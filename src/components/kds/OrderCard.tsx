@@ -3,6 +3,7 @@ import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { StatusChip } from './StatusChip';
+import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { Bell } from 'lucide-react';
 
 interface OrderCardProps {
@@ -33,7 +34,8 @@ const statusBodyMap: Record<string, string> = {
 };
 
 export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardProps) {
-  const urgency = getTimerUrgency(order.elapsedSeconds, order.targetSeconds);
+  const liveElapsed = useElapsedSeconds(order.timeReceived);
+  const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
 
   const buttonLabel = order.status === 'new' ? 'SEEN' :
@@ -61,7 +63,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             </div>
           )}
           <div className="mt-2">
-            <TimerBadge seconds={order.elapsedSeconds} urgency={urgency} />
+            <TimerBadge seconds={liveElapsed} urgency={urgency} />
           </div>
         </div>
         <div className="px-2 pb-2">
@@ -96,7 +98,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
         </div>
 
         <div className="flex items-center justify-between mt-1">
-          <TimerBadge seconds={order.elapsedSeconds} urgency={urgency} />
+          <TimerBadge seconds={liveElapsed} urgency={urgency} />
           <span className="text-modifier text-text-secondary">{order.serverName}</span>
         </div>
       </div>
