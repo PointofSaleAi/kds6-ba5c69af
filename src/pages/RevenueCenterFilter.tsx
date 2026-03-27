@@ -93,7 +93,7 @@ export default function RevenueCenterFilter({ open, onClose, onApply, activeCent
           <div className="px-4 pb-4 space-y-2 shrink-0">
             <button
               onClick={() => setSelected(['ALL STATIONS'])}
-              className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[36px]"
+              className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px]"
             >
               Clear All
             </button>

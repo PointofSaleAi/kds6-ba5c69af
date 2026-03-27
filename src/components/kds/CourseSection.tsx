@@ -20,7 +20,7 @@ export function CourseSection({ courseGroup, onFireCourse }: CourseSectionProps)
         {!isFired && onFireCourse && (
           <button
             onClick={() => onFireCourse(courseGroup.course)}
-            className="text-[10px] font-bold uppercase text-brand-primary hover:text-brand-primary/80 transition-colors px-2 py-0.5 rounded bg-brand-primary/10"
+            className="text-[11px] font-bold uppercase text-brand-primary hover:text-brand-primary/80 transition-colors px-3 py-2 rounded bg-brand-primary/10 min-h-[44px] min-w-[44px]"
           >
             FIRE {courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course}
           </button>
@@ -48,12 +48,12 @@ export function CourseSection({ courseGroup, onFireCourse }: CourseSectionProps)
                 )}
               </div>
               {!item.isCancelled && (
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <button className="p-1 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary" aria-label="Mark seen">
-                    <Eye size={14} />
+                <div className="flex items-center gap-1 shrink-0">
+                  <button className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Mark seen">
+                    <Eye size={16} />
                   </button>
-                  <button className="p-1 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary" aria-label="Alert">
-                    <Bell size={14} />
+                  <button className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Alert">
+                    <Bell size={16} />
                   </button>
                 </div>
               )}

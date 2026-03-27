@@ -124,7 +124,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors min-h-[36px] ${
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm transition-colors min-h-[44px] ${
                     viewMode === mode
                       ? 'bg-brand-primary text-primary-foreground'
                       : 'text-text-secondary hover:text-text-primary'
