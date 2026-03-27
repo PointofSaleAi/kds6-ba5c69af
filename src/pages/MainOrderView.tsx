@@ -15,6 +15,7 @@ interface MainOrderViewProps {
 }
 
 export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
+  const { theme, toggleTheme } = useTheme();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
