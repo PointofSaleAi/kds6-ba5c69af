@@ -135,7 +135,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
 
                     <button
                       onClick={() => handleTestPrint(printer.name)}
-                      className="px-3 py-1.5 text-xs font-semibold text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/10 transition-colors min-h-[36px]"
+                      className="px-3 py-2 text-xs font-semibold text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/10 transition-colors min-h-[44px]"
                     >
                       Test
                     </button>

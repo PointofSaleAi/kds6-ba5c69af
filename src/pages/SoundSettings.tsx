@@ -135,7 +135,7 @@ function SoundPicker({ label, options, value, onChange }: { label: string; optio
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors min-h-[36px] ${
+            className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors min-h-[44px] ${
               value === opt
                 ? 'bg-brand-primary text-primary-foreground'
                 : 'bg-muted text-text-secondary hover:text-text-primary'
