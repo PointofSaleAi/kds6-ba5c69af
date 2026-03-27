@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { LayoutGrid, LayoutList, Columns3 } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
@@ -6,6 +6,7 @@ import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { mockOrders } from '@/data/mock-orders';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
 
 interface MainOrderViewProps {
@@ -16,6 +17,30 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  // Auto-collapse served orders after 30s
+  useEffect(() => {
+    orders.forEach((o) => {
+      if (o.status === 'served' && !servedTimers.current.has(o.id)) {
+        const timer = setTimeout(() => {
+          setOrders((prev) => prev.filter((order) => order.id !== o.id));
+          servedTimers.current.delete(o.id);
+        }, 30000);
+        servedTimers.current.set(o.id, timer);
+      }
+    });
+    return () => {
+      // cleanup on unmount only
+    };
+  }, [orders]);
+
+  // Cleanup all timers on unmount
+  useEffect(() => {
+    return () => {
+      servedTimers.current.forEach((t) => clearTimeout(t));
+    };
+  }, []);
 
   const filteredOrders = orders.filter((o) => {
     if (activeFilter === 'new') return o.status === 'new';
@@ -43,6 +68,12 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   ];
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
+
+  const cardVariants = {
+    initial: { opacity: 0, x: 80, scale: 0.95 },
+    animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 200 } },
+    exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' } },
+  };
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
@@ -86,25 +117,57 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
             <div className="flex-1 overflow-auto p-3">
               {viewMode === 'list' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                  {filteredOrders.map((order) => (
-                    <OrderCard key={order.id} order={order} onBump={handleBump} />
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    {filteredOrders.map((order) => (
+                      <motion.div
+                        key={order.id}
+                        layout
+                        variants={cardVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                      >
+                        <OrderCard order={order} onBump={handleBump} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               )}
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
-                  {filteredOrders.map((order) => (
-                    <OrderCard key={order.id} order={order} compact onBump={handleBump} />
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    {filteredOrders.map((order) => (
+                      <motion.div
+                        key={order.id}
+                        layout
+                        variants={cardVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                      >
+                        <OrderCard order={order} compact onBump={handleBump} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               )}
               {viewMode === 'horizontal' && (
                 <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-                  {filteredOrders.map((order) => (
-                    <div key={order.id} className="shrink-0 w-[280px]">
-                      <OrderCard order={order} onBump={handleBump} />
-                    </div>
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    {filteredOrders.map((order) => (
+                      <motion.div
+                        key={order.id}
+                        layout
+                        variants={cardVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        className="shrink-0 w-[280px]"
+                      >
+                        <OrderCard order={order} onBump={handleBump} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               )}
             </div>
