@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Delete } from 'lucide-react';
 import kitchenHero from '@/assets/kitchen-hero.jpg';
+import posaiLogo from '@/assets/posai-logo.png';
 
 interface SignInScreenProps {
   onSignIn: () => void;

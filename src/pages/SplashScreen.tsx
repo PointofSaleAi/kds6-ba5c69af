@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import posaiLogo from '@/assets/posai-logo.png';
 
 interface SplashScreenProps {
   onReady: () => void;
