@@ -71,8 +71,8 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
 
   const cardVariants = {
     initial: { opacity: 0, x: 80, scale: 0.95 },
-    animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 200 } },
-    exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' } },
+    animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 200 } },
+    exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
   };
 
   return (
