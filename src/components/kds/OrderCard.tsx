@@ -1,0 +1,127 @@
+import type { Order } from '@/types/kds';
+import { OrderTypeBadge } from './OrderTypeBadge';
+import { CourseSection } from './CourseSection';
+import { TimerBadge, getTimerUrgency } from './TimerBadge';
+import { StatusChip } from './StatusChip';
+import { Bell } from 'lucide-react';
+
+interface OrderCardProps {
+  order: Order;
+  compact?: boolean;
+  onBump?: (orderId: string) => void;
+  onFireCourse?: (orderId: string, course: string) => void;
+}
+
+function formatTimeReceived(date: Date): string {
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
+
+const urgencyBorderMap = {
+  ok: 'border-l-success',
+  warning: 'border-l-warning',
+  critical: 'border-l-destructive',
+  overtime: 'border-l-status-overtime',
+};
+
+const statusBodyMap: Record<string, string> = {
+  new: '',
+  'in-progress': '',
+  seen: '',
+  served: 'opacity-60 grayscale',
+  overtime: 'bg-status-overtime/5',
+  recalled: 'border-l-order-take-out',
+};
+
+export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardProps) {
+  const urgency = getTimerUrgency(order.elapsedSeconds, order.targetSeconds);
+  const isServed = order.status === 'served';
+
+  const buttonLabel = order.status === 'new' ? 'SEEN' :
+    order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
+
+  if (compact) {
+    const hasAllergens = order.courses.some(c => c.items.some(i => i.allergens.length > 0));
+    return (
+      <div className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border ${statusBodyMap[order.status] || ''}`}>
+        <OrderTypeBadge
+          type={order.orderType}
+          time={formatTimeReceived(order.timeReceived)}
+        />
+        <div className="p-3 text-center">
+          <div className="text-order-num text-text-primary">{order.orderNumber}</div>
+          <div className="flex items-center justify-center gap-1 mt-2">
+            {Array.from({ length: Math.min(order.itemCount, 8) }).map((_, i) => (
+              <span key={i} className="w-2 h-2 rounded-full bg-text-muted/40" />
+            ))}
+            <span className="text-modifier text-text-secondary ml-1">{order.itemCount} items</span>
+          </div>
+          {hasAllergens && (
+            <div className="mt-1.5 text-[11px] font-bold text-allergen flex items-center justify-center gap-1">
+              <span>{'\u{1F95C}'}</span> has allergens
+            </div>
+          )}
+          <div className="mt-2">
+            <TimerBadge seconds={order.elapsedSeconds} urgency={urgency} />
+          </div>
+        </div>
+        <div className="px-2 pb-2">
+          <button
+            onClick={() => onBump?.(order.id)}
+            className="w-full py-2 bg-brand-dark text-primary-foreground text-cta rounded uppercase"
+          >
+            DONE
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${urgencyBorderMap[urgency]} ${statusBodyMap[order.status] || ''} transition-all duration-300 ${isServed ? 'animate-fade-grey' : 'animate-slide-in-right'}`}
+      style={{ minWidth: 220 }}
+    >
+      <OrderTypeBadge
+        type={order.orderType}
+        time={formatTimeReceived(order.timeReceived)}
+        tableInfo={order.tableName}
+      />
+
+      <div className="px-3 pt-2 pb-1">
+        <div className="flex items-start justify-between">
+          <div className="text-order-num text-text-primary leading-none">
+            {order.orderNumber}
+          </div>
+          <StatusChip status={order.status} />
+        </div>
+
+        <div className="flex items-center justify-between mt-1">
+          <TimerBadge seconds={order.elapsedSeconds} urgency={urgency} />
+          <span className="text-modifier text-text-secondary">{order.serverName}</span>
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        {order.courses.map((courseGroup) => (
+          <CourseSection
+            key={courseGroup.course}
+            courseGroup={courseGroup}
+            onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
+          />
+        ))}
+      </div>
+
+      <div className="p-2 border-t border-border flex gap-2">
+        {!isServed && (
+          <button
+            onClick={() => onBump?.(order.id)}
+            className="flex-1 py-2.5 bg-brand-dark text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:bg-brand-dark/90 transition-colors min-h-[44px]"
+          >
+            <Bell size={14} />
+            {buttonLabel}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}

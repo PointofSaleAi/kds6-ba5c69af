@@ -8,9 +8,7 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       colors: {
@@ -57,28 +55,65 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        brand: {
+          primary: "hsl(var(--brand-primary))",
+          dark: "hsl(var(--brand-dark))",
+        },
+        order: {
+          "dine-in": "hsl(var(--order-dine-in))",
+          "take-out": "hsl(var(--order-take-out))",
+          delivery: "hsl(var(--order-delivery))",
+          banquet: "hsl(var(--order-banquet))",
+        },
+        status: {
+          new: "hsl(var(--status-new))",
+          "in-progress": "hsl(var(--status-in-progress))",
+          seen: "hsl(var(--status-seen))",
+          served: "hsl(var(--status-served))",
+          overtime: "hsl(var(--status-overtime))",
+        },
+        allergen: "hsl(var(--allergen-alert))",
+        modifier: {
+          extra: "hsl(var(--modifier-extra))",
+          remove: "hsl(var(--modifier-remove))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        "text-primary": "hsl(var(--text-primary))",
+        "text-secondary": "hsl(var(--text-secondary))",
+        "text-muted": "hsl(var(--text-muted))",
+        "surface-card": "hsl(var(--surface-card))",
+        "surface-bg": "hsl(var(--surface-bg))",
+        "sidebar-bg": "hsl(var(--sidebar-bg))",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontSize: {
+        "order-num": ["3.5rem", { lineHeight: "1", fontWeight: "900" }],
+        "badge-type": ["0.8125rem", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.05em" }],
+        "section-label": ["0.6875rem", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.08em" }],
+        "item-name": ["0.9375rem", { lineHeight: "1.3", fontWeight: "600" }],
+        "modifier": ["0.8125rem", { lineHeight: "1.3", fontWeight: "400" }],
+        "timer": ["0.8125rem", { lineHeight: "1", fontWeight: "600" }],
+        "cta": ["0.875rem", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.03em" }],
+      },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
