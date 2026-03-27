@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/hooks/use-theme';
 
 interface SettingsScreenProps {
   open: boolean;
@@ -86,6 +87,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
 }
 
 export default function SettingsScreen({ open, onClose, onOpenSub }: SettingsScreenProps) {
+  const { theme, setTheme } = useTheme();
   const [displayMode, setDisplayMode] = useState('List');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
@@ -135,6 +137,17 @@ export default function SettingsScreen({ open, onClose, onOpenSub }: SettingsScr
             <SettingsRow icon={Monitor} label="Cards Per Row" right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
             <SettingsRow icon={Monitor} label="Text Size" right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} />} />
             <SettingsRow icon={Palette} label="Status Colours" description="Customise order status colours" onClick={() => onOpenSub('status-settings')} />
+            <SettingsRow
+              icon={theme === 'dark' ? Moon : Sun}
+              label="Theme"
+              right={
+                <SegmentedToggle
+                  options={['Light', 'Dark']}
+                  value={theme === 'dark' ? 'Dark' : 'Light'}
+                  onChange={(v) => setTheme(v === 'Dark' ? 'dark' : 'light')}
+                />
+              }
+            />
 
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">
