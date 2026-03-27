@@ -113,7 +113,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
                     exit={{ opacity: 0, scale: 0.5 }}
                     className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary text-primary-foreground text-xs font-bold animate-timer-pulse"
                   >
-                    <BellRing size={14} className="animate-shake" />
+                    <BellRing size={14} className="animate-bell-ring" />
                     New Order
                   </motion.div>
                 )}
