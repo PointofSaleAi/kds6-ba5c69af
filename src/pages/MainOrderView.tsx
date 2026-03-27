@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { LayoutGrid, LayoutList, Columns3, BellRing } from 'lucide-react';
+import { LayoutGrid, LayoutList, Columns3, BellRing, Sun, Moon } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/kds/EmptyState';
 import { mockOrders } from '@/data/mock-orders';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
+import { useTheme } from '@/hooks/use-theme';
 
 interface MainOrderViewProps {
   onNavigate: (screen: string) => void;
@@ -119,22 +120,31 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
                 )}
               </AnimatePresence>
             </div>
-            <div className="flex items-center bg-surface-card rounded-lg border border-border p-0.5">
-              {viewModes.map(({ mode, icon: Icon, label }) => (
-                <button
-                  key={mode}
-                  onClick={() => setViewMode(mode)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm transition-colors min-h-[44px] ${
-                    viewMode === mode
-                      ? 'bg-brand-primary text-primary-foreground'
-                      : 'text-text-secondary hover:text-text-primary'
-                  }`}
-                  aria-label={`Switch to ${label} view`}
-                >
-                  <Icon size={16} />
-                  <span className="hidden sm:inline">{label}</span>
-                </button>
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center bg-surface-card rounded-lg border border-border p-0.5">
+                {viewModes.map(({ mode, icon: Icon, label }) => (
+                  <button
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm transition-colors min-h-[44px] ${
+                      viewMode === mode
+                        ? 'bg-brand-primary text-primary-foreground'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
+                    aria-label={`Switch to ${label} view`}
+                  >
+                    <Icon size={16} />
+                    <span className="hidden sm:inline">{label}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center w-11 h-11 rounded-lg border border-border bg-surface-card hover:bg-muted transition-colors min-h-[44px] min-w-[44px]"
+                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+              >
+                {theme === 'light' ? <Moon size={18} className="text-text-secondary" /> : <Sun size={18} className="text-warning" />}
+              </button>
             </div>
           </div>
 
