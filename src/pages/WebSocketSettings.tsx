@@ -94,7 +94,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                   {cloudConnected ? 'Connected' : 'Disconnected'}
                 </div>
               </div>
-              <div className="text-xs text-text-muted mt-1">Server: ws.eatos.net</div>
+              <div className="text-xs text-text-muted mt-1">Server: ws.posai.com</div>
             </div>
 
             {/* Device info */}

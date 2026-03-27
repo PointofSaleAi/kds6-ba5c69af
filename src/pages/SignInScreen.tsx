@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Delete } from 'lucide-react';
 import kitchenHero from '@/assets/kitchen-hero.jpg';
+import posaiLogo from '@/assets/posai-logo.png';
 
 interface SignInScreenProps {
   onSignIn: () => void;
@@ -85,10 +86,8 @@ export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScree
         <div className="w-full max-w-sm">
           {/* Logo */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-black text-brand-primary tracking-tight">
-              eat<span className="text-brand-dark">OS</span>
-            </h1>
-            <p className="text-text-secondary text-sm mt-1">Kitchen Display System</p>
+            <img src={posaiLogo} alt="POS ai" className="h-12 object-contain mx-auto" />
+            <p className="text-text-secondary text-sm mt-2">Kitchen Display System</p>
           </div>
 
           {!useEmail ? (
