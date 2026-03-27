@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { LayoutGrid, LayoutList, Columns3 } from 'lucide-react';
+import { LayoutGrid, LayoutList, Columns3, BellRing } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
@@ -17,7 +17,20 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [newOrderAlert, setNewOrderAlert] = useState(false);
+  const prevOrderCount = useRef(orders.length);
   const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  // Flash indicator when new orders arrive
+  useEffect(() => {
+    const newCount = orders.filter((o) => o.status === 'new').length;
+    if (newCount > 0 && orders.length > prevOrderCount.current) {
+      setNewOrderAlert(true);
+      const timer = setTimeout(() => setNewOrderAlert(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    prevOrderCount.current = orders.length;
+  }, [orders]);
 
   // Auto-collapse served orders after 30s
   useEffect(() => {
@@ -88,8 +101,23 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* View mode toggle + date header */}
           <div className="flex items-center justify-between px-4 py-2 bg-surface-bg">
-            <div className="text-sm text-text-secondary font-medium">
-              Today, {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+            <div className="flex items-center gap-3">
+              <div className="text-sm text-text-secondary font-medium">
+                Today, {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </div>
+              <AnimatePresence>
+                {newOrderAlert && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary text-primary-foreground text-xs font-bold animate-timer-pulse"
+                  >
+                    <BellRing size={14} className="animate-shake" />
+                    New Order
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
             <div className="flex items-center bg-surface-card rounded-lg border border-border p-0.5">
               {viewModes.map(({ mode, icon: Icon, label }) => (
