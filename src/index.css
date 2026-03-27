@@ -82,6 +82,44 @@
   }
 
   .dark {
+    /* Brand - same red, adjusted for dark bg */
+    --brand-primary: 4 76% 57%;
+    --brand-primary-foreground: 0 0% 100%;
+    --brand-dark: 240 25% 18%;
+
+    /* Order type headers - slightly brighter for dark bg contrast */
+    --order-dine-in: 240 25% 22%;
+    --order-take-out: 207 58% 50%;
+    --order-delivery: 168 63% 42%;
+    --order-banquet: 37 85% 55%;
+
+    /* Status */
+    --status-new: 4 76% 57%;
+    --status-in-progress: 24 80% 55%;
+    --status-seen: 210 5% 50%;
+    --status-served: 210 8% 45%;
+    --status-overtime: 4 57% 40%;
+
+    /* Allergen */
+    --allergen-alert: 4 70% 55%;
+
+    /* Modifiers */
+    --modifier-extra: 207 63% 55%;
+    --modifier-remove: 4 82% 60%;
+
+    /* Sidebar */
+    --sidebar-bg: 240 33% 5%;
+
+    /* Surfaces */
+    --surface-card: 240 25% 12%;
+    --surface-bg: 240 33% 8%;
+
+    /* Text - high contrast on dark */
+    --text-primary: 0 0% 92%;
+    --text-secondary: 210 10% 68%;
+    --text-muted: 210 8% 50%;
+
+    /* Shadcn mappings */
     --background: 240 33% 8%;
     --foreground: 0 0% 92%;
     --card: 240 25% 12%;
@@ -96,11 +134,18 @@
     --muted-foreground: 210 10% 55%;
     --accent: 240 20% 18%;
     --accent-foreground: 0 0% 92%;
-    --destructive: 4 57% 35%;
+    --destructive: 4 70% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 240 20% 22%;
     --input: 240 20% 22%;
     --ring: 4 76% 57%;
+
+    /* Success / Warning */
+    --success: 145 63% 48%;
+    --success-foreground: 0 0% 100%;
+    --warning: 37 85% 55%;
+    --warning-foreground: 0 0% 100%;
+
     --sidebar-background: 240 33% 5%;
     --sidebar-foreground: 0 0% 85%;
     --sidebar-primary: 4 76% 57%;
