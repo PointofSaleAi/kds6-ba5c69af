@@ -103,7 +103,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
         <div className="px-2 pb-2">
           <button
             onClick={() => onBump?.(order.id)}
-            className="w-full py-2 bg-brand-dark text-primary-foreground text-cta rounded uppercase"
+            className="w-full py-2 bg-btn-done text-primary-foreground text-cta rounded uppercase"
           >
             DONE
           </button>
