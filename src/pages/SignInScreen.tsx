@@ -154,44 +154,44 @@ export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScree
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className={`space-y-3 ${shake ? 'animate-shake' : ''}`}>
+              <div className={`space-y-4 ${shake ? 'animate-shake' : ''}`}>
                 <div>
-                  <label className="text-sm font-medium text-text-secondary block mb-1">Email</label>
+                  <label className="text-sm font-montserrat font-semibold text-text-primary block mb-1.5 tracking-wide">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                    className={`w-full px-3 py-2.5 rounded-lg border ${error ? 'border-destructive' : 'border-input'} bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-ring min-h-[44px]`}
+                    className={`w-full px-4 py-3 rounded-lg border-2 ${error ? 'border-destructive' : 'border-border hover:border-brand-primary/40'} bg-background text-text-primary font-montserrat text-base focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 min-h-[48px] transition-colors placeholder:text-text-muted`}
                     placeholder="kitchen@restaurant.com"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-text-secondary block mb-1">Password</label>
+                  <label className="text-sm font-montserrat font-semibold text-text-primary block mb-1.5 tracking-wide">Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                      className={`w-full px-3 py-2.5 pr-10 rounded-lg border ${error ? 'border-destructive' : 'border-input'} bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-ring min-h-[44px]`}
+                      className={`w-full px-4 py-3 pr-12 rounded-lg border-2 ${error ? 'border-destructive' : 'border-border hover:border-brand-primary/40'} bg-background text-text-primary font-montserrat text-base focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 min-h-[48px] transition-colors placeholder:text-text-muted`}
                       placeholder="Enter password"
                     />
                     <button
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-brand-primary min-w-[44px] min-h-[44px] flex items-center justify-center rounded-md transition-colors"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                 </div>
 
                 {error && (
-                  <p className="text-destructive text-sm">{error}</p>
+                  <p className="text-destructive text-sm font-montserrat font-medium">{error}</p>
                 )}
 
                 <button
                   onClick={handleEmailSignIn}
-                  className="w-full py-3 bg-brand-primary text-primary-foreground text-cta uppercase rounded-lg hover:bg-brand-primary/90 transition-colors min-h-[48px] mt-2"
+                  className="w-full py-3.5 bg-brand-primary text-primary-foreground font-montserrat font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-brand-primary/90 active:scale-[0.98] transition-all min-h-[48px] mt-1 shadow-md shadow-brand-primary/20"
                 >
                   SIGN IN
                 </button>
