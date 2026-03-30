@@ -6,6 +6,9 @@ import { CourseSection } from './CourseSection';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { StatusChip } from './StatusChip';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
+import seenIcon from '@/assets/seen-icon.svg';
+import preparingIcon from '@/assets/preparing-icon.svg';
+import readyIcon from '@/assets/item-ready-icon.svg';
 
 interface OrderCardProps {
   order: Order;
