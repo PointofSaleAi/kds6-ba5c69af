@@ -199,14 +199,14 @@ export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScree
 
               <button
                 onClick={onForgotPassword}
-                className="w-full mt-3 text-center text-sm text-text-muted hover:text-brand-primary transition-colors"
+                className="w-full mt-3 text-center text-sm text-[hsl(var(--brand-button))] hover:underline transition-colors"
               >
                 Forgot password?
               </button>
 
               <button
                 onClick={() => { setUseEmail(false); setError(''); }}
-                className="w-full mt-2 text-center text-sm text-brand-primary hover:underline"
+                className="w-full mt-2 text-center text-sm text-[hsl(var(--brand-button))] hover:underline"
               >
                 Sign in with PIN instead
               </button>
