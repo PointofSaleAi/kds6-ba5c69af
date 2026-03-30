@@ -163,7 +163,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             onClick={() => onBump?.(order.id)}
             className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
           >
-            <img src={buttonIcon} alt="" className="w-5 h-5 brightness-0 invert" />
+            <img src={buttonIcon} alt="" className="w-6 h-5 rounded-sm" />
             {buttonLabel}
           </button>
         )}
