@@ -228,8 +228,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
                 <CardLabel label="Connection" description="WebSocket and sync settings" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Wifi size={14} className="text-green-500" />
-                    <span className="text-[13px] text-green-600 font-medium">Connected</span>
+                    <Wifi size={14} className="text-status-done" />
+                    <span className="text-[13px] text-status-done font-medium">Connected</span>
                   </div>
                   <ActionButton label="Configure" onClick={() => onOpenSub('websocket-settings')} />
                 </div>
