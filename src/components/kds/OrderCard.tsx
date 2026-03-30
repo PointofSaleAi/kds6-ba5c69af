@@ -52,10 +52,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
         <div className="p-3 text-center">
           <div className="text-order-num text-text-primary">{order.orderNumber}</div>
           <div className="flex items-center justify-center gap-1 mt-2">
-            {Array.from({ length: Math.min(order.itemCount, 8) }).map((_, i) => (
-              <span key={i} className="w-2 h-2 rounded-full bg-text-muted/40" />
-            ))}
-            <span className="text-modifier text-text-secondary ml-1">{order.itemCount} items</span>
+            <span className="text-modifier text-text-secondary">{order.itemCount} products</span>
           </div>
           {hasAllergens && (
             <div className="mt-1.5 text-[11px] font-bold text-allergen flex items-center justify-center gap-1">
