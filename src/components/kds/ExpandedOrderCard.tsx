@@ -116,7 +116,7 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
                           </div>
                           {!item.isCancelled && (
                             <button className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Mark seen">
-                              <Eye size={16} />
+                              <img src={seenIcon} alt="Seen" width={20} height={15} />
                             </button>
                           )}
                         </div>
