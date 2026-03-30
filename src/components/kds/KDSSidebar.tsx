@@ -16,9 +16,10 @@ interface KDSSidebarProps {
   onFilterChange: (filter: string) => void;
   onNavigate: (screen: string) => void;
   activeNav?: string;
+  settingsOpen?: boolean;
 }
 
-export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home' }: KDSSidebarProps) {
+export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen }: KDSSidebarProps) {
   const [expanded, setExpanded] = useState(false);
 
   const navItems: SidebarItem[] = [
@@ -60,7 +61,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             key={item.label}
             onClick={() => onNavigate(item.action!)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] relative ${
-              activeNav === item.action ? 'border-l-2 border-brand-primary bg-sidebar-accent' : ''
+              (item.action === 'settings' ? settingsOpen : activeNav === item.action) ? 'border-l-2 border-brand-primary bg-sidebar-accent' : ''
             }`}
           >
             <item.icon size={20} />
