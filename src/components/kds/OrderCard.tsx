@@ -128,9 +128,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             key={courseGroup.course}
             courseGroup={courseGroup}
             onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
-            seenItems={seenItems}
-            onMarkSeen={handleMarkSeen}
-            onUndoSeen={handleUndoSeen}
+            itemStatuses={itemStatuses}
+            onAdvanceItem={handleAdvanceItem}
+            onUndoItem={handleUndoItem}
           />
         ))}
       </div>
