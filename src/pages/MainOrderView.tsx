@@ -244,6 +244,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           )}
         </div>
         )}
+
+        {!settingsOpen && <ItemSummaryPanel orders={orders} />}
       </div>
 
       <AnimatePresence>
