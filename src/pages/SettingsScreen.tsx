@@ -193,7 +193,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
             <div className="px-4 py-3">
               <button
                 onClick={() => setShowLogoutConfirm(true)}
-                className="w-full py-2.5 text-destructive text-cta font-bold hover:bg-destructive/10 rounded-lg transition-colors min-h-[44px]"
+                className="w-full py-2.5 text-primary text-cta font-bold hover:bg-primary/10 rounded-lg transition-colors min-h-[44px]"
               >
                 LOG OUT
               </button>
@@ -218,7 +218,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
             <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => { onClose(); onLogOut?.(); }}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 min-h-[44px]"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
               Log Out
             </AlertDialogAction>
