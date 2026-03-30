@@ -19,7 +19,7 @@ import WebSocketSettings from '@/pages/WebSocketSettings';
 type AppScreen = 'splash' | 'signin' | 'forgot' | 'main' | 'history' | 'performance';
 
 const Index = () => {
-  const [screen, setScreen] = useState<AppScreen>('splash');
+  const [screen, setScreen] = useState<AppScreen>('signin');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
