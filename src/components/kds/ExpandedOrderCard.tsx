@@ -37,6 +37,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
       if (!current) next.set(itemId, 'preparing');
       else if (current === 'preparing') next.set(itemId, 'ready');
       else if (current === 'ready') next.set(itemId, 'done');
+      return next;
     });
   }, []);
 
