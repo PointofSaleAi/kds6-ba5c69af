@@ -3,7 +3,7 @@ import SplashScreen from '@/pages/SplashScreen';
 import SignInScreen from '@/pages/SignInScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
-import OrderHistoryScreen from '@/pages/OrderHistoryScreen';
+
 import AlertsPanel from '@/pages/AlertsPanel';
 import SettingsScreen from '@/pages/SettingsScreen';
 import PerformanceDashboard from '@/pages/PerformanceDashboard';
@@ -16,7 +16,7 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
-type AppScreen = 'splash' | 'signin' | 'forgot' | 'main' | 'history' | 'performance';
+type AppScreen = 'splash' | 'signin' | 'forgot' | 'main' | 'performance';
 
 const Index = () => {
   const [screen, setScreen] = useState<AppScreen>('signin');
@@ -42,7 +42,7 @@ const Index = () => {
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
       case 'home': setScreen('main'); break;
-      case 'history': setScreen('history'); break;
+      case 'alerts': setAlertsOpen(true); break;
       case 'alerts': setAlertsOpen(true); break;
       case 'settings': setSettingsOpen(true); break;
       case 'performance': setScreen('performance'); break;
@@ -68,7 +68,7 @@ const Index = () => {
       {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
       {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
       {screen === 'main' && <MainOrderView onNavigate={handleNavigate} />}
-      {screen === 'history' && <OrderHistoryScreen onBack={() => setScreen('main')} onRecall={() => setScreen('main')} />}
+      
       {screen === 'performance' && <PerformanceDashboard onBack={() => setScreen('main')} />}
 
       <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
