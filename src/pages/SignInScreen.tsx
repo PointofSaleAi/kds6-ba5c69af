@@ -191,7 +191,7 @@ export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScree
 
                 <button
                   onClick={handleEmailSignIn}
-                  className="w-full py-3.5 bg-brand-primary text-primary-foreground font-montserrat font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-brand-primary/90 active:scale-[0.98] transition-all min-h-[48px] mt-1 shadow-md shadow-brand-primary/20"
+                  className="w-full py-3.5 bg-[hsl(var(--brand-button))] text-primary-foreground font-montserrat font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-[hsl(var(--brand-button)/0.85)] active:scale-[0.98] transition-all min-h-[48px] mt-1 shadow-md shadow-black/15"
                 >
                   SIGN IN
                 </button>
