@@ -20,8 +20,18 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [newOrderAlert, setNewOrderAlert] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
   const prevOrderCount = useRef(orders.length);
   const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const touchStartX = useRef(0);
+  const swipeThreshold = 50;
+
+  const cardsPerPage = viewMode === 'grid' ? 16 : viewMode === 'horizontal' ? 4 : 8;
+
+  // Reset page on filter/view change
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [activeFilter, viewMode]);
 
   // Flash indicator when new orders arrive
   useEffect(() => {
