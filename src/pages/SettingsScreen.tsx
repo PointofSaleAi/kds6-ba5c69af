@@ -101,6 +101,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
   const [staggerMode, setStaggerMode] = useState(false);
   const [servableModifiers, setServableModifiers] = useState(true);
   const [sortDefault, setSortDefault] = useState('By Time');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   if (!open) return null;
 
