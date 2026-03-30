@@ -119,24 +119,24 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                               )}
                             </div>
                             {!item.isCancelled && (
-                              <div className="flex items-center gap-1 shrink-0">
+                              <div className="flex items-center shrink-0">
                                 {isSeen ? (
                                   <>
                                     <button
                                       onClick={() => handleUndoSeen(item.id)}
-                                      className="p-2.5 rounded hover:bg-muted transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                                      className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
                                       aria-label="Undo"
                                     >
                                       <img src={undoIcon} alt="Undo" width={28} height={21} />
                                     </button>
-                                    <button className="p-2.5 rounded min-w-[44px] min-h-[44px] flex items-center justify-center cursor-default" aria-label="Preparing">
+                                    <button className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px] cursor-default" aria-label="Preparing">
                                       <img src={preparingIcon} alt="Preparing" width={28} height={21} />
                                     </button>
                                   </>
                                 ) : (
                                   <button
                                     onClick={() => handleMarkSeen(item.id)}
-                                    className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
+                                    className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
                                     aria-label="Mark seen"
                                   >
                                     <img src={seenIcon} alt="Seen" width={28} height={21} />
