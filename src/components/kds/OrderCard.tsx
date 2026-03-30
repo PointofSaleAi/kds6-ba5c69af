@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Order } from '@/types/kds';
+import type { ItemStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
@@ -37,14 +38,26 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
-  const [seenItems, setSeenItems] = useState<Set<string>>(new Set());
+  const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
 
-  const handleMarkSeen = useCallback((itemId: string) => {
-    setSeenItems(prev => new Set(prev).add(itemId));
+  const handleAdvanceItem = useCallback((itemId: string) => {
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId);
+      if (!current) next.set(itemId, 'preparing');
+      else if (current === 'preparing') next.set(itemId, 'ready');
+      return next;
+    });
   }, []);
 
-  const handleUndoSeen = useCallback((itemId: string) => {
-    setSeenItems(prev => { const next = new Set(prev); next.delete(itemId); return next; });
+  const handleUndoItem = useCallback((itemId: string) => {
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId);
+      if (current === 'ready') next.set(itemId, 'preparing');
+      else next.delete(itemId);
+      return next;
+    });
   }, []);
 
   const buttonLabel = order.status === 'new' ? 'SEEN' :
@@ -115,9 +128,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             key={courseGroup.course}
             courseGroup={courseGroup}
             onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
-            seenItems={seenItems}
-            onMarkSeen={handleMarkSeen}
-            onUndoSeen={handleUndoSeen}
+            itemStatuses={itemStatuses}
+            onAdvanceItem={handleAdvanceItem}
+            onUndoItem={handleUndoItem}
           />
         ))}
       </div>

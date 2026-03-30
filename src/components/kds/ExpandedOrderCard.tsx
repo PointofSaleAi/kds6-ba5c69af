@@ -3,6 +3,8 @@ import { X } from 'lucide-react';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
+import readyIcon from '@/assets/item-ready-icon.svg';
+import type { ItemStatus } from './CourseSection';
 import { motion } from 'framer-motion';
 import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
@@ -26,14 +28,26 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
-  const [seenItems, setSeenItems] = useState<Set<string>>(new Set());
+  const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
 
-  const handleMarkSeen = useCallback((itemId: string) => {
-    setSeenItems(prev => new Set(prev).add(itemId));
+  const handleAdvanceItem = useCallback((itemId: string) => {
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId);
+      if (!current) next.set(itemId, 'preparing');
+      else if (current === 'preparing') next.set(itemId, 'ready');
+      return next;
+    });
   }, []);
 
-  const handleUndoSeen = useCallback((itemId: string) => {
-    setSeenItems(prev => { const next = new Set(prev); next.delete(itemId); return next; });
+  const handleUndoItem = useCallback((itemId: string) => {
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId);
+      if (current === 'ready') next.set(itemId, 'preparing');
+      else next.delete(itemId);
+      return next;
+    });
   }, []);
 
   const buttonLabel = order.status === 'new' ? 'SEEN' :
@@ -101,7 +115,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
 
                   <div className="px-3 py-1">
                     {courseGroup.items.map((item) => {
-                      const isSeen = seenItems.has(item.id);
+                      const status = itemStatuses.get(item.id);
                       return (
                         <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
                           <div className="flex items-center justify-between gap-2">
@@ -120,22 +134,39 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                             </div>
                             {!item.isCancelled && (
                               <div className="flex items-center shrink-0">
-                                {isSeen ? (
+                                {status === 'ready' ? (
                                   <>
                                     <button
-                                      onClick={() => handleUndoSeen(item.id)}
+                                      onClick={() => handleUndoItem(item.id)}
                                       className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
                                       aria-label="Undo"
                                     >
                                       <img src={undoIcon} alt="Undo" width={28} height={21} />
                                     </button>
-                                    <button className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px] cursor-default" aria-label="Preparing">
+                                    <div className="p-1 flex items-center justify-center min-w-[44px] min-h-[44px]">
+                                      <img src={readyIcon} alt="Ready" width={28} height={21} />
+                                    </div>
+                                  </>
+                                ) : status === 'preparing' ? (
+                                  <>
+                                    <button
+                                      onClick={() => handleUndoItem(item.id)}
+                                      className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                                      aria-label="Undo"
+                                    >
+                                      <img src={undoIcon} alt="Undo" width={28} height={21} />
+                                    </button>
+                                    <button
+                                      onClick={() => handleAdvanceItem(item.id)}
+                                      className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                                      aria-label="Mark ready"
+                                    >
                                       <img src={preparingIcon} alt="Preparing" width={28} height={21} />
                                     </button>
                                   </>
                                 ) : (
                                   <button
-                                    onClick={() => handleMarkSeen(item.id)}
+                                    onClick={() => handleAdvanceItem(item.id)}
                                     className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
                                     aria-label="Mark seen"
                                   >
