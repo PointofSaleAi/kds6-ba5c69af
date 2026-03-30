@@ -10,6 +10,11 @@
     --brand-dark: 240 33% 14%;
     --brand-button: 0 0% 13%;
 
+    /* Action button colors */
+    --btn-seen: 217 71% 53%;
+    --btn-in-progress: 4 76% 57%;
+    --btn-done: 271 56% 50%;
+
     /* Order type headers */
     --order-dine-in: 240 33% 14%;
     --order-take-out: 207 58% 44%;
