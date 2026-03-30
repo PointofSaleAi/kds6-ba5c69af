@@ -5,6 +5,7 @@ import { OrderCard } from '@/components/kds/OrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
+import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { mockOrders } from '@/data/mock-orders';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
@@ -20,6 +21,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [newOrderAlert, setNewOrderAlert] = useState(false);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const prevOrderCount = useRef(orders.length);
   const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
@@ -183,6 +185,8 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
                         initial="initial"
                         animate="animate"
                         exit="exit"
+                        onClick={() => setExpandedOrderId(order.id)}
+                        className="cursor-pointer"
                       >
                         <OrderCard order={order} compact onBump={handleBump} />
                       </motion.div>
@@ -215,6 +219,21 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
 
         <ItemSummaryPanel orders={orders} />
       </div>
+
+      {/* Expanded order card overlay for grid view */}
+      <AnimatePresence>
+        {expandedOrderId && (() => {
+          const expandedOrder = orders.find(o => o.id === expandedOrderId);
+          if (!expandedOrder) return null;
+          return (
+            <ExpandedOrderCard
+              order={expandedOrder}
+              onClose={() => setExpandedOrderId(null)}
+              onBump={handleBump}
+            />
+          );
+        })()}
+      </AnimatePresence>
 
       <BottomStatusBar orderCount={activeOrderCount} />
     </div>
