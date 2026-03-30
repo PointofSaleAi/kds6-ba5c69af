@@ -5,7 +5,7 @@ import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
 
 import AlertsPanel from '@/pages/AlertsPanel';
-import SettingsScreen from '@/pages/SettingsScreen';
+
 import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import LanguageSettings from '@/pages/LanguageSettings';
 import SoundSettings from '@/pages/SoundSettings';
