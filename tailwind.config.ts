@@ -98,7 +98,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontSize: {
-        "order-num": ["3.5rem", { lineHeight: "1", fontWeight: "900" }],
+        "order-num": ["4rem", { lineHeight: "1", fontWeight: "900" }],
         "badge-type": ["0.8125rem", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.05em" }],
         "section-label": ["0.6875rem", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.08em" }],
         "item-name": ["0.9375rem", { lineHeight: "1.3", fontWeight: "600" }],
