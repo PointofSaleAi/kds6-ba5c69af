@@ -3,7 +3,7 @@ import SplashScreen from '@/pages/SplashScreen';
 import SignInScreen from '@/pages/SignInScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
-import OrderHistoryScreen from '@/pages/OrderHistoryScreen';
+
 import AlertsPanel from '@/pages/AlertsPanel';
 import SettingsScreen from '@/pages/SettingsScreen';
 import PerformanceDashboard from '@/pages/PerformanceDashboard';

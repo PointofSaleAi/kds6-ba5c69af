@@ -1,15 +1,18 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { BellRing } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
+import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { mockOrders } from '@/data/mock-orders';
+import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
+import { toast } from 'sonner';
 
 interface MainOrderViewProps {
   onNavigate: (screen: string) => void;
@@ -19,22 +22,14 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [activeNav, setActiveNav] = useState('home');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
-  const [newOrderAlert, setNewOrderAlert] = useState(false);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const prevOrderCount = useRef(orders.length);
   const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-  // Flash indicator when new orders arrive
-  useEffect(() => {
-    const newCount = orders.filter((o) => o.status === 'new').length;
-    if (newCount > 0 && orders.length > prevOrderCount.current) {
-      setNewOrderAlert(true);
-      const timer = setTimeout(() => setNewOrderAlert(false), 4000);
-      return () => clearTimeout(timer);
-    }
-    prevOrderCount.current = orders.length;
-  }, [orders]);
+  // History state
+  const [historyDateFilter, setHistoryDateFilter] = useState('today');
+  const [historySearch, setHistorySearch] = useState('');
 
   // Auto-collapse served orders after 30s
   useEffect(() => {
@@ -47,12 +42,8 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         servedTimers.current.set(o.id, timer);
       }
     });
-    return () => {
-      // cleanup on unmount only
-    };
   }, [orders]);
 
-  // Cleanup all timers on unmount
   useEffect(() => {
     return () => {
       servedTimers.current.forEach((t) => clearTimeout(t));
@@ -64,6 +55,16 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
     if (activeFilter === 'completed') return o.status !== 'served';
     return true;
+  });
+
+  const filteredHistory = mockHistoryOrders.filter((o) => {
+    if (!historySearch) return true;
+    const q = historySearch.toLowerCase();
+    return (
+      String(o.orderNumber).includes(q) ||
+      o.tableName.toLowerCase().includes(q) ||
+      o.serverName.toLowerCase().includes(q)
+    );
   });
 
   const handleBump = useCallback((orderId: string) => {
@@ -78,6 +79,27 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     );
   }, []);
 
+  const handleRecall = useCallback((orderId: string) => {
+    const historyOrder = mockHistoryOrders.find(o => o.id === orderId);
+    if (!historyOrder) return;
+    const recalledOrder: Order = {
+      ...historyOrder,
+      status: 'recalled',
+      timeReceived: new Date(),
+      elapsedSeconds: 0,
+    };
+    setOrders((prev) => [recalledOrder, ...prev]);
+    toast.success(`Order #${historyOrder.orderNumber} recalled and added to queue`);
+    setActiveNav('home');
+  }, []);
+
+  const handleNavigate = useCallback((target: string) => {
+    if (target === 'home' || target === 'history') {
+      setActiveNav(target);
+    } else {
+      onNavigate(target);
+    }
+  }, [onNavigate]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
 
@@ -87,102 +109,141 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
   };
 
+  const dateTabs = ['Today', 'Yesterday', 'Last 7 Days'];
+
+  const isHistory = activeNav === 'history';
+
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
       <div className="flex flex-1 overflow-hidden">
         <KDSSidebar
           activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
-          onNavigate={onNavigate}
+          onNavigate={handleNavigate}
+          activeNav={activeNav}
         />
 
-        {/* Main content area */}
         <div className="flex-1 flex flex-col overflow-hidden relative">
-          {/* New order alert overlay */}
-          <AnimatePresence>
-            {newOrderAlert && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="absolute top-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-primary text-primary-foreground text-xs font-bold shadow-lg"
-              >
-                <BellRing size={14} className="animate-bell-ring" />
-                New Order
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {isHistory ? (
+            <>
+              {/* History filter bar */}
+              <div className="flex items-center gap-3 px-3 pt-3 pb-2 shrink-0">
+                <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
+                  HISTORY
+                </span>
+                <div className="flex items-center bg-muted rounded-full p-0.5">
+                  {dateTabs.map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setHistoryDateFilter(tab.toLowerCase())}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[36px] ${
+                        historyDateFilter === tab.toLowerCase()
+                          ? 'bg-brand-dark text-primary-foreground'
+                          : 'text-text-secondary hover:text-text-primary'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex-1" />
+                <div className="relative max-w-[260px]">
+                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                  <input
+                    type="text"
+                    value={historySearch}
+                    onChange={(e) => setHistorySearch(e.target.value)}
+                    placeholder="Search order, table, server..."
+                    className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-input bg-surface-card text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-ring min-h-[36px]"
+                  />
+                </div>
+              </div>
 
-          {/* Order cards area */}
-          {filteredOrders.length === 0 ? (
-            <EmptyState />
+              {/* History cards */}
+              {filteredHistory.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <p className="text-text-muted text-sm">No orders served yet today</p>
+                </div>
+              ) : (
+                <div className="flex-1 overflow-auto p-3">
+                  {viewMode === 'list' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                      {filteredHistory.map((order) => (
+                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                          <HistoryOrderCard order={order} onRecall={handleRecall} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  {viewMode === 'grid' && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                      {filteredHistory.map((order) => (
+                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                          <HistoryOrderCard order={order} compact onRecall={handleRecall} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  {viewMode === 'horizontal' && (
+                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                      {filteredHistory.map((order) => (
+                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[280px]">
+                          <HistoryOrderCard order={order} onRecall={handleRecall} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           ) : (
-            <div className="flex-1 overflow-auto p-3">
-              {viewMode === 'list' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                  <AnimatePresence mode="popLayout">
-                    {filteredOrders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        layout
-                        variants={cardVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                      >
-                        <OrderCard order={order} onBump={handleBump} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+            <>
+              {filteredOrders.length === 0 ? (
+                <EmptyState />
+              ) : (
+                <div className="flex-1 overflow-auto p-3">
+                  {viewMode === 'list' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                            <OrderCard order={order} onBump={handleBump} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                  {viewMode === 'grid' && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" onClick={() => setExpandedOrderId(order.id)} className="cursor-pointer">
+                            <OrderCard order={order} compact onBump={handleBump} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                  {viewMode === 'horizontal' && (
+                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
+                            <OrderCard order={order} onBump={handleBump} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  )}
                 </div>
               )}
-              {viewMode === 'grid' && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
-                  <AnimatePresence mode="popLayout">
-                    {filteredOrders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        layout
-                        variants={cardVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        onClick={() => setExpandedOrderId(order.id)}
-                        className="cursor-pointer"
-                      >
-                        <OrderCard order={order} compact onBump={handleBump} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-              {viewMode === 'horizontal' && (
-                <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-                  <AnimatePresence mode="popLayout">
-                    {filteredOrders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        layout
-                        variants={cardVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        className="shrink-0 w-[280px]"
-                      >
-                        <OrderCard order={order} onBump={handleBump} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-            </div>
+            </>
           )}
         </div>
 
         <ItemSummaryPanel orders={orders} />
       </div>
 
-      {/* Expanded order card overlay for grid view */}
       <AnimatePresence>
         {expandedOrderId && (() => {
           const expandedOrder = orders.find(o => o.id === expandedOrderId);
