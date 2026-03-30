@@ -11,7 +11,7 @@ interface SignInScreenProps {
 
 export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScreenProps) {
   const [pin, setPin] = useState('');
-  const [useEmail, setUseEmail] = useState(false);
+  const [useEmail, setUseEmail] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
