@@ -45,7 +45,7 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
         <button onClick={() => setCollapsed(false)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Expand panel">
           <ChevronLeft size={16} />
         </button>
-        <span className="text-[10px] font-bold text-text-secondary mt-2 [writing-mode:vertical-lr]">{totalItems} items</span>
+        <span className="text-[10px] font-bold text-text-secondary mt-2 [writing-mode:vertical-lr]">{totalItems} products</span>
       </div>
     );
   }
@@ -53,7 +53,7 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
   return (
     <div className="w-[220px] bg-surface-card border-l border-border flex flex-col shrink-0 overflow-hidden">
       <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-        <span className="text-sm font-semibold text-text-primary">Item Summary</span>
+        <span className="text-sm font-semibold text-text-primary">Product Summary</span>
         <div className="flex items-center gap-2">
           <Bell size={16} className="text-text-muted" />
           <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
