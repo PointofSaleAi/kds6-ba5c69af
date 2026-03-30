@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { LayoutGrid, LayoutList, Columns3, BellRing, Sun, Moon } from 'lucide-react';
+import { BellRing } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
@@ -78,11 +78,6 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     );
   }, []);
 
-  const viewModes: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
-    { mode: 'list', icon: LayoutList, label: 'List' },
-    { mode: 'grid', icon: LayoutGrid, label: 'Grid' },
-    { mode: 'horizontal', icon: Columns3, label: 'Horizontal' },
-  ];
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
 
@@ -102,54 +97,21 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         />
 
         {/* Main content area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* View mode toggle + date header */}
-          <div className="flex items-center justify-between px-4 py-2 bg-surface-bg">
-            <div className="flex items-center gap-3">
-              <div className="text-sm text-text-secondary font-medium">
-                Today, {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </div>
-              <AnimatePresence>
-                {newOrderAlert && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary text-primary-foreground text-xs font-bold animate-timer-pulse"
-                  >
-                    <BellRing size={14} className="animate-bell-ring" />
-                    New Order
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center bg-surface-card rounded-lg border border-border p-0.5">
-                {viewModes.map(({ mode, icon: Icon, label }) => (
-                  <button
-                    key={mode}
-                    onClick={() => setViewMode(mode)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm transition-colors min-h-[44px] ${
-                      viewMode === mode
-                        ? 'bg-brand-primary text-primary-foreground'
-                        : 'text-text-secondary hover:text-text-primary'
-                    }`}
-                    aria-label={`Switch to ${label} view`}
-                  >
-                    <Icon size={16} />
-                    <span className="hidden sm:inline">{label}</span>
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={toggleTheme}
-                className="flex items-center justify-center w-11 h-11 rounded-lg border border-border bg-surface-card hover:bg-muted transition-colors min-h-[44px] min-w-[44px]"
-                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        <div className="flex-1 flex flex-col overflow-hidden relative">
+          {/* New order alert overlay */}
+          <AnimatePresence>
+            {newOrderAlert && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="absolute top-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-primary text-primary-foreground text-xs font-bold shadow-lg"
               >
-                {theme === 'light' ? <Moon size={18} className="text-text-secondary" /> : <Sun size={18} className="text-warning" />}
-              </button>
-            </div>
-          </div>
+                <BellRing size={14} className="animate-bell-ring" />
+                New Order
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Order cards area */}
           {filteredOrders.length === 0 ? (
@@ -235,7 +197,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} />
     </div>
   );
 }
