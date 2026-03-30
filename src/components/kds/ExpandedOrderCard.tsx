@@ -115,6 +115,10 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
           <div className="border-t border-border">
             {order.courses.map((courseGroup) => {
               const isFired = courseGroup.isFired;
+              const allDone = courseGroup.items
+                .filter(i => !i.isCancelled)
+                .every(i => itemStatuses.get(i.id) === 'done');
+              if (allDone) return null;
               return (
                 <div key={courseGroup.course} className={isFired ? 'opacity-50' : ''}>
                   <div className="flex items-center justify-between bg-muted px-3 py-1.5">
