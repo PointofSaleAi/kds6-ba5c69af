@@ -24,8 +24,8 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
