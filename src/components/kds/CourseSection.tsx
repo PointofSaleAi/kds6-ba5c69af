@@ -1,7 +1,8 @@
 import type { CourseGroup } from '@/types/kds';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
-import { Eye, Bell } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import seenIcon from '@/assets/seen-icon.svg';
 
 interface CourseSectionProps {
   courseGroup: CourseGroup;
@@ -50,7 +51,7 @@ export function CourseSection({ courseGroup, onFireCourse }: CourseSectionProps)
               {!item.isCancelled && (
                 <div className="flex items-center gap-1 shrink-0">
                   <button className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Mark seen">
-                    <Eye size={16} />
+                    <img src={seenIcon} alt="Seen" width={20} height={15} />
                   </button>
                   <button className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Alert">
                     <Bell size={16} />
