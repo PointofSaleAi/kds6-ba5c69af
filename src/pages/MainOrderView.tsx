@@ -119,6 +119,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           activeNav={activeNav}
         />
 
+        {settingsOpen ? (
+          <SettingsPanel
+            onClose={() => onCloseSettings?.()}
+            onOpenSub={(sub) => onOpenSub?.(sub)}
+            onLogOut={onLogOut}
+          />
+        ) : (
         <div className="flex-1 flex flex-col overflow-hidden relative">
           {isHistory ? (
             <>
@@ -236,8 +243,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </>
           )}
         </div>
-
-        <ItemSummaryPanel orders={orders} />
+        )}
       </div>
 
       <AnimatePresence>
