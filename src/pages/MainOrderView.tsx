@@ -220,6 +220,21 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         <ItemSummaryPanel orders={orders} />
       </div>
 
+      {/* Expanded order card overlay for grid view */}
+      <AnimatePresence>
+        {expandedOrderId && (() => {
+          const expandedOrder = orders.find(o => o.id === expandedOrderId);
+          if (!expandedOrder) return null;
+          return (
+            <ExpandedOrderCard
+              order={expandedOrder}
+              onClose={() => setExpandedOrderId(null)}
+              onBump={handleBump}
+            />
+          );
+        })()}
+      </AnimatePresence>
+
       <BottomStatusBar orderCount={activeOrderCount} />
     </div>
   );
