@@ -60,20 +60,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                 </div>
                 {!item.isCancelled && (
                   <div className="flex items-center shrink-0">
-                    {status === 'ready' ? (
-                      <>
-                        <button
-                          onClick={() => onUndoItem?.(item.id)}
-                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                          aria-label="Undo"
-                        >
-                          <img src={undoIcon} alt="Undo" width={28} height={21} />
-                        </button>
-                        <div className="p-1 flex items-center justify-center min-w-[44px] min-h-[44px]">
-                          <img src={readyIcon} alt="Ready" width={28} height={21} />
-                        </div>
-                      </>
-                    ) : status === 'preparing' ? (
+                    {status === 'preparing' ? (
                       <>
                         <button
                           onClick={() => onUndoItem?.(item.id)}
