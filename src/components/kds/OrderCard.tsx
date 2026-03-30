@@ -75,6 +75,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   const buttonLabel = order.status === 'new' ? 'SEEN' :
     order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
 
+  const buttonColorClass = order.status === 'new' ? 'bg-btn-seen' :
+    order.status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done';
+
   if (compact) {
     const hasAllergens = order.courses.some(c => c.items.some(i => i.allergens.length > 0));
     return (
