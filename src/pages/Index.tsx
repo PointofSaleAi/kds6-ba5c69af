@@ -19,9 +19,7 @@ import WebSocketSettings from '@/pages/WebSocketSettings';
 type AppScreen = 'splash' | 'signin' | 'forgot' | 'main' | 'history' | 'performance';
 
 const Index = () => {
-  const hasPin = Boolean(localStorage.getItem('kds_device_pin'));
   const [screen, setScreen] = useState<AppScreen>('signin');
-  const [signinMode, setSigninMode] = useState<'email' | 'pin'>(hasPin ? 'pin' : 'email');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -39,7 +37,7 @@ const Index = () => {
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
   const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
-  const handleLogOut = useCallback(() => { setSettingsOpen(false); setSigninMode(localStorage.getItem('kds_device_pin') ? 'pin' : 'email'); setScreen('signin'); }, []);
+  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('signin'); }, []);
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
@@ -67,7 +65,7 @@ const Index = () => {
   return (
     <>
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
-      {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} initialMode={signinMode} />}
+      {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
       {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
       {screen === 'main' && <MainOrderView onNavigate={handleNavigate} />}
       {screen === 'history' && <OrderHistoryScreen onBack={() => setScreen('main')} onRecall={() => setScreen('main')} />}
