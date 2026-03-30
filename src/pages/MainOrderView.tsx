@@ -5,6 +5,7 @@ import { OrderCard } from '@/components/kds/OrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
+import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { mockOrders } from '@/data/mock-orders';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
