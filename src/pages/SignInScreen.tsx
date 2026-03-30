@@ -20,11 +20,11 @@ export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScree
   const [carouselDot] = useState(0);
 
   const handlePinDigit = (digit: string) => {
-    if (pin.length >= 6) return;
+    if (pin.length >= 4) return;
     const newPin = pin + digit;
     setPin(newPin);
     setError('');
-    if (newPin.length === 6) {
+    if (newPin.length === 4) {
       // TODO: Replace with API call for PIN validation
       setTimeout(() => onSignIn(), 300);
     }
@@ -93,11 +93,11 @@ export default function SignInScreen({ onSignIn, onForgotPassword }: SignInScree
           {!useEmail ? (
             /* PIN Login */
             <div>
-              <p className="text-center text-text-secondary text-sm mb-4">Enter your 6-digit PIN</p>
+              <p className="text-center text-text-secondary text-sm mb-4">Enter your 4-digit PIN</p>
 
               {/* PIN dots */}
               <div className={`flex justify-center gap-3 mb-6 ${shake ? 'animate-shake' : ''}`}>
-                {Array.from({ length: 6 }).map((_, i) => (
+                {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
                     className={`w-4 h-4 rounded-full border-2 transition-all ${
