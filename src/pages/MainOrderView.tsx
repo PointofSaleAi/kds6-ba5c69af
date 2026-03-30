@@ -24,31 +24,21 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
   const [historySearch, setHistorySearch] = useState('');
 
-  // Auto-collapse served orders after 30s
+  // Move served orders to history immediately
   useEffect(() => {
-    orders.forEach((o) => {
-      if (o.status === 'served' && !servedTimers.current.has(o.id)) {
-        const timer = setTimeout(() => {
-          setOrders((prev) => prev.filter((order) => order.id !== o.id));
-          servedTimers.current.delete(o.id);
-        }, 30000);
-        servedTimers.current.set(o.id, timer);
-      }
-    });
+    const servedOrders = orders.filter(o => o.status === 'served');
+    if (servedOrders.length > 0) {
+      setHistoryOrders(prev => [...servedOrders.map(o => ({ ...o, elapsedSeconds: Math.round((Date.now() - o.timeReceived.getTime()) / 1000) })), ...prev]);
+      setOrders(prev => prev.filter(o => o.status !== 'served'));
+    }
   }, [orders]);
-
-  useEffect(() => {
-    return () => {
-      servedTimers.current.forEach((t) => clearTimeout(t));
-    };
-  }, []);
 
   const filteredOrders = orders.filter((o) => {
     if (activeFilter === 'new') return o.status === 'new';
@@ -57,7 +47,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     return true;
   });
 
-  const filteredHistory = mockHistoryOrders.filter((o) => {
+  const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
     const q = historySearch.toLowerCase();
     return (
@@ -80,7 +70,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   }, []);
 
   const handleRecall = useCallback((orderId: string) => {
-    const historyOrder = mockHistoryOrders.find(o => o.id === orderId);
+    const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
     const recalledOrder: Order = {
       ...historyOrder,
@@ -89,9 +79,10 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
       elapsedSeconds: 0,
     };
     setOrders((prev) => [recalledOrder, ...prev]);
+    setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
     toast.success(`Order #${historyOrder.orderNumber} recalled and added to queue`);
     setActiveNav('home');
-  }, []);
+  }, [historyOrders]);
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history') {
