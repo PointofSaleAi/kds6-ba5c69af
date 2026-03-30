@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { Order } from '@/types/kds';
 import type { ItemStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
@@ -40,6 +40,11 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   const isServed = order.status === 'served';
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
 
+  const allItemIds = useMemo(() => 
+    order.courses.flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id)),
+    [order.courses]
+  );
+
   const handleAdvanceItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
       const next = new Map(prev);
@@ -50,6 +55,12 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
       return next;
     });
   }, []);
+
+  useEffect(() => {
+    if (allItemIds.length > 0 && allItemIds.every(id => itemStatuses.get(id) === 'done')) {
+      onBump?.(order.id);
+    }
+  }, [itemStatuses, allItemIds, onBump, order.id]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {

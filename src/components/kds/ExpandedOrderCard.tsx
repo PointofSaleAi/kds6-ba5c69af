@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { X } from 'lucide-react';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
@@ -30,6 +30,11 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
   const isServed = order.status === 'served';
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
 
+  const allItemIds = useMemo(() => 
+    order.courses.flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id)),
+    [order.courses]
+  );
+
   const handleAdvanceItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
       const next = new Map(prev);
@@ -40,6 +45,13 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
       return next;
     });
   }, []);
+
+  useEffect(() => {
+    if (allItemIds.length > 0 && allItemIds.every(id => itemStatuses.get(id) === 'done')) {
+      onBump?.(order.id);
+      onClose();
+    }
+  }, [itemStatuses, allItemIds, onBump, onClose, order.id]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
