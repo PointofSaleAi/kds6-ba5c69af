@@ -21,6 +21,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [newOrderAlert, setNewOrderAlert] = useState(false);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const prevOrderCount = useRef(orders.length);
   const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
@@ -184,6 +185,8 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
                         initial="initial"
                         animate="animate"
                         exit="exit"
+                        onClick={() => setExpandedOrderId(order.id)}
+                        className="cursor-pointer"
                       >
                         <OrderCard order={order} compact onBump={handleBump} />
                       </motion.div>
