@@ -6,7 +6,7 @@ import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
 import readyIcon from '@/assets/item-ready-icon.svg';
 
-export type ItemStatus = 'preparing' | 'ready';
+export type ItemStatus = 'preparing' | 'ready' | 'done';
 
 interface CourseSectionProps {
   courseGroup: CourseGroup;
