@@ -4,16 +4,19 @@ import { ModifierLine } from './ModifierLine';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
+import readyIcon from '@/assets/item-ready-icon.svg';
+
+export type ItemStatus = 'preparing' | 'ready';
 
 interface CourseSectionProps {
   courseGroup: CourseGroup;
   onFireCourse?: (course: string) => void;
-  seenItems?: Set<string>;
-  onMarkSeen?: (itemId: string) => void;
-  onUndoSeen?: (itemId: string) => void;
+  itemStatuses?: Map<string, ItemStatus>;
+  onAdvanceItem?: (itemId: string) => void;
+  onUndoItem?: (itemId: string) => void;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, seenItems, onMarkSeen, onUndoSeen }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem }: CourseSectionProps) {
   const isFired = courseGroup.isFired;
 
   return (
@@ -37,7 +40,7 @@ export function CourseSection({ courseGroup, onFireCourse, seenItems, onMarkSeen
 
       <div className="px-3 py-1">
         {courseGroup.items.map((item) => {
-          const isSeen = seenItems?.has(item.id) ?? false;
+          const status = itemStatuses?.get(item.id);
 
           return (
             <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
@@ -57,22 +60,39 @@ export function CourseSection({ courseGroup, onFireCourse, seenItems, onMarkSeen
                 </div>
                 {!item.isCancelled && (
                   <div className="flex items-center shrink-0">
-                    {isSeen ? (
+                    {status === 'ready' ? (
                       <>
                         <button
-                          onClick={() => onUndoSeen?.(item.id)}
+                          onClick={() => onUndoItem?.(item.id)}
                           className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
                           aria-label="Undo"
                         >
                           <img src={undoIcon} alt="Undo" width={28} height={21} />
                         </button>
-                        <button className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px] cursor-default" aria-label="Preparing">
+                        <div className="p-1 flex items-center justify-center min-w-[44px] min-h-[44px]">
+                          <img src={readyIcon} alt="Ready" width={28} height={21} />
+                        </div>
+                      </>
+                    ) : status === 'preparing' ? (
+                      <>
+                        <button
+                          onClick={() => onUndoItem?.(item.id)}
+                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                          aria-label="Undo"
+                        >
+                          <img src={undoIcon} alt="Undo" width={28} height={21} />
+                        </button>
+                        <button
+                          onClick={() => onAdvanceItem?.(item.id)}
+                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                          aria-label="Mark ready"
+                        >
                           <img src={preparingIcon} alt="Preparing" width={28} height={21} />
                         </button>
                       </>
                     ) : (
                       <button
-                        onClick={() => onMarkSeen?.(item.id)}
+                        onClick={() => onAdvanceItem?.(item.id)}
                         className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
                         aria-label="Mark seen"
                       >
