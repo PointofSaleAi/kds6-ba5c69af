@@ -7,6 +7,7 @@ import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
+import { SettingsPanel } from '@/components/kds/SettingsPanel';
 import { mockOrders } from '@/data/mock-orders';
 import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,9 +17,13 @@ import { toast } from 'sonner';
 
 interface MainOrderViewProps {
   onNavigate: (screen: string) => void;
+  settingsOpen?: boolean;
+  onCloseSettings?: () => void;
+  onOpenSub?: (sub: string) => void;
+  onLogOut?: () => void;
 }
 
-export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -114,6 +119,13 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
           activeNav={activeNav}
         />
 
+        {settingsOpen ? (
+          <SettingsPanel
+            onClose={() => onCloseSettings?.()}
+            onOpenSub={(sub) => onOpenSub?.(sub)}
+            onLogOut={onLogOut}
+          />
+        ) : (
         <div className="flex-1 flex flex-col overflow-hidden relative">
           {isHistory ? (
             <>
@@ -231,8 +243,9 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
             </>
           )}
         </div>
+        )}
 
-        <ItemSummaryPanel orders={orders} />
+        {!settingsOpen && <ItemSummaryPanel orders={orders} />}
       </div>
 
       <AnimatePresence>
