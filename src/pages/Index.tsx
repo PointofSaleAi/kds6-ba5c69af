@@ -19,7 +19,9 @@ import WebSocketSettings from '@/pages/WebSocketSettings';
 type AppScreen = 'splash' | 'signin' | 'forgot' | 'main' | 'history' | 'performance';
 
 const Index = () => {
+  const hasPin = Boolean(localStorage.getItem('kds_device_pin'));
   const [screen, setScreen] = useState<AppScreen>('signin');
+  const [signinMode, setSigninMode] = useState<'email' | 'pin'>(hasPin ? 'pin' : 'email');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
