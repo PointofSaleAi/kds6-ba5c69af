@@ -78,11 +78,6 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     );
   }, []);
 
-  const viewModes: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
-    { mode: 'list', icon: LayoutList, label: 'List' },
-    { mode: 'grid', icon: LayoutGrid, label: 'Grid' },
-    { mode: 'horizontal', icon: Columns3, label: 'Horizontal' },
-  ];
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
 
