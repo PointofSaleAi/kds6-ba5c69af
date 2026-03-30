@@ -205,6 +205,26 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
           </div>
         </motion.div>
       </motion.div>
+
+      <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <AlertDialogContent className="bg-surface-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-text-primary">Log Out?</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
+              You will be returned to the sign-in screen. Any unsaved settings will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => { onClose(); onLogOut?.(); }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 min-h-[44px]"
+            >
+              Log Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AnimatePresence>
   );
 }
