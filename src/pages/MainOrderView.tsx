@@ -118,6 +118,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           onFilterChange={setActiveFilter}
           onNavigate={handleNavigate}
           activeNav={activeNav}
+          settingsOpen={settingsOpen}
         />
 
         {settingsOpen ? (
