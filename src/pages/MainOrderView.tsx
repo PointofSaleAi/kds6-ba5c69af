@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { LayoutGrid, LayoutList, Columns3, BellRing, Sun, Moon } from 'lucide-react';
+import { BellRing } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
@@ -202,7 +202,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} />
     </div>
   );
 }
