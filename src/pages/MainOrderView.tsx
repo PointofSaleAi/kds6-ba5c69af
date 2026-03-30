@@ -20,18 +20,8 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [newOrderAlert, setNewOrderAlert] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
   const prevOrderCount = useRef(orders.length);
   const servedTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
-  const touchStartX = useRef(0);
-  const swipeThreshold = 50;
-
-  const cardsPerPage = viewMode === 'grid' ? 16 : viewMode === 'horizontal' ? 4 : 8;
-
-  // Reset page on filter/view change
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [activeFilter, viewMode]);
 
   // Flash indicator when new orders arrive
   useEffect(() => {
@@ -74,25 +64,6 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     return true;
   });
 
-  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / cardsPerPage));
-  const clampedPage = Math.min(currentPage, totalPages - 1);
-  if (clampedPage !== currentPage) setCurrentPage(clampedPage);
-  const pagedOrders = filteredOrders.slice(clampedPage * cardsPerPage, (clampedPage + 1) * cardsPerPage);
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  }, []);
-
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > swipeThreshold) {
-      setCurrentPage((prev) => {
-        const next = diff > 0 ? prev + 1 : prev - 1;
-        return Math.max(0, Math.min(totalPages - 1, next));
-      });
-    }
-  }, [totalPages]);
-
   const handleBump = useCallback((orderId: string) => {
     setOrders((prev) =>
       prev.map((o) => {
@@ -118,19 +89,6 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 200 } },
     exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
   };
-
-  const pageVariants = {
-    enter: (direction: number) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (direction: number) => ({ x: direction > 0 ? -300 : 300, opacity: 0 }),
-  };
-
-  const [pageDirection, setPageDirection] = useState(0);
-
-  const handlePageChange = useCallback((page: number) => {
-    setPageDirection(page > clampedPage ? 1 : -1);
-    setCurrentPage(page);
-  }, [clampedPage]);
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
@@ -195,50 +153,62 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
           {filteredOrders.length === 0 ? (
             <EmptyState />
           ) : (
-            <div
-              className="flex-1 overflow-hidden p-3"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-              <AnimatePresence mode="wait" custom={pageDirection}>
-                <motion.div
-                  key={`page-${clampedPage}-${viewMode}`}
-                  custom={pageDirection}
-                  variants={pageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                >
-                  {viewMode === 'list' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                      {pagedOrders.map((order) => (
-                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                          <OrderCard order={order} onBump={handleBump} />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                  {viewMode === 'grid' && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
-                      {pagedOrders.map((order) => (
-                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                          <OrderCard order={order} compact onBump={handleBump} />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                  {viewMode === 'horizontal' && (
-                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-                      {pagedOrders.map((order) => (
-                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
-                          <OrderCard order={order} onBump={handleBump} />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
+            <div className="flex-1 overflow-auto p-3">
+              {viewMode === 'list' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                  <AnimatePresence mode="popLayout">
+                    {filteredOrders.map((order) => (
+                      <motion.div
+                        key={order.id}
+                        layout
+                        variants={cardVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                      >
+                        <OrderCard order={order} onBump={handleBump} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+              {viewMode === 'grid' && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                  <AnimatePresence mode="popLayout">
+                    {filteredOrders.map((order) => (
+                      <motion.div
+                        key={order.id}
+                        layout
+                        variants={cardVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                      >
+                        <OrderCard order={order} compact onBump={handleBump} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+              {viewMode === 'horizontal' && (
+                <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                  <AnimatePresence mode="popLayout">
+                    {filteredOrders.map((order) => (
+                      <motion.div
+                        key={order.id}
+                        layout
+                        variants={cardVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        className="shrink-0 w-[280px]"
+                      >
+                        <OrderCard order={order} onBump={handleBump} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -246,12 +216,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         <ItemSummaryPanel orders={orders} />
       </div>
 
-      <BottomStatusBar
-        orderCount={activeOrderCount}
-        currentPage={clampedPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      <BottomStatusBar orderCount={activeOrderCount} />
     </div>
   );
 }
