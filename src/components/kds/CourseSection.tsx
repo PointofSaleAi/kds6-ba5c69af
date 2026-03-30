@@ -39,7 +39,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
       </div>
 
       <div className="px-3 py-1">
-        {courseGroup.items.map((item) => {
+        {courseGroup.items.filter((item) => itemStatuses?.get(item.id) !== 'ready').map((item) => {
           const status = itemStatuses?.get(item.id);
 
           return (

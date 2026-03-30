@@ -114,7 +114,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                   </div>
 
                   <div className="px-3 py-1">
-                    {courseGroup.items.map((item) => {
+                    {courseGroup.items.filter((item) => itemStatuses.get(item.id) !== 'ready').map((item) => {
                       const status = itemStatuses.get(item.id);
                       return (
                         <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
