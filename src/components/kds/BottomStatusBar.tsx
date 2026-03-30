@@ -12,11 +12,6 @@ export function BottomStatusBar({ orderCount }: BottomStatusBarProps) {
       <span className="text-primary-foreground text-sm font-bold">
         {orderCount} Orders in Queue
       </span>
-      <div className="flex items-center gap-1">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <span key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-primary-foreground' : 'bg-primary-foreground/30'}`} />
-        ))}
-      </div>
       <span className="text-primary-foreground/80 text-sm">
         {timeStr} &middot; {dateStr}
       </span>
