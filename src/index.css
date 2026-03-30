@@ -84,9 +84,10 @@
 
   .dark {
     /* Brand - same red, adjusted for dark bg */
-    --brand-primary: 0 0% 13%;
-    --brand-primary-foreground: 0 0% 100%;
+    --brand-primary: 0 0% 85%;
+    --brand-primary-foreground: 0 0% 8%;
     --brand-dark: 240 25% 18%;
+    --brand-button: 0 0% 85%;
 
     /* Order type headers - slightly brighter for dark bg contrast */
     --order-dine-in: 240 25% 22%;
@@ -127,8 +128,8 @@
     --card-foreground: 0 0% 92%;
     --popover: 240 25% 12%;
     --popover-foreground: 0 0% 92%;
-    --primary: 0 0% 13%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 85%;
+    --primary-foreground: 0 0% 8%;
     --secondary: 240 20% 18%;
     --secondary-foreground: 0 0% 92%;
     --muted: 240 20% 18%;
@@ -139,7 +140,7 @@
     --destructive-foreground: 0 0% 100%;
     --border: 240 20% 22%;
     --input: 240 20% 22%;
-    --ring: 0 0% 13%;
+    --ring: 0 0% 85%;
 
     /* Success / Warning */
     --success: 145 63% 48%;
@@ -149,12 +150,12 @@
 
     --sidebar-background: 240 33% 5%;
     --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 0 0% 13%;
-    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 85%;
+    --sidebar-primary-foreground: 0 0% 8%;
     --sidebar-accent: 240 20% 12%;
     --sidebar-accent-foreground: 0 0% 90%;
     --sidebar-border: 240 20% 15%;
-    --sidebar-ring: 0 0% 13%;
+    --sidebar-ring: 0 0% 85%;
   }
 }
 
