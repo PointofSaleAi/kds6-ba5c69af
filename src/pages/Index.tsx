@@ -76,6 +76,10 @@ const Index = () => {
           onLogOut={handleLogOut}
         />
       )}
+      
+      {screen === 'performance' && <PerformanceDashboard onBack={() => setScreen('main')} />}
+
+      <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
       <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <SoundSettings open={soundOpen} onClose={() => setSoundOpen(false)} />
       <PrinterSettings open={printerOpen} onClose={() => setPrinterOpen(false)} />
