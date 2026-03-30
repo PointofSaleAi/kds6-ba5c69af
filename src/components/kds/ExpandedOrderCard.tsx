@@ -1,5 +1,8 @@
-import { X, Bell } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { X } from 'lucide-react';
 import seenIcon from '@/assets/seen-icon.svg';
+import preparingIcon from '@/assets/preparing-icon.svg';
+import undoIcon from '@/assets/undo-icon.svg';
 import { motion } from 'framer-motion';
 import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
@@ -19,10 +22,19 @@ function formatTimeReceived(date: Date): string {
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 }
 
-export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: ExpandedOrderCardProps) {
+export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardProps) {
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
+  const [seenItems, setSeenItems] = useState<Set<string>>(new Set());
+
+  const handleMarkSeen = useCallback((itemId: string) => {
+    setSeenItems(prev => new Set(prev).add(itemId));
+  }, []);
+
+  const handleUndoSeen = useCallback((itemId: string) => {
+    setSeenItems(prev => { const next = new Set(prev); next.delete(itemId); return next; });
+  }, []);
 
   const buttonLabel = order.status === 'new' ? 'SEEN' :
     order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
@@ -35,13 +47,8 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
       exit={{ opacity: 0 }}
       transition={{ duration: 0.12 }}
     >
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/40"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
-      {/* Expanded card */}
       <motion.div
         className="relative z-10 w-[90vw] max-w-[560px] max-h-[80vh] bg-surface-card rounded-lg shadow-2xl overflow-hidden flex flex-col"
         initial={{ scale: 0.85, opacity: 0 }}
@@ -49,7 +56,6 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
         exit={{ scale: 0.85, opacity: 0 }}
         transition={{ duration: 0.15, ease: 'easeOut' }}
       >
-        {/* Header */}
         <div className="relative">
           <OrderTypeBadge
             type={order.orderType}
@@ -65,9 +71,7 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
           </button>
         </div>
 
-        {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto">
-          {/* Order number */}
           <div className="text-center py-3">
             <div className="text-order-num text-text-primary leading-none">
               {order.orderNumber}
@@ -77,12 +81,10 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
             </div>
           </div>
 
-          {/* Timer row */}
           <div className="flex items-center justify-center gap-3 px-3 pb-2">
             <TimerBadge seconds={liveElapsed} urgency={urgency} />
           </div>
 
-          {/* Course sections */}
           <div className="border-t border-border">
             {order.courses.map((courseGroup) => {
               const isFired = courseGroup.isFired;
@@ -98,42 +100,66 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
                   </div>
 
                   <div className="px-3 py-1">
-                    {courseGroup.items.map((item) => (
-                      <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
-                              {item.quantity}&times; {item.name}
-                            </span>
-                            {item.isCancelled && (
-                              <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
-                                CANCELLED
+                    {courseGroup.items.map((item) => {
+                      const isSeen = seenItems.has(item.id);
+                      return (
+                        <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+                                {item.quantity}&times; {item.name}
                               </span>
-                            )}
-                            {item.isCompleted && !item.isCancelled && (
-                              <span className="text-success text-sm">&#10003;</span>
+                              {item.isCancelled && (
+                                <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
+                                  CANCELLED
+                                </span>
+                              )}
+                              {item.isCompleted && !item.isCancelled && (
+                                <span className="text-success text-sm">&#10003;</span>
+                              )}
+                            </div>
+                            {!item.isCancelled && (
+                              <div className="flex items-center gap-1 shrink-0">
+                                {isSeen ? (
+                                  <>
+                                    <button
+                                      onClick={() => handleUndoSeen(item.id)}
+                                      className="p-2.5 rounded hover:bg-muted transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                                      aria-label="Undo"
+                                    >
+                                      <img src={undoIcon} alt="Undo" width={28} height={21} />
+                                    </button>
+                                    <button className="p-2.5 rounded min-w-[44px] min-h-[44px] flex items-center justify-center cursor-default" aria-label="Preparing">
+                                      <img src={preparingIcon} alt="Preparing" width={28} height={21} />
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    onClick={() => handleMarkSeen(item.id)}
+                                    className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
+                                    aria-label="Mark seen"
+                                  >
+                                    <img src={seenIcon} alt="Seen" width={28} height={21} />
+                                  </button>
+                                )}
+                              </div>
                             )}
                           </div>
-                          {!item.isCancelled && (
-                            <button className="p-2.5 rounded hover:bg-muted transition-colors text-text-muted hover:text-text-primary min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Mark seen">
-                              <img src={seenIcon} alt="Seen" width={28} height={21} />
-                            </button>
+
+                          {item.modifiers.map((mod, idx) => (
+                            <ModifierLine key={idx} modifier={mod} />
+                          ))}
+
+                          {item.allergens.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1 pl-5">
+                              {item.allergens.map((a) => (
+                                <AllergenBadge key={a.type} allergen={a} />
+                              ))}
+                            </div>
                           )}
                         </div>
-
-                        {item.modifiers.map((mod, idx) => (
-                          <ModifierLine key={idx} modifier={mod} />
-                        ))}
-
-                        {item.allergens.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1 pl-5">
-                            {item.allergens.map((a) => (
-                              <AllergenBadge key={a.type} allergen={a} />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );
@@ -141,14 +167,12 @@ export function ExpandedOrderCard({ order, onClose, onBump, anchorRect }: Expand
           </div>
         </div>
 
-        {/* Action button */}
         {!isServed && (
           <div className="p-2 border-t border-border">
             <button
               onClick={() => { onBump?.(order.id); onClose(); }}
               className="w-full py-3 bg-brand-dark text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:bg-brand-dark/90 transition-colors min-h-[44px]"
             >
-              <Bell size={14} />
               {buttonLabel}
             </button>
           </div>

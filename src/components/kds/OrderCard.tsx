@@ -1,10 +1,10 @@
+import { useState, useCallback } from 'react';
 import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { StatusChip } from './StatusChip';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
-import { Bell } from 'lucide-react';
 
 interface OrderCardProps {
   order: Order;
@@ -37,6 +37,15 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
+  const [seenItems, setSeenItems] = useState<Set<string>>(new Set());
+
+  const handleMarkSeen = useCallback((itemId: string) => {
+    setSeenItems(prev => new Set(prev).add(itemId));
+  }, []);
+
+  const handleUndoSeen = useCallback((itemId: string) => {
+    setSeenItems(prev => { const next = new Set(prev); next.delete(itemId); return next; });
+  }, []);
 
   const buttonLabel = order.status === 'new' ? 'SEEN' :
     order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
@@ -106,6 +115,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             key={courseGroup.course}
             courseGroup={courseGroup}
             onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
+            seenItems={seenItems}
+            onMarkSeen={handleMarkSeen}
+            onUndoSeen={handleUndoSeen}
           />
         ))}
       </div>
@@ -116,7 +128,6 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             onClick={() => onBump?.(order.id)}
             className="flex-1 py-2.5 bg-brand-dark text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:bg-brand-dark/90 transition-colors min-h-[44px]"
           >
-            <Bell size={14} />
             {buttonLabel}
           </button>
         )}
