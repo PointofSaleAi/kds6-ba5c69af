@@ -55,7 +55,6 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
       <div className="flex items-center justify-between px-3 py-2 border-b border-border">
         <span className="text-sm font-semibold text-text-primary">Product Summary</span>
         <div className="flex items-center gap-2">
-          <Bell size={16} className="text-text-muted" />
           <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
             <ChevronRight size={16} />
           </button>
