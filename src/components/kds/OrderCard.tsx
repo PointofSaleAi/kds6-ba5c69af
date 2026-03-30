@@ -6,6 +6,9 @@ import { CourseSection } from './CourseSection';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { StatusChip } from './StatusChip';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
+import seenIcon from '@/assets/seen-icon.svg';
+import preparingIcon from '@/assets/preparing-icon.svg';
+import readyIcon from '@/assets/item-ready-icon.svg';
 
 interface OrderCardProps {
   order: Order;
@@ -75,6 +78,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   const buttonLabel = order.status === 'new' ? 'SEEN' :
     order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
 
+  const buttonIcon = order.status === 'new' ? seenIcon :
+    order.status === 'seen' ? preparingIcon : readyIcon;
+
   const buttonColorClass = order.status === 'new' ? 'bg-btn-seen' :
     order.status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done';
 
@@ -103,8 +109,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
         <div className="px-2 pb-2">
           <button
             onClick={() => onBump?.(order.id)}
-            className="w-full py-2 bg-btn-done text-primary-foreground text-cta rounded uppercase"
+            className="w-full py-2 bg-btn-done text-primary-foreground text-cta rounded uppercase flex items-center justify-center gap-2"
           >
+            <img src={readyIcon} alt="" className="w-4 h-4 brightness-0 invert" />
             DONE
           </button>
         </div>
@@ -156,6 +163,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
             onClick={() => onBump?.(order.id)}
             className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
           >
+            <img src={buttonIcon} alt="" className="w-5 h-5 brightness-0 invert" />
             {buttonLabel}
           </button>
         )}
