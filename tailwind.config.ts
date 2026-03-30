@@ -59,6 +59,11 @@ export default {
           primary: "hsl(var(--brand-primary))",
           dark: "hsl(var(--brand-dark))",
         },
+        btn: {
+          seen: "hsl(var(--btn-seen))",
+          "in-progress": "hsl(var(--btn-in-progress))",
+          done: "hsl(var(--btn-done))",
+        },
         order: {
           "dine-in": "hsl(var(--order-dine-in))",
           "take-out": "hsl(var(--order-take-out))",
