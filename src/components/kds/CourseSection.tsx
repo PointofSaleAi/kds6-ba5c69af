@@ -18,6 +18,11 @@ interface CourseSectionProps {
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem }: CourseSectionProps) {
   const isFired = courseGroup.isFired;
+  const allItemsDone = courseGroup.items
+    .filter(i => !i.isCancelled)
+    .every(i => itemStatuses?.get(i.id) === 'done');
+
+  if (allItemsDone) return null;
 
   return (
     <div className={isFired ? 'opacity-50' : ''}>
