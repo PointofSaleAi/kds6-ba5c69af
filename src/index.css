@@ -87,6 +87,7 @@
     --brand-primary: 0 0% 85%;
     --brand-primary-foreground: 0 0% 8%;
     --brand-dark: 240 25% 18%;
+    --brand-button: 0 0% 85%;
 
     /* Order type headers - slightly brighter for dark bg contrast */
     --order-dine-in: 240 25% 22%;
