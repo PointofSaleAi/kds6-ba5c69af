@@ -67,12 +67,15 @@ const Index = () => {
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
       {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
       {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
-      {screen === 'main' && <MainOrderView onNavigate={handleNavigate} />}
-      
-      {screen === 'performance' && <PerformanceDashboard onBack={() => setScreen('main')} />}
-
-      <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
-      <SettingsScreen open={settingsOpen} onClose={() => setSettingsOpen(false)} onOpenSub={handleOpenSub} onLogOut={handleLogOut} />
+      {screen === 'main' && (
+        <MainOrderView
+          onNavigate={handleNavigate}
+          settingsOpen={settingsOpen}
+          onCloseSettings={() => setSettingsOpen(false)}
+          onOpenSub={handleOpenSub}
+          onLogOut={handleLogOut}
+        />
+      )}
       <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <SoundSettings open={soundOpen} onClose={() => setSoundOpen(false)} />
       <PrinterSettings open={printerOpen} onClose={() => setPrinterOpen(false)} />
