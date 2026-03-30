@@ -10,6 +10,11 @@
     --brand-dark: 240 33% 14%;
     --brand-button: 0 0% 13%;
 
+    /* Action button colors */
+    --btn-seen: 217 71% 53%;
+    --btn-in-progress: 4 76% 57%;
+    --btn-done: 271 56% 50%;
+
     /* Order type headers */
     --order-dine-in: 240 33% 14%;
     --order-take-out: 207 58% 44%;
@@ -87,6 +92,11 @@
     --brand-primary: 0 0% 13%;
     --brand-primary-foreground: 0 0% 100%;
     --brand-dark: 240 25% 18%;
+
+    /* Action button colors */
+    --btn-seen: 217 71% 58%;
+    --btn-in-progress: 4 76% 62%;
+    --btn-done: 271 56% 55%;
 
     /* Order type headers - slightly brighter for dark bg contrast */
     --order-dine-in: 240 25% 22%;

@@ -75,6 +75,9 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   const buttonLabel = order.status === 'new' ? 'SEEN' :
     order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
 
+  const buttonColorClass = order.status === 'new' ? 'bg-btn-seen' :
+    order.status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done';
+
   if (compact) {
     const hasAllergens = order.courses.some(c => c.items.some(i => i.allergens.length > 0));
     return (
@@ -100,7 +103,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
         <div className="px-2 pb-2">
           <button
             onClick={() => onBump?.(order.id)}
-            className="w-full py-2 bg-brand-dark text-primary-foreground text-cta rounded uppercase"
+            className="w-full py-2 bg-btn-done text-primary-foreground text-cta rounded uppercase"
           >
             DONE
           </button>
@@ -151,7 +154,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
         {!isServed && (
           <button
             onClick={() => onBump?.(order.id)}
-            className="flex-1 py-2.5 bg-brand-dark text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:bg-brand-dark/90 transition-colors min-h-[44px]"
+            className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
           >
             {buttonLabel}
           </button>
