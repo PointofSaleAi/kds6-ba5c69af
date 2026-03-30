@@ -74,6 +74,25 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     return true;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / cardsPerPage));
+  const clampedPage = Math.min(currentPage, totalPages - 1);
+  if (clampedPage !== currentPage) setCurrentPage(clampedPage);
+  const pagedOrders = filteredOrders.slice(clampedPage * cardsPerPage, (clampedPage + 1) * cardsPerPage);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > swipeThreshold) {
+      setCurrentPage((prev) => {
+        const next = diff > 0 ? prev + 1 : prev - 1;
+        return Math.max(0, Math.min(totalPages - 1, next));
+      });
+    }
+  }, [totalPages]);
+
   const handleBump = useCallback((orderId: string) => {
     setOrders((prev) =>
       prev.map((o) => {
@@ -99,6 +118,19 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 200 } },
     exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
   };
+
+  const pageVariants = {
+    enter: (direction: number) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (direction: number) => ({ x: direction > 0 ? -300 : 300, opacity: 0 }),
+  };
+
+  const [pageDirection, setPageDirection] = useState(0);
+
+  const handlePageChange = useCallback((page: number) => {
+    setPageDirection(page > clampedPage ? 1 : -1);
+    setCurrentPage(page);
+  }, [clampedPage]);
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
