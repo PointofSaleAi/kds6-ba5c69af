@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -186,7 +191,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
             <SettingsRow icon={Globe} label="Language" description="English (US)" onClick={() => onOpenSub('language-settings')} />
             <div className="px-4 py-3">
               <button
-                onClick={() => { onClose(); onLogOut?.(); }}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="w-full py-2.5 text-destructive text-cta font-bold hover:bg-destructive/10 rounded-lg transition-colors min-h-[44px]"
               >
                 LOG OUT
