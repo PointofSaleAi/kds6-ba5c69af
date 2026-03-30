@@ -37,6 +37,7 @@ const Index = () => {
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
   const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
+  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('signin'); }, []);
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
@@ -71,7 +72,7 @@ const Index = () => {
       {screen === 'performance' && <PerformanceDashboard onBack={() => setScreen('main')} />}
 
       <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
-      <SettingsScreen open={settingsOpen} onClose={() => setSettingsOpen(false)} onOpenSub={handleOpenSub} />
+      <SettingsScreen open={settingsOpen} onClose={() => setSettingsOpen(false)} onOpenSub={handleOpenSub} onLogOut={handleLogOut} />
       <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <SoundSettings open={soundOpen} onClose={() => setSoundOpen(false)} />
       <PrinterSettings open={printerOpen} onClose={() => setPrinterOpen(false)} />
