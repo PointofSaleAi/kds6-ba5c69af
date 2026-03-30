@@ -195,62 +195,50 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
           {filteredOrders.length === 0 ? (
             <EmptyState />
           ) : (
-            <div className="flex-1 overflow-auto p-3">
-              {viewMode === 'list' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                  <AnimatePresence mode="popLayout">
-                    {filteredOrders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        layout
-                        variants={cardVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                      >
-                        <OrderCard order={order} onBump={handleBump} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-              {viewMode === 'grid' && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
-                  <AnimatePresence mode="popLayout">
-                    {filteredOrders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        layout
-                        variants={cardVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                      >
-                        <OrderCard order={order} compact onBump={handleBump} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-              {viewMode === 'horizontal' && (
-                <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-                  <AnimatePresence mode="popLayout">
-                    {filteredOrders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        layout
-                        variants={cardVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        className="shrink-0 w-[280px]"
-                      >
-                        <OrderCard order={order} onBump={handleBump} />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
+            <div
+              className="flex-1 overflow-hidden p-3"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              <AnimatePresence mode="wait" custom={pageDirection}>
+                <motion.div
+                  key={`page-${clampedPage}-${viewMode}`}
+                  custom={pageDirection}
+                  variants={pageVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                >
+                  {viewMode === 'list' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                      {pagedOrders.map((order) => (
+                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                          <OrderCard order={order} onBump={handleBump} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  {viewMode === 'grid' && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                      {pagedOrders.map((order) => (
+                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                          <OrderCard order={order} compact onBump={handleBump} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  {viewMode === 'horizontal' && (
+                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                      {pagedOrders.map((order) => (
+                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
+                          <OrderCard order={order} onBump={handleBump} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           )}
         </div>
@@ -258,7 +246,12 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
         <ItemSummaryPanel orders={orders} />
       </div>
 
-      <BottomStatusBar orderCount={activeOrderCount} />
+      <BottomStatusBar
+        orderCount={activeOrderCount}
+        currentPage={clampedPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
