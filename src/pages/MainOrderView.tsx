@@ -92,10 +92,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history') {
       setActiveNav(target);
+      onCloseSettings?.();
     } else {
       onNavigate(target);
     }
-  }, [onNavigate]);
+  }, [onNavigate, onCloseSettings]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
 
