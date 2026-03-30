@@ -5,7 +5,7 @@
 @layer base {
   :root {
     /* Brand */
-    --brand-primary: 4 76% 57%;
+    --brand-primary: 0 0% 13%;
     --brand-primary-foreground: 0 0% 100%;
     --brand-dark: 240 33% 14%;
     --brand-button: 0 0% 13%;
@@ -49,7 +49,7 @@
     --card-foreground: 210 25% 24%;
     --popover: 0 0% 100%;
     --popover-foreground: 210 25% 24%;
-    --primary: 4 76% 57%;
+    --primary: 0 0% 13%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 14% 93%;
     --secondary-foreground: 210 25% 24%;
@@ -61,7 +61,7 @@
     --destructive-foreground: 0 0% 100%;
     --border: 220 13% 87%;
     --input: 220 13% 87%;
-    --ring: 4 76% 57%;
+    --ring: 0 0% 13%;
     --radius: 0.5rem;
 
     --sidebar-background: 240 33% 8%;
