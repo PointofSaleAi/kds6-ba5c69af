@@ -31,24 +31,14 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
   const [historySearch, setHistorySearch] = useState('');
 
-  // Auto-collapse served orders after 30s
+  // Move served orders to history immediately
   useEffect(() => {
-    orders.forEach((o) => {
-      if (o.status === 'served' && !servedTimers.current.has(o.id)) {
-        const timer = setTimeout(() => {
-          setOrders((prev) => prev.filter((order) => order.id !== o.id));
-          servedTimers.current.delete(o.id);
-        }, 30000);
-        servedTimers.current.set(o.id, timer);
-      }
-    });
+    const servedOrders = orders.filter(o => o.status === 'served');
+    if (servedOrders.length > 0) {
+      setHistoryOrders(prev => [...servedOrders.map(o => ({ ...o, elapsedSeconds: Math.round((Date.now() - o.timeReceived.getTime()) / 1000) })), ...prev]);
+      setOrders(prev => prev.filter(o => o.status !== 'served'));
+    }
   }, [orders]);
-
-  useEffect(() => {
-    return () => {
-      servedTimers.current.forEach((t) => clearTimeout(t));
-    };
-  }, []);
 
   const filteredOrders = orders.filter((o) => {
     if (activeFilter === 'new') return o.status === 'new';
