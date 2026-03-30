@@ -61,7 +61,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             key={item.label}
             onClick={() => onNavigate(item.action!)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] relative ${
-              (item.action === 'settings' ? settingsOpen : activeNav === item.action) ? 'border-l-2 border-brand-primary bg-sidebar-accent' : ''
+              (item.action === 'settings' ? settingsOpen : (!settingsOpen && activeNav === item.action)) ? 'border-l-2 border-brand-primary bg-sidebar-accent' : ''
             }`}
           >
             <item.icon size={20} />
