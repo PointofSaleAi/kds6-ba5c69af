@@ -6,7 +6,7 @@ import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
 import readyIcon from '@/assets/item-ready-icon.svg';
 
-export type ItemStatus = 'preparing' | 'ready';
+export type ItemStatus = 'preparing' | 'ready' | 'done';
 
 interface CourseSectionProps {
   courseGroup: CourseGroup;
@@ -43,7 +43,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
           const status = itemStatuses?.get(item.id);
 
           return (
-            <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
+            <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}>
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
@@ -60,19 +60,23 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                 </div>
                 {!item.isCancelled && (
                   <div className="flex items-center shrink-0">
-                    {status === 'ready' ? (
-                      <>
-                        <button
-                          onClick={() => onUndoItem?.(item.id)}
-                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                          aria-label="Undo"
-                        >
-                          <img src={undoIcon} alt="Undo" width={28} height={21} />
-                        </button>
-                        <div className="p-1 flex items-center justify-center min-w-[44px] min-h-[44px]">
-                          <img src={readyIcon} alt="Ready" width={28} height={21} />
-                        </div>
-                      </>
+                      {status === 'ready' ? (
+                        <>
+                          <button
+                            onClick={() => onUndoItem?.(item.id)}
+                            className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                            aria-label="Undo"
+                          >
+                            <img src={undoIcon} alt="Undo" width={28} height={21} />
+                          </button>
+                          <button
+                            onClick={() => onAdvanceItem?.(item.id)}
+                            className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                            aria-label="Mark done"
+                          >
+                            <img src={readyIcon} alt="Ready" width={28} height={21} />
+                          </button>
+                        </>
                     ) : status === 'preparing' ? (
                       <>
                         <button

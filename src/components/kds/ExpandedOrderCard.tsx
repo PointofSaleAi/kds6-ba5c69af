@@ -36,6 +36,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
       const current = next.get(itemId);
       if (!current) next.set(itemId, 'preparing');
       else if (current === 'preparing') next.set(itemId, 'ready');
+      else if (current === 'ready') next.set(itemId, 'done');
       return next;
     });
   }, []);
@@ -117,7 +118,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                     {courseGroup.items.map((item) => {
                       const status = itemStatuses.get(item.id);
                       return (
-                        <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
+                        <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}>
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2 flex-1 min-w-0">
                               <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
@@ -143,9 +144,13 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                                     >
                                       <img src={undoIcon} alt="Undo" width={28} height={21} />
                                     </button>
-                                    <div className="p-1 flex items-center justify-center min-w-[44px] min-h-[44px]">
+                                    <button
+                                      onClick={() => handleAdvanceItem(item.id)}
+                                      className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                                      aria-label="Mark done"
+                                    >
                                       <img src={readyIcon} alt="Ready" width={28} height={21} />
-                                    </div>
+                                    </button>
                                   </>
                                 ) : status === 'preparing' ? (
                                   <>
