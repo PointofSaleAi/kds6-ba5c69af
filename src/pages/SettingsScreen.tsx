@@ -7,6 +7,7 @@ interface SettingsScreenProps {
   open: boolean;
   onClose: () => void;
   onOpenSub: (sub: string) => void;
+  onLogOut?: () => void;
 }
 
 interface SettingsRowProps {
@@ -86,7 +87,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
   );
 }
 
-export default function SettingsScreen({ open, onClose, onOpenSub }: SettingsScreenProps) {
+export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: SettingsScreenProps) {
   const { theme, setTheme } = useTheme();
   const [displayMode, setDisplayMode] = useState('List');
   const [textSize, setTextSize] = useState('Standard');
@@ -184,7 +185,10 @@ export default function SettingsScreen({ open, onClose, onOpenSub }: SettingsScr
             <SettingsRow icon={User} label="Device Name" description="Kitchen Display 1" />
             <SettingsRow icon={Globe} label="Language" description="English (US)" onClick={() => onOpenSub('language-settings')} />
             <div className="px-4 py-3">
-              <button className="w-full py-2.5 text-destructive text-cta font-bold hover:bg-destructive/10 rounded-lg transition-colors min-h-[44px]">
+              <button
+                onClick={() => { onClose(); onLogOut?.(); }}
+                className="w-full py-2.5 text-destructive text-cta font-bold hover:bg-destructive/10 rounded-lg transition-colors min-h-[44px]"
+              >
                 LOG OUT
               </button>
             </div>
