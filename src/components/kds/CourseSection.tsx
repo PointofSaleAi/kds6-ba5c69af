@@ -1,7 +1,8 @@
 import type { CourseGroup } from '@/types/kds';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
-import { Eye, Bell } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import seenIcon from '@/assets/seen-icon.svg';
 
 interface CourseSectionProps {
   courseGroup: CourseGroup;

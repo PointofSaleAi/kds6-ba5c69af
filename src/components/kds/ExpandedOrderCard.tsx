@@ -1,4 +1,5 @@
-import { X, Bell, Eye } from 'lucide-react';
+import { X, Bell } from 'lucide-react';
+import seenIcon from '@/assets/seen-icon.svg';
 import { motion } from 'framer-motion';
 import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
