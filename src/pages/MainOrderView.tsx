@@ -47,7 +47,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
     return true;
   });
 
-  const filteredHistory = mockHistoryOrders.filter((o) => {
+  const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
     const q = historySearch.toLowerCase();
     return (
@@ -70,7 +70,7 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
   }, []);
 
   const handleRecall = useCallback((orderId: string) => {
-    const historyOrder = mockHistoryOrders.find(o => o.id === orderId);
+    const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
     const recalledOrder: Order = {
       ...historyOrder,
@@ -79,9 +79,10 @@ export default function MainOrderView({ onNavigate }: MainOrderViewProps) {
       elapsedSeconds: 0,
     };
     setOrders((prev) => [recalledOrder, ...prev]);
+    setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
     toast.success(`Order #${historyOrder.orderNumber} recalled and added to queue`);
     setActiveNav('home');
-  }, []);
+  }, [historyOrders]);
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history') {
