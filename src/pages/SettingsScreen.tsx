@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -96,6 +101,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
   const [staggerMode, setStaggerMode] = useState(false);
   const [servableModifiers, setServableModifiers] = useState(true);
   const [sortDefault, setSortDefault] = useState('By Time');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   if (!open) return null;
 
@@ -186,7 +192,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
             <SettingsRow icon={Globe} label="Language" description="English (US)" onClick={() => onOpenSub('language-settings')} />
             <div className="px-4 py-3">
               <button
-                onClick={() => { onClose(); onLogOut?.(); }}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="w-full py-2.5 text-destructive text-cta font-bold hover:bg-destructive/10 rounded-lg transition-colors min-h-[44px]"
               >
                 LOG OUT
@@ -199,6 +205,26 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
           </div>
         </motion.div>
       </motion.div>
+
+      <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <AlertDialogContent className="bg-surface-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-text-primary">Log Out?</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
+              You will be returned to the sign-in screen. Any unsaved settings will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => { onClose(); onLogOut?.(); }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 min-h-[44px]"
+            >
+              Log Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AnimatePresence>
   );
 }
