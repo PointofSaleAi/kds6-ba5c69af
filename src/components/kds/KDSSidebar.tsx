@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import {
   Home, Clock, Bell, Settings, Eye, CheckCircle, EyeOff,
   ArrowUpDown, ChevronsDownUp, ArrowLeftRight, Menu,
@@ -21,6 +22,7 @@ interface KDSSidebarProps {
 
 export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen }: KDSSidebarProps) {
   const [expanded, setExpanded] = useState(false);
+  const { showBadge } = useBadgeVisibility();
 
   const navItems: SidebarItem[] = [
     { icon: Home, label: 'Home', action: 'home' },
@@ -66,7 +68,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
           >
             <item.icon size={20} />
             {expanded && <span className="text-sm">{item.label}</span>}
-            {item.badge && (
+            {showBadge && item.badge && (
               <span className="absolute top-1.5 left-7 bg-brand-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {item.badge}
               </span>
