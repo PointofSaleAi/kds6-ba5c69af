@@ -45,7 +45,7 @@ export interface Order {
   itemCount: number;
 }
 
-export type ViewMode = 'list' | 'grid' | 'horizontal';
+export type ViewMode = 'grid' | 'horizontal' | 'stagger';
 export type SortMode = 'time' | 'table' | 'type';
 
 export interface KDSFilter {
