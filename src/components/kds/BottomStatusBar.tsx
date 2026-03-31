@@ -1,5 +1,6 @@
 import { LayoutGrid, LayoutList, Columns3, Sun, Moon } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 
 interface BottomStatusBarProps {
   orderCount: number;
@@ -10,6 +11,7 @@ interface BottomStatusBarProps {
 }
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme }: BottomStatusBarProps) {
+  const { mode: kdsMode } = useKDSMode();
   const now = new Date();
   const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
@@ -22,9 +24,16 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
 
   return (
     <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
-      <span className="text-primary-foreground text-sm font-bold">
-        {orderCount} Orders in Queue
-      </span>
+      <div className="flex items-center gap-3">
+        <span className="text-primary-foreground text-sm font-bold">
+          {orderCount} Orders in Queue
+        </span>
+        {kdsMode !== 'Standard' && (
+          <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
+            {kdsMode} Mode
+          </span>
+        )}
+      </div>
 
       <div className="flex items-center bg-primary-foreground/10 rounded-full p-0.5">
         {viewModes.map(({ mode, icon: Icon, label }) => (
