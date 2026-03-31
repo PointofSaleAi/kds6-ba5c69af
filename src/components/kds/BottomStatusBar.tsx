@@ -1,4 +1,4 @@
-import { LayoutGrid, LayoutList, Columns3, Sun, Moon } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 
@@ -17,9 +17,9 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 
   const viewModes: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
-    { mode: 'list', icon: LayoutList, label: 'List' },
     { mode: 'grid', icon: LayoutGrid, label: 'Grid' },
     { mode: 'horizontal', icon: Columns3, label: 'Horizontal' },
+    { mode: 'stagger', icon: StretchHorizontal, label: 'Stagger' },
   ];
 
   return (
