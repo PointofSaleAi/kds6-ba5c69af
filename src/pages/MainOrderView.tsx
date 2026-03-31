@@ -157,6 +157,21 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     );
   }, []);
 
+  const handleFireCourse = useCallback((orderId: string, course: string) => {
+    setOrders((prev) =>
+      prev.map((o) => {
+        if (o.id !== orderId) return o;
+        return {
+          ...o,
+          courses: o.courses.map((c) =>
+            c.course === course ? { ...c, isFired: true } : c
+          ),
+        };
+      })
+    );
+    toast.success(`${course} fired!`);
+  }, []);
+
   const handleRecall = useCallback((orderId: string) => {
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
@@ -304,7 +319,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} />
                             )}
                           </motion.div>
                         ))}
@@ -319,7 +334,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} />
                             )}
                           </motion.div>
                         ))}
@@ -336,7 +351,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                                 {kdsMode === 'Expo' ? (
                                   <ExpoOrderCard order={order} onBump={handleBump} />
                                 ) : (
-                                  <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
+                                  <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} />
                                 )}
                               </motion.div>
                             ))}
