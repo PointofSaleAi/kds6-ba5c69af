@@ -71,7 +71,7 @@ const Index = () => {
     <>
       {screen === 'dev-selector' && (
         <DevScenarioSelector
-          onSelectHardware={() => setScreen('splash')}
+          onSelectHardware={() => setScreen('pin-first-time')}
           onSelectBYOD={() => setScreen('splash')}
           onExitDevMode={() => setScreen('splash')}
         />
