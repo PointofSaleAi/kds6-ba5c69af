@@ -65,6 +65,7 @@ const Index = () => {
       case 'stagger-mode': setStaggerOpen(true); break;
       case 'status-settings': setStatusSettingsOpen(true); break;
       case 'websocket-settings': setWebsocketOpen(true); break;
+      case 'printers': setPrintersScreenOpen(true); break;
     }
   }, []);
 
