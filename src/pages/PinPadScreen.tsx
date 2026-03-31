@@ -137,6 +137,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
               ))}
             </div>
 
+            <div style={{ minHeight: '420px' }}>
             <AnimatePresence mode="wait">
               {activeTab === 'pin' ? (
                 <motion.div
