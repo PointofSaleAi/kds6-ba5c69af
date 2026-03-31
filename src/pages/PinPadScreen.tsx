@@ -145,10 +145,10 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     </button>
                   );
                 }
-                if (key === 'ENTER') {
+                if (key === 'BACK') {
                   return (
-                    <button key={key} onClick={handleEnter} style={{ ...greyKey, fontSize: '14px', letterSpacing: '0.5px' }}>
-                      ENTER
+                    <button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={{ ...greyKey }} aria-label="Backspace">
+                      <Delete className="w-5 h-5" />
                     </button>
                   );
                 }
