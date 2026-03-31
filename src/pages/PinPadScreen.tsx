@@ -5,7 +5,7 @@ import { Delete, Check, QrCode } from 'lucide-react';
 interface PinPadScreenProps {
   isFirstTime?: boolean;
   onSuccess: () => void;
-  onEmailSignIn: () => void;
+  onEmailSignIn?: () => void;
 }
 
 type SetupPhase = 'detecting' | 'set-pin' | 'confirm-pin' | 'success' | 'ready';
