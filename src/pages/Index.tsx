@@ -17,7 +17,8 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
-const isDev = import.meta.env.DEV;
+// Show dev selector in non-production builds (DEV or preview)
+const isDev = import.meta.env.DEV || import.meta.env.MODE !== 'production' || !window.location.hostname.includes('.lovable.app') || window.location.hostname.includes('-preview--');
 
 type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'forgot' | 'main' | 'performance';
 
