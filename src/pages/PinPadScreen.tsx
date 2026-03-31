@@ -305,7 +305,8 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     Sign in with email
                   </button>
                 </motion.div>
-              ) : (
+              )}
+              {view === 'email' && (
                 <motion.div
                   key="email"
                   initial={{ opacity: 0, x: 20 }}
