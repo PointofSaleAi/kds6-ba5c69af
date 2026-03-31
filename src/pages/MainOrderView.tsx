@@ -194,7 +194,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     </div>
                   )}
                   {viewMode === 'stagger' && (
-                    <div className="flex gap-2.5 h-full">
+                    <div className="flex gap-2 items-start">
                       {(() => {
                         const colCount = 5;
                         const columns: typeof filteredHistory[] = Array.from({ length: colCount }, () => []);
@@ -202,7 +202,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           columns[i % colCount].push(order);
                         });
                         return columns.map((col, colIdx) => (
-                          <div key={colIdx} className="flex-1 min-w-[200px] flex flex-col gap-2.5">
+                          <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-2">
                             {col.map((order) => (
                               <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <HistoryOrderCard order={order} onRecall={handleRecall} />
@@ -255,7 +255,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     </div>
                   )}
                   {viewMode === 'stagger' && (
-                    <div className="flex gap-2.5 h-full overflow-x-auto">
+                    <div className="flex gap-2 items-start">
                       {(() => {
                         const colCount = 5;
                         const columns: typeof filteredOrders[] = Array.from({ length: colCount }, () => []);
@@ -263,7 +263,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           columns[i % colCount].push(order);
                         });
                         return columns.map((col, colIdx) => (
-                          <div key={colIdx} className="flex-1 min-w-[200px] flex flex-col gap-2.5">
+                          <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-2">
                             <AnimatePresence mode="popLayout">
                               {col.map((order) => (
                                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
