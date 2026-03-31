@@ -255,7 +255,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     />
                   </div>
 
-                  <p className="text-center text-sm font-montserrat" style={{ color: '#6C7A89', maxWidth: '320px' }}>
+                  <p className="text-center text-sm font-montserrat" style={{ color: '#B0B8C1', maxWidth: '320px' }}>
                     Open the POS AI app on your phone and scan this code to sign in instantly
                   </p>
                 </motion.div>
