@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
+import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
+import { PrepBoard } from '@/components/kds/PrepBoard';
 import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
@@ -13,6 +15,7 @@ import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import { toast } from 'sonner';
 
 interface MainOrderViewProps {
