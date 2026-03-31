@@ -25,6 +25,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </KDSModeProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
