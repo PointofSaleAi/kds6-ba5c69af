@@ -160,76 +160,12 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
               })}
             </div>
 
-            {/* Action row: Clock Out / Break / Clock In */}
-            <div className="grid grid-cols-3 gap-[6px] mb-[6px]">
-              <button
-                style={{
-                  ...keyBase,
-                  fontSize: '13px',
-                  background: 'linear-gradient(180deg, #C0392B 0%, #A93226 100%)',
-                  boxShadow: '0 2px 3px rgba(0,0,0,0.3)',
-                  color: '#FFFFFF',
-                }}
-              >
-                Clock Out
-              </button>
-              <button
-                style={{
-                  ...keyBase,
-                  fontSize: '13px',
-                  background: 'linear-gradient(180deg, #8C8C8C 0%, #6E6E6E 100%)',
-                  boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
-                  color: '#FFFFFF',
-                }}
-              >
-                Break
-              </button>
-              <button
-                style={{
-                  ...keyBase,
-                  fontSize: '13px',
-                  background: 'linear-gradient(180deg, #27AE60 0%, #1E8449 100%)',
-                  boxShadow: '0 2px 3px rgba(0,0,0,0.3)',
-                  color: '#FFFFFF',
-                }}
-              >
-                Clock In
-              </button>
-            </div>
-
-            {/* Secondary row: Fingerprint / Revenue Center / Scan */}
-            <div className="grid grid-cols-3 gap-[6px] mb-[6px]">
-              <button style={{ ...lightKey, height: '52px' }}>
-                <Fingerprint className="w-5 h-5" style={{ color: '#555' }} />
-              </button>
-              <button
-                style={{
-                  ...lightKey,
-                  height: '52px',
-                  flexDirection: 'column',
-                  gap: '1px',
-                  fontSize: '10px',
-                  fontWeight: 600,
-                  color: '#555',
-                  padding: '4px',
-                }}
-              >
-                <span style={{ fontSize: '9px', fontWeight: 500, color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  Revenue Center
-                </span>
-                <span style={{ fontSize: '13px', fontWeight: 700, color: '#333', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                  Dine Center <span style={{ fontSize: '10px' }}>▾</span>
-                </span>
-              </button>
-              <button style={{ ...lightKey, height: '52px' }}>
-                <ScanLine className="w-5 h-5" style={{ color: '#555' }} />
-              </button>
-            </div>
-
-            {/* LOGOUT button */}
+            {/* Sign in with email */}
             <button
+              onClick={() => {}}
               style={{
                 width: '100%',
+                marginTop: '6px',
                 height: '50px',
                 borderRadius: '6px',
                 background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
@@ -238,13 +174,12 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                 color: '#FFFFFF',
                 fontFamily: 'Montserrat, sans-serif',
                 fontWeight: 700,
-                fontSize: '15px',
-                letterSpacing: '1.5px',
+                fontSize: '14px',
+                letterSpacing: '0.5px',
                 cursor: 'pointer',
-                textTransform: 'uppercase',
               }}
             >
-              Logout
+              Sign in with email
             </button>
 
           </div>
