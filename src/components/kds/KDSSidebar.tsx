@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import {
   Home, Clock, Bell, Settings, Eye, CheckCircle, EyeOff,
-  ArrowUpDown, ChevronsDownUp, ArrowLeftRight, Menu,
+  ArrowLeftRight, Menu,
 } from 'lucide-react';
 
 interface SidebarItem {
