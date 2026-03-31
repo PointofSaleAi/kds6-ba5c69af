@@ -41,7 +41,8 @@ const Index = () => {
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
   const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
-  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('signin'); }, []);
+  const handleBackToPin = useCallback(() => setScreen('pin-login'), []);
+  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('pin-login'); }, []);
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
