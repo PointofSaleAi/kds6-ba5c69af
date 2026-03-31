@@ -17,6 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
 import { useKDSMode } from '@/hooks/use-kds-mode';
+import { useSound } from '@/hooks/use-sound';
 import { toast } from 'sonner';
 
 interface MainOrderViewProps {
