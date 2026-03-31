@@ -170,7 +170,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                 color: '#FFFFFF',
                 fontFamily: 'Montserrat, sans-serif',
                 fontWeight: 700,
-                fontSize: '14px',
+                fontSize: '16px',
                 letterSpacing: '0.5px',
                 cursor: 'pointer',
               }}
