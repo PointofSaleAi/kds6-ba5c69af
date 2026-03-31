@@ -40,6 +40,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode } = useKDSMode();
+  const { playSound } = useSound();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -47,6 +48,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('time');
+  const prevOrderCountRef = useRef(mockOrders.length);
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
