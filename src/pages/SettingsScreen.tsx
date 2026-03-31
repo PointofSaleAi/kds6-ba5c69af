@@ -140,7 +140,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
                 <span className="text-section-label uppercase text-text-muted tracking-widest">DISPLAY</span>
               </div>
             </div>
-            <SettingsRow icon={Monitor} label="Display Mode" right={<SegmentedToggle options={['List', 'Grid', 'Horizontal']} value={displayMode} onChange={setDisplayMode} />} />
+            <SettingsRow icon={Monitor} label="Display Mode" right={<SegmentedToggle options={['Grid', 'Horizontal', 'Stagger']} value={displayMode} onChange={setDisplayMode} />} />
             <SettingsRow icon={Monitor} label="Cards Per Row" right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
             <SettingsRow icon={Monitor} label="Text Size" right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} />} />
             <SettingsRow icon={Palette} label="Status Colours" description="Customise order status colours" onClick={() => onOpenSub('status-settings')} />
