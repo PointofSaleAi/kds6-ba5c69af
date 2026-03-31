@@ -304,7 +304,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
                             )}
                           </motion.div>
                         ))}
