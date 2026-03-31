@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
@@ -26,6 +26,15 @@ interface MainOrderViewProps {
   onLogOut?: () => void;
 }
 
+function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
+  const safeColumnCount = Math.max(1, columnCount);
+  const columns = Array.from({ length: safeColumnCount }, () => [] as T[]);
+  items.forEach((item, i) => {
+    columns[i % safeColumnCount].push(item);
+  });
+  return columns;
+}
+
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode } = useKDSMode();
@@ -39,6 +48,40 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
   const [historySearch, setHistorySearch] = useState('');
+  const boardContentRef = useRef<HTMLDivElement | null>(null);
+  const [boardContentWidth, setBoardContentWidth] = useState(0);
+
+  useEffect(() => {
+    if (settingsOpen) return;
+    const node = boardContentRef.current;
+    if (!node) return;
+
+    const updateWidth = () => setBoardContentWidth(node.clientWidth);
+    updateWidth();
+
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', updateWidth);
+      return () => window.removeEventListener('resize', updateWidth);
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const [entry] = entries;
+      if (!entry) return;
+      setBoardContentWidth(entry.contentRect.width);
+    });
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [settingsOpen]);
+
+  const staggerColumnCount = useMemo(() => {
+    if (boardContentWidth <= 0) return 3;
+    if (boardContentWidth < 520) return 1;
+    if (boardContentWidth < 760) return 2;
+    if (boardContentWidth < 1160) return 3;
+    if (boardContentWidth < 1480) return 4;
+    return 5;
+  }, [boardContentWidth]);
 
   // Move served orders to history immediately
   useEffect(() => {
@@ -65,6 +108,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       o.serverName.toLowerCase().includes(q)
     );
   });
+
+  const staggerOrderColumns = useMemo(
+    () => distributeIntoColumns(filteredOrders, staggerColumnCount),
+    [filteredOrders, staggerColumnCount]
+  );
+
+  const staggerHistoryColumns = useMemo(
+    () => distributeIntoColumns(filteredHistory, staggerColumnCount),
+    [filteredHistory, staggerColumnCount]
+  );
 
   const handleBump = useCallback((orderId: string) => {
     setOrders((prev) =>
@@ -132,7 +185,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             onLogOut={onLogOut}
           />
         ) : (
-        <div className="flex-1 flex flex-col overflow-hidden relative">
+        <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -195,23 +248,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   )}
                   {viewMode === 'stagger' && (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
-                      {(() => {
-                        const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
-                        const colCount = w < 640 ? 2 : w < 1024 ? 3 : w < 1400 ? 4 : 5;
-                        const columns: typeof filteredHistory[] = Array.from({ length: colCount }, () => []);
-                        filteredHistory.forEach((order, i) => {
-                          columns[i % colCount].push(order);
-                        });
-                        return columns.map((col, colIdx) => (
-                          <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
-                            {col.map((order) => (
-                              <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                <HistoryOrderCard order={order} onRecall={handleRecall} />
-                              </motion.div>
-                            ))}
-                          </div>
-                        ));
-                      })()}
+                      {staggerHistoryColumns.map((col, colIdx) => (
+                        <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                          {col.map((order) => (
+                            <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
+                              <HistoryOrderCard order={order} onRecall={handleRecall} />
+                            </motion.div>
+                          ))}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -257,29 +302,21 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   )}
                   {viewMode === 'stagger' && (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
-                      {(() => {
-                        const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
-                        const colCount = w < 640 ? 2 : w < 1024 ? 3 : w < 1400 ? 4 : 5;
-                        const columns: typeof filteredOrders[] = Array.from({ length: colCount }, () => []);
-                        filteredOrders.forEach((order, i) => {
-                          columns[i % colCount].push(order);
-                        });
-                        return columns.map((col, colIdx) => (
-                          <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
-                            <AnimatePresence mode="popLayout">
-                              {col.map((order) => (
-                                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                                  {kdsMode === 'Expo' ? (
-                                    <ExpoOrderCard order={order} onBump={handleBump} />
-                                  ) : (
-                                    <OrderCard order={order} onBump={handleBump} />
-                                  )}
-                                </motion.div>
-                              ))}
-                            </AnimatePresence>
-                          </div>
-                        ));
-                      })()}
+                      {staggerOrderColumns.map((col, colIdx) => (
+                        <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                          <AnimatePresence mode="popLayout">
+                            {col.map((order) => (
+                              <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
+                                {kdsMode === 'Expo' ? (
+                                  <ExpoOrderCard order={order} onBump={handleBump} />
+                                ) : (
+                                  <OrderCard order={order} onBump={handleBump} />
+                                )}
+                              </motion.div>
+                            ))}
+                          </AnimatePresence>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

@@ -122,7 +122,7 @@ export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardPro
   return (
     <div
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${urgencyBorderMap[urgency]} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
-      style={{ minWidth: 220 }}
+      style={{ minWidth: 'min(220px, 100%)' }}
     >
       <OrderTypeBadge
         type={order.orderType}
