@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
 import SignInScreen from '@/pages/SignInScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
@@ -16,10 +17,12 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
-type AppScreen = 'splash' | 'signin' | 'forgot' | 'main' | 'performance';
+const isDev = import.meta.env.DEV;
+
+type AppScreen = 'dev-selector' | 'splash' | 'signin' | 'forgot' | 'main' | 'performance';
 
 const Index = () => {
-  const [screen, setScreen] = useState<AppScreen>('splash');
+  const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
