@@ -31,10 +31,6 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
 
   const handleClear = useCallback(() => setPin(''), []);
 
-  const handleEnter = useCallback(() => {
-    if (pin.length === 4) onSuccess();
-  }, [pin, onSuccess]);
-
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const ampm = hours >= 12 ? 'PM' : 'AM';
