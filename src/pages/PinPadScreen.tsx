@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
-import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
+
 
 interface PinPadScreenProps {
   isFirstTime?: boolean;
