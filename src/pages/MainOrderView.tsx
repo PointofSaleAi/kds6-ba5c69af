@@ -106,6 +106,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     prevOrderCountRef.current = currentCount;
   }, [orders.length, playSound]);
 
+  const filteredOrders = useMemo(() => {
     const filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
       if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
