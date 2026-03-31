@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Search } from 'lucide-react';
+import type { SortMode } from '@/components/kds/BottomStatusBar';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
