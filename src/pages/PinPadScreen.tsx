@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
+import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 
 interface PinPadScreenProps {
   isFirstTime?: boolean;
@@ -13,7 +14,7 @@ interface PinPadScreenProps {
 export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
   const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
-  const [view, setView] = useState<'main' | 'email'>('main');
+  const [view, setView] = useState<'main' | 'email' | 'forgot'>('main');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -83,6 +84,10 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
     boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
     color: '#FFFFFF',
   };
+
+  if (view === 'forgot') {
+    return <ForgotPasswordScreen onBack={() => setView('email')} onComplete={() => setView('main')} />;
+  }
 
   return (
     <div className="fixed inset-0">
@@ -396,6 +401,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     <div className="flex justify-end">
                       <button
                         type="button"
+                        onClick={() => setView('forgot')}
                         className="font-montserrat font-medium text-sm"
                         style={{ color: '#E84C3D', background: 'none', border: 'none', cursor: 'pointer' }}
                       >
