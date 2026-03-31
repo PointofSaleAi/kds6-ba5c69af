@@ -37,9 +37,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
     { icon: EyeOff, label: 'Hide Completed', action: 'completed' },
   ];
 
-  const actionItems: SidebarItem[] = [
-    { icon: ArrowUpDown, label: 'Sort', action: 'sort' },
-  ];
+  const actionItems: SidebarItem[] = [];
 
   const w = expanded ? 'w-[200px]' : 'w-14';
 
