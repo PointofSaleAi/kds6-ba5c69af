@@ -186,6 +186,19 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
                   <LargeToggle checked={showAllergens} onChange={setShowAllergens} />
                 </div>
               </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Enable Badge" description="Show order count badges on cards" />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[13px] text-text-secondary font-medium">{enableBadge ? 'ON' : 'OFF'}</span>
+                  <LargeToggle checked={enableBadge} onChange={setEnableBadge} />
+                </div>
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Mode Switcher" description="Switch between KDS operational modes" />
+                <PillToggle options={['Standard', 'Expo', 'Prep']} value={kdsMode} onChange={setKdsMode} />
+              </SettingsCard>
             </div>
           )}
 
