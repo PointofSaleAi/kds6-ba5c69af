@@ -201,6 +201,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
               <SettingsCard>
                 <CardLabel label="Mode Switcher" description="Switch between KDS operational modes" />
                 <PillToggle options={['Standard', 'Expo', 'Prep']} value={kdsMode} onChange={(v) => setKdsMode(v as KDSMode)} />
+                <div className="mt-3 px-3 py-2 bg-muted rounded-lg text-[12px] text-text-secondary leading-relaxed">
+                  {kdsMode === 'Standard' && 'Full order cards with course sections, item-level tracking, and detailed modifiers. Best for line cooks.'}
+                  {kdsMode === 'Expo' && 'Streamlined cards with progress bars and a single BUMP button. Best for expeditors managing order flow.'}
+                  {kdsMode === 'Prep' && 'Aggregated item board grouped by course type with quantities. Best for prep stations batching work.'}
+                </div>
               </SettingsCard>
             </div>
           )}
