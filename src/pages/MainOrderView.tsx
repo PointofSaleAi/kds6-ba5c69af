@@ -28,6 +28,7 @@ interface MainOrderViewProps {
 
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
+  const { mode: kdsMode } = useKDSMode();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');

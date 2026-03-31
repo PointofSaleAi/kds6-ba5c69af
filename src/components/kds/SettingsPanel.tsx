@@ -200,7 +200,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
 
               <SettingsCard>
                 <CardLabel label="Mode Switcher" description="Switch between KDS operational modes" />
-                <PillToggle options={['Standard', 'Expo', 'Prep']} value={kdsMode} onChange={setKdsMode} />
+                <PillToggle options={['Standard', 'Expo', 'Prep']} value={kdsMode} onChange={(v) => setKdsMode(v as KDSMode)} />
               </SettingsCard>
             </div>
           )}
