@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Fingerprint, ScanLine } from 'lucide-react';
+import { Delete } from 'lucide-react';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
