@@ -131,7 +131,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
           <div className="w-full" style={{ maxWidth: '480px' }}>
 
             <AnimatePresence mode="wait">
-              {view === 'main' ? (
+              {view === 'main' && (
                 <motion.div
                   key="main"
                   initial={{ opacity: 0, x: -20 }}
