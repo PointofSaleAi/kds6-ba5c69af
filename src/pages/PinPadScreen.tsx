@@ -431,6 +431,117 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     </button>
                   </form>
                 </motion.div>
+              ) : (
+                <motion.div
+                  key="forgot"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <button
+                    onClick={() => { setView('email'); setForgotSent(false); setForgotEmail(''); }}
+                    className="flex items-center gap-2 font-montserrat font-medium text-sm mb-8"
+                    style={{ color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Sign In
+                  </button>
+
+                  {!forgotSent ? (
+                    <>
+                      <p className="text-center text-base font-montserrat font-medium mb-2" style={{ color: '#A0A0A0' }}>
+                        Reset your password
+                      </p>
+                      <p className="text-center text-sm font-montserrat mb-8" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        Enter your email and we will send you a reset link
+                      </p>
+
+                      <div className="mb-6">
+                        <label className="block font-montserrat font-medium text-sm mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          value={forgotEmail}
+                          onChange={(e) => setForgotEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          className="font-montserrat"
+                          style={{
+                            width: '100%',
+                            height: '52px',
+                            borderRadius: '8px',
+                            background: 'rgba(255,255,255,0.08)',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                            color: '#FFFFFF',
+                            fontSize: '15px',
+                            padding: '0 16px',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+
+                      <button
+                        onClick={() => { if (forgotEmail) setForgotSent(true); }}
+                        style={{
+                          width: '100%',
+                          height: '60px',
+                          borderRadius: '8px',
+                          background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                          color: '#FFFFFF',
+                          fontFamily: 'Montserrat, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '16px',
+                          letterSpacing: '0.5px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Send Reset Link
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center py-8">
+                      <div
+                        className="flex items-center justify-center mb-6"
+                        style={{
+                          width: '64px',
+                          height: '64px',
+                          borderRadius: '50%',
+                          background: 'rgba(232, 76, 61, 0.15)',
+                        }}
+                      >
+                        <Check className="w-8 h-8" style={{ color: '#E84C3D' }} />
+                      </div>
+                      <p className="text-center text-base font-montserrat font-medium mb-2" style={{ color: '#FFFFFF' }}>
+                        Reset link sent
+                      </p>
+                      <p className="text-center text-sm font-montserrat mb-8" style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '320px' }}>
+                        Check your inbox at <span style={{ color: '#FFFFFF' }}>{forgotEmail}</span> for the password reset link
+                      </p>
+                      <button
+                        onClick={() => { setView('email'); setForgotSent(false); setForgotEmail(''); }}
+                        style={{
+                          width: '100%',
+                          height: '60px',
+                          borderRadius: '8px',
+                          background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                          color: '#FFFFFF',
+                          fontFamily: 'Montserrat, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '16px',
+                          letterSpacing: '0.5px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Back to Sign In
+                      </button>
+                    </div>
+                  )}
+                </motion.div>
               )}
             </AnimatePresence>
 
