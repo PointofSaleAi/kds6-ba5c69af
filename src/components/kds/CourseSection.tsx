@@ -99,6 +99,23 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                           <img src={preparingIcon} alt="Preparing" width={28} height={21} />
                         </button>
                       </>
+                    ) : isFired ? (
+                      <>
+                        <button
+                          onClick={() => onUndoItem?.(item.id)}
+                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                          aria-label="Undo"
+                        >
+                          <img src={undoIcon} alt="Undo" width={28} height={21} />
+                        </button>
+                        <button
+                          onClick={() => onAdvanceItem?.(item.id)}
+                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
+                          aria-label="Mark seen"
+                        >
+                          <img src={readyIcon} alt="Ready" width={28} height={21} />
+                        </button>
+                      </>
                     ) : (
                       <button
                         onClick={() => onAdvanceItem?.(item.id)}
