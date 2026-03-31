@@ -4,7 +4,8 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi, BadgeCheck, Layers, RefreshCw, Printer } from 'lucide-react';
+import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account';
 
@@ -91,6 +92,17 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
   const [servableModifiers, setServableModifiers] = useState(true);
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [enableBadge, setEnableBadge] = useState(true);
+  const [kdsMode, setKdsMode] = useState('Standard');
+  const [syncing, setSyncing] = useState(false);
+
+  const handleSync = () => {
+    setSyncing(true);
+    setTimeout(() => {
+      setSyncing(false);
+      toast.success('Sync complete');
+    }, 1500);
+  };
 
   return (
     <div className="flex-1 flex overflow-hidden">
@@ -174,6 +186,19 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
                   <LargeToggle checked={showAllergens} onChange={setShowAllergens} />
                 </div>
               </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Enable Badge" description="Show order count badges on cards" />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[13px] text-text-secondary font-medium">{enableBadge ? 'ON' : 'OFF'}</span>
+                  <LargeToggle checked={enableBadge} onChange={setEnableBadge} />
+                </div>
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Mode Switcher" description="Switch between KDS operational modes" />
+                <PillToggle options={['Standard', 'Expo', 'Prep']} value={kdsMode} onChange={setKdsMode} />
+              </SettingsCard>
             </div>
           )}
 
@@ -222,6 +247,23 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
               <SettingsCard>
                 <CardLabel label="Sound Settings" description="Volume and alert sounds" />
                 <ActionButton label="Configure" onClick={() => onOpenSub('sound-settings')} />
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Printers" description="Manage paired printers" />
+                <ActionButton label="Manage" onClick={() => onOpenSub('printers')} />
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Sync" description="Manually sync orders and settings" />
+                <button
+                  onClick={handleSync}
+                  disabled={syncing}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
+                  {syncing ? 'Syncing...' : 'Sync Now'}
+                </button>
               </SettingsCard>
 
               <SettingsCard className="col-span-2">

@@ -11,6 +11,7 @@ import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import LanguageSettings from '@/pages/LanguageSettings';
 import SoundSettings from '@/pages/SoundSettings';
 import PrinterSettings from '@/pages/PrinterSettings';
+import PrintersScreen from '@/pages/PrintersScreen';
 import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
 import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
 import StaggerModeSettings from '@/pages/StaggerModeSettings';
@@ -36,6 +37,7 @@ const Index = () => {
   const [staggerOpen, setStaggerOpen] = useState(false);
   const [statusSettingsOpen, setStatusSettingsOpen] = useState(false);
   const [websocketOpen, setWebsocketOpen] = useState(false);
+  const [printersScreenOpen, setPrintersScreenOpen] = useState(false);
 
   const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
   const handleSignIn = useCallback(() => setScreen('main'), []);
@@ -63,6 +65,7 @@ const Index = () => {
       case 'stagger-mode': setStaggerOpen(true); break;
       case 'status-settings': setStatusSettingsOpen(true); break;
       case 'websocket-settings': setWebsocketOpen(true); break;
+      case 'printers': setPrintersScreenOpen(true); break;
     }
   }, []);
 
@@ -100,6 +103,7 @@ const Index = () => {
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       <StatusSettings open={statusSettingsOpen} onClose={() => setStatusSettingsOpen(false)} />
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
+      <PrintersScreen open={printersScreenOpen} onClose={() => setPrintersScreenOpen(false)} />
     </>
   );
 };

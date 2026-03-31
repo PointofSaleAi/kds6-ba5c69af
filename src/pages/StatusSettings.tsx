@@ -12,13 +12,14 @@ interface StatusConfig {
   label: string;
   color: string;
   textColor: 'white' | 'grey' | 'black';
+  thresholdMinutes: number | null;
 }
 
 const defaultStatuses: StatusConfig[] = [
-  { key: 'start', label: 'START (New)', color: '#E84C3D', textColor: 'white' },
-  { key: 'medium', label: 'MEDIUM (In Progress)', color: '#E67E22', textColor: 'white' },
-  { key: 'delay', label: 'DELAY (Warning)', color: '#7F8C8D', textColor: 'white' },
-  { key: 'overtime', label: 'OVERTIME (Critical)', color: '#922B21', textColor: 'white' },
+  { key: 'start', label: 'START (New)', color: '#E84C3D', textColor: 'white', thresholdMinutes: 5 },
+  { key: 'medium', label: 'MEDIUM (In Progress)', color: '#E67E22', textColor: 'white', thresholdMinutes: 10 },
+  { key: 'delay', label: 'DELAY (Warning)', color: '#7F8C8D', textColor: 'white', thresholdMinutes: 20 },
+  { key: 'overtime', label: 'OVERTIME (Critical)', color: '#922B21', textColor: 'white', thresholdMinutes: null },
 ];
 
 const swatches = [
@@ -89,10 +90,13 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
 
               return (
                 <div key={status.key} className="mb-4">
-                  <div className="flex items-center gap-3 min-h-[52px]">
+                    <div className="flex items-center gap-3 min-h-[52px]">
                     <div className="w-8 h-8 rounded-lg shrink-0 border border-border" style={{ backgroundColor: status.color }} />
                     <div className="flex-1">
                       <div className="text-sm font-semibold text-text-primary">{status.label}</div>
+                      <div className="text-xs text-text-muted">
+                        {status.thresholdMinutes !== null ? `Till ${status.thresholdMinutes} mins` : 'No limit'}
+                      </div>
                     </div>
                     <button
                       onClick={() => setEditing(isEditing ? null : status.key)}
@@ -169,6 +173,28 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
                       }`}>
                         {contrast.passes ? <Check size={14} /> : <AlertTriangle size={14} />}
                         {contrast.passes ? `AA Compliant (${contrast.ratio}:1)` : `Low contrast (${contrast.ratio}:1)`}
+                      </div>
+
+                      {/* Timer threshold */}
+                      <div>
+                        <div className="text-xs text-text-muted mb-2">Time Threshold (minutes)</div>
+                        <div className="flex items-center gap-2">
+                          {status.thresholdMinutes !== null ? (
+                            <>
+                              <input
+                                type="number"
+                                min={1}
+                                max={120}
+                                value={status.thresholdMinutes}
+                                onChange={(e) => updateStatus(status.key, { thresholdMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
+                                className="w-20 px-2 py-1.5 text-sm bg-muted rounded border border-border text-text-primary text-center"
+                              />
+                              <span className="text-xs text-text-muted">min</span>
+                            </>
+                          ) : (
+                            <span className="text-xs text-text-secondary italic">No time limit (overtime)</span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Live preview */}
