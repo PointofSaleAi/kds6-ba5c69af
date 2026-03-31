@@ -261,6 +261,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                 </motion.div>
               )}
             </AnimatePresence>
+            </div>
 
             {/* Sign in with email */}
             <button
