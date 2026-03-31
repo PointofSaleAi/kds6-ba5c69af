@@ -90,10 +90,13 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
 
               return (
                 <div key={status.key} className="mb-4">
-                  <div className="flex items-center gap-3 min-h-[52px]">
+                    <div className="flex items-center gap-3 min-h-[52px]">
                     <div className="w-8 h-8 rounded-lg shrink-0 border border-border" style={{ backgroundColor: status.color }} />
                     <div className="flex-1">
                       <div className="text-sm font-semibold text-text-primary">{status.label}</div>
+                      <div className="text-xs text-text-muted">
+                        {status.thresholdMinutes !== null ? `Till ${status.thresholdMinutes} mins` : 'No limit'}
+                      </div>
                     </div>
                     <button
                       onClick={() => setEditing(isEditing ? null : status.key)}
