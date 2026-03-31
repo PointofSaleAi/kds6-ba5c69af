@@ -103,6 +103,7 @@ const Index = () => {
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       <StatusSettings open={statusSettingsOpen} onClose={() => setStatusSettingsOpen(false)} />
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
+      <PrintersScreen open={printersScreenOpen} onClose={() => setPrintersScreenOpen(false)} />
     </>
   );
 };
