@@ -39,7 +39,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
   const actionItems: SidebarItem[] = [
     { icon: ArrowUpDown, label: 'Sort', action: 'sort' },
-    { icon: ChevronsDownUp, label: 'Collapse All', action: 'collapse' },
   ];
 
   const w = expanded ? 'w-[200px]' : 'w-14';
