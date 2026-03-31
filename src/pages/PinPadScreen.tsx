@@ -47,11 +47,11 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '6px',
+    borderRadius: '8px',
     fontFamily: 'Montserrat, sans-serif',
     fontWeight: 700,
-    fontSize: '20px',
-    height: '56px',
+    fontSize: '24px',
+    height: '72px',
     cursor: 'pointer',
     border: 'none',
     transition: 'filter 0.1s',
@@ -94,10 +94,10 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
         <div className="hidden md:flex w-[40%] flex-col justify-center pl-20 pr-8">
           <p className="text-white/70 text-lg font-montserrat font-medium mb-2">{dateStr}</p>
           <div className="flex items-baseline">
-            <span className="text-white font-montserrat font-black" style={{ fontSize: '8rem', lineHeight: 1, letterSpacing: '-3px' }}>
+            <span className="text-white font-montserrat font-black" style={{ fontSize: '8rem', lineHeight: 1, letterSpacing: '-4px' }}>
               {displayHours}:{displayMinutes}
             </span>
-            <span className="text-white/50 font-montserrat font-bold text-4xl ml-3">{ampm}</span>
+            <span className="text-white/50 font-montserrat font-bold text-5xl ml-3">{ampm}</span>
           </div>
           <div className="mt-10">
             <div className="flex items-center gap-3">
@@ -111,20 +111,20 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
 
         {/* RIGHT: PIN Panel */}
         <div className="flex-1 flex flex-col items-center justify-center px-4">
-          <div className="w-full" style={{ maxWidth: '420px' }}>
+          <div className="w-full" style={{ maxWidth: '480px' }}>
 
             {/* Label */}
-            <p className="text-center text-sm font-montserrat font-medium mb-3" style={{ color: '#A0A0A0' }}>
+            <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
               Enter PIN to Clock In
             </p>
 
             {/* Asterisks */}
-            <div className="flex justify-between px-4 mb-5">
+            <div className="flex justify-between px-2 mb-8">
               {Array.from({ length: 4 }).map((_, i) => (
                 <span
                   key={i}
                   className="font-montserrat font-black text-white select-none"
-                  style={{ fontSize: '3.5rem', lineHeight: 1, opacity: i < pin.length ? 1 : 0.3 }}
+                  style={{ fontSize: '4.5rem', lineHeight: 1, opacity: i < pin.length ? 1 : 0.3 }}
                 >
                   ✱
                 </span>
@@ -132,7 +132,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
             </div>
 
             {/* Keypad */}
-            <div className="grid grid-cols-3 gap-[6px] mb-[6px]">
+            <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
               {numKeys.map((key) => {
                 if (key === 'C') {
                   return (
@@ -161,16 +161,16 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
               onClick={() => {}}
               style={{
                 width: '100%',
-                marginTop: '6px',
-                height: '50px',
-                borderRadius: '6px',
+                marginTop: '10px',
+                height: '60px',
+                borderRadius: '8px',
                 background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
                 border: '1px solid rgba(255,255,255,0.12)',
                 color: '#FFFFFF',
                 fontFamily: 'Montserrat, sans-serif',
                 fontWeight: 700,
-                fontSize: '14px',
+                fontSize: '16px',
                 letterSpacing: '0.5px',
                 cursor: 'pointer',
               }}
