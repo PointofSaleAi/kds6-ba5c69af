@@ -118,6 +118,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
 
       <div className="flex items-center gap-3">
+        <SoundToggle />
         <button
           onClick={onToggleTheme}
           className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
