@@ -121,13 +121,18 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
             {/* Asterisks */}
             <div className="flex justify-between px-2 mb-8">
               {Array.from({ length: 4 }).map((_, i) => (
-                <span
+                <motion.span
                   key={i}
                   className="font-montserrat font-black text-white select-none"
-                  style={{ fontSize: '4.5rem', lineHeight: 1, opacity: i < pin.length ? 1 : 0.3 }}
+                  style={{ fontSize: '4.5rem', lineHeight: 1 }}
+                  animate={{
+                    opacity: i < pin.length ? 1 : 0.3,
+                    scale: i < pin.length ? [1, 1.3, 1] : 1,
+                  }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   ✱
-                </span>
+                </motion.span>
               ))}
             </div>
 
