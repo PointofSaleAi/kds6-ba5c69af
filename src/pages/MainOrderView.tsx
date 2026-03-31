@@ -209,6 +209,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             <>
               {filteredOrders.length === 0 ? (
                 <EmptyState />
+              ) : kdsMode === 'Prep' ? (
+                <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
                   {viewMode === 'list' && (
@@ -216,7 +218,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                            <OrderCard order={order} onBump={handleBump} />
+                            {kdsMode === 'Expo' ? (
+                              <ExpoOrderCard order={order} onBump={handleBump} />
+                            ) : (
+                              <OrderCard order={order} onBump={handleBump} />
+                            )}
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -227,7 +233,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" onClick={() => setExpandedOrderId(order.id)} className="cursor-pointer">
-                            <OrderCard order={order} compact onBump={handleBump} />
+                            {kdsMode === 'Expo' ? (
+                              <ExpoOrderCard order={order} onBump={handleBump} />
+                            ) : (
+                              <OrderCard order={order} compact onBump={handleBump} />
+                            )}
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -238,7 +248,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
-                            <OrderCard order={order} onBump={handleBump} />
+                            {kdsMode === 'Expo' ? (
+                              <ExpoOrderCard order={order} onBump={handleBump} />
+                            ) : (
+                              <OrderCard order={order} onBump={handleBump} />
+                            )}
                           </motion.div>
                         ))}
                       </AnimatePresence>
