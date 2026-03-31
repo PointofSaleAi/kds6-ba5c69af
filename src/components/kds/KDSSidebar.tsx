@@ -68,7 +68,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
           >
             <item.icon size={20} />
             {expanded && <span className="text-sm">{item.label}</span>}
-            {item.badge && (
+            {showBadge && item.badge && (
               <span className="absolute top-1.5 left-7 bg-brand-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {item.badge}
               </span>

@@ -192,7 +192,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Enable Badge" description="Show order count badges on cards" />
+                <CardLabel label="Enable Badge" description="Show notification badges on sidebar icons" />
                 <div className="flex items-center justify-between mt-1">
                   <span className="text-[13px] text-text-secondary font-medium">{enableBadge ? 'ON' : 'OFF'}</span>
                   <LargeToggle checked={enableBadge} onChange={setEnableBadge} />
