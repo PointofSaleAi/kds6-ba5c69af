@@ -39,7 +39,6 @@ const Index = () => {
   const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
-  const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
   const handleBackToPin = useCallback(() => setScreen('pin-login'), []);
   const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('pin-login'); }, []);
 
