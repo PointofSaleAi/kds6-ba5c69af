@@ -12,7 +12,7 @@ interface CourseSectionProps {
   courseGroup: CourseGroup;
   onFireCourse?: (course: string) => void;
   itemStatuses?: Map<string, ItemStatus>;
-  onAdvanceItem?: (itemId: string) => void;
+  onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
 }
 
@@ -109,9 +109,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                           <img src={undoIcon} alt="Undo" width={28} height={21} />
                         </button>
                         <button
-                          onClick={() => onAdvanceItem?.(item.id)}
+                          onClick={() => onAdvanceItem?.(item.id, true)}
                           className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                          aria-label="Mark seen"
+                          aria-label="Mark done"
                         >
                           <img src={readyIcon} alt="Ready" width={28} height={21} />
                         </button>
