@@ -87,9 +87,6 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
     color: '#FFFFFF',
   };
 
-  if (view === 'forgot') {
-    return <ForgotPasswordScreen onBack={() => setView('email')} onComplete={() => setView('main')} />;
-  }
 
   return (
     <div className="fixed inset-0">
