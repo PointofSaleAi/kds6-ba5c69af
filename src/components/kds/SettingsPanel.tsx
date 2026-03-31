@@ -92,6 +92,17 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
   const [servableModifiers, setServableModifiers] = useState(true);
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [enableBadge, setEnableBadge] = useState(true);
+  const [kdsMode, setKdsMode] = useState('Standard');
+  const [syncing, setSyncing] = useState(false);
+
+  const handleSync = () => {
+    setSyncing(true);
+    setTimeout(() => {
+      setSyncing(false);
+      toast.success('Sync complete');
+    }, 1500);
+  };
 
   return (
     <div className="flex-1 flex overflow-hidden">
