@@ -161,9 +161,9 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
               onClick={() => {}}
               style={{
                 width: '100%',
-                marginTop: '6px',
-                height: '50px',
-                borderRadius: '6px',
+                marginTop: '10px',
+                height: '60px',
+                borderRadius: '8px',
                 background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
                 border: '1px solid rgba(255,255,255,0.12)',
