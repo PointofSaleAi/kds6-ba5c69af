@@ -146,10 +146,6 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {/* Label */}
-                  <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-                    Set your PIN
-                  </p>
 
                   {/* Asterisks */}
                   <div className="flex justify-center gap-6 mb-8">
