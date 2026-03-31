@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
+import PinPadScreen from '@/pages/PinPadScreen';
 import SignInScreen from '@/pages/SignInScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
@@ -19,7 +20,7 @@ import WebSocketSettings from '@/pages/WebSocketSettings';
 
 const isDev = import.meta.env.DEV;
 
-type AppScreen = 'dev-selector' | 'splash' | 'signin' | 'forgot' | 'main' | 'performance';
+type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'signin' | 'forgot' | 'main' | 'performance';
 
 const Index = () => {
   const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
@@ -36,11 +37,12 @@ const Index = () => {
   const [statusSettingsOpen, setStatusSettingsOpen] = useState(false);
   const [websocketOpen, setWebsocketOpen] = useState(false);
 
-  const handleSplashReady = useCallback(() => setScreen('signin'), []);
+  const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
   const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
-  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('signin'); }, []);
+  const handleBackToPin = useCallback(() => setScreen('pin-login'), []);
+  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('pin-login'); }, []);
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
@@ -69,12 +71,14 @@ const Index = () => {
     <>
       {screen === 'dev-selector' && (
         <DevScenarioSelector
-          onSelectHardware={() => setScreen('splash')}
+          onSelectHardware={() => setScreen('pin-first-time')}
           onSelectBYOD={() => setScreen('splash')}
           onExitDevMode={() => setScreen('splash')}
         />
       )}
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
+      {screen === 'pin-first-time' && <PinPadScreen isFirstTime onSuccess={handleSignIn} onEmailSignIn={() => setScreen('signin')} />}
+      {screen === 'pin-login' && <PinPadScreen onSuccess={handleSignIn} onEmailSignIn={() => setScreen('signin')} />}
       {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
       {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
       {screen === 'main' && (
