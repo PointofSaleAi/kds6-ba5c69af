@@ -14,6 +14,7 @@ interface OrderCardProps {
   order: Order;
   compact?: boolean;
   onBump?: (orderId: string) => void;
+  onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
 }
 
