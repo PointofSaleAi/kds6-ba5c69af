@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
+import { useSound } from '@/hooks/use-sound';
 
 export type SortMode = 'time' | 'table' | 'type';
 
@@ -22,17 +23,11 @@ const sortOptions: { value: SortMode; label: string }[] = [
 ];
 
 function SoundToggle() {
-  const [muted, setMuted] = useState(() => localStorage.getItem('kds-muted') === 'true');
-
-  const toggle = () => {
-    const next = !muted;
-    setMuted(next);
-    localStorage.setItem('kds-muted', String(next));
-  };
+  const { muted, toggleMute } = useSound();
 
   return (
     <button
-      onClick={toggle}
+      onClick={toggleMute}
       className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
       aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
     >

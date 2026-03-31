@@ -17,6 +17,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
 import { useKDSMode } from '@/hooks/use-kds-mode';
+import { useSound } from '@/hooks/use-sound';
 import { toast } from 'sonner';
 
 interface MainOrderViewProps {
@@ -39,6 +40,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode } = useKDSMode();
+  const { playSound } = useSound();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -46,6 +48,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('time');
+  const prevOrderCountRef = useRef(mockOrders.length);
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
@@ -93,6 +96,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       setOrders(prev => prev.filter(o => o.status !== 'served'));
     }
   }, [orders]);
+
+  // Play sound when new orders arrive
+  useEffect(() => {
+    const currentCount = orders.length;
+    if (currentCount > prevOrderCountRef.current) {
+      playSound('newOrder');
+    }
+    prevOrderCountRef.current = currentCount;
+  }, [orders.length, playSound]);
 
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((o) => {
