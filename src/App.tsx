@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { KDSModeProvider } from "@/hooks/use-kds-mode";
 import { BadgeVisibilityProvider } from "@/hooks/use-badge-visibility";
+import { SoundProvider } from "@/hooks/use-sound";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
