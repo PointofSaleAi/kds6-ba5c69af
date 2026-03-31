@@ -1,5 +1,6 @@
 import { LayoutGrid, LayoutList, Columns3, Sun, Moon } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 
 interface BottomStatusBarProps {
   orderCount: number;
@@ -10,6 +11,7 @@ interface BottomStatusBarProps {
 }
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme }: BottomStatusBarProps) {
+  const { mode: kdsMode } = useKDSMode();
   const now = new Date();
   const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
