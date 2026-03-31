@@ -12,7 +12,7 @@ interface CourseSectionProps {
   courseGroup: CourseGroup;
   onFireCourse?: (course: string) => void;
   itemStatuses?: Map<string, ItemStatus>;
-  onAdvanceItem?: (itemId: string) => void;
+  onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
 }
 
