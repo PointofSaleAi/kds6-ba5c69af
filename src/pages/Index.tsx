@@ -23,7 +23,7 @@ const isDev = import.meta.env.DEV || import.meta.env.MODE !== 'production' || !w
 type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'forgot' | 'main' | 'performance';
 
 const Index = () => {
-  const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
+  const [screen, setScreen] = useState<AppScreen>('splash');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
