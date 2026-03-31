@@ -132,7 +132,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
             </div>
 
             {/* Keypad */}
-            <div className="grid grid-cols-3 gap-[6px] mb-[6px]">
+            <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
               {numKeys.map((key) => {
                 if (key === 'C') {
                   return (
