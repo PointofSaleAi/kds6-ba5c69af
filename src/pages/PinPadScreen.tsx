@@ -124,7 +124,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                 <span
                   key={i}
                   className="font-montserrat font-black text-white select-none"
-                  style={{ fontSize: '2.4rem', lineHeight: 1, opacity: i < pin.length ? 1 : 0.3 }}
+                  style={{ fontSize: '3.5rem', lineHeight: 1, opacity: i < pin.length ? 1 : 0.3 }}
                 >
                   ✱
                 </span>
