@@ -50,9 +50,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse }: Or
     [order.courses]
   );
 
-  const handleAdvanceItem = useCallback((itemId: string) => {
+  const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
     setItemStatuses(prev => {
       const next = new Map(prev);
+      if (skipToDone) {
+        next.set(itemId, 'done');
+        return next;
+      }
       const current = next.get(itemId);
       if (!current) next.set(itemId, 'preparing');
       else if (current === 'preparing') next.set(itemId, 'ready');
