@@ -94,10 +94,10 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
         <div className="hidden md:flex w-[40%] flex-col justify-center pl-20 pr-8">
           <p className="text-white/70 text-lg font-montserrat font-medium mb-2">{dateStr}</p>
           <div className="flex items-baseline">
-            <span className="text-white font-montserrat font-black" style={{ fontSize: '8rem', lineHeight: 1, letterSpacing: '-3px' }}>
+            <span className="text-white font-montserrat font-black" style={{ fontSize: '8rem', lineHeight: 1, letterSpacing: '-4px' }}>
               {displayHours}:{displayMinutes}
             </span>
-            <span className="text-white/50 font-montserrat font-bold text-4xl ml-3">{ampm}</span>
+            <span className="text-white/50 font-montserrat font-bold text-5xl ml-3">{ampm}</span>
           </div>
           <div className="mt-10">
             <div className="flex items-center gap-3">
