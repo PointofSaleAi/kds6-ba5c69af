@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Delete, QrCode } from 'lucide-react';
+import { Delete } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
