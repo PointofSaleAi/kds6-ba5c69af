@@ -159,6 +159,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse }: Or
       </div>
 
       <div className="p-2 border-t border-border flex gap-2">
+        {!isServed && order.status !== 'new' && (
+          <button
+            onClick={() => onRecall?.(order.id)}
+            className="w-[44px] min-h-[44px] bg-muted rounded flex items-center justify-center hover:opacity-80 transition-colors shrink-0"
+            title="Go back"
+          >
+            <img src={undoIcon} alt="Back" className="w-8 h-6" />
+          </button>
+        )}
         {!isServed && (
           <button
             onClick={() => onBump?.(order.id)}
