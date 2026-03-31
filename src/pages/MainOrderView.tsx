@@ -97,7 +97,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
   }, [orders]);
 
-  const filteredOrders = useMemo(() => {
+  // Play sound when new orders arrive
+  useEffect(() => {
+    const currentCount = orders.length;
+    if (currentCount > prevOrderCountRef.current) {
+      playSound('newOrder');
+    }
+    prevOrderCountRef.current = currentCount;
+  }, [orders.length, playSound]);
+
     const filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
       if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
