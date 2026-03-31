@@ -4,7 +4,8 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi, BadgeCheck, Layers, RefreshCw, Printer } from 'lucide-react';
+import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account';
 
