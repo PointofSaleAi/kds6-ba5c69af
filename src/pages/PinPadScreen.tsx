@@ -432,7 +432,8 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     </button>
                   </form>
                 </motion.div>
-              ) : (
+              )}
+              {view === 'forgot' && (
                 <motion.div
                   key="forgot"
                   initial={{ opacity: 0, x: 20 }}
