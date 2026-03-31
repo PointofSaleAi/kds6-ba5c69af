@@ -37,7 +37,7 @@ const Index = () => {
   const [statusSettingsOpen, setStatusSettingsOpen] = useState(false);
   const [websocketOpen, setWebsocketOpen] = useState(false);
 
-  const handleSplashReady = useCallback(() => setScreen('signin'), []);
+  const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
   const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
