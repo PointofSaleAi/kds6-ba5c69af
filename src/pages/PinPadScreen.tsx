@@ -115,7 +115,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
 
             {/* Label */}
             <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-              Enter PIN to Clock In
+              Set your PIN
             </p>
 
             {/* Asterisks */}
