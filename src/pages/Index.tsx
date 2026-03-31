@@ -67,6 +67,13 @@ const Index = () => {
 
   return (
     <>
+      {screen === 'dev-selector' && (
+        <DevScenarioSelector
+          onSelectHardware={() => setScreen('splash')}
+          onSelectBYOD={() => setScreen('splash')}
+          onExitDevMode={() => setScreen('splash')}
+        />
+      )}
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
       {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
       {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
