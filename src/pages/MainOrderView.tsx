@@ -256,15 +256,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     </div>
                   )}
                   {viewMode === 'stagger' && (
-                    <div className="flex gap-2 items-start">
+                    <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {(() => {
-                        const colCount = 5;
+                        const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
+                        const colCount = w < 640 ? 2 : w < 1024 ? 3 : w < 1400 ? 4 : 5;
                         const columns: typeof filteredOrders[] = Array.from({ length: colCount }, () => []);
                         filteredOrders.forEach((order, i) => {
                           columns[i % colCount].push(order);
                         });
                         return columns.map((col, colIdx) => (
-                          <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-2">
+                          <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                             <AnimatePresence mode="popLayout">
                               {col.map((order) => (
                                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
