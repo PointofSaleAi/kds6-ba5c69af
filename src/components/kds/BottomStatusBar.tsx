@@ -52,8 +52,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   return (
     <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
       <div className="flex items-center gap-3">
-        <span className="text-primary-foreground text-sm font-bold">
-          {orderCount} Orders in Queue
+        <span className="text-primary-foreground font-bold">
+          <span className="text-lg">{orderCount}</span> <span className="text-sm">Orders in Queue</span>
         </span>
         {kdsMode !== 'Standard' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
