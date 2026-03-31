@@ -30,6 +30,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
       </BadgeVisibilityProvider>
+      </SoundProvider>
       </KDSModeProvider>
     </ThemeProvider>
   </QueryClientProvider>
