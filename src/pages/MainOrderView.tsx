@@ -175,7 +175,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               ) : (
                 <div className="flex-1 overflow-auto p-3">
-                  {viewMode === 'list' && (
+                  {viewMode === 'grid' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -184,19 +184,19 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   )}
-                  {viewMode === 'grid' && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                  {viewMode === 'horizontal' && (
+                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
-                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                          <HistoryOrderCard order={order} compact onRecall={handleRecall} />
+                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[320px]">
+                          <HistoryOrderCard order={order} onRecall={handleRecall} />
                         </motion.div>
                       ))}
                     </div>
                   )}
-                  {viewMode === 'horizontal' && (
-                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                  {viewMode === 'stagger' && (
+                    <div className="columns-3 lg:columns-4 xl:columns-5 gap-3">
                       {filteredHistory.map((order) => (
-                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[280px]">
+                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="break-inside-avoid mb-3">
                           <HistoryOrderCard order={order} onRecall={handleRecall} />
                         </motion.div>
                       ))}
