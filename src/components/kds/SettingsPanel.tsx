@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useKDSMode } from '@/hooks/use-kds-mode';
+import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import type { KDSMode } from '@/hooks/use-kds-mode';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
