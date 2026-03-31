@@ -145,6 +145,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     );
   }, []);
 
+  const handleStepBack = useCallback((orderId: string) => {
+    setOrders((prev) =>
+      prev.map((o) => {
+        if (o.id !== orderId) return o;
+        const prevStatus =
+          o.status === 'in-progress' ? 'seen' as const :
+          o.status === 'seen' ? 'new' as const : o.status;
+        return { ...o, status: prevStatus };
+      })
+    );
+  }, []);
+
   const handleRecall = useCallback((orderId: string) => {
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
@@ -292,7 +304,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
                             )}
                           </motion.div>
                         ))}
@@ -307,7 +319,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
                             )}
                           </motion.div>
                         ))}
@@ -324,7 +336,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                                 {kdsMode === 'Expo' ? (
                                   <ExpoOrderCard order={order} onBump={handleBump} />
                                 ) : (
-                                  <OrderCard order={order} onBump={handleBump} />
+                                  <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} />
                                 )}
                               </motion.div>
                             ))}
