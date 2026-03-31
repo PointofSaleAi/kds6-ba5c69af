@@ -85,7 +85,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
       </div>
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+        style={{ backgroundColor: 'rgba(15,15,12,0.72)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
       />
 
       {/* Content */}
