@@ -1,8 +1,26 @@
-import { useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
+
+export type SortMode = 'time' | 'table' | 'type';
+
+interface BottomStatusBarProps {
+  orderCount: number;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  theme: string;
+  onToggleTheme: () => void;
+  sortMode: SortMode;
+  onSortModeChange: (mode: SortMode) => void;
+}
+
+const sortOptions: { value: SortMode; label: string }[] = [
+  { value: 'time', label: 'By Time' },
+  { value: 'table', label: 'By Table' },
+  { value: 'type', label: 'By Type' },
+];
 
 function SoundToggle() {
   const { muted, toggleMute } = useSound();
