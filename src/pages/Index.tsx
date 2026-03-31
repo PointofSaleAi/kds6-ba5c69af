@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
+import PinPadScreen from '@/pages/PinPadScreen';
 import SignInScreen from '@/pages/SignInScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
