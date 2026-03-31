@@ -95,7 +95,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [enableBadge, setEnableBadge] = useState(true);
-  const [kdsMode, setKdsMode] = useState('Standard');
+  const { mode: kdsMode, setMode: setKdsMode } = useKDSMode();
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
 
