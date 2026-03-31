@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Delete } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Delete, QrCode } from 'lucide-react';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
@@ -11,6 +11,7 @@ interface PinPadScreenProps {
 
 export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
+  const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -113,79 +114,144 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full" style={{ maxWidth: '480px' }}>
 
-            {/* Label */}
-            <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-              Set your PIN
-            </p>
-
-            {/* Asterisks */}
-            <div className="flex justify-center gap-6 mb-8">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <motion.span
-                  key={i}
-                  className="font-montserrat font-black text-white select-none"
-                  style={{ fontSize: '4.5rem', lineHeight: 1 }}
-                  animate={{
-                    opacity: i < pin.length ? 1 : 0.3,
-                    scale: i < pin.length ? [1, 1.3, 1] : 1,
+            {/* Tab Switcher */}
+            <div className="flex mb-6" style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.15)' }}>
+              {(['pin', 'qr'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className="flex-1 font-montserrat font-bold text-sm py-3 transition-colors duration-200"
+                  style={{
+                    background: activeTab === tab
+                      ? 'linear-gradient(180deg, #3A3A3A 0%, #2A2A2A 100%)'
+                      : 'transparent',
+                    color: activeTab === tab ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    letterSpacing: '0.5px',
                   }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
-                  ✱
-                </motion.span>
+                  {tab === 'pin' ? 'PIN' : 'QR CODE'}
+                </button>
               ))}
             </div>
 
-            {/* Keypad */}
-            <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
-              {numKeys.map((key) => {
-                const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
-                const hoverAnim = { scale: 1.03 };
-                const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+            <AnimatePresence mode="wait">
+              {activeTab === 'pin' ? (
+                <motion.div
+                  key="pin"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {/* Label */}
+                  <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
+                    Set your PIN
+                  </p>
 
-                if (key === 'C') {
-                  return (
-                    <motion.button
-                      key={key}
-                      onClick={handleClear}
-                      style={{ ...lightKey, color: '#E84C3D' }}
-                      whileTap={tapAnim}
-                      whileHover={hoverAnim}
-                      transition={transition}
-                    >
-                      C
-                    </motion.button>
-                  );
-                }
-                if (key === 'BACK') {
-                  return (
-                    <motion.button
-                      key={key}
-                      onClick={() => setPin(p => p.slice(0, -1))}
-                      style={{ ...greyKey }}
-                      aria-label="Backspace"
-                      whileTap={tapAnim}
-                      whileHover={hoverAnim}
-                      transition={transition}
-                    >
-                      <Delete className="w-5 h-5" />
-                    </motion.button>
-                  );
-                }
-                return (
-                  <motion.button
-                    key={key}
-                    onClick={() => handleDigit(key)}
-                    style={lightKey}
-                    whileTap={tapAnim}
-                    whileHover={hoverAnim}
-                    transition={transition}
+                  {/* Asterisks */}
+                  <div className="flex justify-center gap-6 mb-8">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <motion.span
+                        key={i}
+                        className="font-montserrat font-black text-white select-none"
+                        style={{ fontSize: '4.5rem', lineHeight: 1 }}
+                        animate={{
+                          opacity: i < pin.length ? 1 : 0.3,
+                          scale: i < pin.length ? [1, 1.3, 1] : 1,
+                        }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                      >
+                        ✱
+                      </motion.span>
+                    ))}
+                  </div>
+
+                  {/* Keypad */}
+                  <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
+                    {numKeys.map((key) => {
+                      const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
+                      const hoverAnim = { scale: 1.03 };
+                      const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+
+                      if (key === 'C') {
+                        return (
+                          <motion.button
+                            key={key}
+                            onClick={handleClear}
+                            style={{ ...lightKey, color: '#E84C3D' }}
+                            whileTap={tapAnim}
+                            whileHover={hoverAnim}
+                            transition={transition}
+                          >
+                            C
+                          </motion.button>
+                        );
+                      }
+                      if (key === 'BACK') {
+                        return (
+                          <motion.button
+                            key={key}
+                            onClick={() => setPin(p => p.slice(0, -1))}
+                            style={{ ...greyKey }}
+                            aria-label="Backspace"
+                            whileTap={tapAnim}
+                            whileHover={hoverAnim}
+                            transition={transition}
+                          >
+                            <Delete className="w-5 h-5" />
+                          </motion.button>
+                        );
+                      }
+                      return (
+                        <motion.button
+                          key={key}
+                          onClick={() => handleDigit(key)}
+                          style={lightKey}
+                          whileTap={tapAnim}
+                          whileHover={hoverAnim}
+                          transition={transition}
+                        >
+                          {key}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="qr"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center"
+                >
+                  <p className="text-center text-base font-montserrat font-medium mb-6" style={{ color: '#A0A0A0' }}>
+                    Scan QR code to sign in
+                  </p>
+
+                  {/* QR Placeholder */}
+                  <div
+                    className="flex flex-col items-center justify-center"
+                    style={{
+                      width: '280px',
+                      height: '280px',
+                      borderRadius: '12px',
+                      background: '#FFFFFF',
+                      marginBottom: '24px',
+                    }}
                   >
-                    {key}
-                  </motion.button>
-                );
-              })}
-            </div>
+                    <QrCode className="w-48 h-48" style={{ color: '#1A1A2E' }} />
+                  </div>
+
+                  <p className="text-center text-sm font-montserrat" style={{ color: '#6C7A89', maxWidth: '320px' }}>
+                    Open the POS AI app on your phone and scan this code to sign in instantly
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Sign in with email */}
             <button
