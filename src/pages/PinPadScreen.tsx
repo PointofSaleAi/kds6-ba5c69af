@@ -341,14 +341,6 @@ export default function PinPadScreen({ isFirstTime = false, onSuccess, onEmailSi
                 </div>
               )}
 
-              {/* Email sign-in link */}
-              <button
-                onClick={onEmailSignIn}
-                className={`w-full mt-6 text-center text-xs font-montserrat underline transition-colors hover:text-white ${locked ? 'text-base font-semibold' : ''}`}
-                style={{ color: locked ? '#E84C3D' : '#6C7A89' }}
-              >
-                Sign in with email instead
-              </button>
             </motion.div>
           )}
         </div>
