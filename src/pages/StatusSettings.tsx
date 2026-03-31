@@ -12,13 +12,14 @@ interface StatusConfig {
   label: string;
   color: string;
   textColor: 'white' | 'grey' | 'black';
+  thresholdMinutes: number | null;
 }
 
 const defaultStatuses: StatusConfig[] = [
-  { key: 'start', label: 'START (New)', color: '#E84C3D', textColor: 'white' },
-  { key: 'medium', label: 'MEDIUM (In Progress)', color: '#E67E22', textColor: 'white' },
-  { key: 'delay', label: 'DELAY (Warning)', color: '#7F8C8D', textColor: 'white' },
-  { key: 'overtime', label: 'OVERTIME (Critical)', color: '#922B21', textColor: 'white' },
+  { key: 'start', label: 'START (New)', color: '#E84C3D', textColor: 'white', thresholdMinutes: 5 },
+  { key: 'medium', label: 'MEDIUM (In Progress)', color: '#E67E22', textColor: 'white', thresholdMinutes: 10 },
+  { key: 'delay', label: 'DELAY (Warning)', color: '#7F8C8D', textColor: 'white', thresholdMinutes: 20 },
+  { key: 'overtime', label: 'OVERTIME (Critical)', color: '#922B21', textColor: 'white', thresholdMinutes: null },
 ];
 
 const swatches = [
