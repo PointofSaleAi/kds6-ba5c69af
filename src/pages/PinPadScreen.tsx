@@ -401,6 +401,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     <div className="flex justify-end">
                       <button
                         type="button"
+                        onClick={() => setView('forgot')}
                         className="font-montserrat font-medium text-sm"
                         style={{ color: '#E84C3D', background: 'none', border: 'none', cursor: 'pointer' }}
                       >
