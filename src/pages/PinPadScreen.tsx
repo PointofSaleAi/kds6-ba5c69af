@@ -134,24 +134,50 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
             {/* Keypad */}
             <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
               {numKeys.map((key) => {
+                const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
+                const hoverAnim = { scale: 1.03 };
+                const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+
                 if (key === 'C') {
                   return (
-                    <button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }}>
+                    <motion.button
+                      key={key}
+                      onClick={handleClear}
+                      style={{ ...lightKey, color: '#E84C3D' }}
+                      whileTap={tapAnim}
+                      whileHover={hoverAnim}
+                      transition={transition}
+                    >
                       C
-                    </button>
+                    </motion.button>
                   );
                 }
                 if (key === 'BACK') {
                   return (
-                    <button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={{ ...greyKey }} aria-label="Backspace">
+                    <motion.button
+                      key={key}
+                      onClick={() => setPin(p => p.slice(0, -1))}
+                      style={{ ...greyKey }}
+                      aria-label="Backspace"
+                      whileTap={tapAnim}
+                      whileHover={hoverAnim}
+                      transition={transition}
+                    >
                       <Delete className="w-5 h-5" />
-                    </button>
+                    </motion.button>
                   );
                 }
                 return (
-                  <button key={key} onClick={() => handleDigit(key)} style={lightKey}>
+                  <motion.button
+                    key={key}
+                    onClick={() => handleDigit(key)}
+                    style={lightKey}
+                    whileTap={tapAnim}
+                    whileHover={hoverAnim}
+                    transition={transition}
+                  >
                     {key}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
