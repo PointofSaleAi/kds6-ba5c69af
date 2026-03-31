@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useKDSMode } from '@/hooks/use-kds-mode';
+import type { KDSMode } from '@/hooks/use-kds-mode';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
