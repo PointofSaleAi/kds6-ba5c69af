@@ -14,6 +14,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <KDSModeProvider>
+      <BadgeVisibilityProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
