@@ -13,6 +13,10 @@ interface PinPadScreenProps {
 export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
   const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
+  const [view, setView] = useState<'main' | 'email'>('main');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
