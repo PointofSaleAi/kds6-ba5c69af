@@ -9,6 +9,7 @@ import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import readyIcon from '@/assets/item-ready-icon.svg';
+import undoIcon from '@/assets/undo-icon.svg';
 
 interface OrderCardProps {
   order: Order;
