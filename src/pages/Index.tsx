@@ -37,6 +37,7 @@ const Index = () => {
   const [staggerOpen, setStaggerOpen] = useState(false);
   const [statusSettingsOpen, setStatusSettingsOpen] = useState(false);
   const [websocketOpen, setWebsocketOpen] = useState(false);
+  const [printersScreenOpen, setPrintersScreenOpen] = useState(false);
 
   const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
   const handleSignIn = useCallback(() => setScreen('main'), []);
