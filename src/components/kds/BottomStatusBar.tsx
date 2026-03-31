@@ -21,6 +21,26 @@ const sortOptions: { value: SortMode; label: string }[] = [
   { value: 'type', label: 'By Type' },
 ];
 
+function SoundToggle() {
+  const [muted, setMuted] = useState(() => localStorage.getItem('kds-muted') === 'true');
+
+  const toggle = () => {
+    const next = !muted;
+    setMuted(next);
+    localStorage.setItem('kds-muted', String(next));
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
+      aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+    >
+      {muted ? <VolumeX size={16} className="text-primary-foreground/70" /> : <Volume2 size={16} className="text-primary-foreground/70" />}
+    </button>
+  );
+}
+
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const [sortOpen, setSortOpen] = useState(false);
