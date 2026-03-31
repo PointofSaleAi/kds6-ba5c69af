@@ -91,21 +91,21 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
       {/* Content */}
       <div className="relative z-10 flex h-full w-full">
         {/* LEFT: Clock + Weather */}
-        <div className="hidden md:flex w-[40%] flex-col justify-center pl-16 pr-8">
-          <p className="text-white/70 text-base font-montserrat font-medium mb-1">{dateStr}</p>
+        <div className="hidden md:flex w-[40%] flex-col justify-center pl-20 pr-8">
+          <p className="text-white/70 text-lg font-montserrat font-medium mb-2">{dateStr}</p>
           <div className="flex items-baseline">
-            <span className="text-white font-montserrat font-black" style={{ fontSize: '6.5rem', lineHeight: 1, letterSpacing: '-2px' }}>
+            <span className="text-white font-montserrat font-black" style={{ fontSize: '8rem', lineHeight: 1, letterSpacing: '-3px' }}>
               {displayHours}:{displayMinutes}
             </span>
-            <span className="text-white/50 font-montserrat font-bold text-3xl ml-2">{ampm}</span>
+            <span className="text-white/50 font-montserrat font-bold text-4xl ml-3">{ampm}</span>
           </div>
-          <div className="mt-8">
-            <div className="flex items-center gap-2">
-              <span className="text-white font-montserrat font-light" style={{ fontSize: '2.8rem' }}>27°</span>
-              <span style={{ fontSize: '2.2rem' }}>☀️</span>
+          <div className="mt-10">
+            <div className="flex items-center gap-3">
+              <span className="text-white font-montserrat font-light" style={{ fontSize: '3.5rem' }}>27°</span>
+              <span style={{ fontSize: '2.8rem' }}>☀️</span>
             </div>
-            <p className="text-white font-montserrat font-bold text-xl mt-1">Bengaluru,</p>
-            <p className="text-white font-montserrat font-bold text-xl">Karnataka</p>
+            <p className="text-white font-montserrat font-bold text-2xl mt-2">Bengaluru,</p>
+            <p className="text-white font-montserrat font-bold text-2xl">Karnataka</p>
           </div>
         </div>
 
