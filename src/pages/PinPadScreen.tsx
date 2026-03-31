@@ -11,6 +11,7 @@ interface PinPadScreenProps {
 
 export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
+  const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
