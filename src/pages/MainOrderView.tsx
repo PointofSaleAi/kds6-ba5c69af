@@ -45,6 +45,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>('time');
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
