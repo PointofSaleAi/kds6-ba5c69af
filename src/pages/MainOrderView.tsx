@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Search } from 'lucide-react';
+import type { SortMode } from '@/components/kds/BottomStatusBar';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
@@ -44,6 +45,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>('time');
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
@@ -92,12 +94,24 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
   }, [orders]);
 
-  const filteredOrders = orders.filter((o) => {
-    if (activeFilter === 'new') return o.status === 'new';
-    if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
-    if (activeFilter === 'completed') return o.status !== 'served';
-    return true;
-  });
+  const filteredOrders = useMemo(() => {
+    const filtered = orders.filter((o) => {
+      if (activeFilter === 'new') return o.status === 'new';
+      if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
+      if (activeFilter === 'completed') return o.status !== 'served';
+      return true;
+    });
+
+    const sorted = [...filtered];
+    if (sortMode === 'table') {
+      sorted.sort((a, b) => a.tableName.localeCompare(b.tableName));
+    } else if (sortMode === 'type') {
+      sorted.sort((a, b) => a.orderType.localeCompare(b.orderType));
+    } else {
+      sorted.sort((a, b) => a.timeReceived.getTime() - b.timeReceived.getTime());
+    }
+    return sorted;
+  }, [orders, activeFilter, sortMode]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
@@ -343,7 +357,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} />
     </div>
   );
 }
