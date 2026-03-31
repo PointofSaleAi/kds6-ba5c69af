@@ -1,4 +1,5 @@
 import type { OrderType } from '@/types/kds';
+import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 
 const typeConfig: Record<OrderType, { bg: string; label: string }> = {
   'dine-in': { bg: 'bg-order-dine-in', label: 'DINE IN' },
@@ -14,7 +15,10 @@ interface OrderTypeBadgeProps {
 }
 
 export function OrderTypeBadge({ type, time, tableInfo }: OrderTypeBadgeProps) {
+  const { showBadge } = useBadgeVisibility();
   const config = typeConfig[type];
+
+  if (!showBadge) return null;
 
   return (
     <div className={`${config.bg} px-3 py-2 rounded-t-lg flex items-center justify-between`}>
