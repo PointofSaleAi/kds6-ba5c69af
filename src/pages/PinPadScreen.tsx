@@ -37,6 +37,13 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
 
   const handleClear = useCallback(() => setPin(''), []);
 
+  const handleEmailSignIn = useCallback((e: FormEvent) => {
+    e.preventDefault();
+    if (email && password) {
+      onSuccess();
+    }
+  }, [email, password, onSuccess]);
+
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const ampm = hours >= 12 ? 'PM' : 'AM';
