@@ -38,7 +38,7 @@ const statusBodyMap: Record<string, string> = {
   recalled: 'border-l-order-take-out',
 };
 
-export function OrderCard({ order, compact, onBump, onFireCourse }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse }: OrderCardProps) {
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
