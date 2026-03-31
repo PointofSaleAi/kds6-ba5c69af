@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Delete } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Delete, QrCode } from 'lucide-react';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
