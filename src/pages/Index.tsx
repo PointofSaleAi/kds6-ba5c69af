@@ -19,7 +19,7 @@ import WebSocketSettings from '@/pages/WebSocketSettings';
 
 const isDev = import.meta.env.DEV;
 
-type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'signin' | 'forgot' | 'main' | 'performance';
+type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'forgot' | 'main' | 'performance';
 
 const Index = () => {
   const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
