@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
 import PinPadScreen from '@/pages/PinPadScreen';
-import SignInScreen from '@/pages/SignInScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
 
@@ -20,7 +19,7 @@ import WebSocketSettings from '@/pages/WebSocketSettings';
 
 const isDev = import.meta.env.DEV;
 
-type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'signin' | 'forgot' | 'main' | 'performance';
+type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'forgot' | 'main' | 'performance';
 
 const Index = () => {
   const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
@@ -40,7 +39,6 @@ const Index = () => {
   const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
   const handleSignIn = useCallback(() => setScreen('main'), []);
   const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
-  const handleBackToSignIn = useCallback(() => setScreen('signin'), []);
   const handleBackToPin = useCallback(() => setScreen('pin-login'), []);
   const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('pin-login'); }, []);
 
@@ -77,10 +75,9 @@ const Index = () => {
         />
       )}
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
-      {screen === 'pin-first-time' && <PinPadScreen isFirstTime onSuccess={handleSignIn} onEmailSignIn={() => setScreen('signin')} />}
-      {screen === 'pin-login' && <PinPadScreen onSuccess={handleSignIn} onEmailSignIn={() => setScreen('signin')} />}
-      {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
-      {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
+      {screen === 'pin-first-time' && <PinPadScreen isFirstTime onSuccess={handleSignIn} />}
+      {screen === 'pin-login' && <PinPadScreen onSuccess={handleSignIn} />}
+      {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToPin} onComplete={handleBackToPin} />}
       {screen === 'main' && (
         <MainOrderView
           onNavigate={handleNavigate}
