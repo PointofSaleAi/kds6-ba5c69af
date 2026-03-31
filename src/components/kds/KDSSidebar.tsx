@@ -37,8 +37,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
     { icon: EyeOff, label: 'Hide Completed', action: 'completed' },
   ];
 
-  const actionItems: SidebarItem[] = [];
-
   const w = expanded ? 'w-[200px]' : 'w-14';
 
   return (
@@ -85,22 +83,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] ${
               activeFilter === item.action ? 'border-l-2 border-brand-primary bg-sidebar-accent/50' : ''
             }`}
-          >
-            <item.icon size={18} />
-            {expanded && <span className="text-sm">{item.label}</span>}
-          </button>
-        ))}
-      </nav>
-
-      <div className="mx-3 my-2 border-t border-sidebar-border" />
-
-      {/* Actions */}
-      <nav className="flex flex-col gap-0.5 px-1.5">
-        {actionItems.map((item) => (
-          <button
-            key={item.label}
-            onClick={() => onNavigate(item.action!)}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px]"
           >
             <item.icon size={18} />
             {expanded && <span className="text-sm">{item.label}</span>}
