@@ -66,7 +66,7 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
   return (
     <div
       className="rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 border-l-text-muted opacity-80 transition-all duration-300"
-      style={{ minWidth: 220 }}
+      style={{ minWidth: 'min(220px, 100%)' }}
     >
       <div className="relative">
         <OrderTypeBadge
