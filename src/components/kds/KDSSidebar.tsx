@@ -22,6 +22,7 @@ interface KDSSidebarProps {
 
 export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen }: KDSSidebarProps) {
   const [expanded, setExpanded] = useState(false);
+  const { showBadge } = useBadgeVisibility();
 
   const navItems: SidebarItem[] = [
     { icon: Home, label: 'Home', action: 'home' },
