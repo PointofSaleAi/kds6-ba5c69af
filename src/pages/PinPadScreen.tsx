@@ -111,7 +111,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
 
         {/* RIGHT: PIN Panel */}
         <div className="flex-1 flex flex-col items-center justify-center px-4">
-          <div className="w-full" style={{ maxWidth: '370px' }}>
+          <div className="w-full" style={{ maxWidth: '420px' }}>
 
             {/* Label */}
             <p className="text-center text-sm font-montserrat font-medium mb-3" style={{ color: '#A0A0A0' }}>
