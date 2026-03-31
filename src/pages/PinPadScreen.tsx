@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, Check, QrCode } from 'lucide-react';
+import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
   isFirstTime?: boolean;
@@ -68,7 +69,6 @@ export default function PinPadScreen({ isFirstTime = false, onSuccess, onEmailSi
       const newPin = prev + digit;
 
       if (newPin.length === 4) {
-        // Auto-submit on 4th digit
         setTimeout(() => {
           if (setupPhase === 'set-pin') {
             setFirstPin(newPin);
@@ -84,8 +84,6 @@ export default function PinPadScreen({ isFirstTime = false, onSuccess, onEmailSi
               setFirstPin('');
             }
           } else {
-            // Normal login - TODO: replace with API validation
-            // For now, accept any 4-digit PIN
             setTimeout(() => onSuccess(), 300);
           }
         }, 200);
@@ -124,7 +122,7 @@ export default function PinPadScreen({ isFirstTime = false, onSuccess, onEmailSi
   const getLabel = () => {
     if (setupPhase === 'set-pin') return 'Set your PIN';
     if (setupPhase === 'confirm-pin') return 'Confirm your PIN';
-    return 'Enter your PIN';
+    return 'Enter PIN to Clock In';
   };
 
   const detectMessages: Record<DetectStep, { text: string; color: string }> = {
@@ -136,213 +134,252 @@ export default function PinPadScreen({ isFirstTime = false, onSuccess, onEmailSi
   const padKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'back'];
 
   return (
-    <div className="fixed inset-0 flex" style={{ backgroundColor: '#0D0D1A' }}>
-      {/* Left panel - Clock & Weather */}
-      <div className="hidden md:flex w-[45%] flex-col justify-center px-12 lg:px-16">
-        <p className="text-white/80 text-lg font-montserrat font-medium mb-2">{dateStr}</p>
-        <div className="flex items-baseline">
-          <span className="text-white font-montserrat font-black" style={{ fontSize: '7rem', lineHeight: 1 }}>
-            {displayHours}:{displayMinutes}
-          </span>
-          <span className="text-white/60 font-montserrat font-bold text-3xl ml-2">{ampm}</span>
-        </div>
-
-        {/* Weather */}
-        <div className="mt-8">
-          <div className="flex items-center gap-3">
-            <span className="text-white font-montserrat font-light" style={{ fontSize: '3rem' }}>27°</span>
-            <span style={{ fontSize: '2.5rem' }}>☀️</span>
-          </div>
-          <p className="text-white font-montserrat font-bold text-2xl mt-1">Bengaluru,</p>
-          <p className="text-white font-montserrat font-bold text-2xl">Karnataka</p>
-        </div>
+    <div className="fixed inset-0">
+      {/* Background: KDS main view, blurred */}
+      <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+        <MainOrderView
+          onNavigate={() => {}}
+          settingsOpen={false}
+          onCloseSettings={() => {}}
+          onOpenSub={() => {}}
+          onLogOut={() => {}}
+        />
       </div>
+      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
 
-      {/* Right panel - PIN Pad */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6">
-        <div className="w-full max-w-[380px]">
-          {/* Auto-detection state */}
-          {setupPhase === 'detecting' && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-20"
-            >
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={detectStep}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  className="text-sm font-montserrat font-medium"
-                  style={{ color: detectMessages[detectStep].color }}
-                >
-                  {detectMessages[detectStep].text}
-                </motion.p>
-              </AnimatePresence>
-            </motion.div>
-          )}
+      {/* Foreground content */}
+      <div className="relative z-10 flex h-full w-full">
+        {/* Left panel - Clock & Weather */}
+        <div className="hidden md:flex w-[45%] flex-col justify-center px-12 lg:px-16">
+          <p className="text-white/80 text-lg font-montserrat font-medium mb-2">{dateStr}</p>
+          <div className="flex items-baseline">
+            <span className="text-white font-montserrat font-black" style={{ fontSize: '7rem', lineHeight: 1 }}>
+              {displayHours}:{displayMinutes}
+            </span>
+            <span className="text-white/60 font-montserrat font-bold text-3xl ml-2">{ampm}</span>
+          </div>
 
-          {/* Success state */}
-          {setupPhase === 'success' && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center py-20"
-            >
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#2ECC71' }}>
-                <Check className="w-8 h-8 text-white" />
-              </div>
-              <p className="text-white font-montserrat font-bold text-lg">PIN saved</p>
-            </motion.div>
-          )}
+          {/* Weather */}
+          <div className="mt-8">
+            <div className="flex items-center gap-3">
+              <span className="text-white font-montserrat font-light" style={{ fontSize: '3rem' }}>27°</span>
+              <span style={{ fontSize: '2.5rem' }}>☀️</span>
+            </div>
+            <p className="text-white font-montserrat font-bold text-2xl mt-1">Bengaluru,</p>
+            <p className="text-white font-montserrat font-bold text-2xl">Karnataka</p>
+          </div>
+        </div>
 
-          {/* Main PIN/QR content */}
-          {setupPhase !== 'detecting' && setupPhase !== 'success' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Tabs */}
-              <div className="flex justify-center gap-2 mb-6">
-                <button
-                  onClick={() => setActiveTab('pin')}
-                  className="px-4 py-1.5 rounded-full text-xs font-montserrat font-semibold transition-all"
-                  style={{
-                    backgroundColor: activeTab === 'pin' ? 'rgba(255,255,255,0.15)' : 'transparent',
-                    color: activeTab === 'pin' ? '#FFFFFF' : '#6C7A89',
-                    border: activeTab === 'pin' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                  }}
-                >
-                  Enter PIN
-                </button>
-                <button
-                  onClick={() => { setActiveTab('qr'); setQrSeconds(300); }}
-                  className="px-4 py-1.5 rounded-full text-xs font-montserrat font-semibold transition-all"
-                  style={{
-                    backgroundColor: activeTab === 'qr' ? 'rgba(255,255,255,0.15)' : 'transparent',
-                    color: activeTab === 'qr' ? '#FFFFFF' : '#6C7A89',
-                    border: activeTab === 'qr' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                  }}
-                >
-                  Scan QR
-                </button>
-              </div>
+        {/* Right panel - PIN Pad */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6">
+          <div className="w-full max-w-[380px]">
+            {/* Auto-detection state */}
+            {setupPhase === 'detecting' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center py-20"
+              >
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={detectStep}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="text-sm font-montserrat font-medium"
+                    style={{ color: detectMessages[detectStep].color }}
+                  >
+                    {detectMessages[detectStep].text}
+                  </motion.p>
+                </AnimatePresence>
+              </motion.div>
+            )}
 
-              {activeTab === 'pin' ? (
-                <>
-                  {/* Label */}
-                  <p className="text-center text-sm font-montserrat font-medium mb-4" style={{ color: '#95A5A6' }}>
-                    {getLabel()}
-                  </p>
+            {/* Success state */}
+            {setupPhase === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center py-20"
+              >
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#2ECC71' }}>
+                  <Check className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-white font-montserrat font-bold text-lg">PIN saved</p>
+              </motion.div>
+            )}
 
-                  {/* PIN dots */}
-                  <div className={`flex justify-center gap-4 mb-6 ${shake ? 'animate-shake' : ''}`}>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="w-5 h-5 rounded-full transition-all duration-200"
-                        style={{
-                          backgroundColor: i < pin.length ? '#E84C3D' : 'transparent',
-                          border: i < pin.length ? '2px solid #E84C3D' : '2px solid rgba(255,255,255,0.3)',
-                        }}
-                      />
-                    ))}
-                  </div>
+            {/* Main PIN/QR content */}
+            {setupPhase !== 'detecting' && setupPhase !== 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Tabs */}
+                <div className="flex justify-center gap-2 mb-6">
+                  <button
+                    onClick={() => setActiveTab('pin')}
+                    className="px-4 py-1.5 rounded-full text-xs font-montserrat font-semibold transition-all"
+                    style={{
+                      backgroundColor: activeTab === 'pin' ? 'rgba(255,255,255,0.15)' : 'transparent',
+                      color: activeTab === 'pin' ? '#FFFFFF' : '#6C7A89',
+                      border: activeTab === 'pin' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
+                    }}
+                  >
+                    Enter PIN
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab('qr'); setQrSeconds(300); }}
+                    className="px-4 py-1.5 rounded-full text-xs font-montserrat font-semibold transition-all"
+                    style={{
+                      backgroundColor: activeTab === 'qr' ? 'rgba(255,255,255,0.15)' : 'transparent',
+                      color: activeTab === 'qr' ? '#FFFFFF' : '#6C7A89',
+                      border: activeTab === 'qr' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
+                    }}
+                  >
+                    Scan QR
+                  </button>
+                </div>
 
-                  {/* Locked state */}
-                  {locked && (
-                    <p className="text-center text-sm font-montserrat font-medium mb-4" style={{ color: '#E84C3D' }}>
-                      Too many attempts. Please sign in with email.
+                {activeTab === 'pin' ? (
+                  <>
+                    {/* Label */}
+                    <p className="text-center text-sm font-montserrat font-medium mb-4" style={{ color: '#95A5A6' }}>
+                      {getLabel()}
                     </p>
-                  )}
 
-                  {/* Number pad */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {padKeys.map((key, i) => {
-                      if (key === 'C') {
+                    {/* PIN asterisks */}
+                    <div className={`flex justify-center gap-5 mb-6 ${shake ? 'animate-shake' : ''}`}>
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <span
+                          key={i}
+                          className="font-montserrat font-black text-white select-none"
+                          style={{
+                            fontSize: '2.5rem',
+                            lineHeight: 1,
+                            opacity: i < pin.length ? 1 : 0.3,
+                          }}
+                        >
+                          ✱
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Locked state */}
+                    {locked && (
+                      <p className="text-center text-sm font-montserrat font-medium mb-4" style={{ color: '#E84C3D' }}>
+                        Too many attempts. Please sign in with email.
+                      </p>
+                    )}
+
+                    {/* Number pad - matching POS AI 6 reference style */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {padKeys.map((key, i) => {
+                        if (key === 'C') {
+                          return (
+                            <button
+                              key={i}
+                              onClick={handleClear}
+                              disabled={locked}
+                              className="flex items-center justify-center rounded-lg font-montserrat font-bold text-xl transition-all active:scale-95 disabled:opacity-30"
+                              style={{
+                                background: 'linear-gradient(180deg, #F5F5F5 0%, #D8D8D8 100%)',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8)',
+                                color: '#E84C3D',
+                                minHeight: '60px',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                            >
+                              C
+                            </button>
+                          );
+                        }
+                        if (key === 'back') {
+                          return (
+                            <button
+                              key={i}
+                              onClick={handleBackspace}
+                              disabled={locked}
+                              className="flex items-center justify-center rounded-lg font-montserrat font-bold text-base transition-all active:scale-95 disabled:opacity-30 uppercase tracking-wide"
+                              style={{
+                                background: 'linear-gradient(180deg, #8A8A8A 0%, #6A6A6A 100%)',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+                                color: '#FFFFFF',
+                                minHeight: '60px',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                              aria-label="Backspace"
+                            >
+                              <Delete className="w-5 h-5" />
+                            </button>
+                          );
+                        }
                         return (
                           <button
                             key={i}
-                            onClick={handleClear}
+                            onClick={() => handleDigit(key)}
                             disabled={locked}
                             className="flex items-center justify-center rounded-lg font-montserrat font-bold text-xl transition-all active:scale-95 disabled:opacity-30"
                             style={{
-                              backgroundColor: 'rgba(255,255,255,0.9)',
-                              color: '#E84C3D',
+                              background: 'linear-gradient(180deg, #F5F5F5 0%, #D8D8D8 100%)',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8)',
+                              color: '#1A1A2E',
                               minHeight: '60px',
+                              border: '1px solid rgba(255,255,255,0.1)',
                             }}
                           >
-                            C
+                            {key}
                           </button>
                         );
-                      }
-                      if (key === 'back') {
-                        return (
-                          <button
-                            key={i}
-                            onClick={handleBackspace}
-                            disabled={locked}
-                            className="flex items-center justify-center rounded-lg font-montserrat transition-all active:scale-95 disabled:opacity-30"
-                            style={{
-                              backgroundColor: 'rgba(255,255,255,0.12)',
-                              minHeight: '60px',
-                            }}
-                            aria-label="Backspace"
-                          >
-                            <Delete className="w-5 h-5" style={{ color: '#95A5A6' }} />
-                          </button>
-                        );
-                      }
-                      return (
-                        <button
-                          key={i}
-                          onClick={() => handleDigit(key)}
-                          disabled={locked}
-                          className="flex items-center justify-center rounded-lg font-montserrat font-bold text-xl transition-all active:scale-95 disabled:opacity-30"
-                          style={{
-                            backgroundColor: 'rgba(255,255,255,0.9)',
-                            color: '#1A1A2E',
-                            minHeight: '60px',
-                          }}
-                        >
-                          {key}
-                        </button>
-                      );
-                    })}
+                      })}
+                    </div>
+
+                    {/* Sign in with email */}
+                    <button
+                      onClick={onEmailSignIn}
+                      className="w-full mt-4 py-3 rounded-lg font-montserrat font-bold text-sm uppercase tracking-wide transition-all active:scale-[0.98]"
+                      style={{
+                        background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
+                        color: '#FFFFFF',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                      }}
+                    >
+                      Sign in with email
+                    </button>
+                  </>
+                ) : (
+                  /* QR Tab */
+                  <div className="flex flex-col items-center py-4">
+                    <p className="text-sm font-montserrat font-medium mb-6" style={{ color: '#95A5A6' }}>
+                      Open your phone camera and scan this code
+                    </p>
+
+                    {/* QR Code placeholder */}
+                    <div
+                      className="w-48 h-48 rounded-xl flex items-center justify-center mb-6"
+                      style={{ backgroundColor: '#FFFFFF' }}
+                    >
+                      <QrCode className="w-32 h-32" style={{ color: '#1A1A2E' }} />
+                    </div>
+
+                    <p className="text-xs font-montserrat" style={{ color: '#6C7A89' }}>
+                      Refreshes in {qrMin}:{qrSec}
+                    </p>
+
+                    <button
+                      className="mt-4 text-xs font-montserrat underline transition-colors hover:text-white"
+                      style={{ color: '#6C7A89' }}
+                    >
+                      Send link to my email or phone instead
+                    </button>
                   </div>
-                </>
-              ) : (
-                /* QR Tab */
-                <div className="flex flex-col items-center py-4">
-                  <p className="text-sm font-montserrat font-medium mb-6" style={{ color: '#95A5A6' }}>
-                    Open your phone camera and scan this code
-                  </p>
+                )}
 
-                  {/* QR Code placeholder */}
-                  <div
-                    className="w-48 h-48 rounded-xl flex items-center justify-center mb-6"
-                    style={{ backgroundColor: '#FFFFFF' }}
-                  >
-                    <QrCode className="w-32 h-32" style={{ color: '#1A1A2E' }} />
-                  </div>
-
-                  <p className="text-xs font-montserrat" style={{ color: '#6C7A89' }}>
-                    Refreshes in {qrMin}:{qrSec}
-                  </p>
-
-                  <button
-                    className="mt-4 text-xs font-montserrat underline transition-colors hover:text-white"
-                    style={{ color: '#6C7A89' }}
-                  >
-                    Send link to my email or phone instead
-                  </button>
-                </div>
-              )}
-
-            </motion.div>
-          )}
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
     </div>
