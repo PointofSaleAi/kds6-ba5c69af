@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Delete } from 'lucide-react';
+import { Delete, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
 
@@ -13,6 +13,10 @@ interface PinPadScreenProps {
 export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
   const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
+  const [view, setView] = useState<'main' | 'email'>('main');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -32,6 +36,13 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
   }, [onSuccess]);
 
   const handleClear = useCallback(() => setPin(''), []);
+
+  const handleEmailSignIn = useCallback((e: FormEvent) => {
+    e.preventDefault();
+    if (email && password) {
+      onSuccess();
+    }
+  }, [email, password, onSuccess]);
 
   const hours = now.getHours();
   const minutes = now.getMinutes();
@@ -115,175 +126,308 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full" style={{ maxWidth: '480px' }}>
 
-            {/* Tab Switcher */}
-            <div className="flex mb-6" style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.15)' }}>
-              {(['pin', 'qr'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className="flex-1 font-montserrat font-bold text-sm py-3 transition-colors duration-200"
-                  style={{
-                    background: activeTab === tab
-                      ? 'linear-gradient(180deg, #3A3A3A 0%, #2A2A2A 100%)'
-                      : 'transparent',
-                    color: activeTab === tab ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    letterSpacing: '0.5px',
-                  }}
-                >
-                  {tab === 'pin' ? 'PIN' : 'QR CODE'}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ minHeight: '420px' }}>
             <AnimatePresence mode="wait">
-              {activeTab === 'pin' ? (
+              {view === 'main' ? (
                 <motion.div
-                  key="pin"
+                  key="main"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {/* Label */}
-                  <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-                    Enter your PIN to Sign In
-                  </p>
-
-                  {/* Asterisks */}
-                  <div className="flex justify-center gap-6 mb-8">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <motion.span
-                        key={i}
-                        className="font-montserrat font-black text-white select-none"
-                        style={{ fontSize: '4.5rem', lineHeight: 1 }}
-                        animate={{
-                          opacity: i < pin.length ? 1 : 0.3,
-                          scale: i < pin.length ? [1, 1.3, 1] : 1,
+                  {/* Tab Switcher */}
+                  <div className="flex mb-6" style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.15)' }}>
+                    {(['pin', 'qr'] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className="flex-1 font-montserrat font-bold text-sm py-3 transition-colors duration-200"
+                        style={{
+                          background: activeTab === tab
+                            ? 'linear-gradient(180deg, #3A3A3A 0%, #2A2A2A 100%)'
+                            : 'transparent',
+                          color: activeTab === tab ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
+                          border: 'none',
+                          cursor: 'pointer',
+                          letterSpacing: '0.5px',
                         }}
-                        transition={{ duration: 0.25, ease: 'easeOut' }}
                       >
-                        ✱
-                      </motion.span>
+                        {tab === 'pin' ? 'PIN' : 'QR CODE'}
+                      </button>
                     ))}
                   </div>
 
-                  {/* Keypad */}
-                  <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
-                    {numKeys.map((key) => {
-                      const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
-                      const hoverAnim = { scale: 1.03 };
-                      const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
-
-                      if (key === 'C') {
-                        return (
-                          <motion.button
-                            key={key}
-                            onClick={handleClear}
-                            style={{ ...lightKey, color: '#E84C3D' }}
-                            whileTap={tapAnim}
-                            whileHover={hoverAnim}
-                            transition={transition}
-                          >
-                            C
-                          </motion.button>
-                        );
-                      }
-                      if (key === 'BACK') {
-                        return (
-                          <motion.button
-                            key={key}
-                            onClick={() => setPin(p => p.slice(0, -1))}
-                            style={{ ...greyKey }}
-                            aria-label="Backspace"
-                            whileTap={tapAnim}
-                            whileHover={hoverAnim}
-                            transition={transition}
-                          >
-                            <Delete className="w-5 h-5" />
-                          </motion.button>
-                        );
-                      }
-                      return (
-                        <motion.button
-                          key={key}
-                          onClick={() => handleDigit(key)}
-                          style={lightKey}
-                          whileTap={tapAnim}
-                          whileHover={hoverAnim}
-                          transition={transition}
+                  <div style={{ minHeight: '420px' }}>
+                    <AnimatePresence mode="wait">
+                      {activeTab === 'pin' ? (
+                        <motion.div
+                          key="pin"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          {key}
-                        </motion.button>
-                      );
-                    })}
+                          <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
+                            Enter your PIN to Sign In
+                          </p>
+
+                          <div className="flex justify-center gap-6 mb-8">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                              <motion.span
+                                key={i}
+                                className="font-montserrat font-black text-white select-none"
+                                style={{ fontSize: '4.5rem', lineHeight: 1 }}
+                                animate={{
+                                  opacity: i < pin.length ? 1 : 0.3,
+                                  scale: i < pin.length ? [1, 1.3, 1] : 1,
+                                }}
+                                transition={{ duration: 0.25, ease: 'easeOut' }}
+                              >
+                                ✱
+                              </motion.span>
+                            ))}
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
+                            {numKeys.map((key) => {
+                              const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
+                              const hoverAnim = { scale: 1.03 };
+                              const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+
+                              if (key === 'C') {
+                                return (
+                                  <motion.button
+                                    key={key}
+                                    onClick={handleClear}
+                                    style={{ ...lightKey, color: '#E84C3D' }}
+                                    whileTap={tapAnim}
+                                    whileHover={hoverAnim}
+                                    transition={transition}
+                                  >
+                                    C
+                                  </motion.button>
+                                );
+                              }
+                              if (key === 'BACK') {
+                                return (
+                                  <motion.button
+                                    key={key}
+                                    onClick={() => setPin(p => p.slice(0, -1))}
+                                    style={{ ...greyKey }}
+                                    aria-label="Backspace"
+                                    whileTap={tapAnim}
+                                    whileHover={hoverAnim}
+                                    transition={transition}
+                                  >
+                                    <Delete className="w-5 h-5" />
+                                  </motion.button>
+                                );
+                              }
+                              return (
+                                <motion.button
+                                  key={key}
+                                  onClick={() => handleDigit(key)}
+                                  style={lightKey}
+                                  whileTap={tapAnim}
+                                  whileHover={hoverAnim}
+                                  transition={transition}
+                                >
+                                  {key}
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="qr"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          transition={{ duration: 0.2 }}
+                          className="flex flex-col items-center"
+                        >
+                          <p className="text-center text-base font-montserrat font-medium mb-6" style={{ color: '#A0A0A0' }}>
+                            Scan QR code to sign in
+                          </p>
+
+                          <div
+                            className="flex items-center justify-center"
+                            style={{
+                              width: '280px',
+                              height: '280px',
+                              borderRadius: '12px',
+                              background: '#FFFFFF',
+                              padding: '20px',
+                              marginBottom: '24px',
+                            }}
+                          >
+                            <QRCodeSVG
+                              value="https://kds.posai.app/auth/qr?device=kds-001&ts=1711900000"
+                              size={240}
+                              level="M"
+                              fgColor="#1A1A2E"
+                              bgColor="#FFFFFF"
+                            />
+                          </div>
+
+                          <p className="text-center text-sm font-montserrat" style={{ color: '#B0B8C1', maxWidth: '320px' }}>
+                            Open the POS AI app on your phone and scan this code to sign in instantly
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
+
+                  {/* Sign in with email */}
+                  <button
+                    onClick={() => setView('email')}
+                    style={{
+                      width: '100%',
+                      marginTop: '10px',
+                      height: '60px',
+                      borderRadius: '8px',
+                      background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      color: '#FFFFFF',
+                      fontFamily: 'Montserrat, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '16px',
+                      letterSpacing: '0.5px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Sign in with email
+                  </button>
                 </motion.div>
               ) : (
                 <motion.div
-                  key="qr"
+                  key="email"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center"
                 >
-                  <p className="text-center text-base font-montserrat font-medium mb-6" style={{ color: '#A0A0A0' }}>
-                    Scan QR code to sign in
-                  </p>
-
-                  {/* QR Code */}
-                  <div
-                    className="flex items-center justify-center"
-                    style={{
-                      width: '280px',
-                      height: '280px',
-                      borderRadius: '12px',
-                      background: '#FFFFFF',
-                      padding: '20px',
-                      marginBottom: '24px',
-                    }}
+                  {/* Back button */}
+                  <button
+                    onClick={() => setView('main')}
+                    className="flex items-center gap-2 font-montserrat font-medium text-sm mb-8"
+                    style={{ color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer' }}
                   >
-                    <QRCodeSVG
-                      value="https://kds.posai.app/auth/qr?device=kds-001&ts=1711900000"
-                      size={240}
-                      level="M"
-                      fgColor="#1A1A2E"
-                      bgColor="#FFFFFF"
-                    />
-                  </div>
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to PIN
+                  </button>
 
-                  <p className="text-center text-sm font-montserrat" style={{ color: '#B0B8C1', maxWidth: '320px' }}>
-                    Open the POS AI app on your phone and scan this code to sign in instantly
+                  <p className="text-center text-base font-montserrat font-medium mb-8" style={{ color: '#A0A0A0' }}>
+                    Sign in with your email
                   </p>
+
+                  <form onSubmit={handleEmailSignIn} className="flex flex-col gap-4">
+                    {/* Email */}
+                    <div>
+                      <label className="block font-montserrat font-medium text-sm mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        className="font-montserrat"
+                        style={{
+                          width: '100%',
+                          height: '52px',
+                          borderRadius: '8px',
+                          background: 'rgba(255,255,255,0.08)',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          color: '#FFFFFF',
+                          fontSize: '15px',
+                          padding: '0 16px',
+                          outline: 'none',
+                        }}
+                      />
+                    </div>
+
+                    {/* Password */}
+                    <div>
+                      <label className="block font-montserrat font-medium text-sm mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        Password
+                      </label>
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Enter your password"
+                          className="font-montserrat"
+                          style={{
+                            width: '100%',
+                            height: '52px',
+                            borderRadius: '8px',
+                            background: 'rgba(255,255,255,0.08)',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                            color: '#FFFFFF',
+                            fontSize: '15px',
+                            padding: '0 48px 0 16px',
+                            outline: 'none',
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          style={{
+                            position: 'absolute',
+                            right: '14px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: 'rgba(255,255,255,0.4)',
+                          }}
+                        >
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Forgot Password */}
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        className="font-montserrat font-medium text-sm"
+                        style={{ color: '#E84C3D', background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
+
+                    {/* Sign In button */}
+                    <button
+                      type="submit"
+                      style={{
+                        width: '100%',
+                        height: '60px',
+                        borderRadius: '8px',
+                        background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
+                        border: '1px solid rgba(255,255,255,0.12)',
+                        color: '#FFFFFF',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '16px',
+                        letterSpacing: '0.5px',
+                        cursor: 'pointer',
+                        marginTop: '8px',
+                      }}
+                    >
+                      Sign In
+                    </button>
+                  </form>
                 </motion.div>
               )}
             </AnimatePresence>
-            </div>
-
-            {/* Sign in with email */}
-            <button
-              onClick={() => {}}
-              style={{
-                width: '100%',
-                marginTop: '10px',
-                height: '60px',
-                borderRadius: '8px',
-                background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: '#FFFFFF',
-                fontFamily: 'Montserrat, sans-serif',
-                fontWeight: 700,
-                fontSize: '16px',
-                letterSpacing: '0.5px',
-                cursor: 'pointer',
-              }}
-            >
-              Sign in with email
-            </button>
 
           </div>
         </div>
