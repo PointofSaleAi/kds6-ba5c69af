@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 
@@ -20,6 +20,26 @@ const sortOptions: { value: SortMode; label: string }[] = [
   { value: 'table', label: 'By Table' },
   { value: 'type', label: 'By Type' },
 ];
+
+function SoundToggle() {
+  const [muted, setMuted] = useState(() => localStorage.getItem('kds-muted') === 'true');
+
+  const toggle = () => {
+    const next = !muted;
+    setMuted(next);
+    localStorage.setItem('kds-muted', String(next));
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
+      aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+    >
+      {muted ? <VolumeX size={16} className="text-primary-foreground/70" /> : <Volume2 size={16} className="text-primary-foreground/70" />}
+    </button>
+  );
+}
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
@@ -52,8 +72,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   return (
     <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
       <div className="flex items-center gap-3">
-        <span className="text-primary-foreground text-sm font-bold">
-          {orderCount} Orders in Queue
+        <span className="text-primary-foreground font-bold">
+          <span className="text-lg">{orderCount}</span> <span className="text-sm">Orders in Queue</span>
         </span>
         {kdsMode !== 'Standard' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
@@ -118,6 +138,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
 
       <div className="flex items-center gap-3">
+        <SoundToggle />
         <button
           onClick={onToggleTheme}
           className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
