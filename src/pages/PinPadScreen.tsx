@@ -114,7 +114,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
           <div className="w-full" style={{ maxWidth: '480px' }}>
 
             {/* Label */}
-            <p className="text-center text-sm font-montserrat font-medium mb-3" style={{ color: '#A0A0A0' }}>
+            <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
               Enter PIN to Clock In
             </p>
 
