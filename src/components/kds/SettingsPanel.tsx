@@ -292,6 +292,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
                 <ActionButton label="Change" onClick={() => onOpenSub('language-settings')} />
               </SettingsCard>
 
+              <SettingsCard>
+                <CardLabel label="Bug Reporting" description="Enable in-app bug reporting tool" />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[13px] text-text-secondary font-medium">{bugReporting ? 'ON' : 'OFF'}</span>
+                  <LargeToggle checked={bugReporting} onChange={setBugReporting} />
+                </div>
+              </SettingsCard>
+
               <SettingsCard className="col-span-2">
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
