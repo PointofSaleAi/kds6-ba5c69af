@@ -119,7 +119,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
             </p>
 
             {/* Asterisks */}
-            <div className="flex justify-center gap-4 mb-5">
+            <div className="flex justify-between px-4 mb-5">
               {Array.from({ length: 4 }).map((_, i) => (
                 <span
                   key={i}
