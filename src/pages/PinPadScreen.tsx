@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Delete, QrCode } from 'lucide-react';
+import { Delete } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
@@ -232,18 +233,25 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
                     Scan QR code to sign in
                   </p>
 
-                  {/* QR Placeholder */}
+                  {/* QR Code */}
                   <div
-                    className="flex flex-col items-center justify-center"
+                    className="flex items-center justify-center"
                     style={{
                       width: '280px',
                       height: '280px',
                       borderRadius: '12px',
                       background: '#FFFFFF',
+                      padding: '20px',
                       marginBottom: '24px',
                     }}
                   >
-                    <QrCode className="w-48 h-48" style={{ color: '#1A1A2E' }} />
+                    <QRCodeSVG
+                      value="https://kds.posai.app/auth/qr?device=kds-001&ts=1711900000"
+                      size={240}
+                      level="M"
+                      fgColor="#1A1A2E"
+                      bgColor="#FFFFFF"
+                    />
                   </div>
 
                   <p className="text-center text-sm font-montserrat" style={{ color: '#6C7A89', maxWidth: '320px' }}>
