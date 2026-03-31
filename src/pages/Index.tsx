@@ -75,10 +75,9 @@ const Index = () => {
         />
       )}
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
-      {screen === 'pin-first-time' && <PinPadScreen isFirstTime onSuccess={handleSignIn} onEmailSignIn={() => setScreen('signin')} />}
-      {screen === 'pin-login' && <PinPadScreen onSuccess={handleSignIn} onEmailSignIn={() => setScreen('signin')} />}
-      {screen === 'signin' && <SignInScreen onSignIn={handleSignIn} onForgotPassword={handleForgotPassword} />}
-      {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToSignIn} onComplete={handleBackToSignIn} />}
+      {screen === 'pin-first-time' && <PinPadScreen isFirstTime onSuccess={handleSignIn} />}
+      {screen === 'pin-login' && <PinPadScreen onSuccess={handleSignIn} />}
+      {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToPin} onComplete={handleBackToPin} />}
       {screen === 'main' && (
         <MainOrderView
           onNavigate={handleNavigate}
