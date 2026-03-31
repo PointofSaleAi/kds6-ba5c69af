@@ -44,7 +44,7 @@ export default function PinPadScreen({ onSuccess }: PinPadScreenProps) {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 
-  const numKeys = ['1','2','3','4','5','6','7','8','9','C','0','ENTER'];
+  const numKeys = ['1','2','3','4','5','6','7','8','9','C','0','BACK'];
 
   // Shared button base
   const keyBase: React.CSSProperties = {
