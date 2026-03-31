@@ -4,7 +4,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi, BadgeCheck, Layers, RefreshCw, Printer } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account';
@@ -95,6 +95,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
   const [enableBadge, setEnableBadge] = useState(true);
   const [kdsMode, setKdsMode] = useState('Standard');
   const [syncing, setSyncing] = useState(false);
+  const [bugReporting, setBugReporting] = useState(false);
 
   const handleSync = () => {
     setSyncing(true);
@@ -289,6 +290,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
               <SettingsCard>
                 <CardLabel label="Language" description="English (US)" />
                 <ActionButton label="Change" onClick={() => onOpenSub('language-settings')} />
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Bug Reporting" description="Enable in-app bug reporting tool" />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[13px] text-text-secondary font-medium">{bugReporting ? 'ON' : 'OFF'}</span>
+                  <LargeToggle checked={bugReporting} onChange={setBugReporting} />
+                </div>
               </SettingsCard>
 
               <SettingsCard className="col-span-2">
