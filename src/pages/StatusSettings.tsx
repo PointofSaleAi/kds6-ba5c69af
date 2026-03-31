@@ -175,6 +175,28 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
                         {contrast.passes ? `AA Compliant (${contrast.ratio}:1)` : `Low contrast (${contrast.ratio}:1)`}
                       </div>
 
+                      {/* Timer threshold */}
+                      <div>
+                        <div className="text-xs text-text-muted mb-2">Time Threshold (minutes)</div>
+                        <div className="flex items-center gap-2">
+                          {status.thresholdMinutes !== null ? (
+                            <>
+                              <input
+                                type="number"
+                                min={1}
+                                max={120}
+                                value={status.thresholdMinutes}
+                                onChange={(e) => updateStatus(status.key, { thresholdMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
+                                className="w-20 px-2 py-1.5 text-sm bg-muted rounded border border-border text-text-primary text-center"
+                              />
+                              <span className="text-xs text-text-muted">min</span>
+                            </>
+                          ) : (
+                            <span className="text-xs text-text-secondary italic">No time limit (overtime)</span>
+                          )}
+                        </div>
+                      </div>
+
                       {/* Live preview */}
                       <div className="rounded-lg p-3 text-center text-sm font-bold" style={{ backgroundColor: status.color, color: status.textColor === 'white' ? '#fff' : status.textColor === 'black' ? '#000' : '#6C7A89' }}>
                         {status.label} Preview

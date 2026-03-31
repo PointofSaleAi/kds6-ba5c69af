@@ -249,6 +249,23 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
                 <ActionButton label="Configure" onClick={() => onOpenSub('sound-settings')} />
               </SettingsCard>
 
+              <SettingsCard>
+                <CardLabel label="Printers" description="Manage paired printers" />
+                <ActionButton label="Manage" onClick={() => onOpenSub('printers')} />
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Sync" description="Manually sync orders and settings" />
+                <button
+                  onClick={handleSync}
+                  disabled={syncing}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
+                  {syncing ? 'Syncing...' : 'Sync Now'}
+                </button>
+              </SettingsCard>
+
               <SettingsCard className="col-span-2">
                 <CardLabel label="Connection" description="WebSocket and sync settings" />
                 <div className="flex items-center justify-between">
