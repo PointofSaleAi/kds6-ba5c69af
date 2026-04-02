@@ -2,11 +2,14 @@ import { useState, useCallback } from 'react';
 import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
 import PinPadScreen from '@/pages/PinPadScreen';
+import HardwareActivationScreen from '@/pages/HardwareActivationScreen';
+import PersonalDeviceLoginScreen from '@/pages/PersonalDeviceLoginScreen';
+import SetPinScreen from '@/pages/SetPinScreen';
+import DeviceActivatedScreen from '@/pages/DeviceActivatedScreen';
 import ForgotPasswordScreen from '@/pages/ForgotPasswordScreen';
 import MainOrderView from '@/pages/MainOrderView';
 
 import AlertsPanel from '@/pages/AlertsPanel';
-
 import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import LanguageSettings from '@/pages/LanguageSettings';
 import SoundSettings from '@/pages/SoundSettings';
@@ -18,13 +21,23 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
-// Show dev selector in non-production builds (DEV or preview)
 const isDev = import.meta.env.DEV || import.meta.env.MODE !== 'production' || !window.location.hostname.includes('.lovable.app') || window.location.hostname.includes('-preview--');
 
-type AppScreen = 'dev-selector' | 'splash' | 'pin-first-time' | 'pin-login' | 'forgot' | 'main' | 'performance';
+type AppScreen =
+  | 'dev-selector'
+  | 'splash'
+  | 'hardware-new'
+  | 'hardware-existing'
+  | 'byod-new'
+  | 'byod-existing'
+  | 'set-pin'
+  | 'device-activated'
+  | 'forgot'
+  | 'main'
+  | 'performance';
 
 const Index = () => {
-  const [screen, setScreen] = useState<AppScreen>('splash');
+  const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -39,16 +52,34 @@ const Index = () => {
   const [websocketOpen, setWebsocketOpen] = useState(false);
   const [printersScreenOpen, setPrintersScreenOpen] = useState(false);
 
-  const handleSplashReady = useCallback(() => setScreen('pin-login'), []);
-  const handleSignIn = useCallback(() => setScreen('main'), []);
-  const handleForgotPassword = useCallback(() => setScreen('forgot'), []);
-  const handleBackToPin = useCallback(() => setScreen('pin-login'), []);
-  const handleLogOut = useCallback(() => { setSettingsOpen(false); setScreen('pin-login'); }, []);
+  // Track where to return for fallback flows
+  const [returnToSelector, setReturnToSelector] = useState(false);
+
+  const handleSplashReady = useCallback(() => setScreen('hardware-existing'), []);
+
+  // After first-time login (email/OTP/QR), go to Set PIN
+  const handleFirstTimeLoginSuccess = useCallback(() => setScreen('set-pin'), []);
+
+  // After PIN is set, show activation success
+  const handlePinSet = useCallback(() => setScreen('device-activated'), []);
+
+  // After activation, enter KDS
+  const handleActivated = useCallback(() => setScreen('main'), []);
+
+  // Existing user PIN success goes straight to KDS
+  const handlePinLoginSuccess = useCallback(() => setScreen('main'), []);
+
+  // Fallback from PIN screen to email/OTP login
+  const handlePinFallback = useCallback(() => setScreen('byod-new'), []);
+
+  const handleLogOut = useCallback(() => {
+    setSettingsOpen(false);
+    setScreen(isDev ? 'dev-selector' : 'splash');
+  }, []);
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
       case 'home': setScreen('main'); break;
-      case 'alerts': setAlertsOpen(true); break;
       case 'alerts': setAlertsOpen(true); break;
       case 'settings': setSettingsOpen(true); break;
       case 'performance': setScreen('performance'); break;
@@ -73,15 +104,49 @@ const Index = () => {
     <>
       {screen === 'dev-selector' && (
         <DevScenarioSelector
-          onSelectHardware={() => setScreen('pin-first-time')}
-          onSelectBYOD={() => setScreen('splash')}
-          onExitDevMode={() => setScreen('splash')}
+          onHardwareNew={() => setScreen('hardware-new')}
+          onHardwareExisting={() => setScreen('hardware-existing')}
+          onBYODNew={() => setScreen('byod-new')}
+          onBYODExisting={() => setScreen('byod-existing')}
         />
       )}
+
       {screen === 'splash' && <SplashScreen onReady={handleSplashReady} />}
-      {screen === 'pin-first-time' && <PinPadScreen isFirstTime onSuccess={handleSignIn} />}
-      {screen === 'pin-login' && <PinPadScreen onSuccess={handleSignIn} />}
-      {screen === 'forgot' && <ForgotPasswordScreen onBack={handleBackToPin} onComplete={handleBackToPin} />}
+
+      {screen === 'hardware-new' && (
+        <HardwareActivationScreen
+          onSuccess={handleFirstTimeLoginSuccess}
+          onBack={() => setScreen(isDev ? 'dev-selector' : 'splash')}
+        />
+      )}
+
+      {screen === 'hardware-existing' && (
+        <PinPadScreen
+          onSuccess={handlePinLoginSuccess}
+          onFallback={() => setScreen('hardware-new')}
+        />
+      )}
+
+      {screen === 'byod-new' && (
+        <PersonalDeviceLoginScreen
+          onSuccess={handleFirstTimeLoginSuccess}
+          onBack={() => setScreen(isDev ? 'dev-selector' : 'splash')}
+        />
+      )}
+
+      {screen === 'byod-existing' && (
+        <PinPadScreen
+          onSuccess={handlePinLoginSuccess}
+          onFallback={() => setScreen('byod-new')}
+        />
+      )}
+
+      {screen === 'set-pin' && <SetPinScreen onComplete={handlePinSet} />}
+
+      {screen === 'device-activated' && <DeviceActivatedScreen onComplete={handleActivated} />}
+
+      {screen === 'forgot' && <ForgotPasswordScreen onBack={() => setScreen('hardware-existing')} onComplete={() => setScreen('hardware-existing')} />}
+
       {screen === 'main' && (
         <MainOrderView
           onNavigate={handleNavigate}
@@ -91,7 +156,7 @@ const Index = () => {
           onLogOut={handleLogOut}
         />
       )}
-      
+
       {screen === 'performance' && <PerformanceDashboard onBack={() => setScreen('main')} />}
 
       <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
