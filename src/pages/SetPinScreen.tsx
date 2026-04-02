@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Delete } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo.png';
+import posaiLogo from '@/assets/posai-logo-white.png';
 
 interface SetPinScreenProps {
   onComplete: () => void;
