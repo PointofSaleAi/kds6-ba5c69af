@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Delete, Check } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo.png';
+import posaiLogo from '@/assets/posai-logo-white.png';
 
 type ForgotStep = 'request' | 'otp' | 'success';
 

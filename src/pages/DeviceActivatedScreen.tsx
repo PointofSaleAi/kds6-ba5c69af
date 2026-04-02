@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo.png';
+import posaiLogo from '@/assets/posai-logo-white.png';
 
 interface DeviceActivatedScreenProps {
   onComplete: () => void;

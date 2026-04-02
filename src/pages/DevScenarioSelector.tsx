@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { AlertTriangle, Info, Monitor, Smartphone, UserPlus, LogIn } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo.png';
+import posaiLogo from '@/assets/posai-logo-white.png';
 
 interface DevScenarioSelectorProps {
   onHardwareNew: () => void;
