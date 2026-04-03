@@ -236,6 +236,9 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                           </div>
                         </div>
                         <button type="submit" style={btnStyle}>ACTIVATE</button>
+                        <button type="button" onClick={() => setPhase('forgot-password')} className="text-sm font-montserrat text-center" style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
+                          Forgot Password?
+                        </button>
                       </motion.div>
                     )}
 
