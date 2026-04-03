@@ -146,8 +146,10 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
               </AnimatePresence>
             </div>
 
-            {/* Vertical divider */}
-            <div className="hidden md:block absolute left-1/2 top-[100px] bottom-[60px]" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
+            {/* Or divider */}
+            <div className="hidden md:flex absolute left-1/2 top-[100px] bottom-[60px] -translate-x-1/2 items-center justify-center">
+              <span className="text-white/50 font-montserrat font-semibold text-sm px-2" style={{ backgroundColor: 'transparent' }}>Or</span>
+            </div>
 
             {/* RIGHT: PIN pad or Sign In form */}
             <div className="flex flex-col items-center justify-center px-10">
