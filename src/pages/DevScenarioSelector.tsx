@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { AlertTriangle, Info, UserPlus, LogIn } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 
 interface DevScenarioSelectorProps {
   onNewUser: () => void;
@@ -38,7 +38,7 @@ export default function DevScenarioSelector({
         </div>
 
         {/* Logo + Title */}
-        <img src={posaiLogo} alt="POSAI" className="h-14 object-contain mb-3" />
+        <PosaiLogo variant="light" className="h-14 object-contain mb-3" />
         <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to POSAI Kitchen Display System</h1>
         <p className="text-sm mb-10 font-montserrat" style={{ color: '#6C7A89' }}>
           Select a scenario to preview the login flow

@@ -2,7 +2,7 @@ import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 
 interface PersonalDeviceLoginScreenProps {
   onSuccess: () => void;
@@ -72,7 +72,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <img src={posaiLogo} alt="POSAI" className="h-12 object-contain mx-auto mb-2" />
+          <PosaiLogo variant="light" className="h-12 object-contain mx-auto mb-2" />
           <h1 className="text-white text-xl font-bold font-montserrat">Sign In to Kitchen Display System</h1>
           <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>Personal device login</p>
         </div>

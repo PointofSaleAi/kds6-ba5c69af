@@ -2,7 +2,7 @@ import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, Check, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
 
@@ -113,7 +113,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
       <div className="relative z-10 flex flex-col h-full w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full">
           <div className="flex items-center justify-center gap-5 pt-14 pb-1">
-            <img src={posaiLogo} alt="POSAI" className="h-14 object-contain" />
+            <PosaiLogo variant="light" className="h-14 object-contain" />
             <h1 className="text-white text-xl font-bold font-montserrat">Kitchen Display System</h1>
           </div>
 

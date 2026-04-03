@@ -2,7 +2,7 @@ import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Check, Delete, ArrowLeft } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
 
@@ -141,7 +141,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
 
         {/* Logo + Title row */}
         <div className="flex items-center justify-center gap-5 pt-14 pb-4">
-          <img src={posaiLogo} alt="POSAI" className="h-14 object-contain" />
+          <PosaiLogo variant="light" className="h-14 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
               {phase === 'activate' ? 'Kitchen Display System' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
