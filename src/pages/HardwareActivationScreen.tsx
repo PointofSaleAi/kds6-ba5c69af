@@ -59,7 +59,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
 
   const btnStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
-    background: '#E84C3D',
+    background: '#212121',
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
     border: 'none', color: '#FFFFFF',
     fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
@@ -84,7 +84,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         <div className="flex items-center justify-center gap-5 pt-14 pb-4">
           <img src={posaiLogo} alt="POS ai" className="h-14 object-contain" />
           <div>
-            <h1 className="text-white text-xl font-bold font-montserrat">Hardware Activation</h1>
+            <h1 className="text-white text-xl font-bold font-montserrat">KDS Activation</h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               Activate this KDS device to get started
             </p>
@@ -134,11 +134,16 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           </div>
 
           {/* Vertical divider */}
-          <div className="hidden md:block absolute left-1/2 top-[180px] bottom-[60px]" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
+          {/* Or divider */}
+          <div className="hidden md:flex absolute left-1/2 top-[180px] bottom-[60px] -translate-x-1/2 flex-col items-center justify-center">
+            <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
+            <span className="text-white/50 font-montserrat font-semibold text-sm py-3">Or</span>
+            <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
+          </div>
 
           {/* RIGHT: Smart sign-in */}
           <div className="flex flex-col justify-center px-10">
-            <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Sign In</p>
+            <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Activate</p>
             <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
               Enter your email or mobile number to activate
             </p>
