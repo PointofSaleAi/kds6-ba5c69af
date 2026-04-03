@@ -164,19 +164,17 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                       transition={{ duration: 0.4 }}
                       onAnimationComplete={() => { if (shake) { setShake(false); setPin(''); } }}
                     >
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="rounded-full"
-                          style={{
-                            width: '20px', height: '20px',
-                            border: i < pin.length ? 'none' : '2px solid rgba(255,255,255,0.3)',
-                            backgroundColor: i < pin.length ? '#E84C3D' : 'transparent',
-                          }}
-                          animate={{ scale: i < pin.length ? [1, 1.3, 1] : 1 }}
-                          transition={{ duration: 0.2 }}
-                        />
-                      ))}
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <motion.span
+                      key={i}
+                      className="font-montserrat font-black text-white select-none"
+                      style={{ fontSize: '4.5rem', lineHeight: 1 }}
+                      animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
+                      transition={{ duration: 0.25, ease: 'easeOut' }}
+                    >
+                      ✱
+                    </motion.span>
+                  ))}
                     </motion.div>
 
                     <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
