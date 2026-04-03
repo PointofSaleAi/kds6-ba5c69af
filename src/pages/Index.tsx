@@ -114,7 +114,6 @@ const Index = () => {
       {screen === 'hardware-new' && (
         <HardwareActivationScreen
           onSuccess={handleFirstTimeLoginSuccess}
-          onBack={() => setScreen(isDev ? 'dev-selector' : 'splash')}
         />
       )}
 
