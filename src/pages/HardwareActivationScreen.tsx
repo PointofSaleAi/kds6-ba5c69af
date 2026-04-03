@@ -144,7 +144,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           <img src={posaiLogo} alt="POS ai" className="h-14 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
-              {phase === 'activate' ? 'Kitchen Display System Activation' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
+              {phase === 'activate' ? 'Kitchen Display Activation' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               {phase === 'activate'
