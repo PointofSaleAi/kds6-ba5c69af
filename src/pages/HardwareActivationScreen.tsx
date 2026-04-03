@@ -4,6 +4,7 @@ import { Eye, EyeOff, Check, Delete, ArrowLeft } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 import MainOrderView from '@/pages/MainOrderView';
+import ResetFlow from '@/components/kds/ResetFlow';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
