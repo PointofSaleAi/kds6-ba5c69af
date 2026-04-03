@@ -166,12 +166,12 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
                 </div>
                 <div>
                   <label className="block font-montserrat font-medium text-xs mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Confirm PIN</label>
-                  <div className="flex gap-3">
+                  <div className="grid grid-cols-4 gap-3 w-full">
                     {confirmPinDigits.map((d, i) => (
                       <input
                         key={i} id={`reset-confirm-pin-${i}`} type="text" inputMode="numeric" maxLength={1}
                         value={d} onChange={(e) => handlePinBoxChange('confirm', i, e.target.value)}
-                        className="flex-1 h-[56px] text-center text-xl font-bold rounded-lg font-montserrat"
+                        className="w-full h-[56px] text-center text-xl font-bold rounded-lg font-montserrat"
                         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
                       />
                     ))}
