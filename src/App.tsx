@@ -9,6 +9,8 @@ import { BadgeVisibilityProvider } from "@/hooks/use-badge-visibility";
 import { SoundProvider } from "@/hooks/use-sound";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import FullKDSView from "./pages/FullKDSView.tsx";
+import StationKDSView from "./pages/StationKDSView.tsx";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/kds/full" element={<FullKDSView />} />
+            <Route path="/kds/station" element={<StationKDSView />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
