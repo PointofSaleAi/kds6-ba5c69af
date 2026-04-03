@@ -79,6 +79,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         )}
       </div>
 
+      {!hideViewControls && (
       <div className="flex items-center gap-3">
         {/* Sort control */}
         <div className="relative" ref={sortRef}>
@@ -133,6 +134,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           ))}
         </div>
       </div>
+      )}
 
       <div className="flex items-center gap-3">
         <SoundToggle />

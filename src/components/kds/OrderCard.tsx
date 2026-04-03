@@ -127,6 +127,20 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
     );
   }
 
+  // Station view: find the course before the station course to check if it's fired
+  const stationNotification = stationCourse ? (() => {
+    const stationIdx = order.courses.findIndex(c => c.course === stationCourse);
+    if (stationIdx > 0) {
+      const prevCourse = order.courses[stationIdx - 1];
+      if (prevCourse.isFired && prevCourse.firedAgoLabel) {
+        const prevName = prevCourse.course.charAt(0) + prevCourse.course.slice(1).toLowerCase();
+        const stationName = stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase();
+        return `${prevName} fired ${prevCourse.firedAgoLabel} \u2014 ${stationName.toLowerCase()} prep triggered automatically`;
+      }
+    }
+    return null;
+  })() : null;
+
   return (
     <div
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${urgencyBorderMap[urgency]} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
@@ -136,6 +150,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
         type={order.orderType}
         time={formatTimeReceived(order.timeReceived)}
         tableInfo={order.tableName}
+        stationBadge={stationCourse ? 'Entree station' : undefined}
       />
 
       <div className="px-3 pt-2 pb-1">
@@ -151,6 +166,16 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
           <span className="text-modifier text-text-secondary">{order.serverName}</span>
         </div>
       </div>
+
+      {/* Fix 3: Auto-fire notification strip */}
+      {stationNotification && (
+        <div className="px-3 py-2 flex items-center gap-2 bg-success/10">
+          <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
+          <span className="text-[11px] font-medium text-success">
+            {stationNotification}
+          </span>
+        </div>
+      )}
 
       <div className="border-t border-border">
         {order.courses.map((courseGroup) => (
