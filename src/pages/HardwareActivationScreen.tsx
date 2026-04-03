@@ -144,7 +144,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
               {/* Smart input */}
               <div>
-                <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Email or mobile number</label>
+                <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or mobile number</label>
                 <input
                   type="text"
                   value={input}
