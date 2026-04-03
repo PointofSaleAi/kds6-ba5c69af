@@ -18,32 +18,118 @@ interface CourseSectionProps {
   stationCourse?: string;
 }
 
+type StationStatus = 'fired' | 'active' | 'pending';
+
+function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
+  if (courseGroup.isFired) return 'fired';
+  if (courseGroup.course === stationCourse) return 'active';
+  return 'pending';
+}
+
+function getStationLabel(courseGroup: CourseGroup, status: StationStatus): string {
+  const name = courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase();
+  switch (status) {
+    case 'fired':
+      return `${name} \u00B7 Other station`;
+    case 'active':
+      return `${name} \u00B7 Your station \u2014 active`;
+    case 'pending':
+      return `${name} \u00B7 Other station \u2014 pending`;
+  }
+}
+
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse }: CourseSectionProps) {
   const isFired = courseGroup.isFired;
-  const isStationDimmed = stationCourse ? courseGroup.course !== stationCourse : false;
+  const isStationMode = !!stationCourse;
+  const stationStatus = isStationMode ? getStationStatus(courseGroup, stationCourse) : null;
+  const isStationDimmed = isStationMode && stationStatus !== 'active';
+
   const allItemsDone = courseGroup.items
     .filter(i => !i.isCancelled)
     .every(i => itemStatuses?.get(i.id) === 'done');
 
   if (allItemsDone) return null;
 
+  // Station mode: active course gets purple border
+  const containerClass = isStationMode && stationStatus === 'active'
+    ? 'border-l-[3px] rounded-l-none'
+    : isStationDimmed
+      ? 'opacity-30 pointer-events-none'
+      : isFired
+        ? 'opacity-50'
+        : '';
+
+  const containerStyle = isStationMode && stationStatus === 'active'
+    ? { borderLeftColor: '#7F77DD' }
+    : undefined;
+
+  // Header background
+  const headerBg = isStationMode && stationStatus === 'active'
+    ? '' // use inline style
+    : 'bg-muted';
+
+  const headerStyle = isStationMode && stationStatus === 'active'
+    ? { backgroundColor: '#EEEDFE' }
+    : undefined;
+
+  // Course label
+  const courseLabel = isStationMode
+    ? getStationLabel(courseGroup, stationStatus!)
+    : courseGroup.course;
+
+  // Label colour
+  const labelClass = isStationMode && stationStatus === 'active'
+    ? 'text-[11px] font-medium uppercase tracking-widest'
+    : 'text-section-label uppercase text-text-secondary tracking-widest';
+
+  const labelStyle = isStationMode && stationStatus === 'active'
+    ? { color: '#7F77DD', fontWeight: 500 }
+    : undefined;
+
+  // Timer chip for station mode
+  const timerChip = isStationMode ? getTimerChip(courseGroup, stationStatus!) : null;
+
+  // Fire button: in station mode, only show on active course; disable on pending
+  const showFireButton = isStationMode
+    ? stationStatus === 'active'
+    : !isFired && !!onFireCourse;
+
+  const fireButtonDisabled = isStationMode && stationStatus === 'pending';
+
   return (
-    <div className={isFired ? 'opacity-50' : isStationDimmed ? 'opacity-30 pointer-events-none' : ''}>
-      <div className="flex items-center justify-between bg-muted px-3 py-1.5 mt-1">
-        <span className="text-section-label uppercase text-text-secondary tracking-widest">
-          {courseGroup.course}
+    <div className={containerClass} style={containerStyle}>
+      <div className={`flex items-center justify-between ${headerBg} px-3 py-1.5 mt-1`} style={headerStyle}>
+        <span className={labelClass} style={labelStyle}>
+          {courseLabel}
         </span>
-        {!isFired && onFireCourse && (
-          <button
-            onClick={() => onFireCourse(courseGroup.course)}
-            className="text-[11px] font-bold uppercase text-brand-primary hover:text-brand-primary/80 transition-colors px-3 py-2 rounded bg-brand-primary/10 min-h-[44px] min-w-[44px]"
-          >
-            FIRE {courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course}
-          </button>
-        )}
-        {isFired && (
-          <span className="text-[10px] font-bold uppercase text-success">FIRED</span>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Timer chip */}
+          {timerChip && (
+            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${timerChip.className}`}>
+              {timerChip.label}
+            </span>
+          )}
+
+          {/* Fired badge (non-station mode) */}
+          {!isStationMode && isFired && (
+            <span className="text-[10px] font-bold uppercase text-success">FIRED</span>
+          )}
+
+          {/* Fire button */}
+          {showFireButton && onFireCourse && (
+            <button
+              onClick={() => onFireCourse(courseGroup.course)}
+              disabled={fireButtonDisabled}
+              className={`text-[11px] font-bold uppercase px-3 py-2 rounded min-h-[44px] min-w-[44px] transition-colors ${
+                fireButtonDisabled
+                  ? 'bg-muted text-muted-foreground pointer-events-none'
+                  : 'text-brand-primary hover:text-brand-primary/80 bg-brand-primary/10'
+              }`}
+            >
+              FIRE {courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="px-3 py-1">
@@ -66,7 +152,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     <span className="text-success text-sm">&#10003;</span>
                   )}
                 </div>
-                {!item.isCancelled && (
+                {!item.isCancelled && !isStationDimmed && (
                   <div className="flex items-center shrink-0">
                       {status === 'ready' ? (
                         <>
@@ -150,4 +236,18 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
       </div>
     </div>
   );
+}
+
+function getTimerChip(courseGroup: CourseGroup, status: StationStatus): { label: string; className: string } | null {
+  switch (status) {
+    case 'fired':
+      if (!courseGroup.firedAgoLabel) return null;
+      return { label: `Done ${courseGroup.firedAgoLabel}`, className: 'bg-order-take-out/15 text-order-take-out' };
+    case 'active':
+      if (!courseGroup.prepTimerLabel) return null;
+      return { label: `Prep: ${courseGroup.prepTimerLabel}`, className: 'bg-success/15 text-success' };
+    case 'pending':
+      if (!courseGroup.autoFireLabel) return null;
+      return { label: courseGroup.autoFireLabel, className: 'bg-muted text-muted-foreground' };
+  }
 }
