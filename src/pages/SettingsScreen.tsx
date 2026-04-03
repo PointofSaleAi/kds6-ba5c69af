@@ -192,6 +192,21 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             </div>
             <SettingsRow icon={User} label="Device Name" description="Kitchen Display 1" />
             <SettingsRow icon={Globe} label="Language" description="English (US)" onClick={() => onOpenSub('language-settings')} />
+            <SettingsRow
+              icon={Bug}
+              label="Dev Mode"
+              description="Show flow selector on login"
+              right={
+                <Toggle
+                  checked={devMode}
+                  onChange={(v) => {
+                    setDevMode(v);
+                    localStorage.setItem('posai-dev-mode', String(v));
+                    onDevModeChange?.(v);
+                  }}
+                />
+              }
+            />
             <div className="px-4 py-3">
               <button
                 onClick={() => setShowLogoutConfirm(true)}
