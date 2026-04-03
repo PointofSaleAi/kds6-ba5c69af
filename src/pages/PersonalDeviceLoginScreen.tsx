@@ -73,7 +73,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
         {/* Logo */}
         <div className="text-center mb-8">
           <img src={posaiLogo} alt="POS ai" className="h-12 object-contain mx-auto mb-2" />
-          <h1 className="text-white text-xl font-bold font-montserrat">Sign In to KDS</h1>
+          <h1 className="text-white text-xl font-bold font-montserrat">Sign In to Kitchen Display System</h1>
           <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>Personal device login</p>
         </div>
 

@@ -60,7 +60,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               >
                 <div>
                   <div className="text-sm font-medium text-text-primary text-left">Enable Local Backup</div>
-                  <div className="text-xs text-text-muted text-left">Keeps KDS working even if internet goes down</div>
+                  <div className="text-xs text-text-muted text-left">Keeps Kitchen Display System working even if internet goes down</div>
                 </div>
                 <div
                   className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] ${localBackup ? 'bg-brand-primary' : 'bg-border'}`}

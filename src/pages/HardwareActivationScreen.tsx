@@ -144,11 +144,11 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           <img src={posaiLogo} alt="POS ai" className="h-14 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
-              {phase === 'activate' ? 'KDS Activation' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
+              {phase === 'activate' ? 'Kitchen Display System Activation' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               {phase === 'activate'
-                ? 'Activate this KDS device to get started'
+                ? 'Activate this Kitchen Display System device to get started'
                 : phase === 'set-pin'
                   ? (pinStep === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm')
                   : 'Reset your account password'}
