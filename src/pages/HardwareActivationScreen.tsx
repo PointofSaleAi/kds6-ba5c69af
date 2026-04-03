@@ -59,7 +59,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
 
   const btnStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
-    background: '#E84C3D',
+    background: '#212121',
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
     border: 'none', color: '#FFFFFF',
     fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
