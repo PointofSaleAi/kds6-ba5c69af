@@ -128,7 +128,7 @@ const Index = () => {
       {screen === 'byod-new' && (
         <PersonalDeviceLoginScreen
           onSuccess={handleFirstTimeLoginSuccess}
-          onBack={() => setScreen(isDev ? 'dev-selector' : 'splash')}
+          onBack={() => setScreen(isDevMode() ? 'dev-selector' : 'splash')}
         />
       )}
 
