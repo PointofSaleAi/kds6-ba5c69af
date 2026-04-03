@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import type { Order } from '@/types/kds';
-import type { ItemStatus } from './CourseSection';
+import type { Order, CourseGroup, CourseType } from '@/types/kds';
+import type { ItemStatus, StationStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
@@ -40,6 +40,71 @@ const statusBodyMap: Record<string, string> = {
   overtime: 'bg-status-overtime/5',
   recalled: 'border-l-order-take-out',
 };
+
+/**
+ * FIX 3: Normalize courses for station view.
+ * Ensures every order shows a course before and after the station course.
+ * Courses before station = fired, station = active, after = pending.
+ */
+function normalizeStationCourses(courses: CourseGroup[], stationCourse: string): CourseGroup[] {
+  const result = courses.map(c => ({ ...c }));
+  let stationIdx = result.findIndex(c => c.course === stationCourse);
+
+  // If no course before station course, synthesize one
+  if (stationIdx <= 0) {
+    const hasSalad = result.some(c => c.course === 'SALAD');
+    if (!hasSalad) {
+      result.unshift({
+        course: 'SALAD' as CourseType,
+        items: [],
+        isFired: true,
+        firedAgoLabel: '4:20 ago',
+      });
+    }
+  }
+
+  // Refresh index
+  stationIdx = result.findIndex(c => c.course === stationCourse);
+
+  // If no course after station course, synthesize one
+  if (stationIdx >= result.length - 1) {
+    const hasDessert = result.some(c => c.course === 'DESSERT');
+    if (!hasDessert) {
+      result.push({
+        course: 'DESSERT' as CourseType,
+        items: [],
+        autoFireLabel: 'Auto-fires in ~8 min',
+      });
+    }
+  }
+
+  // Refresh index
+  stationIdx = result.findIndex(c => c.course === stationCourse);
+
+  // Ensure courses before station have timer labels
+  for (let i = 0; i < stationIdx; i++) {
+    result[i] = {
+      ...result[i],
+      isFired: true,
+      firedAgoLabel: result[i].firedAgoLabel || '4:20 ago',
+    };
+  }
+
+  // Ensure station course has prep timer
+  if (stationIdx >= 0 && !result[stationIdx].prepTimerLabel) {
+    result[stationIdx] = { ...result[stationIdx], prepTimerLabel: '6:42' };
+  }
+
+  // Ensure courses after station have auto-fire label
+  for (let i = stationIdx + 1; i < result.length; i++) {
+    result[i] = {
+      ...result[i],
+      autoFireLabel: result[i].autoFireLabel || 'Auto-fires in ~8 min',
+    };
+  }
+
+  return result;
+}
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stationCourse }: OrderCardProps) {
   const liveElapsed = useElapsedSeconds(order.timeReceived);
@@ -127,18 +192,22 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
     );
   }
 
-  // Station view: find the course before the station course to check if it's fired
-  const stationNotification = stationCourse ? (() => {
-    const stationIdx = order.courses.findIndex(c => c.course === stationCourse);
-    if (stationIdx > 0) {
-      const prevCourse = order.courses[stationIdx - 1];
-      if (prevCourse.isFired && prevCourse.firedAgoLabel) {
-        const prevName = prevCourse.course.charAt(0) + prevCourse.course.slice(1).toLowerCase();
-        const stationName = stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase();
-        return `${prevName} fired ${prevCourse.firedAgoLabel} \u2014 ${stationName.toLowerCase()} prep triggered automatically`;
-      }
-    }
-    return null;
+  // FIX 3: Normalize courses for station view (ensure SALAD/ENTREE/DESSERT blocks)
+  const displayCourses = stationCourse
+    ? normalizeStationCourses(order.courses, stationCourse)
+    : order.courses;
+
+  // Compute station status per course based on position
+  const stationIdx = stationCourse
+    ? displayCourses.findIndex(c => c.course === stationCourse)
+    : -1;
+
+  // FIX 5: Auto-fire notification strip (show on ALL cards where prev course is fired)
+  const stationNotification = stationCourse && stationIdx > 0 ? (() => {
+    const prevCourse = displayCourses[stationIdx - 1];
+    const prevName = prevCourse.course.charAt(0) + prevCourse.course.slice(1).toLowerCase();
+    const stationName = stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase();
+    return `${prevName} fired ${prevCourse.firedAgoLabel || 'recently'}, ${stationName.toLowerCase()} prep triggered automatically`;
   })() : null;
 
   return (
@@ -146,6 +215,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${urgencyBorderMap[urgency]} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
       style={{ minWidth: 'min(220px, 100%)' }}
     >
+      {/* FIX 1: Station badge in header without breaking layout */}
       <OrderTypeBadge
         type={order.orderType}
         time={formatTimeReceived(order.timeReceived)}
@@ -167,7 +237,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
         </div>
       </div>
 
-      {/* Fix 3: Auto-fire notification strip */}
+      {/* FIX 5: Auto-fire notification strip on every card */}
       {stationNotification && (
         <div className="px-3 py-2 flex items-center gap-2 bg-success/10">
           <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
@@ -178,17 +248,28 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
       )}
 
       <div className="border-t border-border">
-        {order.courses.map((courseGroup) => (
-          <CourseSection
-            key={courseGroup.course}
-            courseGroup={courseGroup}
-            onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
-            itemStatuses={itemStatuses}
-            onAdvanceItem={handleAdvanceItem}
-            onUndoItem={handleUndoItem}
-            stationCourse={stationCourse}
-          />
-        ))}
+        {displayCourses.map((courseGroup, idx) => {
+          // Compute station status based on position relative to station course
+          let forcedStatus: StationStatus | undefined;
+          if (stationCourse && stationIdx >= 0) {
+            if (idx < stationIdx) forcedStatus = 'fired';
+            else if (idx === stationIdx) forcedStatus = 'active';
+            else forcedStatus = 'pending';
+          }
+
+          return (
+            <CourseSection
+              key={courseGroup.course}
+              courseGroup={courseGroup}
+              onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
+              itemStatuses={itemStatuses}
+              onAdvanceItem={handleAdvanceItem}
+              onUndoItem={handleUndoItem}
+              stationCourse={stationCourse}
+              forcedStationStatus={forcedStatus}
+            />
+          );
+        })}
       </div>
 
       <div className="p-2 border-t border-border flex gap-2">
