@@ -210,7 +210,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                     <button
                       onClick={() => setRightMode('signin')}
                       className="w-full text-center text-sm font-montserrat mt-4"
-                      style={{ color: '#6C7A89', background: 'none', border: 'none', cursor: 'pointer' }}
+                      style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       Sign in with email or mobile instead
                     </button>
