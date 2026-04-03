@@ -16,6 +16,7 @@ interface SettingsPanelProps {
   onClose: () => void;
   onOpenSub: (sub: string) => void;
   onLogOut?: () => void;
+  onDevModeChange?: (enabled: boolean) => void;
 }
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
