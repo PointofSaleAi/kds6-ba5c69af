@@ -113,7 +113,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col h-full"
         >
-          <div className="flex justify-center pt-8 pb-4">
+          <div className="flex justify-center pt-12 pb-4">
             <img src={posaiLogo} alt="POS ai" className="h-12 object-contain" />
           </div>
 
