@@ -4,13 +4,14 @@ import { Eye, EyeOff, Check, Delete, ArrowLeft } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 import MainOrderView from '@/pages/MainOrderView';
+import ResetFlow from '@/components/kds/ResetFlow';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
 }
 
 export default function HardwareActivationScreen({ onSuccess }: HardwareActivationScreenProps) {
-  const [phase, setPhase] = useState<'activate' | 'set-pin'>('activate');
+  const [phase, setPhase] = useState<'activate' | 'set-pin' | 'forgot-password'>('activate');
 
   // Activation state
   const [input, setInput] = useState('');
@@ -143,14 +144,14 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           <img src={posaiLogo} alt="POS ai" className="h-14 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
-              {phase === 'activate' ? 'KDS Activation' : 'Set Your PIN'}
+              {phase === 'activate' ? 'KDS Activation' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               {phase === 'activate'
                 ? 'Activate this KDS device to get started'
-                : pinStep === 'set'
-                  ? 'Choose a 4-digit PIN for quick access'
-                  : 'Enter the same PIN again to confirm'}
+                : phase === 'set-pin'
+                  ? (pinStep === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm')
+                  : 'Reset your account password'}
             </p>
           </div>
         </div>
@@ -235,6 +236,9 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                           </div>
                         </div>
                         <button type="submit" style={btnStyle}>ACTIVATE</button>
+                        <button type="button" onClick={() => setPhase('forgot-password')} className="text-sm font-montserrat text-center" style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
+                          Forgot Password?
+                        </button>
                       </motion.div>
                     )}
 
@@ -326,6 +330,12 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: pinStep === 'confirm' ? '#FFFFFF' : 'rgba(255,255,255,0.3)' }} />
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {phase === 'forgot-password' && (
+            <motion.div key="forgot-pw" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 flex items-center justify-center">
+              <ResetFlow type="password" onBack={() => setPhase('activate')} onComplete={() => setPhase('activate')} />
             </motion.div>
           )}
         </AnimatePresence>

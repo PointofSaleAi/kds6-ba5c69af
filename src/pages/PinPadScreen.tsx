@@ -4,6 +4,7 @@ import { Delete, Check, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 import MainOrderView from '@/pages/MainOrderView';
+import ResetFlow from '@/components/kds/ResetFlow';
 
 interface PinPadScreenProps {
   onSuccess: () => void;
@@ -14,7 +15,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
-  const [rightMode, setRightMode] = useState<'pin' | 'signin'>('pin');
+  const [rightMode, setRightMode] = useState<'pin' | 'signin' | 'forgot-pin' | 'forgot-password'>('pin');
 
   // Sign-in form state
   const [input, setInput] = useState('');
@@ -92,27 +93,25 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
 
   const btnStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
-    background: '#212121',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
+    background: '#212121', boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
     border: 'none', color: '#FFFFFF',
     fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
     letterSpacing: '0.5px', cursor: 'pointer',
   };
 
+  const linkStyle: React.CSSProperties = {
+    color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer',
+  };
+
   return (
     <div className="fixed inset-0">
-      {/* Blurred KDS background */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
         <MainOrderView onNavigate={() => {}} settingsOpen={false} onCloseSettings={() => {}} onOpenSub={() => {}} onLogOut={() => {}} />
       </div>
       <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,15,12,0.72)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)' }} />
 
       <div className="relative z-10 flex flex-col h-full w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col h-full"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full">
           <div className="flex justify-center pt-12 pb-4">
             <img src={posaiLogo} alt="POS ai" className="h-12 object-contain" />
           </div>
@@ -121,7 +120,6 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
             {/* LEFT: QR */}
             <div className="flex flex-col items-center justify-center px-10">
               <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>Scan to Sign In</p>
-
               <AnimatePresence mode="wait">
                 {!qrApproved ? (
                   <motion.div key="qr" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
@@ -153,10 +151,10 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
               <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
             </div>
 
-            {/* RIGHT: PIN pad or Sign In form */}
+            {/* RIGHT */}
             <div className="flex flex-col items-center justify-center px-10">
               <AnimatePresence mode="wait">
-                {rightMode === 'pin' ? (
+                {rightMode === 'pin' && (
                   <motion.div key="pin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
                     <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
                       Enter your PIN
@@ -168,17 +166,17 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                       transition={{ duration: 0.4 }}
                       onAnimationComplete={() => { if (shake) { setShake(false); setPin(''); } }}
                     >
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <motion.span
-                      key={i}
-                      className="font-montserrat font-black text-white select-none"
-                      style={{ fontSize: '4.5rem', lineHeight: 1 }}
-                      animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                    >
-                      ✱
-                    </motion.span>
-                  ))}
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <motion.span
+                          key={i}
+                          className="font-montserrat font-black text-white select-none"
+                          style={{ fontSize: '4.5rem', lineHeight: 1 }}
+                          animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
+                          transition={{ duration: 0.25, ease: 'easeOut' }}
+                        >
+                          ✱
+                        </motion.span>
+                      ))}
                     </motion.div>
 
                     <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
@@ -201,15 +199,18 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                       })}
                     </div>
 
-                    <button
-                      onClick={() => setRightMode('signin')}
-                      className="w-full text-center text-sm font-montserrat mt-4"
-                      style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
-                    >
-                      Sign in with email or mobile instead
-                    </button>
+                    <div className="flex justify-between mt-4">
+                      <button onClick={() => setRightMode('forgot-pin')} className="text-sm font-montserrat" style={linkStyle}>
+                        Forgot PIN?
+                      </button>
+                      <button onClick={() => setRightMode('signin')} className="text-sm font-montserrat" style={linkStyle}>
+                        Sign in with email or mobile
+                      </button>
+                    </div>
                   </motion.div>
-                ) : (
+                )}
+
+                {rightMode === 'signin' && (
                   <motion.div key="signin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
                     <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Sign In</p>
                     <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
@@ -239,6 +240,9 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                               </div>
                             </div>
                             <button type="submit" style={btnStyle}>SIGN IN</button>
+                            <button type="button" onClick={() => setRightMode('forgot-password')} className="text-sm font-montserrat text-center" style={linkStyle}>
+                              Forgot Password?
+                            </button>
                           </motion.div>
                         )}
 
@@ -268,11 +272,19 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                     <button
                       onClick={() => { setRightMode('pin'); setInput(''); setPassword(''); setOtpSent(false); }}
                       className="w-full text-center text-sm font-montserrat mt-4"
-                      style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+                      style={linkStyle}
                     >
                       Sign in with PIN instead
                     </button>
                   </motion.div>
+                )}
+
+                {rightMode === 'forgot-pin' && (
+                  <ResetFlow type="pin" onBack={() => setRightMode('pin')} onComplete={() => setRightMode('pin')} />
+                )}
+
+                {rightMode === 'forgot-password' && (
+                  <ResetFlow type="password" onBack={() => setRightMode('signin')} onComplete={() => setRightMode('signin')} />
                 )}
               </AnimatePresence>
             </div>
