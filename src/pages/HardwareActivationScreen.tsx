@@ -84,7 +84,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         <div className="flex items-center justify-center gap-5 pt-14 pb-4">
           <img src={posaiLogo} alt="POS ai" className="h-14 object-contain" />
           <div>
-            <h1 className="text-white text-xl font-bold font-montserrat">Hardware Activation</h1>
+            <h1 className="text-white text-xl font-bold font-montserrat">KDS Activation</h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               Activate this KDS device to get started
             </p>
