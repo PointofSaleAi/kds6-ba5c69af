@@ -130,15 +130,9 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                     </div>
                     <div className="flex flex-col gap-[10px]" style={{ maxWidth: '340px' }}>
                       <div className="flex gap-2 items-start">
-                        <span style={{ color: 'hsl(145, 63%, 42%)', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
-                        <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                          Tap the link sent to your email or phone, scan this QR, then tap Approve to auto-login. No password needed.
-                        </p>
-                      </div>
-                      <div className="flex gap-2 items-start">
                         <span style={{ color: '#95A5A6', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
                         <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                          No link? Scan directly with your phone camera. You will be asked to enter your email, password to verify.
+                          Scan directly with your phone camera. You will be asked to enter your email, password to verify.
                         </p>
                       </div>
                     </div>
