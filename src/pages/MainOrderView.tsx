@@ -38,7 +38,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode } = useKDSMode();
   const { playSound } = useSound();
