@@ -38,7 +38,7 @@ type AppScreen =
   | 'performance';
 
 const Index = () => {
-  const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
+  const [screen, setScreen] = useState<AppScreen>(isDevMode() ? 'dev-selector' : 'splash');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
