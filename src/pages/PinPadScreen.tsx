@@ -147,8 +147,10 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
             </div>
 
             {/* Or divider */}
-            <div className="hidden md:flex absolute left-1/2 top-[100px] bottom-[60px] -translate-x-1/2 items-center justify-center">
-              <span className="text-white/50 font-montserrat font-semibold text-sm px-2" style={{ backgroundColor: 'transparent' }}>Or</span>
+            <div className="hidden md:flex absolute left-1/2 top-[100px] bottom-[60px] -translate-x-1/2 flex-col items-center justify-center">
+              <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
+              <span className="text-white/50 font-montserrat font-semibold text-sm py-3">Or</span>
+              <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
             </div>
 
             {/* RIGHT: PIN pad or Sign In form */}
