@@ -32,7 +32,7 @@ export default function DeviceActivatedScreen({ onComplete }: DeviceActivatedScr
           <Check className="w-10 h-10 text-white" strokeWidth={3} />
         </div>
 
-        <img src={posaiLogo} alt="POS ai" className="h-10 object-contain mb-3" />
+        <img src={posaiLogo} alt="POSAI" className="h-10 object-contain mb-3" />
 
         <h1 className="text-white text-2xl font-bold font-montserrat mb-2">Device Activated</h1>
         <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>

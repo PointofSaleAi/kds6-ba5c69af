@@ -75,8 +75,8 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
             </button>
 
             <div className="text-center mb-8">
-              <img src={posaiLogo} alt="POS ai" className="h-10 object-contain mx-auto" />
-              <p className="text-text-muted text-sm mt-2">KDS</p>
+              <img src={posaiLogo} alt="POSAI" className="h-10 object-contain mx-auto" />
+              <p className="text-text-muted text-sm mt-2">Kitchen Display System</p>
             </div>
 
             <h2 className="text-xl font-bold text-text-primary mb-2">Forgot Password</h2>
