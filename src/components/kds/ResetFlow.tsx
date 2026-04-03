@@ -16,6 +16,8 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [newPinDigits, setNewPinDigits] = useState<string[]>(['', '', '', '']);
+  const [confirmPinDigits, setConfirmPinDigits] = useState<string[]>(['', '', '', '']);
 
   const isEmail = input.includes('@');
   const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
@@ -40,12 +42,26 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
     }
   };
 
+  const handlePinBoxChange = (field: 'new' | 'confirm', index: number, value: string) => {
+    if (value.length > 1) return;
+    const arr = field === 'new' ? [...newPinDigits] : [...confirmPinDigits];
+    arr[index] = value;
+    if (field === 'new') setNewPinDigits(arr); else setConfirmPinDigits(arr);
+    if (value && index < 3) {
+      document.getElementById(`reset-${field}-pin-${index + 1}`)?.focus();
+    }
+  };
+
   const handleReset = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (newPassword && newPassword === confirmPassword) {
-      onComplete();
+    if (type === 'pin') {
+      const np = newPinDigits.join('');
+      const cp = confirmPinDigits.join('');
+      if (np.length === 4 && np === cp) onComplete();
+    } else {
+      if (newPassword && newPassword === confirmPassword) onComplete();
     }
-  }, [newPassword, confirmPassword, onComplete]);
+  }, [type, newPassword, confirmPassword, newPinDigits, confirmPinDigits, onComplete]);
 
   const inputStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
@@ -132,48 +148,79 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
             <p className="text-sm font-montserrat" style={{ color: '#A0A0A0' }}>
               {type === 'pin' ? 'Enter your new 4-digit PIN' : 'Enter your new password'}
             </p>
-            <div>
-              <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                New {label}
-              </label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type={showNew ? 'text' : 'password'} value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder={type === 'pin' ? 'Enter new PIN' : 'Enter new password'}
-                  className="font-montserrat"
-                  style={{ ...inputStyle, paddingRight: '48px' }}
-                  maxLength={type === 'pin' ? 4 : undefined}
-                  inputMode={type === 'pin' ? 'numeric' : undefined}
-                />
-                <button type="button" onClick={() => setShowNew(!showNew)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
-                  {showNew ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                Confirm {label}
-              </label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type={showConfirm ? 'text' : 'password'} value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder={type === 'pin' ? 'Confirm new PIN' : 'Confirm new password'}
-                  className="font-montserrat"
-                  style={{ ...inputStyle, paddingRight: '48px' }}
-                  maxLength={type === 'pin' ? 4 : undefined}
-                  inputMode={type === 'pin' ? 'numeric' : undefined}
-                />
-                <button type="button" onClick={() => setShowConfirm(!showConfirm)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
-                  {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
-            {newPassword && confirmPassword && newPassword !== confirmPassword && (
-              <p className="text-xs font-montserrat font-semibold" style={{ color: '#E84C3D' }}>
-                {label}s do not match
-              </p>
+
+            {type === 'pin' ? (
+              <>
+                <div>
+                  <label className="block font-montserrat font-medium text-xs mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>New PIN</label>
+                  <div className="flex justify-center gap-3">
+                    {newPinDigits.map((d, i) => (
+                      <input
+                        key={i} id={`reset-new-pin-${i}`} type="text" inputMode="numeric" maxLength={1}
+                        value={d} onChange={(e) => handlePinBoxChange('new', i, e.target.value)}
+                        className="w-[52px] h-[52px] text-center text-xl font-bold rounded-lg font-montserrat"
+                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block font-montserrat font-medium text-xs mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>Confirm PIN</label>
+                  <div className="flex justify-center gap-3">
+                    {confirmPinDigits.map((d, i) => (
+                      <input
+                        key={i} id={`reset-confirm-pin-${i}`} type="text" inputMode="numeric" maxLength={1}
+                        value={d} onChange={(e) => handlePinBoxChange('confirm', i, e.target.value)}
+                        className="w-[52px] h-[52px] text-center text-xl font-bold rounded-lg font-montserrat"
+                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {newPinDigits.join('').length === 4 && confirmPinDigits.join('').length === 4 && newPinDigits.join('') !== confirmPinDigits.join('') && (
+                  <p className="text-xs font-montserrat font-semibold text-center" style={{ color: '#E84C3D' }}>
+                    PINs do not match
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <div>
+                  <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>New Password</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={showNew ? 'text' : 'password'} value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Enter new password"
+                      className="font-montserrat"
+                      style={{ ...inputStyle, paddingRight: '48px' }}
+                    />
+                    <button type="button" onClick={() => setShowNew(!showNew)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
+                      {showNew ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Confirm Password</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={showConfirm ? 'text' : 'password'} value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm new password"
+                      className="font-montserrat"
+                      style={{ ...inputStyle, paddingRight: '48px' }}
+                    />
+                    <button type="button" onClick={() => setShowConfirm(!showConfirm)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
+                      {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+                {newPassword && confirmPassword && newPassword !== confirmPassword && (
+                  <p className="text-xs font-montserrat font-semibold" style={{ color: '#E84C3D' }}>
+                    Passwords do not match
+                  </p>
+                )}
+              </>
             )}
             <button type="submit" style={btnStyle}>RESET {label.toUpperCase()}</button>
           </motion.form>
