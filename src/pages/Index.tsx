@@ -75,7 +75,7 @@ const Index = () => {
 
   const handleLogOut = useCallback(() => {
     setSettingsOpen(false);
-    setScreen(isDev ? 'dev-selector' : 'splash');
+    setScreen(isDevMode() ? 'dev-selector' : 'splash');
   }, []);
 
   const handleNavigate = useCallback((target: string) => {
