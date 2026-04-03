@@ -57,10 +57,10 @@ const Index = () => {
 
   const handleSplashReady = useCallback(() => setScreen('hardware-existing'), []);
 
-  // After first-time login (email/OTP/QR), go to Set PIN
-  const handleFirstTimeLoginSuccess = useCallback(() => setScreen('set-pin'), []);
+  // Hardware activation now handles set-pin internally, so onSuccess goes straight to main
+  const handleFirstTimeLoginSuccess = useCallback(() => setScreen('main'), []);
 
-  // After PIN is set, show activation success
+  // After PIN is set (legacy, kept for other flows)
   const handlePinSet = useCallback(() => setScreen('device-activated'), []);
 
   // After activation, enter KDS
