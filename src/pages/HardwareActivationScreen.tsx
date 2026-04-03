@@ -234,7 +234,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                             </button>
                           </div>
                         </div>
-                        <button type="submit" style={btnStyle}>SIGN IN</button>
+                        <button type="submit" style={btnStyle}>ACTIVATE</button>
                       </motion.div>
                     )}
 
