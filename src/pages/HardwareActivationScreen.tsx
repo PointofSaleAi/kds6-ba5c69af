@@ -11,7 +11,7 @@ interface HardwareActivationScreenProps {
 }
 
 export default function HardwareActivationScreen({ onSuccess }: HardwareActivationScreenProps) {
-  const [phase, setPhase] = useState<'activate' | 'set-pin'>('activate');
+  const [phase, setPhase] = useState<'activate' | 'set-pin' | 'forgot-password'>('activate');
 
   // Activation state
   const [input, setInput] = useState('');
