@@ -4,7 +4,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -13,6 +13,7 @@ interface SettingsScreenProps {
   onClose: () => void;
   onOpenSub: (sub: string) => void;
   onLogOut?: () => void;
+  onDevModeChange?: (enabled: boolean) => void;
 }
 
 interface SettingsRowProps {
@@ -92,7 +93,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
   );
 }
 
-export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: SettingsScreenProps) {
+export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsScreenProps) {
   const { theme, setTheme } = useTheme();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
@@ -102,6 +103,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
   const [servableModifiers, setServableModifiers] = useState(true);
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
 
   if (!open) return null;
 
@@ -190,6 +192,21 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
             </div>
             <SettingsRow icon={User} label="Device Name" description="Kitchen Display 1" />
             <SettingsRow icon={Globe} label="Language" description="English (US)" onClick={() => onOpenSub('language-settings')} />
+            <SettingsRow
+              icon={Bug}
+              label="Dev Mode"
+              description="Show flow selector on login"
+              right={
+                <Toggle
+                  checked={devMode}
+                  onChange={(v) => {
+                    setDevMode(v);
+                    localStorage.setItem('posai-dev-mode', String(v));
+                    onDevModeChange?.(v);
+                  }}
+                />
+              }
+            />
             <div className="px-4 py-3">
               <button
                 onClick={() => setShowLogoutConfirm(true)}

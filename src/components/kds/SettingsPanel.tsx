@@ -16,6 +16,7 @@ interface SettingsPanelProps {
   onClose: () => void;
   onOpenSub: (sub: string) => void;
   onLogOut?: () => void;
+  onDevModeChange?: (enabled: boolean) => void;
 }
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
@@ -86,7 +87,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelProps) {
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>('display');
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [textSize, setTextSize] = useState('Standard');
@@ -99,6 +100,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
   const { mode: kdsMode, setMode: setKdsMode } = useKDSMode();
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
+  const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
 
   const handleSync = () => {
     setSyncing(true);
@@ -305,6 +307,18 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
                 <div className="flex items-center justify-between mt-1">
                   <span className="text-[13px] text-text-secondary font-medium">{bugReporting ? 'ON' : 'OFF'}</span>
                   <LargeToggle checked={bugReporting} onChange={setBugReporting} />
+                </div>
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Dev Mode" description="Show flow selector on login screen" />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[13px] text-text-secondary font-medium">{devMode ? 'ON' : 'OFF'}</span>
+                  <LargeToggle checked={devMode} onChange={(v) => {
+                    setDevMode(v);
+                    localStorage.setItem('posai-dev-mode', String(v));
+                    onDevModeChange?.(v);
+                  }} />
                 </div>
               </SettingsCard>
 

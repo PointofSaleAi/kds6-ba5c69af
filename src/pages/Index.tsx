@@ -22,6 +22,7 @@ import StatusSettings from '@/pages/StatusSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
 const isDev = import.meta.env.DEV || import.meta.env.MODE !== 'production' || !window.location.hostname.includes('.lovable.app') || window.location.hostname.includes('-preview--');
+const isDevMode = () => isDev || localStorage.getItem('posai-dev-mode') === 'true';
 
 type AppScreen =
   | 'dev-selector'
@@ -37,7 +38,7 @@ type AppScreen =
   | 'performance';
 
 const Index = () => {
-  const [screen, setScreen] = useState<AppScreen>(isDev ? 'dev-selector' : 'splash');
+  const [screen, setScreen] = useState<AppScreen>(isDevMode() ? 'dev-selector' : 'splash');
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -74,7 +75,7 @@ const Index = () => {
 
   const handleLogOut = useCallback(() => {
     setSettingsOpen(false);
-    setScreen(isDev ? 'dev-selector' : 'splash');
+    setScreen(isDevMode() ? 'dev-selector' : 'splash');
   }, []);
 
   const handleNavigate = useCallback((target: string) => {
@@ -121,14 +122,13 @@ const Index = () => {
         <PinPadScreen
           onSuccess={handlePinLoginSuccess}
           onFallback={() => setScreen('hardware-new')}
-          onDevSelector={() => setScreen('dev-selector')}
         />
       )}
 
       {screen === 'byod-new' && (
         <PersonalDeviceLoginScreen
           onSuccess={handleFirstTimeLoginSuccess}
-          onBack={() => setScreen(isDev ? 'dev-selector' : 'splash')}
+          onBack={() => setScreen(isDevMode() ? 'dev-selector' : 'splash')}
         />
       )}
 
@@ -152,6 +152,7 @@ const Index = () => {
           onCloseSettings={() => setSettingsOpen(false)}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
+          onDevModeChange={() => {}}
         />
       )}
 

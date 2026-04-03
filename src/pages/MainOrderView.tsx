@@ -26,6 +26,7 @@ interface MainOrderViewProps {
   onCloseSettings?: () => void;
   onOpenSub?: (sub: string) => void;
   onLogOut?: () => void;
+  onDevModeChange?: (enabled: boolean) => void;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
@@ -37,7 +38,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode } = useKDSMode();
   const { playSound } = useSound();
@@ -236,6 +237,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             onClose={() => onCloseSettings?.()}
             onOpenSub={(sub) => onOpenSub?.(sub)}
             onLogOut={onLogOut}
+            onDevModeChange={onDevModeChange}
           />
         ) : (
         <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
