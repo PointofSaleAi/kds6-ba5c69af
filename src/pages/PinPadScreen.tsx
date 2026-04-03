@@ -238,11 +238,13 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                               </div>
+                              <div className="flex justify-end mt-1.5">
+                                <button type="button" onClick={() => setRightMode('forgot-password')} className="text-xs font-montserrat" style={linkStyle}>
+                                  Forgot Password?
+                                </button>
+                              </div>
                             </div>
                             <button type="submit" style={btnStyle}>SIGN IN</button>
-                            <button type="button" onClick={() => setRightMode('forgot-password')} className="text-sm font-montserrat text-center" style={linkStyle}>
-                              Forgot Password?
-                            </button>
                           </motion.div>
                         )}
 
