@@ -118,14 +118,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       </p>
                     </div>
                   </div>
-                  {/* Dev: simulate approval */}
-                  <button
-                    onClick={handleSimulateQrApproval}
-                    className="mt-4 text-xs underline font-montserrat"
-                    style={{ color: '#6C7A89' }}
-                  >
-                    [Dev] Simulate approval
-                  </button>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div key="approved" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center py-8">
