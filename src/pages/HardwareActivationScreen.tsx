@@ -8,7 +8,7 @@ interface HardwareActivationScreenProps {
   onSuccess: () => void;
 }
 
-export default function HardwareActivationScreen({ onSuccess, onBack }: HardwareActivationScreenProps) {
+export default function HardwareActivationScreen({ onSuccess }: HardwareActivationScreenProps) {
   const [input, setInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
