@@ -2,6 +2,7 @@ import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, Check, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import posaiLogo from '@/assets/posai-logo-white.png';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
@@ -111,7 +112,9 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col h-full"
         >
-          <div className="pt-10" />
+          <div className="flex justify-center pt-8 pb-4">
+            <img src={posaiLogo} alt="POS ai" className="h-12 object-contain" />
+          </div>
 
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
             {/* LEFT: QR */}
