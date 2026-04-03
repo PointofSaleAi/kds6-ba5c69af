@@ -27,6 +27,8 @@ interface MainOrderViewProps {
   onOpenSub?: (sub: string) => void;
   onLogOut?: () => void;
   onDevModeChange?: (enabled: boolean) => void;
+  /** When set, OrderCards dim non-matching courses */
+  stationCourse?: string;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
