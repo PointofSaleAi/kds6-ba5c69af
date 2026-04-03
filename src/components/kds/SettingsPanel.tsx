@@ -87,7 +87,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelProps) {
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>('display');
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [textSize, setTextSize] = useState('Standard');
