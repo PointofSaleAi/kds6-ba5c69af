@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Delete } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Delete, Check } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
 
@@ -11,13 +11,8 @@ interface PinPadScreenProps {
 
 export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
-  const [now, setNow] = useState(new Date());
-  const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
-
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
+  const [shake, setShake] = useState(false);
+  const [qrApproved, setQrApproved] = useState(false);
 
   const handleDigit = useCallback((digit: string) => {
     setPin(prev => {
@@ -32,14 +27,10 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
 
   const handleClear = useCallback(() => setPin(''), []);
 
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 || 12;
-  const displayMinutes = minutes.toString().padStart(2, '0');
-  const dateStr = now.toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  });
+  const handleSimulateQrApproval = useCallback(() => {
+    setQrApproved(true);
+    setTimeout(() => onSuccess(), 1500);
+  }, [onSuccess]);
 
   const numKeys = ['1','2','3','4','5','6','7','8','9','C','0','BACK'];
 
@@ -57,71 +48,98 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
     boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)', color: '#FFFFFF',
   };
 
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    flex: 1, padding: '10px 0', fontFamily: 'Montserrat, sans-serif', fontWeight: 700,
-    fontSize: '13px', letterSpacing: '0.5px', cursor: 'pointer', border: 'none',
-    borderRadius: '6px', transition: 'all 0.2s',
-    background: active ? 'rgba(255,255,255,0.15)' : 'transparent',
-    color: active ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
-  });
-
   return (
     <div className="fixed inset-0">
       {/* Blurred KDS background */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
         <MainOrderView onNavigate={() => {}} settingsOpen={false} onCloseSettings={() => {}} onOpenSub={() => {}} onLogOut={() => {}} />
       </div>
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,15,12,0.72)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }} />
+      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,15,12,0.72)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)' }} />
 
-      <div className="relative z-10 flex h-full w-full">
-        {/* LEFT: Clock */}
-        <div className="hidden md:flex w-[40%] flex-col justify-center pl-20 pr-8">
-          <p className="text-white/70 text-lg font-montserrat font-medium mb-2">{dateStr}</p>
-          <div className="flex items-baseline">
-            <span className="text-white font-montserrat font-black" style={{ fontSize: '8rem', lineHeight: 1, letterSpacing: '-4px' }}>
-              {displayHours}:{displayMinutes}
-            </span>
-            <span className="text-white/50 font-montserrat font-bold text-5xl ml-3">{ampm}</span>
-          </div>
-          <div className="mt-10">
-            <div className="flex items-center gap-3">
-              <span className="text-white font-montserrat font-light" style={{ fontSize: '3.5rem' }}>27°</span>
-              <span style={{ fontSize: '2.8rem' }}>☀️</span>
+      <div className="relative z-10 flex flex-col h-full w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col h-full"
+        >
+          {/* Empty top area - minimal spacing */}
+          <div className="pt-10" />
+
+          {/* 2-column: QR left, PIN right */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
+            {/* LEFT: QR */}
+            <div className="flex flex-col items-center justify-center px-10">
+              <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>Scan to Sign In</p>
+
+              <AnimatePresence mode="wait">
+                {!qrApproved ? (
+                  <motion.div key="qr" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
+                    <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6 cursor-pointer" style={{ width: '300px', height: '300px' }} onClick={handleSimulateQrApproval}>
+                      <QRCodeSVG
+                        value="https://kds.posai.app/auth/qr?pin-login=true"
+                        size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-[10px]" style={{ maxWidth: '340px' }}>
+                      <div className="flex gap-2 items-start">
+                        <span style={{ color: 'hsl(145, 63%, 42%)', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
+                        <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
+                          Tap the link sent to your email or phone, scan this QR, then tap Approve to auto-login. No password needed.
+                        </p>
+                      </div>
+                      <div className="flex gap-2 items-start">
+                        <span style={{ color: '#95A5A6', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
+                        <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
+                          No link? Scan directly with your phone camera. You will be asked to enter your email, password to verify.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div key="approved" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center py-8">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: 'hsl(145, 63%, 42%)' }}>
+                      <Check className="w-8 h-8 text-white" strokeWidth={3} />
+                    </div>
+                    <p className="text-white font-montserrat font-bold">Signed In</p>
+                    <p className="text-xs font-montserrat mt-1" style={{ color: '#6C7A89' }}>Redirecting...</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <p className="text-white font-montserrat font-bold text-2xl mt-2">Bengaluru,</p>
-            <p className="text-white font-montserrat font-bold text-2xl">Karnataka</p>
-          </div>
-        </div>
 
-        {/* RIGHT: PIN / QR */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4">
-          <div className="w-full" style={{ maxWidth: '480px' }}>
-            {/* Tabs */}
-            <div className="flex gap-2 mb-6 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.06)' }}>
-              <button onClick={() => setActiveTab('pin')} style={tabStyle(activeTab === 'pin')}>ENTER PIN</button>
-              <button onClick={() => setActiveTab('qr')} style={tabStyle(activeTab === 'qr')}>SCAN QR</button>
-            </div>
+            {/* Vertical divider */}
+            <div className="hidden md:block absolute left-1/2 top-[100px] bottom-[60px]" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
 
-            {activeTab === 'pin' ? (
-              <>
+            {/* RIGHT: PIN pad */}
+            <div className="flex flex-col items-center justify-center px-10">
+              <div className="w-full" style={{ maxWidth: '380px' }}>
                 <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
                   Enter your PIN
                 </p>
 
-                <div className="flex justify-center gap-6 mb-8">
+                {/* PIN dots */}
+                <motion.div
+                  className="flex justify-center gap-5 mb-8"
+                  animate={shake ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+                  transition={{ duration: 0.4 }}
+                  onAnimationComplete={() => { if (shake) { setShake(false); setPin(''); } }}
+                >
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <motion.span
+                    <motion.div
                       key={i}
-                      className="font-montserrat font-black text-white select-none"
-                      style={{ fontSize: '4.5rem', lineHeight: 1 }}
-                      animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                    >
-                      ✱
-                    </motion.span>
+                      className="rounded-full"
+                      style={{
+                        width: '20px', height: '20px',
+                        border: i < pin.length ? 'none' : '2px solid rgba(255,255,255,0.3)',
+                        backgroundColor: i < pin.length ? '#E84C3D' : 'transparent',
+                      }}
+                      animate={{ scale: i < pin.length ? [1, 1.3, 1] : 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
                   ))}
-                </div>
+                </motion.div>
 
+                {/* Number pad */}
                 <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
                   {numKeys.map((key) => {
                     const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
@@ -141,33 +159,21 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                     );
                   })}
                 </div>
-              </>
-            ) : (
-              <div className="flex flex-col items-center py-6">
-                <p className="text-center text-base font-montserrat font-medium mb-6" style={{ color: '#A0A0A0' }}>
-                  Scan with your phone to sign in
-                </p>
-                <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6" style={{ width: '240px', height: '240px' }}>
-                  <QRCodeSVG value="https://kds.posai.app/auth/qr?pin-login=true" size={200} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF" />
-                </div>
-                <p className="text-sm font-montserrat text-center" style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '320px', lineHeight: 1.6 }}>
-                  Open the camera app on your phone and point it at this QR code to sign in without touching the screen.
-                </p>
-              </div>
-            )}
 
-            {/* Fallback link */}
-            {onFallback && (
-              <button
-                onClick={onFallback}
-                className="w-full text-center text-sm font-montserrat mt-4"
-                style={{ color: '#6C7A89', background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                Sign in with email or mobile instead
-              </button>
-            )}
+                {/* Fallback link */}
+                {onFallback && (
+                  <button
+                    onClick={onFallback}
+                    className="w-full text-center text-sm font-montserrat mt-4"
+                    style={{ color: '#6C7A89', background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    Sign in with email or mobile instead
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
