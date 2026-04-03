@@ -21,8 +21,7 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
-const isDev = import.meta.env.DEV || import.meta.env.MODE !== 'production' || !window.location.hostname.includes('.lovable.app') || window.location.hostname.includes('-preview--');
-const isDevMode = () => isDev || localStorage.getItem('posai-dev-mode') === 'true';
+const isDevMode = () => true;
 
 type AppScreen =
   | 'dev-selector'
