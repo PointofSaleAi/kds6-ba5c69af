@@ -14,6 +14,8 @@ interface BottomStatusBarProps {
   onToggleTheme: () => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
+  /** Hide sort and view mode controls (used in station view) */
+  hideViewControls?: boolean;
 }
 
 const sortOptions: { value: SortMode; label: string }[] = [
