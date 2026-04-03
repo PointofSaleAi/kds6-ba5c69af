@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Check } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
+import MainOrderView from '@/pages/MainOrderView';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
