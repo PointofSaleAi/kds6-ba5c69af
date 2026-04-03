@@ -34,7 +34,7 @@ export default function DevScenarioSelector({
           style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#95A5A6' }}
         >
           <Info className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#6C7A89' }} />
-          <span>For internal testing only. In production, flow is selected automatically based on device.</span>
+          <span>For internal testing only. In production, flow is detected automatically based on user.</span>
         </div>
 
         {/* Logo + Title */}
