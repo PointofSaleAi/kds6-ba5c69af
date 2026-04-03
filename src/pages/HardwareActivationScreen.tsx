@@ -6,7 +6,6 @@ import posaiLogo from '@/assets/posai-logo-white.png';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
-  onBack: () => void;
 }
 
 export default function HardwareActivationScreen({ onSuccess, onBack }: HardwareActivationScreenProps) {
