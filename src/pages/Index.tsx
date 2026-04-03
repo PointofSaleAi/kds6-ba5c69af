@@ -152,6 +152,7 @@ const Index = () => {
           onCloseSettings={() => setSettingsOpen(false)}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
+          onDevModeChange={() => {}}
         />
       )}
 
