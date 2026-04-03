@@ -136,8 +136,8 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
 
           {/* RIGHT: Smart sign-in */}
           <div className="flex flex-col justify-center px-10">
-            <p className="text-white font-montserrat font-bold text-base mb-1">Sign In</p>
-            <p className="text-xs font-montserrat mb-5" style={{ color: '#6C7A89' }}>
+            <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Sign In</p>
+            <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
               Enter your email or mobile number to activate
             </p>
 
