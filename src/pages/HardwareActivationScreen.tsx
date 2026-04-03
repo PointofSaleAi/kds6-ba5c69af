@@ -147,11 +147,9 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
               {phase === 'activate' ? 'Kitchen Display Activation' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
-              {phase === 'activate'
-                ? 'Activate this Kitchen Display System device to get started'
-                : phase === 'set-pin'
-                  ? (pinStep === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm')
-                  : 'Reset your account password'}
+              {phase === 'set-pin'
+                ? (pinStep === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm')
+                : phase === 'forgot-password' ? 'Reset your account password' : ''}
             </p>
           </div>
         </div>
