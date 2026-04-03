@@ -52,7 +52,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
   }, [onSuccess]);
 
   const inputStyle: React.CSSProperties = {
-    width: '100%', height: '52px', borderRadius: '8px',
+    width: '100%', height: '56px', borderRadius: '8px',
     background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
     color: '#FFFFFF', fontSize: '15px', padding: '0 16px', outline: 'none',
   };
@@ -73,15 +73,15 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         <MainOrderView onNavigate={() => {}} settingsOpen={false} onCloseSettings={() => {}} onOpenSub={() => {}} onLogOut={() => {}} />
       </div>
       <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,15,12,0.72)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)' }} />
-      <div className="relative z-10 flex items-center justify-center h-full w-full">
+      <div className="relative z-10 flex flex-col h-full w-full">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[900px] px-6"
+        className="flex flex-col h-full"
       >
 
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center pt-10 pb-6">
           <img src={posaiLogo} alt="POS ai" className="h-12 object-contain mx-auto mb-2" />
           <h1 className="text-white text-xl font-bold font-montserrat">Hardware Activation</h1>
           <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>
@@ -89,10 +89,10 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           </p>
         </div>
 
-        {/* 2-column: QR dominant left, Login right */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* 2-column: QR left, Login right — full remaining height */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
           {/* LEFT: QR (primary) */}
-          <div className="flex flex-col items-center rounded-xl p-8" style={{ backgroundColor: '#1A1A2E', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex flex-col items-center justify-center px-10">
             <p className="text-white font-montserrat font-bold text-base mb-1">Scan to Activate</p>
             <p className="text-xs font-montserrat mb-6" style={{ color: '#6C7A89' }}>
               Scan with your phone to approve this device
@@ -101,13 +101,13 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             <AnimatePresence mode="wait">
               {!qrApproved ? (
                 <motion.div key="qr" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
-                  <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6" style={{ width: '240px', height: '240px' }}>
+                  <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6" style={{ width: '300px', height: '300px' }}>
                     <QRCodeSVG
                       value="https://kds.posai.app/activate?device=kds-001&token=abc123"
-                      size={200} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
+                      size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
                     />
                   </div>
-                  <p className="text-xs font-montserrat text-center" style={{ color: '#95A5A6', maxWidth: '260px' }}>
+                  <p className="text-xs font-montserrat text-center" style={{ color: '#95A5A6', maxWidth: '300px' }}>
                     Scan this QR code with your phone. Open the secure link and tap Approve to activate.
                   </p>
                   {/* Dev: simulate approval */}
@@ -131,8 +131,11 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             </AnimatePresence>
           </div>
 
+          {/* Vertical divider */}
+          <div className="hidden md:block absolute left-1/2 top-[140px] bottom-0" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
+
           {/* RIGHT: Smart sign-in */}
-          <div className="rounded-xl p-6" style={{ backgroundColor: '#1A1A2E', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex flex-col justify-center px-10">
             <p className="text-white font-montserrat font-bold text-base mb-1">Sign In</p>
             <p className="text-xs font-montserrat mb-5" style={{ color: '#6C7A89' }}>
               Enter your email or mobile number to activate
