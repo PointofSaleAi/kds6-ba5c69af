@@ -161,6 +161,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
             itemStatuses={itemStatuses}
             onAdvanceItem={handleAdvanceItem}
             onUndoItem={handleUndoItem}
+            stationCourse={stationCourse}
           />
         ))}
       </div>
