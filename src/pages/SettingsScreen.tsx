@@ -13,6 +13,7 @@ interface SettingsScreenProps {
   onClose: () => void;
   onOpenSub: (sub: string) => void;
   onLogOut?: () => void;
+  onDevModeChange?: (enabled: boolean) => void;
 }
 
 interface SettingsRowProps {
