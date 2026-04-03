@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Delete, Check } from 'lucide-react';
+import { Delete, Check, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
 
@@ -13,6 +13,18 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
+  const [rightMode, setRightMode] = useState<'pin' | 'signin'>('pin');
+
+  // Sign-in form state
+  const [input, setInput] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [otpCode, setOtpCode] = useState<string[]>(['', '', '', '', '', '']);
+  const [otpSent, setOtpSent] = useState(false);
+
+  const isEmail = input.includes('@');
+  const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
+  const detectedMode: 'none' | 'email' | 'phone' = isEmail ? 'email' : (input.length > 0 && isPhone) ? 'phone' : 'none';
 
   const handleDigit = useCallback((digit: string) => {
     setPin(prev => {
@@ -32,6 +44,29 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
     setTimeout(() => onSuccess(), 1500);
   }, [onSuccess]);
 
+  const handleEmailSignIn = useCallback((e: FormEvent) => {
+    e.preventDefault();
+    if (input && password) onSuccess();
+  }, [input, password, onSuccess]);
+
+  const handleSendOtp = useCallback(() => {
+    if (input) setOtpSent(true);
+  }, [input]);
+
+  const handleVerifyOtp = useCallback(() => {
+    onSuccess();
+  }, [onSuccess]);
+
+  const handleOtpDigit = (index: number, value: string) => {
+    if (value.length > 1) return;
+    const next = [...otpCode];
+    next[index] = value;
+    setOtpCode(next);
+    if (value && index < 5) {
+      document.getElementById(`pin-otp-${index + 1}`)?.focus();
+    }
+  };
+
   const numKeys = ['1','2','3','4','5','6','7','8','9','C','0','BACK'];
 
   const keyBase: React.CSSProperties = {
@@ -48,6 +83,20 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
     boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)', color: '#FFFFFF',
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%', height: '56px', borderRadius: '8px',
+    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+    color: '#FFFFFF', fontSize: '15px', padding: '0 16px', outline: 'none',
+  };
+
+  const btnStyle: React.CSSProperties = {
+    width: '100%', height: '56px', borderRadius: '8px',
+    background: '#E84C3D', boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
+    border: 'none', color: '#FFFFFF',
+    fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
+    letterSpacing: '0.5px', cursor: 'pointer',
+  };
+
   return (
     <div className="fixed inset-0">
       {/* Blurred KDS background */}
@@ -62,10 +111,8 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col h-full"
         >
-          {/* Empty top area - minimal spacing */}
           <div className="pt-10" />
 
-          {/* 2-column: QR left, PIN right */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
             {/* LEFT: QR */}
             <div className="flex flex-col items-center justify-center px-10">
@@ -75,10 +122,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                 {!qrApproved ? (
                   <motion.div key="qr" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
                     <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6 cursor-pointer" style={{ width: '300px', height: '300px' }} onClick={handleSimulateQrApproval}>
-                      <QRCodeSVG
-                        value="https://kds.posai.app/auth/qr?pin-login=true"
-                        size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
-                      />
+                      <QRCodeSVG value="https://kds.posai.app/auth/qr?pin-login=true" size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF" />
                     </div>
                     <div className="flex flex-col gap-[10px]" style={{ maxWidth: '340px' }}>
                       <div className="flex gap-2 items-start">
@@ -110,67 +154,130 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
             {/* Vertical divider */}
             <div className="hidden md:block absolute left-1/2 top-[100px] bottom-[60px]" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
 
-            {/* RIGHT: PIN pad */}
+            {/* RIGHT: PIN pad or Sign In form */}
             <div className="flex flex-col items-center justify-center px-10">
-              <div className="w-full" style={{ maxWidth: '380px' }}>
-                <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-                  Enter your PIN
-                </p>
+              <AnimatePresence mode="wait">
+                {rightMode === 'pin' ? (
+                  <motion.div key="pin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
+                    <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
+                      Enter your PIN
+                    </p>
 
-                {/* PIN dots */}
-                <motion.div
-                  className="flex justify-center gap-5 mb-8"
-                  animate={shake ? { x: [0, -10, 10, -10, 10, 0] } : {}}
-                  transition={{ duration: 0.4 }}
-                  onAnimationComplete={() => { if (shake) { setShake(false); setPin(''); } }}
-                >
-                  {Array.from({ length: 4 }).map((_, i) => (
                     <motion.div
-                      key={i}
-                      className="rounded-full"
-                      style={{
-                        width: '20px', height: '20px',
-                        border: i < pin.length ? 'none' : '2px solid rgba(255,255,255,0.3)',
-                        backgroundColor: i < pin.length ? '#E84C3D' : 'transparent',
-                      }}
-                      animate={{ scale: i < pin.length ? [1, 1.3, 1] : 1 }}
-                      transition={{ duration: 0.2 }}
-                    />
-                  ))}
-                </motion.div>
+                      className="flex justify-center gap-5 mb-8"
+                      animate={shake ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+                      transition={{ duration: 0.4 }}
+                      onAnimationComplete={() => { if (shake) { setShake(false); setPin(''); } }}
+                    >
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="rounded-full"
+                          style={{
+                            width: '20px', height: '20px',
+                            border: i < pin.length ? 'none' : '2px solid rgba(255,255,255,0.3)',
+                            backgroundColor: i < pin.length ? '#E84C3D' : 'transparent',
+                          }}
+                          animate={{ scale: i < pin.length ? [1, 1.3, 1] : 1 }}
+                          transition={{ duration: 0.2 }}
+                        />
+                      ))}
+                    </motion.div>
 
-                {/* Number pad */}
-                <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
-                  {numKeys.map((key) => {
-                    const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
-                    const hoverAnim = { scale: 1.03 };
-                    const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+                    <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
+                      {numKeys.map((key) => {
+                        const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
+                        const hoverAnim = { scale: 1.03 };
+                        const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
 
-                    if (key === 'C') return (
-                      <motion.button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
-                    );
-                    if (key === 'BACK') return (
-                      <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
-                        <Delete className="w-5 h-5" />
-                      </motion.button>
-                    );
-                    return (
-                      <motion.button key={key} onClick={() => handleDigit(key)} style={lightKey} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>{key}</motion.button>
-                    );
-                  })}
-                </div>
+                        if (key === 'C') return (
+                          <motion.button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
+                        );
+                        if (key === 'BACK') return (
+                          <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
+                            <Delete className="w-5 h-5" />
+                          </motion.button>
+                        );
+                        return (
+                          <motion.button key={key} onClick={() => handleDigit(key)} style={lightKey} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>{key}</motion.button>
+                        );
+                      })}
+                    </div>
 
-                {/* Fallback link */}
-                {onFallback && (
-                  <button
-                    onClick={onFallback}
-                    className="w-full text-center text-sm font-montserrat mt-4"
-                    style={{ color: '#6C7A89', background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    Sign in with email or mobile instead
-                  </button>
+                    <button
+                      onClick={() => setRightMode('signin')}
+                      className="w-full text-center text-sm font-montserrat mt-4"
+                      style={{ color: '#6C7A89', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      Sign in with email or mobile instead
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.div key="signin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
+                    <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Sign In</p>
+                    <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
+                      Enter your email or mobile number
+                    </p>
+
+                    <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
+                      <div>
+                        <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or mobile number</label>
+                        <input
+                          type="text" value={input} onChange={(e) => setInput(e.target.value)}
+                          placeholder="Enter your email or mobile number"
+                          className="font-montserrat" style={inputStyle}
+                        />
+                      </div>
+
+                      <AnimatePresence mode="wait">
+                        {detectedMode === 'email' && (
+                          <motion.div key="pw" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
+                            <div>
+                              <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
+                              <div style={{ position: 'relative' }}>
+                                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                                <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
+                                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                </button>
+                              </div>
+                            </div>
+                            <button type="submit" style={btnStyle}>SIGN IN</button>
+                          </motion.div>
+                        )}
+
+                        {detectedMode === 'phone' && !otpSent && (
+                          <motion.div key="phone" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
+                            <button type="submit" style={btnStyle}>SEND OTP</button>
+                          </motion.div>
+                        )}
+
+                        {detectedMode === 'phone' && otpSent && (
+                          <motion.div key="otp-verify" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
+                            <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>Enter the 6-digit code sent to your phone</p>
+                            <div className="flex justify-center gap-2">
+                              {otpCode.map((d, i) => (
+                                <input key={i} id={`pin-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={d} onChange={(e) => handleOtpDigit(i, e.target.value)}
+                                  className="w-[44px] h-[44px] text-center text-lg font-bold rounded-lg font-montserrat"
+                                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
+                                />
+                              ))}
+                            </div>
+                            <button type="button" onClick={handleVerifyOtp} style={btnStyle}>VERIFY</button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </form>
+
+                    <button
+                      onClick={() => { setRightMode('pin'); setInput(''); setPassword(''); setOtpSent(false); }}
+                      className="w-full text-center text-sm font-montserrat mt-4"
+                      style={{ color: '#6C7A89', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      Sign in with PIN instead
+                    </button>
+                  </motion.div>
                 )}
-              </div>
+              </AnimatePresence>
             </div>
           </div>
         </motion.div>
