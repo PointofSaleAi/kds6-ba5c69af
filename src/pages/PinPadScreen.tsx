@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, FormEvent } from 'react';
+import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, Check, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
