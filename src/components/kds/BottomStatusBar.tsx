@@ -38,7 +38,7 @@ function SoundToggle() {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
