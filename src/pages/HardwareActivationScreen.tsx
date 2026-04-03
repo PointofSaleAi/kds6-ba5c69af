@@ -148,7 +148,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               {phase === 'activate'
-                ? 'Activate this KDS device to get started'
+                ? 'Activate this Kitchen Display System device to get started'
                 : phase === 'set-pin'
                   ? (pinStep === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm')
                   : 'Reset your account password'}

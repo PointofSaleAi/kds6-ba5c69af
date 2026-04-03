@@ -200,7 +200,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: S
             </div>
 
             <div className="text-center py-3 text-xs text-text-muted">
-              POS ai KDS v2.4.1
+              POS ai Kitchen Display System v2.4.1
             </div>
           </div>
         </motion.div>

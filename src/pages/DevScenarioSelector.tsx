@@ -39,7 +39,7 @@ export default function DevScenarioSelector({
 
         {/* Logo + Title */}
         <img src={posaiLogo} alt="POS ai" className="h-14 object-contain mb-3" />
-        <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to POS AI KDS</h1>
+        <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to POS AI Kitchen Display System</h1>
         <p className="text-sm mb-10 font-montserrat" style={{ color: '#6C7A89' }}>
           Select a scenario to preview the login flow
         </p>
