@@ -103,6 +103,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const [servableModifiers, setServableModifiers] = useState(true);
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
 
   if (!open) return null;
 
