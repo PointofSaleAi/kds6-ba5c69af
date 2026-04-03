@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Delete, Check } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 
 type ForgotStep = 'request' | 'otp' | 'success';
 
@@ -75,7 +75,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
             </button>
 
             <div className="text-center mb-8">
-              <img src={posaiLogo} alt="POSAI" className="h-10 object-contain mx-auto" />
+              <PosaiLogo variant="light" className="h-10 object-contain mx-auto" />
               <p className="text-text-muted text-sm mt-2">Kitchen Display System</p>
             </div>
 

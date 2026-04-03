@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 
 interface SplashScreenProps {
   onReady: () => void;
@@ -34,7 +34,7 @@ export default function SplashScreen({ onReady }: SplashScreenProps) {
         className="flex flex-col items-center"
       >
         {/* Logo */}
-        <img src={posaiLogo} alt="POSAI" className="h-16 object-contain" />
+        <PosaiLogo variant="auto" className="h-16 object-contain" />
 
         <p className="text-text-secondary text-lg mt-2 font-medium">
           Kitchen Display System

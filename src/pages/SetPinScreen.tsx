@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Delete } from 'lucide-react';
-import posaiLogo from '@/assets/posai-logo-white.png';
+import PosaiLogo from '@/components/PosaiLogo';
 
 interface SetPinScreenProps {
   onComplete: () => void;
@@ -64,7 +64,7 @@ export default function SetPinScreen({ onComplete }: SetPinScreenProps) {
   return (
     <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: '#0D0D1A' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-[420px] px-6 flex flex-col items-center">
-        <img src={posaiLogo} alt="POSAI" className="h-12 object-contain mb-4" />
+        <PosaiLogo variant="light" className="h-12 object-contain mb-4" />
         <h1 className="text-white text-xl font-bold font-montserrat mb-1">
           {step === 'set' ? 'Set Your PIN' : 'Confirm Your PIN'}
         </h1>
