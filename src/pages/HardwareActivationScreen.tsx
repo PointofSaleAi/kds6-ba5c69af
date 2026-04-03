@@ -1,6 +1,6 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, Check, Delete } from 'lucide-react';
+import { Eye, EyeOff, Check, Delete, ArrowLeft } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 import MainOrderView from '@/pages/MainOrderView';
