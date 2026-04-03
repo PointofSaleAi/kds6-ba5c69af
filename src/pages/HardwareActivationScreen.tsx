@@ -98,7 +98,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             <AnimatePresence mode="wait">
               {!qrApproved ? (
                 <motion.div key="qr" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
-                  <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6" style={{ width: '300px', height: '300px' }}>
+                  <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6 cursor-pointer" style={{ width: '300px', height: '300px' }} onClick={handleSimulateQrApproval}>
                     <QRCodeSVG
                       value="https://kds.posai.app/activate?device=kds-001&token=abc123"
                       size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
