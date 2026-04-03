@@ -14,6 +14,8 @@ interface CourseSectionProps {
   itemStatuses?: Map<string, ItemStatus>;
   onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
+  /** When set, only the matching course is highlighted; others are dimmed */
+  stationCourse?: string;
 }
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem }: CourseSectionProps) {
