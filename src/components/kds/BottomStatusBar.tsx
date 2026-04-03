@@ -14,6 +14,8 @@ interface BottomStatusBarProps {
   onToggleTheme: () => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
+  /** Hide sort and view mode controls (used in station view) */
+  hideViewControls?: boolean;
 }
 
 const sortOptions: { value: SortMode; label: string }[] = [
@@ -36,7 +38,7 @@ function SoundToggle() {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -77,6 +79,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         )}
       </div>
 
+      {!hideViewControls && (
       <div className="flex items-center gap-3">
         {/* Sort control */}
         <div className="relative" ref={sortRef}>
@@ -131,6 +134,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           ))}
         </div>
       </div>
+      )}
 
       <div className="flex items-center gap-3">
         <SoundToggle />
