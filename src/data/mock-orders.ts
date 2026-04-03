@@ -424,12 +424,14 @@ export const mockOrders: Order[] = [
       {
         course: 'SALAD',
         isFired: true,
+        firedAgoLabel: '4:20 ago',
         items: [
           { id: 'i-034', name: 'Garden Salad', quantity: 5, modifiers: [{ text: 'Dressing on Side', type: 'neutral' }], allergens: [] },
         ],
       },
       {
         course: 'ENTREE',
+        prepTimerLabel: '6:42',
         items: [
           { id: 'i-035', name: 'Roasted Chicken', quantity: 3, modifiers: [{ text: '+ Rosemary Jus', type: 'extra' }], allergens: [] },
           { id: 'i-036', name: 'Grilled Swordfish', quantity: 2, modifiers: [{ text: 'No Capers', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }] },
@@ -438,6 +440,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~8 min',
         items: [
           { id: 'i-038', name: 'Panna Cotta', quantity: 5, modifiers: [{ text: '+ Berry Coulis', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
         ],

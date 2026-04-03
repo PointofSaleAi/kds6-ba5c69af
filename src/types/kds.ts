@@ -29,6 +29,12 @@ export interface CourseGroup {
   course: CourseType;
   items: OrderItem[];
   isFired?: boolean;
+  /** Station view: time since course was fired */
+  firedAgoLabel?: string;
+  /** Station view: prep timer for the active station course */
+  prepTimerLabel?: string;
+  /** Station view: auto-fire countdown for pending courses */
+  autoFireLabel?: string;
 }
 
 export interface Order {
