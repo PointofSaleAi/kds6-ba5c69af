@@ -128,13 +128,10 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                     <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6 cursor-pointer" style={{ width: '300px', height: '300px' }} onClick={handleSimulateQrApproval}>
                       <QRCodeSVG value="https://kds.posai.app/auth/qr?pin-login=true" size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF" />
                     </div>
-                    <div className="flex flex-col gap-[10px]" style={{ maxWidth: '340px' }}>
-                      <div className="flex gap-2 items-start">
-                        <span style={{ color: '#95A5A6', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
-                        <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                          Scan directly with your phone camera. You will be asked to enter your email, password to verify.
-                        </p>
-                      </div>
+                    <div style={{ maxWidth: '340px' }}>
+                      <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
+                        Scan directly with your phone camera. You will be asked to enter your email, password to verify.
+                      </p>
                     </div>
                   </motion.div>
                 ) : (
