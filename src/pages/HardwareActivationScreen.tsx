@@ -114,7 +114,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                     <div className="flex gap-2 items-start">
                       <span style={{ color: '#95A5A6', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
                       <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                        No link? Scan directly with your phone camera. You will be asked to enter your email or password to verify.
+                        No link? Scan directly with your phone camera. You will be asked to enter your email, password to verify.
                       </p>
                     </div>
                   </div>
