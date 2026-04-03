@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Delete, ArrowLeft } from 'lucide-react';
+import { Delete } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import MainOrderView from '@/pages/MainOrderView';
 
 interface PinPadScreenProps {
@@ -11,6 +12,7 @@ interface PinPadScreenProps {
 export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
   const [now, setNow] = useState(new Date());
+  const [activeTab, setActiveTab] = useState<'pin' | 'qr'>('pin');
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
@@ -44,7 +46,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
   const keyBase: React.CSSProperties = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     borderRadius: '8px', fontFamily: 'Montserrat, sans-serif', fontWeight: 700,
-    fontSize: '24px', height: '72px', cursor: 'pointer', border: 'none', transition: 'filter 0.1s',
+    fontSize: '32px', height: '72px', cursor: 'pointer', border: 'none', transition: 'filter 0.1s',
   };
   const lightKey: React.CSSProperties = {
     ...keyBase, background: 'linear-gradient(180deg, #ECECEC 0%, #D4D4D4 100%)',
@@ -54,6 +56,14 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
     ...keyBase, background: 'linear-gradient(180deg, #8C8C8C 0%, #6E6E6E 100%)',
     boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)', color: '#FFFFFF',
   };
+
+  const tabStyle = (active: boolean): React.CSSProperties => ({
+    flex: 1, padding: '10px 0', fontFamily: 'Montserrat, sans-serif', fontWeight: 700,
+    fontSize: '13px', letterSpacing: '0.5px', cursor: 'pointer', border: 'none',
+    borderRadius: '6px', transition: 'all 0.2s',
+    background: active ? 'rgba(255,255,255,0.15)' : 'transparent',
+    color: active ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
+  });
 
   return (
     <div className="fixed inset-0">
@@ -83,46 +93,68 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
           </div>
         </div>
 
-        {/* RIGHT: PIN only */}
+        {/* RIGHT: PIN / QR */}
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full" style={{ maxWidth: '480px' }}>
-            <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-              Enter your PIN to Sign In
-            </p>
-
-            <div className="flex justify-center gap-6 mb-8">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <motion.span
-                  key={i}
-                  className="font-montserrat font-black text-white select-none"
-                  style={{ fontSize: '4.5rem', lineHeight: 1 }}
-                  animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                >
-                  ✱
-                </motion.span>
-              ))}
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.06)' }}>
+              <button onClick={() => setActiveTab('pin')} style={tabStyle(activeTab === 'pin')}>ENTER PIN</button>
+              <button onClick={() => setActiveTab('qr')} style={tabStyle(activeTab === 'qr')}>SCAN QR</button>
             </div>
 
-            <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
-              {numKeys.map((key) => {
-                const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
-                const hoverAnim = { scale: 1.03 };
-                const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+            {activeTab === 'pin' ? (
+              <>
+                <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
+                  Enter your PIN
+                </p>
 
-                if (key === 'C') return (
-                  <motion.button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
-                );
-                if (key === 'BACK') return (
-                  <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
-                    <Delete className="w-5 h-5" />
-                  </motion.button>
-                );
-                return (
-                  <motion.button key={key} onClick={() => handleDigit(key)} style={lightKey} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>{key}</motion.button>
-                );
-              })}
-            </div>
+                <div className="flex justify-center gap-6 mb-8">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <motion.span
+                      key={i}
+                      className="font-montserrat font-black text-white select-none"
+                      style={{ fontSize: '4.5rem', lineHeight: 1 }}
+                      animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
+                      transition={{ duration: 0.25, ease: 'easeOut' }}
+                    >
+                      ✱
+                    </motion.span>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-3 gap-[8px] mb-[8px]">
+                  {numKeys.map((key) => {
+                    const tapAnim = { scale: 0.92, y: 2, boxShadow: '0 0 1px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)' };
+                    const hoverAnim = { scale: 1.03 };
+                    const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
+
+                    if (key === 'C') return (
+                      <motion.button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
+                    );
+                    if (key === 'BACK') return (
+                      <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
+                        <Delete className="w-5 h-5" />
+                      </motion.button>
+                    );
+                    return (
+                      <motion.button key={key} onClick={() => handleDigit(key)} style={lightKey} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>{key}</motion.button>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center py-6">
+                <p className="text-center text-base font-montserrat font-medium mb-6" style={{ color: '#A0A0A0' }}>
+                  Scan with your phone to sign in
+                </p>
+                <div className="flex items-center justify-center rounded-xl bg-white p-5 mb-6" style={{ width: '240px', height: '240px' }}>
+                  <QRCodeSVG value="https://kds.posai.app/auth/qr?pin-login=true" size={200} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF" />
+                </div>
+                <p className="text-sm font-montserrat text-center" style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '320px', lineHeight: 1.6 }}>
+                  Open the camera app on your phone and point it at this QR code to sign in without touching the screen.
+                </p>
+              </div>
+            )}
 
             {/* Fallback link */}
             {onFallback && (
