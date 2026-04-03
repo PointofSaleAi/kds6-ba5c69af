@@ -176,7 +176,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                         <div className="flex gap-2 items-start">
                           <span style={{ color: 'hsl(145, 63%, 42%)', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
                           <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                            Tap the link sent to your email or phone, scan this QR, then tap Approve to auto-login. No password needed.
+                            Got a link in your email or text? Tap it, then scan this code to activate instantly.
                           </p>
                         </div>
                         <div className="flex gap-2 items-start">
