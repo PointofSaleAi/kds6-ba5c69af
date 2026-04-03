@@ -17,6 +17,8 @@ interface OrderCardProps {
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
+  /** When set, only matching course is highlighted; others are dimmed */
+  stationCourse?: string;
 }
 
 function formatTimeReceived(date: Date): string {
