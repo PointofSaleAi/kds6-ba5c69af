@@ -34,7 +34,7 @@ export default function SplashScreen({ onReady }: SplashScreenProps) {
         className="flex flex-col items-center"
       >
         {/* Logo */}
-        <img src={posaiLogo} alt="POS ai" className="h-16 object-contain" />
+        <img src={posaiLogo} alt="POSAI" className="h-16 object-contain" />
 
         <p className="text-text-secondary text-lg mt-2 font-medium">
           Kitchen Display System
