@@ -237,6 +237,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             onClose={() => onCloseSettings?.()}
             onOpenSub={(sub) => onOpenSub?.(sub)}
             onLogOut={onLogOut}
+            onDevModeChange={onDevModeChange}
           />
         ) : (
         <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
