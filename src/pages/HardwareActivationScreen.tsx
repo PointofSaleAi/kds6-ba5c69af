@@ -93,8 +93,8 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
           {/* LEFT: QR (primary) */}
           <div className="flex flex-col items-center justify-center px-10">
-            <p className="text-white font-montserrat font-bold text-base mb-1">Scan to Activate</p>
-            <p className="text-xs font-montserrat mb-6" style={{ color: '#6C7A89' }}>
+            <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '22px' }}>Scan to Activate</p>
+            <p className="font-montserrat mb-6" style={{ color: '#FFFFFF', fontSize: '16px' }}>
               Scan with your phone to approve this device
             </p>
 
