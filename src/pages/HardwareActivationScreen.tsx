@@ -93,8 +93,8 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
           {/* LEFT: QR (primary) */}
           <div className="flex flex-col items-center justify-center px-10">
-            <p className="text-white font-montserrat font-bold text-base mb-1">Scan to Activate</p>
-            <p className="text-xs font-montserrat mb-6" style={{ color: '#6C7A89' }}>
+            <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '22px' }}>Scan to Activate</p>
+            <p className="font-montserrat mb-6" style={{ color: '#FFFFFF', fontSize: '16px' }}>
               Scan with your phone to approve this device
             </p>
 
@@ -107,7 +107,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
                     />
                   </div>
-                  <p className="text-xs font-montserrat text-center" style={{ color: '#95A5A6', maxWidth: '300px' }}>
+                  <p className="font-montserrat text-center" style={{ color: '#FFFFFF', fontSize: '15px', lineHeight: 1.6, maxWidth: '300px' }}>
                     Scan this QR code with your phone. Open the secure link and tap Approve to activate.
                   </p>
                   {/* Dev: simulate approval */}
@@ -136,15 +136,15 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
 
           {/* RIGHT: Smart sign-in */}
           <div className="flex flex-col justify-center px-10">
-            <p className="text-white font-montserrat font-bold text-base mb-1">Sign In</p>
-            <p className="text-xs font-montserrat mb-5" style={{ color: '#6C7A89' }}>
+            <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Sign In</p>
+            <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
               Enter your email or mobile number to activate
             </p>
 
             <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
               {/* Smart input */}
               <div>
-                <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Email or mobile number</label>
+                <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or mobile number</label>
                 <input
                   type="text"
                   value={input}
