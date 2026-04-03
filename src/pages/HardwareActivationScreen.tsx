@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Check } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
+import MainOrderView from '@/pages/MainOrderView';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
@@ -66,7 +67,13 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: '#0D0D1A' }}>
+    <div className="fixed inset-0">
+      {/* Blurred KDS background */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+        <MainOrderView onNavigate={() => {}} settingsOpen={false} onCloseSettings={() => {}} onOpenSub={() => {}} onLogOut={() => {}} />
+      </div>
+      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(15,15,12,0.72)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)' }} />
+      <div className="relative z-10 flex items-center justify-center h-full w-full">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -186,6 +193,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           </div>
         </div>
       </motion.div>
+      </div>
     </div>
   );
 }
