@@ -10,8 +10,7 @@ interface HardwareActivationScreenProps {
 }
 
 export default function HardwareActivationScreen({ onSuccess, onBack }: HardwareActivationScreenProps) {
-  const [method, setMethod] = useState<'qr' | 'email' | 'otp'>('qr');
-  const [email, setEmail] = useState('');
+  const [input, setInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState('');
@@ -19,14 +18,19 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
   const [otpSent, setOtpSent] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
 
+  // Auto-detect input type
+  const isEmail = input.includes('@');
+  const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
+  const detectedMode: 'none' | 'email' | 'phone' = isEmail ? 'email' : (input.length > 0 && isPhone) ? 'phone' : 'none';
+
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (email && password) onSuccess();
-  }, [email, password, onSuccess]);
+    if (input && password) onSuccess();
+  }, [input, password, onSuccess]);
 
   const handleSendOtp = useCallback(() => {
-    if (phone) setOtpSent(true);
-  }, [phone]);
+    if (input || phone) setOtpSent(true);
+  }, [input, phone]);
 
   const handleVerifyOtp = useCallback(() => {
     onSuccess();
@@ -42,7 +46,6 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
     }
   };
 
-  // Simulate QR approval
   const handleSimulateQrApproval = useCallback(() => {
     setQrApproved(true);
     setTimeout(() => onSuccess(), 1500);
@@ -56,9 +59,9 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
 
   const btnStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
-    background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
-    border: '1px solid rgba(255,255,255,0.12)', color: '#FFFFFF',
+    background: '#E84C3D',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
+    border: 'none', color: '#FFFFFF',
     fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
     letterSpacing: '0.5px', cursor: 'pointer',
   };
