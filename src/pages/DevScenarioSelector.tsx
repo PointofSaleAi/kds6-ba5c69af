@@ -1,5 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { AlertTriangle, Info, UserPlus, LogIn } from 'lucide-react';
+import { AlertTriangle, Info, UserPlus, LogIn, ChefHat, Utensils } from 'lucide-react';
 import PosaiLogo from '@/components/PosaiLogo';
 
 interface DevScenarioSelectorProps {
