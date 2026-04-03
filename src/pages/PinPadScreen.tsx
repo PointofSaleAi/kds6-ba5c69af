@@ -9,7 +9,6 @@ import ResetFlow from '@/components/kds/ResetFlow';
 interface PinPadScreenProps {
   onSuccess: () => void;
   onFallback?: () => void;
-  onDevSelector?: () => void;
 }
 
 export default function PinPadScreen({ onSuccess, onFallback, onDevSelector }: PinPadScreenProps) {
