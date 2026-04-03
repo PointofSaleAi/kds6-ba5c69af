@@ -104,9 +104,20 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
                     />
                   </div>
-                  <p className="font-montserrat text-center" style={{ color: '#FFFFFF', fontSize: '15px', lineHeight: 1.6, maxWidth: '300px' }}>
-                    Scan this QR code with your phone. Open the secure link and tap Approve to activate.
-                  </p>
+                  <div className="flex flex-col gap-[10px]" style={{ maxWidth: '340px' }}>
+                    <div className="flex gap-2 items-start">
+                      <span style={{ color: 'hsl(145, 63%, 42%)', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
+                      <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
+                        Tap the link sent to your email or phone, scan this QR, then tap Approve to auto-login. No password needed.
+                      </p>
+                    </div>
+                    <div className="flex gap-2 items-start">
+                      <span style={{ color: '#95A5A6', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
+                      <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
+                        No link? Scan directly with your phone camera. You will be asked to enter your email or password to verify.
+                      </p>
+                    </div>
+                  </div>
                   {/* Dev: simulate approval */}
                   <button
                     onClick={handleSimulateQrApproval}
