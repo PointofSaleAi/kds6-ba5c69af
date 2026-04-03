@@ -92,8 +92,9 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
 
   const btnStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
-    background: '#E84C3D', boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
-    border: 'none', color: '#FFFFFF',
+    background: 'linear-gradient(180deg, #ECECEC 0%, #D4D4D4 100%)',
+    boxShadow: '0 2px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.7)',
+    border: 'none', color: '#1A1A2E',
     fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
     letterSpacing: '0.5px', cursor: 'pointer',
   };
