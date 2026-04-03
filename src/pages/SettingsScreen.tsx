@@ -93,7 +93,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
   );
 }
 
-export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut }: SettingsScreenProps) {
+export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsScreenProps) {
   const { theme, setTheme } = useTheme();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
