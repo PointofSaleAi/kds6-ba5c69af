@@ -1,15 +1,14 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Eye, EyeOff, Check } from 'lucide-react';
+import { Eye, EyeOff, Check } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
-  onBack: () => void;
 }
 
-export default function HardwareActivationScreen({ onSuccess, onBack }: HardwareActivationScreenProps) {
+export default function HardwareActivationScreen({ onSuccess }: HardwareActivationScreenProps) {
   const [input, setInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -73,15 +72,6 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-[900px] px-6"
       >
-        {/* Back */}
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 font-montserrat font-medium text-sm mb-6"
-          style={{ color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
 
         {/* Logo */}
         <div className="text-center mb-8">
