@@ -1,4 +1,4 @@
-import { useState, useCallback, FormEvent } from 'react';
+import { useState, useCallback, useRef, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Delete, Check, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
@@ -9,9 +9,10 @@ import ResetFlow from '@/components/kds/ResetFlow';
 interface PinPadScreenProps {
   onSuccess: () => void;
   onFallback?: () => void;
+  onDevSelector?: () => void;
 }
 
-export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProps) {
+export default function PinPadScreen({ onSuccess, onFallback, onDevSelector }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
@@ -23,6 +24,20 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
   const [showPassword, setShowPassword] = useState(false);
   const [otpCode, setOtpCode] = useState<string[]>(['', '', '', '', '', '']);
   const [otpSent, setOtpSent] = useState(false);
+
+  // Hidden gesture: tap logo 5 times to access dev selector
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const handleLogoTap = useCallback(() => {
+    tapCountRef.current += 1;
+    clearTimeout(tapTimerRef.current);
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      onDevSelector?.();
+    } else {
+      tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, 2000);
+    }
+  }, [onDevSelector]);
 
   const isEmail = input.includes('@');
   const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
@@ -113,7 +128,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
       <div className="relative z-10 flex flex-col h-full w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full">
           <div className="flex items-center justify-center gap-5 pt-14 pb-1">
-            <PosaiLogo variant="light" className="h-14 object-contain" />
+            <div onClick={handleLogoTap} className="cursor-default"><PosaiLogo variant="light" className="h-14 object-contain" /></div>
             <h1 className="text-white text-xl font-bold font-montserrat">Kitchen Display System</h1>
           </div>
 

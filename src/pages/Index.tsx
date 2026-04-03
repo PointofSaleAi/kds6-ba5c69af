@@ -121,6 +121,7 @@ const Index = () => {
         <PinPadScreen
           onSuccess={handlePinLoginSuccess}
           onFallback={() => setScreen('hardware-new')}
+          onDevSelector={() => setScreen('dev-selector')}
         />
       )}
 
