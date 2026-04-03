@@ -72,15 +72,6 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-[900px] px-6"
       >
-        {/* Back */}
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 font-montserrat font-medium text-sm mb-6"
-          style={{ color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
 
         {/* Logo */}
         <div className="text-center mb-8">
