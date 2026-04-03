@@ -81,7 +81,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
       >
 
         {/* Logo + Title row */}
-        <div className="flex items-center justify-center gap-5 pt-10 pb-6">
+        <div className="flex items-center justify-center gap-5 pt-6 pb-4">
           <img src={posaiLogo} alt="POS ai" className="h-14 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">Hardware Activation</h1>
