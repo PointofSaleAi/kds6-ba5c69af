@@ -100,6 +100,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut }: SettingsPanelPro
   const { mode: kdsMode, setMode: setKdsMode } = useKDSMode();
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
+  const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
 
   const handleSync = () => {
     setSyncing(true);
