@@ -17,6 +17,8 @@ interface OrderCardProps {
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
+  /** When set, only matching course is highlighted; others are dimmed */
+  stationCourse?: string;
 }
 
 function formatTimeReceived(date: Date): string {
@@ -39,7 +41,7 @@ const statusBodyMap: Record<string, string> = {
   recalled: 'border-l-order-take-out',
 };
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stationCourse }: OrderCardProps) {
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
@@ -159,6 +161,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse }: Or
             itemStatuses={itemStatuses}
             onAdvanceItem={handleAdvanceItem}
             onUndoItem={handleUndoItem}
+            stationCourse={stationCourse}
           />
         ))}
       </div>

@@ -14,10 +14,13 @@ interface CourseSectionProps {
   itemStatuses?: Map<string, ItemStatus>;
   onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
+  /** When set, only the matching course is highlighted; others are dimmed */
+  stationCourse?: string;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse }: CourseSectionProps) {
   const isFired = courseGroup.isFired;
+  const isStationDimmed = stationCourse ? courseGroup.course !== stationCourse : false;
   const allItemsDone = courseGroup.items
     .filter(i => !i.isCancelled)
     .every(i => itemStatuses?.get(i.id) === 'done');
@@ -25,7 +28,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   if (allItemsDone) return null;
 
   return (
-    <div className={isFired ? 'opacity-50' : ''}>
+    <div className={isFired ? 'opacity-50' : isStationDimmed ? 'opacity-30 pointer-events-none' : ''}>
       <div className="flex items-center justify-between bg-muted px-3 py-1.5 mt-1">
         <span className="text-section-label uppercase text-text-secondary tracking-widest">
           {courseGroup.course}

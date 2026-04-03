@@ -27,6 +27,8 @@ interface MainOrderViewProps {
   onOpenSub?: (sub: string) => void;
   onLogOut?: () => void;
   onDevModeChange?: (enabled: boolean) => void;
+  /** When set, OrderCards dim non-matching courses */
+  stationCourse?: string;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
@@ -38,7 +40,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode } = useKDSMode();
   const { playSound } = useSound();
@@ -333,7 +335,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
                             )}
                           </motion.div>
                         ))}
@@ -348,7 +350,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                             {kdsMode === 'Expo' ? (
                               <ExpoOrderCard order={order} onBump={handleBump} />
                             ) : (
-                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} />
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
                             )}
                           </motion.div>
                         ))}
@@ -365,7 +367,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                                 {kdsMode === 'Expo' ? (
                                   <ExpoOrderCard order={order} onBump={handleBump} />
                                 ) : (
-                                  <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} />
+                                  <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
                                 )}
                               </motion.div>
                             ))}
