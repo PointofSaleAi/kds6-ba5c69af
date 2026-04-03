@@ -42,12 +42,26 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
     }
   };
 
+  const handlePinBoxChange = (field: 'new' | 'confirm', index: number, value: string) => {
+    if (value.length > 1) return;
+    const arr = field === 'new' ? [...newPinDigits] : [...confirmPinDigits];
+    arr[index] = value;
+    if (field === 'new') setNewPinDigits(arr); else setConfirmPinDigits(arr);
+    if (value && index < 3) {
+      document.getElementById(`reset-${field}-pin-${index + 1}`)?.focus();
+    }
+  };
+
   const handleReset = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (newPassword && newPassword === confirmPassword) {
-      onComplete();
+    if (type === 'pin') {
+      const np = newPinDigits.join('');
+      const cp = confirmPinDigits.join('');
+      if (np.length === 4 && np === cp) onComplete();
+    } else {
+      if (newPassword && newPassword === confirmPassword) onComplete();
     }
-  }, [newPassword, confirmPassword, onComplete]);
+  }, [type, newPassword, confirmPassword, newPinDigits, confirmPinDigits, onComplete]);
 
   const inputStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
