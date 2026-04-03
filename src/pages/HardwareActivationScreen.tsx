@@ -118,7 +118,6 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       </p>
                     </div>
                   </div>
-                  </div>
                 </motion.div>
               ) : (
                 <motion.div key="approved" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center py-8">
