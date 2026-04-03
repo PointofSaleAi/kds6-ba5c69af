@@ -12,6 +12,8 @@ export default function DevScenarioSelector({
   onNewUser,
   onExistingUser,
 }: DevScenarioSelectorProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center" style={{ backgroundColor: '#0D0D1A' }}>
       <motion.div
@@ -40,12 +42,12 @@ export default function DevScenarioSelector({
 
         {/* Logo + Title */}
         <PosaiLogo variant="light" className="h-14 object-contain mb-3" />
-        <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to POSAI Kitchen Display System</h1>
+        <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to POSAI Kitchen Display</h1>
         <p className="text-sm mb-10 font-montserrat" style={{ color: '#6C7A89' }}>
           Select a scenario to preview the login flow
         </p>
 
-        {/* Two cards */}
+        {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[600px]">
           <ScenarioCard
             icon={<UserPlus className="w-5 h-5" style={{ color: '#6C7A89' }} />}
@@ -58,6 +60,18 @@ export default function DevScenarioSelector({
             title="Existing User"
             subtitle="Device already activated - sign in with PIN"
             onClick={onExistingUser}
+          />
+          <ScenarioCard
+            icon={<ChefHat className="w-5 h-5" style={{ color: '#6C7A89' }} />}
+            title="KDS - Full View (single chef)"
+            subtitle="Full coursing view with all courses visible"
+            onClick={() => navigate('/kds/full')}
+          />
+          <ScenarioCard
+            icon={<Utensils className="w-5 h-5" style={{ color: '#6C7A89' }} />}
+            title="KDS - Station View (entree station)"
+            subtitle="Station-specific view with auto-fire notifications"
+            onClick={() => navigate('/kds/station')}
           />
         </div>
       </motion.div>
