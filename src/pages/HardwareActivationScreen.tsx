@@ -10,8 +10,7 @@ interface HardwareActivationScreenProps {
 }
 
 export default function HardwareActivationScreen({ onSuccess, onBack }: HardwareActivationScreenProps) {
-  const [method, setMethod] = useState<'qr' | 'email' | 'otp'>('qr');
-  const [email, setEmail] = useState('');
+  const [input, setInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState('');
@@ -19,14 +18,19 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
   const [otpSent, setOtpSent] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
 
+  // Auto-detect input type
+  const isEmail = input.includes('@');
+  const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
+  const detectedMode: 'none' | 'email' | 'phone' = isEmail ? 'email' : (input.length > 0 && isPhone) ? 'phone' : 'none';
+
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (email && password) onSuccess();
-  }, [email, password, onSuccess]);
+    if (input && password) onSuccess();
+  }, [input, password, onSuccess]);
 
   const handleSendOtp = useCallback(() => {
-    if (phone) setOtpSent(true);
-  }, [phone]);
+    if (input || phone) setOtpSent(true);
+  }, [input, phone]);
 
   const handleVerifyOtp = useCallback(() => {
     onSuccess();
@@ -42,7 +46,6 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
     }
   };
 
-  // Simulate QR approval
   const handleSimulateQrApproval = useCallback(() => {
     setQrApproved(true);
     setTimeout(() => onSuccess(), 1500);
@@ -56,9 +59,9 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
 
   const btnStyle: React.CSSProperties = {
     width: '100%', height: '56px', borderRadius: '8px',
-    background: 'linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 100%)',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
-    border: '1px solid rgba(255,255,255,0.12)', color: '#FFFFFF',
+    background: '#E84C3D',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
+    border: 'none', color: '#FFFFFF',
     fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '15px',
     letterSpacing: '0.5px', cursor: 'pointer',
   };
@@ -131,81 +134,65 @@ export default function HardwareActivationScreen({ onSuccess, onBack }: Hardware
             </AnimatePresence>
           </div>
 
-          {/* RIGHT: Email / OTP login */}
+          {/* RIGHT: Smart sign-in */}
           <div className="rounded-xl p-6" style={{ backgroundColor: '#1A1A2E', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-white font-montserrat font-bold text-base mb-1">Or Sign In</p>
+            <p className="text-white font-montserrat font-bold text-base mb-1">Sign In</p>
             <p className="text-xs font-montserrat mb-5" style={{ color: '#6C7A89' }}>
-              Use email or mobile OTP as an alternative
+              Enter your email or mobile number to activate
             </p>
 
-            {/* Method tabs */}
-            <div className="flex mb-5" style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.15)' }}>
-              {(['email', 'otp'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setMethod(tab)}
-                  className="flex-1 font-montserrat font-bold text-xs py-2.5 transition-colors"
-                  style={{
-                    background: method === tab ? 'linear-gradient(180deg, #3A3A3A 0%, #2A2A2A 100%)' : 'transparent',
-                    color: method === tab ? '#FFFFFF' : 'rgba(255,255,255,0.4)',
-                    border: 'none', cursor: 'pointer',
-                  }}
-                >
-                  {tab === 'email' ? 'EMAIL' : 'MOBILE OTP'}
-                </button>
-              ))}
-            </div>
+            <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
+              {/* Smart input */}
+              <div>
+                <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Email or mobile number</label>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Enter your email or mobile number"
+                  className="font-montserrat"
+                  style={inputStyle}
+                />
+              </div>
 
-            <AnimatePresence mode="wait">
-              {method === 'email' ? (
-                <motion.form key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleEmailSignIn} className="flex flex-col gap-4">
-                  <div>
-                    <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Email</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="kitchen@restaurant.com" className="font-montserrat" style={inputStyle} />
-                  </div>
-                  <div>
-                    <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
-                    <div style={{ position: 'relative' }}>
-                      <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
+              <AnimatePresence mode="wait">
+                {detectedMode === 'email' && (
+                  <motion.div key="pw" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
+                    <div>
+                      <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
+                      <div style={{ position: 'relative' }}>
+                        <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <button type="submit" style={btnStyle}>SIGN IN</button>
-                </motion.form>
-              ) : (
-                <motion.div key="otp" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-4">
-                  {!otpSent ? (
-                    <>
-                      <div>
-                        <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Mobile Number</label>
-                        <div className="flex gap-2">
-                          <select className="px-2 py-2.5 rounded-lg text-sm font-montserrat min-h-[44px]" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF' }}>
-                            <option>+1</option><option>+44</option><option>+91</option>
-                          </select>
-                          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(555) 123-4567" className="font-montserrat" style={{ ...inputStyle, flex: 1 }} />
-                        </div>
-                      </div>
-                      <button type="button" onClick={handleSendOtp} style={btnStyle}>SEND OTP</button>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>Enter the 6-digit code sent to your phone</p>
-                      <div className="flex justify-center gap-2">
-                        {otpCode.map((d, i) => (
-                          <input key={i} id={`hw-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={d} onChange={(e) => handleOtpDigit(i, e.target.value)}
-                            className="w-[44px] h-[44px] text-center text-lg font-bold rounded-lg font-montserrat"
-                            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
-                          />
-                        ))}
-                      </div>
-                      <button type="button" onClick={handleVerifyOtp} style={btnStyle}>VERIFY</button>
-                    </>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    <button type="submit" style={btnStyle}>SIGN IN</button>
+                  </motion.div>
+                )}
+
+                {detectedMode === 'phone' && !otpSent && (
+                  <motion.div key="phone" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
+                    <button type="submit" style={btnStyle}>SEND OTP</button>
+                  </motion.div>
+                )}
+
+                {detectedMode === 'phone' && otpSent && (
+                  <motion.div key="otp-verify" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
+                    <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>Enter the 6-digit code sent to your phone</p>
+                    <div className="flex justify-center gap-2">
+                      {otpCode.map((d, i) => (
+                        <input key={i} id={`hw-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={d} onChange={(e) => handleOtpDigit(i, e.target.value)}
+                          className="w-[44px] h-[44px] text-center text-lg font-bold rounded-lg font-montserrat"
+                          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
+                        />
+                      ))}
+                    </div>
+                    <button type="button" onClick={handleVerifyOtp} style={btnStyle}>VERIFY</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </form>
           </div>
         </div>
       </motion.div>
