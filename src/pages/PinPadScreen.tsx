@@ -25,6 +25,20 @@ export default function PinPadScreen({ onSuccess, onFallback, onDevSelector }: P
   const [otpCode, setOtpCode] = useState<string[]>(['', '', '', '', '', '']);
   const [otpSent, setOtpSent] = useState(false);
 
+  // Hidden gesture: tap logo 5 times to access dev selector
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const handleLogoTap = useCallback(() => {
+    tapCountRef.current += 1;
+    clearTimeout(tapTimerRef.current);
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      onDevSelector?.();
+    } else {
+      tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, 2000);
+    }
+  }, [onDevSelector]);
+
   const isEmail = input.includes('@');
   const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
   const detectedMode: 'none' | 'email' | 'phone' = isEmail ? 'email' : (input.length > 0 && isPhone) ? 'phone' : 'none';
