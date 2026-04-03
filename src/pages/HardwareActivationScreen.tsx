@@ -134,7 +134,12 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           </div>
 
           {/* Vertical divider */}
-          <div className="hidden md:block absolute left-1/2 top-[180px] bottom-[60px]" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
+          {/* Or divider */}
+          <div className="hidden md:flex absolute left-1/2 top-[180px] bottom-[60px] -translate-x-1/2 flex-col items-center justify-center">
+            <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
+            <span className="text-white/50 font-montserrat font-semibold text-sm py-3">Or</span>
+            <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
+          </div>
 
           {/* RIGHT: Smart sign-in */}
           <div className="flex flex-col justify-center px-10">
