@@ -1,6 +1,6 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, Check, Delete } from 'lucide-react';
+import { Eye, EyeOff, Check, Delete, ArrowLeft } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 import MainOrderView from '@/pages/MainOrderView';
@@ -266,6 +266,14 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             /* SET PIN phase - replaces activation content */
             <motion.div key="set-pin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 flex items-center justify-center">
               <div className="w-full" style={{ maxWidth: '380px' }}>
+                <button
+                  onClick={() => { setPhase('activate'); setQrApproved(false); setPin(''); setConfirmPin(''); setPinStep('set'); setPinError(false); }}
+                  className="flex items-center gap-2 font-montserrat font-semibold text-sm mb-6"
+                  style={{ color: '#FFFFFF', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back
+                </button>
                 {pinError && (
                   <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm font-montserrat font-semibold mb-4 text-center" style={{ color: '#E84C3D' }}>
                     PINs do not match. Try again.
