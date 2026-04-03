@@ -132,7 +132,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           </div>
 
           {/* Vertical divider */}
-          <div className="hidden md:block absolute left-1/2 top-[140px] bottom-0" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
+          <div className="hidden md:block absolute left-1/2 top-[180px] bottom-[60px]" style={{ width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.10)' }} />
 
           {/* RIGHT: Smart sign-in */}
           <div className="flex flex-col justify-center px-10">
