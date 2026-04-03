@@ -16,6 +16,8 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [newPinDigits, setNewPinDigits] = useState<string[]>(['', '', '', '']);
+  const [confirmPinDigits, setConfirmPinDigits] = useState<string[]>(['', '', '', '']);
 
   const isEmail = input.includes('@');
   const isPhone = /^[+\d\s()-]*$/.test(input) && input.replace(/\D/g, '').length >= 3;
