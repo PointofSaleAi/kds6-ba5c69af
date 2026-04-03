@@ -12,7 +12,7 @@ interface PinPadScreenProps {
   onDevSelector?: () => void;
 }
 
-export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProps) {
+export default function PinPadScreen({ onSuccess, onFallback, onDevSelector }: PinPadScreenProps) {
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
