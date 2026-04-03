@@ -104,10 +104,8 @@ const Index = () => {
     <>
       {screen === 'dev-selector' && (
         <DevScenarioSelector
-          onHardwareNew={() => setScreen('hardware-new')}
-          onHardwareExisting={() => setScreen('hardware-existing')}
-          onBYODNew={() => setScreen('byod-new')}
-          onBYODExisting={() => setScreen('byod-existing')}
+          onNewUser={() => setScreen('hardware-new')}
+          onExistingUser={() => setScreen('hardware-existing')}
         />
       )}
 

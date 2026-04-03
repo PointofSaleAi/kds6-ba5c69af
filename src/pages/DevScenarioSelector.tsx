@@ -1,19 +1,15 @@
 import { motion } from 'framer-motion';
-import { AlertTriangle, Info, Monitor, Smartphone, UserPlus, LogIn } from 'lucide-react';
+import { AlertTriangle, Info, UserPlus, LogIn } from 'lucide-react';
 import posaiLogo from '@/assets/posai-logo-white.png';
 
 interface DevScenarioSelectorProps {
-  onHardwareNew: () => void;
-  onHardwareExisting: () => void;
-  onBYODNew: () => void;
-  onBYODExisting: () => void;
+  onNewUser: () => void;
+  onExistingUser: () => void;
 }
 
 export default function DevScenarioSelector({
-  onHardwareNew,
-  onHardwareExisting,
-  onBYODNew,
-  onBYODExisting,
+  onNewUser,
+  onExistingUser,
 }: DevScenarioSelectorProps) {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center" style={{ backgroundColor: '#0D0D1A' }}>
@@ -45,69 +41,45 @@ export default function DevScenarioSelector({
         <img src={posaiLogo} alt="POS ai" className="h-14 object-contain mb-3" />
         <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to POS AI KDS</h1>
         <p className="text-sm mb-10 font-montserrat" style={{ color: '#6C7A89' }}>
-          Select a device type and user scenario
+          Select a scenario to preview the login flow
         </p>
 
-        {/* 2-column layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          {/* LEFT: Hardware */}
-          <div
-            className="rounded-xl p-6"
-            style={{ backgroundColor: '#1A1A2E', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
-                <Monitor className="w-5 h-5" style={{ color: '#6C7A89' }} />
-              </div>
-              <h2 className="text-white text-lg font-bold font-montserrat">POSAI KDS Hardware</h2>
-            </div>
-            <p className="text-xs mb-6 font-montserrat" style={{ color: '#6C7A89' }}>
-              For fixed KDS / POS / kiosk devices detected by system
-            </p>
-
-            <div className="flex flex-col gap-3">
-              <FlowButton icon={<UserPlus className="w-4 h-4" />} label="New User" onClick={onHardwareNew} />
-              <FlowButton icon={<LogIn className="w-4 h-4" />} label="Existing User" onClick={onHardwareExisting} />
-            </div>
-          </div>
-
-          {/* RIGHT: BYOD */}
-          <div
-            className="rounded-xl p-6"
-            style={{ backgroundColor: '#1A1A2E', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
-                <Smartphone className="w-5 h-5" style={{ color: '#6C7A89' }} />
-              </div>
-              <h2 className="text-white text-lg font-bold font-montserrat">Own iPad / Tablet</h2>
-            </div>
-            <p className="text-xs mb-6 font-montserrat" style={{ color: '#6C7A89' }}>
-              For personal devices using KDS app
-            </p>
-
-            <div className="flex flex-col gap-3">
-              <FlowButton icon={<UserPlus className="w-4 h-4" />} label="New User" onClick={onBYODNew} />
-              <FlowButton icon={<LogIn className="w-4 h-4" />} label="Existing User" onClick={onBYODExisting} />
-            </div>
-          </div>
+        {/* Two cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[600px]">
+          <ScenarioCard
+            icon={<UserPlus className="w-5 h-5" style={{ color: '#6C7A89' }} />}
+            title="New User"
+            subtitle="First time activating this device"
+            onClick={onNewUser}
+          />
+          <ScenarioCard
+            icon={<LogIn className="w-5 h-5" style={{ color: '#6C7A89' }} />}
+            title="Existing User"
+            subtitle="Device already activated - sign in with PIN"
+            onClick={onExistingUser}
+          />
         </div>
       </motion.div>
     </div>
   );
 }
 
-function FlowButton({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
+function ScenarioCard({ icon, title, subtitle, onClick }: { icon: React.ReactNode; title: string; subtitle: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-left transition-all font-montserrat font-semibold text-sm min-h-[48px]"
-      style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', color: '#FFFFFF' }}
-      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+      className="flex items-start gap-4 w-full px-5 py-5 rounded-xl text-left transition-all min-h-[48px]"
+      style={{ backgroundColor: '#1A1A2E', border: '1px solid rgba(255,255,255,0.08)' }}
+      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#1A1A2E'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
     >
-      {icon}
-      {label}
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+        {icon}
+      </div>
+      <div className="flex flex-col gap-1">
+        <span className="text-white text-sm font-bold font-montserrat">{title}</span>
+        <span className="text-xs font-montserrat" style={{ color: '#6C7A89' }}>{subtitle}</span>
+      </div>
     </button>
   );
 }
