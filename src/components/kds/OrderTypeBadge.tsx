@@ -19,21 +19,21 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge }: OrderTyp
   const config = typeConfig[type];
 
   return (
-    <div className={`${config.bg} px-3 py-2 rounded-t-lg flex items-center justify-between`}>
-      <div className="flex items-center gap-2">
-        <span className="text-badge-type text-primary-foreground uppercase tracking-wider">
+    <div className={`${config.bg} px-3 py-2 rounded-t-lg flex items-center justify-between gap-2`}>
+      <div className="flex items-center gap-2 min-w-0">
+        <span className="text-badge-type text-primary-foreground uppercase tracking-wider whitespace-nowrap">
           {config.label}
         </span>
         {stationBadge && (
           <span
-            className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider"
+            className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0"
             style={{ backgroundColor: '#EEEDFE', color: '#3C3489' }}
           >
             {stationBadge}
           </span>
         )}
       </div>
-      <div className="flex items-center gap-2 text-primary-foreground/80 text-modifier">
+      <div className="flex items-center gap-2 text-primary-foreground/80 text-modifier shrink-0">
         {time && <span>{time}</span>}
         {tableInfo && <span>{tableInfo}</span>}
       </div>
