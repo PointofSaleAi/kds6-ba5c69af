@@ -193,6 +193,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           </div>
         </div>
       </motion.div>
+      </div>
     </div>
   );
 }
