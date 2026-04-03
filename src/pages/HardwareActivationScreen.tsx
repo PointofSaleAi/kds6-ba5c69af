@@ -332,6 +332,12 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
               </div>
             </motion.div>
           )}
+
+          {phase === 'forgot-password' && (
+            <motion.div key="forgot-pw" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 flex items-center justify-center">
+              <ResetFlow type="password" onBack={() => setPhase('activate')} onComplete={() => setPhase('activate')} />
+            </motion.div>
+          )}
         </AnimatePresence>
 
       </motion.div>
