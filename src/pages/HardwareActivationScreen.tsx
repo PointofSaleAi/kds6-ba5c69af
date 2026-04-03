@@ -107,7 +107,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       size={260} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF"
                     />
                   </div>
-                  <p className="text-xs font-montserrat text-center" style={{ color: '#95A5A6', maxWidth: '300px' }}>
+                  <p className="font-montserrat text-center" style={{ color: '#FFFFFF', fontSize: '15px', lineHeight: 1.6, maxWidth: '300px' }}>
                     Scan this QR code with your phone. Open the secure link and tap Approve to activate.
                   </p>
                   {/* Dev: simulate approval */}
