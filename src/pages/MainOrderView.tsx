@@ -26,6 +26,7 @@ interface MainOrderViewProps {
   onCloseSettings?: () => void;
   onOpenSub?: (sub: string) => void;
   onLogOut?: () => void;
+  onDevModeChange?: (enabled: boolean) => void;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
