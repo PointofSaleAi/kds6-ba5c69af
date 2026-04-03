@@ -53,3 +53,28 @@ export interface KDSFilter {
   revenueCenters: string[];
   statusFilter: 'all' | 'new' | 'in-progress' | 'completed';
 }
+
+/* ── Coursing types ── */
+
+export type CourseStatus = 'fired' | 'active' | 'pending';
+
+export interface CourseBlock {
+  id: string;
+  name: string;
+  status: CourseStatus;
+  firedAgoLabel?: string;
+  prepTimerLabel?: string;
+  autoFireLabel?: string;
+  items: OrderItem[];
+}
+
+export interface KDSOrder {
+  id: string;
+  orderNumber: number;
+  orderType: 'Dine In' | 'Banquet' | 'Take Out';
+  tableOrLocation: string;
+  elapsedTimer: string;
+  waiterName: string;
+  statusBadge: 'In Progress' | 'Overtime' | 'Done';
+  courses: CourseBlock[];
+}
