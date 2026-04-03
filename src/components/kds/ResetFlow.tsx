@@ -153,12 +153,12 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
               <>
                 <div>
                   <label className="block font-montserrat font-medium text-xs mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>New PIN</label>
-                  <div className="flex justify-center gap-3">
+                  <div className="flex gap-3">
                     {newPinDigits.map((d, i) => (
                       <input
                         key={i} id={`reset-new-pin-${i}`} type="text" inputMode="numeric" maxLength={1}
                         value={d} onChange={(e) => handlePinBoxChange('new', i, e.target.value)}
-                        className="w-[52px] h-[52px] text-center text-xl font-bold rounded-lg font-montserrat"
+                        className="flex-1 h-[56px] text-center text-xl font-bold rounded-lg font-montserrat"
                         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', outline: 'none' }}
                       />
                     ))}
