@@ -1,4 +1,5 @@
 import type { OrderType } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 
 const typeConfig: Record<OrderType, { bg: string; label: string }> = {
   'dine-in': { bg: 'bg-order-dine-in', label: 'DINE IN' },
@@ -16,13 +17,14 @@ interface OrderTypeBadgeProps {
 }
 
 export function OrderTypeBadge({ type, time, tableInfo, stationBadge }: OrderTypeBadgeProps) {
+  const { to } = useLanguage();
   const config = typeConfig[type];
 
   return (
     <div className={`${config.bg} px-3 py-2 rounded-t-lg flex items-center justify-between gap-2`}>
       <div className="flex items-center gap-2 min-w-0">
         <span className="text-badge-type text-primary-foreground uppercase tracking-wider whitespace-nowrap">
-          {config.label}
+          {to(config.label)}
         </span>
         {stationBadge && (
           <span
