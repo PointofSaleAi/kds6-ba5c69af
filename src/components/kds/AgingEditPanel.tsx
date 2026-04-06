@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import type { StatusRule } from '@/hooks/use-status-rules';
 import NumberWheelPicker from '@/components/kds/NumberWheelPicker';
