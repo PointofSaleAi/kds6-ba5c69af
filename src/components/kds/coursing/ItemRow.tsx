@@ -13,7 +13,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
   return (
     <div className={`py-0 ${dimmed ? 'opacity-[0.32]' : ''}`}>
       <div className="flex items-center gap-1">
-        <span className="text-[13px] font-semibold text-text-primary leading-tight">
+        <span className="text-[13px] font-semibold text-text-primary leading-none">
           {item.quantity}x {tp(item.name)}
         </span>
         {item.allergens.map((a) => (
