@@ -91,7 +91,7 @@ export function PrepBoard({ orders }: PrepBoardProps) {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[14px] font-semibold text-text-primary truncate">{item.name}</span>
+                      <span className="text-[14px] font-semibold text-text-primary truncate">{tp(item.name)}</span>
                       {item.hasAllergens && (
                         <span className="text-[10px] font-bold text-allergen bg-allergen/10 px-1.5 py-0.5 rounded">
                           ALLERGY

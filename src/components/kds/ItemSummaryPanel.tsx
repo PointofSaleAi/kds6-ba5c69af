@@ -85,7 +85,7 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
               </div>
               {cat.items.map((item) => (
                 <div key={item.name} className="flex items-center justify-between py-0.5">
-                  <span className="text-modifier text-text-primary truncate">{item.name}</span>
+                  <span className="text-modifier text-text-primary truncate">{tp(item.name)}</span>
                   <span className="text-modifier font-bold text-text-primary ml-2 shrink-0">{item.total}</span>
                 </div>
               ))}

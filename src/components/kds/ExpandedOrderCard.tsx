@@ -140,7 +140,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2 flex-1 min-w-0">
                               <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
-                                {item.quantity}&times; {item.name}
+                                {item.quantity}&times; {tp(item.name)}
                               </span>
                               {item.isCancelled && (
                                 <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
