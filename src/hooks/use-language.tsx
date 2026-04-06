@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 
-export type LanguageCode = 'es' | 'en-US' | 'zh' | 'vi';
+export type LanguageCode = 'es' | 'en-US' | 'en-GB' | 'zh' | 'vi' | 'ar';
 
 interface Translations {
   // Bottom bar
