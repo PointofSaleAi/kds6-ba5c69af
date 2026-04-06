@@ -77,10 +77,12 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
         {summary.map((cat) => {
           const totalCat = cat.items.reduce((a, i) => a + i.total, 0);
           const completedCat = cat.items.reduce((a, i) => a + i.completed, 0);
+          const isStation = stationCourse === cat.category;
+          const isMuted = stationCourse && !isStation;
           return (
-            <div key={cat.category}>
+            <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-section-label text-text-secondary uppercase tracking-widest">
+                <span className={`text-section-label uppercase tracking-widest ${isStation ? 'text-text-primary font-bold' : 'text-text-secondary'}`}>
                   {tc(cat.category)}S
                 </span>
                 <span className="text-[11px] text-text-muted">
@@ -89,7 +91,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
               </div>
               <div className="w-full h-1 bg-muted rounded-full mb-2">
                 <div
-                  className="h-full bg-success rounded-full transition-all"
+                  className={`h-full rounded-full transition-all ${isStation ? 'bg-primary' : 'bg-success'}`}
                   style={{ width: `${totalCat > 0 ? (completedCat / totalCat) * 100 : 0}%` }}
                 />
               </div>
