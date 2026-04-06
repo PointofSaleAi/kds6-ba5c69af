@@ -151,7 +151,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
     : isDimmed
-      ? (isStationMode ? 'opacity-60 pointer-events-none' : '')
+      ? (isStationMode ? 'opacity-70 pointer-events-none' : '')
       : '';
 
   const containerStyle = coursingStatus === 'active'
