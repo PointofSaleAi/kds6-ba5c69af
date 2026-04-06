@@ -28,8 +28,8 @@ function getStationStatus(courseGroup: CourseGroup, stationCourse: string): Stat
   return 'pending';
 }
 
-function getStationLabel(courseGroup: CourseGroup, status: StationStatus): string {
-  const name = courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase();
+function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s: string) => string): string {
+  const name = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   switch (status) {
     case 'fired':
       return `${name} \u00B7 Other station`;
@@ -41,7 +41,7 @@ function getStationLabel(courseGroup: CourseGroup, status: StationStatus): strin
 }
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus }: CourseSectionProps) {
-  const { tp } = useLanguage();
+  const { tp, tc } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
   const stationStatus = forcedStationStatus ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : null);
@@ -79,8 +79,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
   // FIX 6: Course label
   const courseLabel = isStationMode
-    ? getStationLabel(courseGroup, stationStatus!)
-    : courseGroup.course;
+    ? getStationLabel(courseGroup, stationStatus!, tc)
+    : tc(courseGroup.course);
 
   // Label colour: purple for active station course
   const labelClass = isStationMode && stationStatus === 'active'
@@ -135,7 +135,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
               }`}
               style={!fireButtonDisabled && isStationMode ? { backgroundColor: '#7F77DD' } : undefined}
             >
-              FIRE {courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course}
+              FIRE {tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}
             </button>
           )}
         </div>
