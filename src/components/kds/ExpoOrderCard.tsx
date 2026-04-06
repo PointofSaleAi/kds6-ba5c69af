@@ -1,5 +1,13 @@
 import { useMemo, useCallback } from 'react';
-import type { Order } from '@/types/kds';
+import type { Order, OrderType } from '@/types/kds';
+
+function getLocationLabel(orderType: OrderType, tableName?: string): string | undefined {
+  if (!tableName) return undefined;
+  const upper = tableName.toUpperCase();
+  if (orderType === 'take-out' && (upper === 'PICKUP' || upper === 'TAKE OUT')) return undefined;
+  if (orderType === 'delivery' && upper === 'DELIVERY') return undefined;
+  return tableName;
+}
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -45,7 +53,7 @@ export function ExpoOrderCard({ order, onBump }: ExpoOrderCardProps) {
       <OrderTypeBadge
         type={order.orderType}
         time={formatTimeReceived(order.timeReceived)}
-        tableInfo={order.tableName}
+        tableInfo={getLocationLabel(order.orderType, order.tableName)}
       />
 
       <div className="px-3 pt-3 pb-2">

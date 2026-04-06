@@ -33,6 +33,18 @@ const urgencyBorderMap = {
   overtime: 'border-l-status-overtime',
 };
 
+/**
+ * Suppress redundant location labels: PICKUP for take-out, DELIVERY for delivery.
+ * Banquet and dine-in keep their location labels.
+ */
+function getLocationLabel(orderType: OrderType, tableName?: string): string | undefined {
+  if (!tableName) return undefined;
+  const upper = tableName.toUpperCase();
+  if (orderType === 'take-out' && (upper === 'PICKUP' || upper === 'TAKE OUT')) return undefined;
+  if (orderType === 'delivery' && upper === 'DELIVERY') return undefined;
+  return tableName;
+}
+
 const statusBodyMap: Record<string, string> = {
   new: '',
   'in-progress': '',
@@ -166,6 +178,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
         <OrderTypeBadge
           type={order.orderType}
           time={formatTimeReceived(order.timeReceived)}
+          tableInfo={getLocationLabel(order.orderType, order.tableName)}
         />
         <div className="p-3 text-center">
           <div className="text-order-num text-text-primary">{order.orderNumber}</div>
@@ -219,11 +232,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
     >
       {/* FIX 1: Station badge in header without breaking layout */}
       <OrderTypeBadge
-        type={order.orderType}
-        time={formatTimeReceived(order.timeReceived)}
-        tableInfo={order.tableName}
-        stationBadge={stationCourse ? 'Entree station' : undefined}
-      />
+          type={order.orderType}
+          time={formatTimeReceived(order.timeReceived)}
+          tableInfo={getLocationLabel(order.orderType, order.tableName)}
+          stationBadge={stationCourse ? 'Entree station' : undefined}
+        />
 
       <div className="px-3 pt-2 pb-1">
         <div className="flex items-start justify-between">

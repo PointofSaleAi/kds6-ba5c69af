@@ -230,7 +230,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                 </div>
 
                 {item.allergens.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-1 pl-5">
+                  <div className="flex flex-wrap gap-1 mt-0.5 pl-5">
                     <span className="text-[12px] font-bold text-allergen">Allergies</span>
                     {item.allergens.map((a) => (
                       <AllergenBadge key={a.type} allergen={a} />

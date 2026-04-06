@@ -113,7 +113,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
   return (
     <div className="flex-1 flex overflow-hidden">
       {/* Left column - section tabs */}
-      <div className="w-[280px] bg-surface-card border-r border-border flex flex-col shrink-0">
+      <div className="w-[200px] bg-surface-card border-r border-border flex flex-col shrink-0">
         <div className="px-5 py-4">
           <h2 className="text-lg font-bold text-text-primary">Settings</h2>
         </div>
@@ -122,10 +122,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
             <button
               key={id}
               onClick={() => setActiveSection(id)}
-              className={`flex items-center gap-3 px-4 py-4 rounded-lg text-left transition-colors min-h-[56px] ${
+              className={`flex items-center gap-3 px-3 py-4 rounded-lg text-left transition-colors min-h-[56px] ${
                 activeSection === id
-                  ? 'bg-muted border-l-[3px] border-status-new text-text-primary font-bold'
-                  : 'text-text-secondary hover:bg-muted/50'
+                  ? 'bg-status-new/10 border-l-[3px] border-status-new text-text-primary font-medium'
+                  : 'text-text-secondary hover:bg-muted/50 font-normal'
               }`}
             >
               <Icon size={20} />

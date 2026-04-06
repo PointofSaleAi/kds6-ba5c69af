@@ -11,7 +11,7 @@ interface ItemRowProps {
 export function ItemRow({ item, dimmed }: ItemRowProps) {
   const { tp } = useLanguage();
   return (
-    <div className={`py-1.5 ${dimmed ? 'opacity-[0.32]' : ''}`}>
+    <div className={`py-0.5 mb-0.5 ${dimmed ? 'opacity-[0.32]' : ''}`}>
       <div className="flex items-center gap-2">
         <span className="text-item-name text-text-primary">
           {item.quantity}x {tp(item.name)}
