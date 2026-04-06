@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { X, RotateCcw, GripVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
@@ -40,6 +40,117 @@ function validateRules(rules: StatusRule[]): Map<string, string[]> {
 
 function resolveTextColor(tc: string) {
   return tc === 'white' ? '#FFFFFF' : tc === 'black' ? '#000000' : '#6C7A89';
+}
+
+function rechainRules(rules: StatusRule[]): StatusRule[] {
+  return rules.map((rule, i) => {
+    const minMinutes = i === 0 ? 0 : (rules[i - 1].maxMinutes !== null ? rules[i - 1].maxMinutes! + 1 : rule.minMinutes);
+    const maxMinutes = i === rules.length - 1 ? null : rule.maxMinutes;
+    return { ...rule, minMinutes, maxMinutes };
+  });
+}
+
+interface DraggableStatusListProps {
+  rules: StatusRule[];
+  selectedId: string;
+  errors: Map<string, string[]>;
+  onSelect: (id: string) => void;
+  onReorder: (rules: StatusRule[]) => void;
+  onReset: () => void;
+}
+
+function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset }: DraggableStatusListProps) {
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [overIdx, setOverIdx] = useState<number | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const handleDragStart = (e: React.DragEvent, idx: number) => {
+    setDragIdx(idx);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(idx));
+  };
+
+  const handleDragOver = (e: React.DragEvent, idx: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setOverIdx(idx);
+  };
+
+  const handleDrop = (e: React.DragEvent, toIdx: number) => {
+    e.preventDefault();
+    if (dragIdx === null || dragIdx === toIdx) {
+      setDragIdx(null);
+      setOverIdx(null);
+      return;
+    }
+    const next = [...rules];
+    const [moved] = next.splice(dragIdx, 1);
+    next.splice(toIdx, 0, moved);
+    onReorder(rechainRules(next));
+    setDragIdx(null);
+    setOverIdx(null);
+  };
+
+  const handleDragEnd = () => {
+    setDragIdx(null);
+    setOverIdx(null);
+  };
+
+  return (
+    <div ref={listRef} className="w-[45%] border-r border-border overflow-y-auto p-3 space-y-1">
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
+        <button
+          onClick={onReset}
+          className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px]"
+        >
+          <RotateCcw size={10} />
+          Reset
+        </button>
+      </div>
+
+      {rules.map((rule, i) => {
+        const isSelected = selectedId === rule.id;
+        const textColor = resolveTextColor(rule.textColor);
+        const ruleErrors = errors.get(rule.id);
+        const isDragging = dragIdx === i;
+        const isOver = overIdx === i && dragIdx !== null && dragIdx !== i;
+
+        return (
+          <div
+            key={rule.id}
+            draggable
+            onDragStart={(e) => handleDragStart(e, i)}
+            onDragOver={(e) => handleDragOver(e, i)}
+            onDrop={(e) => handleDrop(e, i)}
+            onDragEnd={handleDragEnd}
+            onClick={() => onSelect(rule.id)}
+            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
+              isSelected
+                ? 'bg-muted ring-1 ring-ring shadow-sm'
+                : 'hover:bg-muted/40'
+            } ${ruleErrors ? 'ring-1 ring-destructive/40' : ''} ${
+              isDragging ? 'opacity-40 scale-95' : ''
+            } ${isOver ? 'border-t-2 border-ring' : ''}`}
+          >
+            <GripVertical size={14} className="text-text-muted/40 shrink-0 cursor-grab active:cursor-grabbing" />
+            <div
+              className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold shadow-sm"
+              style={{ backgroundColor: rule.color, color: textColor }}
+            >
+              Aa
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[13px] font-semibold text-text-primary truncate">{rule.label}</div>
+            </div>
+            <span className="text-[11px] font-bold text-text-muted shrink-0 bg-muted px-2 py-1 rounded-md">
+              {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes}m` : `${rule.minMinutes}m+`}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
@@ -98,28 +209,6 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     resetToDefaults();
   };
 
-  // Drag reorder
-  const moveRule = (fromIdx: number, toIdx: number) => {
-    if (toIdx < 0 || toIdx >= draft.length) return;
-    setDraft((prev) => {
-      const next = [...prev];
-      const [moved] = next.splice(fromIdx, 1);
-      next.splice(toIdx, 0, moved);
-      // Rechain min/max
-      for (let i = 0; i < next.length; i++) {
-        if (i === 0) {
-          next[i] = { ...next[i], minMinutes: 0 };
-        } else {
-          const prevMax = next[i - 1].maxMinutes;
-          next[i] = { ...next[i], minMinutes: prevMax !== null ? prevMax + 1 : next[i].minMinutes };
-        }
-        if (i === next.length - 1) {
-          next[i] = { ...next[i], maxMinutes: null };
-        }
-      }
-      return next;
-    });
-  };
 
   return (
     <AnimatePresence>
@@ -165,77 +254,14 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
           {/* Two-panel body */}
           <div className="flex-1 overflow-hidden flex min-h-0">
             {/* LEFT: Status List */}
-            <div className="w-[45%] border-r border-border overflow-y-auto p-3 space-y-1.5">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
-                <button
-                  onClick={handleReset}
-                  className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px]"
-                >
-                  <RotateCcw size={10} />
-                  Reset
-                </button>
-              </div>
-
-              {draft.map((rule, i) => {
-                const isSelected = selectedId === rule.id;
-                const textColor = resolveTextColor(rule.textColor);
-                const ruleErrors = errors.get(rule.id);
-
-                return (
-                  <button
-                    key={rule.id}
-                    onClick={() => setSelectedId(rule.id)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] ${
-                      isSelected
-                        ? 'bg-muted ring-1 ring-ring shadow-sm'
-                        : 'hover:bg-muted/40'
-                    } ${ruleErrors ? 'ring-1 ring-destructive/40' : ''}`}
-                  >
-                    {/* Drag handle */}
-                    <GripVertical size={14} className="text-text-muted/40 shrink-0 cursor-grab" />
-
-                    {/* Color block */}
-                    <div
-                      className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold shadow-sm"
-                      style={{ backgroundColor: rule.color, color: textColor }}
-                    >
-                      Aa
-                    </div>
-
-                    {/* Label */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[13px] font-semibold text-text-primary truncate">{rule.label}</div>
-                    </div>
-
-                    {/* Time badge */}
-                    <span className="text-[11px] font-bold text-text-muted shrink-0 bg-muted px-2 py-1 rounded-md">
-                      {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes}m` : `${rule.minMinutes}m+`}
-                    </span>
-                  </button>
-                );
-              })}
-
-              {/* Move controls for selected */}
-              {selectedRule && (
-                <div className="flex gap-1.5 pt-2">
-                  <button
-                    onClick={() => moveRule(selectedIndex, selectedIndex - 1)}
-                    disabled={selectedIndex === 0}
-                    className="flex-1 py-2 text-[11px] font-semibold text-text-secondary bg-muted rounded-lg hover:bg-muted/80 disabled:opacity-30 disabled:pointer-events-none min-h-[36px] transition-colors"
-                  >
-                    Move Up
-                  </button>
-                  <button
-                    onClick={() => moveRule(selectedIndex, selectedIndex + 1)}
-                    disabled={selectedIndex === draft.length - 1}
-                    className="flex-1 py-2 text-[11px] font-semibold text-text-secondary bg-muted rounded-lg hover:bg-muted/80 disabled:opacity-30 disabled:pointer-events-none min-h-[36px] transition-colors"
-                  >
-                    Move Down
-                  </button>
-                </div>
-              )}
-            </div>
+            <DraggableStatusList
+              rules={draft}
+              selectedId={selectedId}
+              errors={errors}
+              onSelect={setSelectedId}
+              onReorder={(newDraft) => setDraft(newDraft)}
+              onReset={handleReset}
+            />
 
             {/* RIGHT: Edit Panel */}
             <div className="flex-1 overflow-y-auto p-4">
