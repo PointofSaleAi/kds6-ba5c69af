@@ -88,7 +88,8 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
           Time Range (minutes)
         </label>
-        <div className="flex items-center gap-2">
+        {/* Manual inputs */}
+        <div className="flex items-center gap-2 mb-3">
           <input
             type="number"
             min={0}
@@ -113,6 +114,36 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             />
           )}
           <span className="text-[11px] text-text-muted font-medium">min</span>
+        </div>
+        {/* Wheel pickers */}
+        <div className="flex items-end gap-3 justify-center">
+          <NumberWheelPicker
+            value={rule.minMinutes}
+            onChange={(val) => onChange({ minMinutes: val })}
+            min={0}
+            max={60}
+            label="From"
+          />
+          <span className="text-text-muted text-xs font-medium pb-16">to</span>
+          {isLast ? (
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] font-semibold text-text-muted mb-1 uppercase tracking-wider">To</span>
+              <div
+                className="flex items-center justify-center rounded-xl border border-border bg-muted text-sm text-text-secondary italic"
+                style={{ height: 180, width: 64 }}
+              >
+                ∞
+              </div>
+            </div>
+          ) : (
+            <NumberWheelPicker
+              value={rule.maxMinutes ?? 1}
+              onChange={(val) => onChange({ maxMinutes: Math.max(1, val) })}
+              min={0}
+              max={60}
+              label="To"
+            />
+          )}
         </div>
       </div>
 
