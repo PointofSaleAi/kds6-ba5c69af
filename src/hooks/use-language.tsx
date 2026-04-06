@@ -979,6 +979,13 @@ const allergenLabels: Record<LanguageCode, Record<string, string>> = {
 
 const orderTypeLabels: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
+  'en-GB': {},
+  ar: {
+    'DINE IN': 'تناول هنا',
+    'TAKE OUT': 'سفري',
+    'DELIVERY': 'توصيل',
+    'BANQUET': 'مأدبة',
+  },
   es: {
     'DINE IN': 'COMER AQUÍ',
     'TAKE OUT': 'PARA LLEVAR',
@@ -1001,6 +1008,8 @@ const orderTypeLabels: Record<LanguageCode, Record<string, string>> = {
 
 const languageNames: Record<LanguageCode, string> = {
   'en-US': 'English (US)',
+  'en-GB': 'English (UK)',
+  ar: 'العربية',
   es: 'Español',
   zh: '中文简体',
   vi: 'Tiếng Việt',
@@ -1008,6 +1017,8 @@ const languageNames: Record<LanguageCode, string> = {
 
 const languageFlags: Record<LanguageCode, string> = {
   'en-US': '🇺🇸',
+  'en-GB': '🇬🇧',
+  ar: '🇸🇦',
   es: '🇪🇸',
   zh: '🇨🇳',
   vi: '🇻🇳',
@@ -1027,16 +1038,16 @@ interface LanguageContextType {
 }
 
 const defaultLanguageContext: LanguageContextType = {
-  language: 'es',
+  language: 'en-US',
   setLanguage: () => {},
-  t: translations.es,
-  tp: (name: string) => productNames.es[name] || name,
-  tm: (text: string) => modifierTexts.es[text] || text,
-  tc: (course: string) => courseNames.es[course] || course,
-  ta: (label: string) => allergenLabels.es[label] || label,
-  to: (label: string) => orderTypeLabels.es[label] || label,
-  languageName: languageNames.es,
-  languageFlag: languageFlags.es,
+  t: translations['en-US'],
+  tp: (name: string) => name,
+  tm: (text: string) => text,
+  tc: (course: string) => course,
+  ta: (label: string) => label,
+  to: (label: string) => label,
+  languageName: languageNames['en-US'],
+  languageFlag: languageFlags['en-US'],
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
