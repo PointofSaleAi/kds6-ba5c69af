@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { X, RotateCcw, GripVertical } from 'lucide-react';
+import { X, RotateCcw, GripVertical, Plus, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
 import AgingTimeline from '@/components/kds/AgingTimeline';
@@ -57,9 +57,11 @@ interface DraggableStatusListProps {
   onSelect: (id: string) => void;
   onReorder: (rules: StatusRule[]) => void;
   onReset: () => void;
+  onAdd: () => void;
+  onRemove: (id: string) => void;
 }
 
-function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset }: DraggableStatusListProps) {
+function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset, onAdd, onRemove }: DraggableStatusListProps) {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -96,17 +98,29 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
     setOverIdx(null);
   };
 
+  const canRemove = rules.length > 2;
+
   return (
     <div ref={listRef} className="w-[45%] border-r border-border overflow-y-auto p-3 space-y-1">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px]"
-        >
-          <RotateCcw size={10} />
-          Reset
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onAdd}
+            className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
+            title="Add new status level"
+          >
+            <Plus size={12} />
+            Add
+          </button>
+          <button
+            onClick={onReset}
+            className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
+          >
+            <RotateCcw size={10} />
+            Reset
+          </button>
+        </div>
       </div>
 
       {rules.map((rule, i) => {
@@ -125,7 +139,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
             onDrop={(e) => handleDrop(e, i)}
             onDragEnd={handleDragEnd}
             onClick={() => onSelect(rule.id)}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
+            className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
               isSelected
                 ? 'bg-muted ring-1 ring-ring shadow-sm'
                 : 'hover:bg-muted/40'
@@ -146,6 +160,15 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
             <span className="text-[11px] font-bold text-text-muted shrink-0 bg-muted px-2 py-1 rounded-md">
               {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes}m` : `${rule.minMinutes}m+`}
             </span>
+            {canRemove && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
+                className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center"
+                title="Remove status level"
+              >
+                <Trash2 size={12} />
+              </button>
+            )}
           </div>
         );
       })}
@@ -207,6 +230,32 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     setDraft(DEFAULT_RULES);
     setSelectedId(DEFAULT_RULES[0].id);
     resetToDefaults();
+  };
+
+  const handleAddRule = () => {
+    const lastRule = draft[draft.length - 1];
+    const prevMax = draft.length >= 2 ? (draft[draft.length - 2].maxMinutes ?? 20) : 5;
+    const newMin = lastRule.minMinutes;
+    const newMax = newMin + 5;
+    const newId = `custom-${Date.now()}`;
+    const colors = ['#27AE60', '#2980B9', '#8E44AD', '#D4AC0D', '#1ABC9C', '#E67E22'];
+    const color = colors[draft.length % colors.length];
+    // Insert before last (open-ended) rule, push last rule forward
+    const updated = [
+      ...draft.slice(0, -1),
+      { ...draft[draft.length - 1], maxMinutes: newMax },
+      { id: newId, label: `Status ${draft.length + 1}`, color, textColor: 'white' as const, minMinutes: newMax + 1, maxMinutes: null },
+    ];
+    setDraft(rechainRules(updated));
+    setSelectedId(newId);
+  };
+
+  const handleRemoveRule = (id: string) => {
+    if (draft.length <= 2) return;
+    const filtered = draft.filter(r => r.id !== id);
+    const rechained = rechainRules(filtered);
+    setDraft(rechained);
+    if (selectedId === id) setSelectedId(rechained[0].id);
   };
 
 const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
@@ -319,6 +368,8 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
               onSelect={setSelectedId}
               onReorder={(newDraft) => setDraft(newDraft)}
               onReset={handleReset}
+              onAdd={handleAddRule}
+              onRemove={handleRemoveRule}
             />
 
             {/* RIGHT: Edit Panel */}
