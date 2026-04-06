@@ -209,6 +209,38 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     resetToDefaults();
   };
 
+const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
+  {
+    label: 'Fast Kitchen',
+    description: 'Tight thresholds for high-volume kitchens',
+    rules: [
+      { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
+      { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 4, maxMinutes: 6 },
+      { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 7, maxMinutes: 12 },
+      { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 13, maxMinutes: null },
+    ],
+  },
+  {
+    label: 'Standard',
+    description: 'Balanced timing for most restaurants',
+    rules: [
+      { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
+      { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
+      { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
+      { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 21, maxMinutes: null },
+    ],
+  },
+  {
+    label: 'Slow Kitchen',
+    description: 'Relaxed thresholds for fine dining or complex menus',
+    rules: [
+      { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 10 },
+      { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
+      { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 21, maxMinutes: 35 },
+      { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 36, maxMinutes: null },
+    ],
+  },
+];
 
   return (
     <AnimatePresence>
