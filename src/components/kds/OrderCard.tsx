@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
-import type { Order, CourseGroup, CourseType } from '@/types/kds';
+import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
 import type { ItemStatus, StationStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
