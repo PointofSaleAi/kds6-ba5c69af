@@ -930,6 +930,18 @@ const courseNames: Record<LanguageCode, Record<string, string>> = {
 
 const allergenLabels: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
+  'en-GB': {},
+  ar: {
+    'PEANUT': 'فول سوداني',
+    'GLUTEN': 'غلوتين',
+    'DAIRY': 'ألبان',
+    'EGG': 'بيض',
+    'FISH': 'سمك',
+    'SHELLFISH': 'محار',
+    'SOY': 'صويا',
+    'NUT': 'مكسرات',
+    'SESAME': 'سمسم',
+  },
   es: {
     'PEANUT': 'MANÍ',
     'GLUTEN': 'GLUTEN',
