@@ -57,9 +57,11 @@ interface DraggableStatusListProps {
   onSelect: (id: string) => void;
   onReorder: (rules: StatusRule[]) => void;
   onReset: () => void;
+  onAdd: () => void;
+  onRemove: (id: string) => void;
 }
 
-function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset }: DraggableStatusListProps) {
+function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset, onAdd, onRemove }: DraggableStatusListProps) {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -96,17 +98,29 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
     setOverIdx(null);
   };
 
+  const canRemove = rules.length > 2;
+
   return (
     <div ref={listRef} className="w-[45%] border-r border-border overflow-y-auto p-3 space-y-1">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px]"
-        >
-          <RotateCcw size={10} />
-          Reset
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onAdd}
+            className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
+            title="Add new status level"
+          >
+            <Plus size={12} />
+            Add
+          </button>
+          <button
+            onClick={onReset}
+            className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
+          >
+            <RotateCcw size={10} />
+            Reset
+          </button>
+        </div>
       </div>
 
       {rules.map((rule, i) => {
@@ -125,7 +139,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
             onDrop={(e) => handleDrop(e, i)}
             onDragEnd={handleDragEnd}
             onClick={() => onSelect(rule.id)}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
+            className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
               isSelected
                 ? 'bg-muted ring-1 ring-ring shadow-sm'
                 : 'hover:bg-muted/40'
@@ -146,6 +160,15 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
             <span className="text-[11px] font-bold text-text-muted shrink-0 bg-muted px-2 py-1 rounded-md">
               {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes}m` : `${rule.minMinutes}m+`}
             </span>
+            {canRemove && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
+                className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center"
+                title="Remove status level"
+              >
+                <Trash2 size={12} />
+              </button>
+            )}
           </div>
         );
       })}
