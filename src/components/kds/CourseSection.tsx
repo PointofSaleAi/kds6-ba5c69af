@@ -142,12 +142,12 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
       </div>
 
       {hasItems && (
-        <div className="px-3 py-1">
+        <div className="px-3 pt-1 pb-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
 
             return (
-              <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}>
+              <div key={item.id} className={`py-0.5 mb-0.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
@@ -230,7 +230,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                 </div>
 
                 {item.allergens.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-1 pl-5">
+                  <div className="flex flex-wrap gap-1 mt-0.5 pl-5">
                     <span className="text-[12px] font-bold text-allergen">Allergies</span>
                     {item.allergens.map((a) => (
                       <AllergenBadge key={a.type} allergen={a} />
