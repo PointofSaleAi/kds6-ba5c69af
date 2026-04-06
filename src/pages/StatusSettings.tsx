@@ -272,6 +272,23 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
             </button>
           </div>
 
+          {/* Presets */}
+          <div className="px-5 py-3 border-b border-border shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets:</span>
+              {PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
+                  className="px-3 py-1.5 text-[11px] font-semibold rounded-lg bg-muted text-text-secondary hover:bg-accent hover:text-text-primary transition-colors min-h-[32px]"
+                  title={preset.description}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Timeline */}
           <div className="px-5 py-4 border-b border-border shrink-0">
             <AgingTimeline
