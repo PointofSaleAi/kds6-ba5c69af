@@ -99,7 +99,7 @@ function getHeaderBg(status: CourseBlock['status']): string {
 function getNameColor(status: CourseBlock['status']): string {
   switch (status) {
     case 'fired':
-      return 'text-text-primary';
+      return 'text-success';
     case 'active':
       return 'text-[#7F77DD] font-medium';
     case 'pending':
