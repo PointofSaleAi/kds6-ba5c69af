@@ -36,6 +36,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
 }
 
 export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
+  const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const summary = buildSummary(orders);
   const totalItems = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.total, 0), 0);

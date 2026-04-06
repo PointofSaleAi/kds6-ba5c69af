@@ -54,6 +54,7 @@ function buildPrepBoard(orders: Order[]): PrepCourse[] {
 }
 
 export function PrepBoard({ orders }: PrepBoardProps) {
+  const { tp } = useLanguage();
   const prepCourses = useMemo(() => buildPrepBoard(orders), [orders]);
 
   if (prepCourses.length === 0) {

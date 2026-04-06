@@ -21,6 +21,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardProps) {
+  const { tp } = useLanguage();
   const durationText = formatDuration(order.elapsedSeconds);
   const isOverTarget = order.elapsedSeconds > order.targetSeconds;
 
