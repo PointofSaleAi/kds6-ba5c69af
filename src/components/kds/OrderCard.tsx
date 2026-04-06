@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
+import { AllergenBadge } from './AllergenBadge';
 import type { ItemStatus, StationStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
@@ -238,7 +239,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
           stationBadge={stationCourse ? 'Entree station' : undefined}
         />
 
-      <div className="px-3 pt-2 pb-1">
+      <div className="px-2 pt-1.5 pb-1">
         <div className="flex items-start justify-between">
           <div className="text-order-num text-text-primary leading-none">
             {order.orderNumber}
@@ -246,17 +247,31 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
           <StatusChip status={order.status} />
         </div>
 
-        <div className="flex items-center justify-between mt-1">
+        <div className="flex items-center justify-between mt-0.5">
           <TimerBadge seconds={liveElapsed} urgency={urgency} />
           <span className="text-modifier text-text-secondary">{order.serverName}</span>
         </div>
       </div>
 
-      {/* FIX 5: Auto-fire notification strip on every card */}
+      {/* Order-level allergen warning strip */}
+      {(() => {
+        const allAllergens = order.courses.flatMap(c => c.items.flatMap(i => i.allergens));
+        const unique = Array.from(new Map(allAllergens.map(a => [a.type, a])).values());
+        if (unique.length === 0) return null;
+        return (
+          <div className="px-2 py-1 flex items-center gap-1.5 bg-allergen/8 border-t border-allergen/15">
+            <span className="text-allergen text-[10px] font-bold">&#9888;</span>
+            {unique.map(a => (
+              <AllergenBadge key={a.type} allergen={a} variant="order" />
+            ))}
+          </div>
+        );
+      })()}
+
       {stationNotification && (
-        <div className="px-3 py-2 flex items-center gap-2 bg-success/10">
+        <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
           <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
-          <span className="text-[11px] font-medium text-success">
+          <span className="text-[10px] font-medium text-success">
             {stationNotification}
           </span>
         </div>
@@ -287,7 +302,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
         })}
       </div>
 
-      <div className="p-2 border-t border-border flex gap-2">
+      <div className="p-1.5 border-t border-border flex gap-1.5">
         {!isServed && order.status !== 'new' && (
           <button
             onClick={() => onRecall?.(order.id)}

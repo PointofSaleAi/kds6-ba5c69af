@@ -16,9 +16,7 @@ interface CourseSectionProps {
   itemStatuses?: Map<string, ItemStatus>;
   onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
-  /** When set, enables station-mode rendering */
   stationCourse?: string;
-  /** Explicit station status (computed by parent based on position) */
   forcedStationStatus?: StationStatus;
 }
 
@@ -28,12 +26,11 @@ function getStationStatus(courseGroup: CourseGroup, stationCourse: string): Stat
   return 'pending';
 }
 
-/** Derive coursing status from data markers (for non-station mode) */
 function getCoursingStatus(courseGroup: CourseGroup): StationStatus {
   if (courseGroup.isFired) return 'fired';
   if (courseGroup.prepTimerLabel) return 'active';
   if (courseGroup.autoFireLabel) return 'pending';
-  return 'active'; // default to active if no markers
+  return 'active';
 }
 
 function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s: string) => string): string {
@@ -53,7 +50,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
-  // Derive coursing status: station mode uses position-based, otherwise data-based
   const coursingStatus = forcedStationStatus
     ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
   
@@ -65,10 +61,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     .filter(i => !i.isCancelled)
     .every(i => itemStatuses?.get(i.id) === 'done');
 
-  // Hide if all items done (but keep empty station-mode course blocks visible)
   if (allItemsDone) return null;
 
-  // Container styling based on coursing status
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
     : isDimmed
@@ -90,52 +84,43 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     ? { backgroundColor: '#EEEDFE' }
     : undefined;
 
-  // Course label
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   const courseLabel = isStationMode
     ? getStationLabel(courseGroup, coursingStatus, tc)
     : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Fired' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
 
-  // Label colour
   const labelClass = coursingStatus === 'active'
-    ? 'text-[11px] uppercase tracking-widest'
+    ? 'text-[10px] uppercase tracking-widest'
     : coursingStatus === 'fired'
-      ? 'text-section-label uppercase tracking-widest text-success'
-      : 'text-section-label uppercase text-muted-foreground tracking-widest';
+      ? 'text-[10px] uppercase tracking-widest text-success'
+      : 'text-[10px] uppercase text-muted-foreground tracking-widest';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: '#7F77DD', fontWeight: 500 }
     : undefined;
 
-  // Timer chip
   const timerChip = getTimerChip(courseGroup, coursingStatus);
-
-  // Fire button: hide on fired courses
   const showFireButton = coursingStatus !== 'fired' && !!onFireCourse;
-
-  // Pending course fire button is disabled
   const fireButtonDisabled = coursingStatus === 'pending';
 
   return (
     <div className={containerClass} style={containerStyle}>
-      <div className={`flex items-center justify-between ${headerBg} px-3 py-1.5 mt-1`} style={headerStyle}>
+      {/* Compact header: label + timer + fire button in single row */}
+      <div className={`flex items-center justify-between ${headerBg} px-2 py-1`} style={headerStyle}>
         <span className={labelClass} style={labelStyle}>
           {courseLabel}
         </span>
-        <div className="flex items-center gap-2">
-          {/* Timer chip */}
+        <div className="flex items-center gap-1.5">
           {timerChip && (
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${timerChip.className}`}>
+            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${timerChip.className}`}>
               {timerChip.label}
             </span>
           )}
-
-          {/* Fire button */}
           {showFireButton && onFireCourse && (
             <button
               onClick={() => onFireCourse(courseGroup.course)}
               disabled={fireButtonDisabled}
-              className={`text-[11px] font-bold uppercase px-3 py-2 rounded min-h-[44px] min-w-[44px] transition-colors ${
+              className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded min-h-[28px] transition-colors ${
                 fireButtonDisabled
                   ? 'bg-muted text-muted-foreground pointer-events-none'
                   : 'text-white hover:opacity-90'
@@ -149,101 +134,72 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
       </div>
 
       {hasItems && (
-        <div className="px-3 pt-1 pb-0.5">
+        <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
 
             return (
-              <div key={item.id} className={`py-0.5 mb-0.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}>
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+              <div key={item.id} className={`py-px ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}>
+                <div className="flex items-center justify-between gap-1">
+                  <div className="flex items-center gap-1 flex-1 min-w-0">
+                    <span className={`text-[13px] font-semibold leading-tight ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
                       {item.quantity}&times; {tp(item.name)}
                     </span>
                     {item.isCancelled && (
-                      <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
+                      <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
                         CANCELLED
                       </span>
                     )}
                     {item.isCompleted && !item.isCancelled && (
-                      <span className="text-success text-sm">&#10003;</span>
+                      <span className="text-success text-xs">&#10003;</span>
+                    )}
+                    {/* Inline item-level allergens - subtle */}
+                    {item.allergens.length > 0 && (
+                      <div className="flex items-center gap-0.5 ml-1">
+                        {item.allergens.map((a) => (
+                          <AllergenBadge key={a.type} allergen={a} variant="item" />
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {/* FIX 6: Hide action icons on dimmed (non-active) rows */}
+                  {/* Action icons */}
                   {!item.isCancelled && !isDimmed && (
                     <div className="flex items-center shrink-0">
                         {status === 'ready' ? (
                           <>
-                            <button
-                              onClick={() => onUndoItem?.(item.id)}
-                              className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                              aria-label="Undo"
-                            >
-                              <img src={undoIcon} alt="Undo" width={28} height={21} />
+                            <button onClick={() => onUndoItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Undo">
+                              <img src={undoIcon} alt="Undo" width={22} height={17} />
                             </button>
-                            <button
-                              onClick={() => onAdvanceItem?.(item.id)}
-                              className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                              aria-label="Mark done"
-                            >
-                              <img src={readyIcon} alt="Ready" width={28} height={21} />
+                            <button onClick={() => onAdvanceItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark done">
+                              <img src={readyIcon} alt="Ready" width={22} height={17} />
                             </button>
                           </>
                       ) : status === 'preparing' ? (
                         <>
-                          <button
-                            onClick={() => onUndoItem?.(item.id)}
-                            className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                            aria-label="Undo"
-                          >
-                            <img src={undoIcon} alt="Undo" width={28} height={21} />
+                          <button onClick={() => onUndoItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Undo">
+                            <img src={undoIcon} alt="Undo" width={22} height={17} />
                           </button>
-                          <button
-                            onClick={() => onAdvanceItem?.(item.id)}
-                            className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                            aria-label="Mark ready"
-                          >
-                            <img src={preparingIcon} alt="Preparing" width={28} height={21} />
+                          <button onClick={() => onAdvanceItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark ready">
+                            <img src={preparingIcon} alt="Preparing" width={22} height={17} />
                           </button>
                         </>
                       ) : isFired ? (
                         <>
-                          <button
-                            onClick={() => onUndoItem?.(item.id)}
-                            className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                            aria-label="Undo"
-                          >
-                            <img src={undoIcon} alt="Undo" width={28} height={21} />
+                          <button onClick={() => onUndoItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Undo">
+                            <img src={undoIcon} alt="Undo" width={22} height={17} />
                           </button>
-                          <button
-                            onClick={() => onAdvanceItem?.(item.id, true)}
-                            className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                            aria-label="Mark done"
-                          >
-                            <img src={readyIcon} alt="Ready" width={28} height={21} />
+                          <button onClick={() => onAdvanceItem?.(item.id, true)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark done">
+                            <img src={readyIcon} alt="Ready" width={22} height={17} />
                           </button>
                         </>
                       ) : (
-                        <button
-                          onClick={() => onAdvanceItem?.(item.id)}
-                          className="p-1 rounded flex items-center justify-center min-w-[44px] min-h-[44px]"
-                          aria-label="Mark seen"
-                        >
-                          <img src={seenIcon} alt="Seen" width={28} height={21} />
+                        <button onClick={() => onAdvanceItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark seen">
+                          <img src={seenIcon} alt="Seen" width={22} height={17} />
                         </button>
                       )}
                     </div>
                   )}
                 </div>
-
-                {item.allergens.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-0.5 pl-5">
-                    <span className="text-[12px] font-bold text-allergen">Allergies</span>
-                    {item.allergens.map((a) => (
-                      <AllergenBadge key={a.type} allergen={a} />
-                    ))}
-                  </div>
-                )}
 
                 {item.modifiers.map((mod, idx) => (
                   <ModifierLine key={idx} modifier={mod} />
