@@ -742,6 +742,8 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
 
 const modifierTexts: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
+  'en-GB': {},
+  ar: {},
   es: {
     'Medium Rare': 'Medio crudo',
     'Medium Well': 'Tres cuartos',
