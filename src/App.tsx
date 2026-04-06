@@ -11,7 +11,7 @@ import { StatusRulesProvider } from "@/hooks/use-status-rules";
 import { LanguageProvider } from "@/hooks/use-language";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import FullKDSView from "./pages/FullKDSView.tsx";
+
 import StationKDSView from "./pages/StationKDSView.tsx";
 
 const queryClient = new QueryClient();
@@ -29,8 +29,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/kds/full" element={<FullKDSView />} />
+            <Route path="/kds/full" element={<Index />} />
             <Route path="/kds/station" element={<StationKDSView />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

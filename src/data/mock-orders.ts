@@ -16,6 +16,8 @@ export const mockOrders: Order[] = [
     courses: [
       {
         course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '3:45 ago',
         items: [
           {
             id: 'i-001',
@@ -28,6 +30,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'ENTREE',
+        prepTimerLabel: '3:45',
         items: [
           {
             id: 'i-002',
@@ -54,6 +57,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~10 min',
         items: [
           {
             id: 'i-004',
@@ -82,7 +86,22 @@ export const mockOrders: Order[] = [
     itemCount: 3,
     courses: [
       {
+        course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '8:30 ago',
+        items: [
+          {
+            id: 'i-005b',
+            name: 'Bruschetta',
+            quantity: 1,
+            modifiers: [],
+            allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }],
+          },
+        ],
+      },
+      {
         course: 'ENTREE',
+        prepTimerLabel: '11:20',
         items: [
           {
             id: 'i-005',
@@ -103,6 +122,19 @@ export const mockOrders: Order[] = [
           },
         ],
       },
+      {
+        course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~5 min',
+        items: [
+          {
+            id: 'i-006b',
+            name: 'Cheesecake',
+            quantity: 1,
+            modifiers: [],
+            allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
+          },
+        ],
+      },
     ],
   },
   {
@@ -119,6 +151,8 @@ export const mockOrders: Order[] = [
     courses: [
       {
         course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '2:00 ago',
         items: [
           {
             id: 'i-007',
@@ -131,6 +165,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'ENTREE',
+        prepTimerLabel: '2:00',
         items: [
           {
             id: 'i-008',
@@ -154,6 +189,19 @@ export const mockOrders: Order[] = [
           },
         ],
       },
+      {
+        course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~15 min',
+        items: [
+          {
+            id: 'i-009b',
+            name: 'Mango Sticky Rice',
+            quantity: 1,
+            modifiers: [],
+            allergens: [],
+          },
+        ],
+      },
     ],
   },
   {
@@ -169,7 +217,22 @@ export const mockOrders: Order[] = [
     itemCount: 2,
     courses: [
       {
+        course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '20:00 ago',
+        items: [
+          {
+            id: 'i-010c',
+            name: 'Oysters',
+            quantity: 6,
+            modifiers: [{ text: 'Mignonette', type: 'extra' }],
+            allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }],
+          },
+        ],
+      },
+      {
         course: 'ENTREE',
+        prepTimerLabel: '25:00',
         items: [
           {
             id: 'i-010',
@@ -190,6 +253,19 @@ export const mockOrders: Order[] = [
           },
         ],
       },
+      {
+        course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~3 min',
+        items: [
+          {
+            id: 'i-011b',
+            name: 'Creme Brulee',
+            quantity: 2,
+            modifiers: [],
+            allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }],
+          },
+        ],
+      },
     ],
   },
   {
@@ -207,6 +283,7 @@ export const mockOrders: Order[] = [
       {
         course: 'APPETIZER',
         isFired: true,
+        firedAgoLabel: '7:00 ago',
         items: [
           {
             id: 'i-012',
@@ -220,6 +297,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'ENTREE',
+        prepTimerLabel: '7:00',
         items: [
           {
             id: 'i-013',
@@ -239,6 +317,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~12 min',
         items: [
           {
             id: 'i-015',
@@ -268,11 +347,28 @@ export const mockOrders: Order[] = [
     itemCount: 3,
     courses: [
       {
+        course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '30:00 ago',
+        items: [
+          { id: 'i-015b', name: 'Garlic Bread', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true },
+        ],
+      },
+      {
         course: 'ENTREE',
         isFired: true,
+        firedAgoLabel: '20:00 ago',
         items: [
           { id: 'i-016', name: 'Fish and Chips', quantity: 2, modifiers: [{ text: 'Mushy Peas', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true },
           { id: 'i-017', name: 'Onion Rings', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, isCancelled: true },
+        ],
+      },
+      {
+        course: 'DESSERT',
+        isFired: true,
+        firedAgoLabel: '10:00 ago',
+        items: [
+          { id: 'i-017b', name: 'Apple Pie', quantity: 1, modifiers: [{ text: '+ Vanilla Ice Cream', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], isCompleted: true },
         ],
       },
     ],
@@ -290,9 +386,25 @@ export const mockOrders: Order[] = [
     itemCount: 1,
     courses: [
       {
+        course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '1:30 ago',
+        items: [
+          { id: 'i-017c', name: 'Soup of the Day', quantity: 1, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+        ],
+      },
+      {
         course: 'ENTREE',
+        prepTimerLabel: '1:30',
         items: [
           { id: 'i-018', name: 'Club Sandwich', quantity: 1, modifiers: [{ text: 'No Mayo', type: 'remove' }], allergens: [] },
+        ],
+      },
+      {
+        course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~8 min',
+        items: [
+          { id: 'i-018b', name: 'Brownie', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
         ],
       },
     ],
@@ -312,6 +424,7 @@ export const mockOrders: Order[] = [
       {
         course: 'APPETIZER',
         isFired: true,
+        firedAgoLabel: '9:00 ago',
         items: [
           { id: 'i-019', name: 'Soup of the Day', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
           { id: 'i-020', name: 'Garlic Bread', quantity: 1, modifiers: [{ text: '+ Extra Garlic Butter', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
@@ -319,6 +432,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'ENTREE',
+        prepTimerLabel: '9:00',
         items: [
           { id: 'i-021', name: 'Lamb Chops', quantity: 2, modifiers: [{ text: 'Medium', type: 'neutral' }, { text: '+ Mint Sauce', type: 'extra' }], allergens: [] },
           { id: 'i-022', name: 'Mushroom Pasta', quantity: 1, modifiers: [{ text: 'Gluten Free Pasta', type: 'neutral' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
@@ -326,6 +440,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~6 min',
         items: [
           { id: 'i-023', name: 'Creme Brulee', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
         ],
@@ -345,10 +460,25 @@ export const mockOrders: Order[] = [
     itemCount: 2,
     courses: [
       {
+        course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '1:00 ago',
+        items: [
+          { id: 'i-023b', name: 'Garlic Knots', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+        ],
+      },
+      {
         course: 'ENTREE',
+        prepTimerLabel: '1:00',
         items: [
           { id: 'i-024', name: 'Margherita Pizza', quantity: 1, modifiers: [{ text: '+ Extra Mozzarella', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
-          { id: 'i-025', name: 'Garlic Knots', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+        ],
+      },
+      {
+        course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~18 min',
+        items: [
+          { id: 'i-025', name: 'Gelato', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
         ],
       },
     ],
@@ -367,6 +497,8 @@ export const mockOrders: Order[] = [
     courses: [
       {
         course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '6:00 ago',
         items: [
           { id: 'i-026', name: 'Calamari', quantity: 1, modifiers: [{ text: '+ Marinara', type: 'extra' }], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
           { id: 'i-027', name: 'Caprese Salad', quantity: 1, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
@@ -374,6 +506,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'ENTREE',
+        prepTimerLabel: '6:00',
         items: [
           { id: 'i-028', name: 'Ribeye Steak', quantity: 1, modifiers: [{ text: 'Rare', type: 'neutral' }, { text: '+ Peppercorn Sauce', type: 'extra' }, { text: 'No Asparagus', type: 'remove' }], allergens: [] },
           { id: 'i-029', name: 'Sea Bass', quantity: 1, modifiers: [{ text: 'Pan Seared', type: 'neutral' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }] },
@@ -382,6 +515,7 @@ export const mockOrders: Order[] = [
       },
       {
         course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~10 min',
         items: [
           { id: 'i-031', name: 'Chocolate Lava Cake', quantity: 1, modifiers: [{ text: '+ Vanilla Ice Cream', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
         ],
@@ -401,10 +535,26 @@ export const mockOrders: Order[] = [
     itemCount: 3,
     courses: [
       {
+        course: 'APPETIZER',
+        isFired: true,
+        firedAgoLabel: '0:45 ago',
+        items: [
+          { id: 'i-031b', name: 'Nachos', quantity: 1, modifiers: [{ text: '+ Jalapenos', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+        ],
+      },
+      {
         course: 'ENTREE',
+        prepTimerLabel: '0:45',
         items: [
           { id: 'i-032', name: 'Beef Burger', quantity: 2, modifiers: [{ text: 'Well Done', type: 'neutral' }, { text: '+ Bacon', type: 'extra' }, { text: 'No Pickles', type: 'remove' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'sesame', label: 'SESAME', icon: '\u{1FAD8}' }] },
           { id: 'i-033', name: 'Fries', quantity: 1, modifiers: [{ text: 'Seasoned', type: 'neutral' }], allergens: [] },
+        ],
+      },
+      {
+        course: 'DESSERT',
+        autoFireLabel: 'Auto-fires in ~8 min',
+        items: [
+          { id: 'i-033b', name: 'Milkshake', quantity: 2, modifiers: [{ text: 'Chocolate', type: 'neutral' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
         ],
       },
     ],
