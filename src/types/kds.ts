@@ -29,12 +29,18 @@ export interface CourseGroup {
   course: CourseType;
   items: OrderItem[];
   isFired?: boolean;
-  /** Station view: time since course was fired */
+  /** Time since course was fired */
   firedAgoLabel?: string;
-  /** Station view: prep timer for the active station course */
+  /** Static prep timer label (legacy) */
   prepTimerLabel?: string;
-  /** Station view: auto-fire countdown for pending courses */
+  /** Static auto-fire label (legacy) */
   autoFireLabel?: string;
+  /** Dynamic: seconds until this course should fire (countdown). Negative = overdue */
+  fireInSeconds?: number;
+  /** Dynamic: timestamp when course was fired */
+  firedAt?: Date;
+  /** Dynamic: target seconds for auto-fire from previous course firing */
+  autoFireTargetSeconds?: number;
 }
 
 export interface Order {
