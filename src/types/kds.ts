@@ -41,6 +41,8 @@ export interface CourseGroup {
   firedAt?: Date;
   /** Dynamic: target seconds for auto-fire from previous course firing */
   autoFireTargetSeconds?: number;
+  /** Internal: timestamp when this course status started (for live countdown) */
+  _startedAt?: Date;
 }
 
 export interface Order {
