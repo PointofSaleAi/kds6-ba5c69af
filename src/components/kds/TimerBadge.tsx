@@ -1,8 +1,8 @@
-import type { TimerUrgency } from '@/types/kds';
+import { useStatusRules } from '@/hooks/use-status-rules';
 
 interface TimerBadgeProps {
   seconds: number;
-  urgency: TimerUrgency;
+  urgency?: string; // kept for backward compat but ignored when rules available
 }
 
 function formatTime(totalSeconds: number): string {
@@ -11,14 +11,7 @@ function formatTime(totalSeconds: number): string {
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-const urgencyStyles: Record<TimerUrgency, string> = {
-  ok: 'text-success',
-  warning: 'text-warning',
-  critical: 'text-destructive animate-timer-pulse',
-  overtime: 'text-status-overtime animate-timer-pulse-fast',
-};
-
-export function getTimerUrgency(elapsed: number, target: number): TimerUrgency {
+export function getTimerUrgency(elapsed: number, target: number): 'ok' | 'warning' | 'critical' | 'overtime' {
   const ratio = elapsed / target;
   if (ratio >= 1) return 'overtime';
   if (ratio >= 0.66) return 'critical';
@@ -26,9 +19,15 @@ export function getTimerUrgency(elapsed: number, target: number): TimerUrgency {
   return 'ok';
 }
 
-export function TimerBadge({ seconds, urgency }: TimerBadgeProps) {
+export function TimerBadge({ seconds }: TimerBadgeProps) {
+  const { getStatusForElapsed } = useStatusRules();
+  const status = getStatusForElapsed(seconds);
+
   return (
-    <span className={`font-mono-timer text-timer ${urgencyStyles[urgency]}`}>
+    <span
+      className="font-mono-timer text-timer font-bold"
+      style={{ color: status.color }}
+    >
       {formatTime(seconds)}
     </span>
   );
