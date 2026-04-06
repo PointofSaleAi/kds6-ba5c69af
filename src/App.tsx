@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { KDSModeProvider } from "@/hooks/use-kds-mode";
 import { BadgeVisibilityProvider } from "@/hooks/use-badge-visibility";
 import { SoundProvider } from "@/hooks/use-sound";
+import { StatusRulesProvider } from "@/hooks/use-status-rules";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import FullKDSView from "./pages/FullKDSView.tsx";
@@ -20,6 +21,7 @@ const App = () => (
       <KDSModeProvider>
       <SoundProvider>
       <BadgeVisibilityProvider>
+      <StatusRulesProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -33,6 +35,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </StatusRulesProvider>
       </BadgeVisibilityProvider>
       </SoundProvider>
       </KDSModeProvider>
