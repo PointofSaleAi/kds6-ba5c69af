@@ -1055,7 +1055,7 @@ const LanguageContext = createContext<LanguageContextType>(defaultLanguageContex
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<LanguageCode>(() => {
     const saved = localStorage.getItem('posai-language');
-    return (saved as LanguageCode) || 'es';
+    return (saved as LanguageCode) || 'en-US';
   });
 
   const setLanguage = useCallback((lang: LanguageCode) => {
