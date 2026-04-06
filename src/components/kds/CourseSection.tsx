@@ -145,8 +145,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
               FIRE {tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}
             </button>
           )}
-            </button>
-          )}
         </div>
       </div>
 
