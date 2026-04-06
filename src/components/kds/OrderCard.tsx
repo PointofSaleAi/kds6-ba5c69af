@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
+import { AllergenBadge } from './AllergenBadge';
 import type { ItemStatus, StationStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
@@ -301,7 +302,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
         })}
       </div>
 
-      <div className="p-2 border-t border-border flex gap-2">
+      <div className="p-1.5 border-t border-border flex gap-1.5">
         {!isServed && order.status !== 'new' && (
           <button
             onClick={() => onRecall?.(order.id)}
