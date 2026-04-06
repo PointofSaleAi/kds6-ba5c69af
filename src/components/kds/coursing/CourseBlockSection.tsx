@@ -54,7 +54,7 @@ export function CourseBlockSection({
               {course.autoFireLabel}
             </span>
           )}
-          {showFireButton && (
+          {showFireButton && course.status !== 'fired' && (
             <FireButton
               label={fireButtonLabel ?? `Fire ${course.name.toLowerCase()}`}
               disabled={course.status !== 'active'}
@@ -99,7 +99,7 @@ function getHeaderBg(status: CourseBlock['status']): string {
 function getNameColor(status: CourseBlock['status']): string {
   switch (status) {
     case 'fired':
-      return 'text-text-primary';
+      return 'text-success';
     case 'active':
       return 'text-[#7F77DD] font-medium';
     case 'pending':
