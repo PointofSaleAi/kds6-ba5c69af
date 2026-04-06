@@ -150,8 +150,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
     });
   }, []);
 
-  const buttonLabel = order.status === 'new' ? 'SEEN' :
-    order.status === 'seen' ? 'IN PROGRESS' : 'DONE';
+  const buttonLabel = order.status === 'new' ? t.seen :
+    order.status === 'seen' ? t.inProgress.toUpperCase() : t.done;
 
   const buttonIcon = order.status === 'new' ? seenIcon :
     order.status === 'seen' ? preparingIcon : readyIcon;
@@ -170,11 +170,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
         <div className="p-3 text-center">
           <div className="text-order-num text-text-primary">{order.orderNumber}</div>
           <div className="flex items-center justify-center gap-1 mt-2">
-            <span className="text-modifier text-text-secondary">{order.itemCount} products</span>
+            <span className="text-modifier text-text-secondary">{order.itemCount} {t.products}</span>
           </div>
           {hasAllergens && (
             <div className="mt-1.5 text-[11px] font-bold text-allergen flex items-center justify-center gap-1">
-              <span>{'\u{1F95C}'}</span> has allergens
+              <span>{'\u{1F95C}'}</span> {t.hasAllergens}
             </div>
           )}
           <div className="mt-2">
@@ -187,7 +187,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
             className="w-full py-2 bg-btn-done text-primary-foreground text-cta rounded uppercase flex items-center justify-center gap-2"
           >
             <img src={readyIcon} alt="" className="w-6 h-5 rounded-sm" />
-            DONE
+            {t.done}
           </button>
         </div>
       </div>
