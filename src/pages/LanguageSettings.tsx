@@ -15,27 +15,17 @@ interface Language {
 }
 
 const languages: Language[] = [
-  { code: 'en-US', name: 'English (US)', native: 'English', flag: '🇺🇸' },
-  { code: 'en-GB', name: 'English (UK)', native: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'French', native: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'German', native: 'Deutsch', flag: '🇩🇪' },
-  { code: 'it', name: 'Italian', native: 'Italiano', flag: '🇮🇹' },
-  { code: 'pt', name: 'Portuguese', native: 'Português', flag: '🇵🇹' },
-  { code: 'zh', name: 'Chinese (Simplified)', native: '中文', flag: '🇨🇳' },
-  { code: 'ja', name: 'Japanese', native: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: 'Korean', native: '한국어', flag: '🇰🇷' },
-  { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
-  { code: 'hi', name: 'Hindi', native: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'en-US', name: 'English (US)', native: 'English', flag: '🇺🇸' },
+  { code: 'zh', name: 'Chinese Simplified', native: '中文简体', flag: '🇨🇳' },
   { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳' },
-  { code: 'th', name: 'Thai', native: 'ไทย', flag: '🇹🇭' },
 ];
 
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
 export default function LanguageSettings({ open, onClose }: LanguageSettingsProps) {
-  const [selectedLang, setSelectedLang] = useState('en-US');
+  const [selectedLang, setSelectedLang] = useState('es');
   const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState(0);
@@ -139,6 +129,9 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                   )}
                 </button>
               ))}
+              <div className="px-4 py-3 border-t border-border">
+                <span className="text-xs font-medium text-text-muted">More languages coming soon</span>
+              </div>
             </div>
 
             {/* Regional format preview */}
