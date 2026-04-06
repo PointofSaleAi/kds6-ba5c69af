@@ -121,14 +121,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             <button
               onClick={() => onFireCourse(courseGroup.course)}
               disabled={fireButtonDisabled}
-              className={`rounded-full flex items-center justify-center min-h-[32px] min-w-[32px] p-1 transition-opacity ${
+              className={`rounded-full flex items-center justify-center min-h-[40px] min-w-[40px] p-1 transition-all duration-200 ${
                 fireButtonDisabled
                   ? 'opacity-30 pointer-events-none'
-                  : 'hover:opacity-80'
+                  : 'hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(255,140,50,0.6)]'
               }`}
               title={`Fire ${tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}`}
             >
-              <img src={fireIcon} alt="Fire" className="w-7 h-7" />
+              <img src={fireIcon} alt="Fire" className="w-9 h-9" />
             </button>
           )}
         </div>
