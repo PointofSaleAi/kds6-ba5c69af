@@ -6,6 +6,7 @@ import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
 import readyIcon from '@/assets/item-ready-icon.svg';
+import fireIcon from '@/assets/fire-icon.png';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -120,14 +121,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             <button
               onClick={() => onFireCourse(courseGroup.course)}
               disabled={fireButtonDisabled}
-              className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded min-h-[28px] transition-colors ${
+              className={`rounded-full flex items-center justify-center min-h-[32px] min-w-[32px] p-1 transition-opacity ${
                 fireButtonDisabled
-                  ? 'bg-muted text-muted-foreground pointer-events-none'
-                  : 'text-white hover:opacity-90'
+                  ? 'opacity-30 pointer-events-none'
+                  : 'hover:opacity-80'
               }`}
-              style={!fireButtonDisabled ? { backgroundColor: '#7F77DD' } : undefined}
+              title={`Fire ${tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}`}
             >
-              FIRE {tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}
+              <img src={fireIcon} alt="Fire" className="w-7 h-7" />
             </button>
           )}
         </div>
