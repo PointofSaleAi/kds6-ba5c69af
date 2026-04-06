@@ -778,6 +778,28 @@ const allergenLabels: Record<LanguageCode, Record<string, string>> = {
   },
 };
 
+const orderTypeLabels: Record<LanguageCode, Record<string, string>> = {
+  'en-US': {},
+  es: {
+    'DINE IN': 'COMER AQUÍ',
+    'TAKE OUT': 'PARA LLEVAR',
+    'DELIVERY': 'ENTREGA',
+    'BANQUET': 'BANQUETE',
+  },
+  zh: {
+    'DINE IN': '堂食',
+    'TAKE OUT': '外带',
+    'DELIVERY': '外卖',
+    'BANQUET': '宴会',
+  },
+  vi: {
+    'DINE IN': 'TẠI CHỖ',
+    'TAKE OUT': 'MANG ĐI',
+    'DELIVERY': 'GIAO HÀNG',
+    'BANQUET': 'TIỆC',
+  },
+};
+
 const languageNames: Record<LanguageCode, string> = {
   'en-US': 'English (US)',
   es: 'Español',
@@ -800,6 +822,7 @@ interface LanguageContextType {
   tm: (text: string) => string;
   tc: (course: string) => string;
   ta: (label: string) => string;
+  to: (label: string) => string;
   languageName: string;
   languageFlag: string;
 }
@@ -812,6 +835,7 @@ const defaultLanguageContext: LanguageContextType = {
   tm: (text: string) => modifierTexts.es[text] || text,
   tc: (course: string) => courseNames.es[course] || course,
   ta: (label: string) => allergenLabels.es[label] || label,
+  to: (label: string) => orderTypeLabels.es[label] || label,
   languageName: languageNames.es,
   languageFlag: languageFlags.es,
 };
@@ -845,6 +869,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return allergenLabels[language]?.[label] || label;
   }, [language]);
 
+  const to = useCallback((label: string) => {
+    return orderTypeLabels[language]?.[label] || label;
+  }, [language]);
+
   const value: LanguageContextType = {
     language,
     setLanguage,
@@ -853,6 +881,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     tm,
     tc,
     ta,
+    to,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
   };
