@@ -243,17 +243,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           />
         ) : (
         <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
-          {stationCourse && (
-            <div className="flex items-center gap-2 px-4 py-1.5 border-b border-border bg-surface-card shrink-0" style={{ backgroundColor: '#EEEDFE' }}>
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: '#7F77DD' }} />
-              <span className="text-[13px] font-bold uppercase tracking-wider" style={{ color: '#3C3489' }}>
-                {stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase()} Station
-              </span>
-              <span className="text-[11px] text-text-secondary ml-1">
-                {filteredOrders.length} orders
-              </span>
-            </div>
-          )}
           {isHistory ? (
             <>
               {/* History filter bar */}
