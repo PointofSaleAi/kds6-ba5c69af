@@ -701,6 +701,46 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
   },
 };
 
+const courseNames: Record<LanguageCode, Record<string, string>> = {
+  'en-US': {},
+  es: {
+    'APPETIZER': 'ENTRADA',
+    'ENTREE': 'PLATO PRINCIPAL',
+    'DESSERT': 'POSTRE',
+    'SALAD': 'ENSALADA',
+    'SOUP': 'SOPA',
+    'SIDE': 'ACOMPAÑAMIENTO',
+    'BEVERAGE': 'BEBIDA',
+    'Salad': 'Ensalada',
+    'Entree': 'Plato Principal',
+    'Dessert': 'Postre',
+  },
+  zh: {
+    'APPETIZER': '开胃菜',
+    'ENTREE': '主菜',
+    'DESSERT': '甜点',
+    'SALAD': '沙拉',
+    'SOUP': '汤',
+    'SIDE': '配菜',
+    'BEVERAGE': '饮料',
+    'Salad': '沙拉',
+    'Entree': '主菜',
+    'Dessert': '甜点',
+  },
+  vi: {
+    'APPETIZER': 'KHAI VỊ',
+    'ENTREE': 'MÓN CHÍNH',
+    'DESSERT': 'TRÁNG MIỆNG',
+    'SALAD': 'SALAD',
+    'SOUP': 'SÚP',
+    'SIDE': 'MÓN PHỤ',
+    'BEVERAGE': 'THỨC UỐNG',
+    'Salad': 'Salad',
+    'Entree': 'Món Chính',
+    'Dessert': 'Tráng Miệng',
+  },
+};
+
 const languageNames: Record<LanguageCode, string> = {
   'en-US': 'English (US)',
   es: 'Español',
@@ -721,6 +761,7 @@ interface LanguageContextType {
   t: Translations;
   tp: (name: string) => string;
   tm: (text: string) => string;
+  tc: (course: string) => string;
   languageName: string;
   languageFlag: string;
 }
@@ -731,6 +772,7 @@ const defaultLanguageContext: LanguageContextType = {
   t: translations.es,
   tp: (name: string) => productNames.es[name] || name,
   tm: (text: string) => modifierTexts.es[text] || text,
+  tc: (course: string) => courseNames.es[course] || course,
   languageName: languageNames.es,
   languageFlag: languageFlags.es,
 };
@@ -756,12 +798,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return modifierTexts[language]?.[text] || text;
   }, [language]);
 
+  const tc = useCallback((course: string) => {
+    return courseNames[language]?.[course] || course;
+  }, [language]);
+
   const value: LanguageContextType = {
     language,
     setLanguage,
     t: translations[language],
     tp,
     tm,
+    tc,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
   };
