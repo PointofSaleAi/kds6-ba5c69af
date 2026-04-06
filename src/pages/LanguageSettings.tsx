@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Search, Check, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage, type LanguageCode } from '@/hooks/use-language';
 
 interface LanguageSettingsProps {
   open: boolean;
@@ -8,7 +9,7 @@ interface LanguageSettingsProps {
 }
 
 interface Language {
-  code: string;
+  code: LanguageCode;
   name: string;
   native: string;
   flag: string;
@@ -25,7 +26,7 @@ const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
 export default function LanguageSettings({ open, onClose }: LanguageSettingsProps) {
-  const [selectedLang, setSelectedLang] = useState('es');
+  const { language, setLanguage, t } = useLanguage();
   const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState(0);
@@ -40,15 +41,19 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   );
 
   const sorted = [
-    ...filtered.filter((l) => l.code === selectedLang),
-    ...filtered.filter((l) => l.code !== selectedLang),
+    ...filtered.filter((l) => l.code === language),
+    ...filtered.filter((l) => l.code !== language),
   ];
 
   const scopeOptions = [
-    { key: 'interface' as const, label: 'App Interface' },
-    { key: 'menu' as const, label: 'Menu Items' },
-    { key: 'both' as const, label: 'Both' },
+    { key: 'interface' as const, label: t.appInterface },
+    { key: 'menu' as const, label: t.menuItems },
+    { key: 'both' as const, label: t.both },
   ];
+
+  const handleSave = () => {
+    onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -70,7 +75,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Globe size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">Language & Region</h2>
+            <h2 className="text-lg font-bold text-text-primary">{t.languageRegion}</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -79,7 +84,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           <div className="flex-1 overflow-y-auto">
             {/* Scope toggle */}
             <div className="px-4 pt-4 pb-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Language Scope</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">{t.languageScope}</div>
               <div className="flex bg-muted rounded-lg p-0.5">
                 {scopeOptions.map((opt) => (
                   <button
@@ -101,7 +106,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                 <Search size={16} className="text-text-muted" />
                 <input
                   type="text"
-                  placeholder="Search languages..."
+                  placeholder={t.searchLanguages}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none min-h-[32px]"
@@ -114,9 +119,9 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               {sorted.map((lang) => (
                 <button
                   key={lang.code}
-                  onClick={() => setSelectedLang(lang.code)}
+                  onClick={() => setLanguage(lang.code)}
                   className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 rounded-lg transition-colors min-h-[52px] ${
-                    selectedLang === lang.code ? 'bg-brand-primary/10' : ''
+                    language === lang.code ? 'bg-brand-primary/10' : ''
                   }`}
                 >
                   <span className="text-xl">{lang.flag}</span>
@@ -124,22 +129,22 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                     <div className="text-sm font-semibold text-text-primary">{lang.name}</div>
                     <div className="text-xs text-text-muted">{lang.native}</div>
                   </div>
-                  {selectedLang === lang.code && (
+                  {language === lang.code && (
                     <Check size={18} className="text-brand-primary" />
                   )}
                 </button>
               ))}
               <div className="px-4 py-3 border-t border-border">
-                <span className="text-xs font-medium text-text-muted">More languages coming soon</span>
+                <span className="text-xs font-medium text-text-muted">{t.moreLanguages}</span>
               </div>
             </div>
 
             {/* Regional format preview */}
             <div className="px-4 pt-4 pb-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Regional Format</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{t.regionalFormat}</div>
 
               <div className="mb-3">
-                <div className="text-sm font-medium text-text-primary mb-1.5">Date Format</div>
+                <div className="text-sm font-medium text-text-primary mb-1.5">{t.dateFormat}</div>
                 <div className="flex gap-2 flex-wrap">
                   {dateFormats.map((fmt, i) => (
                     <button
@@ -158,7 +163,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
 
               <div className="mb-3">
-                <div className="text-sm font-medium text-text-primary mb-1.5">Time Format</div>
+                <div className="text-sm font-medium text-text-primary mb-1.5">{t.timeFormat}</div>
                 <div className="flex gap-2">
                   {timeFormats.map((fmt, i) => (
                     <button
@@ -180,10 +185,10 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
             {/* Save */}
             <div className="px-4 py-4">
               <button
-                onClick={onClose}
+                onClick={handleSave}
                 className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
               >
-                Save Changes
+                {t.saveChanges}
               </button>
             </div>
           </div>

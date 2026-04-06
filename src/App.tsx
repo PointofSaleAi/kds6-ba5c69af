@@ -8,6 +8,7 @@ import { KDSModeProvider } from "@/hooks/use-kds-mode";
 import { BadgeVisibilityProvider } from "@/hooks/use-badge-visibility";
 import { SoundProvider } from "@/hooks/use-sound";
 import { StatusRulesProvider } from "@/hooks/use-status-rules";
+import { LanguageProvider } from "@/hooks/use-language";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import FullKDSView from "./pages/FullKDSView.tsx";
@@ -18,6 +19,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
+      <LanguageProvider>
       <KDSModeProvider>
       <SoundProvider>
       <BadgeVisibilityProvider>
@@ -39,6 +41,7 @@ const App = () => (
       </BadgeVisibilityProvider>
       </SoundProvider>
       </KDSModeProvider>
+      </LanguageProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

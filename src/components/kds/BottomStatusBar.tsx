@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
+import { useLanguage } from '@/hooks/use-language';
+import LanguageSettings from '@/pages/LanguageSettings';
 
 export type SortMode = 'time' | 'table' | 'type';
 
@@ -18,12 +20,6 @@ interface BottomStatusBarProps {
   hideViewControls?: boolean;
 }
 
-const sortOptions: { value: SortMode; label: string }[] = [
-  { value: 'time', label: 'By Time' },
-  { value: 'table', label: 'By Table' },
-  { value: 'type', label: 'By Type' },
-];
-
 function SoundToggle() {
   const { muted, toggleMute } = useSound();
 
@@ -38,14 +34,39 @@ function SoundToggle() {
   );
 }
 
+function LanguageToggle() {
+  const [langOpen, setLangOpen] = useState(false);
+  const { languageFlag } = useLanguage();
+
+  return (
+    <>
+      <button
+        onClick={() => setLangOpen(true)}
+        className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px] gap-1"
+        aria-label="Change language"
+      >
+        <Globe size={16} className="text-primary-foreground/70" />
+      </button>
+      <LanguageSettings open={langOpen} onClose={() => setLangOpen(false)} />
+    </>
+  );
+}
+
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
+  const { t } = useLanguage();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
   const now = new Date();
   const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+
+  const sortOptions: { value: SortMode; label: string }[] = [
+    { value: 'time', label: t.sortByTime },
+    { value: 'table', label: t.sortByTable },
+    { value: 'type', label: t.sortByType },
+  ];
 
   const activeSort = sortOptions.find(s => s.value === sortMode)!;
 
@@ -61,16 +82,16 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   }, [sortOpen]);
 
   const viewModes: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
-    { mode: 'grid', icon: LayoutGrid, label: 'Grid' },
-    { mode: 'horizontal', icon: Columns3, label: 'Horizontal' },
-    { mode: 'stagger', icon: StretchHorizontal, label: 'Stagger' },
+    { mode: 'grid', icon: LayoutGrid, label: t.grid },
+    { mode: 'horizontal', icon: Columns3, label: t.horizontal },
+    { mode: 'stagger', icon: StretchHorizontal, label: t.stagger },
   ];
 
   return (
     <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
       <div className="flex items-center gap-3">
         <span className="text-primary-foreground font-bold">
-          <span className="text-lg">{orderCount}</span> <span className="text-sm">Orders in Queue</span>
+          <span className="text-lg">{orderCount}</span> <span className="text-sm">{t.ordersInQueue}</span>
         </span>
         {kdsMode !== 'Standard' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
@@ -93,7 +114,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             aria-label="Sort orders"
           >
             <ArrowUpDown size={14} />
-            <span>{sortMode === 'time' ? 'Sort' : `Sort: ${activeSort.label}`}</span>
+            <span>{sortMode === 'time' ? t.sort : `${t.sort}: ${activeSort.label}`}</span>
           </button>
 
           {sortOpen && (
@@ -137,6 +158,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       )}
 
       <div className="flex items-center gap-3">
+        <LanguageToggle />
         <SoundToggle />
         <button
           onClick={onToggleTheme}
