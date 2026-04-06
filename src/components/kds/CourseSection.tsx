@@ -6,6 +6,7 @@ import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
 import readyIcon from '@/assets/item-ready-icon.svg';
+import fireIcon from '@/assets/fire-icon.png';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
