@@ -7,6 +7,7 @@ import {
 import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
+import { useLanguage } from '@/hooks/use-language';
 
 interface SettingsScreenProps {
   open: boolean;
@@ -95,6 +96,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
 
 export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsScreenProps) {
   const { theme, setTheme } = useTheme();
+  const { t, languageName } = useLanguage();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
@@ -127,7 +129,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
-            <h2 className="text-lg font-bold text-text-primary">Settings</h2>
+            <h2 className="text-lg font-bold text-text-primary">{t.settings}</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close settings">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -139,21 +141,21 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <Monitor size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">DISPLAY</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{t.display}</span>
               </div>
             </div>
-            <SettingsRow icon={Monitor} label="Display Mode" right={<SegmentedToggle options={['Grid', 'Horizontal', 'Stagger']} value={displayMode} onChange={setDisplayMode} />} />
-            <SettingsRow icon={Monitor} label="Cards Per Row" right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
-            <SettingsRow icon={Monitor} label="Text Size" right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} />} />
-            <SettingsRow icon={Palette} label="Status Colours" description="Customise order status colours" onClick={() => onOpenSub('status-settings')} />
+            <SettingsRow icon={Monitor} label={t.displayMode} right={<SegmentedToggle options={[t.grid, t.horizontal, t.stagger]} value={displayMode} onChange={setDisplayMode} />} />
+            <SettingsRow icon={Monitor} label={t.cardsPerRow} right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
+            <SettingsRow icon={Monitor} label={t.textSize} right={<SegmentedToggle options={[t.compact, t.standard, t.large]} value={textSize} onChange={setTextSize} />} />
+            <SettingsRow icon={Palette} label={t.statusColours} description={t.customiseStatusColours} onClick={() => onOpenSub('status-settings')} />
             <SettingsRow
               icon={theme === 'dark' ? Moon : Sun}
-              label="Theme"
+              label={t.theme}
               right={
                 <SegmentedToggle
-                  options={['Light', 'Dark']}
-                  value={theme === 'dark' ? 'Dark' : 'Light'}
-                  onChange={(v) => setTheme(v === 'Dark' ? 'dark' : 'light')}
+                  options={[t.light, t.dark]}
+                  value={theme === 'dark' ? t.dark : t.light}
+                  onChange={(v) => setTheme(v === t.dark ? 'dark' : 'light')}
                 />
               }
             />
@@ -162,40 +164,40 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <ShoppingBag size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">ORDERS</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{t.orders}</span>
               </div>
             </div>
-            <SettingsRow icon={ShoppingBag} label="Category Filter" description="Manage active categories" onClick={() => onOpenSub('category-filter')} />
-            <SettingsRow icon={ShoppingBag} label="Revenue Center Filter" description="Manage station filters" onClick={() => onOpenSub('revenue-filter')} />
-            <SettingsRow icon={Clock} label="Stagger Mode" description={staggerMode ? 'Configure release schedule' : undefined} right={<Toggle checked={staggerMode} onChange={setStaggerMode} />} onClick={staggerMode ? () => onOpenSub('stagger-mode') : undefined} />
-            <SettingsRow icon={ShoppingBag} label="Servable Modifiers" right={<Toggle checked={servableModifiers} onChange={setServableModifiers} />} />
-            <SettingsRow icon={ShoppingBag} label="Show Allergen Badges" right={<Toggle checked={showAllergens} onChange={setShowAllergens} />} />
-            <SettingsRow icon={ShoppingBag} label="Sort Default" right={<SegmentedToggle options={['By Time', 'By Table', 'By Type']} value={sortDefault} onChange={setSortDefault} />} />
+            <SettingsRow icon={ShoppingBag} label={t.categoryFilter} description={t.manageCategories} onClick={() => onOpenSub('category-filter')} />
+            <SettingsRow icon={ShoppingBag} label={t.revenueCenterFilter} description={t.manageStationFilters} onClick={() => onOpenSub('revenue-filter')} />
+            <SettingsRow icon={Clock} label={t.staggerMode} description={staggerMode ? t.configureRelease : undefined} right={<Toggle checked={staggerMode} onChange={setStaggerMode} />} onClick={staggerMode ? () => onOpenSub('stagger-mode') : undefined} />
+            <SettingsRow icon={ShoppingBag} label={t.servableModifiers} right={<Toggle checked={servableModifiers} onChange={setServableModifiers} />} />
+            <SettingsRow icon={ShoppingBag} label={t.showAllergenBadges} right={<Toggle checked={showAllergens} onChange={setShowAllergens} />} />
+            <SettingsRow icon={ShoppingBag} label={t.sortDefault} right={<SegmentedToggle options={[t.byTime, t.byTable, t.byType]} value={sortDefault} onChange={setSortDefault} />} />
 
             {/* HARDWARE */}
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <Cpu size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">HARDWARE</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{t.hardware}</span>
               </div>
             </div>
-            <SettingsRow icon={Printer} label="Main Printing Device" description="Kitchen Epson TM-T88" onClick={() => onOpenSub('printer-settings')} />
-            <SettingsRow icon={Volume2} label="Sound Settings" description="Volume and alert sounds" onClick={() => onOpenSub('sound-settings')} />
-            <SettingsRow icon={Server} label="Connection" description="WebSocket and sync settings" onClick={() => onOpenSub('websocket-settings')} />
+            <SettingsRow icon={Printer} label={t.mainPrintingDevice} description="Kitchen Epson TM-T88" onClick={() => onOpenSub('printer-settings')} />
+            <SettingsRow icon={Volume2} label={t.soundSettings} description={t.volumeAndAlerts} onClick={() => onOpenSub('sound-settings')} />
+            <SettingsRow icon={Server} label={t.connection} description={t.wsAndSync} onClick={() => onOpenSub('websocket-settings')} />
 
             {/* ACCOUNT */}
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <User size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">ACCOUNT</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{t.account}</span>
               </div>
             </div>
-            <SettingsRow icon={User} label="Device Name" description="Kitchen Display 1" />
-            <SettingsRow icon={Globe} label="Language" description="English (US)" onClick={() => onOpenSub('language-settings')} />
+            <SettingsRow icon={User} label={t.deviceName} description="Kitchen Display 1" />
+            <SettingsRow icon={Globe} label={t.language} description={languageName} onClick={() => onOpenSub('language-settings')} />
             <SettingsRow
               icon={Bug}
-              label="Dev Mode"
-              description="Show flow selector on login"
+              label={t.devMode}
+              description={t.showFlowSelector}
               right={
                 <Toggle
                   checked={devMode}
@@ -212,7 +214,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 onClick={() => setShowLogoutConfirm(true)}
                 className="w-full py-2.5 text-primary text-cta font-bold hover:bg-primary/10 rounded-lg transition-colors min-h-[44px]"
               >
-                LOG OUT
+                {t.logOut}
               </button>
             </div>
 
@@ -226,18 +228,18 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
       <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Log Out?</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">{t.logOutConfirm}</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
-              You will be returned to the sign-in screen. Any unsaved settings will be lost.
+              {t.logOutDescription}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="min-h-[44px]">{t.cancel}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => { onClose(); onLogOut?.(); }}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Log Out
+              {t.logOut}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
