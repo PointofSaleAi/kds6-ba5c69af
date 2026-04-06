@@ -154,7 +154,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             const status = itemStatuses?.get(item.id);
 
             return (
-              <div key={item.id} className={`py-0.5 mb-0.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}>
+              <div key={item.id} className={`py-0.5 mb-0.5 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
@@ -170,7 +170,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     )}
                   </div>
                   {/* FIX 6: Hide action icons on dimmed (non-active) rows */}
-                  {!item.isCancelled && !isStationDimmed && (
+                  {!item.isCancelled && !isDimmed && (
                     <div className="flex items-center shrink-0">
                         {status === 'ready' ? (
                           <>
