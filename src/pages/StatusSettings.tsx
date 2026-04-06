@@ -209,28 +209,6 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     resetToDefaults();
   };
 
-  // Drag reorder
-  const moveRule = (fromIdx: number, toIdx: number) => {
-    if (toIdx < 0 || toIdx >= draft.length) return;
-    setDraft((prev) => {
-      const next = [...prev];
-      const [moved] = next.splice(fromIdx, 1);
-      next.splice(toIdx, 0, moved);
-      // Rechain min/max
-      for (let i = 0; i < next.length; i++) {
-        if (i === 0) {
-          next[i] = { ...next[i], minMinutes: 0 };
-        } else {
-          const prevMax = next[i - 1].maxMinutes;
-          next[i] = { ...next[i], minMinutes: prevMax !== null ? prevMax + 1 : next[i].minMinutes };
-        }
-        if (i === next.length - 1) {
-          next[i] = { ...next[i], maxMinutes: null };
-        }
-      }
-      return next;
-    });
-  };
 
   return (
     <AnimatePresence>
