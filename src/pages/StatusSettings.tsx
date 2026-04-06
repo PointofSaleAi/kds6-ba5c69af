@@ -256,6 +256,8 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     const rechained = rechainRules(filtered);
     setDraft(rechained);
     if (selectedId === id) setSelectedId(rechained[0].id);
+  };
+
 const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
   {
     label: 'Fast Kitchen',
