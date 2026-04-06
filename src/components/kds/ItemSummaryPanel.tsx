@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '@/hooks/use-language';
 import { ChevronRight, ChevronLeft, Bell } from 'lucide-react';
 import type { Order, CourseType } from '@/types/kds';
 

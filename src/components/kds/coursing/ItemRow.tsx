@@ -1,4 +1,5 @@
 import type { OrderItem } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { ModifierLine } from '@/components/kds/ModifierLine';
 

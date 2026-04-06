@@ -1,4 +1,5 @@
 import type { CourseGroup } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
 import seenIcon from '@/assets/seen-icon.svg';

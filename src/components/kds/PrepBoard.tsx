@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLanguage } from '@/hooks/use-language';
 import type { Order, CourseType } from '@/types/kds';
 
 interface PrepBoardProps {
