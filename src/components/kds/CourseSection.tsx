@@ -40,9 +40,9 @@ function getCoursingStatus(courseGroup: CourseGroup): StationStatus {
 function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s: string) => string): string {
   const name = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   switch (status) {
-    case 'fired': return `${name} \u00B7 Other station`;
-    case 'active': return `${name} \u00B7 Your station - active`;
-    case 'pending': return `${name} \u00B7 Other station - pending`;
+    case 'fired': return `${name} \u00B7 Fired`;
+    case 'active': return `${name} \u00B7 Active`;
+    case 'pending': return `${name} \u00B7 Pending`;
   }
 }
 

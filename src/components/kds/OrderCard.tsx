@@ -236,7 +236,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
           type={order.orderType}
           time={formatTimeReceived(order.timeReceived)}
           tableInfo={getLocationLabel(order.orderType, order.tableName)}
-          stationBadge={stationCourse ? 'Entree station' : undefined}
+          stationBadge={undefined}
         />
 
       <div className="px-2 pt-1.5 pb-1">

@@ -5,6 +5,8 @@ import type { Order, CourseType } from '@/types/kds';
 
 interface ItemSummaryPanelProps {
   orders: Order[];
+  /** When set, prioritize this course at the top and highlight it */
+  stationCourse?: string;
 }
 
 interface CategorySummary {
