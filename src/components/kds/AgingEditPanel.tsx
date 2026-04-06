@@ -37,6 +37,114 @@ function resolveTextColor(tc: string) {
   return tc === 'white' ? '#FFFFFF' : tc === 'black' ? '#000000' : '#6C7A89';
 }
 
+function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: boolean; onChange: (u: Partial<StatusRule>) => void }) {
+  const [openPicker, setOpenPicker] = useState<'from' | 'to' | null>(null);
+  const fromRef = useRef<HTMLDivElement>(null);
+  const toRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!openPicker) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (openPicker === 'from' && fromRef.current && !fromRef.current.contains(target)) setOpenPicker(null);
+      if (openPicker === 'to' && toRef.current && !toRef.current.contains(target)) setOpenPicker(null);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [openPicker]);
+
+  return (
+    <div>
+      <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+        Time Range (minutes)
+      </label>
+      <div className="flex items-center gap-2">
+        <div ref={fromRef} className="relative">
+          <button
+            onClick={() => setOpenPicker(openPicker === 'from' ? null : 'from')}
+            className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${openPicker === 'from' ? 'border-ring ring-2 ring-ring' : 'border-border'}`}
+          >
+            {rule.minMinutes}
+          </button>
+          {openPicker === 'from' && (
+            <WheelPopover value={rule.minMinutes} min={0} max={60} onChange={(v) => onChange({ minMinutes: v })} />
+          )}
+        </div>
+        <span className="text-text-muted text-xs font-medium">to</span>
+        {isLast ? (
+          <span className="px-3 py-2.5 text-sm text-text-secondary italic bg-muted rounded-lg border border-border flex-1 text-center">
+            No limit (∞)
+          </span>
+        ) : (
+          <div ref={toRef} className="relative">
+            <button
+              onClick={() => setOpenPicker(openPicker === 'to' ? null : 'to')}
+              className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${openPicker === 'to' ? 'border-ring ring-2 ring-ring' : 'border-border'}`}
+            >
+              {rule.maxMinutes ?? ''}
+            </button>
+            {openPicker === 'to' && (
+              <WheelPopover value={rule.maxMinutes ?? 1} min={0} max={60} onChange={(v) => onChange({ maxMinutes: Math.max(1, v) })} />
+            )}
+          </div>
+        )}
+        <span className="text-[11px] text-text-muted font-medium">min</span>
+      </div>
+    </div>
+  );
+}
+
+function WheelPopover({ value, min, max, onChange }: { value: number; min: number; max: number; onChange: (v: number) => void }) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const itemH = 36;
+  const visible = 5;
+  const pad = Math.floor(visible / 2);
+  const items = Array.from({ length: max - min + 1 }, (_, i) => min + i);
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (listRef.current) listRef.current.scrollTo({ top: (value - min) * itemH, behavior: 'auto' });
+  }, []);
+
+  const handleScroll = () => {
+    if (!listRef.current) return;
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(() => {
+      if (!listRef.current) return;
+      const idx = Math.round(listRef.current.scrollTop / itemH);
+      const snapped = Math.max(min, Math.min(max, min + idx));
+      listRef.current.scrollTo({ top: idx * itemH, behavior: 'smooth' });
+      onChange(snapped);
+    }, 80);
+  };
+
+  return (
+    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 rounded-xl border border-border bg-surface-card shadow-xl overflow-hidden"
+      style={{ width: 72, height: itemH * visible }}
+    >
+      <div className="absolute left-1 right-1 rounded-lg bg-foreground/8 pointer-events-none z-10"
+        style={{ top: itemH * pad, height: itemH }}
+      />
+      <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-surface-card to-transparent pointer-events-none z-20" />
+      <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-surface-card to-transparent pointer-events-none z-20" />
+      <div ref={listRef} onScroll={handleScroll} className="h-full overflow-y-auto scrollbar-hide" style={{ scrollSnapType: 'y mandatory' }}>
+        {Array.from({ length: pad }).map((_, i) => <div key={`pt${i}`} style={{ height: itemH }} />)}
+        {items.map((num) => (
+          <div
+            key={num}
+            onClick={() => { onChange(num); listRef.current?.scrollTo({ top: (num - min) * itemH, behavior: 'smooth' }); }}
+            className={`flex items-center justify-center cursor-pointer select-none transition-all ${num === value ? 'text-text-primary font-bold text-base' : 'text-text-muted text-sm'}`}
+            style={{ height: itemH, scrollSnapAlign: 'start' }}
+          >
+            {num}
+          </div>
+        ))}
+        {Array.from({ length: pad }).map((_, i) => <div key={`pb${i}`} style={{ height: itemH }} />)}
+      </div>
+    </div>
+  );
+}
+
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
   const [customHex, setCustomHex] = useState('');
   const contrast = getContrastRatio(rule.color, rule.textColor);
