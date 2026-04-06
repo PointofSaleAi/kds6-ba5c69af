@@ -36,7 +36,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
 }
 
 export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
-  const { tp } = useLanguage();
+  const { tp, tc } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const summary = buildSummary(orders);
   const totalItems = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.total, 0), 0);
@@ -71,7 +71,7 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
             <div key={cat.category}>
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-section-label text-text-secondary uppercase tracking-widest">
-                  {cat.category}S
+                  {tc(cat.category)}S
                 </span>
                 <span className="text-[11px] text-text-muted">
                   {completedCat} / {totalCat}

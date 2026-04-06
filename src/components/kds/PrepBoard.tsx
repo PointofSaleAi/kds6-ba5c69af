@@ -54,7 +54,7 @@ function buildPrepBoard(orders: Order[]): PrepCourse[] {
 }
 
 export function PrepBoard({ orders }: PrepBoardProps) {
-  const { tp } = useLanguage();
+  const { tp, tc } = useLanguage();
   const prepCourses = useMemo(() => buildPrepBoard(orders), [orders]);
 
   if (prepCourses.length === 0) {
@@ -73,7 +73,7 @@ export function PrepBoard({ orders }: PrepBoardProps) {
             {/* Course header */}
             <div className="bg-brand-dark px-4 py-2.5">
               <span className="text-primary-foreground text-[13px] font-bold uppercase tracking-wider">
-                {course.course}S
+                {tc(course.course)}S
               </span>
               <span className="text-primary-foreground/60 text-[11px] ml-2">
                 {course.items.reduce((s, i) => s + i.totalQty, 0)} total
