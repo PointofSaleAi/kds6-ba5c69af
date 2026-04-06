@@ -108,6 +108,7 @@ function normalizeStationCourses(courses: CourseGroup[], stationCourse: string):
 }
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stationCourse }: OrderCardProps) {
+  const { t } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
