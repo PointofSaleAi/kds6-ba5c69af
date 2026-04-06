@@ -26,7 +26,7 @@ function formatTimeReceived(date: Date): string {
 }
 
 export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardProps) {
-  const { tp } = useLanguage();
+  const { tp, tc } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
@@ -125,7 +125,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                 <div key={courseGroup.course} className={isFired ? 'opacity-50' : ''}>
                   <div className="flex items-center justify-between bg-muted px-3 py-1.5">
                     <span className="text-section-label uppercase text-text-secondary tracking-widest">
-                      {courseGroup.course}
+                      {tc(courseGroup.course)}
                     </span>
                     {isFired && (
                       <span className="text-[10px] font-bold uppercase text-success">FIRED</span>
