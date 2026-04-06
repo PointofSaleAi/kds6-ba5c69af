@@ -209,6 +209,38 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     resetToDefaults();
   };
 
+const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
+  {
+    label: 'Fast Kitchen',
+    description: 'Tight thresholds for high-volume kitchens',
+    rules: [
+      { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
+      { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 4, maxMinutes: 6 },
+      { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 7, maxMinutes: 12 },
+      { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 13, maxMinutes: null },
+    ],
+  },
+  {
+    label: 'Standard',
+    description: 'Balanced timing for most restaurants',
+    rules: [
+      { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
+      { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
+      { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
+      { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 21, maxMinutes: null },
+    ],
+  },
+  {
+    label: 'Slow Kitchen',
+    description: 'Relaxed thresholds for fine dining or complex menus',
+    rules: [
+      { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 10 },
+      { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
+      { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 21, maxMinutes: 35 },
+      { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 36, maxMinutes: null },
+    ],
+  },
+];
 
   return (
     <AnimatePresence>
@@ -238,6 +270,23 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
             <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
+          </div>
+
+          {/* Presets */}
+          <div className="px-5 py-3 border-b border-border shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets:</span>
+              {PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
+                  className="px-3 py-1.5 text-[11px] font-semibold rounded-lg bg-muted text-text-secondary hover:bg-accent hover:text-text-primary transition-colors min-h-[32px]"
+                  title={preset.description}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Timeline */}
