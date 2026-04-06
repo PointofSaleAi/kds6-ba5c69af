@@ -11,13 +11,13 @@ interface ItemRowProps {
 export function ItemRow({ item, dimmed }: ItemRowProps) {
   const { tp } = useLanguage();
   return (
-    <div className={`py-0.5 mb-0.5 ${dimmed ? 'opacity-[0.32]' : ''}`}>
-      <div className="flex items-center gap-2">
-        <span className="text-item-name text-text-primary">
+    <div className={`py-px ${dimmed ? 'opacity-[0.32]' : ''}`}>
+      <div className="flex items-center gap-1">
+        <span className="text-[13px] font-semibold text-text-primary leading-tight">
           {item.quantity}x {tp(item.name)}
         </span>
         {item.allergens.map((a) => (
-          <AllergenBadge key={a.type} allergen={a} />
+          <AllergenBadge key={a.type} allergen={a} variant="item" />
         ))}
       </div>
       {item.modifiers.map((m, i) => (
