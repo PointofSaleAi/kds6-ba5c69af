@@ -877,6 +877,19 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
 
 const courseNames: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
+  'en-GB': {},
+  ar: {
+    'APPETIZER': 'مقبلات',
+    'ENTREE': 'طبق رئيسي',
+    'DESSERT': 'حلويات',
+    'SALAD': 'سلطة',
+    'SOUP': 'شوربة',
+    'SIDE': 'طبق جانبي',
+    'BEVERAGE': 'مشروبات',
+    'Salad': 'سلطة',
+    'Entree': 'طبق رئيسي',
+    'Dessert': 'حلويات',
+  },
   es: {
     'APPETIZER': 'ENTRADA',
     'ENTREE': 'PLATO PRINCIPAL',
