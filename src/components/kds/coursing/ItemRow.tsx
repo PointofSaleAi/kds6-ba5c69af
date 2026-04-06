@@ -1,4 +1,5 @@
 import type { OrderItem } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { ModifierLine } from '@/components/kds/ModifierLine';
 
@@ -8,11 +9,12 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, dimmed }: ItemRowProps) {
+  const { tp } = useLanguage();
   return (
     <div className={`py-1.5 ${dimmed ? 'opacity-[0.32]' : ''}`}>
       <div className="flex items-center gap-2">
         <span className="text-item-name text-text-primary">
-          {item.quantity}x {item.name}
+          {item.quantity}x {tp(item.name)}
         </span>
         {item.allergens.map((a) => (
           <AllergenBadge key={a.type} allergen={a} />

@@ -1,4 +1,5 @@
 import type { CourseGroup } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
 import seenIcon from '@/assets/seen-icon.svg';
@@ -40,6 +41,7 @@ function getStationLabel(courseGroup: CourseGroup, status: StationStatus): strin
 }
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus }: CourseSectionProps) {
+  const { tp } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
   const stationStatus = forcedStationStatus ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : null);
@@ -149,7 +151,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={`text-item-name ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
-                      {item.quantity}&times; {item.name}
+                      {item.quantity}&times; {tp(item.name)}
                     </span>
                     {item.isCancelled && (
                       <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">

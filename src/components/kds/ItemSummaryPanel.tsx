@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLanguage } from '@/hooks/use-language';
 import { ChevronRight, ChevronLeft, Bell } from 'lucide-react';
 import type { Order, CourseType } from '@/types/kds';
 
@@ -35,6 +36,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
 }
 
 export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
+  const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const summary = buildSummary(orders);
   const totalItems = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.total, 0), 0);
@@ -83,7 +85,7 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
               </div>
               {cat.items.map((item) => (
                 <div key={item.name} className="flex items-center justify-between py-0.5">
-                  <span className="text-modifier text-text-primary truncate">{item.name}</span>
+                  <span className="text-modifier text-text-primary truncate">{tp(item.name)}</span>
                   <span className="text-modifier font-bold text-text-primary ml-2 shrink-0">{item.total}</span>
                 </div>
               ))}

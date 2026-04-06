@@ -1,4 +1,5 @@
 import { RotateCcw } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { AllergenBadge } from './AllergenBadge';
@@ -20,6 +21,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardProps) {
+  const { tp } = useLanguage();
   const durationText = formatDuration(order.elapsedSeconds);
   const isOverTarget = order.elapsedSeconds > order.targetSeconds;
 
@@ -107,7 +109,7 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
                 <div key={item.id} className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
                   <div className="flex items-center gap-2">
                     <span className={`text-item-name line-through ${item.isCancelled ? 'text-text-muted' : 'text-text-muted'}`}>
-                      {item.quantity}&times; {item.name}
+                      {item.quantity}&times; {tp(item.name)}
                     </span>
                     {item.isCancelled && (
                       <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
