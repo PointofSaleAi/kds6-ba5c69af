@@ -232,6 +232,30 @@ export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
     resetToDefaults();
   };
 
+  const handleAddRule = () => {
+    const lastRule = draft[draft.length - 1];
+    const prevMax = draft.length >= 2 ? (draft[draft.length - 2].maxMinutes ?? 20) : 5;
+    const newMin = lastRule.minMinutes;
+    const newMax = newMin + 5;
+    const newId = `custom-${Date.now()}`;
+    const colors = ['#27AE60', '#2980B9', '#8E44AD', '#D4AC0D', '#1ABC9C', '#E67E22'];
+    const color = colors[draft.length % colors.length];
+    // Insert before last (open-ended) rule, push last rule forward
+    const updated = [
+      ...draft.slice(0, -1),
+      { ...draft[draft.length - 1], maxMinutes: newMax },
+      { id: newId, label: `Status ${draft.length + 1}`, color, textColor: 'white' as const, minMinutes: newMax + 1, maxMinutes: null },
+    ];
+    setDraft(rechainRules(updated));
+    setSelectedId(newId);
+  };
+
+  const handleRemoveRule = (id: string) => {
+    if (draft.length <= 2) return;
+    const filtered = draft.filter(r => r.id !== id);
+    const rechained = rechainRules(filtered);
+    setDraft(rechained);
+    if (selectedId === id) setSelectedId(rechained[0].id);
 const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
   {
     label: 'Fast Kitchen',
