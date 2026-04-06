@@ -54,7 +54,7 @@ export function CourseBlockSection({
               {course.autoFireLabel}
             </span>
           )}
-          {showFireButton && (
+          {showFireButton && course.status !== 'fired' && (
             <FireButton
               label={fireButtonLabel ?? `Fire ${course.name.toLowerCase()}`}
               disabled={course.status !== 'active'}
