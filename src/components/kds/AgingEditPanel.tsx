@@ -255,12 +255,6 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             </button>
           ))}
         </div>
-        <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold mt-2 ${
-          contrast.passes ? 'bg-[hsl(145,40%,92%)] text-[hsl(145,60%,30%)]' : 'bg-[hsl(37,80%,92%)] text-[hsl(37,80%,30%)]'
-        }`}>
-          {contrast.passes ? <Check size={14} /> : <AlertTriangle size={14} />}
-          {contrast.passes ? `AA Compliant (${contrast.ratio}:1)` : `Low contrast (${contrast.ratio}:1)`}
-        </div>
       </div>
 
       {/* Live KDS Ticket Preview */}
