@@ -368,6 +368,8 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
               onSelect={setSelectedId}
               onReorder={(newDraft) => setDraft(newDraft)}
               onReset={handleReset}
+              onAdd={handleAddRule}
+              onRemove={handleRemoveRule}
             />
 
             {/* RIGHT: Edit Panel */}
