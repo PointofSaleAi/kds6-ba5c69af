@@ -383,7 +383,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={orders} />}
+        {!settingsOpen && <ItemSummaryPanel orders={orders} stationCourse={stationCourse} />}
       </div>
 
       <AnimatePresence>
