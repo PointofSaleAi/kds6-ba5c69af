@@ -5,6 +5,8 @@ import type { Order, CourseType } from '@/types/kds';
 
 interface ItemSummaryPanelProps {
   orders: Order[];
+  /** When set, prioritize this course at the top and highlight it */
+  stationCourse?: string;
 }
 
 interface CategorySummary {
@@ -35,10 +37,18 @@ function buildSummary(orders: Order[]): CategorySummary[] {
   }));
 }
 
-export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProps) {
   const { tp, tc } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
-  const summary = buildSummary(orders);
+  const rawSummary = buildSummary(orders);
+
+  // Reorder: station course first if set
+  const summary = stationCourse
+    ? [
+        ...rawSummary.filter(c => c.category === stationCourse),
+        ...rawSummary.filter(c => c.category !== stationCourse),
+      ]
+    : rawSummary;
   const totalItems = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.total, 0), 0);
 
   if (collapsed) {
@@ -67,10 +77,12 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
         {summary.map((cat) => {
           const totalCat = cat.items.reduce((a, i) => a + i.total, 0);
           const completedCat = cat.items.reduce((a, i) => a + i.completed, 0);
+          const isStation = stationCourse === cat.category;
+          const isMuted = stationCourse && !isStation;
           return (
-            <div key={cat.category}>
+            <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-section-label text-text-secondary uppercase tracking-widest">
+                <span className={`text-section-label uppercase tracking-widest ${isStation ? 'text-text-primary font-bold' : 'text-text-secondary'}`}>
                   {tc(cat.category)}S
                 </span>
                 <span className="text-[11px] text-text-muted">
@@ -79,7 +91,7 @@ export function ItemSummaryPanel({ orders }: ItemSummaryPanelProps) {
               </div>
               <div className="w-full h-1 bg-muted rounded-full mb-2">
                 <div
-                  className="h-full bg-success rounded-full transition-all"
+                  className={`h-full rounded-full transition-all ${isStation ? 'bg-primary' : 'bg-success'}`}
                   style={{ width: `${totalCat > 0 ? (completedCat / totalCat) * 100 : 0}%` }}
                 />
               </div>
