@@ -1,12 +1,15 @@
 import { CheckCircle, Zap, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/hooks/use-language';
 
 export function EmptyState() {
+  const { t } = useLanguage();
+
   // TODO: Replace with API data
   const stats = [
-    { label: 'Orders Served', value: '48', icon: CheckCircle, color: 'text-success' },
-    { label: 'Avg Ticket Time', value: '14 min', icon: Clock, color: 'text-warning' },
-    { label: 'Fastest Ticket', value: '6 min', icon: Zap, color: 'text-brand-primary' },
+    { label: t.ordersServed, value: '48', icon: CheckCircle, color: 'text-success' },
+    { label: t.avgTicketTime, value: '14 min', icon: Clock, color: 'text-warning' },
+    { label: t.fastestTicket, value: '6 min', icon: Zap, color: 'text-brand-primary' },
   ];
 
   return (
@@ -26,7 +29,7 @@ export function EmptyState() {
         transition={{ delay: 0.2 }}
         className="text-2xl font-bold text-text-primary mb-2"
       >
-        Queue is clear, great work!
+        {t.queueClear}
       </motion.h2>
 
       <motion.p
@@ -35,7 +38,7 @@ export function EmptyState() {
         transition={{ delay: 0.3 }}
         className="text-text-secondary text-sm mb-8"
       >
-        Last order served at 2:34 PM - 48 orders completed today
+        {t.lastOrderServed}
       </motion.p>
 
       <motion.div

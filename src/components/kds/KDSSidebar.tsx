@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
+import { useLanguage } from '@/hooks/use-language';
 import {
   Home, Clock, Bell, Settings, Eye, CheckCircle, EyeOff,
   ArrowLeftRight, Menu,
@@ -23,18 +24,19 @@ interface KDSSidebarProps {
 export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen }: KDSSidebarProps) {
   const [expanded, setExpanded] = useState(false);
   const { showBadge } = useBadgeVisibility();
+  const { t } = useLanguage();
 
   const navItems: SidebarItem[] = [
-    { icon: Home, label: 'Home', action: 'home' },
-    { icon: Clock, label: 'History', badge: 6, action: 'history' },
-    { icon: Bell, label: 'Alerts', badge: 3, action: 'alerts' },
-    { icon: Settings, label: 'Settings', action: 'settings' },
+    { icon: Home, label: t.home, action: 'home' },
+    { icon: Clock, label: t.history, badge: 6, action: 'history' },
+    { icon: Bell, label: t.alerts, badge: 3, action: 'alerts' },
+    { icon: Settings, label: t.settings, action: 'settings' },
   ];
 
   const filterItems: SidebarItem[] = [
-    { icon: Eye, label: 'New Orders', action: 'new' },
-    { icon: CheckCircle, label: 'In Progress', action: 'in-progress' },
-    { icon: EyeOff, label: 'Hide Completed', action: 'completed' },
+    { icon: Eye, label: t.newOrders, action: 'new' },
+    { icon: CheckCircle, label: t.inProgress, action: 'in-progress' },
+    { icon: EyeOff, label: t.hideCompleted, action: 'completed' },
   ];
 
   const w = expanded ? 'w-[200px]' : 'w-14';
@@ -48,14 +50,14 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
         aria-label="Toggle sidebar"
       >
         <Menu size={20} />
-        {expanded && <span className="text-sm font-semibold">Menu</span>}
+        {expanded && <span className="text-sm font-semibold">{t.menu}</span>}
       </button>
 
       {/* Navigation */}
       <nav className="flex flex-col gap-0.5 px-1.5">
         {navItems.map((item) => (
           <button
-            key={item.label}
+            key={item.action}
             onClick={() => onNavigate(item.action!)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] relative ${
               (item.action === 'settings' ? settingsOpen : (!settingsOpen && activeNav === item.action)) ? 'border-l-2 border-brand-primary bg-sidebar-accent' : ''
@@ -78,7 +80,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
       <nav className="flex flex-col gap-0.5 px-1.5">
         {filterItems.map((item) => (
           <button
-            key={item.label}
+            key={item.action}
             onClick={() => onFilterChange(item.action!)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] ${
               activeFilter === item.action ? 'border-l-2 border-brand-primary bg-sidebar-accent/50' : ''
@@ -99,7 +101,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
         className="flex items-center gap-3 px-3 py-3 text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] mx-1.5 mb-2 rounded-md"
       >
         <ArrowLeftRight size={18} />
-        {expanded && <span className="text-sm">Switch to POS</span>}
+        {expanded && <span className="text-sm">{t.switchToPOS}</span>}
       </button>
     </div>
   );
