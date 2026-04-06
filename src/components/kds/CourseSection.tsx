@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from 'react';
 import type { CourseGroup } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -10,6 +11,8 @@ import fireIcon from '@/assets/fire-icon.png';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
+
+type FireUrgency = 'normal' | 'due-soon' | 'overdue';
 
 interface CourseSectionProps {
   courseGroup: CourseGroup;
@@ -29,22 +32,101 @@ function getStationStatus(courseGroup: CourseGroup, stationCourse: string): Stat
 
 function getCoursingStatus(courseGroup: CourseGroup): StationStatus {
   if (courseGroup.isFired) return 'fired';
-  if (courseGroup.prepTimerLabel) return 'active';
-  if (courseGroup.autoFireLabel) return 'pending';
+  if (courseGroup.prepTimerLabel || courseGroup.fireInSeconds !== undefined) return 'active';
+  if (courseGroup.autoFireLabel || courseGroup.autoFireTargetSeconds !== undefined) return 'pending';
   return 'active';
 }
 
 function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s: string) => string): string {
   const name = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   switch (status) {
-    case 'fired':
-      return `${name} \u00B7 Other station`;
-    case 'active':
-      return `${name} \u00B7 Your station - active`;
-    case 'pending':
-      return `${name} \u00B7 Other station - pending`;
+    case 'fired': return `${name} \u00B7 Other station`;
+    case 'active': return `${name} \u00B7 Your station - active`;
+    case 'pending': return `${name} \u00B7 Other station - pending`;
   }
 }
+
+function formatTimer(seconds: number): string {
+  const abs = Math.abs(Math.floor(seconds));
+  const m = Math.floor(abs / 60);
+  const s = abs % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+/** Live timer hook for a single course */
+function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
+  label: string;
+  urgency: FireUrgency;
+} | null {
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    if (status === 'fired' && !courseGroup.firedAt) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [status, courseGroup.firedAt]);
+
+  if (status === 'fired') {
+    if (courseGroup.firedAt) {
+      const ago = Math.floor((now - courseGroup.firedAt.getTime()) / 1000);
+      return { label: `Done ${formatTimer(ago)} ago`, urgency: 'normal' };
+    }
+    if (courseGroup.firedAgoLabel) {
+      return { label: `Done ${courseGroup.firedAgoLabel}`, urgency: 'normal' };
+    }
+    return null;
+  }
+
+  if (status === 'active') {
+    if (courseGroup.fireInSeconds !== undefined) {
+      const remaining = courseGroup.fireInSeconds - Math.floor((now - (courseGroup._startedAt?.getTime() ?? now)) / 1000);
+      if (remaining <= 0) {
+        return { label: `Overdue ${formatTimer(-remaining)}`, urgency: 'overdue' };
+      }
+      if (remaining <= 60) {
+        return { label: `Ready to fire`, urgency: 'due-soon' };
+      }
+      return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'normal' };
+    }
+    if (courseGroup.prepTimerLabel) {
+      // Parse static label as seconds for live countdown
+      const parts = courseGroup.prepTimerLabel.split(':').map(Number);
+      const totalSec = (parts[0] || 0) * 60 + (parts[1] || 0);
+      const elapsed = Math.floor((now - (courseGroup._startedAt?.getTime() ?? (now - totalSec * 1000))) / 1000);
+      const remaining = totalSec - elapsed;
+      if (remaining <= 0) {
+        return { label: `Ready to fire`, urgency: 'due-soon' };
+      }
+      if (remaining <= 60) {
+        return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'due-soon' };
+      }
+      return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'normal' };
+    }
+    return null;
+  }
+
+  if (status === 'pending') {
+    if (courseGroup.autoFireTargetSeconds !== undefined) {
+      const remaining = courseGroup.autoFireTargetSeconds - Math.floor((now - (courseGroup._startedAt?.getTime() ?? now)) / 1000);
+      return { label: `Auto-fire in ${formatTimer(Math.max(0, remaining))}`, urgency: 'normal' };
+    }
+    if (courseGroup.autoFireLabel) {
+      return { label: courseGroup.autoFireLabel, urgency: 'normal' };
+    }
+    return null;
+  }
+
+  return null;
+}
+
+const urgencyChipStyles: Record<FireUrgency, string> = {
+  'normal': 'bg-success/15 text-success',
+  'due-soon': 'bg-warning/15 text-warning',
+  'overdue': 'bg-destructive/15 text-destructive animate-pulse',
+};
+
+const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
+const pendingChipStyle = 'bg-muted text-muted-foreground';
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus }: CourseSectionProps) {
   const { tp, tc } = useLanguage();
@@ -55,7 +137,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
   
   const isDimmed = coursingStatus === 'fired' || coursingStatus === 'pending';
-  const isStationDimmed = isStationMode && coursingStatus !== 'active';
 
   const hasItems = courseGroup.items.length > 0;
   const allItemsDone = hasItems && courseGroup.items
@@ -63,6 +144,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     .every(i => itemStatuses?.get(i.id) === 'done');
 
   if (allItemsDone) return null;
+
+  // Live timer
+  const timer = useCourseTimer(courseGroup, coursingStatus);
 
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
@@ -74,7 +158,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     ? { borderLeftColor: '#7F77DD' }
     : undefined;
 
-  // Header background
   const headerBg = coursingStatus === 'active'
     ? ''
     : coursingStatus === 'fired'
@@ -100,21 +183,26 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     ? { color: '#7F77DD', fontWeight: 500 }
     : undefined;
 
-  const timerChip = getTimerChip(courseGroup, coursingStatus);
   const showFireButton = coursingStatus !== 'fired' && !!onFireCourse;
   const fireButtonDisabled = coursingStatus === 'pending';
 
+  // Timer chip style
+  const chipStyle = coursingStatus === 'fired'
+    ? firedChipStyle
+    : coursingStatus === 'pending'
+      ? pendingChipStyle
+      : timer ? urgencyChipStyles[timer.urgency] : '';
+
   return (
     <div className={containerClass} style={containerStyle}>
-      {/* Compact header: label + timer + fire button in single row */}
       <div className={`flex items-center justify-between ${headerBg} px-2 py-1`} style={headerStyle}>
         <span className={labelClass} style={labelStyle}>
           {courseLabel}
         </span>
         <div className="flex items-center gap-1.5">
-          {timerChip && (
-            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${timerChip.className}`}>
-              {timerChip.label}
+          {timer && (
+            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums ${chipStyle}`}>
+              {timer.label}
             </span>
           )}
           {showFireButton && onFireCourse && (
@@ -154,7 +242,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     {item.isCompleted && !item.isCancelled && (
                       <span className="text-success text-xs">&#10003;</span>
                     )}
-                    {/* Inline item-level allergens - subtle */}
                     {item.allergens.length > 0 && (
                       <div className="flex items-center gap-0.5 ml-1">
                         {item.allergens.map((a) => (
@@ -163,7 +250,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                       </div>
                     )}
                   </div>
-                  {/* Action icons */}
                   {!item.isCancelled && !isDimmed && (
                     <div className="flex items-center shrink-0">
                         {status === 'ready' ? (
@@ -212,18 +298,4 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
       )}
     </div>
   );
-}
-
-function getTimerChip(courseGroup: CourseGroup, status: StationStatus): { label: string; className: string } | null {
-  switch (status) {
-    case 'fired':
-      if (!courseGroup.firedAgoLabel) return null;
-      return { label: `Done ${courseGroup.firedAgoLabel}`, className: 'bg-order-take-out/15 text-order-take-out' };
-    case 'active':
-      if (!courseGroup.prepTimerLabel) return null;
-      return { label: `Prep: ${courseGroup.prepTimerLabel}`, className: 'bg-success/15 text-success' };
-    case 'pending':
-      if (!courseGroup.autoFireLabel) return null;
-      return { label: courseGroup.autoFireLabel, className: 'bg-muted text-muted-foreground' };
-  }
 }
