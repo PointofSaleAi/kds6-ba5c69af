@@ -586,6 +586,7 @@ interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
   t: Translations;
+  tp: (name: string) => string;
   languageName: string;
   languageFlag: string;
 }
@@ -604,10 +605,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('posai-language', lang);
   }, []);
 
+  const tp = useCallback((name: string) => {
+    return productNames[language]?.[name] || name;
+  }, [language]);
+
   const value: LanguageContextType = {
     language,
     setLanguage,
     t: translations[language],
+    tp,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
   };
