@@ -84,68 +84,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
       </div>
 
       {/* Time Range */}
-      <div>
-        <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-          Time Range (minutes)
-        </label>
-        {/* Manual inputs */}
-        <div className="flex items-center gap-2 mb-3">
-          <input
-            type="number"
-            min={0}
-            max={999}
-            value={rule.minMinutes}
-            onChange={(e) => onChange({ minMinutes: Math.max(0, parseInt(e.target.value) || 0) })}
-            className="w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <span className="text-text-muted text-xs font-medium">to</span>
-          {isLast ? (
-            <span className="px-3 py-2.5 text-sm text-text-secondary italic bg-muted rounded-lg border border-border flex-1 text-center">
-              No limit (∞)
-            </span>
-          ) : (
-            <input
-              type="number"
-              min={1}
-              max={999}
-              value={rule.maxMinutes ?? ''}
-              onChange={(e) => onChange({ maxMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
-              className="w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-          )}
-          <span className="text-[11px] text-text-muted font-medium">min</span>
-        </div>
-        {/* Wheel pickers */}
-        <div className="flex items-end gap-3 justify-center">
-          <NumberWheelPicker
-            value={rule.minMinutes}
-            onChange={(val) => onChange({ minMinutes: val })}
-            min={0}
-            max={60}
-            label="From"
-          />
-          <span className="text-text-muted text-xs font-medium pb-16">to</span>
-          {isLast ? (
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-semibold text-text-muted mb-1 uppercase tracking-wider">To</span>
-              <div
-                className="flex items-center justify-center rounded-xl border border-border bg-muted text-sm text-text-secondary italic"
-                style={{ height: 180, width: 64 }}
-              >
-                ∞
-              </div>
-            </div>
-          ) : (
-            <NumberWheelPicker
-              value={rule.maxMinutes ?? 1}
-              onChange={(val) => onChange({ maxMinutes: Math.max(1, val) })}
-              min={0}
-              max={60}
-              label="To"
-            />
-          )}
-        </div>
-      </div>
+      <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
 
       {/* Colour Picker - Grouped */}
       <div>
