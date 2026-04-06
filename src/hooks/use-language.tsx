@@ -616,6 +616,8 @@ const translations: Record<LanguageCode, Translations> = {
 
 const productNames: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
+  'en-GB': {},
+  ar: {},
   es: {
     'Cheese Selection': 'Selección de Quesos',
     'Meatballs': 'Albóndigas',
