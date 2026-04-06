@@ -26,7 +26,7 @@ function formatTimeReceived(date: Date): string {
 }
 
 export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardProps) {
-  const { tp, tc } = useLanguage();
+  const { t, tp, tc } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
