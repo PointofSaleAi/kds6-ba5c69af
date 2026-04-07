@@ -67,11 +67,18 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
 
   if (collapsed) {
     return (
-      <div className="w-10 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-3 shrink-0">
-        <button onClick={() => setCollapsed(false)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Expand panel">
-          <ChevronLeft size={16} className="text-sidebar-foreground" />
+      <div className="w-[220px] bg-sidebar border-l border-sidebar-border flex flex-col shrink-0">
+        <button
+          onClick={() => setCollapsed(false)}
+          className="flex items-center justify-between px-3 py-2 w-full hover:bg-sidebar-accent transition-colors min-h-[44px]"
+          aria-label="Expand panel"
+        >
+          <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide leading-tight">Cooking<br/>Summary</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] font-bold text-sidebar-foreground/70 bg-sidebar-accent rounded px-2 py-1">{totalRemaining}</span>
+            <ChevronRight size={16} className="text-sidebar-foreground/60" />
+          </div>
         </button>
-        <span className="text-[10px] font-bold text-sidebar-foreground/70 mt-2 [writing-mode:vertical-lr]">{totalRemaining} to cook</span>
       </div>
     );
   }
