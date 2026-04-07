@@ -67,32 +67,25 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
 
   if (collapsed) {
     return (
-      <div className="w-[220px] bg-sidebar border-l border-sidebar-border flex flex-col shrink-0">
-        <button
-          onClick={() => setCollapsed(false)}
-          className="flex items-center justify-between px-3 py-2 w-full hover:bg-sidebar-accent transition-colors min-h-[44px]"
-          aria-label="Expand panel"
-        >
-          <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide leading-tight">Cooking<br/>Summary</span>
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-bold text-sidebar-foreground/70 bg-sidebar-accent rounded px-2 py-1">{totalRemaining}</span>
-            <ChevronRight size={16} className="text-sidebar-foreground/60" />
-          </div>
+      <div className="w-10 bg-surface-card border-l border-border flex flex-col items-center py-3 shrink-0">
+        <button onClick={() => setCollapsed(false)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Expand panel">
+          <ChevronLeft size={16} />
         </button>
+        <span className="text-[10px] font-bold text-text-secondary mt-2 [writing-mode:vertical-lr]">{totalRemaining} to cook</span>
       </div>
     );
   }
 
   return (
-    <div className="w-[220px] bg-sidebar border-l border-sidebar-border flex flex-col shrink-0 overflow-hidden">
+    <div className="w-[220px] bg-surface-card border-l border-border flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-1.5 border-b border-sidebar-border">
+      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border">
         <div className="flex items-center gap-1.5">
-          <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
-          <span className="text-[11px] font-bold text-sidebar-foreground/60 bg-sidebar-accent rounded px-1.5 py-0.5">{totalRemaining}</span>
+          <span className="text-[13px] font-bold text-text-primary uppercase tracking-wide">Cooking Summary</span>
+          <span className="text-[11px] font-bold text-text-muted bg-muted rounded px-1.5 py-0.5">{totalRemaining}</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
-          <ChevronRight size={16} className="text-sidebar-foreground" />
+        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
+          <ChevronRight size={16} />
         </button>
       </div>
 
@@ -100,7 +93,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
       <div className="flex-1 overflow-y-auto">
         {summary.length === 0 && (
           <div className="px-3 py-4 text-center">
-            <p className="text-[12px] text-sidebar-foreground/50">All items completed</p>
+            <p className="text-[12px] text-text-muted">All items completed</p>
           </div>
         )}
         {summary.map((cat) => {
@@ -114,18 +107,18 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
               {/* Section header — tappable */}
               <button
                 onClick={() => toggleSection(cat.category)}
-                className="w-full flex items-center justify-between px-3 py-1.5 bg-sidebar-accent/50 border-b border-sidebar-border hover:bg-sidebar-accent transition-colors min-h-[36px]"
+                className="w-full flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b border-border hover:bg-muted transition-colors min-h-[36px]"
               >
                 <div className="flex items-center gap-1.5">
                   <ChevronDown
                     size={12}
-                    className={`text-sidebar-foreground/50 transition-transform ${isExpanded ? '' : '-rotate-90'}`}
+                    className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                   />
-                  <span className={`text-[11px] uppercase tracking-widest font-bold ${isStation ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}>
+                  <span className={`text-[11px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {tc(cat.category)}S
                   </span>
                 </div>
-                <span className={`text-[12px] font-black ${isStation ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}>
+                <span className={`text-[12px] font-black ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
                   {sectionTotal}
                 </span>
               </button>
@@ -137,14 +130,14 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                     const isCritical = item.remaining >= 10;
                     const isHigh = !isCritical && item.remaining >= 5;
                     const tierClass = isCritical
-                      ? 'bg-destructive/20 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
+                      ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
                       : isHigh
-                        ? 'bg-warning/20 -mx-3 px-3 border-l-2 border-warning'
+                        ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
                         : '';
-                    const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-sidebar-foreground';
+                    const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                     return (
                       <div key={item.name} className={`flex items-center justify-between py-[2px] ${tierClass}`}>
-                        <span className={`text-[12px] truncate leading-tight ${isCritical || isHigh ? 'text-sidebar-foreground font-bold' : 'text-sidebar-foreground/80'}`}>{tp(item.name)}</span>
+                        <span className={`text-[12px] truncate leading-tight ${isCritical || isHigh ? 'text-text-primary font-bold' : 'text-text-primary'}`}>{tp(item.name)}</span>
                         <span className={`text-[12px] font-bold ml-2 shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
                       </div>
                     );
