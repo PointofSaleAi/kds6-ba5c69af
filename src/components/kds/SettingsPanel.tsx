@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
-import type { KDSMode } from '@/hooks/use-kds-mode';
+import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -209,6 +209,36 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
                   {kdsMode === 'Expo' && 'Consolidated view across all stations. Best for the expediter managing the pass.'}
                   {kdsMode === 'Prep' && 'Aggregated item board grouped by course type with quantities. Best for prep stations batching work.'}
                 </div>
+                {kdsMode === 'Prep' && (
+                  <div className="mt-3">
+                    <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Station</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      {([
+                        { value: 'ENTREE' as StationCourse, label: 'Entree' },
+                        { value: 'APPETIZER' as StationCourse, label: 'Appetizer' },
+                        { value: 'DESSERT' as StationCourse, label: 'Dessert' },
+                        { value: 'SIDES' as StationCourse, label: 'Sides' },
+                      ]).map((station) => (
+                        <button
+                          key={station.value}
+                          onClick={() => setStationCourse(stationCourse === station.value ? null : station.value)}
+                          className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
+                            stationCourse === station.value
+                              ? 'bg-brand-dark text-primary-foreground border-brand-dark'
+                              : 'bg-surface-card text-text-secondary border-border hover:border-text-muted'
+                          }`}
+                        >
+                          {station.label}
+                        </button>
+                      ))}
+                    </div>
+                    {stationCourse && (
+                      <div className="mt-2 px-3 py-1.5 bg-muted rounded text-[11px] text-text-muted">
+                        Showing station view for {stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase()} station
+                      </div>
+                    )}
+                  </div>
+                )}
               </SettingsCard>
             </div>
           )}
