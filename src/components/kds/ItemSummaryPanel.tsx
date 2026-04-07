@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { ChevronRight, ChevronLeft, ChevronDown } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
-import type { Order, CourseType } from '@/types/kds';
+import type { Order, ProductCategory } from '@/types/kds';
 
 interface ItemSummaryPanelProps {
   orders: Order[];
@@ -10,22 +10,23 @@ interface ItemSummaryPanelProps {
 }
 
 interface CategorySummary {
-  category: CourseType;
+  category: ProductCategory;
   items: { name: string; remaining: number }[];
 }
 
 function buildSummary(orders: Order[]): CategorySummary[] {
-  const map = new Map<CourseType, Map<string, number>>();
+  const map = new Map<ProductCategory, Map<string, number>>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
       // Skip entire fired courses - those items are already done
       if (cg.isFired) continue;
-      if (!map.has(cg.course)) map.set(cg.course, new Map());
-      const items = map.get(cg.course)!;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
+        const cat = item.category || ('Uncategorized' as ProductCategory);
+        if (!map.has(cat)) map.set(cat, new Map());
+        const items = map.get(cat)!;
         const existing = items.get(item.name) || 0;
         items.set(item.name, existing + item.quantity);
       }
