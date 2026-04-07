@@ -1105,6 +1105,8 @@ const languageFlags: Record<LanguageCode, string> = {
   vi: '🇻🇳',
 };
 
+export type DisplayMode = 'single' | 'dual';
+
 interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
@@ -1116,6 +1118,14 @@ interface LanguageContextType {
   to: (label: string) => string;
   languageName: string;
   languageFlag: string;
+  displayMode: DisplayMode;
+  setDisplayMode: (mode: DisplayMode) => void;
+  primaryLang: LanguageCode;
+  setPrimaryLang: (lang: LanguageCode) => void;
+  secondaryLang: LanguageCode;
+  setSecondaryLang: (lang: LanguageCode) => void;
+  tpSecondary: (name: string) => string;
+  tmSecondary: (text: string) => string;
 }
 
 const defaultLanguageContext: LanguageContextType = {
@@ -1129,6 +1139,14 @@ const defaultLanguageContext: LanguageContextType = {
   to: (label: string) => label,
   languageName: languageNames['en-US'],
   languageFlag: languageFlags['en-US'],
+  displayMode: 'dual',
+  setDisplayMode: () => {},
+  primaryLang: 'en-US',
+  setPrimaryLang: () => {},
+  secondaryLang: 'es',
+  setSecondaryLang: () => {},
+  tpSecondary: (name: string) => name,
+  tmSecondary: (text: string) => text,
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
@@ -1139,18 +1157,58 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return (saved as LanguageCode) || 'en-US';
   });
 
+  const [displayMode, setDisplayModeState] = useState<DisplayMode>(() => {
+    const saved = localStorage.getItem('posai-display-mode');
+    return (saved as DisplayMode) || 'dual';
+  });
+
+  const [primaryLang, setPrimaryLangState] = useState<LanguageCode>(() => {
+    const saved = localStorage.getItem('posai-primary-lang');
+    return (saved as LanguageCode) || 'en-US';
+  });
+
+  const [secondaryLang, setSecondaryLangState] = useState<LanguageCode>(() => {
+    const saved = localStorage.getItem('posai-secondary-lang');
+    return (saved as LanguageCode) || 'es';
+  });
+
   const setLanguage = useCallback((lang: LanguageCode) => {
     setLanguageState(lang);
     localStorage.setItem('posai-language', lang);
   }, []);
 
+  const setDisplayMode = useCallback((mode: DisplayMode) => {
+    setDisplayModeState(mode);
+    localStorage.setItem('posai-display-mode', mode);
+  }, []);
+
+  const setPrimaryLang = useCallback((lang: LanguageCode) => {
+    setPrimaryLangState(lang);
+    localStorage.setItem('posai-primary-lang', lang);
+  }, []);
+
+  const setSecondaryLang = useCallback((lang: LanguageCode) => {
+    setSecondaryLangState(lang);
+    localStorage.setItem('posai-secondary-lang', lang);
+  }, []);
+
   const tp = useCallback((name: string) => {
-    return productNames[language]?.[name] || name;
-  }, [language]);
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    return productNames[lang]?.[name] || name;
+  }, [language, displayMode, primaryLang]);
 
   const tm = useCallback((text: string) => {
-    return modifierTexts[language]?.[text] || text;
-  }, [language]);
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    return modifierTexts[lang]?.[text] || text;
+  }, [language, displayMode, primaryLang]);
+
+  const tpSecondary = useCallback((name: string) => {
+    return productNames[secondaryLang]?.[name] || name;
+  }, [secondaryLang]);
+
+  const tmSecondary = useCallback((text: string) => {
+    return modifierTexts[secondaryLang]?.[text] || text;
+  }, [secondaryLang]);
 
   const tc = useCallback((course: string) => {
     return courseNames[language]?.[course] || course;
@@ -1175,6 +1233,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     to,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
+    displayMode,
+    setDisplayMode,
+    primaryLang,
+    setPrimaryLang,
+    secondaryLang,
+    setSecondaryLang,
+    tpSecondary,
+    tmSecondary,
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

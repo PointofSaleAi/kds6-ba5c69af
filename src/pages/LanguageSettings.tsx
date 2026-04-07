@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { X, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage, type LanguageCode } from '@/hooks/use-language';
-
+import { useLanguage, type LanguageCode, type DisplayMode } from '@/hooks/use-language';
 interface LanguageSettingsProps {
   open: boolean;
   onClose: () => void;
@@ -14,8 +13,6 @@ interface Language {
   native: string;
   flag: string;
 }
-
-type DisplayMode = 'single' | 'dual';
 
 const languages: Language[] = [
   { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
@@ -41,15 +38,12 @@ const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
 export default function LanguageSettings({ open, onClose }: LanguageSettingsProps) {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, displayMode, setDisplayMode, primaryLang, setPrimaryLang, secondaryLang, setSecondaryLang } = useLanguage();
   const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState(0);
   const [timeFormat, setTimeFormat] = useState(0);
-  const [displayMode, setDisplayMode] = useState<DisplayMode>('dual');
-  const [primaryLang, setPrimaryLang] = useState<LanguageCode>('en-US');
-  const [secondaryLang, setSecondaryLang] = useState<LanguageCode>('es');
-  const [singleLang, setSingleLang] = useState<LanguageCode>('es');
+  const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
 
   if (!open) return null;
 
@@ -77,13 +71,13 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
     onClose();
   };
 
-  const selectedLangInList = displayMode === 'dual' ? secondaryLang : singleLang;
+  const selectedLangInList = displayMode === 'dual' ? secondaryLang : localSingleLang;
 
   const handleSelectLang = (code: LanguageCode) => {
     if (displayMode === 'dual') {
       setSecondaryLang(code);
     } else {
-      setSingleLang(code);
+      setLocalSingleLang(code);
       setLanguage(code);
     }
   };
@@ -294,7 +288,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
               <div className="rounded-lg p-3" style={{ backgroundColor: '#f7f7f7' }}>
                 {previewItems.map((item) => {
-                  const primaryText = getTranslation(item.key, displayMode === 'dual' ? primaryLang : singleLang);
+                  const primaryText = getTranslation(item.key, displayMode === 'dual' ? primaryLang : localSingleLang);
                   const secondaryText = displayMode === 'dual' ? getTranslation(item.key, secondaryLang) : null;
                   return (
                     <div key={item.key} className="py-1.5 border-b border-border/30 last:border-0">

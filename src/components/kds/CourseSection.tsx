@@ -129,7 +129,7 @@ const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
 const pendingChipStyle = 'bg-muted text-muted-foreground';
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus }: CourseSectionProps) {
-  const { tp, tc } = useLanguage();
+  const { tp, tc, displayMode, tpSecondary } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
@@ -255,6 +255,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                       <AllergenBadge key={a.type} allergen={a} variant="item" />
                     ))}
                   </div>
+
+                  {/* Dual-language secondary name */}
+                  {displayMode === 'dual' && !item.isCancelled && (
+                    <div className="text-[11px] text-text-muted" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                      {tpSecondary(item.name)}
+                    </div>
+                  )}
 
                   {/* .item-mods */}
                   {item.modifiers.length > 0 && (
