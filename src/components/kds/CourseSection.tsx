@@ -228,7 +228,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             const status = itemStatuses?.get(item.id);
 
             return (
-              <div key={item.id} className={`py-px ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}>
+              <div key={item.id} className={`${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}>
                 <div className="flex items-center justify-between gap-1">
                   <div className="flex items-center gap-1 flex-1 min-w-0">
                     <span className={`text-[13px] font-semibold leading-tight ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
