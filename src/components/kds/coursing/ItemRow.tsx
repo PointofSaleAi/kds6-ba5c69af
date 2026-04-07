@@ -39,7 +39,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
                 key={idx}
                 className={
                   mod.type === 'extra'
-                    ? 'text-success'
+                    ? 'text-modifier-extra'
                     : mod.type === 'remove'
                       ? 'text-destructive line-through'
                       : 'text-text-secondary'
