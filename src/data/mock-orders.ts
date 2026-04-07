@@ -12,7 +12,7 @@ export const mockOrders: Order[] = [
     timeReceived: new Date(Date.now() - 225000),
     elapsedSeconds: 225,
     targetSeconds: 900,
-    itemCount: 5,
+    itemCount: 7,
     courses: [
       {
         course: 'APPETIZER',
@@ -54,6 +54,25 @@ export const mockOrders: Order[] = [
               { text: '+ Extra Olive Oil', type: 'extra' },
             ],
             allergens: [],
+          },
+          {
+            id: 'i-003b',
+            name: 'Grilled Chicken Breast',
+            quantity: 1,
+            modifiers: [
+              { text: 'No Skin', type: 'remove' },
+              { text: '+ Chimichurri', type: 'extra' },
+            ],
+            allergens: [],
+          },
+          {
+            id: 'i-003c',
+            name: 'Pan-Seared Duck',
+            quantity: 1,
+            modifiers: [
+              { text: '+ Orange Glaze', type: 'extra' },
+            ],
+            allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }],
           },
         ],
       },
@@ -446,7 +465,7 @@ export const mockOrders: Order[] = [
     timeReceived: new Date(Date.now() - 540000),
     elapsedSeconds: 540,
     targetSeconds: 900,
-    itemCount: 6,
+    itemCount: 9,
     courses: [
       {
         course: 'APPETIZER',
@@ -465,6 +484,9 @@ export const mockOrders: Order[] = [
         items: [
           { id: 'i-021', name: 'Lamb Chops', quantity: 2, modifiers: [{ text: 'Medium', type: 'neutral' }, { text: '+ Mint Sauce', type: 'extra' }], allergens: [] },
           { id: 'i-022', name: 'Mushroom Pasta', quantity: 1, modifiers: [{ text: 'Gluten Free Pasta', type: 'neutral' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
+          { id: 'i-022b', name: 'Beef Wellington', quantity: 1, modifiers: [{ text: 'Medium Rare', type: 'neutral' }, { text: '+ Red Wine Jus', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+          { id: 'i-022c', name: 'Grilled Halloumi', quantity: 2, modifiers: [{ text: '+ Pomegranate', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+          { id: 'i-022d', name: 'Pork Belly', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: '+ Apple Compote', type: 'extra' }], allergens: [] },
         ],
       },
       {
