@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { X, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, type LanguageCode, type DisplayMode } from '@/hooks/use-language';
-import { useLanguage, type LanguageCode } from '@/hooks/use-language';
-
 interface LanguageSettingsProps {
   open: boolean;
   onClose: () => void;
