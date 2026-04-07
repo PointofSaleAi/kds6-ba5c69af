@@ -139,7 +139,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                         <div
                           key={item.id}
                           className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}
-                          style={{ padding: '8px', gap: 0 }}
+                style={{ padding: '6px', gap: 0 }}
                         >
                           {/* Child 1 — item-main */}
                           <div className="flex-1 min-w-0">
