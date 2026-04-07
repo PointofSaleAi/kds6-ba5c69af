@@ -31,6 +31,13 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           ))}
         </div>
 
+        {/* Dual-language secondary name */}
+        {displayMode === 'dual' && (
+          <div className="text-[11px] text-text-muted" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+            {tpSecondary(item.name)}
+          </div>
+        )}
+
         {/* .item-mods */}
         {item.modifiers.length > 0 && (
           <div style={{ marginTop: '2px' }}>
