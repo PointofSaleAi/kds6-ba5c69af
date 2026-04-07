@@ -255,7 +255,7 @@ function ExpoTopControls({
 
 /* ── Main ExpoView ── */
 
-export default function ExpoView() {
+export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (tickets: ExpoTicket[]) => void }) {
   const [tickets, setTickets] = useState<ExpoTicket[]>(mockExpoTickets);
   const [filter, setFilter] = useState<ExpoFilter>('all');
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
