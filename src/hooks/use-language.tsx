@@ -1152,6 +1152,10 @@ interface LanguageContextType {
 }
 
 const defaultLanguageContext: LanguageContextType = {
+  dateFormat: 0,
+  setDateFormat: () => {},
+  timeFormat: 0,
+  setTimeFormat: () => {},
   language: 'en-US',
   setLanguage: () => {},
   t: translations['en-US'],
