@@ -74,6 +74,13 @@ export const mockOrders: Order[] = [
             ],
             allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }],
           },
+          {
+            id: 'i-003d',
+            name: 'Caesar Salad',
+            quantity: 2,
+            modifiers: [{ text: '+ Grilled Shrimp', type: 'extra' }],
+            allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }],
+          },
         ],
       },
       {
