@@ -215,8 +215,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     );
   }
 
+  const isDineIn = order.orderType === 'dine-in';
+
   // FIX 3: Normalize courses for station view (ensure SALAD/ENTREE/DESSERT blocks)
-  const displayCourses = stationCourse
+  const displayCourses = (stationCourse && isDineIn)
     ? normalizeStationCourses(order.courses, stationCourse)
     : order.courses;
 
