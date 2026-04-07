@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { ChevronRight, ChevronLeft, ChevronDown } from 'lucide-react';
+import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, CourseType } from '@/types/kds';
 
 interface ItemSummaryPanelProps {
