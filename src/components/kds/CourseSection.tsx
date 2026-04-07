@@ -228,11 +228,20 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             const status = itemStatuses?.get(item.id);
 
             return (
-              <div key={item.id} className={`${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}>
-                <div className="flex items-center justify-between gap-1">
-                  <div className="flex items-center gap-1 flex-1 min-w-0">
-                    <span className={`text-[13px] font-semibold leading-tight ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
-                      {item.quantity}&times; {tp(item.name)}
+              <div
+                key={item.id}
+                className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}
+                style={{ padding: '8px 12px', gap: 0 }}
+              >
+                {/* Child 1 — item-main */}
+                <div className="flex-1 min-w-0">
+                  {/* .item-name-row */}
+                  <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
+                    <span className="text-[13px] font-normal text-text-secondary">
+                      {item.quantity}×
+                    </span>
+                    <span className={`text-[13px] font-medium ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+                      {tp(item.name)}
                     </span>
                     {item.isCancelled && (
                       <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
@@ -242,55 +251,70 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     {item.isCompleted && !item.isCancelled && (
                       <span className="text-success text-xs">&#10003;</span>
                     )}
-                    {item.allergens.length > 0 && (
-                      <div className="flex items-center gap-0.5 ml-1">
-                        {item.allergens.map((a) => (
-                          <AllergenBadge key={a.type} allergen={a} variant="item" />
-                        ))}
-                      </div>
-                    )}
+                    {item.allergens.length > 0 && item.allergens.map((a) => (
+                      <AllergenBadge key={a.type} allergen={a} variant="item" />
+                    ))}
                   </div>
-                  {!item.isCancelled && !isDimmed && (
-                    <div className="flex items-center shrink-0">
-                        {status === 'ready' ? (
-                          <>
-                            <button onClick={() => onUndoItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Undo">
-                              <img src={undoIcon} alt="Undo" width={22} height={17} />
-                            </button>
-                            <button onClick={() => onAdvanceItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark done">
-                              <img src={readyIcon} alt="Ready" width={22} height={17} />
-                            </button>
-                          </>
-                      ) : status === 'preparing' ? (
-                        <>
-                          <button onClick={() => onUndoItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Undo">
-                            <img src={undoIcon} alt="Undo" width={22} height={17} />
-                          </button>
-                          <button onClick={() => onAdvanceItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark ready">
-                            <img src={preparingIcon} alt="Preparing" width={22} height={17} />
-                          </button>
-                        </>
-                      ) : isFired ? (
-                        <>
-                          <button onClick={() => onUndoItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Undo">
-                            <img src={undoIcon} alt="Undo" width={22} height={17} />
-                          </button>
-                          <button onClick={() => onAdvanceItem?.(item.id, true)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark done">
-                            <img src={readyIcon} alt="Ready" width={22} height={17} />
-                          </button>
-                        </>
-                      ) : (
-                        <button onClick={() => onAdvanceItem?.(item.id)} className="p-0.5 rounded flex items-center justify-center min-w-[36px] min-h-[36px]" aria-label="Mark seen">
-                          <img src={seenIcon} alt="Seen" width={22} height={17} />
-                        </button>
-                      )}
+
+                  {/* .item-mods */}
+                  {item.modifiers.length > 0 && (
+                    <div style={{ marginTop: '2px' }}>
+                      {item.modifiers.map((mod, idx) => (
+                        <div
+                          key={idx}
+                          className={
+                            mod.type === 'extra'
+                              ? 'text-success'
+                              : mod.type === 'remove'
+                                ? 'text-destructive line-through'
+                                : 'text-text-secondary'
+                          }
+                          style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
+                        >
+                          {mod.type === 'extra' ? `+ ${mod.text}` : mod.text}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
 
-                {item.modifiers.map((mod, idx) => (
-                  <ModifierLine key={idx} modifier={mod} />
-                ))}
+                {/* Child 2 — item-action */}
+                {!item.isCancelled && !isDimmed && (
+                  <div className="flex items-start justify-center shrink-0" style={{ width: '28px', paddingTop: '1px' }}>
+                    {status === 'ready' ? (
+                      <>
+                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Undo">
+                          <img src={undoIcon} alt="Undo" style={{ width: '12px', height: '12px' }} />
+                        </button>
+                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark done">
+                          <img src={readyIcon} alt="Ready" style={{ width: '12px', height: '12px' }} />
+                        </button>
+                      </>
+                    ) : status === 'preparing' ? (
+                      <>
+                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Undo">
+                          <img src={undoIcon} alt="Undo" style={{ width: '12px', height: '12px' }} />
+                        </button>
+                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark ready">
+                          <img src={preparingIcon} alt="Preparing" style={{ width: '12px', height: '12px' }} />
+                        </button>
+                      </>
+                    ) : isFired ? (
+                      <>
+                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Undo">
+                          <img src={undoIcon} alt="Undo" style={{ width: '12px', height: '12px' }} />
+                        </button>
+                        <button onClick={() => onAdvanceItem?.(item.id, true)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark done">
+                          <img src={readyIcon} alt="Ready" style={{ width: '12px', height: '12px' }} />
+                        </button>
+                      </>
+                    ) : (
+                      <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark seen">
+                        <img src={seenIcon} alt="Seen" style={{ width: '12px', height: '12px' }} />
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
