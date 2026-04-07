@@ -280,37 +280,37 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
                 {/* Child 2 — item-action */}
                 {!item.isCancelled && !isDimmed && (
-                  <div className="flex items-start justify-center shrink-0" style={{ width: '28px', paddingTop: '1px' }}>
+                  <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
                     {status === 'ready' ? (
                       <>
-                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Undo">
-                          <img src={undoIcon} alt="Undo" style={{ width: '12px', height: '12px' }} />
+                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
+                          <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
                         </button>
-                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark done">
-                          <img src={readyIcon} alt="Ready" style={{ width: '12px', height: '12px' }} />
+                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark done">
+                          <img src={readyIcon} alt="Ready" style={{ width: '40px', height: '30px' }} />
                         </button>
                       </>
                     ) : status === 'preparing' ? (
                       <>
-                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Undo">
-                          <img src={undoIcon} alt="Undo" style={{ width: '12px', height: '12px' }} />
+                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
+                          <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
                         </button>
-                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark ready">
-                          <img src={preparingIcon} alt="Preparing" style={{ width: '12px', height: '12px' }} />
+                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark ready">
+                          <img src={preparingIcon} alt="Preparing" style={{ width: '40px', height: '30px' }} />
                         </button>
                       </>
                     ) : isFired ? (
                       <>
-                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Undo">
-                          <img src={undoIcon} alt="Undo" style={{ width: '12px', height: '12px' }} />
+                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
+                          <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
                         </button>
-                        <button onClick={() => onAdvanceItem?.(item.id, true)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark done">
-                          <img src={readyIcon} alt="Ready" style={{ width: '12px', height: '12px' }} />
+                        <button onClick={() => onAdvanceItem?.(item.id, true)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark done">
+                          <img src={readyIcon} alt="Ready" style={{ width: '40px', height: '30px' }} />
                         </button>
                       </>
                     ) : (
-                      <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded bg-muted border border-border/50" style={{ width: '24px', height: '24px' }} aria-label="Mark seen">
-                        <img src={seenIcon} alt="Seen" style={{ width: '12px', height: '12px' }} />
+                      <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark seen">
+                        <img src={seenIcon} alt="Seen" style={{ width: '40px', height: '30px' }} />
                       </button>
                     )}
                   </div>
