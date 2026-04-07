@@ -6,6 +6,7 @@ import { OrderCard } from '@/components/kds/OrderCard';
 import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
+import { type ExpoTicket } from '@/data/mock-expo-orders';
 import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
@@ -52,6 +53,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('time');
+  const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
 
   // History state
@@ -214,6 +216,35 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
 
+  // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
+  const expoSyntheticOrders: Order[] = useMemo(() => {
+    if (kdsMode !== 'Expo') return [];
+    return expoTickets.map(t => ({
+      id: t.id,
+      orderNumber: t.orderNumber,
+      orderType: t.orderType as Order['orderType'],
+      status: 'in-progress' as const,
+      tableName: t.tableName,
+      serverName: '',
+      timeReceived: new Date(Date.now() - t.timerSeconds * 1000),
+      elapsedSeconds: t.timerSeconds,
+      targetSeconds: 900,
+      itemCount: t.items.reduce((sum, i) => sum + i.quantity, 0),
+      courses: [{
+        course: 'ENTREE' as const,
+        items: t.items.map(i => ({
+          id: i.id,
+          name: i.name,
+          quantity: i.quantity,
+          modifiers: [],
+          allergens: [],
+          isCompleted: i.status === 'done',
+          isCancelled: false,
+        })),
+      }],
+    }));
+  }, [kdsMode, expoTickets]);
+
   const cardVariants = {
     initial: { opacity: 0, x: 80, scale: 0.95 },
     animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 200 } },
@@ -327,7 +358,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Prep' ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : kdsMode === 'Expo' ? (
-                <ExpoView />
+                <ExpoView onTicketsChange={setExpoTickets} />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
                   {viewMode === 'grid' && (
@@ -374,7 +405,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={orders} stationCourse={stationCourse} />}
+        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : orders} stationCourse={stationCourse} />}
       </div>
 
       <AnimatePresence>

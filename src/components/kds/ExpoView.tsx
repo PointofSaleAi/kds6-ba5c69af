@@ -1,7 +1,8 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
+import { CheckCircle } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 import {
   mockExpoTickets,
   kitchenStations,
@@ -22,10 +23,10 @@ function allDone(t: ExpoTicket) {
   return t.stations.every(s => s.status === 'done');
 }
 function isOvertime(t: ExpoTicket) {
-  return t.timerSeconds >= 900; // 15 min
+  return t.timerSeconds >= 900;
 }
 function isWarning(t: ExpoTicket) {
-  return t.timerSeconds >= 600 && t.timerSeconds < 900; // 10-15 min
+  return t.timerSeconds >= 600 && t.timerSeconds < 900;
 }
 
 function ticketBorderClass(t: ExpoTicket): string {
@@ -35,16 +36,22 @@ function ticketBorderClass(t: ExpoTicket): string {
   return 'border-l-border';
 }
 
+/** FIX 5: header bg -- overtime uses red tint, warning uses amber */
+function ticketHeaderBg(t: ExpoTicket): string {
+  if (isOvertime(t)) return 'bg-[#450a0a]';
+  if (isWarning(t)) return 'bg-warning/20';
+  const map: Record<string, string> = {
+    'dine-in': 'bg-order-dine-in',
+    'take-out': 'bg-order-take-out',
+    banquet: 'bg-order-banquet',
+  };
+  return map[t.orderType] || 'bg-order-dine-in';
+}
+
 const orderTypeLabel: Record<string, string> = {
   'dine-in': 'DINE IN',
   'take-out': 'TAKE OUT',
   banquet: 'BANQUET',
-};
-
-const orderTypeHeaderBg: Record<string, string> = {
-  'dine-in': 'bg-order-dine-in',
-  'take-out': 'bg-order-take-out',
-  banquet: 'bg-order-banquet',
 };
 
 const stationChipStyles: Record<string, { bg: string; text: string }> = {
@@ -88,7 +95,7 @@ interface ExpoTicketCardProps {
 }
 
 function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
-  const { tp, timeFormat } = useLanguage();
+  const { tp } = useLanguage();
   const doneCount = ticket.stations.filter(s => s.status === 'done').length;
   const totalCount = ticket.stations.length;
   const isDone = allDone(ticket);
@@ -102,13 +109,15 @@ function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35 } }}
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300`}
     >
-      {/* Header */}
-      <div className={`flex items-center justify-between px-2 py-1.5 ${orderTypeHeaderBg[ticket.orderType]} text-primary-foreground`}>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider">
-            {orderTypeLabel[ticket.orderType]}
+      {/* FIX 2 + FIX 5: Header with swapped hierarchy and overtime red bg */}
+      <div className={`flex items-center justify-between px-2 py-1.5 ${ticketHeaderBg(ticket)} text-primary-foreground`}>
+        <div className="flex flex-col">
+          <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
+            {orderTypeLabel[ticket.orderType]} &middot; {ticket.tableName}
           </span>
-          <span className="text-[10px] opacity-80">{ticket.tableName}</span>
+          <span className="text-[12px] opacity-70 leading-tight">
+            #{ticket.orderNumber}
+          </span>
         </div>
         <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
       </div>
@@ -116,23 +125,16 @@ function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
       {/* Station chips */}
       <ExpoStationChips stations={ticket.stations} />
 
-      {/* Order number + items */}
-      <div className="px-2 pt-1.5 pb-1">
-        <div className="text-[28px] font-black text-text-primary leading-none">
-          #{ticket.orderNumber}
-        </div>
-      </div>
-
-      {/* Item rows */}
-      <div className="px-2 pb-1.5 space-y-0.5">
+      {/* FIX 3 + FIX 4: Item rows -- title case, × symbol */}
+      <div className="px-2 py-1.5 space-y-0.5">
         {ticket.items.map(item => (
           <div key={item.id} className="flex items-start justify-between py-0.5">
             <div className="flex-1 min-w-0">
-              <span className={`text-[13px] font-medium uppercase ${itemStatusStyles[item.status]}`}>
-                {item.quantity}x {tp(item.name)}
+              <span className={`text-[13px] font-medium ${itemStatusStyles[item.status]}`}>
+                {item.quantity}&times; {tp(item.name)}
               </span>
               {item.statusLabel && (
-                <span className={`ml-2 text-[11px] italic ${item.status === 'firing' ? 'text-warning' : item.status === 'pending' ? 'text-text-muted' : 'text-text-muted'}`}>
+                <span className={`ml-2 text-[11px] italic ${item.status === 'firing' ? 'text-warning' : 'text-text-muted'}`}>
                   {item.statusLabel}
                 </span>
               )}
@@ -221,8 +223,11 @@ function ExpoTopControls({
 
   return (
     <div className="flex items-center gap-3 px-3 py-2 bg-surface-card border-b border-border shrink-0">
-      {/* Expo badge */}
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/15 text-purple-500 text-[11px] font-bold uppercase tracking-wider">
+      {/* FIX 1: Solid purple badge */}
+      <span
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
+        style={{ backgroundColor: '#7c3aed', color: '#ede9fe' }}
+      >
         Expediter
       </span>
 
@@ -250,10 +255,14 @@ function ExpoTopControls({
 
 /* ── Main ExpoView ── */
 
-export default function ExpoView() {
+export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (tickets: ExpoTicket[]) => void }) {
   const [tickets, setTickets] = useState<ExpoTicket[]>(mockExpoTickets);
   const [filter, setFilter] = useState<ExpoFilter>('all');
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
+
+  useEffect(() => {
+    onTicketsChange?.(tickets);
+  }, [tickets, onTicketsChange]);
 
   const handleSendOut = useCallback((id: string) => {
     const ticket = tickets.find(t => t.id === id);
@@ -293,10 +302,13 @@ export default function ExpoView() {
       {/* Ticket grid */}
       <div className="flex-1 overflow-auto p-3">
         {filteredTickets.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center h-full">
-            <p className="text-text-muted text-sm">
-              {filter === 'ready' ? 'No tickets are fully ready yet' : 'All tickets have been sent out. Great work!'}
-            </p>
+          /* FIX 8: Empty state */
+          <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
+            <CheckCircle size={48} className="text-success/60" />
+            <div className="text-center">
+              <p className="text-success/80 text-lg font-bold">Kitchen clear</p>
+              <p className="text-success/50 text-sm mt-1">All tickets fulfilled, waiting for new orders</p>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -314,13 +326,13 @@ export default function ExpoView() {
         )}
       </div>
 
-      {/* Expose stats for bottom bar via data attributes */}
+      {/* Expo bottom stats */}
       <ExpoBottomStats stats={stats} fulfilledTickets={fulfilledTickets} />
     </div>
   );
 }
 
-/* ── Expo Bottom Stats (injected into bottom area, above main BottomStatusBar) ── */
+/* ── Expo Bottom Stats ── */
 
 function ExpoBottomStats({
   stats,
@@ -331,7 +343,6 @@ function ExpoBottomStats({
 }) {
   return (
     <div className="flex items-center justify-between px-4 py-1.5 bg-surface-card border-t border-border shrink-0">
-      {/* Left: stat counters */}
       <div className="flex items-center gap-4">
         <StatCounter label="Open" value={stats.open} />
         <StatCounter label="Ready" value={stats.ready} colorClass="text-success" />
@@ -339,7 +350,6 @@ function ExpoBottomStats({
         <StatCounter label="Avg time" value={formatTimer(stats.avgTime)} />
       </div>
 
-      {/* Right: legend + recall */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <LegendDot color="bg-success" label="Ready" />
