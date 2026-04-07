@@ -71,13 +71,13 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
     onClose();
   };
 
-  const selectedLangInList = displayMode === 'dual' ? secondaryLang : singleLang;
+  const selectedLangInList = displayMode === 'dual' ? secondaryLang : localSingleLang;
 
   const handleSelectLang = (code: LanguageCode) => {
     if (displayMode === 'dual') {
       setSecondaryLang(code);
     } else {
-      setSingleLang(code);
+      setLocalSingleLang(code);
       setLanguage(code);
     }
   };
@@ -288,7 +288,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
               <div className="rounded-lg p-3" style={{ backgroundColor: '#f7f7f7' }}>
                 {previewItems.map((item) => {
-                  const primaryText = getTranslation(item.key, displayMode === 'dual' ? primaryLang : singleLang);
+                  const primaryText = getTranslation(item.key, displayMode === 'dual' ? primaryLang : localSingleLang);
                   const secondaryText = displayMode === 'dual' ? getTranslation(item.key, secondaryLang) : null;
                   return (
                     <div key={item.key} className="py-1.5 border-b border-border/30 last:border-0">
