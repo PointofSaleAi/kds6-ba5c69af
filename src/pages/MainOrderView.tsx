@@ -5,6 +5,7 @@ import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
 import { PrepBoard } from '@/components/kds/PrepBoard';
+import ExpoView from '@/components/kds/ExpoView';
 import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
@@ -321,10 +322,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </>
           ) : (
             <>
-              {filteredOrders.length === 0 ? (
+              {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
                 <EmptyState />
               ) : kdsMode === 'Prep' ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
+              ) : kdsMode === 'Expo' ? (
+                <ExpoView />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
                   {viewMode === 'grid' && (
@@ -332,11 +335,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                            {kdsMode === 'Expo' ? (
-                              <ExpoOrderCard order={order} onBump={handleBump} />
-                            ) : (
-                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
-                            )}
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -347,11 +346,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
-                            {kdsMode === 'Expo' ? (
-                              <ExpoOrderCard order={order} onBump={handleBump} />
-                            ) : (
-                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
-                            )}
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -364,11 +359,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
                               <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                                {kdsMode === 'Expo' ? (
-                                  <ExpoOrderCard order={order} onBump={handleBump} />
-                                ) : (
-                                  <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
-                                )}
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
