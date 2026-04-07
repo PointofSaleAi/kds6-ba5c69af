@@ -19,7 +19,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardProps) {
-  const { tp } = useLanguage();
+  const { tp, timeFormat } = useLanguage();
   const durationText = formatDuration(order.elapsedSeconds);
   const isOverTarget = order.elapsedSeconds > order.targetSeconds;
 
@@ -29,7 +29,7 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
       <div className="rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border opacity-70">
         <OrderTypeBadge
           type={order.orderType}
-          time={formatTimeReceived(order.timeReceived)}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
         />
         <div className="p-3 text-center">
           <div className="text-order-num text-text-muted line-through">{order.orderNumber}</div>
@@ -71,7 +71,7 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
       <div className="relative">
         <OrderTypeBadge
           type={order.orderType}
-          time={formatTimeReceived(order.timeReceived)}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={order.tableName}
         />
         <span className="absolute top-1.5 right-2 text-[10px] font-bold uppercase text-text-muted bg-muted/80 px-2 py-0.5 rounded">
