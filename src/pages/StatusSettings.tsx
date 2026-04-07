@@ -391,17 +391,11 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
           </div>
 
           {/* Footer */}
-          <div className="px-5 pb-4 pt-3 shrink-0 border-t border-border flex gap-3">
-            <button
-              onClick={onClose}
-              className="flex-1 py-3 text-text-secondary font-bold text-sm uppercase rounded-lg transition-colors hover:bg-muted min-h-[44px]"
-            >
-              Cancel
-            </button>
+          <div className="px-5 pb-4 pt-3 shrink-0 border-t border-border">
             <button
               onClick={handleSave}
               disabled={hasErrors}
-              className="flex-1 py-3 bg-foreground text-background font-bold text-sm uppercase rounded-lg transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none min-h-[44px]"
+              className="w-full py-3 bg-foreground text-background font-bold text-sm uppercase rounded-lg transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none min-h-[44px]"
             >
               Save Rules
             </button>
