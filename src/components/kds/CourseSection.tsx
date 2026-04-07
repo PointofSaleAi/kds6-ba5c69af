@@ -174,10 +174,10 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Fired' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
 
   const labelClass = coursingStatus === 'active'
-    ? 'text-[10px] uppercase tracking-widest font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
     : coursingStatus === 'fired'
-      ? 'text-[10px] uppercase tracking-widest text-success font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-      : 'text-[10px] uppercase text-muted-foreground tracking-widest font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+      ? 'text-[11px] uppercase tracking-wider text-success font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+      : 'text-[11px] uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: '#7F77DD', fontWeight: 500 }
@@ -195,11 +195,11 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
   return (
     <div className={containerClass} style={containerStyle}>
-      <div className={`flex items-center justify-between flex-nowrap ${headerBg}`} style={{ ...headerStyle, padding: '6px 12px' }}>
+      <div className={`flex items-center justify-between flex-nowrap ${headerBg}`} style={{ ...headerStyle, padding: '4px 8px' }}>
         <span className={labelClass} style={labelStyle}>
           {courseLabel}
         </span>
-        <div className="flex items-center shrink-0" style={{ gap: '6px' }}>
+        <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
           {timer && (
             <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums ${chipStyle}`}>
               {timer.label}

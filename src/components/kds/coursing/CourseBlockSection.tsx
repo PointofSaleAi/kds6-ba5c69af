@@ -32,14 +32,14 @@ export function CourseBlockSection({
       {/* Header */}
       <div
         className={`flex items-center justify-between flex-nowrap ${getHeaderBg(course.status)}`}
-        style={{ padding: '6px 12px' }}
+        style={{ padding: '4px 8px' }}
       >
         <span
-          className={`text-section-label uppercase flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis ${getNameColor(course.status)}`}
+          className={`text-[11px] uppercase tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis ${getNameColor(course.status)}`}
         >
           {label}
         </span>
-        <div className="flex items-center shrink-0" style={{ gap: '6px' }}>
+        <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
           {course.status === 'fired' && course.firedAgoLabel && (
             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-order-take-out/15 text-order-take-out">
               Done {course.firedAgoLabel}
