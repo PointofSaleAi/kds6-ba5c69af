@@ -44,7 +44,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
-  const { mode: kdsMode } = useKDSMode();
+  const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
   const { playSound } = useSound();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');

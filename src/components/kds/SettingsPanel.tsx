@@ -97,7 +97,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { showBadge: enableBadge, setShowBadge: setEnableBadge } = useBadgeVisibility();
-  const { mode: kdsMode, setMode: setKdsMode } = useKDSMode();
+  const { mode: kdsMode, setMode: setKdsMode, stationCourse, setStationCourse } = useKDSMode();
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
