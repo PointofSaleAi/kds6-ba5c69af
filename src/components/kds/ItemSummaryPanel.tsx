@@ -123,7 +123,13 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                     {tc(cat.category)}S
                   </span>
                 </div>
-                <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${isStation ? 'bg-primary text-primary-foreground' : 'bg-muted text-text-secondary'}`}>
+                <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
+                  sectionTotal >= 20
+                    ? 'bg-destructive text-destructive-foreground'
+                    : sectionTotal >= 10
+                      ? 'bg-warning text-warning-foreground'
+                      : 'bg-emerald-600 text-white'
+                }`}>
                   {sectionTotal}
                 </span>
               </button>
