@@ -45,7 +45,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
 }
 
 export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProps) {
-  const { tp, tc } = useLanguage();
+  const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
 
