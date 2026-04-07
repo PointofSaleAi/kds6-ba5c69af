@@ -1139,6 +1139,14 @@ const defaultLanguageContext: LanguageContextType = {
   to: (label: string) => label,
   languageName: languageNames['en-US'],
   languageFlag: languageFlags['en-US'],
+  displayMode: 'dual',
+  setDisplayMode: () => {},
+  primaryLang: 'en-US',
+  setPrimaryLang: () => {},
+  secondaryLang: 'es',
+  setSecondaryLang: () => {},
+  tpSecondary: (name: string) => name,
+  tmSecondary: (text: string) => text,
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
