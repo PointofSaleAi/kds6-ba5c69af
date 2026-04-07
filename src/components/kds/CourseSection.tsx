@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { CourseGroup } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
-import { ModifierLine } from './ModifierLine';
+
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';

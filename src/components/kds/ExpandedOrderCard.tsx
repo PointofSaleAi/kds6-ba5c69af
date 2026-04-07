@@ -11,7 +11,7 @@ import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { AllergenBadge } from './AllergenBadge';
-import { ModifierLine } from './ModifierLine';
+
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 
 interface ExpandedOrderCardProps {
