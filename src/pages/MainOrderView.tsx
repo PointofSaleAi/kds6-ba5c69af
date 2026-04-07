@@ -57,6 +57,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [sortMode, setSortMode] = useState<SortMode>('time');
   const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
+  const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+
+  const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
+    setGlobalItemStatuses(prev => {
+      const next = new Map(prev);
+      if (status === undefined) next.delete(itemId);
+      else next.set(itemId, status);
+      return next;
+    });
+  }, []);
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
