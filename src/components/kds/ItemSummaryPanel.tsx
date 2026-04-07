@@ -77,17 +77,20 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
   }
 
   return (
-    <div className="w-[220px] bg-surface-card border-l border-border flex flex-col shrink-0 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border">
+    <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
+      {/* Header - sidebar bg */}
+      <div className="flex items-center justify-between px-3 py-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5">
-          <span className="text-[13px] font-bold text-text-primary uppercase tracking-wide">Cooking Summary</span>
-          <span className="text-[11px] font-bold text-text-muted bg-muted rounded px-1.5 py-0.5">{totalRemaining}</span>
+          <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
+          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded px-1.5 py-0.5">{totalRemaining}</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
+        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Collapse panel">
           <ChevronRight size={16} />
         </button>
       </div>
+
+      {/* Categories section */}
+      <div className="flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
 
       {/* Sections */}
       <div className="flex-1 overflow-y-auto">
