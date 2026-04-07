@@ -240,7 +240,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     <span className="text-[13px] font-normal text-text-secondary">
                       {item.quantity}×
                     </span>
-                    <span className={`text-[13px] font-medium ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+                    <span className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
                       {tp(item.name)}
                     </span>
                     {item.isCancelled && (
