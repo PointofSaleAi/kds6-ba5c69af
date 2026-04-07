@@ -163,6 +163,21 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     [filteredHistory, staggerColumnCount]
   );
 
+  // Enrich orders with global item statuses for Cooking Summary
+  const ordersWithItemStatuses = useMemo(() => {
+    if (globalItemStatuses.size === 0) return orders;
+    return orders.map(order => ({
+      ...order,
+      courses: order.courses.map(cg => ({
+        ...cg,
+        items: cg.items.map(item => ({
+          ...item,
+          isCompleted: item.isCompleted || globalItemStatuses.get(item.id) === 'done',
+        })),
+      })),
+    }));
+  }, [orders, globalItemStatuses]);
+
   const handleBump = useCallback((orderId: string) => {
     setOrders((prev) =>
       prev.map((o) => {
