@@ -42,9 +42,10 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
-  const { mode: kdsMode } = useKDSMode();
+  const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
+  const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -366,7 +367,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -377,7 +378,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -390,7 +391,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
                               <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={stationCourse} />
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
@@ -405,7 +406,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : orders} stationCourse={stationCourse} />}
+        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : orders} stationCourse={resolvedStationCourse} />}
       </div>
 
       <AnimatePresence>
