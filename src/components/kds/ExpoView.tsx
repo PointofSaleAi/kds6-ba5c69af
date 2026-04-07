@@ -37,15 +37,15 @@ function ticketBorderClass(t: ExpoTicket): string {
 }
 
 /** FIX 5: header bg -- overtime uses red tint, warning uses amber */
-function ticketHeaderBg(t: ExpoTicket): string {
-  if (isOvertime(t)) return 'bg-[#450a0a]';
-  if (isWarning(t)) return 'bg-warning/20';
+function ticketHeaderBg(t: ExpoTicket): { bg: string; text: string } {
+  if (isOvertime(t)) return { bg: 'bg-[#450a0a]', text: 'text-primary-foreground' };
+  if (isWarning(t)) return { bg: 'bg-warning/20', text: 'text-text-primary' };
   const map: Record<string, string> = {
     'dine-in': 'bg-order-dine-in',
     'take-out': 'bg-order-take-out',
     banquet: 'bg-order-banquet',
   };
-  return map[t.orderType] || 'bg-order-dine-in';
+  return { bg: map[t.orderType] || 'bg-order-dine-in', text: 'text-primary-foreground' };
 }
 
 const orderTypeLabel: Record<string, string> = {
@@ -110,7 +110,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300`}
     >
       {/* FIX 2 + FIX 5: Header with swapped hierarchy and overtime red bg */}
-      <div className={`flex items-center justify-between px-2 py-1.5 ${ticketHeaderBg(ticket)} text-primary-foreground`}>
+      <div className={`flex items-center justify-between px-2 py-1.5 ${ticketHeaderBg(ticket).bg} ${ticketHeaderBg(ticket).text}`}>
         <div className="flex flex-col">
           <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
             {orderTypeLabel[ticket.orderType]} &middot; {ticket.tableName}
