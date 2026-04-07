@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage, type LanguageCode, type DisplayMode } from '@/hooks/use-language';
+import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 
 interface LanguageSettingsProps {
   open: boolean;
@@ -39,11 +39,11 @@ const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
 export default function LanguageSettings({ open, onClose }: LanguageSettingsProps) {
-  const { language, setLanguage, t, displayMode, setDisplayMode, primaryLang, setPrimaryLang, secondaryLang, setSecondaryLang } = useLanguage();
+  const { language, setLanguage, t, displayMode, setDisplayMode, primaryLang, setPrimaryLang, secondaryLang, setSecondaryLang, dateFormat: savedDateFormat, setDateFormat: saveDateFormat, timeFormat: savedTimeFormat, setTimeFormat: saveTimeFormat } = useLanguage();
   const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
-  const [dateFormat, setDateFormat] = useState(0);
-  const [timeFormat, setTimeFormat] = useState(0);
+  const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
+  const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
   const [activeTab, setActiveTab] = useState<'language' | 'region'>('language');
 
@@ -70,6 +70,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   ];
 
   const handleSave = () => {
+    saveDateFormat(dateFormat);
+    saveTimeFormat(timeFormat);
     onClose();
   };
 
@@ -356,7 +358,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                     {dateFormats.map((fmt, i) => (
                       <button
                         key={fmt}
-                        onClick={() => setDateFormat(i)}
+                        onClick={() => setDateFormat(i as DateFormatIndex)}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
                         style={{
                           border: dateFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))',
@@ -381,7 +383,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                     {timeFormats.map((fmt, i) => (
                       <button
                         key={fmt}
-                        onClick={() => setTimeFormat(i)}
+                        onClick={() => setTimeFormat(i as TimeFormatIndex)}
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
                         style={{
                           border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))',

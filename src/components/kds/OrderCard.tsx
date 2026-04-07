@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
 import { AllergenBadge } from './AllergenBadge';
 import type { ItemStatus, StationStatus } from './CourseSection';
@@ -23,9 +23,7 @@ interface OrderCardProps {
   stationCourse?: string;
 }
 
-function formatTimeReceived(date: Date): string {
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-}
+// Removed local formatTimeReceived - now using formatTimeForKDS from context
 
 const urgencyBorderMap = {
   ok: 'border-l-success',
@@ -121,7 +119,7 @@ function normalizeStationCourses(courses: CourseGroup[], stationCourse: string):
 }
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stationCourse }: OrderCardProps) {
-  const { t } = useLanguage();
+  const { t, timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
@@ -178,7 +176,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
       <div className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border ${statusBodyMap[order.status] || ''}`}>
         <OrderTypeBadge
           type={order.orderType}
-          time={formatTimeReceived(order.timeReceived)}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={getLocationLabel(order.orderType, order.tableName)}
         />
         <div className="p-3 text-center">
@@ -234,7 +232,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
       {/* FIX 1: Station badge in header without breaking layout */}
       <OrderTypeBadge
           type={order.orderType}
-          time={formatTimeReceived(order.timeReceived)}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={getLocationLabel(order.orderType, order.tableName)}
           stationBadge={undefined}
         />
