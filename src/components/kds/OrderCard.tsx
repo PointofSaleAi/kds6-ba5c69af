@@ -176,7 +176,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
       <div className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border ${statusBodyMap[order.status] || ''}`}>
         <OrderTypeBadge
           type={order.orderType}
-          time={formatTimeReceived(order.timeReceived)}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={getLocationLabel(order.orderType, order.tableName)}
         />
         <div className="p-3 text-center">
@@ -232,7 +232,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
       {/* FIX 1: Station badge in header without breaking layout */}
       <OrderTypeBadge
           type={order.orderType}
-          time={formatTimeReceived(order.timeReceived)}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={getLocationLabel(order.orderType, order.tableName)}
           stationBadge={undefined}
         />
