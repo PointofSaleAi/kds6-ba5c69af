@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Search, Check, Globe } from 'lucide-react';
+import { X, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, type LanguageCode } from '@/hooks/use-language';
 
@@ -15,13 +15,26 @@ interface Language {
   flag: string;
 }
 
+type DisplayMode = 'single' | 'dual';
+
 const languages: Language[] = [
-  { code: 'en-US', name: 'English (US)', native: 'English', flag: '🇺🇸' },
-  { code: 'en-GB', name: 'English (UK)', native: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
-  { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
   { code: 'zh', name: 'Chinese Simplified', native: '中文简体', flag: '🇨🇳' },
   { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'en-US', name: 'English (US)', native: 'English', flag: '🇺🇸' },
+];
+
+const translations: Record<string, Record<string, string>> = {
+  'en-US': { fries: 'French Fries', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
+  es: { fries: 'Papas fritas', chicken: 'Pollo a la parrilla', salad: 'Ensalada César' },
+  zh: { fries: '薄薯条', chicken: '烤鸡胸', salad: '寺庙沙拉' },
+  vi: { fries: 'Khoai tây chiên', chicken: 'Gà nướng', salad: 'Salad Caesar' },
+};
+
+const previewItems = [
+  { qty: 2, key: 'fries' },
+  { qty: 1, key: 'chicken' },
+  { qty: 1, key: 'salad' },
 ];
 
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
@@ -33,6 +46,10 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState(0);
   const [timeFormat, setTimeFormat] = useState(0);
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('dual');
+  const [primaryLang, setPrimaryLang] = useState<LanguageCode>('en-US');
+  const [secondaryLang, setSecondaryLang] = useState<LanguageCode>('es');
+  const [singleLang, setSingleLang] = useState<LanguageCode>('es');
 
   if (!open) return null;
 
@@ -42,10 +59,13 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
       l.native.toLowerCase().includes(search.toLowerCase())
   );
 
-  const sorted = [
-    ...filtered.filter((l) => l.code === language),
-    ...filtered.filter((l) => l.code !== language),
-  ];
+  const handleSwap = () => {
+    setPrimaryLang(secondaryLang);
+    setSecondaryLang(primaryLang);
+  };
+
+  const getLangInfo = (code: LanguageCode): Language =>
+    languages.find((l) => l.code === code) ?? languages[0];
 
   const scopeOptions = [
     { key: 'interface' as const, label: t.appInterface },
@@ -56,6 +76,24 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const handleSave = () => {
     onClose();
   };
+
+  const selectedLangInList = displayMode === 'dual' ? secondaryLang : singleLang;
+
+  const handleSelectLang = (code: LanguageCode) => {
+    if (displayMode === 'dual') {
+      setSecondaryLang(code);
+    } else {
+      setSingleLang(code);
+      setLanguage(code);
+    }
+  };
+
+  // Preview helpers
+  const getTranslation = (key: string, lang: LanguageCode) =>
+    translations[lang]?.[key] ?? translations['en-US'][key];
+
+  const primaryInfo = getLangInfo(primaryLang);
+  const secondaryInfo = getLangInfo(secondaryLang);
 
   return (
     <AnimatePresence>
@@ -102,6 +140,114 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
             </div>
 
+            {/* Display mode */}
+            <div className="px-4 pt-2 pb-2">
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Display mode</div>
+              <div className="flex gap-3">
+                {/* Single language card */}
+                <button
+                  onClick={() => setDisplayMode('single')}
+                  className="flex-1 rounded-lg p-3 text-left transition-all"
+                  style={{
+                    border: displayMode === 'single' ? '1.5px solid #111' : '1.5px solid hsl(var(--border))',
+                  }}
+                >
+                  <div className="flex items-start gap-2">
+                    <div
+                      className="w-4 h-4 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center"
+                      style={{
+                        borderColor: displayMode === 'single' ? '#111' : 'hsl(var(--border))',
+                      }}
+                    >
+                      {displayMode === 'single' && (
+                        <div className="w-2 h-2 rounded-full bg-text-primary" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-text-primary">Single language</div>
+                      <div className="text-[11px] text-text-muted mt-0.5">Show one language only on the KDS</div>
+                      <div className="mt-2 bg-muted/50 rounded px-2 py-1.5">
+                        <span className="text-[12px] font-medium text-text-primary">2× French Fries</span>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Dual language card */}
+                <button
+                  onClick={() => setDisplayMode('dual')}
+                  className="flex-1 rounded-lg p-3 text-left transition-all"
+                  style={{
+                    border: displayMode === 'dual' ? '1.5px solid #111' : '1.5px solid hsl(var(--border))',
+                  }}
+                >
+                  <div className="flex items-start gap-2">
+                    <div
+                      className="w-4 h-4 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center"
+                      style={{
+                        borderColor: displayMode === 'dual' ? '#111' : 'hsl(var(--border))',
+                      }}
+                    >
+                      {displayMode === 'dual' && (
+                        <div className="w-2 h-2 rounded-full bg-text-primary" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-text-primary">Dual language</div>
+                      <div className="text-[11px] text-text-muted mt-0.5">Show two languages on every item</div>
+                      <div className="mt-2 bg-muted/50 rounded px-2 py-1.5">
+                        <div className="text-[12px] font-bold text-text-primary">2× French Fries</div>
+                        <div className="text-[10px] text-text-muted">Papas fritas</div>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Language pair (dual mode only) */}
+            {displayMode === 'dual' && (
+              <div className="px-4 pt-2 pb-2">
+                <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Language pair</div>
+                <div className="flex items-center gap-2">
+                  {/* Primary slot */}
+                  <div className="flex-1 bg-muted rounded-lg px-3 py-2.5">
+                    <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Primary</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">{primaryInfo.flag}</span>
+                      <span className="text-sm font-medium text-text-primary">{primaryInfo.name}</span>
+                    </div>
+                  </div>
+
+                  {/* Swap button */}
+                  <button
+                    onClick={handleSwap}
+                    className="shrink-0 w-9 h-9 rounded-full bg-brand-primary text-primary-foreground flex items-center justify-center hover:bg-brand-primary/90 transition-colors"
+                    aria-label="Swap languages"
+                  >
+                    <ArrowLeftRight size={16} />
+                  </button>
+
+                  {/* Secondary slot */}
+                  <div className="flex-1 bg-muted rounded-lg px-3 py-2.5">
+                    <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Secondary</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">{secondaryInfo.flag}</span>
+                      <span className="text-sm font-medium text-text-primary">{secondaryInfo.name}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-[10px] text-text-muted text-center mt-1.5">tap ⇆ to swap primary and secondary</div>
+              </div>
+            )}
+
+            {/* Section label */}
+            <div className="px-4 pt-2 pb-1">
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest">
+                {displayMode === 'dual' ? 'Select secondary language' : 'Select language'}
+              </div>
+            </div>
+
             {/* Search */}
             <div className="px-4 py-2">
               <div className="flex items-center gap-2 bg-muted rounded-lg px-3 py-2">
@@ -118,12 +264,12 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
 
             {/* Language list */}
             <div className="px-2">
-              {sorted.map((lang) => (
+              {filtered.map((lang) => (
                 <button
                   key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
+                  onClick={() => handleSelectLang(lang.code)}
                   className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 rounded-lg transition-colors min-h-[52px] ${
-                    language === lang.code ? 'bg-brand-primary/10' : ''
+                    selectedLangInList === lang.code ? 'bg-brand-primary/10' : ''
                   }`}
                 >
                   <span className="text-xl">{lang.flag}</span>
@@ -131,7 +277,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                     <div className="text-sm font-semibold text-text-primary">{lang.name}</div>
                     <div className="text-xs text-text-muted">{lang.native}</div>
                   </div>
-                  {language === lang.code && (
+                  {selectedLangInList === lang.code && (
                     <Check size={18} className="text-brand-primary" />
                   )}
                 </button>
@@ -141,7 +287,32 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
             </div>
 
-            {/* Regional format preview */}
+            {/* Live preview */}
+            <div className="px-4 pt-2 pb-2">
+              <div className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">
+                Preview &mdash; how items will appear on KDS
+              </div>
+              <div className="rounded-lg p-3" style={{ backgroundColor: '#f7f7f7' }}>
+                {previewItems.map((item) => {
+                  const primaryText = getTranslation(item.key, displayMode === 'dual' ? primaryLang : singleLang);
+                  const secondaryText = displayMode === 'dual' ? getTranslation(item.key, secondaryLang) : null;
+                  return (
+                    <div key={item.key} className="py-1.5 border-b border-border/30 last:border-0">
+                      <div className="text-[13px] font-bold text-text-primary">
+                        {item.qty}× {primaryText}
+                      </div>
+                      {secondaryText && (
+                        <div className="text-[11px] text-text-muted">
+                          {secondaryText}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Regional format */}
             <div className="px-4 pt-4 pb-2">
               <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{t.regionalFormat}</div>
 
