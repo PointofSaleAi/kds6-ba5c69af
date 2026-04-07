@@ -1219,6 +1219,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('posai-display-mode', mode);
   }, []);
 
+  const setDateFormat = useCallback((f: DateFormatIndex) => {
+    setDateFormatState(f);
+    localStorage.setItem('posai-date-format', String(f));
+  }, []);
+
+  const setTimeFormat = useCallback((f: TimeFormatIndex) => {
+    setTimeFormatState(f);
+    localStorage.setItem('posai-time-format', String(f));
+  }, []);
+
   const setPrimaryLang = useCallback((lang: LanguageCode) => {
     setPrimaryLangState(lang);
     localStorage.setItem('posai-primary-lang', lang);
