@@ -31,14 +31,15 @@ export function CourseBlockSection({
     >
       {/* Header */}
       <div
-        className={`px-3 py-2 flex items-center justify-between ${getHeaderBg(course.status)}`}
+        className={`flex items-center justify-between flex-nowrap ${getHeaderBg(course.status)}`}
+        style={{ padding: '6px 12px' }}
       >
         <span
-          className={`text-section-label uppercase ${getNameColor(course.status)}`}
+          className={`text-section-label uppercase flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis ${getNameColor(course.status)}`}
         >
           {label}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center shrink-0" style={{ gap: '6px' }}>
           {course.status === 'fired' && course.firedAgoLabel && (
             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-order-take-out/15 text-order-take-out">
               Done {course.firedAgoLabel}
@@ -99,10 +100,10 @@ function getHeaderBg(status: CourseBlock['status']): string {
 function getNameColor(status: CourseBlock['status']): string {
   switch (status) {
     case 'fired':
-      return 'text-success';
+      return 'text-success font-normal';
     case 'active':
       return 'text-[#7F77DD] font-medium';
     case 'pending':
-      return 'text-muted-foreground';
+      return 'text-muted-foreground font-normal';
   }
 }
