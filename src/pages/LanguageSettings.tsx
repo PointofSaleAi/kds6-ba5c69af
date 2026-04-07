@@ -151,9 +151,9 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           {/* Tab content */}
           <div className="flex-1 overflow-hidden">
             {activeTab === 'language' ? (
-              <div className="flex h-full">
+              <div className="flex flex-col md:flex-row h-full">
                 {/* LEFT COLUMN */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 min-w-0">
                   {/* Section A: Language scope */}
                   <div>
                     <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.languageScope}</div>
