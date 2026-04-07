@@ -33,7 +33,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
         {/* Dual-language secondary name */}
         {displayMode === 'dual' && (
-          <div className="text-[11px] text-text-muted italic" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+          <div className="text-[11px] text-text-muted font-medium uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
             {tpSecondary(item.name)}
           </div>
         )}
