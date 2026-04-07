@@ -271,7 +271,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                           }
                           style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
                         >
-                          {mod.type === 'extra' ? `+ ${mod.text}` : mod.text}
+                          {mod.text}
                         </div>
                       ))}
                     </div>
