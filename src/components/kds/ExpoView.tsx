@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
@@ -259,6 +259,10 @@ export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (ticke
   const [tickets, setTickets] = useState<ExpoTicket[]>(mockExpoTickets);
   const [filter, setFilter] = useState<ExpoFilter>('all');
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
+
+  useEffect(() => {
+    onTicketsChange?.(tickets);
+  }, [tickets, onTicketsChange]);
 
   const handleSendOut = useCallback((id: string) => {
     const ticket = tickets.find(t => t.id === id);
