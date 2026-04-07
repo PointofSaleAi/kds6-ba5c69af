@@ -9,7 +9,7 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, dimmed }: ItemRowProps) {
-  const { tp } = useLanguage();
+  const { tp, displayMode, tpSecondary } = useLanguage();
 
   return (
     <div
