@@ -123,7 +123,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                     className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                   />
                   <span className={`text-[13px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
-                    {tc(cat.category)}S
+                    {cat.category}
                   </span>
                 </div>
                 <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
