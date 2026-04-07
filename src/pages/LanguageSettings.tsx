@@ -403,16 +403,10 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 px-5 py-3 border-t border-border shrink-0">
-            <button
-              onClick={onClose}
-              className="px-5 py-2 rounded-lg text-sm font-semibold text-text-muted border border-border hover:bg-muted transition-colors min-h-[40px]"
-            >
-              Cancel
-            </button>
+          <div className="px-5 py-3 border-t border-border shrink-0">
             <button
               onClick={handleSave}
-              className="px-5 py-2 rounded-lg text-sm font-semibold text-primary-foreground bg-brand-primary hover:bg-brand-primary/90 transition-colors min-h-[40px]"
+              className="w-full py-2.5 rounded-lg text-sm font-semibold text-primary-foreground bg-brand-primary hover:bg-brand-primary/90 transition-colors min-h-[44px]"
             >
               Save changes
             </button>
