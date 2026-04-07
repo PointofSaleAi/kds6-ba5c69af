@@ -6,6 +6,7 @@ import { OrderCard } from '@/components/kds/OrderCard';
 import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
+import { type ExpoTicket } from '@/data/mock-expo-orders';
 import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
