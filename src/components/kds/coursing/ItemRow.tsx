@@ -55,15 +55,14 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
       {/* Child 2 — item-action */}
       <div
-        className="flex items-start justify-center shrink-0"
-        style={{ width: '28px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
+        className="flex items-center shrink-0"
+        style={{ gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
       >
         <button
-          className="flex items-center justify-center rounded bg-muted border border-border/50"
-          style={{ width: '24px', height: '24px' }}
+          className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[44px]"
           aria-label="Mark seen"
         >
-          <img src={seenIcon} alt="Seen" style={{ width: '12px', height: '12px' }} />
+          <img src={seenIcon} alt="Seen" className="w-full h-full" style={{ width: '40px', height: '30px' }} />
         </button>
       </div>
     </div>
