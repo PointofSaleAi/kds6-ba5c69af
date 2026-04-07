@@ -127,11 +127,18 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
               {isExpanded && (
                 <div className="px-3 py-1">
                   {cat.items.map((item) => {
-                    const isHigh = item.remaining >= 5;
+                    const isCritical = item.remaining >= 10;
+                    const isHigh = !isCritical && item.remaining >= 5;
+                    const tierClass = isCritical
+                      ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive'
+                      : isHigh
+                        ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
+                        : '';
+                    const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                     return (
-                      <div key={item.name} className={`flex items-center justify-between py-[2px] ${isHigh ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning' : ''}`}>
-                        <span className={`text-[12px] truncate leading-tight ${isHigh ? 'text-text-primary font-bold' : 'text-text-primary'}`}>{tp(item.name)}</span>
-                        <span className={`text-[12px] font-bold ml-2 shrink-0 tabular-nums ${isHigh ? 'text-warning' : 'text-text-primary'}`}>{item.remaining}</span>
+                      <div key={item.name} className={`flex items-center justify-between py-[2px] ${tierClass}`}>
+                        <span className={`text-[12px] truncate leading-tight ${isCritical || isHigh ? 'text-text-primary font-bold' : 'text-text-primary'}`}>{tp(item.name)}</span>
+                        <span className={`text-[12px] font-bold ml-2 shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
                       </div>
                     );
                   })}
