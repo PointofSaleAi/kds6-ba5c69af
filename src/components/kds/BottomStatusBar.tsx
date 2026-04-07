@@ -93,9 +93,9 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         <span className="text-primary-foreground font-bold">
           <span className="text-lg">{orderCount}</span> <span className="text-sm">{t.ordersInQueue}</span>
         </span>
-        {kdsMode !== 'Standard' && (
+        {kdsMode === 'Prep' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
-            {kdsMode} Mode
+            Prep Mode
           </span>
         )}
       </div>
