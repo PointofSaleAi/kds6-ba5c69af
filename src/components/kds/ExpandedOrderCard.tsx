@@ -188,7 +188,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
 
                           {/* Child 2 — item-action */}
                           {!item.isCancelled && (
-                            <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
+                            <div className="flex items-center justify-end shrink-0" style={{ width: '92px', gap: '4px', paddingTop: '1px' }}>
                               {status === 'ready' ? (
                                 <>
                                   <button onClick={() => handleUndoItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">

@@ -55,8 +55,8 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
       {/* Child 2 — item-action */}
       <div
-        className="flex items-center shrink-0"
-        style={{ gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
+        className="flex items-center justify-end shrink-0"
+        style={{ width: '92px', gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
       >
         <button
           className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[44px]"
