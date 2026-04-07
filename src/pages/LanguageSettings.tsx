@@ -110,8 +110,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-surface-card w-full flex flex-col shadow-2xl"
-          style={{ maxWidth: '820px', borderRadius: '20px', height: '580px' }}
+          className="bg-surface-card w-full flex flex-col shadow-2xl mx-3"
+          style={{ maxWidth: '820px', borderRadius: '20px', height: 'min(580px, calc(100vh - 40px))' }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-border shrink-0">
@@ -151,9 +151,9 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           {/* Tab content */}
           <div className="flex-1 overflow-hidden">
             {activeTab === 'language' ? (
-              <div className="flex h-full">
+              <div className="flex flex-col md:flex-row h-full">
                 {/* LEFT COLUMN */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 min-w-0">
                   {/* Section A: Language scope */}
                   <div>
                     <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.languageScope}</div>
@@ -304,10 +304,12 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                 </div>
 
                 {/* VERTICAL DIVIDER */}
-                <div className="w-px bg-border shrink-0" />
+                <div className="hidden md:block w-px bg-border shrink-0" />
+                {/* HORIZONTAL DIVIDER (mobile) */}
+                <div className="md:hidden h-px bg-border shrink-0 mx-3" />
 
                 {/* RIGHT COLUMN - Live preview */}
-                <div className="flex-1 p-4 flex flex-col">
+                <div className="flex-1 p-3 md:p-4 flex flex-col min-w-0">
                   <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                     Preview - KDS ticket
                   </div>
@@ -346,7 +348,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
             ) : (
               /* REGION TAB */
-              <div className="flex h-full p-5 gap-8">
+              <div className="flex flex-col sm:flex-row h-full p-4 md:p-5 gap-6 md:gap-8 overflow-y-auto">
                 {/* Left - Date format */}
                 <div className="flex-1">
                   <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
