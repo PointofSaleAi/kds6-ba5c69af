@@ -304,10 +304,12 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                 </div>
 
                 {/* VERTICAL DIVIDER */}
-                <div className="w-px bg-border shrink-0" />
+                <div className="hidden md:block w-px bg-border shrink-0" />
+                {/* HORIZONTAL DIVIDER (mobile) */}
+                <div className="md:hidden h-px bg-border shrink-0 mx-3" />
 
                 {/* RIGHT COLUMN - Live preview */}
-                <div className="flex-1 p-4 flex flex-col">
+                <div className="flex-1 p-3 md:p-4 flex flex-col min-w-0">
                   <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                     Preview - KDS ticket
                   </div>
