@@ -14,8 +14,6 @@ interface Language {
   flag: string;
 }
 
-type DisplayMode = 'single' | 'dual';
-
 const languages: Language[] = [
   { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
   { code: 'zh', name: 'Chinese Simplified', native: '中文简体', flag: '🇨🇳' },
