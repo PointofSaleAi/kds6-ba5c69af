@@ -1,5 +1,5 @@
 import { RotateCcw } from 'lucide-react';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { AllergenBadge } from './AllergenBadge';
@@ -11,9 +11,7 @@ interface HistoryOrderCardProps {
   onRecall?: (orderId: string) => void;
 }
 
-function formatTimeReceived(date: Date): string {
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-}
+// Using formatTimeForKDS from context
 
 function formatDuration(seconds: number): string {
   const min = Math.round(seconds / 60);

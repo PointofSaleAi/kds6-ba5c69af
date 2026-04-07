@@ -1,4 +1,5 @@
 import { useMemo, useCallback } from 'react';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderType } from '@/types/kds';
 
 function getLocationLabel(orderType: OrderType, tableName?: string): string | undefined {
@@ -18,9 +19,7 @@ interface ExpoOrderCardProps {
   onBump?: (orderId: string) => void;
 }
 
-function formatTimeReceived(date: Date): string {
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-}
+// Using formatTimeForKDS from context
 
 export function ExpoOrderCard({ order, onBump }: ExpoOrderCardProps) {
   const liveElapsed = useElapsedSeconds(order.timeReceived);

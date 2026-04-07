@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { X } from 'lucide-react';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
@@ -21,12 +21,10 @@ interface ExpandedOrderCardProps {
   anchorRect?: DOMRect | null;
 }
 
-function formatTimeReceived(date: Date): string {
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-}
+// Using formatTimeForKDS from context
 
 export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardProps) {
-  const { t, tp, tc } = useLanguage();
+  const { t, tp, tc, timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
@@ -88,7 +86,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
         <div className="relative">
           <OrderTypeBadge
             type={order.orderType}
-            time={formatTimeReceived(order.timeReceived)}
+            time={formatTimeForKDS(order.timeReceived, timeFormat)}
             tableInfo={order.tableName}
           />
           <button

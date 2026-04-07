@@ -3,7 +3,7 @@ import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import LanguageSettings from '@/pages/LanguageSettings';
 
 export type SortMode = 'time' | 'table' | 'type';
@@ -54,13 +54,13 @@ function LanguageToggle() {
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
-  const { t } = useLanguage();
+  const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
   const now = new Date();
-  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-  const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  const timeStr = formatTimeForKDS(now, tfmt);
+  const dateStr = formatDateForKDS(now, dfmt);
 
   const sortOptions: { value: SortMode; label: string }[] = [
     { value: 'time', label: t.sortByTime },
