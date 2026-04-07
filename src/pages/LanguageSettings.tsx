@@ -38,15 +38,12 @@ const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
 export default function LanguageSettings({ open, onClose }: LanguageSettingsProps) {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, displayMode, setDisplayMode, primaryLang, setPrimaryLang, secondaryLang, setSecondaryLang } = useLanguage();
   const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState(0);
   const [timeFormat, setTimeFormat] = useState(0);
-  const [displayMode, setDisplayMode] = useState<DisplayMode>('dual');
-  const [primaryLang, setPrimaryLang] = useState<LanguageCode>('en-US');
-  const [secondaryLang, setSecondaryLang] = useState<LanguageCode>('es');
-  const [singleLang, setSingleLang] = useState<LanguageCode>('es');
+  const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
 
   if (!open) return null;
 
