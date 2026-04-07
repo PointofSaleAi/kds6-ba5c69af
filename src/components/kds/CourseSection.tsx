@@ -129,7 +129,7 @@ const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
 const pendingChipStyle = 'bg-muted text-muted-foreground';
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus }: CourseSectionProps) {
-  const { tp, tc } = useLanguage();
+  const { tp, tc, displayMode, tpSecondary } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
