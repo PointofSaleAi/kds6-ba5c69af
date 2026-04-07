@@ -23,7 +23,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           <span className="text-[13px] font-normal text-text-secondary">
             {item.quantity}×
           </span>
-          <span className="text-[13px] font-medium text-text-primary">
+          <span className="text-[13px] font-medium text-text-primary uppercase">
             {tp(item.name)}
           </span>
           {item.allergens.map((a) => (
