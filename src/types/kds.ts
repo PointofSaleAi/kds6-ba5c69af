@@ -4,6 +4,21 @@ export type CourseType = 'APPETIZER' | 'SALAD' | 'ENTREE' | 'DESSERT' | 'BEVERAG
 export type TimerUrgency = 'ok' | 'warning' | 'critical' | 'overtime';
 export type AllergenType = 'peanut' | 'gluten' | 'dairy' | 'shellfish' | 'soy' | 'egg' | 'tree-nut' | 'sesame';
 
+export type ProductCategory =
+  | 'Seafood'
+  | 'Meat'
+  | 'Poultry'
+  | 'Pasta'
+  | 'Salads'
+  | 'Sides'
+  | 'Desserts'
+  | 'Soups'
+  | 'Pizza'
+  | 'Sandwiches'
+  | 'Appetizers'
+  | 'Vegetarian'
+  | 'Beverages';
+
 export interface Allergen {
   type: AllergenType;
   label: string;
