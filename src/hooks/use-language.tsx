@@ -1105,6 +1105,8 @@ const languageFlags: Record<LanguageCode, string> = {
   vi: '🇻🇳',
 };
 
+export type DisplayMode = 'single' | 'dual';
+
 interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
@@ -1116,6 +1118,14 @@ interface LanguageContextType {
   to: (label: string) => string;
   languageName: string;
   languageFlag: string;
+  displayMode: DisplayMode;
+  setDisplayMode: (mode: DisplayMode) => void;
+  primaryLang: LanguageCode;
+  setPrimaryLang: (lang: LanguageCode) => void;
+  secondaryLang: LanguageCode;
+  setSecondaryLang: (lang: LanguageCode) => void;
+  tpSecondary: (name: string) => string;
+  tmSecondary: (text: string) => string;
 }
 
 const defaultLanguageContext: LanguageContextType = {
