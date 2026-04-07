@@ -34,6 +34,7 @@ export interface OrderItem {
   id: string;
   name: string;
   quantity: number;
+  category?: ProductCategory;
   modifiers: Modifier[];
   allergens: Allergen[];
   isCancelled?: boolean;
