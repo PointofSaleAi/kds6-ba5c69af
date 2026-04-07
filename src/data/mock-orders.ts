@@ -12,7 +12,7 @@ export const mockOrders: Order[] = [
     timeReceived: new Date(Date.now() - 225000),
     elapsedSeconds: 225,
     targetSeconds: 900,
-    itemCount: 5,
+    itemCount: 7,
     courses: [
       {
         course: 'APPETIZER',
@@ -465,7 +465,7 @@ export const mockOrders: Order[] = [
     timeReceived: new Date(Date.now() - 540000),
     elapsedSeconds: 540,
     targetSeconds: 900,
-    itemCount: 6,
+    itemCount: 9,
     courses: [
       {
         course: 'APPETIZER',
