@@ -147,9 +147,9 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                         : '';
                     const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                     return (
-                      <div key={item.name} className={`flex items-center justify-between py-[2px] ${tierClass}`}>
-                        <span className={`text-[12px] truncate leading-tight uppercase font-bold ${isCritical || isHigh ? 'text-text-primary' : 'text-text-primary'}`}>{tp(item.name)}</span>
-                        <span className={`text-[12px] font-bold ml-2 shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
+                      <div key={item.name} className={`flex items-center gap-1 py-[2px] ${tierClass}`}>
+                        <span className={`text-[12px] truncate leading-tight uppercase font-bold flex-1 text-text-primary`}>{tp(item.name)}</span>
+                        <span className={`text-[12px] font-bold shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
                       </div>
                     );
                   })}
