@@ -258,7 +258,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
                   {/* Dual-language secondary name */}
                   {displayMode === 'dual' && !item.isCancelled && (
-                    <div className="text-[11px] text-text-muted font-medium uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                    <div className="text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
                       {tpSecondary(item.name)}
                     </div>
                   )}
