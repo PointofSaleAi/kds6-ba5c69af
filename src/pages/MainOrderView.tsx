@@ -417,7 +417,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : orders} stationCourse={resolvedStationCourse} />}
+        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} />}
       </div>
 
       <AnimatePresence>
