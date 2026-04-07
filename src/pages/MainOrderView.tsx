@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
+import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
@@ -56,6 +57,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [sortMode, setSortMode] = useState<SortMode>('time');
   const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
+  const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+
+  const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
+    setGlobalItemStatuses(prev => {
+      const next = new Map(prev);
+      if (status === undefined) next.delete(itemId);
+      else next.set(itemId, status);
+      return next;
+    });
+  }, []);
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
@@ -151,6 +162,21 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     () => distributeIntoColumns(filteredHistory, staggerColumnCount),
     [filteredHistory, staggerColumnCount]
   );
+
+  // Enrich orders with global item statuses for Cooking Summary
+  const ordersWithItemStatuses = useMemo(() => {
+    if (globalItemStatuses.size === 0) return orders;
+    return orders.map(order => ({
+      ...order,
+      courses: order.courses.map(cg => ({
+        ...cg,
+        items: cg.items.map(item => ({
+          ...item,
+          isCompleted: item.isCompleted || globalItemStatuses.get(item.id) === 'done',
+        })),
+      })),
+    }));
+  }, [orders, globalItemStatuses]);
 
   const handleBump = useCallback((orderId: string) => {
     setOrders((prev) =>
@@ -367,7 +393,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -378,7 +404,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -391,7 +417,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
                               <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
@@ -406,7 +432,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : orders} stationCourse={resolvedStationCourse} />}
+        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} />}
       </div>
 
       <AnimatePresence>

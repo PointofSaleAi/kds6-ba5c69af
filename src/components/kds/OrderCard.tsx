@@ -19,6 +19,7 @@ interface OrderCardProps {
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
+  onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
   /** When set, only matching course is highlighted; others are dimmed */
   stationCourse?: string;
 }
@@ -118,7 +119,7 @@ function normalizeStationCourses(courses: CourseGroup[], stationCourse: string):
   return result;
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stationCourse }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, stationCourse }: OrderCardProps) {
   const { t, timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
@@ -133,17 +134,20 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
   const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
     setItemStatuses(prev => {
       const next = new Map(prev);
+      let newStatus: ItemStatus;
       if (skipToDone) {
-        next.set(itemId, 'done');
-        return next;
+        newStatus = 'done';
+      } else {
+        const current = next.get(itemId);
+        if (!current) newStatus = 'preparing';
+        else if (current === 'preparing') newStatus = 'ready';
+        else newStatus = 'done';
       }
-      const current = next.get(itemId);
-      if (!current) next.set(itemId, 'preparing');
-      else if (current === 'preparing') next.set(itemId, 'ready');
-      else if (current === 'ready') next.set(itemId, 'done');
+      next.set(itemId, newStatus);
+      onItemStatusChange?.(itemId, newStatus);
       return next;
     });
-  }, []);
+  }, [onItemStatusChange]);
 
   useEffect(() => {
     if (allItemIds.length > 0 && allItemIds.every(id => itemStatuses.get(id) === 'done')) {
@@ -155,11 +159,16 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, stat
     setItemStatuses(prev => {
       const next = new Map(prev);
       const current = next.get(itemId);
-      if (current === 'ready') next.set(itemId, 'preparing');
-      else next.delete(itemId);
+      if (current === 'ready') {
+        next.set(itemId, 'preparing');
+        onItemStatusChange?.(itemId, 'preparing');
+      } else {
+        next.delete(itemId);
+        onItemStatusChange?.(itemId, undefined);
+      }
       return next;
     });
-  }, []);
+  }, [onItemStatusChange]);
 
   const buttonLabel = order.status === 'new' ? t.seen :
     order.status === 'seen' ? t.inProgress.toUpperCase() : t.done;
