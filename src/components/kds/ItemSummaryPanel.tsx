@@ -20,6 +20,8 @@ function buildSummary(orders: Order[]): CategorySummary[] {
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
+      // Skip entire fired courses - those items are already done
+      if (cg.isFired) continue;
       if (!map.has(cg.course)) map.set(cg.course, new Map());
       const items = map.get(cg.course)!;
       for (const item of cg.items) {
