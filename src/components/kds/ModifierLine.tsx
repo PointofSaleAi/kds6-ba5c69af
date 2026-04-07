@@ -14,7 +14,7 @@ export function ModifierLine({ modifier }: ModifierLineProps) {
   };
 
   return (
-    <span className={`text-modifier pl-5 block leading-none -mt-px ${styles[modifier.type]}`}>
+    <span className={`text-modifier pl-5 block leading-tight -mt-0.5 ${styles[modifier.type]}`}>
       {tm(modifier.text)}
     </span>
   );
