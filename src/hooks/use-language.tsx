@@ -1107,6 +1107,25 @@ const languageFlags: Record<LanguageCode, string> = {
 
 export type DisplayMode = 'single' | 'dual';
 
+/** 0 = '27 March 2026', 1 = 'March 27, 2026', 2 = '27/03/2026' */
+export type DateFormatIndex = 0 | 1 | 2;
+/** 0 = 12h, 1 = 24h */
+export type TimeFormatIndex = 0 | 1;
+
+export function formatTimeForKDS(date: Date, timeFormat: TimeFormatIndex): string {
+  const hour12 = timeFormat === 0;
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12 });
+}
+
+export function formatDateForKDS(date: Date, dateFormat: DateFormatIndex): string {
+  switch (dateFormat) {
+    case 0: return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    case 1: return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    case 2: return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    default: return date.toLocaleDateString('en-US');
+  }
+}
+
 interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
@@ -1126,6 +1145,10 @@ interface LanguageContextType {
   setSecondaryLang: (lang: LanguageCode) => void;
   tpSecondary: (name: string) => string;
   tmSecondary: (text: string) => string;
+  dateFormat: DateFormatIndex;
+  setDateFormat: (f: DateFormatIndex) => void;
+  timeFormat: TimeFormatIndex;
+  setTimeFormat: (f: TimeFormatIndex) => void;
 }
 
 const defaultLanguageContext: LanguageContextType = {
