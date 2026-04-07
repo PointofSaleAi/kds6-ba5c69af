@@ -1199,6 +1199,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return (saved as LanguageCode) || 'es';
   });
 
+  const [dateFormat, setDateFormatState] = useState<DateFormatIndex>(() => {
+    const saved = localStorage.getItem('posai-date-format');
+    return (saved !== null ? Number(saved) : 0) as DateFormatIndex;
+  });
+
+  const [timeFormat, setTimeFormatState] = useState<TimeFormatIndex>(() => {
+    const saved = localStorage.getItem('posai-time-format');
+    return (saved !== null ? Number(saved) : 0) as TimeFormatIndex;
+  });
+
   const setLanguage = useCallback((lang: LanguageCode) => {
     setLanguageState(lang);
     localStorage.setItem('posai-language', lang);
