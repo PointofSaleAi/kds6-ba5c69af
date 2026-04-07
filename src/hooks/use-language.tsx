@@ -1288,6 +1288,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setSecondaryLang,
     tpSecondary,
     tmSecondary,
+    dateFormat,
+    setDateFormat,
+    timeFormat,
+    setTimeFormat,
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
