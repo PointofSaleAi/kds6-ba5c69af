@@ -348,7 +348,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               </div>
             ) : (
               /* REGION TAB */
-              <div className="flex h-full p-5 gap-8">
+              <div className="flex flex-col sm:flex-row h-full p-4 md:p-5 gap-6 md:gap-8 overflow-y-auto">
                 {/* Left - Date format */}
                 <div className="flex-1">
                   <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
