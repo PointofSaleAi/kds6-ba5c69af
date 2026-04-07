@@ -107,18 +107,18 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
               {/* Section header — tappable */}
               <button
                 onClick={() => toggleSection(cat.category)}
-                className="w-full flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b border-border hover:bg-muted transition-colors min-h-[36px]"
+                className="w-full flex items-center justify-between px-3 py-1.5 bg-sidebar-accent/50 border-b border-sidebar-border hover:bg-sidebar-accent transition-colors min-h-[36px]"
               >
                 <div className="flex items-center gap-1.5">
                   <ChevronDown
                     size={12}
-                    className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
+                    className={`text-sidebar-foreground/50 transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                   />
-                  <span className={`text-[11px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[11px] uppercase tracking-widest font-bold ${isStation ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}>
                     {tc(cat.category)}S
                   </span>
                 </div>
-                <span className={`text-[12px] font-black ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
+                <span className={`text-[12px] font-black ${isStation ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}>
                   {sectionTotal}
                 </span>
               </button>
@@ -130,14 +130,14 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                     const isCritical = item.remaining >= 10;
                     const isHigh = !isCritical && item.remaining >= 5;
                     const tierClass = isCritical
-                      ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
+                      ? 'bg-destructive/20 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
                       : isHigh
-                        ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
+                        ? 'bg-warning/20 -mx-3 px-3 border-l-2 border-warning'
                         : '';
-                    const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
+                    const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-sidebar-foreground';
                     return (
                       <div key={item.name} className={`flex items-center justify-between py-[2px] ${tierClass}`}>
-                        <span className={`text-[12px] truncate leading-tight ${isCritical || isHigh ? 'text-text-primary font-bold' : 'text-text-primary'}`}>{tp(item.name)}</span>
+                        <span className={`text-[12px] truncate leading-tight ${isCritical || isHigh ? 'text-sidebar-foreground font-bold' : 'text-sidebar-foreground/80'}`}>{tp(item.name)}</span>
                         <span className={`text-[12px] font-bold ml-2 shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
                       </div>
                     );
