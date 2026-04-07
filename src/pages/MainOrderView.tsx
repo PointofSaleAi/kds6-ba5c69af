@@ -216,6 +216,35 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
 
+  // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
+  const expoSyntheticOrders: Order[] = useMemo(() => {
+    if (kdsMode !== 'Expo') return [];
+    return expoTickets.map(t => ({
+      id: t.id,
+      orderNumber: t.orderNumber,
+      orderType: t.orderType as Order['orderType'],
+      status: 'in-progress' as const,
+      tableName: t.tableName,
+      serverName: '',
+      timeReceived: new Date(Date.now() - t.timerSeconds * 1000),
+      elapsedSeconds: t.timerSeconds,
+      targetSeconds: 900,
+      itemCount: t.items.reduce((sum, i) => sum + i.quantity, 0),
+      courses: [{
+        course: 'ENTREE' as const,
+        items: t.items.map(i => ({
+          id: i.id,
+          name: i.name,
+          quantity: i.quantity,
+          modifiers: [],
+          allergens: [],
+          isCompleted: i.status === 'done',
+          isCancelled: false,
+        })),
+      }],
+    }));
+  }, [kdsMode, expoTickets]);
+
   const cardVariants = {
     initial: { opacity: 0, x: 80, scale: 0.95 },
     animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 200 } },
