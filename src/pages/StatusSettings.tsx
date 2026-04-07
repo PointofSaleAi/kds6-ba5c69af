@@ -324,7 +324,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
           {/* Presets */}
           <div className="px-5 py-3 border-b border-border shrink-0">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets:</span>
+              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets</span>
               {PRESETS.map((preset) => {
                 const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
                   draft[i] && pr.color === draft[i].color && pr.minMinutes === draft[i].minMinutes && pr.maxMinutes === draft[i].maxMinutes && pr.label === draft[i].label
