@@ -417,7 +417,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
                               <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} stationCourse={resolvedStationCourse} />
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
