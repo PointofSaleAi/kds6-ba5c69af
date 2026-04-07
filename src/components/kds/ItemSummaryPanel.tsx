@@ -77,15 +77,15 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
   }
 
   return (
-    <div className="w-[220px] bg-surface-card border-l border-border flex flex-col shrink-0 overflow-hidden">
+    <div className="w-[220px] bg-sidebar border-l border-sidebar-border flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border">
+      <div className="flex items-center justify-between px-3 py-1.5 border-b border-sidebar-border">
         <div className="flex items-center gap-1.5">
-          <span className="text-[13px] font-bold text-text-primary uppercase tracking-wide">Cooking Summary</span>
-          <span className="text-[11px] font-bold text-text-muted bg-muted rounded px-1.5 py-0.5">{totalRemaining}</span>
+          <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
+          <span className="text-[11px] font-bold text-sidebar-foreground/60 bg-sidebar-accent rounded px-1.5 py-0.5">{totalRemaining}</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-muted rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
-          <ChevronRight size={16} />
+        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Collapse panel">
+          <ChevronRight size={16} className="text-sidebar-foreground" />
         </button>
       </div>
 
@@ -93,7 +93,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
       <div className="flex-1 overflow-y-auto">
         {summary.length === 0 && (
           <div className="px-3 py-4 text-center">
-            <p className="text-[12px] text-text-muted">All items completed</p>
+            <p className="text-[12px] text-sidebar-foreground/50">All items completed</p>
           </div>
         )}
         {summary.map((cat) => {
