@@ -151,6 +151,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
           );
         })}
       </div>
+      </div>
     </div>
   );
 }
