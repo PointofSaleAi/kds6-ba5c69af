@@ -149,7 +149,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
         </div>
 
         {/* Section content */}
-        <div className="flex-1 px-6 pb-6 overflow-hidden">
+        <div className="flex-1 px-6 pb-6 overflow-y-auto">
           {activeSection === 'display' && (
             <div className="grid grid-cols-2 gap-4">
               <SettingsCard>
