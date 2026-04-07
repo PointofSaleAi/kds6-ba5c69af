@@ -147,7 +147,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                         : '';
                     const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                     return (
-                      <div key={item.name} className={`flex items-center py-[2px] ${tierClass}`}>
+                      <div key={item.name} className={`flex items-center py-[3px] border-b border-border/40 last:border-b-0 ${tierClass}`}>
                         <span className="min-w-0 flex-1 truncate text-[12px] font-bold uppercase leading-tight text-text-primary">{tp(item.name)}</span>
                         <span className={`w-8 text-right text-[12px] font-bold shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
                       </div>
