@@ -231,7 +231,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
               <div
                 key={item.id}
                 className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}
-                style={{ padding: '8px', gap: 0 }}
+                style={{ padding: '6px', gap: 0 }}
               >
                 {/* Child 1 — item-main */}
                 <div className="flex-1 min-w-0">
