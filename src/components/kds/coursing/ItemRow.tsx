@@ -14,7 +14,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
   return (
     <div
       className={`flex items-start border-b border-border/50 ${dimmed ? 'opacity-[0.32]' : ''}`}
-      style={{ padding: '6px', gap: 0 }}
+      style={{ padding: '4px', gap: 0 }}
     >
       {/* Child 1 — item-main */}
       <div className="flex-1 min-w-0">
