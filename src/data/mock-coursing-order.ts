@@ -18,6 +18,7 @@ export const mockCoursingOrder: KDSOrder = {
         {
           id: 'item-garden-salad',
           name: 'Garden Salad',
+          category: 'Salads',
           quantity: 5,
           modifiers: [{ text: 'Dressing on side', type: 'extra' }],
           allergens: [],
@@ -33,6 +34,7 @@ export const mockCoursingOrder: KDSOrder = {
         {
           id: 'item-roasted-chicken',
           name: 'Roasted Chicken',
+          category: 'Poultry',
           quantity: 3,
           modifiers: [{ text: 'Rosemary Jus', type: 'extra' }],
           allergens: [],
@@ -40,6 +42,7 @@ export const mockCoursingOrder: KDSOrder = {
         {
           id: 'item-grilled-swordfish',
           name: 'Grilled Swordfish',
+          category: 'Seafood',
           quantity: 2,
           modifiers: [{ text: 'No Capers', type: 'remove' }],
           allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F41F}' }],
@@ -47,6 +50,7 @@ export const mockCoursingOrder: KDSOrder = {
         {
           id: 'item-eggplant-parmesan',
           name: 'Eggplant Parmesan',
+          category: 'Vegetarian',
           quantity: 2,
           modifiers: [],
           allergens: [
@@ -65,6 +69,7 @@ export const mockCoursingOrder: KDSOrder = {
         {
           id: 'item-panna-cotta',
           name: 'Panna Cotta',
+          category: 'Desserts',
           quantity: 5,
           modifiers: [{ text: 'Berry Coulis', type: 'extra' }],
           allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
@@ -92,6 +97,7 @@ export const mockCoursingOrder22: KDSOrder = {
         {
           id: 'item-caesar-salad-22',
           name: 'Caesar Salad',
+          category: 'Salads',
           quantity: 2,
           modifiers: [{ text: 'Extra Croutons', type: 'extra' }],
           allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }],
@@ -107,6 +113,7 @@ export const mockCoursingOrder22: KDSOrder = {
         {
           id: 'item-ribeye-22',
           name: 'Ribeye Steak',
+          category: 'Meat',
           quantity: 1,
           modifiers: [
             { text: 'Medium Rare', type: 'neutral' },
@@ -117,6 +124,7 @@ export const mockCoursingOrder22: KDSOrder = {
         {
           id: 'item-salmon-22',
           name: 'Pan-Seared Salmon',
+          category: 'Seafood',
           quantity: 1,
           modifiers: [{ text: 'No Dill', type: 'remove' }],
           allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F41F}' }],
@@ -132,6 +140,7 @@ export const mockCoursingOrder22: KDSOrder = {
         {
           id: 'item-tiramisu-22',
           name: 'Tiramisu',
+          category: 'Desserts',
           quantity: 2,
           modifiers: [],
           allergens: [
@@ -162,6 +171,7 @@ export const mockCoursingOrder24: KDSOrder = {
         {
           id: 'item-greek-salad-24',
           name: 'Greek Salad',
+          category: 'Salads',
           quantity: 1,
           modifiers: [{ text: 'Extra Feta', type: 'extra' }],
           allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
@@ -177,6 +187,7 @@ export const mockCoursingOrder24: KDSOrder = {
         {
           id: 'item-chicken-wrap-24',
           name: 'Chicken Wrap',
+          category: 'Sandwiches',
           quantity: 2,
           modifiers: [
             { text: 'Extra Cheese', type: 'extra' },
@@ -195,6 +206,7 @@ export const mockCoursingOrder24: KDSOrder = {
         {
           id: 'item-brownie-24',
           name: 'Chocolate Brownie',
+          category: 'Desserts',
           quantity: 2,
           modifiers: [{ text: 'Vanilla Ice Cream', type: 'extra' }],
           allergens: [
