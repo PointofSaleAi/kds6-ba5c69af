@@ -5,6 +5,7 @@ import { AllergenBadge } from './AllergenBadge';
 import type { ItemStatus, StationStatus } from './CourseSection';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
+import { FlatItemList } from './FlatItemList';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { StatusChip } from './StatusChip';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -215,8 +216,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     );
   }
 
+  const isDineIn = order.orderType === 'dine-in';
+
   // FIX 3: Normalize courses for station view (ensure SALAD/ENTREE/DESSERT blocks)
-  const displayCourses = stationCourse
+  const displayCourses = (stationCourse && isDineIn)
     ? normalizeStationCourses(order.courses, stationCourse)
     : order.courses;
 
@@ -275,7 +278,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         );
       })()}
 
-      {stationNotification && (
+      {isDineIn && stationNotification && (
         <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
           <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
           <span className="text-[10px] font-medium text-success">
@@ -285,28 +288,36 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       )}
 
       <div className="border-t border-border">
-        {displayCourses.map((courseGroup, idx) => {
-          // Compute station status based on position relative to station course
-          let forcedStatus: StationStatus | undefined;
-          if (stationCourse && stationIdx >= 0) {
-            if (idx < stationIdx) forcedStatus = 'fired';
-            else if (idx === stationIdx) forcedStatus = 'active';
-            else forcedStatus = 'pending';
-          }
+        {isDineIn ? (
+          displayCourses.map((courseGroup, idx) => {
+            let forcedStatus: StationStatus | undefined;
+            if (stationCourse && stationIdx >= 0) {
+              if (idx < stationIdx) forcedStatus = 'fired';
+              else if (idx === stationIdx) forcedStatus = 'active';
+              else forcedStatus = 'pending';
+            }
 
-          return (
-            <CourseSection
-              key={courseGroup.course}
-              courseGroup={courseGroup}
-              onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
-              itemStatuses={itemStatuses}
-              onAdvanceItem={handleAdvanceItem}
-              onUndoItem={handleUndoItem}
-              stationCourse={stationCourse}
-              forcedStationStatus={forcedStatus}
-            />
-          );
-        })}
+            return (
+              <CourseSection
+                key={courseGroup.course}
+                courseGroup={courseGroup}
+                onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
+                itemStatuses={itemStatuses}
+                onAdvanceItem={handleAdvanceItem}
+                onUndoItem={handleUndoItem}
+                stationCourse={stationCourse}
+                forcedStationStatus={forcedStatus}
+              />
+            );
+          })
+        ) : (
+          <FlatItemList
+            courses={order.courses}
+            itemStatuses={itemStatuses}
+            onAdvanceItem={handleAdvanceItem}
+            onUndoItem={handleUndoItem}
+          />
+        )}
       </div>
 
       <div className="p-1.5 border-t border-border flex gap-1.5">
