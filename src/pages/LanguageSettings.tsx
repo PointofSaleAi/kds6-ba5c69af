@@ -110,8 +110,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-surface-card w-full flex flex-col shadow-2xl"
-          style={{ maxWidth: '820px', borderRadius: '20px', height: '580px' }}
+          className="bg-surface-card w-full flex flex-col shadow-2xl mx-3"
+          style={{ maxWidth: '820px', borderRadius: '20px', height: 'min(580px, calc(100vh - 40px))' }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-border shrink-0">
