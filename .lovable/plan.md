@@ -1,23 +1,33 @@
 
 
+# Remove Coursing from Non-Dine-In Orders
+
 ## Problem
+Take-out, delivery, and banquet orders currently display course sections (APPETIZER, ENTREE, DESSERT) with fire buttons and timing, which doesn't match real kitchen workflow. Only dine-in (table) orders use multi-course firing.
 
-The product names and modifier lines are colliding/overlapping on order cards. Root cause:
+## Approach
+For non-dine-in orders, flatten all items into a single list without course headers, fire buttons, or course timing. The OrderCard component will check the order type and render accordingly.
 
-1. The `text-modifier` Tailwind utility (defined in `tailwind.config.ts` line 110) sets `line-height: 1.3` — but the inline `leading-none` class cannot override it because `text-modifier` is a `fontSize` utility that bundles its own line-height.
-2. The `-mt-1.5` (6px) negative margin pulls the modifier text too far up, causing it to overlap with the product name above.
-3. The product name also uses `leading-none`, compressing everything vertically.
+## Changes
 
-## Plan
+### 1. OrderCard.tsx - Conditional coursing display
+- Check if `order.orderType === 'dine-in'`
+- If dine-in: render courses as today (with CourseSection headers, fire buttons, timers)
+- If NOT dine-in: render all items in a single flat list without course headers, fire buttons, or auto-fire/prep timers
+- Reuse existing item rendering from CourseSection but skip the course header/controls
 
-**File: `src/components/kds/ModifierLine.tsx`**
-- Remove `leading-none` (it's being overridden anyway by `text-modifier`)
-- Change `-mt-1.5` back to `-mt-0.5` (2px) — enough to keep items close but not overlapping
-- This gives a clean 2px gap consistent with the design philosophy of dense but readable spacing
+### 2. Mock data cleanup (mock-orders.ts)
+- For take-out, delivery, and banquet orders: consolidate items into a single course group (or keep multiple but they won't render headers)
+- Alternatively, keep mock data as-is since the UI will just flatten them visually
 
-**File: `src/components/kds/CourseSection.tsx`**
-- Change product name `leading-none` back to `leading-tight` — `leading-none` at 13px makes the text box too short, causing the modifier to visually collide
-- This restores proper vertical rhythm while keeping the layout dense
+### 3. Station view logic (normalizeStationCourses)
+- Skip station course normalization for non-dine-in orders since coursing doesn't apply
+- The station notification strip should also be suppressed for non-dine-in orders
 
-These changes fix the collision by restoring appropriate line-heights while maintaining tight (but not overlapping) spacing between product names and modifiers.
+## Technical detail
+- In OrderCard, wrap the `displayCourses.map(...)` block with a condition:
+  - `order.orderType === 'dine-in'` → current CourseSection rendering
+  - Otherwise → flat item list: iterate all courses' items, render item rows without course headers
+- Could extract a `FlatItemList` component or inline it
+- The compact card view stays unchanged (it already doesn't show courses)
 
