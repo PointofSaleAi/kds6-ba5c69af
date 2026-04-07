@@ -82,6 +82,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
       {/* Header - sidebar bg */}
       <div className="flex items-center justify-between px-3 py-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5">
+          <img src={cookingSummaryIcon} alt="" className="w-4 h-4" />
           <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded px-1.5 py-0.5">{totalRemaining}</span>
         </div>
