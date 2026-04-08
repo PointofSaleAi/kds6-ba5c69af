@@ -152,7 +152,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                   key={tab}
                   onClick={() => setLangTab(tab)}
                   className={`px-4 py-2 text-sm font-semibold transition-colors relative rounded-lg min-h-[44px] ${
-                    langTab === tab ? 'text-text-primary bg-muted' : 'text-text-muted hover:text-text-secondary'
+                    langTab === tab ? 'text-white bg-[#212121]' : 'text-text-muted hover:text-text-secondary'
                   }`}
                 >
                   {tab === 'language' ? 'Language' : 'Region'}
