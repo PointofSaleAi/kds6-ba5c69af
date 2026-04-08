@@ -233,7 +233,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         </div>
       </div>
 
-      {hasItems && isExpanded && (
+      {hasItems && (
+        <div
+          className="overflow-hidden transition-all duration-200 ease-in-out"
+          style={{
+            maxHeight: isExpanded ? '500px' : '0px',
+            opacity: isExpanded ? 1 : 0,
+          }}
+        >
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
