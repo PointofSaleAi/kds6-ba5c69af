@@ -170,6 +170,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
             <X size={20} className="text-text-secondary" />
           </button>
         </div>
+        {activeSection === 'language' && <div className="mx-5 h-px bg-border" />}
 
         {/* Section content */}
         <div className="flex-1 px-6 pb-6 overflow-y-auto">
