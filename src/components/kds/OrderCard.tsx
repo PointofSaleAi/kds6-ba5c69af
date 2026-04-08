@@ -181,7 +181,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         </div>
 
-        <OrderAllergenStrip order={order} />
+        {showAllergens && <OrderAllergenStrip order={order} />}
 
         {order.orderNotes && (
           <OrderNotesSection
