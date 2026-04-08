@@ -117,10 +117,10 @@ export function ItemRoutingModal({ item, order, onClose, onConfirm }: ItemRoutin
                     >
                       <div className="flex items-center gap-2.5">
                         <span
-                          className="inline-block w-3 h-3 rounded-full ring-2 ring-offset-1"
+                          className={`inline-block w-3 h-3 rounded-full ${isSelected ? 'ring-2 ring-offset-1' : ''}`}
                           style={{
                             backgroundColor: colors.text,
-                            ringColor: isSelected ? colors.text : 'transparent',
+                            ...(isSelected ? { '--tw-ring-color': colors.text } as React.CSSProperties : {}),
                           }}
                         />
                         <span className={`text-[13px] font-bold text-text-primary ${isSelected ? '' : ''}`}>{s.name}</span>
