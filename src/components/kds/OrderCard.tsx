@@ -281,6 +281,36 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         );
       })()}
 
+      {/* Order Notes section */}
+      {order.orderNotes && (
+        <div className="border-t border-border">
+          <div className="flex items-center justify-between bg-muted" style={{ padding: '4px 8px' }}>
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-text-primary">
+              Order Notes
+            </span>
+          </div>
+          <div className="px-2 py-2 flex items-start justify-between gap-2">
+            <span className="text-[13px] text-text-primary leading-snug flex-1">
+              {order.orderNotes}
+            </span>
+            <button
+              onClick={() => {
+                setNotesAcknowledged(!notesAcknowledged);
+                onAcknowledgeNotes?.(order.id);
+              }}
+              className={`shrink-0 w-[44px] h-[44px] rounded-lg flex items-center justify-center transition-colors ${
+                notesAcknowledged
+                  ? 'bg-success/15 text-success'
+                  : 'bg-order-take-out/15 text-order-take-out'
+              }`}
+              title={notesAcknowledged ? 'Acknowledged' : 'Acknowledge notes'}
+            >
+              <Eye className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {isDineIn && stationNotification && (
         <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
           <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
