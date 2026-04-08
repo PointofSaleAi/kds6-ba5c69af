@@ -83,11 +83,11 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
   return (
     <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
       {/* Header - sidebar bg */}
-      <div className="flex items-center justify-between px-3 py-2 bg-sidebar border-l border-sidebar-border">
-        <div className="flex items-center gap-1.5">
+      <div className="flex items-center justify-between px-3 py-2.5 bg-sidebar border-l border-sidebar-border">
+        <div className="flex items-center gap-2">
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70" />
-          <span className="text-[13px] font-bold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
-          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded px-1.5 py-0.5">{totalRemaining}</span>
+          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
+          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center">{totalRemaining}</span>
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Collapse panel">
           <ChevronRight size={16} />
@@ -112,17 +112,17 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
 
           return (
             <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
-              {/* Section header — tappable */}
+              {/* Section header */}
               <button
                 onClick={() => toggleSection(cat.category)}
-                className="w-full flex items-center justify-between px-3 py-1.5 bg-muted/50 border-b border-border hover:bg-muted transition-colors min-h-[36px]"
+                className="w-full flex items-center justify-between px-3 py-2 bg-muted/40 border-b border-border hover:bg-muted/70 transition-colors min-h-[36px]"
               >
                 <div className="flex items-center gap-1.5">
                   <ChevronDown
                     size={12}
                     className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                   />
-                  <span className={`text-[13px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[12px] uppercase tracking-widest font-semibold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {cat.category}
                   </span>
                 </div>
@@ -150,9 +150,9 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                         : '';
                     const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                     return (
-                      <div key={item.name} className={`flex items-center justify-between py-[3px] border-b border-border/40 last:border-b-0 ${tierClass}`}>
-                        <span className="min-w-0 truncate text-[13px] font-bold uppercase leading-tight text-text-primary">{tp(item.name)}</span>
-                        <span className={`ml-2 text-right text-[13px] font-bold shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
+                      <div key={item.name} className={`flex items-center justify-between py-[4px] border-b border-border/30 last:border-b-0 ${tierClass}`}>
+                        <span className="min-w-0 truncate text-[13px] font-normal uppercase leading-tight text-text-primary">{tp(item.name)}</span>
+                        <span className={`ml-2 text-right text-[14px] font-bold shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
                       </div>
                     );
                   })}
