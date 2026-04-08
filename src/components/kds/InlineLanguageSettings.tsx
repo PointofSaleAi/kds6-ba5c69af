@@ -241,7 +241,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                 Preview - KDS ticket
               </div>
-              <div className="overflow-y-auto flex-1">
+              <div className="flex-1">
                 <OrderCard order={mockOrders[0]} />
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">

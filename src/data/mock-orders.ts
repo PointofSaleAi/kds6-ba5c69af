@@ -43,7 +43,6 @@ export const mockOrders: Order[] = [
             quantity: 2,
             modifiers: [
               { text: 'Medium Rare', type: 'neutral' },
-              { text: 'Potato Wedge', type: 'neutral' },
               { text: '+ Extra Cheese', type: 'extra' },
             ],
             notes: 'Make it extra spicy please',
@@ -56,19 +55,6 @@ export const mockOrders: Order[] = [
             quantity: 1,
             modifiers: [
               { text: 'Medium Rare', type: 'neutral' },
-              { text: '+ Extra Olive Oil', type: 'extra' },
-            ],
-            notes: 'Serve on a warm plate',
-            allergens: [],
-          },
-          {
-            id: 'i-003b',
-            name: 'Grilled Chicken Breast',
-            category: 'Poultry',
-            quantity: 1,
-            modifiers: [
-              { text: 'No Skin', type: 'remove' },
-              { text: '+ Chimichurri', type: 'extra' },
             ],
             allergens: [],
           },
