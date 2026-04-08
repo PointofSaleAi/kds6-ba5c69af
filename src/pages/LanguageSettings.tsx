@@ -410,7 +410,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               onClick={handleSave}
               className="w-full py-2.5 rounded-lg text-sm font-semibold text-primary-foreground bg-brand-primary hover:bg-brand-primary/90 transition-colors min-h-[44px]"
             >
-              Save changes
+              Save
             </button>
           </div>
         </motion.div>
