@@ -161,27 +161,33 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${urgencyBorderMap[urgency]} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
         style={{ minWidth: 'min(220px, 100%)' }}
       >
-        <OrderTypeBadge
-          type={order.orderType}
-          time={formatTimeForKDS(order.timeReceived, timeFormat)}
-          tableInfo={getLocationLabel(order.orderType, order.tableName)}
-          stationBadge={undefined}
-        />
+        {/* Tappable header area - opens ticket routing modal */}
+        <div
+          className="cursor-pointer active:brightness-110 transition-all"
+          onClick={() => setShowTicketRouting(true)}
+        >
+          <OrderTypeBadge
+            type={order.orderType}
+            time={formatTimeForKDS(order.timeReceived, timeFormat)}
+            tableInfo={getLocationLabel(order.orderType, order.tableName)}
+            stationBadge={undefined}
+          />
 
-        <div className="px-2 pt-1.5 pb-1">
-          <div className="flex items-start justify-between">
-            <div className="text-order-num text-text-primary leading-none">
-              {order.orderNumber}
+          <div className="px-2 pt-1.5 pb-1">
+            <div className="flex items-start justify-between">
+              <div className="text-order-num text-text-primary leading-none">
+                {order.orderNumber}
+              </div>
+              <StatusChip status={order.status} />
             </div>
-            <StatusChip status={order.status} />
+            <div className="flex items-center justify-between mt-0.5">
+              <TimerBadge seconds={liveElapsed} urgency={urgency} />
+              <span className="text-modifier text-text-secondary">{order.serverName}</span>
+            </div>
           </div>
-          <div className="flex items-center justify-between mt-0.5">
-            <TimerBadge seconds={liveElapsed} urgency={urgency} />
-            <span className="text-modifier text-text-secondary">{order.serverName}</span>
-          </div>
-        </div>
 
-        {showAllergens && <OrderAllergenStrip order={order} />}
+          {showAllergens && <OrderAllergenStrip order={order} />}
+        </div>
 
         {order.orderNotes && (
           <OrderNotesSection
@@ -249,7 +255,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           isDineIn={isDineIn}
           onBump={onBump}
           onRecall={onRecall}
-          onReRouteTicket={() => setShowTicketRouting(true)}
         />
       </div>
 
