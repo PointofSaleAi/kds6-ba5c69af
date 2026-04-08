@@ -115,14 +115,14 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
               {/* Section header */}
               <button
                 onClick={() => toggleSection(cat.category)}
-                className="w-full flex items-center justify-between px-3 py-2 bg-muted/40 border-b border-border hover:bg-muted/70 transition-colors min-h-[36px]"
+                className="w-full flex items-center justify-between px-3 py-2 bg-muted border-b border-border hover:bg-muted/90 transition-colors min-h-[36px]"
               >
                 <div className="flex items-center gap-1.5">
                   <ChevronDown
                     size={12}
                     className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                   />
-                  <span className={`text-[12px] uppercase tracking-widest font-semibold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[12px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {cat.category}
                   </span>
                 </div>
