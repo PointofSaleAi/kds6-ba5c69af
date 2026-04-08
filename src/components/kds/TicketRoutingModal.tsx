@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Route } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { Order, StationName } from '@/types/kds';
@@ -23,9 +23,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
   const [selected, setSelected] = useState<StationName | null>(null);
   const { tp } = useLanguage();
 
-  const orderLabel = `Ticket #${order.orderNumber} \u00B7 ${
-    order.orderType === 'dine-in' ? 'Dine In' : order.orderType === 'take-out' ? 'Take Out' : order.orderType === 'delivery' ? 'Delivery' : 'Banquet'
-  } \u00B7 ${order.tableName}`;
+  const orderTypeLabel = order.orderType === 'dine-in' ? 'Dine In' : order.orderType === 'take-out' ? 'Take Out' : order.orderType === 'delivery' ? 'Delivery' : 'Banquet';
 
   const allItems = order.courses.flatMap(c => c.items).filter(i => !i.isCancelled);
 
@@ -45,76 +43,92 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
         exit={{ opacity: 0 }}
         transition={{ duration: 0.15 }}
       >
-        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+        <div className="absolute inset-0 bg-black/60" onClick={onClose} />
         <motion.div
-          className="relative z-10 w-[90vw] flex flex-col bg-surface-card border border-border"
-          style={{ maxWidth: 500, borderRadius: 16, maxHeight: '85vh', overflow: 'auto' }}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.15 }}
+          className="relative z-10 w-[90vw] flex flex-col bg-surface-card border border-border shadow-xl"
+          style={{ maxWidth: 480, borderRadius: 16, maxHeight: '85vh', overflow: 'auto' }}
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 10 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
         >
           {/* Header */}
-          <div className="flex items-start justify-between p-4 pb-2">
-            <div>
-              <div className="text-[15px] font-medium text-text-primary">Re-route entire ticket</div>
-              <div className="text-[11px] text-text-muted mt-0.5">{orderLabel}</div>
+          <div className="flex items-start justify-between p-5 pb-3 border-b border-border">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-warning/15 flex items-center justify-center">
+                <Route size={16} className="text-warning" />
+              </div>
+              <div>
+                <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route Entire Ticket</div>
+                <div className="text-[11px] text-text-secondary mt-0.5 font-medium">
+                  Ticket <span className="font-bold text-text-primary">#{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
+                </div>
+              </div>
             </div>
             <button
               onClick={onClose}
-              className="flex items-center justify-center shrink-0 w-7 h-7 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+              className="flex items-center justify-center shrink-0 w-8 h-8 rounded-lg bg-muted hover:bg-border transition-colors"
             >
-              <X size={14} className="text-text-secondary" />
+              <X size={15} className="text-text-secondary" />
             </button>
           </div>
 
           {/* Body */}
-          <div className="px-4 pb-4 flex flex-col gap-4">
+          <div className="px-5 py-4 flex flex-col gap-5">
             {/* Warning box */}
-            <div className="bg-warning/10 border border-warning/30 rounded-lg p-3">
-              <span className="text-[12px] text-warning leading-relaxed">
+            <div className="bg-warning/8 border border-warning/25 rounded-xl p-3.5 flex items-start gap-2.5">
+              <span className="text-warning text-[14px] mt-0.5">⚠</span>
+              <span className="text-[11px] text-warning font-semibold leading-relaxed">
                 All items will move to the selected station. Current station assignments will be overridden.
               </span>
             </div>
 
             {/* Items list */}
-            <div className="bg-muted rounded-lg border border-border">
-              <div className="text-[10px] uppercase text-text-muted tracking-wider px-3 pt-2 pb-1">Items in this ticket</div>
-              {allItems.map((item, idx) => (
-                <div
-                  key={item.id}
-                  className="flex items-center justify-between px-3 py-1.5"
-                  style={{ borderTop: idx > 0 ? '1px solid hsl(var(--border))' : undefined }}
-                >
-                  <span className="text-[13px] text-text-primary">{tp(item.name)}</span>
-                  {item.station && <StationBadge station={item.station} />}
-                </div>
-              ))}
+            <div>
+              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Items in this ticket</div>
+              <div className="bg-muted/60 rounded-xl border border-border overflow-hidden">
+                {allItems.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between px-4 py-2.5"
+                    style={{ borderTop: idx > 0 ? '1px solid hsl(var(--border))' : undefined }}
+                  >
+                    <span className="text-[12px] font-semibold text-text-primary uppercase">{tp(item.name)}</span>
+                    {item.station && <StationBadge station={item.station} />}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Station selector */}
             <div>
-              <div className="text-[11px] uppercase text-text-muted tracking-wider mb-2">Move all items to:</div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2.5">Move all items to:</div>
+              <div className="grid grid-cols-2 gap-2.5">
                 {allStations.map((s) => {
                   const isSelected = s.name === selected;
-                  const dotColor = stationColors[s.name].text;
+                  const colors = stationColors[s.name];
                   return (
                     <button
                       key={s.name}
                       onClick={() => setSelected(s.name)}
-                      className={`text-left rounded-[10px] border-[1.5px] transition-all cursor-pointer ${
+                      className={`text-left rounded-xl border-2 transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border bg-muted hover:bg-muted/80'
+                          ? 'border-brand-dark shadow-md'
+                          : 'border-border bg-surface-card hover:border-text-muted hover:shadow-sm'
                       }`}
-                      style={{ padding: '12px 14px' }}
+                      style={{ padding: '14px 16px', backgroundColor: isSelected ? `${colors.bg}12` : undefined }}
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: dotColor }} />
-                        <span className="text-[13px] font-medium text-text-primary">{s.name}</span>
+                      <div className="flex items-center gap-2.5">
+                        <span
+                          className={`inline-block w-3 h-3 rounded-full ${isSelected ? 'ring-2 ring-offset-1' : ''}`}
+                          style={{
+                            backgroundColor: colors.text,
+                            ...(isSelected ? { '--tw-ring-color': colors.text } as React.CSSProperties : {}),
+                          }}
+                        />
+                        <span className="text-[13px] font-bold text-text-primary">{s.name}</span>
                       </div>
-                      <div className="text-[11px] text-text-muted mt-1">{s.activeItems} active items</div>
+                      <div className="text-[10px] text-text-muted mt-1 font-medium ml-5.5">{s.activeItems} active items</div>
                     </button>
                   );
                 })}
@@ -123,13 +137,13 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
           </div>
 
           {/* Footer */}
-          <div className="p-4 pt-0">
+          <div className="p-5 pt-0">
             <button
               onClick={handleConfirm}
               disabled={!selected}
-              className={`w-full flex items-center justify-center py-3 rounded-lg text-[13px] font-semibold transition-colors ${
+              className={`w-full flex items-center justify-center py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-wide transition-all ${
                 selected
-                  ? 'bg-primary text-primary-foreground hover:opacity-90'
+                  ? 'bg-brand-dark text-primary-foreground hover:opacity-90 shadow-md'
                   : 'bg-muted text-text-muted cursor-default'
               }`}
             >
