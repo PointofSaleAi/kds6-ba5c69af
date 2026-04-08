@@ -251,8 +251,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             return (
               <div
                 key={item.id}
-                className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
+                className={`flex items-start border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
                 style={{ padding: '4px', gap: 0 }}
+                onClick={() => !item.isCancelled && onReRouteItem?.(item)}
               >
                 {/* Child 1 — item-main */}
                 <div className="flex-1 min-w-0">
@@ -322,34 +323,28 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                   )}
                 </div>
 
-                {/* Child 2 — item-action */}
+                {/* Child 2 — item-action (stopPropagation to isolate from row tap) */}
                 {!item.isCancelled && (
-                  <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
+                  <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }} onClick={(e) => e.stopPropagation()}>
                     {isCourseCompleted ? (
                       <KdsActionIcon icon="acknowledged" disabled />
                     ) : !isDimmed && status === 'ready' ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
-                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                       </>
                     ) : !isDimmed && status === 'preparing' ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark ready" />
-                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                       </>
                     ) : !isDimmed && isFired ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id, true)} label="Mark done" />
-                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                       </>
                     ) : !isDimmed ? (
-                      <>
-                        <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
-                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
-                      </>
+                      <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
                     ) : null}
                   </div>
                 )}
