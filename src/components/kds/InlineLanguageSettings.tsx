@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Check, ArrowLeftRight } from 'lucide-react';
+import { Search, Check, ArrowLeftRight, Languages } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 
 interface Language {
