@@ -46,7 +46,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const [sortOpen, setSortOpen] = useState(false);
