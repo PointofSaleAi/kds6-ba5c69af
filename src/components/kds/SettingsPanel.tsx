@@ -7,10 +7,10 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
-type Section = 'display' | 'orders' | 'hardware' | 'account';
+type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language';
 
 interface SettingsPanelProps {
   onClose: () => void;
@@ -24,6 +24,7 @@ const sections: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: 'orders', label: 'Orders', icon: ShoppingBag },
   { id: 'hardware', label: 'Hardware', icon: Cpu },
   { id: 'account', label: 'Account', icon: User },
+  { id: 'language', label: 'Language', icon: Globe },
 ];
 
 function SettingsCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -328,8 +329,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Language" description="English (US)" />
-                <ActionButton label="Change" onClick={() => onOpenSub('language-settings')} />
+                <CardLabel label="Station ID" />
+                <div className="text-[15px] text-text-primary font-medium">STN-001</div>
               </SettingsCard>
 
               <SettingsCard>
@@ -359,6 +360,15 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
                 >
                   LOG OUT
                 </button>
+              </SettingsCard>
+            </div>
+          )}
+
+          {activeSection === 'language' && (
+            <div className="grid grid-cols-2 gap-4">
+              <SettingsCard className="col-span-2">
+                <CardLabel label="Language & Region" description="Configure display language and regional preferences" />
+                <ActionButton label="Configure" onClick={() => onOpenSub('language-settings')} />
               </SettingsCard>
             </div>
           )}
