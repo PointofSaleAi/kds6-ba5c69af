@@ -1,4 +1,5 @@
 import type { CourseGroup } from '@/types/kds';
+import { Languages } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -52,7 +53,8 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem 
               </div>
 
               {displayMode === 'dual' && !item.isCancelled && (
-                <div className="text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                <div className="flex items-center gap-1 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                  <Languages size={10} className="shrink-0" />
                   {tpSecondary(item.name)}
                 </div>
               )}

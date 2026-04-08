@@ -1,4 +1,5 @@
 import type { OrderItem } from '@/types/kds';
+import { Languages } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import seenIcon from '@/assets/seen-icon.svg';
@@ -33,7 +34,8 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
         {/* Dual-language secondary name */}
         {displayMode === 'dual' && (
-          <div className="text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+          <div className="flex items-center gap-1 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+            <Languages size={10} className="shrink-0" />
             {tpSecondary(item.name)}
           </div>
         )}
