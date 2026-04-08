@@ -288,7 +288,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               Order Notes
             </span>
           </div>
-          <div className="px-2 py-2 flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between" style={{ padding: '4px', gap: 0 }}>
             <span className="text-[13px] text-text-primary leading-snug flex-1">
               {order.orderNotes}
             </span>
