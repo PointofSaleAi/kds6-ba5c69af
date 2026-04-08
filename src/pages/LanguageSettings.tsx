@@ -16,17 +16,17 @@ interface Language {
 }
 
 const languages: Language[] = [
-  { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
-  { code: 'zh', name: 'Chinese Simplified', native: '中文简体', flag: '🇨🇳' },
-  { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳' },
   { code: 'en-US', name: 'English (US)', native: 'English', flag: '🇺🇸' },
+  { code: 'en-GB', name: 'English (UK)', native: 'English', flag: '🇬🇧' },
+  { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
+  { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
   'en-US': { fries: 'French Fries', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
+  'en-GB': { fries: 'Chips', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
   es: { fries: 'Papas fritas', chicken: 'Pollo a la parrilla', salad: 'Ensalada César' },
-  zh: { fries: '薄薯条', chicken: '烤鸡胸', salad: '寺庙沙拉' },
-  vi: { fries: 'Khoai tây chiên', chicken: 'Gà nướng', salad: 'Salad Caesar' },
+  ar: { fries: 'بطاطس مقلية', chicken: 'دجاج مشوي', salad: 'سلطة سيزر' },
 };
 
 const previewItems = [
@@ -298,9 +298,6 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                           )}
                         </button>
                       ))}
-                      <div className="px-3 py-2 border-t border-border mt-1">
-                        <span className="text-[10px] font-medium text-text-muted">{t.moreLanguages}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
