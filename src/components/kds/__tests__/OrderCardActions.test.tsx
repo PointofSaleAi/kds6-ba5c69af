@@ -10,19 +10,39 @@ vi.mock('@/hooks/use-language', () => ({
 }));
 
 describe('OrderCardActions', () => {
-  it('shows SEEN button for new orders', () => {
-    render(<OrderCardActions orderId="o1" status="new" />);
-    expect(screen.getByText('SEEN')).toBeInTheDocument();
+  describe('non-dine-in orders', () => {
+    it('shows SEEN button for new orders', () => {
+      render(<OrderCardActions orderId="o1" status="new" />);
+      expect(screen.getByText('SEEN')).toBeInTheDocument();
+    });
+
+    it('shows IN PROGRESS button for seen orders', () => {
+      render(<OrderCardActions orderId="o1" status="seen" />);
+      expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
+    });
+
+    it('shows DONE button for in-progress orders', () => {
+      render(<OrderCardActions orderId="o1" status="in-progress" />);
+      expect(screen.getByText('DONE')).toBeInTheDocument();
+    });
   });
 
-  it('shows IN PROGRESS button for seen orders', () => {
-    render(<OrderCardActions orderId="o1" status="seen" />);
-    expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
-  });
+  describe('dine-in orders', () => {
+    it('shows IN PROGRESS button for new orders (skips SEEN)', () => {
+      render(<OrderCardActions orderId="o1" status="new" isDineIn />);
+      expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
+      expect(screen.queryByText('SEEN')).not.toBeInTheDocument();
+    });
 
-  it('shows DONE button for in-progress orders', () => {
-    render(<OrderCardActions orderId="o1" status="in-progress" />);
-    expect(screen.getByText('DONE')).toBeInTheDocument();
+    it('shows IN PROGRESS button for seen orders', () => {
+      render(<OrderCardActions orderId="o1" status="seen" isDineIn />);
+      expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
+    });
+
+    it('shows DONE button for in-progress orders', () => {
+      render(<OrderCardActions orderId="o1" status="in-progress" isDineIn />);
+      expect(screen.getByText('DONE')).toBeInTheDocument();
+    });
   });
 
   it('hides buttons for served orders', () => {
