@@ -30,6 +30,8 @@ export interface Modifier {
   type: 'extra' | 'remove' | 'neutral';
 }
 
+export type StationName = 'Grill' | 'Fry' | 'Salad' | 'Dessert' | 'Bar';
+
 export interface OrderItem {
   id: string;
   name: string;
@@ -40,6 +42,7 @@ export interface OrderItem {
   notes?: string;
   isCancelled?: boolean;
   isCompleted?: boolean;
+  station?: StationName;
 }
 
 export interface CourseGroup {

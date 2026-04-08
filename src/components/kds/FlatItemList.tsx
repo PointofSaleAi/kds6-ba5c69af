@@ -1,18 +1,21 @@
-import type { CourseGroup } from '@/types/kds';
+import type { CourseGroup, OrderItem } from '@/types/kds';
 import { Languages } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
+import { StationBadge } from './StationBadge';
+import { ReRouteButton } from './ReRouteButton';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
   itemStatuses: Map<string, ItemStatus>;
   onAdvanceItem: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem: (itemId: string) => void;
+  onReRouteItem?: (item: OrderItem) => void;
 }
 
-export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem, onReRouteItem }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary } = useLanguage();
 
   const allItems = courses.flatMap(c => c.items);
@@ -36,6 +39,9 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem 
                 <span className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
                   {tp(item.name)}
                 </span>
+                {item.station && !item.isCancelled && (
+                  <StationBadge station={item.station} />
+                )}
                 {item.isCancelled && (
                   <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
                     CANCELLED
@@ -94,14 +100,19 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem 
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
                     <KdsActionIcon icon="ready" onClick={() => onAdvanceItem(item.id)} label="Mark done" />
+                    {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                   </>
                 ) : status === 'preparing' ? (
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
                     <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem(item.id)} label="Mark ready" />
+                    {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                   </>
                 ) : (
-                  <KdsActionIcon icon="seen" onClick={() => onAdvanceItem(item.id)} label="Mark seen" />
+                  <>
+                    <KdsActionIcon icon="seen" onClick={() => onAdvanceItem(item.id)} label="Mark seen" />
+                    {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
+                  </>
                 )}
               </div>
             )}
