@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import seenIcon from '@/assets/seen-icon.svg';
+import { KdsActionIcon } from './KdsActionIcon';
 
 interface OrderNotesSectionProps {
   notes: string;
@@ -24,16 +24,15 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           </div>
         </div>
         <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
-          <button
+          <KdsActionIcon
+            icon="seen"
             onClick={() => {
               setNotesAcknowledged(!notesAcknowledged);
               onAcknowledgeNotes?.(orderId);
             }}
-            className="min-w-[44px] min-h-[33px] overflow-hidden rounded-[3px] flex items-center justify-center"
             title={notesAcknowledged ? 'Acknowledged' : 'Acknowledge notes'}
-          >
-            <img src={seenIcon} alt="Acknowledge" style={{ width: 40, height: 30 }} />
-          </button>
+            label={notesAcknowledged ? 'Acknowledged' : 'Acknowledge notes'}
+          />
         </div>
       </div>
     </div>

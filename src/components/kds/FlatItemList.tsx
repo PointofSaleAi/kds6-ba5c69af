@@ -3,10 +3,7 @@ import { Languages } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
-import seenIcon from '@/assets/seen-icon.svg';
-import preparingIcon from '@/assets/preparing-icon.svg';
-import undoIcon from '@/assets/undo-icon.svg';
-import readyIcon from '@/assets/item-ready-icon.svg';
+import { KdsActionIcon } from './KdsActionIcon';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
@@ -86,26 +83,16 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem 
               <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
                 {status === 'ready' ? (
                   <>
-                    <button onClick={() => onUndoItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
-                      <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
-                    </button>
-                    <button onClick={() => onAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark done">
-                      <img src={readyIcon} alt="Ready" style={{ width: '40px', height: '30px' }} />
-                    </button>
+                    <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
+                    <KdsActionIcon icon="ready" onClick={() => onAdvanceItem(item.id)} label="Mark done" />
                   </>
                 ) : status === 'preparing' ? (
                   <>
-                    <button onClick={() => onUndoItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
-                      <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
-                    </button>
-                    <button onClick={() => onAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark ready">
-                      <img src={preparingIcon} alt="Preparing" style={{ width: '40px', height: '30px' }} />
-                    </button>
+                    <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
+                    <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem(item.id)} label="Mark ready" />
                   </>
                 ) : (
-                  <button onClick={() => onAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark seen">
-                    <img src={seenIcon} alt="Seen" style={{ width: '40px', height: '30px' }} />
-                  </button>
+                  <KdsActionIcon icon="seen" onClick={() => onAdvanceItem(item.id)} label="Mark seen" />
                 )}
               </div>
             )}
