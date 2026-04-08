@@ -1,22 +1,49 @@
 
+## What I found
 
-# Fix Eye Icon Consistency Between Products and Order Notes
+The icon image size is already the same in the live code:
+- Product buttons in `FlatItemList` and `CourseSection`: container `min-w-[44px] min-h-[33px]`, icon `40x30`
+- Order Notes button in `OrderCard`: container `min-w-[44px] min-h-[33px]`, icon `40x30`
 
-## Problem
-The eye icon container and icon size differ between product items and the Order Notes section:
-- **Products**: `min-w-[44px] min-h-[33px]` container, `40x30px` icon (fills container)
-- **Order Notes**: `w-[44px] h-[44px]` container, `24x20px` icon (small within container)
+So the mismatch you still see is not the SVG size. It comes from the button wrapper styles:
+- Order Notes uses `rounded-lg`
+- Order Notes adds an extra button background (`bg-success/15` or `bg-order-take-out/15`)
+- Product buttons use `rounded-[3px]` and no extra outer background, so only the SVG background is visible
 
-This creates a visual inconsistency as shown in the screenshot.
+That extra outer fill makes the Order Notes action look larger and softer, even though the raw dimensions match.
 
-## Plan
+## Updated plan
 
-**File: `src/components/kds/OrderCard.tsx`** (single edit, ~line 297-307)
+1. Update `src/components/kds/OrderCard.tsx`
+   - change the Order Notes acknowledge button to use the exact same shell styling as product action buttons
+   - use `rounded-[3px]`, `overflow-hidden`, `min-w-[44px]`, and `min-h-[33px]`
+   - keep the same `seenIcon` at `40x30`
 
-Update the Order Notes acknowledge button to match the product icon pattern:
-- Change container from `w-[44px] h-[44px]` to `min-w-[44px] min-h-[33px]` with `overflow-hidden`
-- Change icon from `w-6 h-5 rounded-sm` to inline style `width: 40px; height: 30px` (same as product icons)
-- Keep the conditional background color logic for acknowledged/unacknowledged state
+2. Preserve acknowledgment state without changing perceived size
+   - remove the current filled background classes from the button
+   - if a state cue is still needed, use a non-size-changing treatment such as a subtle ring, opacity shift, or title change instead of an outer filled background
 
-This ensures both the container dimensions and icon fill are identical across products and order notes.
+3. Optional consistency cleanup
+   - normalize `src/components/kds/coursing/ItemRow.tsx`, which still uses `min-h-[44px]`, so other coursing-related views do not reintroduce a different eye button height elsewhere
 
+## Expected result
+
+After this change, the Order Notes eye button and the product eye button will look identical in:
+- visible blue background area
+- corner radius
+- perceived padding
+- overall touch target footprint
+
+## Technical detail
+
+Files involved:
+- primary: `src/components/kds/OrderCard.tsx`
+- optional consistency pass: `src/components/kds/coursing/ItemRow.tsx`
+
+Exact reason for the current mismatch:
+```text
+Product button = transparent 44x33 shell + 40x30 SVG
+Order Notes    = colored 44x33 shell + 40x30 SVG
+```
+
+Because the SVG already contains its own light blue background, the extra shell background on Order Notes creates a double-background effect and makes it look bigger.
