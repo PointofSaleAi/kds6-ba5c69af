@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { Eye } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
 import { AllergenBadge } from './AllergenBadge';
@@ -305,7 +304,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               }`}
               title={notesAcknowledged ? 'Acknowledged' : 'Acknowledge notes'}
             >
-              <Eye className="w-5 h-5" />
+              <img src={seenIcon} alt="Acknowledge" className="w-6 h-5 rounded-sm" />
             </button>
           </div>
         </div>
