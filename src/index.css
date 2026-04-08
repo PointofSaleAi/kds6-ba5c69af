@@ -253,7 +253,21 @@
   }
 }
 
+/* Text scale utilities */
+.text-scale-compact {
+  font-size: 85%;
+}
+.text-scale-large {
+  font-size: 115%;
+}
+
 .scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
