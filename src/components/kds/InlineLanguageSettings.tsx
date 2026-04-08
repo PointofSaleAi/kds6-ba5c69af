@@ -218,34 +218,34 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     className="flex-1 bg-transparent text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[28px]"
                   />
                 </div>
-                <div>
+                <div className="grid grid-cols-2 gap-2">
                   {filtered.map((lang) => (
                     <button
                       key={lang.code}
                       onClick={() => handleSelectLang(lang.code)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 hover:bg-muted/50 rounded-lg transition-colors min-h-[40px] ${
-                        selectedLangInList === lang.code ? 'bg-brand-primary/10' : ''
+                      className={`flex items-center gap-2.5 px-3 py-2 hover:bg-muted/50 rounded-lg transition-colors min-h-[44px] border ${
+                        selectedLangInList === lang.code ? 'bg-brand-primary/10 border-brand-primary' : 'border-border'
                       }`}
                     >
                       <span className="text-base">{lang.flag}</span>
-                      <div className="flex-1 text-left">
-                        <div className="text-xs font-semibold text-text-primary">{lang.name}</div>
-                        <div className="text-[10px] text-text-muted">{lang.native}</div>
+                      <div className="flex-1 text-left min-w-0">
+                        <div className="text-xs font-semibold text-text-primary truncate">{lang.name}</div>
+                        <div className="text-[10px] text-text-muted truncate">{lang.native}</div>
                       </div>
                       {selectedLangInList === lang.code && (
-                        <Check size={16} className="text-brand-primary" />
+                        <Check size={14} className="text-brand-primary shrink-0" />
                       )}
                     </button>
                   ))}
-                  <div className="px-3 py-2 border-t border-border mt-1">
-                    <button
-                      onClick={() => window.open('mailto:support@posai.com?subject=Language%20Request', '_blank')}
-                      className="w-full flex items-center gap-2.5 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[40px]"
-                    >
-                      <span className="text-base">🌐</span>
-                      <span className="text-xs font-semibold text-brand-primary">Request a language</span>
-                    </button>
-                  </div>
+                </div>
+                <div className="mt-2 pt-2 border-t border-border">
+                  <button
+                    onClick={() => window.open('mailto:support@posai.com?subject=Language%20Request', '_blank')}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px]"
+                  >
+                    <span className="text-base">🌐</span>
+                    <span className="text-xs font-semibold text-brand-primary">Request a language</span>
+                  </button>
                 </div>
               </div>
             </div>
