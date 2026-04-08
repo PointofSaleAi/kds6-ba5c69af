@@ -235,7 +235,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         </div>
       </div>
 
-      {hasItems && (
+      {hasItems && (!isCourseCompleted || isExpanded) && (
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
