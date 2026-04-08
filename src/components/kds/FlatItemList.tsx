@@ -5,7 +5,6 @@ import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
-import { ReRouteButton } from './ReRouteButton';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
