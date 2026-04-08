@@ -103,6 +103,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
+  const [langTab, setLangTab] = useState<'language' | 'region'>('language');
 
   const handleSync = () => {
     setSyncing(true);
@@ -139,8 +140,26 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
 
       {/* Right column - content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Close button header */}
-        <div className="flex items-center justify-end px-5 py-3 shrink-0">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 shrink-0">
+          {/* Language tabs in header when language section is active */}
+          {activeSection === 'language' ? (
+            <div className="flex gap-1">
+              {(['language', 'region'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setLangTab(tab)}
+                  className={`px-4 py-2 text-sm font-semibold transition-colors relative rounded-lg min-h-[44px] ${
+                    langTab === tab ? 'text-text-primary bg-muted' : 'text-text-muted hover:text-text-secondary'
+                  }`}
+                >
+                  {tab === 'language' ? 'Language' : 'Region'}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div />
+          )}
           <button
             onClick={onClose}
             className="p-2.5 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
@@ -366,7 +385,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
           )}
 
           {activeSection === 'language' && (
-            <InlineLanguageSettings />
+            <InlineLanguageSettings activeTab={langTab} />
           )}
         </div>
       </div>
