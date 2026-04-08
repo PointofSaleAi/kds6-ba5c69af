@@ -141,7 +141,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     .filter(i => !i.isCancelled)
     .every(i => itemStatuses?.get(i.id) === 'done');
 
-  const isCourseCompleted = coursingStatus === 'fired' && allItemsDone;
+  // Course is completed if it's fired (already done) OR all items manually marked done
+  const isCourseCompleted = coursingStatus === 'fired';
 
   // Live timer
   const timer = useCourseTimer(courseGroup, coursingStatus);
