@@ -193,7 +193,6 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
               </div>
             </div>
             <SettingsRow icon={User} label={t.deviceName} description="Kitchen Display 1" />
-            <SettingsRow icon={Globe} label={t.language} description={languageName} onClick={() => onOpenSub('language-settings')} />
             <SettingsRow
               icon={Bug}
               label={t.devMode}
@@ -217,6 +216,15 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 {t.logOut}
               </button>
             </div>
+
+            {/* LANGUAGE & REGION */}
+            <div className="px-4 pt-4 pb-1">
+              <div className="flex items-center gap-2 mb-1">
+                <Globe size={14} className="text-text-muted" />
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{t.language}</span>
+              </div>
+            </div>
+            <SettingsRow icon={Globe} label={t.language} description={languageName} onClick={() => onOpenSub('language-settings')} />
 
             <div className="text-center py-3 text-xs text-text-muted">
               POSAI Kitchen Display System v2.4.1
