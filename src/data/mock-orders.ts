@@ -156,6 +156,7 @@ export const mockOrders: Order[] = [
               { text: 'No Butter', type: 'remove' },
               { text: '+ Lemon Sauce', type: 'extra' },
             ],
+            notes: 'Cook well done, no pink',
             allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }],
           },
           {
