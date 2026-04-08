@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { Eye } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
 import { AllergenBadge } from './AllergenBadge';
@@ -21,6 +22,7 @@ interface OrderCardProps {
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
+  onAcknowledgeNotes?: (orderId: string) => void;
   /** When set, only matching course is highlighted; others are dimmed */
   stationCourse?: string;
 }
@@ -120,7 +122,7 @@ function normalizeStationCourses(courses: CourseGroup[], stationCourse: string):
   return result;
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, stationCourse }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse }: OrderCardProps) {
   const { t, timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
