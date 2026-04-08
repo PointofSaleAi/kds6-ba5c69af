@@ -298,6 +298,15 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                           )}
                         </button>
                       ))}
+                      <div className="px-3 py-2 border-t border-border mt-1">
+                        <button
+                          onClick={() => window.open('mailto:support@posai.com?subject=Language%20Request', '_blank')}
+                          className="w-full flex items-center gap-2.5 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[40px]"
+                        >
+                          <span className="text-base">🌐</span>
+                          <span className="text-xs font-semibold text-brand-primary">Request a language</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
