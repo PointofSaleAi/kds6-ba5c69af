@@ -243,7 +243,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             return (
               <div
                 key={item.id}
-                className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-[0.32]' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
+                className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-60' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
                 style={{ padding: '4px', gap: 0 }}
               >
                 {/* Child 1 — item-main */}
