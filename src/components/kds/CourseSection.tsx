@@ -144,7 +144,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   // Course is completed if it's fired (already done) OR all items manually marked done
   const isCourseCompleted = coursingStatus === 'fired';
 
-  // Collapse done courses by default
+  // All courses are collapsible; active & pending expanded by default, fired collapsed
   const [isExpanded, setIsExpanded] = useState(!isCourseCompleted);
 
   // Live timer
