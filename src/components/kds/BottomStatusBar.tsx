@@ -152,7 +152,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       )}
 
       <div className="flex items-center gap-3">
-        <LanguageToggle />
+        <LanguageToggle onOpen={onOpenLanguageSettings} />
         <SoundToggle />
         <button
           onClick={onToggleTheme}
