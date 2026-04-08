@@ -229,6 +229,7 @@ export const mockOrders: Order[] = [
               { text: 'Spicy', type: 'neutral' },
               { text: '+ Extra Shrimp', type: 'extra' },
             ],
+            notes: 'Pack sauce separately',
             allergens: [
               { type: 'peanut', label: 'PEANUT', icon: '\u{1F95C}' },
               { type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' },
@@ -374,6 +375,7 @@ export const mockOrders: Order[] = [
             category: 'Poultry',
             quantity: 4,
             modifiers: [{ text: '+ Extra Sauce', type: 'extra' }],
+            notes: 'Cut into smaller portions for sharing',
             allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
           },
           {
@@ -482,7 +484,7 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '1:30',
         items: [
           { id: 'i-018', name: 'Club Sandwich',
-            category: 'Sandwiches', quantity: 1, modifiers: [{ text: 'No Mayo', type: 'remove' }], allergens: [] },
+            category: 'Sandwiches', quantity: 1, modifiers: [{ text: 'No Mayo', type: 'remove' }], notes: 'Toast the bread lightly', allergens: [] },
         ],
       },
       {
