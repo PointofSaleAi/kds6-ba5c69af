@@ -188,6 +188,7 @@ export const mockOrders: Order[] = [
             quantity: 2,
             modifiers: [{ text: 'Extra Dipping Sauce', type: 'extra' }],
             allergens: [{ type: 'soy', label: 'SOY', icon: '\u{1FAD8}' }],
+            station: 'Fry',
           },
         ],
       },
@@ -210,6 +211,7 @@ export const mockOrders: Order[] = [
               { type: 'peanut', label: 'PEANUT', icon: '\u{1F95C}' },
               { type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' },
             ],
+            station: 'Fry',
           },
           {
             id: 'i-009',
@@ -218,6 +220,7 @@ export const mockOrders: Order[] = [
             quantity: 1,
             modifiers: [{ text: 'Mild', type: 'neutral' }],
             allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
+            station: 'Grill',
           },
         ],
       },
