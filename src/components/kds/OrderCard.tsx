@@ -159,26 +159,33 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
       <div className="border-t border-border">
         {isDineIn ? (
-          displayCourses.map((courseGroup, idx) => {
-            let forcedStatus: StationStatus | undefined;
-            if (stationCourse && stationIdx >= 0) {
-              if (idx < stationIdx) forcedStatus = 'fired';
-              else if (idx === stationIdx) forcedStatus = 'active';
-              else forcedStatus = 'pending';
-            }
-            return (
-              <CourseSection
-                key={courseGroup.course}
-                courseGroup={courseGroup}
-                onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
-                itemStatuses={itemStatuses}
-                onAdvanceItem={handleAdvanceItem}
-                onUndoItem={handleUndoItem}
-                stationCourse={stationCourse}
-                forcedStationStatus={forcedStatus}
-              />
-            );
-          })
+          [...displayCourses]
+            .sort((a, b) => {
+              const aFired = a.isFired ? 1 : 0;
+              const bFired = b.isFired ? 1 : 0;
+              return aFired - bFired;
+            })
+            .map((courseGroup, idx, sorted) => {
+              let forcedStatus: StationStatus | undefined;
+              if (stationCourse && stationIdx >= 0) {
+                const originalIdx = displayCourses.indexOf(courseGroup);
+                if (originalIdx < stationIdx) forcedStatus = 'fired';
+                else if (originalIdx === stationIdx) forcedStatus = 'active';
+                else forcedStatus = 'pending';
+              }
+              return (
+                <CourseSection
+                  key={courseGroup.course}
+                  courseGroup={courseGroup}
+                  onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
+                  itemStatuses={itemStatuses}
+                  onAdvanceItem={handleAdvanceItem}
+                  onUndoItem={handleUndoItem}
+                  stationCourse={stationCourse}
+                  forcedStationStatus={forcedStatus}
+                />
+              );
+            })
         ) : (
           <FlatItemList
             courses={order.courses}
