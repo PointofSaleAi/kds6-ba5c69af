@@ -122,6 +122,7 @@ export const mockOrders: Order[] = [
     elapsedSeconds: 680,
     targetSeconds: 900,
     itemCount: 3,
+    orderNotes: 'Extra napkins and utensils for 4 people',
     courses: [
       {
         course: 'APPETIZER',
