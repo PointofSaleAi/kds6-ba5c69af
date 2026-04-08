@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Languages } from 'lucide-react';
 import type { CourseGroup } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
