@@ -51,7 +51,7 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
                 {item.isCompleted && !item.isCancelled && (
                   <span className="text-success text-xs">&#10003;</span>
                 )}
-                {item.allergens.length > 0 && item.allergens.map((a) => (
+                {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
               </div>
