@@ -15,6 +15,8 @@ import { OrderCardActions } from './OrderCardActions';
 import { normalizeStationCourses, getLocationLabel } from './station-utils';
 import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
+import { useStatusRules } from '@/hooks/use-status-rules';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 
 interface OrderCardProps {
   order: Order;
@@ -28,11 +30,10 @@ interface OrderCardProps {
   showAllergens?: boolean;
 }
 
-const urgencyBorderMap = {
-  ok: 'border-l-success',
-  warning: 'border-l-warning',
-  critical: 'border-l-destructive',
-  overtime: 'border-l-status-overtime',
+const TEXT_SIZE_SCALE: Record<string, number> = {
+  Compact: 0.85,
+  Standard: 1,
+  Large: 1.15,
 };
 
 const statusBodyMap: Record<string, string> = {
@@ -48,6 +49,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const { textSize } = useKDSSettings();
+  const statusColor = getStatusForElapsed(liveElapsed);
+  const scaleFactor = TEXT_SIZE_SCALE[textSize] || 1;
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
 
   // Station overrides for re-routing
@@ -158,8 +163,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   return (
     <>
       <div
-        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${urgencyBorderMap[urgency]} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
-        style={{ minWidth: 'min(220px, 100%)' }}
+        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${statusBodyMap[order.status] || ''} transition-all duration-300`}
+        style={{
+          minWidth: 'min(220px, 100%)',
+          borderLeftColor: statusColor.color,
+          fontSize: scaleFactor !== 1 ? `${scaleFactor}rem` : undefined,
+        }}
       >
         {/* Tappable header area - opens ticket routing modal */}
         <div
@@ -178,7 +187,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               <div className="text-order-num text-text-primary leading-none">
                 {order.orderNumber}
               </div>
-              <StatusChip status={order.status} />
+              <StatusChip elapsedSeconds={liveElapsed} />
             </div>
             <div className="flex items-center justify-between mt-0.5">
               <TimerBadge seconds={liveElapsed} urgency={urgency} />
