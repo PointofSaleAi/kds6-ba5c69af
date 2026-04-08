@@ -1,6 +1,16 @@
 import type { OrderStatus } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
-import { KdsActionIcon } from './KdsActionIcon';
+import seenIcon from '@/assets/seen-icon.svg';
+import preparingIcon from '@/assets/preparing-icon.svg';
+import readyIcon from '@/assets/item-ready-icon.svg';
+import undoIcon from '@/assets/undo-icon.svg';
+
+const iconSrcMap = {
+  seen: seenIcon,
+  preparing: preparingIcon,
+  ready: readyIcon,
+  undo: undoIcon,
+} as const;
 
 interface OrderCardActionsProps {
   orderId: string;
@@ -19,7 +29,7 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }
     ? (status === 'new' || status === 'seen' ? t.inProgress.toUpperCase() : t.done)
     : (status === 'new' ? t.seen : status === 'seen' ? t.inProgress.toUpperCase() : t.done);
 
-  const buttonIcon: 'seen' | 'preparing' | 'ready' = isDineIn
+  const buttonIcon = isDineIn
     ? (status === 'new' || status === 'seen' ? 'preparing' : 'ready')
     : (status === 'new' ? 'seen' : status === 'seen' ? 'preparing' : 'ready');
 
@@ -27,7 +37,6 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }
     ? (status === 'new' || status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done')
     : (status === 'new' ? 'bg-btn-seen' : status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done');
 
-  // Show undo for non-new statuses; for dine-in also hide on 'new'
   const showUndo = !isServed && status !== 'new';
 
   return (
@@ -38,7 +47,7 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }
           className="w-[44px] min-h-[44px] bg-muted rounded flex items-center justify-center hover:opacity-80 transition-colors shrink-0"
           title="Go back"
         >
-          <KdsActionIcon icon="undo" />
+          <img src={undoIcon} alt="Back" className="w-8 h-6" />
         </button>
       )}
       {!isServed && (
@@ -46,7 +55,7 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }
           onClick={() => onBump?.(orderId)}
           className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
         >
-          <KdsActionIcon icon={buttonIcon} />
+          <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
           {buttonLabel}
         </button>
       )}
