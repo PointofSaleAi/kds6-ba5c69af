@@ -187,7 +187,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               <div className="text-order-num text-text-primary leading-none">
                 {order.orderNumber}
               </div>
-              <StatusChip status={order.status} />
+              <StatusChip elapsedSeconds={liveElapsed} />
             </div>
             <div className="flex items-center justify-between mt-0.5">
               <TimerBadge seconds={liveElapsed} urgency={urgency} />
