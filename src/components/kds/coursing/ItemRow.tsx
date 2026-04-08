@@ -70,7 +70,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         style={{ gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
       >
         <button
-          className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[44px]"
+          className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]"
           aria-label="Mark seen"
         >
           <img src={seenIcon} alt="Seen" className="w-full h-full" style={{ width: '40px', height: '30px' }} />
