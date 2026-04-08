@@ -144,7 +144,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   // Course is completed if it's fired (already done) OR all items manually marked done
   const isCourseCompleted = coursingStatus === 'fired';
 
-  // Collapse done courses by default
+  // All courses are collapsible; active & pending expanded by default, fired collapsed
   const [isExpanded, setIsExpanded] = useState(!isCourseCompleted);
 
   // Live timer
@@ -198,16 +198,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   return (
     <div className={containerClass} style={containerStyle}>
       <div
-        className={`flex items-center justify-between flex-nowrap ${headerBg} ${isCourseCompleted ? 'cursor-pointer select-none' : ''}`}
+        className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
         style={{ ...headerStyle, padding: '4px 8px' }}
-        onClick={isCourseCompleted ? () => setIsExpanded(prev => !prev) : undefined}
+        onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          {isCourseCompleted && (
-            <span className={`text-[11px] text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
-              ▶
-            </span>
-          )}
+          <span className={`text-[11px] text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
+            ▶
+          </span>
           <span className={labelClass} style={labelStyle}>
             {courseLabel}
           </span>
@@ -235,7 +233,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         </div>
       </div>
 
-      {hasItems && (!isCourseCompleted || isExpanded) && (
+      {hasItems && isExpanded && (
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
