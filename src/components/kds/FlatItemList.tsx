@@ -28,8 +28,9 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
         return (
           <div
             key={item.id}
-            className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}
+            className={`flex items-start border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}
             style={{ padding: '4px', gap: 0 }}
+            onClick={() => !item.isCancelled && onReRouteItem?.(item)}
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
@@ -95,24 +96,19 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
             </div>
 
             {!item.isCancelled && (
-              <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
+              <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }} onClick={(e) => e.stopPropagation()}>
                 {status === 'ready' ? (
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
                     <KdsActionIcon icon="ready" onClick={() => onAdvanceItem(item.id)} label="Mark done" />
-                    {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                   </>
                 ) : status === 'preparing' ? (
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
                     <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem(item.id)} label="Mark ready" />
-                    {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                   </>
                 ) : (
-                  <>
-                    <KdsActionIcon icon="seen" onClick={() => onAdvanceItem(item.id)} label="Mark seen" />
-                    {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
-                  </>
+                  <KdsActionIcon icon="seen" onClick={() => onAdvanceItem(item.id)} label="Mark seen" />
                 )}
               </div>
             )}
