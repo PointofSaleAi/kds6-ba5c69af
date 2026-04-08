@@ -203,11 +203,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          {isCourseCompleted && (
-            <span className={`text-[11px] text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
-              ▶
-            </span>
-          )}
+          <span className={`text-[11px] text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
+            ▶
+          </span>
           <span className={labelClass} style={labelStyle}>
             {courseLabel}
           </span>
