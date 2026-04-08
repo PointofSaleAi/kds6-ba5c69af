@@ -296,10 +296,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
         {settingsOpen ? (
           <SettingsPanel
-            onClose={() => onCloseSettings?.()}
+            onClose={() => { onCloseSettings?.(); setSettingsSection('display'); }}
             onOpenSub={(sub) => onOpenSub?.(sub)}
             onLogOut={onLogOut}
             onDevModeChange={onDevModeChange}
+            initialSection={settingsSection as any}
           />
         ) : (
         <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
