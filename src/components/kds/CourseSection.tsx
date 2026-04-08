@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Languages } from 'lucide-react';
-import type { CourseGroup } from '@/types/kds';
+import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
+import { StationBadge } from './StationBadge';
+import { ReRouteButton } from './ReRouteButton';
 
 import fireIcon from '@/assets/fire-icon.png';
 
@@ -20,6 +22,7 @@ interface CourseSectionProps {
   onUndoItem?: (itemId: string) => void;
   stationCourse?: string;
   forcedStationStatus?: StationStatus;
+  onReRouteItem?: (item: OrderItem) => void;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -126,7 +129,7 @@ const urgencyChipStyles: Record<FireUrgency, string> = {
 const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
 const pendingChipStyle = 'bg-muted text-muted-foreground';
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -261,6 +264,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     <span className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
                       {tp(item.name)}
                     </span>
+                    {item.station && !item.isCancelled && (
+                      <StationBadge station={item.station} />
+                    )}
                     {item.isCancelled && (
                       <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
                         CANCELLED
@@ -325,19 +331,25 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
+                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                       </>
                     ) : !isDimmed && status === 'preparing' ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark ready" />
+                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                       </>
                     ) : !isDimmed && isFired ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id, true)} label="Mark done" />
+                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
                       </>
                     ) : !isDimmed ? (
-                      <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
+                      <>
+                        <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
+                        {onReRouteItem && <ReRouteButton onClick={() => onReRouteItem(item)} />}
+                      </>
                     ) : null}
                   </div>
                 )}
