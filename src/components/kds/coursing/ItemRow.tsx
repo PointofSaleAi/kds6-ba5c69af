@@ -2,7 +2,7 @@ import type { OrderItem } from '@/types/kds';
 import { Languages } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
-import seenIcon from '@/assets/seen-icon.svg';
+import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 
 interface ItemRowProps {
   item: OrderItem;
@@ -17,9 +17,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
       className={`flex items-start border-b border-border/50 ${dimmed ? 'opacity-[0.32]' : ''}`}
       style={{ padding: '4px', gap: 0 }}
     >
-      {/* Child 1 — item-main */}
       <div className="flex-1 min-w-0">
-        {/* .item-name-row */}
         <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
           <span className="text-[13px] font-normal text-text-secondary">
             {item.quantity}×
@@ -32,7 +30,6 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           ))}
         </div>
 
-        {/* Dual-language secondary name */}
         {displayMode === 'dual' && (
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
             <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
@@ -42,7 +39,6 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           </div>
         )}
 
-        {/* .item-mods */}
         {item.modifiers.length > 0 && (
           <div style={{ marginTop: '2px' }}>
             {item.modifiers.map((mod, idx) => (
@@ -64,17 +60,11 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         )}
       </div>
 
-      {/* Child 2 — item-action */}
       <div
         className="flex items-center shrink-0"
         style={{ gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
       >
-        <button
-          className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]"
-          aria-label="Mark seen"
-        >
-          <img src={seenIcon} alt="Seen" className="w-full h-full" style={{ width: '40px', height: '30px' }} />
-        </button>
+        <KdsActionIcon icon="seen" label="Mark seen" />
       </div>
     </div>
   );
