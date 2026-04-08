@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Search, Check, ArrowLeftRight, Languages } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { toast } from 'sonner';
+import { OrderCard } from './OrderCard';
+import { mockOrders } from '@/data/mock-orders';
 
 interface Language {
   code: LanguageCode;
@@ -23,12 +25,6 @@ const translations: Record<string, Record<string, string>> = {
   es: { fries: 'Papas fritas', chicken: 'Pollo a la parrilla', salad: 'Ensalada César' },
   ar: { fries: 'بطاطس مقلية', chicken: 'دجاج مشوي', salad: 'سلطة سيزر' },
 };
-
-const previewItems = [
-  { qty: 2, key: 'fries' },
-  { qty: 1, key: 'chicken' },
-  { qty: 1, key: 'salad' },
-];
 
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
@@ -245,50 +241,8 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                 Preview - KDS ticket
               </div>
-              <div className="rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border flex-1">
-                {/* Card header - dine-in style */}
-                <div className="bg-order-dine-in px-3 py-2 rounded-t-lg flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-primary-foreground uppercase tracking-wider">DINE IN</span>
-                  <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px]">
-                    <span>2:34 PM</span>
-                    <span>Table 12</span>
-                  </div>
-                </div>
-                {/* Order number + status */}
-                <div className="px-3 pt-2 pb-1">
-                  <div className="flex items-start justify-between">
-                    <div className="text-[28px] font-black text-text-primary leading-none">#1042</div>
-                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-muted text-text-muted">New</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <span className="text-[11px] font-mono text-warning">3:42</span>
-                    <span className="text-[11px] text-text-secondary">Sarah K.</span>
-                  </div>
-                </div>
-                {/* Items */}
-                <div className="px-3 pb-3 pt-1 space-y-1.5">
-                  {previewItems.map((item) => {
-                    const primaryText = getTranslation(item.key, previewPrimaryLang);
-                    const secondaryText = displayMode === 'dual' ? getTranslation(item.key, previewSecondaryLang) : null;
-                    return (
-                      <div key={item.key} className="border-b border-border/50 pb-1.5 last:border-0">
-                        <div className="text-[13px] font-medium text-text-primary uppercase">
-                          {item.qty} <span className="text-text-muted">x</span> {primaryText}
-                        </div>
-                        {secondaryText && (
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
-                              <Languages size={10} className="text-text-muted" />
-                            </span>
-                            <span className="text-[11px] font-semibold uppercase text-text-muted">
-                              {secondaryText}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+              <div className="overflow-y-auto flex-1">
+                <OrderCard order={mockOrders[0]} />
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
                 {displayMode === 'dual'
