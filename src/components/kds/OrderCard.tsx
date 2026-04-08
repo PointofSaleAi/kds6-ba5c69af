@@ -128,6 +128,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+  const [notesAcknowledged, setNotesAcknowledged] = useState(false);
 
   const allItemIds = useMemo(() => 
     order.courses.flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id)),
