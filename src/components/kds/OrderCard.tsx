@@ -297,14 +297,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 setNotesAcknowledged(!notesAcknowledged);
                 onAcknowledgeNotes?.(order.id);
               }}
-              className={`shrink-0 w-[44px] h-[44px] rounded-lg flex items-center justify-center transition-colors ${
+              className={`shrink-0 min-w-[44px] min-h-[33px] overflow-hidden rounded-lg flex items-center justify-center transition-colors ${
                 notesAcknowledged
                   ? 'bg-success/15 text-success'
                   : 'bg-order-take-out/15 text-order-take-out'
               }`}
               title={notesAcknowledged ? 'Acknowledged' : 'Acknowledge notes'}
             >
-              <img src={seenIcon} alt="Acknowledge" className="w-6 h-5 rounded-sm" />
+              <img src={seenIcon} alt="Acknowledge" style={{ width: 40, height: 30 }} className="rounded-sm" />
             </button>
           </div>
         </div>
