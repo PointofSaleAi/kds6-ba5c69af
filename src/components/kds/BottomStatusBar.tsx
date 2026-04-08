@@ -4,7 +4,7 @@ import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
-import LanguageSettings from '@/pages/LanguageSettings';
+
 
 export type SortMode = 'time' | 'table' | 'type';
 
@@ -16,8 +16,8 @@ interface BottomStatusBarProps {
   onToggleTheme: () => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
-  /** Hide sort and view mode controls (used in station view) */
   hideViewControls?: boolean;
+  onOpenLanguageSettings?: () => void;
 }
 
 function SoundToggle() {
@@ -34,21 +34,15 @@ function SoundToggle() {
   );
 }
 
-function LanguageToggle() {
-  const [langOpen, setLangOpen] = useState(false);
-  const { languageFlag } = useLanguage();
-
+function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   return (
-    <>
-      <button
-        onClick={() => setLangOpen(true)}
-        className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px] gap-1"
-        aria-label="Change language"
-      >
-        <Globe size={16} className="text-primary-foreground/70" />
-      </button>
-      <LanguageSettings open={langOpen} onClose={() => setLangOpen(false)} />
-    </>
+    <button
+      onClick={onOpen}
+      className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px] gap-1"
+      aria-label="Change language"
+    >
+      <Globe size={16} className="text-primary-foreground/70" />
+    </button>
   );
 }
 
