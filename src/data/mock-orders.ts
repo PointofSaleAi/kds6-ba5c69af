@@ -13,6 +13,7 @@ export const mockOrders: Order[] = [
     elapsedSeconds: 225,
     targetSeconds: 900,
     itemCount: 7,
+    orderNotes: 'Allergy to nuts. Please prepare food separately and notify server',
     courses: [
       {
         course: 'APPETIZER',
@@ -121,6 +122,7 @@ export const mockOrders: Order[] = [
     elapsedSeconds: 680,
     targetSeconds: 900,
     itemCount: 3,
+    orderNotes: 'Extra napkins and utensils for 4 people',
     courses: [
       {
         course: 'APPETIZER',

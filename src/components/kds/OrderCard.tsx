@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { Eye } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderType, CourseGroup, CourseType } from '@/types/kds';
 import { AllergenBadge } from './AllergenBadge';
@@ -21,6 +22,7 @@ interface OrderCardProps {
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
+  onAcknowledgeNotes?: (orderId: string) => void;
   /** When set, only matching course is highlighted; others are dimmed */
   stationCourse?: string;
 }
@@ -120,12 +122,13 @@ function normalizeStationCourses(courses: CourseGroup[], stationCourse: string):
   return result;
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, stationCourse }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse }: OrderCardProps) {
   const { t, timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const isServed = order.status === 'served';
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+  const [notesAcknowledged, setNotesAcknowledged] = useState(false);
 
   const allItemIds = useMemo(() => 
     order.courses.flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id)),
@@ -277,6 +280,36 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         );
       })()}
+
+      {/* Order Notes section */}
+      {order.orderNotes && (
+        <div className="border-t border-border">
+          <div className="flex items-center justify-between bg-muted" style={{ padding: '4px 8px' }}>
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-text-primary">
+              Order Notes
+            </span>
+          </div>
+          <div className="px-2 py-2 flex items-start justify-between gap-2">
+            <span className="text-[13px] text-text-primary leading-snug flex-1">
+              {order.orderNotes}
+            </span>
+            <button
+              onClick={() => {
+                setNotesAcknowledged(!notesAcknowledged);
+                onAcknowledgeNotes?.(order.id);
+              }}
+              className={`shrink-0 w-[44px] h-[44px] rounded-lg flex items-center justify-center transition-colors ${
+                notesAcknowledged
+                  ? 'bg-success/15 text-success'
+                  : 'bg-order-take-out/15 text-order-take-out'
+              }`}
+              title={notesAcknowledged ? 'Acknowledged' : 'Acknowledge notes'}
+            >
+              <Eye className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {isDineIn && stationNotification && (
         <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
