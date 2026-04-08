@@ -77,6 +77,15 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem 
                   ))}
                 </div>
               )}
+
+              {item.notes && !item.isCancelled && (
+                <div
+                  className="text-[11px] text-text-muted italic leading-snug"
+                  style={{ paddingLeft: '20px', marginTop: '2px' }}
+                >
+                  "{item.notes}"
+                </div>
+              )}
             </div>
 
             {!item.isCancelled && (
