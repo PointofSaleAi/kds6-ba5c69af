@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
@@ -93,12 +94,14 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
 export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display' }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
-  const [cardsPerRow, setCardsPerRow] = useState(4);
-  const [textSize, setTextSize] = useState('Standard');
-  const [showAllergens, setShowAllergens] = useState(true);
-  const [staggerMode, setStaggerMode] = useState(false);
-  const [servableModifiers, setServableModifiers] = useState(true);
-  const [sortDefault, setSortDefault] = useState('By Time');
+  const {
+    cardsPerRow, setCardsPerRow,
+    textSize, setTextSize,
+    showAllergens, setShowAllergens,
+    staggerMode, setStaggerMode,
+    servableModifiers, setServableModifiers,
+    sortDefault, setSortDefault,
+  } = useKDSSettings();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { showBadge: enableBadge, setShowBadge: setEnableBadge } = useBadgeVisibility();
   const { mode: kdsMode, setMode: setKdsMode, stationCourse, setStationCourse } = useKDSMode();
