@@ -1,33 +1,22 @@
 
 
-# Remove Coursing from Non-Dine-In Orders
+# Fix Eye Icon Consistency Between Products and Order Notes
 
 ## Problem
-Take-out, delivery, and banquet orders currently display course sections (APPETIZER, ENTREE, DESSERT) with fire buttons and timing, which doesn't match real kitchen workflow. Only dine-in (table) orders use multi-course firing.
+The eye icon container and icon size differ between product items and the Order Notes section:
+- **Products**: `min-w-[44px] min-h-[33px]` container, `40x30px` icon (fills container)
+- **Order Notes**: `w-[44px] h-[44px]` container, `24x20px` icon (small within container)
 
-## Approach
-For non-dine-in orders, flatten all items into a single list without course headers, fire buttons, or course timing. The OrderCard component will check the order type and render accordingly.
+This creates a visual inconsistency as shown in the screenshot.
 
-## Changes
+## Plan
 
-### 1. OrderCard.tsx - Conditional coursing display
-- Check if `order.orderType === 'dine-in'`
-- If dine-in: render courses as today (with CourseSection headers, fire buttons, timers)
-- If NOT dine-in: render all items in a single flat list without course headers, fire buttons, or auto-fire/prep timers
-- Reuse existing item rendering from CourseSection but skip the course header/controls
+**File: `src/components/kds/OrderCard.tsx`** (single edit, ~line 297-307)
 
-### 2. Mock data cleanup (mock-orders.ts)
-- For take-out, delivery, and banquet orders: consolidate items into a single course group (or keep multiple but they won't render headers)
-- Alternatively, keep mock data as-is since the UI will just flatten them visually
+Update the Order Notes acknowledge button to match the product icon pattern:
+- Change container from `w-[44px] h-[44px]` to `min-w-[44px] min-h-[33px]` with `overflow-hidden`
+- Change icon from `w-6 h-5 rounded-sm` to inline style `width: 40px; height: 30px` (same as product icons)
+- Keep the conditional background color logic for acknowledged/unacknowledged state
 
-### 3. Station view logic (normalizeStationCourses)
-- Skip station course normalization for non-dine-in orders since coursing doesn't apply
-- The station notification strip should also be suppressed for non-dine-in orders
-
-## Technical detail
-- In OrderCard, wrap the `displayCourses.map(...)` block with a condition:
-  - `order.orderType === 'dine-in'` → current CourseSection rendering
-  - Otherwise → flat item list: iterate all courses' items, render item rows without course headers
-- Could extract a `FlatItemList` component or inline it
-- The compact card view stays unchanged (it already doesn't show courses)
+This ensures both the container dimensions and icon fill are identical across products and order notes.
 
