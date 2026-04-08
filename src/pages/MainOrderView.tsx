@@ -55,6 +55,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('time');
+  const [settingsSection, setSettingsSection] = useState<string>('display');
   const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
