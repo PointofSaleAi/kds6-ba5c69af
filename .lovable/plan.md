@@ -1,49 +1,86 @@
 
-## What I found
 
-The icon image size is already the same in the live code:
-- Product buttons in `FlatItemList` and `CourseSection`: container `min-w-[44px] min-h-[33px]`, icon `40x30`
-- Order Notes button in `OrderCard`: container `min-w-[44px] min-h-[33px]`, icon `40x30`
+# Plan: Connect Settings to KDS Home Screen
 
-So the mismatch you still see is not the SVG size. It comes from the button wrapper styles:
-- Order Notes uses `rounded-lg`
-- Order Notes adds an extra button background (`bg-success/15` or `bg-order-take-out/15`)
-- Product buttons use `rounded-[3px]` and no extra outer background, so only the SVG background is visible
+## Problem
+All settings in the SettingsPanel use local `useState` that resets on close and never reaches the KDS home screen. Each setting category needs a shared context so changes persist and reflect in real-time.
 
-That extra outer fill makes the Order Notes action look larger and softer, even though the raw dimensions match.
+## Solution: Create a KDS Settings Context
 
-## Updated plan
+### New file: `src/hooks/use-kds-settings.tsx`
+Create a single `KDSSettingsProvider` context with localStorage persistence for all settings:
 
-1. Update `src/components/kds/OrderCard.tsx`
-   - change the Order Notes acknowledge button to use the exact same shell styling as product action buttons
-   - use `rounded-[3px]`, `overflow-hidden`, `min-w-[44px]`, and `min-h-[33px]`
-   - keep the same `seenIcon` at `40x30`
+**Display settings:**
+- `cardsPerRow` (number, default 4) - controls grid column count
+- `textSize` ('Compact' | 'Standard' | 'Large') - controls font scaling on cards
+- `showAllergens` (boolean) - toggles allergen badges on order cards
+- `enableBadge` - already handled by `useBadgeVisibility` (working)
+- Mode Switcher - already handled by `useKDSMode` (working)
 
-2. Preserve acknowledgment state without changing perceived size
-   - remove the current filled background classes from the button
-   - if a state cue is still needed, use a non-size-changing treatment such as a subtle ring, opacity shift, or title change instead of an outer filled background
+**Order settings:**
+- `sortDefault` ('By Time' | 'By Table' | 'By Type') - sets initial sort mode
+- `staggerMode` (boolean) - placeholder toggle (no deep integration yet)
+- `servableModifiers` (boolean) - placeholder toggle
 
-3. Optional consistency cleanup
-   - normalize `src/components/kds/coursing/ItemRow.tsx`, which still uses `min-h-[44px]`, so other coursing-related views do not reintroduce a different eye button height elsewhere
+**Status Colours, Category Filter, Revenue Center Filter** - these open sub-panels and are already functional navigation, no data binding needed now.
 
-## Expected result
+**Hardware settings** - Printer, Sound, Sync, Connection are sub-panel navigations or actions. Sound is already context-based. These are presentational/navigational, not data-binding issues.
 
-After this change, the Order Notes eye button and the product eye button will look identical in:
-- visible blue background area
-- corner radius
-- perceived padding
-- overall touch target footprint
+**Language** - already fully functional via `useLanguage` context.
 
-## Technical detail
+---
 
-Files involved:
-- primary: `src/components/kds/OrderCard.tsx`
-- optional consistency pass: `src/components/kds/coursing/ItemRow.tsx`
+### Changes by file
 
-Exact reason for the current mismatch:
-```text
-Product button = transparent 44x33 shell + 40x30 SVG
-Order Notes    = colored 44x33 shell + 40x30 SVG
-```
+#### 1. `src/hooks/use-kds-settings.tsx` (NEW)
+- Context with: `cardsPerRow`, `textSize`, `showAllergens`, `sortDefault`, `staggerMode`, `servableModifiers`
+- All values persisted to localStorage
+- Provider wraps the app
 
-Because the SVG already contains its own light blue background, the extra shell background on Order Notes creates a double-background effect and makes it look bigger.
+#### 2. `src/main.tsx`
+- Wrap app with `KDSSettingsProvider`
+
+#### 3. `src/components/kds/SettingsPanel.tsx`
+- Replace local `useState` for `cardsPerRow`, `textSize`, `showAllergens`, `sortDefault`, `staggerMode`, `servableModifiers` with values from `useKDSSettings()`
+- Settings changes now immediately update the context
+
+#### 4. `src/pages/MainOrderView.tsx`
+- Read `cardsPerRow` from context to set grid columns dynamically (`gridTemplateColumns: repeat(N, minmax(0, 1fr))`)
+- Read `textSize` from context and apply a CSS class to the card container (e.g., `text-scale-compact`, `text-scale-large`)
+- Read `showAllergens` from context and pass it down to `OrderCard`
+- Read `sortDefault` to initialize `sortMode` state
+- Read `staggerMode` - if ON, force viewMode to stagger layout
+
+#### 5. `src/components/kds/OrderCard.tsx`
+- Accept `showAllergens` prop (or read from context)
+- Conditionally render `OrderAllergenStrip` and item-level allergen badges
+
+#### 6. `src/components/kds/CourseSection.tsx` and `src/components/kds/FlatItemList.tsx`
+- Pass through or read `showAllergens` to hide/show item-level allergen badges
+
+#### 7. `src/index.css`
+- Add text scale utility classes:
+  - `.text-scale-compact` - reduces base font sizes by ~15%
+  - `.text-scale-large` - increases base font sizes by ~15%
+
+---
+
+### What already works (no changes needed)
+- **Enable Badge** - uses `useBadgeVisibility` context (connected)
+- **Mode Switcher** - uses `useKDSMode` context (connected)
+- **Theme** - uses `useTheme` context (connected)
+- **Sound Settings** - uses `useSound` context (connected)
+- **Language/Region** - uses `useLanguage` context (connected)
+- **Status Colours** - opens sub-panel (navigational)
+- **Category/Revenue Filter** - opens sub-panel (navigational)
+- **Printer/Connection** - opens sub-panel (navigational)
+- **Sync** - action button (functional)
+
+### What this plan connects
+- **Cards Per Row** → grid column count on home screen
+- **Text Size** → font scaling on order cards
+- **Show Allergen Badges** → hides/shows allergen strips and badges
+- **Sort Default** → initializes sort order on home screen
+- **Stagger Mode** → forces stagger layout when ON
+- **Servable Modifiers** → stored in context for future use
+
