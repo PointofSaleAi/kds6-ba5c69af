@@ -58,6 +58,15 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             ))}
           </div>
         )}
+
+        {item.notes && (
+          <div
+            className="text-[11px] text-text-muted italic leading-snug"
+            style={{ paddingLeft: '20px', marginTop: '2px' }}
+          >
+            "{item.notes}"
+          </div>
+        )}
       </div>
 
       <div

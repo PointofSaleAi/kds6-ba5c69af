@@ -46,6 +46,7 @@ export const mockOrders: Order[] = [
               { text: 'Potato Wedge', type: 'neutral' },
               { text: '+ Extra Cheese', type: 'extra' },
             ],
+            notes: 'Make it extra spicy please',
             allergens: [],
           },
           {
@@ -57,6 +58,7 @@ export const mockOrders: Order[] = [
               { text: 'Medium Rare', type: 'neutral' },
               { text: '+ Extra Olive Oil', type: 'extra' },
             ],
+            notes: 'Serve on a warm plate',
             allergens: [],
           },
           {
