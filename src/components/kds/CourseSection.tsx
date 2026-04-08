@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Languages } from 'lucide-react';
 import type { CourseGroup } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -258,7 +259,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
                   {/* Dual-language secondary name */}
                   {displayMode === 'dual' && !item.isCancelled && (
-                    <div className="text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                    <div className="flex items-center gap-1 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                      <Languages size={10} className="shrink-0" />
                       {tpSecondary(item.name)}
                     </div>
                   )}
