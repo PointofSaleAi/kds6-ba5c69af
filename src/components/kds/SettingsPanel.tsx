@@ -364,17 +364,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </div>
               </SettingsCard>
 
-              <SettingsCard>
-                <CardLabel label="Dev Mode" description="Show flow selector on login screen" />
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-[13px] text-text-secondary font-medium">{devMode ? 'ON' : 'OFF'}</span>
-                  <LargeToggle checked={devMode} onChange={(v) => {
-                    setDevMode(v);
-                    localStorage.setItem('posai-dev-mode', String(v));
-                    onDevModeChange?.(v);
-                  }} />
-                </div>
-              </SettingsCard>
+
 
               <SettingsCard className="col-span-2">
                 <button
