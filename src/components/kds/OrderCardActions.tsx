@@ -4,7 +4,6 @@ import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import readyIcon from '@/assets/item-ready-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
-import { ReRouteButton } from './ReRouteButton';
 
 const iconSrcMap = {
   seen: seenIcon,
@@ -19,10 +18,9 @@ interface OrderCardActionsProps {
   isDineIn?: boolean;
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
-  onReRouteTicket?: () => void;
 }
 
-export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall, onReRouteTicket }: OrderCardActionsProps) {
+export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }: OrderCardActionsProps) {
   const { t } = useLanguage();
   const isServed = status === 'served';
 
@@ -60,9 +58,6 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall, 
           <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
           {buttonLabel}
         </button>
-      )}
-      {!isServed && onReRouteTicket && (
-        <ReRouteButton onClick={onReRouteTicket} size="ticket" />
       )}
     </div>
   );
