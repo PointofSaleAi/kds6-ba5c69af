@@ -72,24 +72,6 @@ export const mockOrders: Order[] = [
             ],
             allergens: [],
           },
-          {
-            id: 'i-003c',
-            name: 'Pan-Seared Duck',
-            category: 'Poultry',
-            quantity: 1,
-            modifiers: [
-              { text: '+ Orange Glaze', type: 'extra' },
-            ],
-            allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }],
-          },
-          {
-            id: 'i-003d',
-            name: 'Caesar Salad',
-            category: 'Salads',
-            quantity: 2,
-            modifiers: [{ text: '+ Grilled Shrimp', type: 'extra' }],
-            allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }],
-          },
         ],
       },
       {
