@@ -227,6 +227,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     stationCourse={stationCourse}
                     forcedStationStatus={forcedStatus}
                     onReRouteItem={(item) => setItemRouting(item)}
+                    showAllergens={showAllergens}
                   />
                 );
               })
@@ -237,6 +238,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               onAdvanceItem={handleAdvanceItem}
               onUndoItem={handleUndoItem}
               onReRouteItem={(item) => setItemRouting(item)}
+              showAllergens={showAllergens}
             />
           )}
         </div>
