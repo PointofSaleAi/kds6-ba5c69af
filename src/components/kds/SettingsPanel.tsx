@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
@@ -365,12 +366,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }:
           )}
 
           {activeSection === 'language' && (
-            <div className="grid grid-cols-2 gap-4">
-              <SettingsCard className="col-span-2">
-                <CardLabel label="Language & Region" description="Configure display language and regional preferences" />
-                <ActionButton label="Configure" onClick={() => onOpenSub('language-settings')} />
-              </SettingsCard>
-            </div>
+            <InlineLanguageSettings />
           )}
         </div>
       </div>
