@@ -417,30 +417,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         ))}
                       </AnimatePresence>
                     </div>
-                  ) : viewMode === 'horizontal' ? (
+                  ) : (
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
-                    </div>
-                  )}
-                  {viewMode === 'stagger' && (
-                    <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
-                      {staggerOrderColumns.map((col, colIdx) => (
-                        <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
-                          <AnimatePresence mode="popLayout">
-                            {col.map((order) => (
-                              <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
-                              </motion.div>
-                            ))}
-                          </AnimatePresence>
-                        </div>
-                      ))}
                     </div>
                   )}
                 </div>
