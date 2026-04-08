@@ -228,7 +228,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             return (
               <div
                 key={item.id}
-                className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''} ${isDimmed && !item.isCancelled ? 'opacity-[0.32]' : ''}`}
+                className={`flex items-start border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-[0.32]' : ''} ${isCourseCompleted ? 'opacity-50' : ''}`}
                 style={{ padding: '4px', gap: 0 }}
               >
                 {/* Child 1 — item-main */}
@@ -284,43 +284,41 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                       ))}
                     </div>
                   )}
+
+                  {/* Product notes */}
+                  {item.notes && !item.isCancelled && (
+                    <div
+                      className="text-[11px] text-text-muted italic leading-snug"
+                      style={{ paddingLeft: '20px', marginTop: '2px' }}
+                    >
+                      "{item.notes}"
+                    </div>
+                  )}
                 </div>
 
                 {/* Child 2 — item-action */}
-                {!item.isCancelled && !isDimmed && (
+                {!item.isCancelled && (
                   <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
-                    {status === 'ready' ? (
+                    {isCourseCompleted ? (
+                      <KdsActionIcon icon="acknowledged" disabled />
+                    ) : !isDimmed && status === 'ready' ? (
                       <>
-                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
-                          <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
-                        </button>
-                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark done">
-                          <img src={readyIcon} alt="Ready" style={{ width: '40px', height: '30px' }} />
-                        </button>
+                        <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
+                        <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
                       </>
-                    ) : status === 'preparing' ? (
+                    ) : !isDimmed && status === 'preparing' ? (
                       <>
-                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
-                          <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
-                        </button>
-                        <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark ready">
-                          <img src={preparingIcon} alt="Preparing" style={{ width: '40px', height: '30px' }} />
-                        </button>
+                        <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
+                        <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark ready" />
                       </>
-                    ) : isFired ? (
+                    ) : !isDimmed && isFired ? (
                       <>
-                        <button onClick={() => onUndoItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
-                          <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
-                        </button>
-                        <button onClick={() => onAdvanceItem?.(item.id, true)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark done">
-                          <img src={readyIcon} alt="Ready" style={{ width: '40px', height: '30px' }} />
-                        </button>
+                        <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
+                        <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id, true)} label="Mark done" />
                       </>
-                    ) : (
-                      <button onClick={() => onAdvanceItem?.(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark seen">
-                        <img src={seenIcon} alt="Seen" style={{ width: '40px', height: '30px' }} />
-                      </button>
-                    )}
+                    ) : !isDimmed ? (
+                      <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
+                    ) : null}
                   </div>
                 )}
               </div>
