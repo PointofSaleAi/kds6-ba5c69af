@@ -144,6 +144,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   // Course is completed if it's fired (already done) OR all items manually marked done
   const isCourseCompleted = coursingStatus === 'fired';
 
+  // Collapse done courses by default
+  const [isExpanded, setIsExpanded] = useState(!isCourseCompleted);
+
   // Live timer
   const timer = useCourseTimer(courseGroup, coursingStatus);
 
@@ -194,10 +197,21 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
   return (
     <div className={containerClass} style={containerStyle}>
-      <div className={`flex items-center justify-between flex-nowrap ${headerBg}`} style={{ ...headerStyle, padding: '4px 8px' }}>
-        <span className={labelClass} style={labelStyle}>
-          {courseLabel}
-        </span>
+      <div
+        className={`flex items-center justify-between flex-nowrap ${headerBg} ${isCourseCompleted ? 'cursor-pointer select-none' : ''}`}
+        style={{ ...headerStyle, padding: '4px 8px' }}
+        onClick={isCourseCompleted ? () => setIsExpanded(prev => !prev) : undefined}
+      >
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          {isCourseCompleted && (
+            <span className={`text-[11px] text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
+              ▶
+            </span>
+          )}
+          <span className={labelClass} style={labelStyle}>
+            {courseLabel}
+          </span>
+        </div>
         <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
           {timer && (
             <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums ${chipStyle}`}>
@@ -206,7 +220,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
           )}
           {showFireButton && onFireCourse && (
             <button
-              onClick={() => onFireCourse(courseGroup.course)}
+              onClick={(e) => { e.stopPropagation(); onFireCourse(courseGroup.course); }}
               disabled={fireButtonDisabled}
               className={`rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 ${
                 fireButtonDisabled
@@ -221,7 +235,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         </div>
       </div>
 
-      {hasItems && (
+      {hasItems && (!isCourseCompleted || isExpanded) && (
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
