@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
@@ -18,6 +18,7 @@ interface SettingsPanelProps {
   onOpenSub: (sub: string) => void;
   onLogOut?: () => void;
   onDevModeChange?: (enabled: boolean) => void;
+  initialSection?: Section;
 }
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
@@ -89,8 +90,9 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsPanelProps) {
-  const [activeSection, setActiveSection] = useState<Section>('display');
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display' }: SettingsPanelProps) {
+  const [activeSection, setActiveSection] = useState<Section>(initialSection);
+  useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [textSize, setTextSize] = useState('Standard');
   const [showAllergens, setShowAllergens] = useState(true);

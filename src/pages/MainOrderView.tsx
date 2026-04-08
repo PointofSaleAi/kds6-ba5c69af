@@ -55,6 +55,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('time');
+  const [settingsSection, setSettingsSection] = useState<string>('display');
   const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
@@ -295,10 +296,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
         {settingsOpen ? (
           <SettingsPanel
-            onClose={() => onCloseSettings?.()}
+            onClose={() => { onCloseSettings?.(); setSettingsSection('display'); }}
             onOpenSub={(sub) => onOpenSub?.(sub)}
             onLogOut={onLogOut}
             onDevModeChange={onDevModeChange}
+            initialSection={settingsSection as any}
           />
         ) : (
         <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
@@ -449,7 +451,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { setSettingsSection('language'); onNavigate('settings'); }} />
     </div>
   );
 }
