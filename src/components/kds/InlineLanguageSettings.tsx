@@ -32,7 +32,11 @@ const previewItems = [
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
-export default function InlineLanguageSettings() {
+interface InlineLanguageSettingsProps {
+  activeTab: 'language' | 'region';
+}
+
+export default function InlineLanguageSettings({ activeTab }: InlineLanguageSettingsProps) {
   const {
     language, setLanguage, t, displayMode, setDisplayMode,
     primaryLang, setPrimaryLang, secondaryLang, setSecondaryLang,
@@ -45,7 +49,6 @@ export default function InlineLanguageSettings() {
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
-  const [activeTab, setActiveTab] = useState<'language' | 'region'>('language');
 
   const filtered = languages.filter(
     (l) =>
@@ -95,32 +98,6 @@ export default function InlineLanguageSettings() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Tab bar */}
-      <div className="flex border-b border-border shrink-0 mb-4">
-        <button
-          onClick={() => setActiveTab('language')}
-          className={`px-4 py-2.5 text-sm font-semibold transition-colors relative ${
-            activeTab === 'language' ? 'text-text-primary' : 'text-text-muted hover:text-text-secondary'
-          }`}
-        >
-          Language
-          {activeTab === 'language' && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary rounded-full" />
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('region')}
-          className={`px-4 py-2.5 text-sm font-semibold transition-colors relative ${
-            activeTab === 'region' ? 'text-text-primary' : 'text-text-muted hover:text-text-secondary'
-          }`}
-        >
-          Region
-          {activeTab === 'region' && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary rounded-full" />
-          )}
-        </button>
-      </div>
-
       {/* Tab content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'language' ? (
