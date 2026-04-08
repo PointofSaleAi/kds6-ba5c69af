@@ -21,6 +21,7 @@ import type { ViewMode, Order } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
 
 interface MainOrderViewProps {
@@ -48,13 +49,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const [sortMode, setSortMode] = useState<SortMode>('time');
+  const sortDefaultMap: Record<string, SortMode> = { 'By Time': 'time', 'By Table': 'table', 'By Type': 'type' };
+  const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'time');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
@@ -389,42 +392,40 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Expo' ? (
                 <ExpoView onTicketsChange={setExpoTickets} />
               ) : (
-                <div className="flex-1 overflow-auto p-3">
-                  {viewMode === 'grid' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                      <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                  )}
-                  {viewMode === 'horizontal' && (
-                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-                      <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                  )}
-                  {viewMode === 'stagger' && (
+                <div className={`flex-1 overflow-auto p-3 ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
+                  {(staggerMode || viewMode === 'stagger') ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
                               <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} />
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
                         </div>
                       ))}
+                    </div>
+                  ) : viewMode === 'grid' ? (
+                    <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, 1fr))` }}>
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
                     </div>
                   )}
                 </div>

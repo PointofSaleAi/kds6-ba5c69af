@@ -9,6 +9,7 @@ import { BadgeVisibilityProvider } from "@/hooks/use-badge-visibility";
 import { SoundProvider } from "@/hooks/use-sound";
 import { StatusRulesProvider } from "@/hooks/use-status-rules";
 import { LanguageProvider } from "@/hooks/use-language";
+import { KDSSettingsProvider } from "@/hooks/use-kds-settings";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -21,6 +22,7 @@ const App = () => (
     <ThemeProvider>
       <LanguageProvider>
       <KDSModeProvider>
+      <KDSSettingsProvider>
       <SoundProvider>
       <BadgeVisibilityProvider>
       <StatusRulesProvider>
@@ -40,6 +42,7 @@ const App = () => (
       </StatusRulesProvider>
       </BadgeVisibilityProvider>
       </SoundProvider>
+      </KDSSettingsProvider>
       </KDSModeProvider>
       </LanguageProvider>
     </ThemeProvider>

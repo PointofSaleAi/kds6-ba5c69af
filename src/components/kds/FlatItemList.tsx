@@ -13,9 +13,10 @@ interface FlatItemListProps {
   onAdvanceItem: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem: (itemId: string) => void;
   onReRouteItem?: (item: OrderItem) => void;
+  showAllergens?: boolean;
 }
 
-export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem, onReRouteItem }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary } = useLanguage();
 
   const allItems = courses.flatMap(c => c.items);
@@ -50,7 +51,7 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
                 {item.isCompleted && !item.isCancelled && (
                   <span className="text-success text-xs">&#10003;</span>
                 )}
-                {item.allergens.length > 0 && item.allergens.map((a) => (
+                {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
               </div>

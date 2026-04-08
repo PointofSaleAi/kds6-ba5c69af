@@ -25,6 +25,7 @@ interface OrderCardProps {
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
   onAcknowledgeNotes?: (orderId: string) => void;
   stationCourse?: string;
+  showAllergens?: boolean;
 }
 
 const urgencyBorderMap = {
@@ -43,7 +44,7 @@ const statusBodyMap: Record<string, string> = {
   recalled: 'border-l-order-take-out',
 };
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
@@ -180,7 +181,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         </div>
 
-        <OrderAllergenStrip order={order} />
+        {showAllergens && <OrderAllergenStrip order={order} />}
 
         {order.orderNotes && (
           <OrderNotesSection
@@ -226,6 +227,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     stationCourse={stationCourse}
                     forcedStationStatus={forcedStatus}
                     onReRouteItem={(item) => setItemRouting(item)}
+                    showAllergens={showAllergens}
                   />
                 );
               })
@@ -236,6 +238,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               onAdvanceItem={handleAdvanceItem}
               onUndoItem={handleUndoItem}
               onReRouteItem={(item) => setItemRouting(item)}
+              showAllergens={showAllergens}
             />
           )}
         </div>

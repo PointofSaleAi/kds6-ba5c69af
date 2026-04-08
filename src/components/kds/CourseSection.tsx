@@ -23,6 +23,7 @@ interface CourseSectionProps {
   stationCourse?: string;
   forcedStationStatus?: StationStatus;
   onReRouteItem?: (item: OrderItem) => void;
+  showAllergens?: boolean;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -129,7 +130,7 @@ const urgencyChipStyles: Record<FireUrgency, string> = {
 const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
 const pendingChipStyle = 'bg-muted text-muted-foreground';
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -275,7 +276,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     {item.isCompleted && !item.isCancelled && (
                       <span className="text-success text-xs">&#10003;</span>
                     )}
-                    {item.allergens.length > 0 && item.allergens.map((a) => (
+                    {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
                       <AllergenBadge key={a.type} allergen={a} variant="item" />
                     ))}
                   </div>
