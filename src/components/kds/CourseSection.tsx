@@ -3,11 +3,8 @@ import { Languages } from 'lucide-react';
 import type { CourseGroup } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
+import { KdsActionIcon } from './KdsActionIcon';
 
-import seenIcon from '@/assets/seen-icon.svg';
-import preparingIcon from '@/assets/preparing-icon.svg';
-import undoIcon from '@/assets/undo-icon.svg';
-import readyIcon from '@/assets/item-ready-icon.svg';
 import fireIcon from '@/assets/fire-icon.png';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
@@ -144,7 +141,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     .filter(i => !i.isCancelled)
     .every(i => itemStatuses?.get(i.id) === 'done');
 
-  if (allItemsDone) return null;
+  const isCourseCompleted = coursingStatus === 'fired' && allItemsDone;
 
   // Live timer
   const timer = useCourseTimer(courseGroup, coursingStatus);
