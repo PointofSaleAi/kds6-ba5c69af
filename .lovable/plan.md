@@ -1,86 +1,36 @@
 
 
-# Plan: Connect Settings to KDS Home Screen
+# Plan: Fix Text Size and Status Colors Reflecting on Home Screen
 
-## Problem
-All settings in the SettingsPanel use local `useState` that resets on close and never reaches the KDS home screen. Each setting category needs a shared context so changes persist and reflect in real-time.
+## Issues Found
 
-## Solution: Create a KDS Settings Context
+### 1. Status Colors - NOT connected to custom rules
+The `OrderCard` uses a hardcoded `urgencyBorderMap` for the left border color:
+```
+ok → border-l-success (green)
+warning → border-l-warning (orange)
+critical → border-l-destructive (red)
+overtime → border-l-status-overtime (dark red)
+```
+These are static Tailwind classes based on a fixed ratio calculation (`getTimerUrgency`), completely ignoring the custom status rules from `StatusRulesProvider`. Only the `TimerBadge` timer text color uses the custom rules. When a user changes status colors in Settings > Status Colours, only the timer digit color changes, not the card border or any other visual element.
 
-### New file: `src/hooks/use-kds-settings.tsx`
-Create a single `KDSSettingsProvider` context with localStorage persistence for all settings:
+**Fix:** Update `OrderCard` to use `getStatusForElapsed()` from `useStatusRules()` for the left border color (inline style instead of hardcoded class). Also update `StatusChip` to reflect the active status rule color.
 
-**Display settings:**
-- `cardsPerRow` (number, default 4) - controls grid column count
-- `textSize` ('Compact' | 'Standard' | 'Large') - controls font scaling on cards
-- `showAllergens` (boolean) - toggles allergen badges on order cards
-- `enableBadge` - already handled by `useBadgeVisibility` (working)
-- Mode Switcher - already handled by `useKDSMode` (working)
+### 2. Text Size - Works but may appear broken
+The CSS classes `.text-scale-compact` (85%) and `.text-scale-large` (115%) ARE applied correctly. However, the settings panel replaces the order view when open, so users cannot see changes in real-time. The font scaling also only affects the order grid container, not the order card's internal elements which use fixed pixel sizes (`text-order-num`, `text-modifier`, etc.), making the change nearly invisible.
 
-**Order settings:**
-- `sortDefault` ('By Time' | 'By Table' | 'By Type') - sets initial sort mode
-- `staggerMode` (boolean) - placeholder toggle (no deep integration yet)
-- `servableModifiers` (boolean) - placeholder toggle
+**Fix:** Apply text scaling at the individual card level using a `style={{ fontSize }}` override so it cascades into the card's relative-sized elements. Convert key card typography from fixed `px` to `em` units so they respond to the parent scale factor.
 
-**Status Colours, Category Filter, Revenue Center Filter** - these open sub-panels and are already functional navigation, no data binding needed now.
+## Files to Change
 
-**Hardware settings** - Printer, Sound, Sync, Connection are sub-panel navigations or actions. Sound is already context-based. These are presentational/navigational, not data-binding issues.
+1. **`src/components/kds/OrderCard.tsx`** - Use `getStatusForElapsed()` for border color via inline `style.borderLeftColor`. Wrap card in a container that applies text size scaling.
 
-**Language** - already fully functional via `useLanguage` context.
+2. **`src/components/kds/TimerBadge.tsx`** - Already correct (uses status rules). No change needed.
 
----
+3. **`src/components/kds/StatusChip.tsx`** - Optionally derive chip color from status rules instead of hardcoded status config, so custom colors show in the chip too.
 
-### Changes by file
+4. **`src/index.css`** - No change needed, CSS classes are fine as a fallback.
 
-#### 1. `src/hooks/use-kds-settings.tsx` (NEW)
-- Context with: `cardsPerRow`, `textSize`, `showAllergens`, `sortDefault`, `staggerMode`, `servableModifiers`
-- All values persisted to localStorage
-- Provider wraps the app
-
-#### 2. `src/main.tsx`
-- Wrap app with `KDSSettingsProvider`
-
-#### 3. `src/components/kds/SettingsPanel.tsx`
-- Replace local `useState` for `cardsPerRow`, `textSize`, `showAllergens`, `sortDefault`, `staggerMode`, `servableModifiers` with values from `useKDSSettings()`
-- Settings changes now immediately update the context
-
-#### 4. `src/pages/MainOrderView.tsx`
-- Read `cardsPerRow` from context to set grid columns dynamically (`gridTemplateColumns: repeat(N, minmax(0, 1fr))`)
-- Read `textSize` from context and apply a CSS class to the card container (e.g., `text-scale-compact`, `text-scale-large`)
-- Read `showAllergens` from context and pass it down to `OrderCard`
-- Read `sortDefault` to initialize `sortMode` state
-- Read `staggerMode` - if ON, force viewMode to stagger layout
-
-#### 5. `src/components/kds/OrderCard.tsx`
-- Accept `showAllergens` prop (or read from context)
-- Conditionally render `OrderAllergenStrip` and item-level allergen badges
-
-#### 6. `src/components/kds/CourseSection.tsx` and `src/components/kds/FlatItemList.tsx`
-- Pass through or read `showAllergens` to hide/show item-level allergen badges
-
-#### 7. `src/index.css`
-- Add text scale utility classes:
-  - `.text-scale-compact` - reduces base font sizes by ~15%
-  - `.text-scale-large` - increases base font sizes by ~15%
-
----
-
-### What already works (no changes needed)
-- **Enable Badge** - uses `useBadgeVisibility` context (connected)
-- **Mode Switcher** - uses `useKDSMode` context (connected)
-- **Theme** - uses `useTheme` context (connected)
-- **Sound Settings** - uses `useSound` context (connected)
-- **Language/Region** - uses `useLanguage` context (connected)
-- **Status Colours** - opens sub-panel (navigational)
-- **Category/Revenue Filter** - opens sub-panel (navigational)
-- **Printer/Connection** - opens sub-panel (navigational)
-- **Sync** - action button (functional)
-
-### What this plan connects
-- **Cards Per Row** → grid column count on home screen
-- **Text Size** → font scaling on order cards
-- **Show Allergen Badges** → hides/shows allergen strips and badges
-- **Sort Default** → initializes sort order on home screen
-- **Stagger Mode** → forces stagger layout when ON
-- **Servable Modifiers** → stored in context for future use
+## What Already Works
+- Cards Per Row, Show Allergens, Sort Default, Stagger Mode, Enable Badge, Mode Switcher, Language, Sound - all functional.
 
