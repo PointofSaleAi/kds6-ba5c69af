@@ -235,7 +235,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
       {hasItems && (
         <div
-          className="overflow-hidden transition-all duration-200 ease-in-out"
+          className="overflow-hidden transition-all duration-300 ease-in-out"
           style={{
             maxHeight: isExpanded ? '500px' : '0px',
             opacity: isExpanded ? 1 : 0,
