@@ -144,21 +144,13 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     className="flex-1 rounded-lg p-2.5 text-left transition-all"
                     style={{ border: displayMode === 'dual' ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                   >
-                    <div className="flex items-start gap-2">
-                      <div
-                        className="w-3.5 h-3.5 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center"
-                        style={{ borderColor: displayMode === 'dual' ? '#111' : 'hsl(var(--border))' }}
-                      >
-                        {displayMode === 'dual' && <div className="w-1.5 h-1.5 rounded-full bg-text-primary" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-text-primary">Dual language</div>
                         <div className="text-[10px] text-text-muted mt-0.5">Two languages per item</div>
                         <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                           <div className="text-[11px] font-bold text-text-primary">2x French Fries</div>
                           <div className="text-[9px] text-text-muted">{getTranslation('fries', selectedLangInList)}</div>
                         </div>
-                      </div>
                     </div>
                   </button>
                 </div>
