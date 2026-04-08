@@ -2,33 +2,8 @@ import { useState } from 'react';
 import { Search, Check, ArrowLeftRight, Languages } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { toast } from 'sonner';
-
-interface Language {
-  code: LanguageCode;
-  name: string;
-  native: string;
-  flag: string;
-}
-
-const languages: Language[] = [
-  { code: 'en-US', name: 'English (US)', native: 'English', flag: '🇺🇸' },
-  { code: 'en-GB', name: 'English (UK)', native: 'English', flag: '🇬🇧' },
-  { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
-  { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
-];
-
-const translations: Record<string, Record<string, string>> = {
-  'en-US': { fries: 'French Fries', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
-  'en-GB': { fries: 'Chips', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
-  es: { fries: 'Papas fritas', chicken: 'Pollo a la parrilla', salad: 'Ensalada César' },
-  ar: { fries: 'بطاطس مقلية', chicken: 'دجاج مشوي', salad: 'سلطة سيزر' },
-};
-
-const previewItems = [
-  { qty: 2, key: 'fries' },
-  { qty: 1, key: 'chicken' },
-  { qty: 1, key: 'salad' },
-];
+import { OrderCard } from './OrderCard';
+import { mockOrders } from '@/data/mock-orders';
 
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
