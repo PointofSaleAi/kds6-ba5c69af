@@ -22,6 +22,7 @@ const App = () => (
     <ThemeProvider>
       <LanguageProvider>
       <KDSModeProvider>
+      <KDSSettingsProvider>
       <SoundProvider>
       <BadgeVisibilityProvider>
       <StatusRulesProvider>
@@ -41,6 +42,7 @@ const App = () => (
       </StatusRulesProvider>
       </BadgeVisibilityProvider>
       </SoundProvider>
+      </KDSSettingsProvider>
       </KDSModeProvider>
       </LanguageProvider>
     </ThemeProvider>
