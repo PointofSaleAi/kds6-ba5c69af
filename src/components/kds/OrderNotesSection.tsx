@@ -17,7 +17,7 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           Order Notes
         </span>
       </div>
-      <div className="flex items-start" style={{ padding: '4px', gap: 0 }}>
+      <div className={`flex items-start ${notesAcknowledged ? 'opacity-50' : ''}`} style={{ padding: '4px', gap: 0 }}>
         <div className="flex-1 min-w-0">
           <div className="text-[13px] text-text-primary leading-snug">
             {notes}
@@ -25,7 +25,7 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
         </div>
         <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }}>
           <KdsActionIcon
-            icon="seen"
+            icon={notesAcknowledged ? 'acknowledged' : 'seen'}
             onClick={() => {
               setNotesAcknowledged(!notesAcknowledged);
               onAcknowledgeNotes?.(orderId);
