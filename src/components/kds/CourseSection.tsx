@@ -345,6 +345,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             );
           })}
         </div>
+        </div>
       )}
     </div>
   );
