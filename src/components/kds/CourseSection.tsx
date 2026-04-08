@@ -198,9 +198,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   return (
     <div className={containerClass} style={containerStyle}>
       <div
-        className={`flex items-center justify-between flex-nowrap ${headerBg} ${isCourseCompleted ? 'cursor-pointer select-none' : ''}`}
+        className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
         style={{ ...headerStyle, padding: '4px 8px' }}
-        onClick={isCourseCompleted ? () => setIsExpanded(prev => !prev) : undefined}
+        onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
           {isCourseCompleted && (
