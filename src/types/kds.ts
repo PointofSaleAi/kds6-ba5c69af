@@ -73,6 +73,7 @@ export interface Order {
   targetSeconds: number;
   courses: CourseGroup[];
   itemCount: number;
+  orderNotes?: string;
 }
 
 export type ViewMode = 'grid' | 'horizontal' | 'stagger';
