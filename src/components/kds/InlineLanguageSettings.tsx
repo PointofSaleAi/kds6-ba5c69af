@@ -316,128 +316,152 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   ))}
                 </div>
                 <div className="mt-2 pt-2 border-t border-border">
-                  {requestSubmitted ? (
-                    <div className="flex items-center gap-2 px-3 py-2 min-h-[44px]">
-                      <CheckCircle size={16} className="text-green-600 shrink-0" />
-                      <span className="text-xs font-semibold text-green-700">Thanks! We'll notify you when this language is available.</span>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => setRequestFormOpen(!requestFormOpen)}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px]"
-                      >
-                        <span className="text-base">🌐</span>
-                        <span className="text-xs font-semibold text-brand-primary">Request a language</span>
-                      </button>
-                      {requestFormOpen && (
-                        <div className="mt-2 space-y-3 px-1 pb-1">
-                          {/* Language Name (required) */}
-                          <div>
-                            <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
-                              Language name *
-                            </label>
-                            <div ref={reqDropdownRef} className="relative">
-                              <div
-                                className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-1.5 cursor-text"
-                                onClick={() => setReqDropdownOpen(true)}
-                              >
-                                <Search size={14} className="text-text-muted shrink-0" />
-                                <input
-                                  type="text"
-                                  placeholder="Search languages..."
-                                  value={reqSelectedLang || reqLangSearch}
-                                  onChange={(e) => {
-                                    setReqLangSearch(e.target.value);
-                                    setReqSelectedLang('');
-                                    setReqDropdownOpen(true);
-                                  }}
-                                  onFocus={() => setReqDropdownOpen(true)}
-                                  className="flex-1 bg-transparent text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[28px]"
-                                />
-                                <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${reqDropdownOpen ? 'rotate-180' : ''}`} />
-                              </div>
-                              {reqDropdownOpen && (
-                                <div className="absolute z-20 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[180px] overflow-y-auto">
-                                  {filteredPopular.length > 0 && (
-                                    <>
-                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
-                                      {filteredPopular.map((lang) => (
-                                        <button
-                                          key={lang}
-                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
-                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
-                                        >
-                                          {lang}
-                                        </button>
-                                      ))}
-                                    </>
-                                  )}
-                                  {filteredMore.length > 0 && (
-                                    <>
-                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
-                                      {filteredMore.map((lang) => (
-                                        <button
-                                          key={lang}
-                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
-                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
-                                        >
-                                          {lang}
-                                        </button>
-                                      ))}
-                                    </>
-                                  )}
-                                  {filteredPopular.length === 0 && filteredMore.length === 0 && (
-                                    <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
+                  <button
+                    onClick={() => setRequestFormOpen(true)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px]"
+                  >
+                    <span className="text-base">🌐</span>
+                    <span className="text-xs font-semibold text-brand-primary">Request a language</span>
+                  </button>
+                </div>
 
-                          {/* Region / Dialect (conditional) */}
-                          {hasVariants && (
-                            <div>
-                              <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
-                                Region / Dialect
-                              </label>
+                {/* Request a Language Modal */}
+                {requestFormOpen && (
+                  <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center"
+                    onClick={() => setRequestFormOpen(false)}
+                  >
+                    <div className="absolute inset-0 bg-black/50" />
+                    <div
+                      className="relative bg-surface-card rounded-lg shadow-xl w-[480px] max-w-[90vw] max-h-[85vh] flex flex-col"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
+                        <h3 className="text-sm font-bold text-text-primary">Request a Language</h3>
+                        <button
+                          onClick={() => setRequestFormOpen(false)}
+                          className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-text-muted"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {/* Body */}
+                      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+                        {/* Language Name */}
+                        <div>
+                          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                            Language name *
+                          </label>
+                          <div ref={reqDropdownRef} className="relative">
+                            <div
+                              className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-1.5 cursor-text"
+                              onClick={() => setReqDropdownOpen(true)}
+                            >
+                              <Search size={14} className="text-text-muted shrink-0" />
                               <input
                                 type="text"
-                                placeholder="e.g. Simplified vs Traditional Chinese"
-                                value={reqDialect}
-                                onChange={(e) => setReqDialect(e.target.value)}
-                                className="w-full bg-muted rounded-lg px-2.5 py-2 text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[36px]"
+                                placeholder="Search languages..."
+                                value={reqSelectedLang || reqLangSearch}
+                                onChange={(e) => {
+                                  setReqLangSearch(e.target.value);
+                                  setReqSelectedLang('');
+                                  setReqDropdownOpen(true);
+                                }}
+                                onFocus={() => setReqDropdownOpen(true)}
+                                className="flex-1 bg-transparent text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[28px]"
                               />
+                              <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${reqDropdownOpen ? 'rotate-180' : ''}`} />
                             </div>
-                          )}
+                            {reqDropdownOpen && (
+                              <div className="absolute z-20 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[180px] overflow-y-auto">
+                                {filteredPopular.length > 0 && (
+                                  <>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
+                                    {filteredPopular.map((lang) => (
+                                      <button
+                                        key={lang}
+                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                      >
+                                        {lang}
+                                      </button>
+                                    ))}
+                                  </>
+                                )}
+                                {filteredMore.length > 0 && (
+                                  <>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
+                                    {filteredMore.map((lang) => (
+                                      <button
+                                        key={lang}
+                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                      >
+                                        {lang}
+                                      </button>
+                                    ))}
+                                  </>
+                                )}
+                                {filteredPopular.length === 0 && filteredMore.length === 0 && (
+                                  <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
 
-                          {/* Reason (optional) */}
+                        {/* Region / Dialect (conditional) */}
+                        {hasVariants && (
                           <div>
                             <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
-                              Why do you need it?
+                              Region / Dialect
                             </label>
                             <input
                               type="text"
-                              placeholder="Tell us your use case..."
-                              value={reqReason}
-                              onChange={(e) => setReqReason(e.target.value)}
+                              placeholder="e.g. Simplified vs Traditional Chinese"
+                              value={reqDialect}
+                              onChange={(e) => setReqDialect(e.target.value)}
                               className="w-full bg-muted rounded-lg px-2.5 py-2 text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[36px]"
                             />
                           </div>
+                        )}
 
-                          {/* Submit */}
-                          <button
-                            onClick={handleRequestSubmit}
-                            disabled={!reqSelectedLang}
-                            className="w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px] bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
-                          >
-                            Submit Request
-                          </button>
+                        {/* Reason */}
+                        <div>
+                          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                            Why do you need it?
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Tell us your use case..."
+                            value={reqReason}
+                            onChange={(e) => setReqReason(e.target.value)}
+                            className="w-full bg-muted rounded-lg px-2.5 py-2 text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[36px]"
+                          />
                         </div>
-                      )}
-                    </>
-                  )}
-                </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex gap-3 px-5 py-3.5 border-t border-border">
+                        <button
+                          onClick={() => setRequestFormOpen(false)}
+                          className="flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-border text-text-primary hover:bg-muted transition-colors min-h-[44px]"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleRequestSubmit}
+                          disabled={!reqSelectedLang}
+                          className="flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[44px]"
+                        >
+                          Submit Request
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
