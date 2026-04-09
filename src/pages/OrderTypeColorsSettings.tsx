@@ -2,18 +2,18 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-setti
 import { ChevronLeft, RotateCcw } from 'lucide-react';
 
 const ORDER_TYPES = [
-  { key: 'dine-in', label: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', items: ['Grilled Salmon', 'Caesar Salad', 'Garlic Bread'] },
-  { key: 'take-out', label: 'TAKE OUT', table: '#1042', server: 'Mike', time: '1:12', items: ['Burger Combo', 'Fries', 'Cola'] },
-  { key: 'delivery', label: 'DELIVERY', table: '#D-207', server: 'UberEats', time: '4:08', items: ['Pad Thai', 'Spring Rolls'] },
-  { key: 'banquet', label: 'BANQUET', table: 'Hall B', server: 'James', time: '0:45', items: ['Filet Mignon x12', 'Lobster Bisque x12'] },
+  { key: 'dine-in', label: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', orderNum: 142, items: ['Grilled Salmon', 'Caesar Salad', 'Garlic Bread'] },
+  { key: 'take-out', label: 'TAKE OUT', table: '#1042', server: 'Mike', time: '1:12', orderNum: 318, items: ['Burger Combo', 'Fries', 'Cola'] },
+  { key: 'delivery', label: 'DELIVERY', table: '#D-207', server: 'UberEats', time: '4:08', orderNum: 527, items: ['Pad Thai', 'Spring Rolls'] },
+  { key: 'banquet', label: 'BANQUET', table: 'Hall B', server: 'James', time: '0:45', orderNum: 891, items: ['Filet Mignon x12', 'Lobster Bisque x12'] },
 ] as const;
 
 interface OrderTypeColorsSettingsProps {
   onBack: () => void;
 }
 
-function LivePreviewCard({ type, label, table, server, time, items, bgColor }: {
-  type: string; label: string; table: string; server: string; time: string; items: readonly string[]; bgColor: string;
+function LivePreviewCard({ label, table, server, time, items, bgColor, orderNum }: {
+  label: string; table: string; server: string; time: string; items: readonly string[]; bgColor: string; orderNum: number;
 }) {
   return (
     <div className="rounded-lg overflow-hidden border border-border shadow-sm">
@@ -33,7 +33,7 @@ function LivePreviewCard({ type, label, table, server, time, items, bgColor }: {
       {/* Body */}
       <div className="bg-surface-card px-3 py-2">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[20px] font-black text-text-primary leading-none">#{Math.floor(Math.random() * 900 + 100)}</span>
+          <span className="text-[20px] font-black text-text-primary leading-none">#{orderNum}</span>
           <span className="text-[11px] text-text-muted">{server}</span>
         </div>
         {items.map((item, i) => (
@@ -76,14 +76,14 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         <div className="mb-6">
           <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Live Preview</span>
           <div className="grid grid-cols-4 gap-2">
-            {ORDER_TYPES.map(({ key, label, table, server, time, items }) => (
+            {ORDER_TYPES.map(({ key, label, table, server, time, orderNum, items }) => (
               <LivePreviewCard
                 key={key}
-                type={key}
                 label={label}
                 table={table}
                 server={server}
                 time={time}
+                orderNum={orderNum}
                 items={items}
                 bgColor={orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key]}
               />
