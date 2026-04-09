@@ -6,7 +6,8 @@ interface Translations {
   // Bottom bar
   ordersInQueue: string;
   sort: string;
-  sortByTime: string;
+  sortNewToOld: string;
+  sortOldToNew: string;
   sortByTable: string;
   sortByType: string;
   grid: string;
