@@ -1,13 +1,11 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { X, RotateCcw, GripVertical, Plus, Trash2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { RotateCcw, GripVertical, Plus, Trash2 } from 'lucide-react';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
 import AgingTimeline from '@/components/kds/AgingTimeline';
 import AgingEditPanel from '@/components/kds/AgingEditPanel';
 
 interface StatusSettingsProps {
-  open: boolean;
-  onClose: () => void;
+  onBack: () => void;
 }
 
 function validateRules(rules: StatusRule[]): Map<string, string[]> {
@@ -176,88 +174,6 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   );
 }
 
-export default function StatusSettings({ open, onClose }: StatusSettingsProps) {
-  const { rules: savedRules, setRules: saveRules, resetToDefaults } = useStatusRules();
-  const [draft, setDraft] = useState<StatusRule[]>(savedRules);
-  const [selectedId, setSelectedId] = useState<string>(draft[0]?.id || '');
-
-  const errors = useMemo(() => validateRules(draft), [draft]);
-  const hasErrors = errors.size > 0;
-
-  const selectedRule = draft.find(r => r.id === selectedId);
-  const selectedIndex = draft.findIndex(r => r.id === selectedId);
-  const isLastSelected = selectedIndex === draft.length - 1;
-
-  const maxMins = useMemo(() => {
-    const lastBounded = draft.filter(r => r.maxMinutes !== null);
-    const highestEnd = lastBounded.length > 0 ? Math.max(...lastBounded.map(r => r.maxMinutes!)) : 20;
-    return Math.max(30, highestEnd + 10);
-  }, [draft]);
-
-  if (!open) return null;
-
-  const updateRule = (id: string, updates: Partial<StatusRule>) => {
-    setDraft((prev) => {
-      const next = prev.map((r) => (r.id === id ? { ...r, ...updates } : r));
-      const idx = next.findIndex((r) => r.id === id);
-      if (updates.maxMinutes !== undefined && idx < next.length - 1 && updates.maxMinutes !== null) {
-        next[idx + 1] = { ...next[idx + 1], minMinutes: updates.maxMinutes + 1 };
-      }
-      return next;
-    });
-  };
-
-  const handleBoundaryDrag = (ruleId: string, newMax: number) => {
-    setDraft((prev) => {
-      const next = [...prev];
-      const idx = next.findIndex(r => r.id === ruleId);
-      if (idx === -1 || idx === next.length - 1) return prev;
-      const rule = next[idx];
-      if (newMax <= rule.minMinutes) return prev;
-      next[idx] = { ...rule, maxMinutes: newMax };
-      next[idx + 1] = { ...next[idx + 1], minMinutes: newMax + 1 };
-      return next;
-    });
-  };
-
-  const handleSave = () => {
-    if (hasErrors) return;
-    saveRules(draft);
-    onClose();
-  };
-
-  const handleReset = () => {
-    setDraft(DEFAULT_RULES);
-    setSelectedId(DEFAULT_RULES[0].id);
-    resetToDefaults();
-  };
-
-  const handleAddRule = () => {
-    const lastRule = draft[draft.length - 1];
-    const prevMax = draft.length >= 2 ? (draft[draft.length - 2].maxMinutes ?? 20) : 5;
-    const newMin = lastRule.minMinutes;
-    const newMax = newMin + 5;
-    const newId = `custom-${Date.now()}`;
-    const colors = ['#27AE60', '#2980B9', '#8E44AD', '#D4AC0D', '#1ABC9C', '#E67E22'];
-    const color = colors[draft.length % colors.length];
-    // Insert before last (open-ended) rule, push last rule forward
-    const updated = [
-      ...draft.slice(0, -1),
-      { ...draft[draft.length - 1], maxMinutes: newMax },
-      { id: newId, label: `Status ${draft.length + 1}`, color, textColor: 'white' as const, minMinutes: newMax + 1, maxMinutes: null },
-    ];
-    setDraft(rechainRules(updated));
-    setSelectedId(newId);
-  };
-
-  const handleRemoveRule = (id: string) => {
-    if (draft.length <= 2) return;
-    const filtered = draft.filter(r => r.id !== id);
-    const rechained = rechainRules(filtered);
-    setDraft(rechained);
-    if (selectedId === id) setSelectedId(rechained[0].id);
-  };
-
 const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
   {
     label: 'Fast Kitchen',
@@ -291,117 +207,173 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
   },
 ];
 
+export default function StatusSettings({ onBack }: StatusSettingsProps) {
+  const { rules: savedRules, setRules: saveRules, resetToDefaults } = useStatusRules();
+  const [draft, setDraft] = useState<StatusRule[]>(savedRules);
+  const [selectedId, setSelectedId] = useState<string>(draft[0]?.id || '');
+
+  const errors = useMemo(() => validateRules(draft), [draft]);
+  const hasErrors = errors.size > 0;
+
+  const selectedRule = draft.find(r => r.id === selectedId);
+  const selectedIndex = draft.findIndex(r => r.id === selectedId);
+  const isLastSelected = selectedIndex === draft.length - 1;
+
+  const maxMins = useMemo(() => {
+    const lastBounded = draft.filter(r => r.maxMinutes !== null);
+    const highestEnd = lastBounded.length > 0 ? Math.max(...lastBounded.map(r => r.maxMinutes!)) : 20;
+    return Math.max(30, highestEnd + 10);
+  }, [draft]);
+
+  const updateRule = (id: string, updates: Partial<StatusRule>) => {
+    setDraft((prev) => {
+      const next = prev.map((r) => (r.id === id ? { ...r, ...updates } : r));
+      const idx = next.findIndex((r) => r.id === id);
+      if (updates.maxMinutes !== undefined && idx < next.length - 1 && updates.maxMinutes !== null) {
+        next[idx + 1] = { ...next[idx + 1], minMinutes: updates.maxMinutes + 1 };
+      }
+      return next;
+    });
+  };
+
+  const handleBoundaryDrag = (ruleId: string, newMax: number) => {
+    setDraft((prev) => {
+      const next = [...prev];
+      const idx = next.findIndex(r => r.id === ruleId);
+      if (idx === -1 || idx === next.length - 1) return prev;
+      const rule = next[idx];
+      if (newMax <= rule.minMinutes) return prev;
+      next[idx] = { ...rule, maxMinutes: newMax };
+      next[idx + 1] = { ...next[idx + 1], minMinutes: newMax + 1 };
+      return next;
+    });
+  };
+
+  const handleSave = () => {
+    if (hasErrors) return;
+    saveRules(draft);
+    onBack();
+  };
+
+  const handleReset = () => {
+    setDraft(DEFAULT_RULES);
+    setSelectedId(DEFAULT_RULES[0].id);
+    resetToDefaults();
+  };
+
+  const handleAddRule = () => {
+    const lastRule = draft[draft.length - 1];
+    const prevMax = draft.length >= 2 ? (draft[draft.length - 2].maxMinutes ?? 20) : 5;
+    const newMin = lastRule.minMinutes;
+    const newMax = newMin + 5;
+    const newId = `custom-${Date.now()}`;
+    const colors = ['#27AE60', '#2980B9', '#8E44AD', '#D4AC0D', '#1ABC9C', '#E67E22'];
+    const color = colors[draft.length % colors.length];
+    const updated = [
+      ...draft.slice(0, -1),
+      { ...draft[draft.length - 1], maxMinutes: newMax },
+      { id: newId, label: `Status ${draft.length + 1}`, color, textColor: 'white' as const, minMinutes: newMax + 1, maxMinutes: null },
+    ];
+    setDraft(rechainRules(updated));
+    setSelectedId(newId);
+  };
+
+  const handleRemoveRule = (id: string) => {
+    if (draft.length <= 2) return;
+    const filtered = draft.filter(r => r.id !== id);
+    const rechained = rechainRules(filtered);
+    setDraft(rechained);
+    if (selectedId === id) setSelectedId(rechained[0].id);
+  };
+
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-brand-dark/60 z-50 flex items-center justify-center"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-surface-card rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl mx-4"
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Description */}
+      <div className="px-6 pb-3">
+        <p className="text-[12px] text-text-muted">
+          Orders change colour as they age. Adjust thresholds based on your kitchen speed.
+        </p>
+      </div>
+
+      {/* Presets */}
+      <div className="px-6 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets</span>
+          {PRESETS.map((preset) => {
+            const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
+              draft[i] && pr.color === draft[i].color && pr.minMinutes === draft[i].minMinutes && pr.maxMinutes === draft[i].maxMinutes && pr.label === draft[i].label
+            );
+            return (
+              <button
+                key={preset.label}
+                onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
+                className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg transition-colors min-h-[32px] ${
+                  isActive
+                    ? 'bg-foreground text-background'
+                    : 'bg-muted text-text-secondary hover:bg-accent hover:text-text-primary'
+                }`}
+                title={preset.description}
+              >
+                {preset.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Timeline */}
+      <div className="px-6 pb-4">
+        <AgingTimeline
+          rules={draft}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onBoundaryDrag={handleBoundaryDrag}
+          maxMinutes={maxMins}
+        />
+      </div>
+
+      {/* Two-panel body */}
+      <div className="flex-1 overflow-hidden flex min-h-0 mx-6 border border-border rounded-xl bg-surface-card">
+        {/* LEFT: Status List */}
+        <DraggableStatusList
+          rules={draft}
+          selectedId={selectedId}
+          errors={errors}
+          onSelect={setSelectedId}
+          onReorder={(newDraft) => setDraft(newDraft)}
+          onReset={handleReset}
+          onAdd={handleAddRule}
+          onRemove={handleRemoveRule}
+        />
+
+        {/* RIGHT: Edit Panel */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {selectedRule ? (
+            <AgingEditPanel
+              key={selectedRule.id}
+              rule={selectedRule}
+              isLast={isLastSelected}
+              onChange={(updates) => updateRule(selectedRule.id, updates)}
+              errors={errors.get(selectedRule.id) || []}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-sm text-text-muted">
+              Select a status rule to edit
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Save button */}
+      <div className="px-6 pb-4 pt-3 shrink-0">
+        <button
+          onClick={handleSave}
+          disabled={hasErrors}
+          className="w-full py-3 bg-foreground text-background font-bold text-sm uppercase rounded-lg transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none min-h-[44px]"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-border shrink-0">
-            <div>
-              <h2 className="text-base font-bold text-text-primary">Ticket Aging Rules</h2>
-              <p className="text-[11px] text-text-muted mt-0.5">
-                Orders change colour as they age. Adjust thresholds based on your kitchen speed.
-              </p>
-            </div>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
-              <X size={20} className="text-text-secondary" />
-            </button>
-          </div>
-
-          {/* Presets */}
-          <div className="px-5 py-3 border-b border-border shrink-0">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets</span>
-              {PRESETS.map((preset) => {
-                const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
-                  draft[i] && pr.color === draft[i].color && pr.minMinutes === draft[i].minMinutes && pr.maxMinutes === draft[i].maxMinutes && pr.label === draft[i].label
-                );
-                return (
-                  <button
-                    key={preset.label}
-                    onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
-                    className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg transition-colors min-h-[32px] ${
-                      isActive
-                        ? 'bg-foreground text-background'
-                        : 'bg-muted text-text-secondary hover:bg-accent hover:text-text-primary'
-                    }`}
-                    title={preset.description}
-                  >
-                    {preset.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Timeline */}
-          <div className="px-5 py-4 border-b border-border shrink-0">
-            <AgingTimeline
-              rules={draft}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-              onBoundaryDrag={handleBoundaryDrag}
-              maxMinutes={maxMins}
-            />
-          </div>
-
-          {/* Two-panel body */}
-          <div className="flex-1 overflow-hidden flex min-h-0">
-            {/* LEFT: Status List */}
-            <DraggableStatusList
-              rules={draft}
-              selectedId={selectedId}
-              errors={errors}
-              onSelect={setSelectedId}
-              onReorder={(newDraft) => setDraft(newDraft)}
-              onReset={handleReset}
-              onAdd={handleAddRule}
-              onRemove={handleRemoveRule}
-            />
-
-            {/* RIGHT: Edit Panel */}
-            <div className="flex-1 overflow-y-auto p-4">
-              {selectedRule ? (
-                <AgingEditPanel
-                  key={selectedRule.id}
-                  rule={selectedRule}
-                  isLast={isLastSelected}
-                  onChange={(updates) => updateRule(selectedRule.id, updates)}
-                  errors={errors.get(selectedRule.id) || []}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-sm text-text-muted">
-                  Select a status rule to edit
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="px-5 pb-4 pt-3 shrink-0 border-t border-border">
-            <button
-              onClick={handleSave}
-              disabled={hasErrors}
-              className="w-full py-3 bg-foreground text-background font-bold text-sm uppercase rounded-lg transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none min-h-[44px]"
-            >
-              Save Rules
-            </button>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+          Save Rules
+        </button>
+      </div>
+    </div>
   );
 }

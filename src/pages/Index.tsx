@@ -18,7 +18,7 @@ import PrintersScreen from '@/pages/PrintersScreen';
 import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
 import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
 import StaggerModeSettings from '@/pages/StaggerModeSettings';
-import StatusSettings from '@/pages/StatusSettings';
+
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
 const isDevMode = () => true;
@@ -48,7 +48,7 @@ const Index = () => {
   const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
   const [revenueFilterOpen, setRevenueFilterOpen] = useState(false);
   const [staggerOpen, setStaggerOpen] = useState(false);
-  const [statusSettingsOpen, setStatusSettingsOpen] = useState(false);
+  
   const [websocketOpen, setWebsocketOpen] = useState(false);
   const [printersScreenOpen, setPrintersScreenOpen] = useState(false);
 
@@ -94,7 +94,7 @@ const Index = () => {
       case 'category-filter': setCategoryFilterOpen(true); break;
       case 'revenue-filter': setRevenueFilterOpen(true); break;
       case 'stagger-mode': setStaggerOpen(true); break;
-      case 'status-settings': setStatusSettingsOpen(true); break;
+      case 'status-settings': break; // handled inline in SettingsPanel
       case 'websocket-settings': setWebsocketOpen(true); break;
       case 'printers': setPrintersScreenOpen(true); break;
     }
@@ -164,7 +164,7 @@ const Index = () => {
       <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} onApply={() => {}} />
       <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} onApply={() => {}} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
-      <StatusSettings open={statusSettingsOpen} onClose={() => setStatusSettingsOpen(false)} />
+      
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
       <PrintersScreen open={printersScreenOpen} onClose={() => setPrintersScreenOpen(false)} />
     </>
