@@ -148,7 +148,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
         <div className="flex items-center justify-between px-5 py-3 shrink-0">
           {/* Language tabs in header when language section is active */}
           {activeSection === 'language' ? (
-            <div className="flex gap-1">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveSection('display')}
+                className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Back to Display"
+              >
+                <ChevronLeft size={20} className="text-text-secondary" />
+              </button>
               {(['language', 'region'] as const).map((tab) => (
                 <button
                   key={tab}
