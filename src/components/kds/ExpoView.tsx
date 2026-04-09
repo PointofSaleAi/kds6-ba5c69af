@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Timer } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
 import {
@@ -12,7 +12,7 @@ import {
   type ExpoItemStatus,
 } from '@/data/mock-expo-orders';
 
-/* ── helpers ── */
+/* -- helpers -- */
 
 function formatTimer(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -20,8 +20,8 @@ function formatTimer(seconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-function allDone(t: ExpoTicket) {
-  return t.stations.every(s => s.status === 'done');
+function allDone(t: ExpoTicket, holds?: Set<string>) {
+  return t.stations.every(s => s.status === 'done' || holds?.has(`${t.id}-${s.name}`));
 }
 function isOvertime(t: ExpoTicket) {
   return t.timerSeconds >= 900;
@@ -31,13 +31,12 @@ function isWarning(t: ExpoTicket) {
 }
 
 function ticketBorderClass(t: ExpoTicket): string {
-  if (allDone(t)) return 'border-l-success';
+  if (t.stations.every(s => s.status === 'done')) return 'border-l-success';
   if (isOvertime(t)) return 'border-l-destructive';
-  if (isWarning(t)) return 'border-l-warning';
+  if (isWarning(t)) return 'border-l-border';
   return 'border-l-border';
 }
 
-/** FIX 5: header bg -- overtime uses red tint, warning uses amber */
 function ticketHeaderBg(t: ExpoTicket, colors: OrderTypeColors): { bg?: string; bgColor?: string; text: string } {
   if (isOvertime(t)) return { bg: 'bg-[#450a0a]', text: 'text-primary-foreground' };
   if (isWarning(t)) return { bg: 'bg-warning/20', text: 'text-text-primary' };
@@ -55,29 +54,97 @@ const stationChipStyles: Record<string, { bg: string; text: string }> = {
   done: { bg: 'bg-success/15', text: 'text-success' },
   firing: { bg: 'bg-warning/15', text: 'text-warning' },
   pending: { bg: 'bg-muted', text: 'text-text-muted' },
+  holding: { bg: 'bg-warning/30', text: 'text-warning' },
 };
 
-const itemStatusStyles: Record<ExpoItemStatus, string> = {
-  done: 'line-through text-text-muted',
-  firing: 'text-warning',
-  pending: 'text-text-primary',
-};
+/* -- Item status badge styles -- */
+function getItemStatusBadge(status: ExpoItemStatus, statusLabel?: string): { label: string; bg: string; text: string } | null {
+  if (status === 'done') return null; // strikethrough, no badge
+  if (statusLabel === 'Overdue') return { label: 'Overdue', bg: 'bg-destructive', text: 'text-white' };
+  if (status === 'firing' && statusLabel) return { label: statusLabel, bg: 'bg-warning/20', text: 'text-warning' };
+  if (status === 'pending' && statusLabel && !statusLabel.startsWith('Auto-fire')) {
+    return { label: statusLabel, bg: 'bg-muted', text: 'text-text-muted' };
+  }
+  if (status === 'pending') return { label: 'Pending', bg: 'bg-muted', text: 'text-text-muted' };
+  return null;
+}
 
-/* ── ExpoTicketCard ── */
+/* -- Auto-fire countdown badge -- */
+function AutoFireBadge({ ticket }: { ticket: ExpoTicket }) {
+  const [remaining, setRemaining] = useState(ticket.autoFireSeconds ?? 0);
+  const startRef = useRef(Date.now());
+  const initialRef = useRef(ticket.autoFireSeconds ?? 0);
 
-function ExpoStationChips({ stations }: { stations: ExpoStation[] }) {
+  useEffect(() => {
+    startRef.current = Date.now();
+    initialRef.current = ticket.autoFireSeconds ?? 0;
+    setRemaining(ticket.autoFireSeconds ?? 0);
+  }, [ticket.autoFireSeconds]);
+
+  useEffect(() => {
+    if (ticket.autoFireSeconds == null) return;
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startRef.current) / 1000);
+      setRemaining(Math.max(0, initialRef.current - elapsed));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [ticket.autoFireSeconds]);
+
+  if (ticket.autoFireSeconds == null) return null;
+
+  const isFiring = remaining <= 0;
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+        isFiring
+          ? 'bg-success text-white'
+          : 'bg-warning text-white'
+      }`}
+    >
+      <Timer size={10} />
+      {isFiring ? 'Firing...' : `Auto-fire ${formatTimer(remaining)}`}
+    </span>
+  );
+}
+
+/* -- ExpoStationChips with Hold/Release -- */
+
+function ExpoStationChips({
+  ticket,
+  holdStations,
+  onToggleHold,
+}: {
+  ticket: ExpoTicket;
+  holdStations: Set<string>;
+  onToggleHold: (ticketId: string, stationName: string) => void;
+}) {
+  const overtime = isOvertime(ticket);
+
   return (
     <div className="flex flex-wrap gap-1 px-2 py-1.5 border-b border-border">
-      {stations.map(s => {
-        const style = stationChipStyles[s.status];
+      {ticket.stations.map(s => {
+        const holdKey = `${ticket.id}-${s.name}`;
+        const isHolding = holdStations.has(holdKey);
+        const chipStatus = isHolding ? 'holding' : s.status;
+        const style = stationChipStyles[chipStatus];
+        const showHoldToggle = !overtime && (s.status === 'done' || isHolding);
+
         return (
           <span
             key={s.name}
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${style.bg} ${style.text} ${s.status === 'pending' ? 'border border-border' : ''}`}
+            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${style.bg} ${style.text} ${s.status === 'pending' && !isHolding ? 'border border-border' : ''} ${showHoldToggle ? 'cursor-pointer' : ''}`}
+            onClick={showHoldToggle ? () => onToggleHold(ticket.id, s.name) : undefined}
           >
             {s.name}
-            {s.status === 'done' && ' \u2713'}
+            {isHolding && ' Holding'}
+            {!isHolding && s.status === 'done' && ' \u2713'}
             {s.status === 'firing' && ' ...'}
+            {showHoldToggle && (
+              <span className="ml-0.5 text-[8px] opacity-70 font-normal">
+                {isHolding ? '(Release)' : '(Hold)'}
+              </span>
+            )}
           </span>
         );
       })}
@@ -85,18 +152,22 @@ function ExpoStationChips({ stations }: { stations: ExpoStation[] }) {
   );
 }
 
+/* -- ExpoTicketCard -- */
+
 interface ExpoTicketCardProps {
   ticket: ExpoTicket;
   onSendOut: (id: string) => void;
   onRush?: (id: string) => void;
+  holdStations: Set<string>;
+  onToggleHold: (ticketId: string, stationName: string) => void;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
-  const doneCount = ticket.stations.filter(s => s.status === 'done').length;
+  const doneCount = ticket.stations.filter(s => s.status === 'done' || holdStations.has(`${ticket.id}-${s.name}`)).length;
   const totalCount = ticket.stations.length;
-  const isDone = allDone(ticket);
+  const isDone = allDone(ticket, holdStations);
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
 
@@ -108,7 +179,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35 } }}
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300`}
     >
-      {/* FIX 2 + FIX 5: Header with swapped hierarchy and overtime red bg */}
+      {/* Header */}
       <div className={`flex items-center justify-between px-2 py-1.5 ${headerStyle.bg || ''} ${headerStyle.text}`} style={headerStyle.bgColor ? { backgroundColor: headerStyle.bgColor } : undefined}>
         <div className="flex flex-col">
           <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
@@ -118,28 +189,34 @@ function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
             #{ticket.orderNumber}
           </span>
         </div>
-        <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
+        <div className="flex items-center gap-1.5">
+          <AutoFireBadge ticket={ticket} />
+          <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
+        </div>
       </div>
 
-      {/* Station chips */}
-      <ExpoStationChips stations={ticket.stations} />
+      {/* Station chips with hold/release */}
+      <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
 
-      {/* FIX 3 + FIX 4: Item rows -- title case, × symbol */}
+      {/* Item rows with status badges */}
       <div className="px-2 py-1.5 space-y-0.5">
-        {ticket.items.map(item => (
-          <div key={item.id} className="flex items-start justify-between py-0.5">
-            <div className="flex-1 min-w-0">
-              <span className={`text-[13px] font-medium ${itemStatusStyles[item.status]}`}>
-                {item.quantity}&times; {tp(item.name)}
-              </span>
-              {item.statusLabel && (
-                <span className={`ml-2 text-[11px] italic ${item.status === 'firing' ? 'text-warning' : 'text-text-muted'}`}>
-                  {item.statusLabel}
+        {ticket.items.map(item => {
+          const badge = getItemStatusBadge(item.status, item.statusLabel);
+          return (
+            <div key={item.id} className="flex items-start justify-between py-0.5">
+              <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
+                <span className={`text-[13px] font-medium ${item.status === 'done' ? 'line-through text-text-muted' : 'text-text-primary'}`}>
+                  {item.quantity}&times; {tp(item.name)}
                 </span>
-              )}
+                {badge && (
+                  <span className={`inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold ${badge.bg} ${badge.text}`}>
+                    {badge.label}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Footer */}
@@ -173,7 +250,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush }: ExpoTicketCardProps) {
   );
 }
 
-/* ── Station Status Bar ── */
+/* -- Station Status Bar -- */
 
 function ExpoStationBar() {
   return (
@@ -192,7 +269,7 @@ function ExpoStationBar() {
   );
 }
 
-/* ── Top Bar Filter Buttons ── */
+/* -- Top Bar Filter Buttons -- */
 
 type ExpoFilter = 'all' | 'ready' | 'recalled';
 
@@ -222,7 +299,6 @@ function ExpoTopControls({
 
   return (
     <div className="flex items-center gap-3 px-3 py-2 bg-surface-card border-b border-border shrink-0">
-      {/* FIX 1: Solid purple badge */}
       <span
         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
         style={{ backgroundColor: '#7c3aed', color: '#ede9fe' }}
@@ -232,7 +308,6 @@ function ExpoTopControls({
 
       <div className="flex-1" />
 
-      {/* Filter buttons */}
       <div className="flex items-center bg-muted rounded-full p-0.5">
         {filters.map(f => (
           <button
@@ -252,22 +327,46 @@ function ExpoTopControls({
   );
 }
 
-/* ── Main ExpoView ── */
+/* -- Main ExpoView -- */
 
 export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (tickets: ExpoTicket[]) => void }) {
   const [tickets, setTickets] = useState<ExpoTicket[]>(mockExpoTickets);
   const [filter, setFilter] = useState<ExpoFilter>('all');
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
+  const [holdStations, setHoldStations] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     onTicketsChange?.(tickets);
   }, [tickets, onTicketsChange]);
+
+  const handleToggleHold = useCallback((ticketId: string, stationName: string) => {
+    const key = `${ticketId}-${stationName}`;
+    setHoldStations(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+        toast(`Released ${stationName}`);
+      } else {
+        next.add(key);
+        toast(`Holding ${stationName}`);
+      }
+      return next;
+    });
+  }, []);
 
   const handleSendOut = useCallback((id: string) => {
     const ticket = tickets.find(t => t.id === id);
     if (!ticket) return;
     setFulfilledTickets(prev => [ticket.orderNumber, ...prev]);
     setTickets(prev => prev.filter(t => t.id !== id));
+    // Clear holds for this ticket
+    setHoldStations(prev => {
+      const next = new Set(prev);
+      for (const key of prev) {
+        if (key.startsWith(id + '-')) next.delete(key);
+      }
+      return next;
+    });
     toast.success(`Ticket #${ticket.orderNumber} sent out`);
   }, [tickets]);
 
@@ -278,30 +377,27 @@ export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (ticke
   }, [tickets]);
 
   const filteredTickets = useMemo(() => {
-    if (filter === 'ready') return tickets.filter(allDone);
+    if (filter === 'ready') return tickets.filter(t => allDone(t, holdStations));
     return tickets;
-  }, [tickets, filter]);
+  }, [tickets, filter, holdStations]);
 
-  // Stats for bottom bar
   const stats = useMemo(() => {
     const open = tickets.length;
-    const ready = tickets.filter(allDone).length;
+    const ready = tickets.filter(t => allDone(t, holdStations)).length;
     const overtime = tickets.filter(isOvertime).length;
     const avgTime = tickets.length > 0
       ? Math.round(tickets.reduce((sum, t) => sum + t.timerSeconds, 0) / tickets.length)
       : 0;
     return { open, ready, overtime, avgTime };
-  }, [tickets]);
+  }, [tickets, holdStations]);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <ExpoTopControls filter={filter} onFilterChange={setFilter} fulfilledTickets={fulfilledTickets} />
       <ExpoStationBar />
 
-      {/* Ticket grid */}
       <div className="flex-1 overflow-auto p-3">
         {filteredTickets.length === 0 ? (
-          /* FIX 8: Empty state */
           <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
             <CheckCircle size={48} className="text-success/60" />
             <div className="text-center">
@@ -318,6 +414,8 @@ export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (ticke
                   ticket={ticket}
                   onSendOut={handleSendOut}
                   onRush={handleRush}
+                  holdStations={holdStations}
+                  onToggleHold={handleToggleHold}
                 />
               ))}
             </AnimatePresence>
@@ -325,13 +423,12 @@ export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (ticke
         )}
       </div>
 
-      {/* Expo bottom stats */}
       <ExpoBottomStats stats={stats} fulfilledTickets={fulfilledTickets} />
     </div>
   );
 }
 
-/* ── Expo Bottom Stats ── */
+/* -- Expo Bottom Stats -- */
 
 function ExpoBottomStats({
   stats,
