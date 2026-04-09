@@ -170,7 +170,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </button>
               ))}
             </div>
-          ) : activeSection === 'order-type-colors' ? (
+          ) : activeSection === 'order-type-colors' || activeSection === 'status-settings' ? (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setActiveSection('display')}
@@ -179,7 +179,9 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               >
                 <ChevronLeft size={20} className="text-text-secondary" />
               </button>
-              <h2 className="text-lg font-bold text-text-primary">Order Type Colors</h2>
+              <h2 className="text-lg font-bold text-text-primary">
+                {activeSection === 'order-type-colors' ? 'Order Type Colors' : 'Ticket Aging Rules'}
+              </h2>
             </div>
           ) : (
             <div />
@@ -192,7 +194,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
             <X size={20} className="text-text-secondary" />
           </button>
         </div>
-        {(activeSection === 'language' || activeSection === 'order-type-colors') && <div className="mx-5 h-px bg-border mb-4" />}
+        {(activeSection === 'language' || activeSection === 'order-type-colors' || activeSection === 'status-settings') && <div className="mx-5 h-px bg-border mb-4" />}
 
         {/* Section content */}
         <div className="flex-1 px-6 pb-6 overflow-y-auto">
