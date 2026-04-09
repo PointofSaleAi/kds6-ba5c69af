@@ -360,6 +360,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     className="fixed inset-0 z-[100] flex items-center justify-center"
                     onClick={(e) => {
                       if (reqDropdownRef.current?.contains(e.target as Node)) return;
+                      if (reqJustSelectedRef.current) { reqJustSelectedRef.current = false; return; }
                       setRequestFormOpen(false);
                     }}
                   >
