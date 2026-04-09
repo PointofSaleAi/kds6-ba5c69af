@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter, Building2 } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useKDSMode } from '@/hooks/use-kds-mode';
@@ -20,6 +20,7 @@ interface BottomStatusBarProps {
   hideViewControls?: boolean;
   onOpenLanguageSettings?: () => void;
   onOpenCategoryFilter?: () => void;
+  onOpenRevenueFilter?: () => void;
 }
 
 function SoundToggle() {
@@ -48,7 +49,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const [sortOpen, setSortOpen] = useState(false);
@@ -111,6 +112,22 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
               </button>
             </TooltipTrigger>
             <TooltipContent side="top"><p>{t.categoryFilter || 'Category Filter'}</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* Revenue center filter */}
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={onOpenRevenueFilter}
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
+                aria-label="Revenue center filter"
+              >
+                <Building2 size={14} className="text-primary-foreground/70" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue Center Filter'}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
