@@ -443,17 +443,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                       </div>
 
                       {/* Footer */}
-                      <div className="flex gap-3 px-5 py-3.5 border-t border-border">
-                        <button
-                          onClick={() => setRequestFormOpen(false)}
-                          className="flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider border border-border text-text-primary hover:bg-muted transition-colors min-h-[44px]"
-                        >
-                          Cancel
-                        </button>
+                      <div className="px-5 py-3.5 border-t border-border">
                         <button
                           onClick={handleRequestSubmit}
                           disabled={!reqSelectedLang}
-                          className="flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[44px]"
+                          className="w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[44px]"
                         >
                           Submit Request
                         </button>
