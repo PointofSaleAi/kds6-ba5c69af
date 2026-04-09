@@ -169,6 +169,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </button>
               ))}
             </div>
+          ) : activeSection === 'order-type-colors' ? (
+            <div />
           ) : (
             <div />
           )}
