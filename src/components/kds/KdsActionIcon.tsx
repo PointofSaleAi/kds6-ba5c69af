@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, Check, Undo2 } from 'lucide-react';
+import { Eye, Check, Undo2, BellRing } from 'lucide-react';
 
 export type KdsIconType = 'seen' | 'preparing' | 'ready' | 'undo' | 'acknowledged';
 
@@ -19,21 +19,21 @@ const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: 
     IconComponent: Eye,
   },
   preparing: {
-    bg: '#3B82F6',
+    bg: '#D1D5DB',
     border: 'none',
-    iconColor: '#FFFFFF',
-    IconComponent: Eye,
+    iconColor: '#EF4444',
+    IconComponent: BellRing,
   },
   ready: {
-    bg: '#22C55E',
+    bg: '#EDE9FE',
     border: 'none',
-    iconColor: '#FFFFFF',
+    iconColor: '#7C3AED',
     IconComponent: Check,
   },
   acknowledged: {
-    bg: '#22C55E',
+    bg: '#EDE9FE',
     border: 'none',
-    iconColor: '#FFFFFF',
+    iconColor: '#7C3AED',
     IconComponent: Check,
   },
   undo: {
