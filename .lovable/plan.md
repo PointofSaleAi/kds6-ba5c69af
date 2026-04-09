@@ -1,18 +1,13 @@
 
 
-# Order Type Colors - Two-Column Layout
+# Align Server Name and Timer with Order Number
 
-## Goal
-Reorganize the Order Type Colors settings into a side-by-side layout: color pickers on the left, live preview cards on the right.
+## Change
 
-## Changes
+In `src/components/kds/OrderCard.tsx` (lines 184-195), adjust the right column so the server name and timer visually align with the top and bottom edges of the order number:
 
-### File: `src/pages/OrderTypeColorsSettings.tsx`
+- Add `mt-1` (or `pt-1`) to the server name `<span>` to push it slightly down, aligning it with the top of the large order number text
+- Add `mb-1` (or `pb-1`) to the `TimerBadge` wrapper (or reduce gap) to pull the timer slightly up, aligning it with the bottom of the order number
 
-**Layout restructure:**
-- Wrap content in a two-column grid (`grid-cols-2`) with equal widths
-- **Left column**: All 9 color picker rows (color swatch + label + hex value) stacked vertically, plus the "Reset to Defaults" button at the bottom
-- **Right column**: All 9 live preview cards stacked vertically, each showing the corresponding order type with its current color applied to the header
-
-This gives a clear 1:1 visual mapping - each color picker on the left corresponds to the preview card at the same vertical position on the right. Both columns scroll together within the existing scrollable container.
+The right-side flex column already uses `justify-between self-stretch`, so fine-tuning margins on the children will achieve horizontal alignment with the order number on the left.
 
