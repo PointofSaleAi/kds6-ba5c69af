@@ -182,17 +182,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
 
           <div
-            className="px-2 pt-1.5 pb-1"
+            className="px-2 pt-1.5 pb-1.5"
             style={{ backgroundColor: statusColor.color }}
           >
             <div className="flex items-start justify-between">
               <div className="text-order-num text-white leading-none">
                 {order.orderNumber}
               </div>
-              <div className="flex flex-col items-end gap-0.5 mt-1">
-                <span className="text-modifier text-white/80">{order.serverName}</span>
-                <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
-              </div>
+              <span className="text-modifier text-white/80 mt-1">{order.serverName}</span>
+            </div>
+            <div className="flex items-center justify-between mt-0.5">
+              <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
             </div>
           </div>
 
