@@ -251,8 +251,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             return (
               <div
                 key={item.id}
-                className={`flex items-start border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
-                style={{ padding: '4px', gap: 0 }}
+                className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
+                style={{ padding: '4px 0 4px 4px', gap: 0 }}
                 onClick={() => !item.isCancelled && onReRouteItem?.(item)}
               >
                 {/* Child 1 — item-main */}
@@ -325,7 +325,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
                 {/* Child 2 — item-action (stopPropagation to isolate from row tap) */}
                 {!item.isCancelled && (
-                  <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }} onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center shrink-0 ml-auto" style={{ gap: '4px' }} onClick={(e) => e.stopPropagation()}>
                     {isCourseCompleted ? (
                       <KdsActionIcon icon="acknowledged" disabled />
                     ) : !isDimmed && status === 'ready' ? (

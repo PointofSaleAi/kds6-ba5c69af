@@ -14,8 +14,8 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
   return (
     <div
-      className={`flex items-start border-b border-border/50 ${dimmed ? 'opacity-[0.32]' : ''}`}
-      style={{ padding: '4px', gap: 0 }}
+      className={`flex items-center border-b border-border/50 ${dimmed ? 'opacity-[0.32]' : ''}`}
+      style={{ padding: '4px 0 4px 4px', gap: 0 }}
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
@@ -71,7 +71,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
       <div
         className="flex items-center shrink-0"
-        style={{ gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
+        style={{ gap: '4px', display: dimmed ? 'none' : 'flex' }}
       >
         <KdsActionIcon icon="seen" label="Mark seen" />
       </div>
