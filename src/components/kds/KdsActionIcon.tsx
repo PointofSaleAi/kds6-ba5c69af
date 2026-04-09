@@ -1,18 +1,7 @@
-import seenIcon from '@/assets/seen-icon.svg';
-import preparingIcon from '@/assets/preparing-icon.svg';
-import readyIcon from '@/assets/item-ready-icon.svg';
-import undoIcon from '@/assets/undo-icon.svg';
-import acknowledgedIcon from '@/assets/acknowledged-icon.svg';
+import { useState } from 'react';
+import { Eye, Check, Undo2 } from 'lucide-react';
 
-const iconMap = {
-  seen: { src: seenIcon, alt: 'Seen' },
-  preparing: { src: preparingIcon, alt: 'Preparing' },
-  ready: { src: readyIcon, alt: 'Ready' },
-  undo: { src: undoIcon, alt: 'Undo' },
-  acknowledged: { src: acknowledgedIcon, alt: 'Acknowledged' },
-} as const;
-
-export type KdsIconType = keyof typeof iconMap;
+export type KdsIconType = 'seen' | 'preparing' | 'ready' | 'undo' | 'acknowledged';
 
 interface KdsActionIconProps {
   icon: KdsIconType;
@@ -22,18 +11,72 @@ interface KdsActionIconProps {
   disabled?: boolean;
 }
 
+const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: string; IconComponent: typeof Eye }> = {
+  seen: {
+    bg: '#FFFFFF',
+    border: '2px solid #3B82F6',
+    iconColor: '#3B82F6',
+    IconComponent: Eye,
+  },
+  preparing: {
+    bg: '#3B82F6',
+    border: 'none',
+    iconColor: '#FFFFFF',
+    IconComponent: Eye,
+  },
+  ready: {
+    bg: '#22C55E',
+    border: 'none',
+    iconColor: '#FFFFFF',
+    IconComponent: Check,
+  },
+  acknowledged: {
+    bg: '#22C55E',
+    border: 'none',
+    iconColor: '#FFFFFF',
+    IconComponent: Check,
+  },
+  undo: {
+    bg: '#FFFFFF',
+    border: '2px solid #94A3B8',
+    iconColor: '#64748B',
+    IconComponent: Undo2,
+  },
+};
+
 export function KdsActionIcon({ icon, onClick, label, title, disabled }: KdsActionIconProps) {
-  const { src, alt } = iconMap[icon];
+  const [animating, setAnimating] = useState(false);
+  const style = stateStyles[icon];
+  const { IconComponent } = style;
+
+  const handleClick = () => {
+    if (disabled) return;
+    setAnimating(true);
+    setTimeout(() => setAnimating(false), 150);
+    onClick?.();
+  };
 
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
-      className={`flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px] ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
-      aria-label={label ?? alt}
+      className={`flex items-center justify-center min-w-[44px] min-h-[33px] ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
+      aria-label={label ?? icon}
       title={title}
     >
-      <img src={src} alt={alt} style={{ width: 40, height: 30 }} />
+      <div
+        className="flex items-center justify-center rounded-full"
+        style={{
+          width: 30,
+          height: 30,
+          backgroundColor: style.bg,
+          border: style.border,
+          transition: 'all 150ms ease',
+          transform: animating ? 'scale(1.15)' : 'scale(1)',
+        }}
+      >
+        <IconComponent size={16} color={style.iconColor} strokeWidth={2.5} />
+      </div>
     </button>
   );
 }
