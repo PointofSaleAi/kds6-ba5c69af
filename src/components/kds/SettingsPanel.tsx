@@ -378,6 +378,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </div>
               </SettingsCard>
 
+              <SettingsCard>
+                <CardLabel label="Region" description="Language and regional preferences" />
+                <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
+              </SettingsCard>
 
 
               <SettingsCard className="col-span-2">
