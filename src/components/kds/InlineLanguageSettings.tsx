@@ -108,6 +108,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
   const reqInputTriggerRef = useRef<HTMLDivElement>(null);
   const reqDropdownRef = useRef<HTMLDivElement>(null);
+  const reqJustSelectedRef = useRef(false);
   const [reqDropdownPos, setReqDropdownPos] = useState<{ top: number; left: number; width: number } | null>(null);
 
   const updateDropdownPos = useCallback(() => {
@@ -359,6 +360,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     className="fixed inset-0 z-[100] flex items-center justify-center"
                     onClick={(e) => {
                       if (reqDropdownRef.current?.contains(e.target as Node)) return;
+                      if (reqJustSelectedRef.current) { reqJustSelectedRef.current = false; return; }
                       setRequestFormOpen(false);
                     }}
                   >
@@ -409,6 +411,8 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                             {reqDropdownOpen && reqDropdownPos && createPortal(
                               <div
                                 ref={reqDropdownRef}
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onClick={(e) => e.stopPropagation()}
                                 className="bg-surface-card border border-border rounded-lg shadow-lg max-h-[240px] overflow-y-auto"
                                 style={{
                                   position: 'fixed',
@@ -424,7 +428,14 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                     {filteredPopular.map((lang) => (
                                       <button
                                         key={lang}
-                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        onMouseDown={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          reqJustSelectedRef.current = true;
+                                          setReqSelectedLang(lang);
+                                          setReqLangSearch('');
+                                          setReqDropdownOpen(false);
+                                        }}
                                         className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
                                       >
                                         {lang}
@@ -438,7 +449,14 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                     {filteredMore.map((lang) => (
                                       <button
                                         key={lang}
-                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        onMouseDown={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          reqJustSelectedRef.current = true;
+                                          setReqSelectedLang(lang);
+                                          setReqLangSearch('');
+                                          setReqDropdownOpen(false);
+                                        }}
                                         className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
                                       >
                                         {lang}
