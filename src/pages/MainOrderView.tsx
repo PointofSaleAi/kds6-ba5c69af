@@ -49,17 +49,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
+  const { orders, setOrders, expoTickets } = useOrderStore();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const sortDefaultMap: Record<string, SortMode> = { 'By Time': 'newest', 'By Table': 'table', 'By Type': 'type' };
   const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
-  const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
-  const prevOrderCountRef = useRef(mockOrders.length);
+  const prevOrderCountRef = useRef(orders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
 
   const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
