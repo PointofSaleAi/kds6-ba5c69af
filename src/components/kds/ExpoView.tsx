@@ -185,7 +185,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
           <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
             {orderTypeLabel[ticket.orderType]} &middot; {ticket.tableName}
           </span>
-          <span className="text-[12px] font-medium opacity-85 leading-tight">
+          <span className="text-[12px] font-bold opacity-85 leading-tight">
             #{ticket.orderNumber}
           </span>
         </div>
