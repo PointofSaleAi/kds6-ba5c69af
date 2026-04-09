@@ -30,6 +30,28 @@ const translations: Record<string, Record<string, string>> = {
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
 
+const variantLanguages = new Set(['Chinese', 'Portuguese', 'Arabic', 'Malay', 'Uzbek', 'Serbian']);
+
+const popularRequestLanguages = [
+  'French', 'German', 'Japanese', 'Korean',
+  'Portuguese (Brazil)', 'Portuguese (Portugal)',
+  'Hindi', 'Bengali', 'Punjabi', 'Tamil', 'Telugu', 'Marathi',
+];
+
+const moreLanguages = [
+  'Afrikaans','Albanian','Amharic','Armenian','Azerbaijani','Basque','Belarusian','Bosnian',
+  'Bulgarian','Burmese','Catalan','Cebuano','Chichewa','Chinese (Simplified)','Chinese (Traditional)',
+  'Corsican','Croatian','Czech','Danish','Dutch','Esperanto','Estonian','Filipino','Finnish',
+  'Frisian','Galician','Georgian','Greek','Gujarati','Haitian Creole','Hausa','Hawaiian',
+  'Hebrew','Hmong','Hungarian','Icelandic','Igbo','Indonesian','Irish','Italian','Javanese',
+  'Kannada','Kazakh','Khmer','Kinyarwanda','Kurdish','Kyrgyz','Lao','Latin','Latvian',
+  'Lithuanian','Luxembourgish','Macedonian','Malagasy','Malay','Malayalam','Maltese','Maori',
+  'Mongolian','Nepali','Norwegian','Odia','Pashto','Persian','Polish','Romanian','Russian',
+  'Samoan','Scots Gaelic','Serbian','Sesotho','Shona','Sindhi','Sinhala','Slovak','Slovenian',
+  'Somali','Sundanese','Swahili','Swedish','Tajik','Thai','Turkish','Turkmen','Ukrainian',
+  'Urdu','Uyghur','Vietnamese','Welsh','Xhosa','Yiddish','Yoruba','Zulu',
+];
+
 const timezoneOptions = [
   { value: 'auto', label: 'Auto-detect (based on device)' },
   { value: 'America/New_York', label: 'America/New_York (EST)' },
