@@ -10,6 +10,7 @@ import { SoundProvider } from "@/hooks/use-sound";
 import { StatusRulesProvider } from "@/hooks/use-status-rules";
 import { LanguageProvider } from "@/hooks/use-language";
 import { KDSSettingsProvider } from "@/hooks/use-kds-settings";
+import { OrderStoreProvider } from "@/hooks/use-order-store";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -26,6 +27,7 @@ const App = () => (
       <SoundProvider>
       <BadgeVisibilityProvider>
       <StatusRulesProvider>
+      <OrderStoreProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -39,6 +41,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </OrderStoreProvider>
       </StatusRulesProvider>
       </BadgeVisibilityProvider>
       </SoundProvider>
