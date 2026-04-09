@@ -108,6 +108,14 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
   const reqInputTriggerRef = useRef<HTMLDivElement>(null);
   const reqDropdownRef = useRef<HTMLDivElement>(null);
+  const [reqDropdownPos, setReqDropdownPos] = useState<{ top: number; left: number; width: number } | null>(null);
+
+  const updateDropdownPos = useCallback(() => {
+    if (reqInputTriggerRef.current) {
+      const rect = reqInputTriggerRef.current.getBoundingClientRect();
+      setReqDropdownPos({ top: rect.bottom + 4, left: rect.left, width: rect.width });
+    }
+  }, []);
 
   const existingLangNames = languages.map(l => l.name);
   const filteredPopular = popularRequestLanguages.filter(
