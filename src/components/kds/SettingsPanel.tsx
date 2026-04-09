@@ -27,7 +27,6 @@ const sections: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: 'orders', label: 'Orders', icon: ShoppingBag },
   { id: 'hardware', label: 'Hardware', icon: Cpu },
   { id: 'account', label: 'Account', icon: User },
-  { id: 'language', label: 'Language', icon: Globe },
 ];
 
 function SettingsCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -266,6 +265,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                     )}
                   </div>
                 )}
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Region" description="Language and regional preferences" />
+                <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
               </SettingsCard>
             </div>
           )}
