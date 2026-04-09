@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import { CheckCircle, Timer } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
+import { useOrderStore } from '@/hooks/use-order-store';
 import {
-  mockExpoTickets,
   kitchenStations,
   type ExpoTicket,
   type ExpoStation,
@@ -329,15 +329,11 @@ function ExpoTopControls({
 
 /* -- Main ExpoView -- */
 
-export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (tickets: ExpoTicket[]) => void }) {
-  const [tickets, setTickets] = useState<ExpoTicket[]>(mockExpoTickets);
+export default function ExpoView() {
+  const { expoTickets: tickets, sendOutOrder } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
   const [holdStations, setHoldStations] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    onTicketsChange?.(tickets);
-  }, [tickets, onTicketsChange]);
 
   const handleToggleHold = useCallback((ticketId: string, stationName: string) => {
     const key = `${ticketId}-${stationName}`;
@@ -358,7 +354,7 @@ export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (ticke
     const ticket = tickets.find(t => t.id === id);
     if (!ticket) return;
     setFulfilledTickets(prev => [ticket.orderNumber, ...prev]);
-    setTickets(prev => prev.filter(t => t.id !== id));
+    sendOutOrder(id);
     // Clear holds for this ticket
     setHoldStations(prev => {
       const next = new Set(prev);
@@ -368,7 +364,7 @@ export default function ExpoView({ onTicketsChange }: { onTicketsChange?: (ticke
       return next;
     });
     toast.success(`Ticket #${ticket.orderNumber} sent out`);
-  }, [tickets]);
+  }, [tickets, sendOutOrder]);
 
   const handleRush = useCallback((id: string) => {
     const ticket = tickets.find(t => t.id === id);
