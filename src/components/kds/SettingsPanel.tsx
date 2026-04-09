@@ -209,6 +209,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard>
+                <CardLabel label="Region" description="Language and regional preferences" />
+                <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
+              </SettingsCard>
+
+              <SettingsCard>
                 <CardLabel label="Text Size" />
                 <PillToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} />
               </SettingsCard>
