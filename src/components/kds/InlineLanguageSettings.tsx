@@ -139,16 +139,35 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     toast.success("Thanks! We'll notify you when this language is available.");
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (portal-aware)
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (reqDropdownRef.current && !reqDropdownRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (
+        reqDropdownRef.current && !reqDropdownRef.current.contains(target) &&
+        reqInputTriggerRef.current && !reqInputTriggerRef.current.contains(target)
+      ) {
         setReqDropdownOpen(false);
       }
     };
-    if (reqDropdownOpen) document.addEventListener('mousedown', handler);
+    if (reqDropdownOpen) {
+      document.addEventListener('mousedown', handler);
+      updateDropdownPos();
+    }
     return () => document.removeEventListener('mousedown', handler);
-  }, [reqDropdownOpen]);
+  }, [reqDropdownOpen, updateDropdownPos]);
+
+  // Reposition dropdown on scroll/resize
+  useEffect(() => {
+    if (!reqDropdownOpen) return;
+    const reposition = () => updateDropdownPos();
+    window.addEventListener('scroll', reposition, true);
+    window.addEventListener('resize', reposition);
+    return () => {
+      window.removeEventListener('scroll', reposition, true);
+      window.removeEventListener('resize', reposition);
+    };
+  }, [reqDropdownOpen, updateDropdownPos]);
 
   const filtered = languages.filter(
     (l) =>
