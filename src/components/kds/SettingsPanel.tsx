@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
+import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
@@ -12,7 +13,7 @@ import {
 import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
-type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language';
+type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors';
 
 interface SettingsPanelProps {
   onClose: () => void;
@@ -168,6 +169,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </button>
               ))}
             </div>
+          ) : activeSection === 'order-type-colors' ? (
+            <div />
           ) : (
             <div />
           )}
@@ -221,6 +224,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               <SettingsCard>
                 <CardLabel label="Status Colours" description="Customise order status colours" />
                 <ActionButton label="Customise" onClick={() => onOpenSub('status-settings')} />
+              </SettingsCard>
+
+              <SettingsCard>
+                <CardLabel label="Order Type Colors" description="Customise order type header colors" />
+                <ActionButton label="Customise" onClick={() => setActiveSection('order-type-colors')} />
               </SettingsCard>
 
               <SettingsCard>
@@ -396,6 +404,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
           {activeSection === 'language' && (
             <InlineLanguageSettings activeTab={langTab} />
+          )}
+
+          {activeSection === 'order-type-colors' && (
+            <OrderTypeColorsSettings onBack={() => setActiveSection('display')} />
           )}
         </div>
       </div>
