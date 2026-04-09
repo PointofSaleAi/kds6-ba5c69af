@@ -440,7 +440,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                     {filteredMore.map((lang) => (
                                       <button
                                         key={lang}
-                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        onClick={() => { reqJustSelectedRef.current = true; setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
                                         className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
                                       >
                                         {lang}
