@@ -94,6 +94,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setCurrency: update('currency'),
         setTempUnit: update('tempUnit'),
         setWeekStart: update('weekStart'),
+        setOrderTypeColors: update('orderTypeColors'),
       }}
     >
       {children}
