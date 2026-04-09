@@ -183,7 +183,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
           <div
             className="px-2 pt-1.5 pb-1"
-            style={{ backgroundColor: `${statusColor.color}20` }}
+            style={{ backgroundColor: statusColor.color }}
           >
             <div className="flex items-start justify-between">
               <div className="text-order-num text-text-primary leading-none">
