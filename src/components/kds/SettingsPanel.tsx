@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
+import StatusSettings from '@/pages/StatusSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
@@ -13,7 +14,7 @@ import {
 import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
-type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors';
+type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
 
 interface SettingsPanelProps {
   onClose: () => void;
