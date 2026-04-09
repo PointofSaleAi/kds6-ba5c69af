@@ -263,35 +263,25 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           Live Ticket Preview
         </label>
         <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-          {/* Ticket header */}
-          <div
-            className="px-3 py-2"
-            style={{ backgroundColor: rule.color, color: textColor }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase opacity-80">DINE IN</span>
-              <span className="text-[10px] font-mono opacity-80">12:34 PM</span>
+          {/* Order type header */}
+          <div className="px-3 py-1.5 flex items-center justify-between" style={{ backgroundColor: '#1A1A2E' }}>
+            <span className="text-[10px] font-bold uppercase text-white">DINE IN</span>
+            <span className="text-[10px] font-mono text-white/70">12:34 PM</span>
+          </div>
+          {/* Order number section - status color */}
+          <div className="px-3 pt-1.5 pb-1" style={{ backgroundColor: rule.color, color: textColor }}>
+            <div className="text-2xl font-black leading-none">#1042</div>
+            <div className="flex items-center justify-between mt-0.5">
+              <span className="font-mono text-xs font-bold opacity-90">
+                {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
+              </span>
+              <span className="text-[10px] opacity-80">Sarah K</span>
             </div>
-            <div className="text-2xl font-black mt-0.5">#1042</div>
           </div>
           {/* Ticket body */}
           <div className="bg-surface-card px-3 py-2">
             <div className="text-xs font-semibold text-text-primary">Chicken Burger x2</div>
             <div className="text-[11px] text-text-muted mt-0.5">+ Extra cheese, No onion</div>
-            <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
-              <span
-                className="font-mono text-sm font-bold"
-                style={{ color: rule.color }}
-              >
-                {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
-              </span>
-              <span
-                className="text-[10px] font-bold px-2 py-0.5 rounded"
-                style={{ backgroundColor: rule.color, color: textColor }}
-              >
-                {rule.label}
-              </span>
-            </div>
           </div>
         </div>
       </div>
