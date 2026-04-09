@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, Check, ArrowLeftRight, Languages, ChevronDown, CheckCircle } from 'lucide-react';
+import { Search, Check, ArrowLeftRight, Languages, ChevronDown } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
