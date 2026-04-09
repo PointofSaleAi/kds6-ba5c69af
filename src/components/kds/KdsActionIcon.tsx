@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Eye, Check, Undo2, BellRing } from 'lucide-react';
+import { Eye, Check, Undo2 } from 'lucide-react';
+import preparingIcon from '@/assets/preparing-icon.svg';
 
 export type KdsIconType = 'seen' | 'preparing' | 'ready' | 'undo' | 'acknowledged';
 
@@ -11,7 +12,15 @@ interface KdsActionIconProps {
   disabled?: boolean;
 }
 
-const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: string; IconComponent: typeof Eye }> = {
+type StateStyle = {
+  bg: string;
+  border: string;
+  iconColor: string;
+  IconComponent?: typeof Eye;
+  svgSrc?: string;
+};
+
+const stateStyles: Record<KdsIconType, StateStyle> = {
   seen: {
     bg: '#FFFFFF',
     border: '2px solid #3B82F6',
@@ -19,10 +28,10 @@ const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: 
     IconComponent: Eye,
   },
   preparing: {
-    bg: '#D1D5DB',
+    bg: 'transparent',
     border: 'none',
-    iconColor: '#EF4444',
-    IconComponent: BellRing,
+    iconColor: '',
+    svgSrc: preparingIcon,
   },
   ready: {
     bg: '#EDE9FE',
@@ -64,19 +73,32 @@ export function KdsActionIcon({ icon, onClick, label, title, disabled }: KdsActi
       aria-label={label ?? icon}
       title={title}
     >
-      <div
-        className="flex items-center justify-center rounded-full"
-        style={{
-          width: 30,
-          height: 30,
-          backgroundColor: style.bg,
-          border: style.border,
-          transition: 'all 150ms ease',
-          transform: animating ? 'scale(1.15)' : 'scale(1)',
-        }}
-      >
-        <IconComponent size={16} color={style.iconColor} strokeWidth={2.5} />
-      </div>
+      {style.svgSrc ? (
+        <img
+          src={style.svgSrc}
+          alt={icon}
+          style={{
+            width: 40,
+            height: 30,
+            transition: 'all 150ms ease',
+            transform: animating ? 'scale(1.15)' : 'scale(1)',
+          }}
+        />
+      ) : (
+        <div
+          className="flex items-center justify-center rounded-full"
+          style={{
+            width: 30,
+            height: 30,
+            backgroundColor: style.bg,
+            border: style.border,
+            transition: 'all 150ms ease',
+            transform: animating ? 'scale(1.15)' : 'scale(1)',
+          }}
+        >
+          {style.IconComponent && <style.IconComponent size={16} color={style.iconColor} strokeWidth={2.5} />}
+        </div>
+      )}
     </button>
   );
 }
