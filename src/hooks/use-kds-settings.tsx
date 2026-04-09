@@ -5,6 +5,15 @@ export type SortDefault = 'By Time' | 'By Table' | 'By Type';
 export type TempUnit = 'F' | 'C';
 export type WeekStart = 'Sunday' | 'Monday';
 
+export type OrderTypeColors = Record<string, string>;
+
+export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
+  'dine-in': '#1A1A2E',
+  'take-out': '#2980B9',
+  'delivery': '#16A085',
+  'banquet': '#F39C12',
+};
+
 export interface KDSSettings {
   cardsPerRow: number;
   textSize: TextSize;
@@ -16,6 +25,7 @@ export interface KDSSettings {
   currency: string;
   tempUnit: TempUnit;
   weekStart: WeekStart;
+  orderTypeColors: OrderTypeColors;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
