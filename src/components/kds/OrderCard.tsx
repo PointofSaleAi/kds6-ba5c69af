@@ -163,10 +163,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   return (
     <>
       <div
-        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${statusBodyMap[order.status] || ''} transition-all duration-300`}
+        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
         style={{
           minWidth: 'min(220px, 100%)',
-          borderLeftColor: statusColor.color,
           fontSize: scaleFactor !== 1 ? `${scaleFactor}rem` : undefined,
         }}
       >
@@ -182,12 +181,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             stationBadge={undefined}
           />
 
-          <div className="px-2 pt-1.5 pb-1">
+          <div
+            className="px-2 pt-1.5 pb-1"
+            style={{ backgroundColor: `${statusColor.color}20` }}
+          >
             <div className="flex items-start justify-between">
               <div className="text-order-num text-text-primary leading-none">
                 {order.orderNumber}
               </div>
-              <StatusChip elapsedSeconds={liveElapsed} />
             </div>
             <div className="flex items-center justify-between mt-0.5">
               <TimerBadge seconds={liveElapsed} urgency={urgency} />
