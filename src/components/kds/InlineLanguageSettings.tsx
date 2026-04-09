@@ -357,7 +357,10 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 {requestFormOpen && (
                   <div
                     className="fixed inset-0 z-[100] flex items-center justify-center"
-                    onClick={() => setRequestFormOpen(false)}
+                    onClick={(e) => {
+                      if (reqDropdownRef.current?.contains(e.target as Node)) return;
+                      setRequestFormOpen(false);
+                    }}
                   >
                     <div className="absolute inset-0 bg-black/50" />
                     <div
