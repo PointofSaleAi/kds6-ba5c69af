@@ -191,7 +191,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               </div>
             </div>
             <div className="flex items-center justify-between mt-0.5">
-              <TimerBadge seconds={liveElapsed} urgency={urgency} />
+              <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
               <span className="text-modifier text-white/80">{order.serverName}</span>
             </div>
           </div>
