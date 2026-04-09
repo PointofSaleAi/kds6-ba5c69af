@@ -39,6 +39,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setCurrency: (v: string) => void;
   setTempUnit: (v: TempUnit) => void;
   setWeekStart: (v: WeekStart) => void;
+  setOrderTypeColors: (v: OrderTypeColors) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings';
