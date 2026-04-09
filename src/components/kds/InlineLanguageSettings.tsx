@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search, Check, ArrowLeftRight, Languages, ChevronDown } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
 import { OrderCard } from './OrderCard';
 import { mockOrders } from '@/data/mock-orders';
@@ -59,14 +60,17 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     timeFormat: savedTimeFormat, setTimeFormat: saveTimeFormat,
   } = useLanguage();
 
+  const {
+    timezone, setTimezone,
+    currency, setCurrency,
+    tempUnit, setTempUnit,
+    weekStart, setWeekStart,
+  } = useKDSSettings();
+
   const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
-  const [timezone, setTimezone] = useState('auto');
-  const [currency, setCurrency] = useState('USD');
-  const [tempUnit, setTempUnit] = useState<'F' | 'C'>('F');
-  const [weekStart, setWeekStart] = useState<'Sunday' | 'Monday'>('Sunday');
   const [tzOpen, setTzOpen] = useState(false);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
