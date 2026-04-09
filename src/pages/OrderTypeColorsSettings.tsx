@@ -2,10 +2,15 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-setti
 import { ChevronLeft, RotateCcw } from 'lucide-react';
 
 const ORDER_TYPES = [
-  { key: 'dine-in', label: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', orderNum: 142, items: ['Grilled Salmon', 'Caesar Salad', 'Garlic Bread'] },
-  { key: 'take-out', label: 'TAKE OUT', table: '#1042', server: 'Mike', time: '1:12', orderNum: 318, items: ['Burger Combo', 'Fries', 'Cola'] },
+  { key: 'dine-in', label: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', orderNum: 142, items: ['Grilled Salmon', 'Caesar Salad'] },
+  { key: 'take-out', label: 'TAKE OUT', table: '#1042', server: 'Mike', time: '1:12', orderNum: 318, items: ['Burger Combo', 'Fries'] },
   { key: 'delivery', label: 'DELIVERY', table: '#D-207', server: 'UberEats', time: '4:08', orderNum: 527, items: ['Pad Thai', 'Spring Rolls'] },
-  { key: 'banquet', label: 'BANQUET', table: 'Hall B', server: 'James', time: '0:45', orderNum: 891, items: ['Filet Mignon x12', 'Lobster Bisque x12'] },
+  { key: 'banquet', label: 'BANQUET', table: 'Hall B', server: 'James', time: '0:45', orderNum: 891, items: ['Filet Mignon x12'] },
+  { key: 'drive-thru', label: 'DRIVE THRU', table: 'Lane 2', server: 'Alex', time: '1:50', orderNum: 604, items: ['Chicken Wrap', 'Iced Tea'] },
+  { key: 'curb-side', label: 'CURB SIDE', table: 'Spot 5', server: 'Lina', time: '3:20', orderNum: 735, items: ['Family Meal Box'] },
+  { key: 'scheduled', label: 'SCHEDULED', table: '6:30 PM', server: 'Online', time: '0:00', orderNum: 412, items: ['Party Platter'] },
+  { key: 'phone-in', label: 'PHONE-IN', table: '#P-88', server: 'Front', time: '2:10', orderNum: 263, items: ['Pizza Margherita'] },
+  { key: 'custom', label: 'CUSTOM', table: 'Event', server: 'Chef', time: '5:00', orderNum: 109, items: ['Special Menu'] },
 ] as const;
 
 interface OrderTypeColorsSettingsProps {
@@ -75,7 +80,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         {/* Live Preview Strip */}
         <div className="mb-6">
           <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Live Preview</span>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {ORDER_TYPES.map(({ key, label, table, server, time, orderNum, items }) => (
               <LivePreviewCard
                 key={key}
@@ -92,7 +97,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         </div>
 
         {/* Color Pickers */}
-        <div className="grid grid-cols-2 gap-3 max-w-2xl">
+        <div className="grid grid-cols-3 gap-3 max-w-3xl">
           {ORDER_TYPES.map(({ key, label }) => {
             const color = orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key];
             return (

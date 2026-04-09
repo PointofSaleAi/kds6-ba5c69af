@@ -7,6 +7,11 @@ const typeLabels: Record<OrderType, string> = {
   'take-out': 'TAKE OUT',
   'delivery': 'DELIVERY',
   'banquet': 'BANQUET',
+  'drive-thru': 'DRIVE THRU',
+  'curb-side': 'CURB SIDE',
+  'scheduled': 'SCHEDULED',
+  'phone-in': 'PHONE-IN',
+  'custom': 'CUSTOM',
 };
 
 interface OrderTypeBadgeProps {

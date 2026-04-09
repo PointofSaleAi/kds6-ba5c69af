@@ -12,6 +12,11 @@ export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
   'take-out': '#2980B9',
   'delivery': '#16A085',
   'banquet': '#F39C12',
+  'drive-thru': '#8E44AD',
+  'curb-side': '#27AE60',
+  'scheduled': '#2C3E50',
+  'phone-in': '#D35400',
+  'custom': '#7F8C8D',
 };
 
 export interface KDSSettings {
