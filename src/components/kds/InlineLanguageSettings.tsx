@@ -99,7 +99,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
   // Request language form state
   const [requestFormOpen, setRequestFormOpen] = useState(false);
-  const [requestSubmitted, setRequestSubmitted] = useState(false);
+  
   const [reqLangSearch, setReqLangSearch] = useState('');
   const [reqSelectedLang, setReqSelectedLang] = useState('');
   const [reqDialect, setReqDialect] = useState('');
