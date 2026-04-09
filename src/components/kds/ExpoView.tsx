@@ -330,8 +330,25 @@ function ExpoTopControls({
 /* -- Main ExpoView -- */
 
 export default function ExpoView() {
-  const { expoTickets: tickets, sendOutOrder } = useOrderStore();
+  const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
+
+  // Live tick every second to drive elapsed timers
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Recompute timerSeconds live from order.timeReceived
+  const tickets = useMemo(() => {
+    const now = Date.now();
+    return rawTickets.map(t => {
+      const order = orders.find(o => o.id === t.id);
+      if (!order) return t;
+      return { ...t, timerSeconds: Math.round((now - order.timeReceived.getTime()) / 1000) };
+    });
+  }, [rawTickets, orders, tick]);
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
   const [holdStations, setHoldStations] = useState<Set<string>>(new Set());
 
