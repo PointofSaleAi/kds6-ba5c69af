@@ -9,19 +9,26 @@ describe('OrderNotesSection', () => {
     expect(screen.getByText('Order Notes')).toBeInTheDocument();
   });
 
-  it('calls onAcknowledgeNotes when eye icon is clicked', () => {
+  it('calls onAcknowledgeNotes when reaching acknowledged state', () => {
     const onAck = vi.fn();
     render(<OrderNotesSection notes="Extra sauce" orderId="o1" onAcknowledgeNotes={onAck} />);
+    // First tap: unseen -> seen
     fireEvent.click(screen.getByTitle('Acknowledge notes'));
+    expect(onAck).not.toHaveBeenCalled();
+    // Second tap: seen -> acknowledged
+    fireEvent.click(screen.getByTitle('Confirm acknowledged'));
     expect(onAck).toHaveBeenCalledWith('o1');
   });
 
-  it('toggles acknowledged state on click', () => {
+  it('progresses through three states: unseen -> seen -> acknowledged', () => {
     render(<OrderNotesSection notes="Test" orderId="o1" />);
-    const btn = screen.getByTitle('Acknowledge notes');
-    fireEvent.click(btn);
-    expect(screen.getByTitle('Acknowledged')).toBeInTheDocument();
-    fireEvent.click(screen.getByTitle('Acknowledged'));
+    // Initial: unseen
     expect(screen.getByTitle('Acknowledge notes')).toBeInTheDocument();
+    // Tap 1: seen
+    fireEvent.click(screen.getByTitle('Acknowledge notes'));
+    expect(screen.getByTitle('Confirm acknowledged')).toBeInTheDocument();
+    // Tap 2: acknowledged (final)
+    fireEvent.click(screen.getByTitle('Confirm acknowledged'));
+    expect(screen.getByTitle('Acknowledged')).toBeInTheDocument();
   });
 });
