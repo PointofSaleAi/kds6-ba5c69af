@@ -1,5 +1,5 @@
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
-import { ChevronLeft, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 
 const ORDER_TYPES = [
   { key: 'dine-in', label: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', orderNum: 142, items: ['Grilled Salmon', 'Caesar Salad'] },
