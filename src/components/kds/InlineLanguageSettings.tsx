@@ -277,47 +277,164 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
           </div>
         ) : (
           /* REGION TAB */
-          <div className="flex flex-col sm:flex-row h-full gap-6 md:gap-8 overflow-y-auto">
-            <div className="flex-1">
-              <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
-              <div className="space-y-2">
-                {dateFormats.map((fmt, i) => (
-                  <button
-                    key={fmt}
-                    onClick={() => setDateFormat(i as DateFormatIndex)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
-                    style={{ border: dateFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
-                  >
-                    <div
-                      className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
-                      style={{ borderColor: dateFormat === i ? '#111' : 'hsl(var(--border))' }}
+          <div className="overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+              {/* Date Format - left */}
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
+                <div className="space-y-2">
+                  {dateFormats.map((fmt, i) => (
+                    <button
+                      key={fmt}
+                      onClick={() => setDateFormat(i as DateFormatIndex)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      style={{ border: dateFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
-                      {dateFormat === i && <div className="w-2 h-2 rounded-full bg-text-primary" />}
-                    </div>
-                    <span className="text-sm font-medium text-text-primary">{fmt}</span>
-                  </button>
-                ))}
+                      <div
+                        className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
+                        style={{ borderColor: dateFormat === i ? '#111' : 'hsl(var(--border))' }}
+                      >
+                        {dateFormat === i && <div className="w-2 h-2 rounded-full bg-text-primary" />}
+                      </div>
+                      <span className="text-sm font-medium text-text-primary">{fmt}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="flex-1">
-              <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time format</div>
-              <div className="space-y-2">
-                {timeFormats.map((fmt, i) => (
-                  <button
-                    key={fmt}
-                    onClick={() => setTimeFormat(i as TimeFormatIndex)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
-                    style={{ border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
-                  >
-                    <div
-                      className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
-                      style={{ borderColor: timeFormat === i ? '#111' : 'hsl(var(--border))' }}
+
+              {/* Time Format - right */}
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time format</div>
+                <div className="space-y-2">
+                  {timeFormats.map((fmt, i) => (
+                    <button
+                      key={fmt}
+                      onClick={() => setTimeFormat(i as TimeFormatIndex)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      style={{ border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
-                      {timeFormat === i && <div className="w-2 h-2 rounded-full bg-text-primary" />}
-                    </div>
-                    <span className="text-sm font-medium text-text-primary">{fmt}</span>
+                      <div
+                        className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
+                        style={{ borderColor: timeFormat === i ? '#111' : 'hsl(var(--border))' }}
+                      >
+                        {timeFormat === i && <div className="w-2 h-2 rounded-full bg-text-primary" />}
+                      </div>
+                      <span className="text-sm font-medium text-text-primary">{fmt}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Timezone - left */}
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Timezone</div>
+                <div className="relative">
+                  <button
+                    onClick={() => setTzOpen(!tzOpen)}
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                    style={{ border: '1.5px solid hsl(var(--border))' }}
+                  >
+                    <span className="text-sm font-medium text-text-primary truncate">
+                      {timezoneOptions.find(tz => tz.value === timezone)?.label}
+                    </span>
+                    <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${tzOpen ? 'rotate-180' : ''}`} />
                   </button>
-                ))}
+                  {tzOpen && (
+                    <div className="absolute z-10 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
+                      {timezoneOptions.map((tz) => (
+                        <button
+                          key={tz.value}
+                          onClick={() => { setTimezone(tz.value); setTzOpen(false); }}
+                          className={`w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/50 min-h-[40px] ${
+                            timezone === tz.value ? 'font-semibold text-text-primary bg-muted/30' : 'text-text-secondary'
+                          }`}
+                        >
+                          {timezone === tz.value && <Check size={14} className="text-brand-primary shrink-0" />}
+                          <span className="truncate">{tz.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Currency - right */}
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Currency</div>
+                <div className="relative">
+                  <button
+                    onClick={() => setCurrOpen(!currOpen)}
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                    style={{ border: '1.5px solid hsl(var(--border))' }}
+                  >
+                    <span className="text-sm font-medium text-text-primary">
+                      {currencyOptions.find(c => c.value === currency)?.label}
+                    </span>
+                    <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${currOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {currOpen && (
+                    <div className="absolute z-10 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
+                      {currencyOptions.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => { setCurrency(c.value); setCurrOpen(false); }}
+                          className={`w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/50 min-h-[40px] ${
+                            currency === c.value ? 'font-semibold text-text-primary bg-muted/30' : 'text-text-secondary'
+                          }`}
+                        >
+                          {currency === c.value && <Check size={14} className="text-brand-primary shrink-0" />}
+                          <span>{c.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Temperature Unit - left */}
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Temperature unit</div>
+                <div className="space-y-2">
+                  {(['F', 'C'] as const).map((unit) => (
+                    <button
+                      key={unit}
+                      onClick={() => setTempUnit(unit)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      style={{ border: tempUnit === unit ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
+                    >
+                      <div
+                        className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
+                        style={{ borderColor: tempUnit === unit ? '#111' : 'hsl(var(--border))' }}
+                      >
+                        {tempUnit === unit && <div className="w-2 h-2 rounded-full bg-text-primary" />}
+                      </div>
+                      <span className="text-sm font-medium text-text-primary">{`\u00B0${unit}`}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Week Start Day - right */}
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Week start day</div>
+                <div className="space-y-2">
+                  {(['Sunday', 'Monday'] as const).map((day) => (
+                    <button
+                      key={day}
+                      onClick={() => setWeekStart(day)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      style={{ border: weekStart === day ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
+                    >
+                      <div
+                        className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
+                        style={{ borderColor: weekStart === day ? '#111' : 'hsl(var(--border))' }}
+                      >
+                        {weekStart === day && <div className="w-2 h-2 rounded-full bg-text-primary" />}
+                      </div>
+                      <span className="text-sm font-medium text-text-primary">{day}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
