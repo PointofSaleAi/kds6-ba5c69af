@@ -86,7 +86,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
       <div className="flex items-center justify-between px-3 py-2.5 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-2">
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70" />
-          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide">Cooking Summary</span>
+          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide">Summary</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center">{totalRemaining}</span>
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Collapse panel">
