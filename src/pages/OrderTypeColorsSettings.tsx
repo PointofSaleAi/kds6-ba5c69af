@@ -76,14 +76,14 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         <div className="mb-6">
           <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Live Preview</span>
           <div className="grid grid-cols-4 gap-2">
-            {ORDER_TYPES.map(({ key, label, table, server, time, items }) => (
+            {ORDER_TYPES.map(({ key, label, table, server, time, orderNum, items }) => (
               <LivePreviewCard
                 key={key}
-                type={key}
                 label={label}
                 table={table}
                 server={server}
                 time={time}
+                orderNum={orderNum}
                 items={items}
                 bgColor={orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key]}
               />
