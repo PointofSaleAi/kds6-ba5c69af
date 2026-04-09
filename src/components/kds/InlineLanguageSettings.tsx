@@ -357,7 +357,10 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 {requestFormOpen && (
                   <div
                     className="fixed inset-0 z-[100] flex items-center justify-center"
-                    onClick={() => setRequestFormOpen(false)}
+                    onClick={(e) => {
+                      if (reqDropdownRef.current?.contains(e.target as Node)) return;
+                      setRequestFormOpen(false);
+                    }}
                   >
                     <div className="absolute inset-0 bg-black/50" />
                     <div
@@ -391,7 +394,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                               <Search size={14} className="text-text-muted shrink-0" />
                               <input
                                 type="text"
-                                placeholder="Select languages..."
+                                placeholder="Select language..."
                                 value={reqSelectedLang || reqLangSearch}
                                 onChange={(e) => {
                                   setReqLangSearch(e.target.value);
