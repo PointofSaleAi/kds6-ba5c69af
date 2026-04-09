@@ -78,13 +78,10 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
                     </div>
                   </div>
                   <div className="bg-surface-card px-3 py-2 flex-1">
-                    <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center justify-between">
                       <span className="text-[20px] font-black text-text-primary leading-none">#{orderNum}</span>
                       <span className="text-[11px] text-text-muted">{server}</span>
                     </div>
-                    {items.map((item, i) => (
-                      <div key={i} className="text-[12px] text-text-secondary font-medium leading-relaxed">{item}</div>
-                    ))}
                   </div>
                 </div>
               </div>
