@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
 import {
   mockExpoTickets,
   kitchenStations,
@@ -37,15 +38,11 @@ function ticketBorderClass(t: ExpoTicket): string {
 }
 
 /** FIX 5: header bg -- overtime uses red tint, warning uses amber */
-function ticketHeaderBg(t: ExpoTicket): { bg: string; text: string } {
+function ticketHeaderBg(t: ExpoTicket, colors: OrderTypeColors): { bg?: string; bgColor?: string; text: string } {
   if (isOvertime(t)) return { bg: 'bg-[#450a0a]', text: 'text-primary-foreground' };
   if (isWarning(t)) return { bg: 'bg-warning/20', text: 'text-text-primary' };
-  const map: Record<string, string> = {
-    'dine-in': 'bg-order-dine-in',
-    'take-out': 'bg-order-take-out',
-    banquet: 'bg-order-banquet',
-  };
-  return { bg: map[t.orderType] || 'bg-order-dine-in', text: 'text-primary-foreground' };
+  const color = colors[t.orderType] || DEFAULT_ORDER_TYPE_COLORS[t.orderType] || DEFAULT_ORDER_TYPE_COLORS['dine-in'];
+  return { bgColor: color, text: 'text-primary-foreground' };
 }
 
 const orderTypeLabel: Record<string, string> = {
