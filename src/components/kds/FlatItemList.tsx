@@ -96,7 +96,7 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
             </div>
 
             {!item.isCancelled && (
-              <div className="flex items-center shrink-0" style={{ gap: '4px', paddingTop: '1px' }} onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center shrink-0 ml-auto" style={{ gap: '4px' }} onClick={(e) => e.stopPropagation()}>
                 {status === 'ready' ? (
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />

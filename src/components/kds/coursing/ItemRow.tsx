@@ -71,7 +71,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
       <div
         className="flex items-center shrink-0"
-        style={{ gap: '4px', paddingTop: '1px', display: dimmed ? 'none' : 'flex' }}
+        style={{ gap: '4px', display: dimmed ? 'none' : 'flex' }}
       >
         <KdsActionIcon icon="seen" label="Mark seen" />
       </div>
