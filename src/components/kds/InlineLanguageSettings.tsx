@@ -391,7 +391,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                               <Search size={14} className="text-text-muted shrink-0" />
                               <input
                                 type="text"
-                                placeholder="Search languages..."
+                                placeholder="Select languages..."
                                 value={reqSelectedLang || reqLangSearch}
                                 onChange={(e) => {
                                   setReqLangSearch(e.target.value);
