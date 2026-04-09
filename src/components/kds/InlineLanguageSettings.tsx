@@ -108,6 +108,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
   const reqInputTriggerRef = useRef<HTMLDivElement>(null);
   const reqDropdownRef = useRef<HTMLDivElement>(null);
+  const reqJustSelectedRef = useRef(false);
   const [reqDropdownPos, setReqDropdownPos] = useState<{ top: number; left: number; width: number } | null>(null);
 
   const updateDropdownPos = useCallback(() => {
