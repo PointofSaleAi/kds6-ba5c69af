@@ -1,42 +1,53 @@
 
-Goal
 
-- Make the Language name dropdown in the Request a Language popup render outside the popup boundary so it can extend beyond the modal and stay fully usable.
-- Keep the popup UI, CTA, spacing, and all other fields unchanged.
+# Customizable Order Type Header Colors
 
-What I found
+## Overview
+Add a new "Order Type Colors" settings sub-screen accessible from Settings > Display, allowing users to customize the header colors for Dine In, Take Out, Delivery, and Banquet order cards. Colors persist via the existing KDSSettings context and localStorage.
 
-- On the live `/kds/full` settings flow, this screen is powered by `src/components/kds/InlineLanguageSettings.tsx` through `SettingsPanel`.
-- The current Language name menu is a custom dropdown inside the Request a Language popup subtree. Even with fixed positioning, it still behaves visually like part of the popup stack, so it can end up competing with the footer CTA area.
-- There is also a separate `src/pages/LanguageSettings.tsx`, but it is not the active path for this screen, so I would leave it untouched.
+## Changes
 
-Implementation plan
+### 1. Extend KDSSettings with order type colors
+**File: `src/hooks/use-kds-settings.tsx`**
+- Add `orderTypeColors` field: `Record<OrderType, string>` storing hex colors
+- Defaults: `{ 'dine-in': '#1A1A2E', 'take-out': '#2980B9', 'delivery': '#16A085', 'banquet': '#F39C12' }`
+- Add `setOrderTypeColors` setter
+- Persisted to localStorage automatically via existing mechanism
 
-1. Keep the Request a Language popup exactly as it is and only change how the Language name dropdown is rendered.
-2. Move the dropdown list to a true portal layer attached to `document.body`, local to `InlineLanguageSettings.tsx`.
-3. Anchor that portaled dropdown to the search field using `getBoundingClientRect()` so it matches the field width and horizontal position.
-4. Make the menu prefer opening below the field, outside the popup boundary, and flip above only if the viewport does not have enough space.
-5. Raise the dropdown z-index above the popup and footer CTA so no part of the list is hidden.
-6. Reposition the dropdown while open on resize and scroll so it stays aligned with the input.
-7. Tighten outside-click handling so the trigger and the portaled menu are treated as one interactive area, while overlay click, X close, option select, and submit keep working as they do now.
-8. Do not change any labels, button styling, modal sizing, or other settings UI.
+### 2. Create Order Type Colors settings screen
+**New file: `src/pages/OrderTypeColorsSettings.tsx`**
+- Full-screen panel matching the existing StatusSettings pattern (slide-up modal with header, back/close button)
+- Title: "Order Type Colors"
+- Four rows, one per order type, each showing:
+  - Color swatch (circle) with the current color
+  - Label (DINE IN, TAKE OUT, DELIVERY, BANQUET)
+  - Color picker input (native HTML color picker triggered by tapping the swatch)
+- "Reset to Defaults" button at the bottom
+- Live preview: a small sample header strip for each type showing the chosen color
+- Save is instant (updates context on change, no separate save button needed)
 
-Technical details
+### 3. Add settings row in SettingsScreen
+**File: `src/pages/SettingsScreen.tsx`**
+- Add a new row under "Status Colours" in the Display section:
+  - Icon: `Palette`, Label: "Order Type Colors", Description: "Customise order type header colors"
+  - onClick opens `'order-type-colors'` sub-screen
 
-- Primary file: `src/components/kds/InlineLanguageSettings.tsx`
-- Likely changes:
-  - add a portal render path for the dropdown
-  - store measured dropdown position in local state
-  - add refs for trigger, popup body, and dropdown layer
-  - update open/close and outside-click logic for the portaled menu
-- No shared UI primitive changes are required.
-- No changes should be made to unrelated screens or the legacy `LanguageSettings` page.
+### 4. Wire sub-screen routing
+**File: `src/pages/MainOrderView.tsx` (or wherever sub-screen routing lives)**
+- Add case for `'order-type-colors'` to render `OrderTypeColorsSettings`
 
-Verification
+### 5. Apply custom colors in OrderTypeBadge
+**File: `src/components/kds/OrderTypeBadge.tsx`**
+- Import `useKDSSettings` and read `orderTypeColors`
+- Replace the Tailwind `bg-order-*` class with an inline `style={{ backgroundColor }}` using the custom color
+- Keep the Tailwind class as fallback if no custom color is set
 
-- Open Settings > Language & Region > Language > Request a language.
-- Open the Language name dropdown and confirm it extends beyond the popup instead of opening inside it.
-- Confirm the full list is visible and scrollable, with no part hidden behind Submit Request.
-- Search/filter the list, select a language, and verify the value fills the field correctly.
-- Select Chinese or Portuguese and confirm Region / Dialect still appears.
-- Test X, overlay click, and submit toast to confirm the popup behavior still works end to end.
+### 6. Wire in other components using order type colors
+- Search for any other usage of `bg-order-dine-in` etc. (ExpoOrderCard, HistoryOrderCard) and apply the same inline style override
+
+## Testing
+- Open Settings > Display > Order Type Colors
+- Change each order type color and confirm the card headers on the home screen update immediately
+- Reload the page and confirm colors persist
+- Reset to defaults and confirm original colors return
+
