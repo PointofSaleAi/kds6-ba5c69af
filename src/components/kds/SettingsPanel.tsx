@@ -224,6 +224,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard>
+                <CardLabel label="Order Type Colors" description="Customise order type header colors" />
+                <ActionButton label="Customise" onClick={() => onOpenSub('order-type-colors')} />
+              </SettingsCard>
+
+              <SettingsCard>
                 <CardLabel label="Show Allergen Badges" />
                 <div className="flex items-center justify-between mt-1">
                   <span className="text-[13px] text-text-secondary font-medium">{showAllergens ? 'ON' : 'OFF'}</span>
