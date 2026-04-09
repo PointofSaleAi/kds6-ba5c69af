@@ -62,20 +62,6 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-2 px-5 py-3 shrink-0">
-        <button
-          onClick={onBack}
-          className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-          aria-label="Back"
-        >
-          <ChevronLeft size={20} className="text-text-secondary" />
-        </button>
-        <h2 className="text-lg font-bold text-text-primary">Order Type Colors</h2>
-      </div>
-      <div className="mx-5 h-px bg-border mb-4" />
-
-      {/* Content */}
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
         {/* Live Preview Strip */}
         <div className="mb-6">
