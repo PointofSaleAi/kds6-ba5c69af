@@ -12,7 +12,7 @@ export interface ExpoItem {
   name: string;
   quantity: number;
   status: ExpoItemStatus;
-  statusLabel?: string; // e.g. "Frying...", "On grill..."
+  statusLabel?: string; // e.g. "Frying...", "On grill...", "Overdue"
 }
 
 export interface ExpoTicket {
@@ -23,11 +23,13 @@ export interface ExpoTicket {
   timerSeconds: number;
   stations: ExpoStation[];
   items: ExpoItem[];
+  /** Seconds remaining until auto-fire triggers. undefined = no auto-fire. 0 = firing now. */
+  autoFireSeconds?: number;
 }
 
 export interface KitchenStation {
   name: string;
-  color: string; // tailwind color token
+  color: string;
   dotClass: string;
 }
 
@@ -45,7 +47,7 @@ export const mockExpoTickets: ExpoTicket[] = [
     orderNumber: 1042,
     orderType: 'dine-in',
     tableName: 'Table 12',
-    timerSeconds: 504, // 8:24
+    timerSeconds: 504,
     stations: [
       { name: 'Grill', status: 'done' },
       { name: 'Fry', status: 'done' },
@@ -62,7 +64,8 @@ export const mockExpoTickets: ExpoTicket[] = [
     orderNumber: 1043,
     orderType: 'dine-in',
     tableName: 'Table 15',
-    timerSeconds: 725, // 12:05
+    timerSeconds: 725,
+    autoFireSeconds: 270, // 4:30
     stations: [
       { name: 'Grill', status: 'done' },
       { name: 'Fry', status: 'firing' },
@@ -71,7 +74,7 @@ export const mockExpoTickets: ExpoTicket[] = [
     items: [
       { id: 'e2-1', name: 'Beef Burger', quantity: 2, status: 'done' },
       { id: 'e2-2', name: 'Onion Rings', quantity: 2, status: 'firing', statusLabel: 'Frying...' },
-      { id: 'e2-3', name: 'Creme Brulee', quantity: 1, status: 'pending', statusLabel: 'Auto-fire in 4:30' },
+      { id: 'e2-3', name: 'Creme Brulee', quantity: 1, status: 'pending' },
     ],
   },
   {
@@ -79,7 +82,7 @@ export const mockExpoTickets: ExpoTicket[] = [
     orderNumber: 1044,
     orderType: 'banquet',
     tableName: 'Banquet B',
-    timerSeconds: 1127, // 18:47
+    timerSeconds: 1127,
     stations: [
       { name: 'Grill', status: 'done' },
       { name: 'Salad', status: 'pending' },
@@ -96,7 +99,8 @@ export const mockExpoTickets: ExpoTicket[] = [
     orderNumber: 1045,
     orderType: 'take-out',
     tableName: 'Table 8',
-    timerSeconds: 72, // 1:12
+    timerSeconds: 72,
+    autoFireSeconds: 180, // 3:00
     stations: [
       { name: 'Grill', status: 'firing' },
       { name: 'Fry', status: 'pending' },
@@ -111,7 +115,7 @@ export const mockExpoTickets: ExpoTicket[] = [
     orderNumber: 1046,
     orderType: 'dine-in',
     tableName: 'Table 3',
-    timerSeconds: 228, // 3:48
+    timerSeconds: 228,
     stations: [
       { name: 'Fry', status: 'done' },
       { name: 'Salad', status: 'firing' },

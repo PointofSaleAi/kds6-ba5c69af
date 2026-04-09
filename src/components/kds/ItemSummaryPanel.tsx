@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
-import { ChevronRight, ChevronLeft, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
-import type { Order, ProductCategory } from '@/types/kds';
+import type { Order, ProductCategory, StationName } from '@/types/kds';
 
 interface ItemSummaryPanelProps {
   orders: Order[];
@@ -14,13 +14,14 @@ interface CategorySummary {
   items: { name: string; remaining: number }[];
 }
 
+const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
+
 function buildSummary(orders: Order[]): CategorySummary[] {
   const map = new Map<ProductCategory, Map<string, number>>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
-      // Skip entire fired courses - those items are already done
       if (cg.isFired) continue;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
@@ -58,7 +59,6 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
 
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
 
-  // Track which sections are expanded; default: sections with items are expanded
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
   const toggleSection = (cat: string) => {
     setCollapsedSections(prev => {
@@ -67,6 +67,20 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
       else next.add(cat);
       return next;
     });
+  };
+
+  // Track which uncategorized items have an open assign dropdown
+  const [assigningItem, setAssigningItem] = useState<string | null>(null);
+  // Track assigned stations for uncategorized items (item name -> station)
+  const [assignedStations, setAssignedStations] = useState<Map<string, StationName>>(new Map());
+
+  const handleAssignStation = (itemName: string, station: StationName) => {
+    setAssignedStations(prev => {
+      const next = new Map(prev);
+      next.set(itemName, station);
+      return next;
+    });
+    setAssigningItem(null);
   };
 
   if (collapsed) {
@@ -82,7 +96,7 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
 
   return (
     <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
-      {/* Header - sidebar bg */}
+      {/* Header */}
       <div className="flex items-center justify-between px-3 py-2.5 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-2">
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70" />
@@ -96,72 +110,119 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
 
       {/* Categories section */}
       <div className="flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
-
-      {/* Sections */}
-      <div className="flex-1 overflow-y-auto">
-        {summary.length === 0 && (
-          <div className="px-3 py-4 text-center">
-            <p className="text-[12px] text-text-muted">All items completed</p>
-          </div>
-        )}
-        {summary.map((cat) => {
-          const isStation = stationCourse === cat.category;
-          const isMuted = !!stationCourse && !isStation;
-          const sectionTotal = cat.items.reduce((a, i) => a + i.remaining, 0);
-          const isExpanded = !collapsedSections.has(cat.category);
-
-          return (
-            <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
-              {/* Section header */}
-              <button
-                onClick={() => toggleSection(cat.category)}
-                className="w-full flex items-center justify-between px-3 py-2 bg-muted border-b border-border hover:bg-muted/90 transition-colors min-h-[36px]"
-              >
-                <div className="flex items-center gap-1.5">
-                  <ChevronDown
-                    size={12}
-                    className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
-                  />
-                  <span className={`text-[12px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
-                    {cat.category}
-                  </span>
-                </div>
-                <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
-                  sectionTotal >= 20
-                    ? 'bg-destructive text-destructive-foreground'
-                    : sectionTotal >= 10
-                      ? 'bg-warning text-warning-foreground'
-                      : 'bg-emerald-600 text-white'
-                }`}>
-                  {sectionTotal}
-                </span>
-              </button>
-
-              {/* Items */}
-              {isExpanded && (
-                <div className="px-3 py-1">
-                  {cat.items.map((item) => {
-                    const isCritical = item.remaining >= 10;
-                    const isHigh = !isCritical && item.remaining >= 5;
-                    const tierClass = isCritical
-                      ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
-                      : isHigh
-                        ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
-                        : '';
-                    const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
-                    return (
-                      <div key={item.name} className={`flex items-center justify-between py-[4px] border-b border-border/30 last:border-b-0 ${tierClass}`}>
-                        <span className="min-w-0 truncate text-[13px] font-medium uppercase leading-tight text-text-primary">{tp(item.name)}</span>
-                        <span className={`ml-2 text-right text-[14px] font-bold shrink-0 tabular-nums ${countColor}`}>{item.remaining}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+        <div className="flex-1 overflow-y-auto">
+          {summary.length === 0 && (
+            <div className="px-3 py-4 text-center">
+              <p className="text-[12px] text-text-muted">All items completed</p>
             </div>
-          );
-        })}
-      </div>
+          )}
+          {summary.map((cat) => {
+            const isUncategorized = cat.category === ('Uncategorized' as ProductCategory);
+            const isStation = stationCourse === cat.category;
+            const isMuted = !!stationCourse && !isStation;
+            const sectionTotal = cat.items.reduce((a, i) => a + i.remaining, 0);
+            const isExpanded = !collapsedSections.has(cat.category);
+
+            // Filter out assigned items from uncategorized
+            const displayItems = isUncategorized
+              ? cat.items.filter(item => !assignedStations.has(item.name))
+              : cat.items;
+
+            // Hide section if all uncategorized items are assigned
+            if (isUncategorized && displayItems.length === 0) return null;
+
+            return (
+              <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
+                {/* Section header */}
+                <button
+                  onClick={() => toggleSection(cat.category)}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-muted border-b border-border hover:bg-muted/90 transition-colors min-h-[36px]"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <ChevronDown
+                      size={12}
+                      className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
+                    />
+                    {isUncategorized && (
+                      <AlertTriangle size={12} className="text-warning shrink-0" />
+                    )}
+                    <span className={`text-[12px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
+                      {cat.category}
+                    </span>
+                  </div>
+                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
+                    sectionTotal >= 20
+                      ? 'bg-destructive text-destructive-foreground'
+                      : sectionTotal >= 10
+                        ? 'bg-warning text-warning-foreground'
+                        : 'bg-emerald-600 text-white'
+                  }`}>
+                    {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
+                  </span>
+                </button>
+
+                {/* Items */}
+                {isExpanded && (
+                  <div className="px-3 py-1">
+                    {displayItems.map((item) => {
+                      const isCritical = item.remaining >= 10;
+                      const isHigh = !isCritical && item.remaining >= 5;
+                      const tierClass = isCritical
+                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
+                        : isHigh
+                          ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
+                          : '';
+                      const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
+                      const isAssigning = assigningItem === item.name;
+
+                      return (
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${tierClass}`}>
+                          <div className="flex items-center justify-between py-[4px]">
+                            <span className="min-w-0 truncate text-[13px] font-medium uppercase leading-tight text-text-primary">{tp(item.name)}</span>
+                            <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                              {isUncategorized && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setAssigningItem(isAssigning ? null : item.name);
+                                  }}
+                                  className="text-[10px] text-text-muted hover:text-text-primary transition-colors font-medium"
+                                >
+                                  + Assign
+                                </button>
+                              )}
+                              <span className={`text-right text-[14px] font-bold tabular-nums ${countColor}`}>{item.remaining}</span>
+                            </div>
+                          </div>
+
+                          {/* Inline assign dropdown */}
+                          {isUncategorized && isAssigning && (
+                            <div className="pb-1.5">
+                              <div className="flex flex-wrap gap-1">
+                                {AVAILABLE_STATIONS.map(station => (
+                                  <button
+                                    key={station}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleAssignStation(item.name, station);
+                                    }}
+                                    className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-muted hover:bg-muted/70 text-text-secondary transition-colors"
+                                  >
+                                    {station}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
