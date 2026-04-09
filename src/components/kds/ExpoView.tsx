@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import { CheckCircle, Timer } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
+import { useOrderStore } from '@/hooks/use-order-store';
 import {
-  mockExpoTickets,
   kitchenStations,
   type ExpoTicket,
   type ExpoStation,
