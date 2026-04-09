@@ -17,36 +17,6 @@ interface OrderTypeColorsSettingsProps {
   onBack: () => void;
 }
 
-function LivePreviewCard({ label, table, server, time, items, bgColor, orderNum }: {
-  label: string; table: string; server: string; time: string; items: readonly string[]; bgColor: string; orderNum: number;
-}) {
-  return (
-    <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-      <div
-        className="px-3 py-2 flex items-center justify-between"
-        style={{ backgroundColor: bgColor }}
-      >
-        <span className="text-[13px] font-bold text-primary-foreground uppercase tracking-wider">
-          {label}
-        </span>
-        <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px]">
-          <span>{time}</span>
-          <span>{table}</span>
-        </div>
-      </div>
-      <div className="bg-surface-card px-3 py-2">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[20px] font-black text-text-primary leading-none">#{orderNum}</span>
-          <span className="text-[11px] text-text-muted">{server}</span>
-        </div>
-        {items.map((item, i) => (
-          <div key={i} className="text-[12px] text-text-secondary font-medium leading-relaxed">{item}</div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSettingsProps) {
   const { orderTypeColors, setOrderTypeColors } = useKDSSettings();
 
@@ -61,13 +31,20 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        <div className="grid grid-cols-2 gap-8">
-          {/* Left Column: Color Pickers */}
-          <div className="flex flex-col gap-3">
-            {ORDER_TYPES.map(({ key, label }) => {
-              const color = orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key];
-              return (
-                <div key={key} className="bg-surface-card border border-border rounded-xl p-4 flex items-center gap-3">
+        {/* Column headers */}
+        <div className="grid grid-cols-2 gap-8 mb-2">
+          <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider">Color Settings</span>
+          <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider">Live Preview</span>
+        </div>
+
+        {/* Aligned rows */}
+        <div className="flex flex-col gap-3">
+          {ORDER_TYPES.map(({ key, label, table, server, time, orderNum, items }) => {
+            const color = orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key];
+            return (
+              <div key={key} className="grid grid-cols-2 gap-8 items-stretch">
+                {/* Left: Color picker */}
+                <div className="bg-surface-card border border-border rounded-xl p-4 flex items-center gap-3">
                   <label className="relative cursor-pointer shrink-0">
                     <input
                       type="color"
@@ -85,34 +62,43 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
                     <div className="text-[12px] text-text-muted font-mono uppercase">{color}</div>
                   </div>
                 </div>
-              );
-            })}
-            <button
-              onClick={handleReset}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-1"
-            >
-              <RotateCcw size={14} />
-              Reset to Defaults
-            </button>
-          </div>
 
-          {/* Right Column: Live Previews */}
-          <div className="flex flex-col gap-3">
-            <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-0">Live Preview</span>
-            {ORDER_TYPES.map(({ key, label, table, server, time, orderNum, items }) => (
-              <LivePreviewCard
-                key={key}
-                label={label}
-                table={table}
-                server={server}
-                time={time}
-                orderNum={orderNum}
-                items={items}
-                bgColor={orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key]}
-              />
-            ))}
-          </div>
+                {/* Right: Preview card */}
+                <div className="rounded-lg overflow-hidden border border-border shadow-sm flex flex-col">
+                  <div
+                    className="px-3 py-2 flex items-center justify-between"
+                    style={{ backgroundColor: color }}
+                  >
+                    <span className="text-[13px] font-bold text-primary-foreground uppercase tracking-wider">
+                      {label}
+                    </span>
+                    <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px]">
+                      <span>{time}</span>
+                      <span>{table}</span>
+                    </div>
+                  </div>
+                  <div className="bg-surface-card px-3 py-2 flex-1">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[20px] font-black text-text-primary leading-none">#{orderNum}</span>
+                      <span className="text-[11px] text-text-muted">{server}</span>
+                    </div>
+                    {items.map((item, i) => (
+                      <div key={i} className="text-[12px] text-text-secondary font-medium leading-relaxed">{item}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        <button
+          onClick={handleReset}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
+        >
+          <RotateCcw size={14} />
+          Reset to Defaults
+        </button>
       </div>
     </div>
   );
