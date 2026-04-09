@@ -81,7 +81,7 @@ export interface Order {
 }
 
 export type ViewMode = 'grid' | 'horizontal' | 'stagger';
-export type SortMode = 'time' | 'table' | 'type';
+export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
 
 export interface KDSFilter {
   categories: string[];

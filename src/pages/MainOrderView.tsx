@@ -56,8 +56,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const sortDefaultMap: Record<string, SortMode> = { 'By Time': 'time', 'By Table': 'table', 'By Type': 'type' };
-  const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'time');
+  const sortDefaultMap: Record<string, SortMode> = { 'By Time': 'newest', 'By Table': 'table', 'By Type': 'type' };
+  const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const [expoTickets, setExpoTickets] = useState<ExpoTicket[]>([]);
   const prevOrderCountRef = useRef(mockOrders.length);
@@ -141,8 +141,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       sorted.sort((a, b) => a.tableName.localeCompare(b.tableName));
     } else if (sortMode === 'type') {
       sorted.sort((a, b) => a.orderType.localeCompare(b.orderType));
-    } else {
+    } else if (sortMode === 'oldest') {
       sorted.sort((a, b) => a.timeReceived.getTime() - b.timeReceived.getTime());
+    } else {
+      sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
     return sorted;
   }, [orders, activeFilter, sortMode]);

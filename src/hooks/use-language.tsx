@@ -6,7 +6,8 @@ interface Translations {
   // Bottom bar
   ordersInQueue: string;
   sort: string;
-  sortByTime: string;
+  sortNewToOld: string;
+  sortOldToNew: string;
   sortByTable: string;
   sortByType: string;
   grid: string;
@@ -105,7 +106,8 @@ const translations: Record<LanguageCode, Translations> = {
   'en-US': {
     ordersInQueue: 'Orders in Queue',
     sort: 'Sort',
-    sortByTime: 'By Time',
+    sortNewToOld: 'New to Old',
+    sortOldToNew: 'Old to New',
     sortByTable: 'By Table',
     sortByType: 'By Type',
     grid: 'Grid',
@@ -190,7 +192,8 @@ const translations: Record<LanguageCode, Translations> = {
   'en-GB': {
     ordersInQueue: 'Orders in Queue',
     sort: 'Sort',
-    sortByTime: 'By Time',
+    sortNewToOld: 'New to Old',
+    sortOldToNew: 'Old to New',
     sortByTable: 'By Table',
     sortByType: 'By Type',
     grid: 'Grid',
@@ -275,7 +278,8 @@ const translations: Record<LanguageCode, Translations> = {
   ar: {
     ordersInQueue: 'الطلبات في الانتظار',
     sort: 'ترتيب',
-    sortByTime: 'حسب الوقت',
+    sortNewToOld: 'من الجديد للقديم',
+    sortOldToNew: 'من القديم للجديد',
     sortByTable: 'حسب الطاولة',
     sortByType: 'حسب النوع',
     grid: 'شبكة',
@@ -360,7 +364,8 @@ const translations: Record<LanguageCode, Translations> = {
   es: {
     ordersInQueue: 'Pedidos en cola',
     sort: 'Ordenar',
-    sortByTime: 'Por tiempo',
+    sortNewToOld: 'Nuevo a Antiguo',
+    sortOldToNew: 'Antiguo a Nuevo',
     sortByTable: 'Por mesa',
     sortByType: 'Por tipo',
     grid: 'Cuadricula',
@@ -445,7 +450,8 @@ const translations: Record<LanguageCode, Translations> = {
   zh: {
     ordersInQueue: '排队订单',
     sort: '排序',
-    sortByTime: '按时间',
+    sortNewToOld: '从新到旧',
+    sortOldToNew: '从旧到新',
     sortByTable: '按桌号',
     sortByType: '按类型',
     grid: '网格',
@@ -530,7 +536,8 @@ const translations: Record<LanguageCode, Translations> = {
   vi: {
     ordersInQueue: 'Don hang trong hang doi',
     sort: 'Sap xep',
-    sortByTime: 'Theo thoi gian',
+    sortNewToOld: 'Moi den Cu',
+    sortOldToNew: 'Cu den Moi',
     sortByTable: 'Theo ban',
     sortByType: 'Theo loai',
     grid: 'Luoi',
