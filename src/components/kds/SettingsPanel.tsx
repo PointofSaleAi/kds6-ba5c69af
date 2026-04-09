@@ -226,7 +226,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
               <SettingsCard>
                 <CardLabel label="Order Type Colors" description="Customise order type header colors" />
-                <ActionButton label="Customise" onClick={() => onOpenSub('order-type-colors')} />
+                <ActionButton label="Customise" onClick={() => setActiveSection('order-type-colors')} />
               </SettingsCard>
 
               <SettingsCard>
