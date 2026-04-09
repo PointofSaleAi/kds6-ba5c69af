@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 
 export type TextSize = 'Compact' | 'Standard' | 'Large';
 export type SortDefault = 'By Time' | 'By Table' | 'By Type';
+export type TempUnit = 'F' | 'C';
+export type WeekStart = 'Sunday' | 'Monday';
 
 export interface KDSSettings {
   cardsPerRow: number;
@@ -10,6 +12,10 @@ export interface KDSSettings {
   sortDefault: SortDefault;
   staggerMode: boolean;
   servableModifiers: boolean;
+  timezone: string;
+  currency: string;
+  tempUnit: TempUnit;
+  weekStart: WeekStart;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -19,6 +25,10 @@ interface KDSSettingsContextValue extends KDSSettings {
   setSortDefault: (v: SortDefault) => void;
   setStaggerMode: (v: boolean) => void;
   setServableModifiers: (v: boolean) => void;
+  setTimezone: (v: string) => void;
+  setCurrency: (v: string) => void;
+  setTempUnit: (v: TempUnit) => void;
+  setWeekStart: (v: WeekStart) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings';
@@ -30,6 +40,10 @@ const defaults: KDSSettings = {
   sortDefault: 'By Time',
   staggerMode: false,
   servableModifiers: true,
+  timezone: 'auto',
+  currency: 'USD',
+  tempUnit: 'F',
+  weekStart: 'Sunday',
 };
 
 function loadSettings(): KDSSettings {
@@ -64,6 +78,10 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setSortDefault: update('sortDefault'),
         setStaggerMode: update('staggerMode'),
         setServableModifiers: update('servableModifiers'),
+        setTimezone: update('timezone'),
+        setCurrency: update('currency'),
+        setTempUnit: update('tempUnit'),
+        setWeekStart: update('weekStart'),
       }}
     >
       {children}
