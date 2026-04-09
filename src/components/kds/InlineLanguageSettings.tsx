@@ -411,6 +411,8 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                             {reqDropdownOpen && reqDropdownPos && createPortal(
                               <div
                                 ref={reqDropdownRef}
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onClick={(e) => e.stopPropagation()}
                                 className="bg-surface-card border border-border rounded-lg shadow-lg max-h-[240px] overflow-y-auto"
                                 style={{
                                   position: 'fixed',
