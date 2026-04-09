@@ -159,6 +159,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 />
               }
             />
+            <SettingsRow icon={Globe} label={t.region || 'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
 
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">
