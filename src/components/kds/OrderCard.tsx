@@ -189,8 +189,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               {order.orderNumber}
             </div>
             <div className="flex flex-col items-end justify-between self-stretch">
-              <span className="text-sm font-semibold text-white">{order.serverName}</span>
-              <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+              <span className="text-sm font-semibold text-white mt-1">{order.serverName}</span>
+              <div className="mb-0.5">
+                <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+              </div>
             </div>
           </div>
 
