@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, ArrowLeft, RotateCcw } from 'lucide-react';
 import { StatusChip } from '@/components/kds/StatusChip';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import type { OrderType, OrderStatus } from '@/types/kds';
 
 interface HistoryOrder {
