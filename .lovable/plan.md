@@ -1,36 +1,42 @@
 
+Goal
 
-# Plan: Fix Text Size and Status Colors Reflecting on Home Screen
+- Make the Language name dropdown in the Request a Language popup render outside the popup boundary so it can extend beyond the modal and stay fully usable.
+- Keep the popup UI, CTA, spacing, and all other fields unchanged.
 
-## Issues Found
+What I found
 
-### 1. Status Colors - NOT connected to custom rules
-The `OrderCard` uses a hardcoded `urgencyBorderMap` for the left border color:
-```
-ok → border-l-success (green)
-warning → border-l-warning (orange)
-critical → border-l-destructive (red)
-overtime → border-l-status-overtime (dark red)
-```
-These are static Tailwind classes based on a fixed ratio calculation (`getTimerUrgency`), completely ignoring the custom status rules from `StatusRulesProvider`. Only the `TimerBadge` timer text color uses the custom rules. When a user changes status colors in Settings > Status Colours, only the timer digit color changes, not the card border or any other visual element.
+- On the live `/kds/full` settings flow, this screen is powered by `src/components/kds/InlineLanguageSettings.tsx` through `SettingsPanel`.
+- The current Language name menu is a custom dropdown inside the Request a Language popup subtree. Even with fixed positioning, it still behaves visually like part of the popup stack, so it can end up competing with the footer CTA area.
+- There is also a separate `src/pages/LanguageSettings.tsx`, but it is not the active path for this screen, so I would leave it untouched.
 
-**Fix:** Update `OrderCard` to use `getStatusForElapsed()` from `useStatusRules()` for the left border color (inline style instead of hardcoded class). Also update `StatusChip` to reflect the active status rule color.
+Implementation plan
 
-### 2. Text Size - Works but may appear broken
-The CSS classes `.text-scale-compact` (85%) and `.text-scale-large` (115%) ARE applied correctly. However, the settings panel replaces the order view when open, so users cannot see changes in real-time. The font scaling also only affects the order grid container, not the order card's internal elements which use fixed pixel sizes (`text-order-num`, `text-modifier`, etc.), making the change nearly invisible.
+1. Keep the Request a Language popup exactly as it is and only change how the Language name dropdown is rendered.
+2. Move the dropdown list to a true portal layer attached to `document.body`, local to `InlineLanguageSettings.tsx`.
+3. Anchor that portaled dropdown to the search field using `getBoundingClientRect()` so it matches the field width and horizontal position.
+4. Make the menu prefer opening below the field, outside the popup boundary, and flip above only if the viewport does not have enough space.
+5. Raise the dropdown z-index above the popup and footer CTA so no part of the list is hidden.
+6. Reposition the dropdown while open on resize and scroll so it stays aligned with the input.
+7. Tighten outside-click handling so the trigger and the portaled menu are treated as one interactive area, while overlay click, X close, option select, and submit keep working as they do now.
+8. Do not change any labels, button styling, modal sizing, or other settings UI.
 
-**Fix:** Apply text scaling at the individual card level using a `style={{ fontSize }}` override so it cascades into the card's relative-sized elements. Convert key card typography from fixed `px` to `em` units so they respond to the parent scale factor.
+Technical details
 
-## Files to Change
+- Primary file: `src/components/kds/InlineLanguageSettings.tsx`
+- Likely changes:
+  - add a portal render path for the dropdown
+  - store measured dropdown position in local state
+  - add refs for trigger, popup body, and dropdown layer
+  - update open/close and outside-click logic for the portaled menu
+- No shared UI primitive changes are required.
+- No changes should be made to unrelated screens or the legacy `LanguageSettings` page.
 
-1. **`src/components/kds/OrderCard.tsx`** - Use `getStatusForElapsed()` for border color via inline `style.borderLeftColor`. Wrap card in a container that applies text size scaling.
+Verification
 
-2. **`src/components/kds/TimerBadge.tsx`** - Already correct (uses status rules). No change needed.
-
-3. **`src/components/kds/StatusChip.tsx`** - Optionally derive chip color from status rules instead of hardcoded status config, so custom colors show in the chip too.
-
-4. **`src/index.css`** - No change needed, CSS classes are fine as a fallback.
-
-## What Already Works
-- Cards Per Row, Show Allergens, Sort Default, Stagger Mode, Enable Badge, Mode Switcher, Language, Sound - all functional.
-
+- Open Settings > Language & Region > Language > Request a language.
+- Open the Language name dropdown and confirm it extends beyond the popup instead of opening inside it.
+- Confirm the full list is visible and scrollable, with no part hidden behind Submit Request.
+- Search/filter the list, select a language, and verify the value fills the field correctly.
+- Select Chinese or Portuguese and confirm Region / Dialect still appears.
+- Test X, overlay click, and submit toast to confirm the popup behavior still works end to end.
