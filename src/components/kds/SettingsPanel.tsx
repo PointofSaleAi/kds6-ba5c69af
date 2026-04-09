@@ -421,6 +421,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           {activeSection === 'order-type-colors' && (
             <OrderTypeColorsSettings onBack={() => setActiveSection('display')} />
           )}
+
+          {activeSection === 'status-settings' && (
+            <StatusSettings onBack={() => setActiveSection('display')} />
+          )}
         </div>
       </div>
 
