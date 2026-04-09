@@ -209,7 +209,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Language & Region" description="Language and regional preferences" />
+                <CardLabel label="Language & Region" description="Set display language, region, date and time format preferences." />
                 <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
               </SettingsCard>
 
