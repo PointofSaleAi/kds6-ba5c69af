@@ -390,7 +390,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Prep' ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : kdsMode === 'Expo' ? (
-                <ExpoView onTicketsChange={setExpoTickets} />
+                <ExpoView />
               ) : (
                 <div className={`flex-1 overflow-auto p-3 ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
                   {(staggerMode || viewMode === 'stagger') ? (
