@@ -2,14 +2,46 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-setti
 import { ChevronLeft, RotateCcw } from 'lucide-react';
 
 const ORDER_TYPES = [
-  { key: 'dine-in', label: 'DINE IN' },
-  { key: 'take-out', label: 'TAKE OUT' },
-  { key: 'delivery', label: 'DELIVERY' },
-  { key: 'banquet', label: 'BANQUET' },
+  { key: 'dine-in', label: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', items: ['Grilled Salmon', 'Caesar Salad', 'Garlic Bread'] },
+  { key: 'take-out', label: 'TAKE OUT', table: '#1042', server: 'Mike', time: '1:12', items: ['Burger Combo', 'Fries', 'Cola'] },
+  { key: 'delivery', label: 'DELIVERY', table: '#D-207', server: 'UberEats', time: '4:08', items: ['Pad Thai', 'Spring Rolls'] },
+  { key: 'banquet', label: 'BANQUET', table: 'Hall B', server: 'James', time: '0:45', items: ['Filet Mignon x12', 'Lobster Bisque x12'] },
 ] as const;
 
 interface OrderTypeColorsSettingsProps {
   onBack: () => void;
+}
+
+function LivePreviewCard({ type, label, table, server, time, items, bgColor }: {
+  type: string; label: string; table: string; server: string; time: string; items: readonly string[]; bgColor: string;
+}) {
+  return (
+    <div className="rounded-lg overflow-hidden border border-border shadow-sm">
+      {/* Header - the part that changes color */}
+      <div
+        className="px-3 py-2 flex items-center justify-between"
+        style={{ backgroundColor: bgColor }}
+      >
+        <span className="text-[13px] font-bold text-primary-foreground uppercase tracking-wider">
+          {label}
+        </span>
+        <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px]">
+          <span>{time}</span>
+          <span>{table}</span>
+        </div>
+      </div>
+      {/* Body */}
+      <div className="bg-surface-card px-3 py-2">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[20px] font-black text-text-primary leading-none">#{Math.floor(Math.random() * 900 + 100)}</span>
+          <span className="text-[11px] text-text-muted">{server}</span>
+        </div>
+        {items.map((item, i) => (
+          <div key={i} className="text-[12px] text-text-secondary font-medium leading-relaxed">{item}</div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSettingsProps) {
@@ -40,51 +72,59 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
 
       {/* Content */}
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        <div className="space-y-3 max-w-md">
-          {ORDER_TYPES.map(({ key, label }) => (
-            <div key={key} className="bg-surface-card border border-border rounded-xl p-4">
-              {/* Preview strip */}
-              <div
-                className="rounded-lg px-3 py-2 mb-3"
-                style={{ backgroundColor: orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key] }}
-              >
-                <span className="text-[13px] font-bold text-primary-foreground uppercase tracking-wider">
-                  {label}
-                </span>
-              </div>
+        {/* Live Preview Strip */}
+        <div className="mb-6">
+          <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Live Preview</span>
+          <div className="grid grid-cols-4 gap-2">
+            {ORDER_TYPES.map(({ key, label, table, server, time, items }) => (
+              <LivePreviewCard
+                key={key}
+                type={key}
+                label={label}
+                table={table}
+                server={server}
+                time={time}
+                items={items}
+                bgColor={orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key]}
+              />
+            ))}
+          </div>
+        </div>
 
-              {/* Color picker row */}
-              <div className="flex items-center gap-3">
-                <label className="relative cursor-pointer">
+        {/* Color Pickers */}
+        <div className="grid grid-cols-2 gap-3 max-w-2xl">
+          {ORDER_TYPES.map(({ key, label }) => {
+            const color = orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key];
+            return (
+              <div key={key} className="bg-surface-card border border-border rounded-xl p-4 flex items-center gap-3">
+                <label className="relative cursor-pointer shrink-0">
                   <input
                     type="color"
-                    value={orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key]}
+                    value={color}
                     onChange={(e) => handleColorChange(key, e.target.value)}
                     className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                   />
                   <span
                     className="block w-10 h-10 rounded-full border-2 border-border"
-                    style={{ backgroundColor: orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key] }}
+                    style={{ backgroundColor: color }}
                   />
                 </label>
-                <div>
+                <div className="min-w-0">
                   <div className="text-[15px] font-bold text-text-primary">{label}</div>
-                  <div className="text-[12px] text-text-muted font-mono uppercase">
-                    {orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key]}
-                  </div>
+                  <div className="text-[12px] text-text-muted font-mono uppercase">{color}</div>
                 </div>
               </div>
-            </div>
-          ))}
-
-          <button
-            onClick={handleReset}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
-          >
-            <RotateCcw size={14} />
-            Reset to Defaults
-          </button>
+            );
+          })}
         </div>
+
+        <button
+          onClick={handleReset}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
+        >
+          <RotateCcw size={14} />
+          Reset to Defaults
+        </button>
       </div>
     </div>
   );
