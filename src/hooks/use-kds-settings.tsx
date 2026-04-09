@@ -55,6 +55,7 @@ const defaults: KDSSettings = {
   currency: 'USD',
   tempUnit: 'F',
   weekStart: 'Sunday',
+  orderTypeColors: { ...DEFAULT_ORDER_TYPE_COLORS },
 };
 
 function loadSettings(): KDSSettings {
