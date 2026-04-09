@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
@@ -18,6 +18,7 @@ interface BottomStatusBarProps {
   onSortModeChange: (mode: SortMode) => void;
   hideViewControls?: boolean;
   onOpenLanguageSettings?: () => void;
+  onOpenCategoryFilter?: () => void;
 }
 
 function SoundToggle() {
@@ -46,7 +47,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const [sortOpen, setSortOpen] = useState(false);
@@ -96,11 +97,20 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
 
       {!hideViewControls && (
       <div className="flex items-center gap-3">
+        {/* Category filter */}
+        <button
+          onClick={onOpenCategoryFilter}
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
+          aria-label="Category filter"
+        >
+          <Filter size={14} className="text-primary-foreground/70" />
+        </button>
+
         {/* Sort control */}
         <div className="relative" ref={sortRef}>
           <button
             onClick={() => setSortOpen(!sortOpen)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
+            className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
               sortMode !== 'time'
                 ? 'bg-primary-foreground/20 text-primary-foreground'
                 : 'bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground'
@@ -108,7 +118,6 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             aria-label="Sort orders"
           >
             <ArrowUpDown size={14} />
-            <span>{sortMode === 'time' ? t.sort : `${t.sort}: ${activeSort.label}`}</span>
           </button>
 
           {sortOpen && (
