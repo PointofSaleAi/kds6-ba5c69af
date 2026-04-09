@@ -49,7 +49,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
-  const { orders, setOrders, expoTickets } = useOrderStore();
+  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone } = useOrderStore();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -68,7 +68,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       else next.set(itemId, status);
       return next;
     });
-  }, []);
+    // Sync to shared store so Expo view reflects item-level changes
+    if (status === 'done') {
+      // Find which order contains this item
+      const order = orders.find(o => o.courses.some(c => c.items.some(i => i.id === itemId)));
+      if (order) {
+        markItemDone(order.id, itemId);
+      }
+    }
+  }, [orders, markItemDone]);
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
@@ -183,16 +191,20 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [orders, globalItemStatuses]);
 
   const handleBump = useCallback((orderId: string) => {
-    setOrders((prev) =>
-      prev.map((o) => {
-        if (o.id !== orderId) return o;
-        const nextStatus =
-          o.status === 'new' ? 'seen' as const :
-          o.status === 'seen' ? 'in-progress' as const : 'served' as const;
-        return { ...o, status: nextStatus };
-      })
-    );
-  }, []);
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+    const nextStatus =
+      order.status === 'new' ? 'seen' as const :
+      order.status === 'seen' ? 'in-progress' as const : 'served' as const;
+    if (nextStatus === 'served') {
+      // Mark all items done so Expo view reflects completion before removal
+      markAllItemsDone(orderId);
+    } else {
+      setOrders((prev) =>
+        prev.map((o) => o.id === orderId ? { ...o, status: nextStatus } : o)
+      );
+    }
+  }, [orders, markAllItemsDone, setOrders]);
 
   const handleStepBack = useCallback((orderId: string) => {
     setOrders((prev) =>
