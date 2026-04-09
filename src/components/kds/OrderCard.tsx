@@ -6,7 +6,7 @@ import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
 import { FlatItemList } from './FlatItemList';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
-import { StatusChip } from './StatusChip';
+
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { CompactOrderCard } from './CompactOrderCard';
 import { OrderAllergenStrip } from './OrderAllergenStrip';
