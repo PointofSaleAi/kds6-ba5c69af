@@ -235,7 +235,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
               <SettingsCard>
                 <CardLabel label="Status Colours" description="Customise order status colours" />
-                <ActionButton label="Customise" onClick={() => onOpenSub('status-settings')} />
+                <ActionButton label="Customise" onClick={() => setActiveSection('status-settings')} />
               </SettingsCard>
 
               <SettingsCard>
