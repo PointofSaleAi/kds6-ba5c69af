@@ -7,7 +7,7 @@ import { useSound } from '@/hooks/use-sound';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 
 
-export type SortMode = 'time' | 'table' | 'type';
+export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
 
 interface BottomStatusBarProps {
   orderCount: number;
@@ -60,7 +60,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const dateStr = formatDateForKDS(now, dfmt);
 
   const sortOptions: { value: SortMode; label: string }[] = [
-    { value: 'time', label: t.sortByTime },
+    { value: 'newest', label: t.sortNewToOld },
+    { value: 'oldest', label: t.sortOldToNew },
     { value: 'table', label: t.sortByTable },
     { value: 'type', label: t.sortByType },
   ];
