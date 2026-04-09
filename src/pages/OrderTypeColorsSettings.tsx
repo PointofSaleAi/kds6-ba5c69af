@@ -22,7 +22,6 @@ function LivePreviewCard({ label, table, server, time, items, bgColor, orderNum 
 }) {
   return (
     <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-      {/* Header - the part that changes color */}
       <div
         className="px-3 py-2 flex items-center justify-between"
         style={{ backgroundColor: bgColor }}
@@ -35,7 +34,6 @@ function LivePreviewCard({ label, table, server, time, items, bgColor, orderNum 
           <span>{table}</span>
         </div>
       </div>
-      {/* Body */}
       <div className="bg-surface-card px-3 py-2">
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-[20px] font-black text-text-primary leading-none">#{orderNum}</span>
@@ -63,10 +61,44 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        {/* Live Preview Strip */}
-        <div className="mb-6">
-          <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Live Preview</span>
-          <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-8">
+          {/* Left Column: Color Pickers */}
+          <div className="flex flex-col gap-3">
+            {ORDER_TYPES.map(({ key, label }) => {
+              const color = orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key];
+              return (
+                <div key={key} className="bg-surface-card border border-border rounded-xl p-4 flex items-center gap-3">
+                  <label className="relative cursor-pointer shrink-0">
+                    <input
+                      type="color"
+                      value={color}
+                      onChange={(e) => handleColorChange(key, e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    />
+                    <span
+                      className="block w-10 h-10 rounded-full border-2 border-border"
+                      style={{ backgroundColor: color }}
+                    />
+                  </label>
+                  <div className="min-w-0">
+                    <div className="text-[15px] font-bold text-text-primary">{label}</div>
+                    <div className="text-[12px] text-text-muted font-mono uppercase">{color}</div>
+                  </div>
+                </div>
+              );
+            })}
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-1"
+            >
+              <RotateCcw size={14} />
+              Reset to Defaults
+            </button>
+          </div>
+
+          {/* Right Column: Live Previews */}
+          <div className="flex flex-col gap-3">
+            <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-0">Live Preview</span>
             {ORDER_TYPES.map(({ key, label, table, server, time, orderNum, items }) => (
               <LivePreviewCard
                 key={key}
@@ -81,41 +113,6 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
             ))}
           </div>
         </div>
-
-        {/* Color Pickers */}
-        <div className="grid grid-cols-3 gap-3 max-w-3xl">
-          {ORDER_TYPES.map(({ key, label }) => {
-            const color = orderTypeColors[key] || DEFAULT_ORDER_TYPE_COLORS[key];
-            return (
-              <div key={key} className="bg-surface-card border border-border rounded-xl p-4 flex items-center gap-3">
-                <label className="relative cursor-pointer shrink-0">
-                  <input
-                    type="color"
-                    value={color}
-                    onChange={(e) => handleColorChange(key, e.target.value)}
-                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  />
-                  <span
-                    className="block w-10 h-10 rounded-full border-2 border-border"
-                    style={{ backgroundColor: color }}
-                  />
-                </label>
-                <div className="min-w-0">
-                  <div className="text-[15px] font-bold text-text-primary">{label}</div>
-                  <div className="text-[12px] text-text-muted font-mono uppercase">{color}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
-        >
-          <RotateCcw size={14} />
-          Reset to Defaults
-        </button>
       </div>
     </div>
   );
