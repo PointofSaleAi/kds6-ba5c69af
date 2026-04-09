@@ -325,7 +325,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
 
                 {/* Child 2 — item-action (stopPropagation to isolate from row tap) */}
                 {!item.isCancelled && (
-                  <div className="flex items-center shrink-0 ml-auto" style={{ gap: '4px' }} onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center shrink-0 ml-auto" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
                     {isCourseCompleted ? (
                       <KdsActionIcon icon="acknowledged" disabled />
                     ) : !isDimmed && status === 'ready' ? (

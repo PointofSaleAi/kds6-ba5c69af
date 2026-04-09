@@ -60,7 +60,7 @@ export function KdsActionIcon({ icon, onClick, label, title, disabled }: KdsActi
     <button
       onClick={handleClick}
       disabled={disabled}
-      className={`flex items-center justify-center min-w-[44px] min-h-[33px] ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
+      className={`flex items-center justify-center min-w-[34px] min-h-[33px] ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
       aria-label={label ?? icon}
       title={title}
     >
