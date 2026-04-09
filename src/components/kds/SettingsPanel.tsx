@@ -405,6 +405,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           {activeSection === 'language' && (
             <InlineLanguageSettings activeTab={langTab} />
           )}
+
+          {activeSection === 'order-type-colors' && (
+            <OrderTypeColorsSettings onBack={() => setActiveSection('display')} />
+          )}
         </div>
       </div>
 
