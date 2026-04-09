@@ -35,6 +35,7 @@ interface OrderHistoryScreenProps {
 export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScreenProps) {
   const [dateFilter, setDateFilter] = useState('today');
   const [search, setSearch] = useState('');
+  const { orderTypeColors } = useKDSSettings();
 
   const tabs = ['Today', 'Yesterday', 'Last 7 Days', 'Custom Range'];
 
@@ -94,11 +95,10 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
                 {order.orderNumber}
               </div>
 
-              <div className={`px-2 py-1 rounded text-badge-type uppercase tracking-wider text-primary-foreground ${
-                order.orderType === 'dine-in' ? 'bg-order-dine-in' :
-                order.orderType === 'take-out' ? 'bg-order-take-out' :
-                order.orderType === 'delivery' ? 'bg-order-delivery' : 'bg-order-banquet'
-              }`}>
+              <div
+                className="px-2 py-1 rounded text-badge-type uppercase tracking-wider text-primary-foreground"
+                style={{ backgroundColor: orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType] }}
+              >
                 {order.orderType.replace('-', ' ')}
               </div>
 
