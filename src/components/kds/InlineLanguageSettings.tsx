@@ -105,6 +105,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [reqDialect, setReqDialect] = useState('');
   const [reqReason, setReqReason] = useState('');
   const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
+  const reqInputTriggerRef = useRef<HTMLDivElement>(null);
   const reqDropdownRef = useRef<HTMLDivElement>(null);
 
   const existingLangNames = languages.map(l => l.name);
