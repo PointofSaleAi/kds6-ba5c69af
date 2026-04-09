@@ -10,10 +10,10 @@ export interface StatusRule {
 }
 
 const DEFAULT_RULES: StatusRule[] = [
-  { id: 'start', label: 'Start (New)', color: '#E84C3D', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
-  { id: 'medium', label: 'Medium (In Progress)', color: '#E67E22', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
-  { id: 'delay', label: 'Delay (Warning)', color: '#7F8C8D', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
-  { id: 'overtime', label: 'Overtime (Critical)', color: '#922B21', textColor: 'white', minMinutes: 21, maxMinutes: null },
+  { id: 'start', label: 'Start (New)', color: '#22C55E', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
+  { id: 'medium', label: 'Medium (In Progress)', color: '#EAB308', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
+  { id: 'delay', label: 'Delay (Warning)', color: '#F97316', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
+  { id: 'overtime', label: 'Overtime (Critical)', color: '#EF4444', textColor: 'white', minMinutes: 21, maxMinutes: null },
 ];
 
 export interface StatusRulesContextValue {
