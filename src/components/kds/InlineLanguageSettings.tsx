@@ -122,12 +122,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     // TODO: submit to backend API
     console.log('Language request:', { language: reqSelectedLang, dialect: reqDialect, reason: reqReason });
     setRequestFormOpen(false);
-    setRequestSubmitted(true);
     setReqSelectedLang('');
     setReqDialect('');
     setReqReason('');
     setReqLangSearch('');
-    setTimeout(() => setRequestSubmitted(false), 3000);
+    toast.success("Thanks! We'll notify you when this language is available.");
   };
 
   // Close dropdown when clicking outside
