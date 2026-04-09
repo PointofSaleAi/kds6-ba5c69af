@@ -97,6 +97,50 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
 
+  // Request language form state
+  const [requestFormOpen, setRequestFormOpen] = useState(false);
+  const [requestSubmitted, setRequestSubmitted] = useState(false);
+  const [reqLangSearch, setReqLangSearch] = useState('');
+  const [reqSelectedLang, setReqSelectedLang] = useState('');
+  const [reqDialect, setReqDialect] = useState('');
+  const [reqReason, setReqReason] = useState('');
+  const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
+  const reqDropdownRef = useRef<HTMLDivElement>(null);
+
+  const existingLangNames = languages.map(l => l.name);
+  const filteredPopular = popularRequestLanguages.filter(
+    l => !existingLangNames.includes(l) && l.toLowerCase().includes(reqLangSearch.toLowerCase())
+  );
+  const filteredMore = moreLanguages.filter(
+    l => !existingLangNames.includes(l) && l.toLowerCase().includes(reqLangSearch.toLowerCase())
+  );
+
+  const hasVariants = variantLanguages.has(reqSelectedLang.split(' ')[0]);
+
+  const handleRequestSubmit = () => {
+    if (!reqSelectedLang) return;
+    // TODO: submit to backend API
+    console.log('Language request:', { language: reqSelectedLang, dialect: reqDialect, reason: reqReason });
+    setRequestFormOpen(false);
+    setRequestSubmitted(true);
+    setReqSelectedLang('');
+    setReqDialect('');
+    setReqReason('');
+    setReqLangSearch('');
+    setTimeout(() => setRequestSubmitted(false), 3000);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (reqDropdownRef.current && !reqDropdownRef.current.contains(e.target as Node)) {
+        setReqDropdownOpen(false);
+      }
+    };
+    if (reqDropdownOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [reqDropdownOpen]);
+
   const filtered = languages.filter(
     (l) =>
       l.name.toLowerCase().includes(search.toLowerCase()) ||
