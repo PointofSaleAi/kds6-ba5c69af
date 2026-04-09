@@ -356,6 +356,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                           </label>
                           <div ref={reqDropdownRef} className="relative">
                             <div
+                              ref={reqInputTriggerRef}
                               className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-1.5 cursor-text"
                               onClick={() => setReqDropdownOpen(true)}
                             >
@@ -374,41 +375,52 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                               />
                               <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${reqDropdownOpen ? 'rotate-180' : ''}`} />
                             </div>
-                            {reqDropdownOpen && (
-                              <div className="absolute z-20 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[180px] overflow-y-auto">
-                                {filteredPopular.length > 0 && (
-                                  <>
-                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
-                                    {filteredPopular.map((lang) => (
-                                      <button
-                                        key={lang}
-                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
-                                        className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
-                                      >
-                                        {lang}
-                                      </button>
-                                    ))}
-                                  </>
-                                )}
-                                {filteredMore.length > 0 && (
-                                  <>
-                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
-                                    {filteredMore.map((lang) => (
-                                      <button
-                                        key={lang}
-                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
-                                        className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
-                                      >
-                                        {lang}
-                                      </button>
-                                    ))}
-                                  </>
-                                )}
-                                {filteredPopular.length === 0 && filteredMore.length === 0 && (
-                                  <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
-                                )}
-                              </div>
-                            )}
+                            {reqDropdownOpen && reqInputTriggerRef.current && (() => {
+                              const rect = reqInputTriggerRef.current!.getBoundingClientRect();
+                              return (
+                                <div
+                                  className="fixed bg-surface-card border border-border rounded-lg shadow-lg max-h-[240px] overflow-y-auto"
+                                  style={{
+                                    zIndex: 200,
+                                    top: rect.bottom + 4,
+                                    left: rect.left,
+                                    width: rect.width,
+                                  }}
+                                >
+                                  {filteredPopular.length > 0 && (
+                                    <>
+                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
+                                      {filteredPopular.map((lang) => (
+                                        <button
+                                          key={lang}
+                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                        >
+                                          {lang}
+                                        </button>
+                                      ))}
+                                    </>
+                                  )}
+                                  {filteredMore.length > 0 && (
+                                    <>
+                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
+                                      {filteredMore.map((lang) => (
+                                        <button
+                                          key={lang}
+                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                        >
+                                          {lang}
+                                        </button>
+                                      ))}
+                                    </>
+                                  )}
+                                  {filteredPopular.length === 0 && filteredMore.length === 0 && (
+                                    <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           </div>
                         </div>
 
