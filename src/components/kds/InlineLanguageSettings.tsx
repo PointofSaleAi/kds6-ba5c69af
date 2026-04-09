@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, Check, ArrowLeftRight, Languages, ChevronDown } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
@@ -107,6 +108,14 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
   const reqInputTriggerRef = useRef<HTMLDivElement>(null);
   const reqDropdownRef = useRef<HTMLDivElement>(null);
+  const [reqDropdownPos, setReqDropdownPos] = useState<{ top: number; left: number; width: number } | null>(null);
+
+  const updateDropdownPos = useCallback(() => {
+    if (reqInputTriggerRef.current) {
+      const rect = reqInputTriggerRef.current.getBoundingClientRect();
+      setReqDropdownPos({ top: rect.bottom + 4, left: rect.left, width: rect.width });
+    }
+  }, []);
 
   const existingLangNames = languages.map(l => l.name);
   const filteredPopular = popularRequestLanguages.filter(
@@ -130,16 +139,35 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     toast.success("Thanks! We'll notify you when this language is available.");
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (portal-aware)
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (reqDropdownRef.current && !reqDropdownRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (
+        reqDropdownRef.current && !reqDropdownRef.current.contains(target) &&
+        reqInputTriggerRef.current && !reqInputTriggerRef.current.contains(target)
+      ) {
         setReqDropdownOpen(false);
       }
     };
-    if (reqDropdownOpen) document.addEventListener('mousedown', handler);
+    if (reqDropdownOpen) {
+      document.addEventListener('mousedown', handler);
+      updateDropdownPos();
+    }
     return () => document.removeEventListener('mousedown', handler);
-  }, [reqDropdownOpen]);
+  }, [reqDropdownOpen, updateDropdownPos]);
+
+  // Reposition dropdown on scroll/resize
+  useEffect(() => {
+    if (!reqDropdownOpen) return;
+    const reposition = () => updateDropdownPos();
+    window.addEventListener('scroll', reposition, true);
+    window.addEventListener('resize', reposition);
+    return () => {
+      window.removeEventListener('scroll', reposition, true);
+      window.removeEventListener('resize', reposition);
+    };
+  }, [reqDropdownOpen, updateDropdownPos]);
 
   const filtered = languages.filter(
     (l) =>
@@ -375,52 +403,52 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                               />
                               <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${reqDropdownOpen ? 'rotate-180' : ''}`} />
                             </div>
-                            {reqDropdownOpen && reqInputTriggerRef.current && (() => {
-                              const rect = reqInputTriggerRef.current!.getBoundingClientRect();
-                              return (
-                                <div
-                                  className="fixed bg-surface-card border border-border rounded-lg shadow-lg max-h-[240px] overflow-y-auto"
-                                  style={{
-                                    zIndex: 200,
-                                    top: rect.bottom + 4,
-                                    left: rect.left,
-                                    width: rect.width,
-                                  }}
-                                >
-                                  {filteredPopular.length > 0 && (
-                                    <>
-                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
-                                      {filteredPopular.map((lang) => (
-                                        <button
-                                          key={lang}
-                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
-                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
-                                        >
-                                          {lang}
-                                        </button>
-                                      ))}
-                                    </>
-                                  )}
-                                  {filteredMore.length > 0 && (
-                                    <>
-                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
-                                      {filteredMore.map((lang) => (
-                                        <button
-                                          key={lang}
-                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
-                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
-                                        >
-                                          {lang}
-                                        </button>
-                                      ))}
-                                    </>
-                                  )}
-                                  {filteredPopular.length === 0 && filteredMore.length === 0 && (
-                                    <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
-                                  )}
-                                </div>
-                              );
-                            })()}
+                            {reqDropdownOpen && reqDropdownPos && createPortal(
+                              <div
+                                ref={reqDropdownRef}
+                                className="bg-surface-card border border-border rounded-lg shadow-lg max-h-[240px] overflow-y-auto"
+                                style={{
+                                  position: 'fixed',
+                                  zIndex: 9999,
+                                  top: reqDropdownPos.top,
+                                  left: reqDropdownPos.left,
+                                  width: reqDropdownPos.width,
+                                }}
+                              >
+                                {filteredPopular.length > 0 && (
+                                  <>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
+                                    {filteredPopular.map((lang) => (
+                                      <button
+                                        key={lang}
+                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                      >
+                                        {lang}
+                                      </button>
+                                    ))}
+                                  </>
+                                )}
+                                {filteredMore.length > 0 && (
+                                  <>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
+                                    {filteredMore.map((lang) => (
+                                      <button
+                                        key={lang}
+                                        onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                        className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                      >
+                                        {lang}
+                                      </button>
+                                    ))}
+                                  </>
+                                )}
+                                {filteredPopular.length === 0 && filteredMore.length === 0 && (
+                                  <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
+                                )}
+                              </div>,
+                              document.body
+                            )}
                           </div>
                         </div>
 
