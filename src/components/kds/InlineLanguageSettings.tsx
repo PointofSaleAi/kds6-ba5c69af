@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Search, Check, ArrowLeftRight, Languages, ChevronDown } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, Check, ArrowLeftRight, Languages, ChevronDown, CheckCircle } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
@@ -29,6 +29,28 @@ const translations: Record<string, Record<string, string>> = {
 
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
 const timeFormats = ['12h (2:34 PM)', '24h (14:34)'];
+
+const variantLanguages = new Set(['Chinese', 'Portuguese', 'Arabic', 'Malay', 'Uzbek', 'Serbian']);
+
+const popularRequestLanguages = [
+  'French', 'German', 'Japanese', 'Korean',
+  'Portuguese (Brazil)', 'Portuguese (Portugal)',
+  'Hindi', 'Bengali', 'Punjabi', 'Tamil', 'Telugu', 'Marathi',
+];
+
+const moreLanguages = [
+  'Afrikaans','Albanian','Amharic','Armenian','Azerbaijani','Basque','Belarusian','Bosnian',
+  'Bulgarian','Burmese','Catalan','Cebuano','Chichewa','Chinese (Simplified)','Chinese (Traditional)',
+  'Corsican','Croatian','Czech','Danish','Dutch','Esperanto','Estonian','Filipino','Finnish',
+  'Frisian','Galician','Georgian','Greek','Gujarati','Haitian Creole','Hausa','Hawaiian',
+  'Hebrew','Hmong','Hungarian','Icelandic','Igbo','Indonesian','Irish','Italian','Javanese',
+  'Kannada','Kazakh','Khmer','Kinyarwanda','Kurdish','Kyrgyz','Lao','Latin','Latvian',
+  'Lithuanian','Luxembourgish','Macedonian','Malagasy','Malay','Malayalam','Maltese','Maori',
+  'Mongolian','Nepali','Norwegian','Odia','Pashto','Persian','Polish','Romanian','Russian',
+  'Samoan','Scots Gaelic','Serbian','Sesotho','Shona','Sindhi','Sinhala','Slovak','Slovenian',
+  'Somali','Sundanese','Swahili','Swedish','Tajik','Thai','Turkish','Turkmen','Ukrainian',
+  'Urdu','Uyghur','Vietnamese','Welsh','Xhosa','Yiddish','Yoruba','Zulu',
+];
 
 const timezoneOptions = [
   { value: 'auto', label: 'Auto-detect (based on device)' },
@@ -74,6 +96,50 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [tzOpen, setTzOpen] = useState(false);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
+
+  // Request language form state
+  const [requestFormOpen, setRequestFormOpen] = useState(false);
+  const [requestSubmitted, setRequestSubmitted] = useState(false);
+  const [reqLangSearch, setReqLangSearch] = useState('');
+  const [reqSelectedLang, setReqSelectedLang] = useState('');
+  const [reqDialect, setReqDialect] = useState('');
+  const [reqReason, setReqReason] = useState('');
+  const [reqDropdownOpen, setReqDropdownOpen] = useState(false);
+  const reqDropdownRef = useRef<HTMLDivElement>(null);
+
+  const existingLangNames = languages.map(l => l.name);
+  const filteredPopular = popularRequestLanguages.filter(
+    l => !existingLangNames.includes(l) && l.toLowerCase().includes(reqLangSearch.toLowerCase())
+  );
+  const filteredMore = moreLanguages.filter(
+    l => !existingLangNames.includes(l) && l.toLowerCase().includes(reqLangSearch.toLowerCase())
+  );
+
+  const hasVariants = variantLanguages.has(reqSelectedLang.split(' ')[0]);
+
+  const handleRequestSubmit = () => {
+    if (!reqSelectedLang) return;
+    // TODO: submit to backend API
+    console.log('Language request:', { language: reqSelectedLang, dialect: reqDialect, reason: reqReason });
+    setRequestFormOpen(false);
+    setRequestSubmitted(true);
+    setReqSelectedLang('');
+    setReqDialect('');
+    setReqReason('');
+    setReqLangSearch('');
+    setTimeout(() => setRequestSubmitted(false), 3000);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (reqDropdownRef.current && !reqDropdownRef.current.contains(e.target as Node)) {
+        setReqDropdownOpen(false);
+      }
+    };
+    if (reqDropdownOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [reqDropdownOpen]);
 
   const filtered = languages.filter(
     (l) =>
@@ -250,13 +316,127 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   ))}
                 </div>
                 <div className="mt-2 pt-2 border-t border-border">
-                  <button
-                    onClick={() => window.open('mailto:support@posai.com?subject=Language%20Request', '_blank')}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px]"
-                  >
-                    <span className="text-base">🌐</span>
-                    <span className="text-xs font-semibold text-brand-primary">Request a language</span>
-                  </button>
+                  {requestSubmitted ? (
+                    <div className="flex items-center gap-2 px-3 py-2 min-h-[44px]">
+                      <CheckCircle size={16} className="text-green-600 shrink-0" />
+                      <span className="text-xs font-semibold text-green-700">Thanks! We'll notify you when this language is available.</span>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setRequestFormOpen(!requestFormOpen)}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px]"
+                      >
+                        <span className="text-base">🌐</span>
+                        <span className="text-xs font-semibold text-brand-primary">Request a language</span>
+                      </button>
+                      {requestFormOpen && (
+                        <div className="mt-2 space-y-3 px-1 pb-1">
+                          {/* Language Name (required) */}
+                          <div>
+                            <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                              Language name *
+                            </label>
+                            <div ref={reqDropdownRef} className="relative">
+                              <div
+                                className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-1.5 cursor-text"
+                                onClick={() => setReqDropdownOpen(true)}
+                              >
+                                <Search size={14} className="text-text-muted shrink-0" />
+                                <input
+                                  type="text"
+                                  placeholder="Search languages..."
+                                  value={reqSelectedLang || reqLangSearch}
+                                  onChange={(e) => {
+                                    setReqLangSearch(e.target.value);
+                                    setReqSelectedLang('');
+                                    setReqDropdownOpen(true);
+                                  }}
+                                  onFocus={() => setReqDropdownOpen(true)}
+                                  className="flex-1 bg-transparent text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[28px]"
+                                />
+                                <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${reqDropdownOpen ? 'rotate-180' : ''}`} />
+                              </div>
+                              {reqDropdownOpen && (
+                                <div className="absolute z-20 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[180px] overflow-y-auto">
+                                  {filteredPopular.length > 0 && (
+                                    <>
+                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
+                                      {filteredPopular.map((lang) => (
+                                        <button
+                                          key={lang}
+                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                        >
+                                          {lang}
+                                        </button>
+                                      ))}
+                                    </>
+                                  )}
+                                  {filteredMore.length > 0 && (
+                                    <>
+                                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
+                                      {filteredMore.map((lang) => (
+                                        <button
+                                          key={lang}
+                                          onClick={() => { setReqSelectedLang(lang); setReqLangSearch(''); setReqDropdownOpen(false); }}
+                                          className="w-full text-left px-3 py-2 text-xs text-text-primary hover:bg-muted/50 transition-colors"
+                                        >
+                                          {lang}
+                                        </button>
+                                      ))}
+                                    </>
+                                  )}
+                                  {filteredPopular.length === 0 && filteredMore.length === 0 && (
+                                    <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Region / Dialect (conditional) */}
+                          {hasVariants && (
+                            <div>
+                              <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                                Region / Dialect
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="e.g. Simplified vs Traditional Chinese"
+                                value={reqDialect}
+                                onChange={(e) => setReqDialect(e.target.value)}
+                                className="w-full bg-muted rounded-lg px-2.5 py-2 text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[36px]"
+                              />
+                            </div>
+                          )}
+
+                          {/* Reason (optional) */}
+                          <div>
+                            <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                              Why do you need it?
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Tell us your use case..."
+                              value={reqReason}
+                              onChange={(e) => setReqReason(e.target.value)}
+                              className="w-full bg-muted rounded-lg px-2.5 py-2 text-xs text-text-primary placeholder:text-text-muted outline-none min-h-[36px]"
+                            />
+                          </div>
+
+                          {/* Submit */}
+                          <button
+                            onClick={handleRequestSubmit}
+                            disabled={!reqSelectedLang}
+                            className="w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px] bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            Submit Request
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
