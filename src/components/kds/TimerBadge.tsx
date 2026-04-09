@@ -2,7 +2,8 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 
 interface TimerBadgeProps {
   seconds: number;
-  urgency?: string; // kept for backward compat but ignored when rules available
+  urgency?: string;
+  invertColor?: boolean;
 }
 
 function formatTime(totalSeconds: number): string {
@@ -19,14 +20,14 @@ export function getTimerUrgency(elapsed: number, target: number): 'ok' | 'warnin
   return 'ok';
 }
 
-export function TimerBadge({ seconds }: TimerBadgeProps) {
+export function TimerBadge({ seconds, invertColor }: TimerBadgeProps) {
   const { getStatusForElapsed } = useStatusRules();
   const status = getStatusForElapsed(seconds);
 
   return (
     <span
       className="font-mono-timer text-timer font-bold"
-      style={{ color: status.color }}
+      style={{ color: invertColor ? 'white' : status.color }}
     >
       {formatTime(seconds)}
     </span>
