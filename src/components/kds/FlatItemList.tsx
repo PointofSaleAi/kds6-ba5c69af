@@ -32,15 +32,15 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           <div
             key={item.id}
             className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''}`}
-            style={{ padding: '4px 0 4px 4px', gap: 0, opacity: isDone && !item.isCancelled ? 0.5 : undefined }}
+            style={{ padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`, gap: 0, opacity: isDone && !item.isCancelled ? 0.5 : undefined }}
             onClick={() => !item.isCancelled && onReRouteItem?.(item)}
           >
             <div className="flex-1 min-w-0">
-              <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
-                <span className="text-[13px] font-normal text-text-secondary">
+              <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+                <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
                   {item.quantity}&times;
                 </span>
-                <span className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+                <span className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`} style={{ fontSize: 'var(--kds-item-name)' }}>
                   {tp(item.name)}
                 </span>
                 {item.station && !item.isCancelled && (
@@ -71,7 +71,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
               </div>
 
               {displayMode === 'dual' && !item.isCancelled && (
-                <div className="flex items-center gap-1.5 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                <div className="flex items-center gap-1.5 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px', fontSize: 'var(--kds-modifier)' }}>
                   <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
                     <Languages size={10} className="text-text-secondary" />
                   </span>
@@ -91,7 +91,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                             ? 'text-destructive line-through'
                             : 'text-text-secondary'
                       }
-                      style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
+                      style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
                     >
                       {mod.text}
                     </div>
@@ -101,8 +101,8 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
 
               {item.notes && !item.isCancelled && (
                 <div
-                  className="text-[11px] text-text-muted italic leading-snug"
-                  style={{ paddingLeft: '20px', marginTop: '2px' }}
+                  className="text-text-muted italic leading-snug"
+                  style={{ paddingLeft: '20px', marginTop: '2px', fontSize: 'var(--kds-modifier)' }}
                 >
                   "{item.notes}"
                 </div>

@@ -14,7 +14,7 @@ export function ModifierLine({ modifier }: ModifierLineProps) {
   };
 
   return (
-    <span className={`text-modifier pl-5 block -mt-0.5 ${styles[modifier.type]}`}>
+    <span className={`pl-5 block -mt-0.5 ${styles[modifier.type]}`} style={{ fontSize: 'var(--kds-modifier)' }}>
       {tm(modifier.text)}
     </span>
   );

@@ -253,22 +253,57 @@
   }
 }
 
-/* Text scale utilities - granular per element */
-.text-scale-compact .text-badge-type { font-size: 10px !important; }
-.text-scale-compact .text-order-num { font-size: 28px !important; }
-.text-scale-compact .text-item-name { font-size: 11px !important; }
-.text-scale-compact .text-modifier { font-size: 10px !important; }
-.text-scale-compact .text-section-label { font-size: 9px !important; }
-.text-scale-compact .text-cta { font-size: 12px !important; }
-.text-scale-compact [class*="allergen"] { font-size: 9px !important; }
+/* KDS text-size scale tokens (Standard is default) */
+:root {
+  --kds-order-num: 80px;
+  --kds-item-name: 14px;
+  --kds-item-qty: 13px;
+  --kds-modifier: 12px;
+  --kds-course-header: 11px;
+  --kds-allergen-font: 11px;
+  --kds-allergen-py: 3px;
+  --kds-allergen-px: 6px;
+  --kds-eye-icon: 32px;
+  --kds-eye-inner: 16px;
+  --kds-card-padding: 12px;
+  --kds-item-gap: 6px;
+  --kds-summary-text: 13px;
+  --kds-cta: 13px;
+}
 
-.text-scale-large .text-badge-type { font-size: 14px !important; }
-.text-scale-large .text-order-num { font-size: 52px !important; }
-.text-scale-large .text-item-name { font-size: 15px !important; }
-.text-scale-large .text-modifier { font-size: 13px !important; }
-.text-scale-large .text-section-label { font-size: 11px !important; }
-.text-scale-large .text-cta { font-size: 14px !important; }
-.text-scale-large [class*="allergen"] { font-size: 12px !important; }
+.text-scale-compact {
+  --kds-order-num: 60px;
+  --kds-item-name: 12px;
+  --kds-item-qty: 11px;
+  --kds-modifier: 10px;
+  --kds-course-header: 10px;
+  --kds-allergen-font: 10px;
+  --kds-allergen-py: 2px;
+  --kds-allergen-px: 5px;
+  --kds-eye-icon: 26px;
+  --kds-eye-inner: 13px;
+  --kds-card-padding: 8px;
+  --kds-item-gap: 4px;
+  --kds-summary-text: 11px;
+  --kds-cta: 12px;
+}
+
+.text-scale-large {
+  --kds-order-num: 110px;
+  --kds-item-name: 17px;
+  --kds-item-qty: 15px;
+  --kds-modifier: 14px;
+  --kds-course-header: 13px;
+  --kds-allergen-font: 13px;
+  --kds-allergen-py: 4px;
+  --kds-allergen-px: 8px;
+  --kds-eye-icon: 40px;
+  --kds-eye-inner: 20px;
+  --kds-card-padding: 18px;
+  --kds-item-gap: 10px;
+  --kds-summary-text: 15px;
+  --kds-cta: 14px;
+}
 
 .scrollbar-hide {
   -ms-overflow-style: none;
