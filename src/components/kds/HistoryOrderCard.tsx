@@ -167,20 +167,12 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
       className="rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 border-l-text-muted transition-all duration-300"
       style={{ minWidth: 'min(220px, 100%)' }}
     >
-      <div className="relative">
-        <div style={{ opacity: 0.65 }}>
-          <OrderTypeBadge
-            type={order.orderType}
-            time={formatTimeForKDS(order.timeReceived, timeFormat)}
-            tableInfo={getLocationLabel(order.orderType, order.tableName)}
-          />
-        </div>
-        <span
-          className="absolute top-1/2 -translate-y-1/2 right-2 text-[10px] font-medium uppercase rounded z-10"
-          style={{ backgroundColor: '#F1F5F9', color: '#64748B', padding: '2px 8px', borderRadius: 4 }}
-        >
-          SERVED
-        </span>
+      <div style={{ opacity: 0.65 }}>
+        <OrderTypeBadge
+          type={order.orderType}
+          time={formatTimeForKDS(order.timeReceived, timeFormat)}
+          tableInfo={getLocationLabel(order.orderType, order.tableName)}
+        />
       </div>
 
       <div className="relative">
