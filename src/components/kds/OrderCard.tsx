@@ -172,7 +172,20 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       const allDone = courseItemIds.every(id => next.get(id) === 'done');
 
-      if (allDone) return prev; // No-op
+      if (allDone) {
+        // Confirm this course as served so it collapses
+        const courseName = displayCourses.find(c =>
+          c.items.some(i => courseItemIds.includes(i.id))
+        )?.course;
+        if (courseName) {
+          setConfirmedCourses(prev => {
+            const next = new Set(prev);
+            next.add(courseName);
+            return next;
+          });
+        }
+        return prev;
+      }
 
       if (allPreparing) {
         // Advance all to done
