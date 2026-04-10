@@ -134,9 +134,6 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
           </>
         )}
 
-        <span className="absolute top-1.5 right-2 text-[10px] font-bold uppercase text-white bg-white/20 px-2 py-0.5 rounded">
-          SERVED
-        </span>
       </div>
 
       <div className="border-t border-border">
