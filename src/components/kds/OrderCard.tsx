@@ -34,11 +34,7 @@ interface OrderCardProps {
   highlightItemNames?: Set<string>;
 }
 
-const TEXT_SIZE_SCALE: Record<string, number> = {
-  Compact: 0.85,
-  Standard: 1,
-  Large: 1.15,
-};
+// Text size scaling is now handled via CSS custom properties (--kds-*)
 
 const statusBodyMap: Record<string, string> = {
   new: '',
@@ -59,9 +55,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed } = useStatusRules();
-  const { textSize, ticketHeaderLayout } = useKDSSettings();
+  const { ticketHeaderLayout } = useKDSSettings();
   const statusColor = getStatusForElapsed(liveElapsed);
-  const scaleFactor = TEXT_SIZE_SCALE[textSize] || 1;
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
@@ -467,10 +462,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     <>
       <div
         className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
-        style={{
-          minWidth: 'min(220px, 100%)',
-          fontSize: scaleFactor !== 1 ? `${scaleFactor}rem` : undefined,
-        }}
+        style={{ minWidth: 'min(220px, 100%)' }}
       >
         {/* Tappable header area - opens ticket routing modal */}
         <div
@@ -485,12 +477,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
 
           <div
-            className="px-3 py-3 flex items-stretch justify-between transition-all duration-200"
-            style={{ backgroundColor: statusColor.color }}
+            className="flex items-stretch justify-between transition-all duration-200"
+            style={{ backgroundColor: statusColor.color, padding: `var(--kds-card-padding)` }}
           >
             {ticketHeaderLayout === 'kitchen' ? (
               <>
-                <div className="text-order-num text-white leading-none">
+                <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
