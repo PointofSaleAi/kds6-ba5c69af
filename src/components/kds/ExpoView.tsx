@@ -372,6 +372,11 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
 
+  const handleFilterChange = useCallback((f: ExpoFilter) => {
+    setFilter(f);
+    onFilterChange?.();
+  }, [onFilterChange]);
+
   // ResizeObserver for stagger column count
   const boardRef = useRef<HTMLDivElement | null>(null);
   const [boardWidth, setBoardWidth] = useState(0);
