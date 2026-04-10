@@ -135,6 +135,12 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     onBulkAdvanceCourse(activeItemIds);
   };
 
+  const handleCourseUndo = () => {
+    if (!onUndoItem) return;
+    // Undo all items one step back
+    activeItemIds.forEach(id => onUndoItem(id));
+  };
+
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
     : isDimmed
@@ -222,7 +228,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           )}
           {/* Active course: "Seen at HH:MM" after first acknowledgement */}
           {isActive && courseSeenAt && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal bg-muted text-muted-foreground">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-[#7F77DD]" style={{ backgroundColor: '#EEEDFE' }}>
               Seen at {courseSeenAt}
             </span>
           )}
@@ -232,15 +238,20 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               Preparing at {firingAtLabel}
             </span>
           )}
-          {/* Course-level eye/check icon for active courses */}
+          {/* Course-level undo + action icon for active courses */}
           {isActive && onBulkAdvanceCourse && (
-            <button
-              onClick={handleCourseEyeClick}
-              className="rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 hover:scale-110"
-              title={collectiveState === 'unseen' ? 'Mark all seen' : collectiveState === 'preparing' ? 'Mark all done' : 'All done'}
-            >
-              {renderCourseIcon()}
-            </button>
+            <div className="flex items-center" style={{ gap: '2px' }}>
+              {collectiveState !== 'unseen' && (
+                <KdsActionIcon icon="undo" onClick={() => { handleCourseUndo(); }} label="Undo course" />
+              )}
+              <button
+                onClick={handleCourseEyeClick}
+                className="rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 hover:scale-110"
+                title={collectiveState === 'unseen' ? 'Mark all seen' : collectiveState === 'preparing' ? 'Mark all done' : 'All done'}
+              >
+                {renderCourseIcon()}
+              </button>
+            </div>
           )}
         </div>
       </div>
