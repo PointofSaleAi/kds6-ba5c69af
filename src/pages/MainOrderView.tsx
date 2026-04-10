@@ -509,14 +509,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   ) : viewMode === 'grid' ? (
-                    <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, 1fr))` }}>
-                      <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
+                    <div className="relative">
+                      <div className="flex flex-row flex-nowrap overflow-x-auto gap-3 p-3 items-start scrollbar-hide" style={{ scrollBehavior: 'smooth' }}>
+                        <AnimatePresence mode="popLayout">
+                          {filteredOrders.map((order) => (
+                            <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0" style={{ minWidth: 280 }}>
+                              <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                      <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-10" style={{ background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.15))' }} />
                     </div>
                   ) : (
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
