@@ -568,7 +568,6 @@ export default function ExpoView() {
       <ExpoBottomStats
         stats={stats}
         fulfilledTickets={fulfilledTickets}
-        demoMode={demoMode}
         onDemoRecallLast={handleDemoRecallLast}
         hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
       />
