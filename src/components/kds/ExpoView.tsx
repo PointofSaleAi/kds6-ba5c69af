@@ -360,10 +360,9 @@ function ExpoTopControls({
 
 /* -- Main ExpoView -- */
 
-export default function ExpoView() {
+export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   // ResizeObserver for stagger column count
   const boardRef = useRef<HTMLDivElement | null>(null);
