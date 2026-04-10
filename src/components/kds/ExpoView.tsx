@@ -535,10 +535,30 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     return [...tickets, ...visibleDemoTickets];
   }, [tickets, visibleDemoTickets]);
 
-  const filteredTickets = useMemo(() => {
-    if (filter === 'ready') return allTickets.filter(t => allItemsDone(t));
-    return allTickets;
-  }, [allTickets, filter]);
+  // Report allTickets to parent for summary panel
+  useEffect(() => {
+    onAllTicketsChange?.(allTickets);
+  }, [allTickets, onAllTicketsChange]);
+
+  // Reorder by pinned IDs then elapsed time
+  const sortedTickets = useMemo(() => {
+    const base = filter === 'ready' ? allTickets.filter(t => allItemsDone(t)) : allTickets;
+    if (pinnedTicketIds.length === 0) return base;
+
+    const pinnedSet = new Set(pinnedTicketIds);
+    const pinned: typeof base = [];
+    const unpinned: typeof base = [];
+
+    for (const t of base) {
+      if (pinnedSet.has(t.id)) pinned.push(t);
+      else unpinned.push(t);
+    }
+
+    // Sort pinned by their order in pinnedTicketIds
+    pinned.sort((a, b) => pinnedTicketIds.indexOf(a.id) - pinnedTicketIds.indexOf(b.id));
+
+    return [...pinned, ...unpinned];
+  }, [allTickets, filter, pinnedTicketIds]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
