@@ -17,7 +17,8 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { UtensilsCrossed, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
+import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 
 interface OrderCardProps {
   order: Order;
