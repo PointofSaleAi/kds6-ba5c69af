@@ -200,7 +200,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   </span>
                   {order.guestName ? (
                     <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                      <UserRound size={14} className="text-white" />
+                      <img src={UsersBold} alt="" width={14} height={14} className="invert" />
                       {order.guestName}
                     </span>
                   ) : (
