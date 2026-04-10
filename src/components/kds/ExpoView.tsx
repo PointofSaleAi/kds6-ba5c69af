@@ -583,26 +583,56 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     } else {
       handleSendOut(id);
     }
-  }, [handleDemoSendOut, handleSendOut]);
+    onTicketSentOut?.(id);
+  }, [handleDemoSendOut, handleSendOut, onTicketSentOut]);
 
-  const renderTicketCard = (ticket: ExpoTicket) => (
-    <ExpoTicketCard
-      key={ticket.id}
-      ticket={ticket}
-      onSendOut={handleSendOutAny}
-      onRush={handleRush}
-      holdStations={holdStations}
-      onToggleHold={handleToggleHold}
-      isDemo={ticket.id.startsWith('demo-')}
-      onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
-    />
-  );
+  // Highlight pulse state for recently pinned tickets
+  const [pulsingIds, setPulsingIds] = useState<Set<string>>(new Set());
+  const prevPinnedRef = useRef<string[]>([]);
+  useEffect(() => {
+    const prevSet = new Set(prevPinnedRef.current);
+    const newlyPinned = pinnedTicketIds.filter(id => !prevSet.has(id));
+    if (newlyPinned.length > 0) {
+      setPulsingIds(prev => {
+        const next = new Set(prev);
+        newlyPinned.forEach(id => next.add(id));
+        return next;
+      });
+      const timer = setTimeout(() => {
+        setPulsingIds(prev => {
+          const next = new Set(prev);
+          newlyPinned.forEach(id => next.delete(id));
+          return next;
+        });
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+    prevPinnedRef.current = pinnedTicketIds;
+  }, [pinnedTicketIds]);
+
+  const renderTicketCard = (ticket: ExpoTicket) => {
+    const isPulsing = pulsingIds.has(ticket.id);
+    return (
+      <div className={isPulsing ? 'animate-expo-pin-pulse' : ''}>
+        <ExpoTicketCard
+          key={ticket.id}
+          ticket={ticket}
+          onSendOut={handleSendOutAny}
+          onRush={handleRush}
+          holdStations={holdStations}
+          onToggleHold={handleToggleHold}
+          isDemo={ticket.id.startsWith('demo-')}
+          onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <ExpoTopControls
         filter={filter}
-        onFilterChange={setFilter}
+        onFilterChange={handleFilterChange}
         fulfilledTickets={fulfilledTickets}
       />
       <ExpoStationBar />
