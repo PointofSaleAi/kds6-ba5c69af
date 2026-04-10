@@ -120,29 +120,30 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
-          {selectionCount > 0 && (
-            <span
-              className="text-[11px] font-bold text-white rounded shrink-0 px-1.5 py-0.5 transition-all duration-150"
-              style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}
-            >
-              {matchingTicketCount !== undefined ? `${matchingTicketCount} ticket${matchingTicketCount !== 1 ? 's' : ''}` : selectionLabel}
-            </span>
-          )}
         </div>
-        <div className="flex items-center gap-1 shrink-0">
-          {selectionCount > 0 && (
-            <button
-              onClick={onClearAll}
-              className="text-[11px] font-medium text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors whitespace-nowrap"
-            >
-              Clear all
-            </button>
-          )}
-          <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Collapse panel">
-            <ChevronRight size={16} />
+        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground shrink-0" aria-label="Collapse panel">
+          <ChevronRight size={16} />
+        </button>
+      </div>
+
+      {/* Filter status bar */}
+      {selectionCount > 0 && (
+        <div className="flex items-center justify-between px-3 py-1.5 bg-[#EFF6FF] border-l border-border border-b border-b-border transition-all duration-150">
+          <span
+            className="text-[11px] font-bold text-white rounded px-1.5 py-0.5"
+            style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}
+          >
+            {matchingTicketCount !== undefined ? `${matchingTicketCount} ticket${matchingTicketCount !== 1 ? 's' : ''}` : selectionLabel}
+          </span>
+          <button
+            onClick={onClearAll}
+            className="text-[11px] font-medium transition-colors whitespace-nowrap"
+            style={{ color: '#3B82F6' }}
+          >
+            Clear all
           </button>
         </div>
-      </div>
+      )}
 
       {/* Categories section */}
       <div className="flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
