@@ -18,9 +18,10 @@ interface OrderCardActionsProps {
   isDineIn?: boolean;
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
+  doneDisabled?: boolean;
 }
 
-export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }: OrderCardActionsProps) {
+export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall, doneDisabled }: OrderCardActionsProps) {
   const { t } = useLanguage();
   const isServed = status === 'served';
 
@@ -39,6 +40,9 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }
 
   const showUndo = !isServed && status !== 'new';
 
+  // For dine-in DONE button, disable if not all active items are done
+  const isButtonDisabled = isDineIn && doneDisabled && !(status === 'new' || status === 'seen');
+
   return (
     <div className="p-1.5 border-t border-border flex gap-1.5">
       {showUndo && (
@@ -52,8 +56,9 @@ export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall }
       )}
       {!isServed && (
         <button
-          onClick={() => onBump?.(orderId)}
-          className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
+          onClick={() => !isButtonDisabled && onBump?.(orderId)}
+          disabled={isButtonDisabled}
+          className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px] ${isButtonDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}
         >
           <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
           {buttonLabel}
