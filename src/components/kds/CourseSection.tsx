@@ -99,26 +99,24 @@ function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
   if (status === 'active') {
     if (courseGroup.fireInSeconds !== undefined) {
       const remaining = courseGroup.fireInSeconds - Math.floor((now - (courseGroup._startedAt?.getTime() ?? now)) / 1000);
+      const targetTime = new Date(now + remaining * 1000);
+      const timeStr = targetTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
       if (remaining <= 0) {
         return { label: `Overdue ${formatTimer(-remaining)}`, urgency: 'overdue' };
       }
-      if (remaining <= 60) {
-        return { label: `Ready to fire`, urgency: 'due-soon' };
-      }
-      return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'normal' };
+      return { label: `Preparing at ${timeStr}`, urgency: remaining <= 60 ? 'due-soon' : 'normal' };
     }
     if (courseGroup.prepTimerLabel) {
       const parts = courseGroup.prepTimerLabel.split(':').map(Number);
       const totalSec = (parts[0] || 0) * 60 + (parts[1] || 0);
       const elapsed = Math.floor((now - (courseGroup._startedAt?.getTime() ?? (now - totalSec * 1000))) / 1000);
       const remaining = totalSec - elapsed;
+      const targetTime = new Date(now + remaining * 1000);
+      const timeStr = targetTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
       if (remaining <= 0) {
-        return { label: `Ready to fire`, urgency: 'due-soon' };
+        return { label: `Preparing now`, urgency: 'due-soon' };
       }
-      if (remaining <= 60) {
-        return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'due-soon' };
-      }
-      return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'normal' };
+      return { label: `Preparing at ${timeStr}`, urgency: remaining <= 60 ? 'due-soon' : 'normal' };
     }
     return null;
   }
@@ -224,20 +222,22 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
               {timer.label}
             </span>
           )}
-          {/* Pending: static "Firing at X:XX PM" label — no icon */}
+          {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal bg-muted text-muted-foreground">
-              Firing at {firingAtLabel}
+              Preparing at {firingAtLabel}
             </span>
           )}
-          {/* Fire button only for active courses */}
+          {/* Eye button only for active courses */}
           {showFireButton && onFireCourse && (
             <button
               onClick={(e) => { e.stopPropagation(); onFireCourse(courseGroup.course); }}
-              className="rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(255,140,50,0.6)]"
-              title={`Fire ${tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}`}
+              className="rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 hover:scale-110"
+              title={`Prepare ${tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}`}
             >
-              <img src={fireIcon} alt="Fire" className="w-6 h-6" />
+              <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#DBEAFE' }}>
+                <Eye size={14} color="#3B82F6" strokeWidth={2.5} />
+              </div>
             </button>
           )}
         </div>
