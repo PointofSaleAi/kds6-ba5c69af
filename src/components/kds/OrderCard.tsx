@@ -265,13 +265,32 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   }, [isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
 
   // Ticket-level advance: operates on active course only for dine-in
+  // Find the currently active course name
+  const activeCourseName = useMemo(() => {
+    if (!isDineIn) return undefined;
+    for (const [course, status] of courseLifecycleMap) {
+      if (status === 'active') return course;
+    }
+    return undefined;
+  }, [isDineIn, courseLifecycleMap]);
+
   const handleTicketAdvance = useCallback((orderId: string) => {
     if (ticketState === 'done') {
-      if (isDineIn && !allCoursesServed) {
-        // Active course done but more courses remain - no-op, course will auto-collapse via lifecycle
+      if (isDineIn && activeCourseName) {
+        // Confirm this course as done - it will collapse and next course becomes active
+        setConfirmedCourses(prev => {
+          const next = new Set(prev);
+          next.add(activeCourseName);
+          return next;
+        });
         return;
       }
-      // Final DONE or non-coursed DONE - remove ticket
+      if (isDineIn && allCoursesServed) {
+        // All courses served, final DONE - remove ticket
+        onBump?.(orderId);
+        return;
+      }
+      // Non-coursed DONE - remove ticket
       onBump?.(orderId);
       return;
     }
@@ -298,7 +317,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
