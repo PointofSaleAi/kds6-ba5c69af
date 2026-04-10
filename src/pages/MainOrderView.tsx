@@ -60,7 +60,20 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
-  const [selectedSummaryItem, setSelectedSummaryItem] = useState<string | null>(null);
+  const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
+
+  const handleSummaryItemToggle = useCallback((itemName: string) => {
+    setSelectedSummaryItems(prev => {
+      const next = new Set(prev);
+      if (next.has(itemName)) next.delete(itemName);
+      else next.add(itemName);
+      return next;
+    });
+  }, []);
+
+  const handleSummaryClearAll = useCallback(() => {
+    setSelectedSummaryItems(new Set());
+  }, []);
 
   const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
     setGlobalItemStatuses(prev => {
@@ -154,25 +167,26 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
 
-    // Reorder based on selected summary item
-    if (selectedSummaryItem) {
-      const matching: Order[] = [];
+    // Reorder based on selected summary items (multi-select)
+    if (selectedSummaryItems.size > 0) {
+      const matching: Array<{ order: Order; matchCount: number }> = [];
       const nonMatching: Order[] = [];
       for (const o of sorted) {
-        const hasItem = o.courses.some(c => c.items.some(i => i.name === selectedSummaryItem && !i.isCompleted && !i.isCancelled));
-        if (hasItem) matching.push(o);
+        const matchCount = o.courses.reduce((acc, c) => acc + c.items.filter(i => selectedSummaryItems.has(i.name) && !i.isCompleted && !i.isCancelled).length, 0);
+        if (matchCount > 0) matching.push({ order: o, matchCount });
         else nonMatching.push(o);
       }
-      return [...matching, ...nonMatching];
+      matching.sort((a, b) => b.matchCount - a.matchCount);
+      return [...matching.map(m => m.order), ...nonMatching];
     }
 
     return sorted;
-  }, [orders, activeFilter, sortMode, selectedSummaryItem]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems]);
 
   const orderHasSelectedItem = useCallback((order: Order): boolean => {
-    if (!selectedSummaryItem) return true;
-    return order.courses.some(c => c.items.some(i => i.name === selectedSummaryItem && !i.isCompleted && !i.isCancelled));
-  }, [selectedSummaryItem]);
+    if (selectedSummaryItems.size === 0) return true;
+    return order.courses.some(c => c.items.some(i => selectedSummaryItems.has(i.name) && !i.isCompleted && !i.isCancelled));
+  }, [selectedSummaryItems]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
@@ -430,8 +444,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
-                              <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItem && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemName={selectedSummaryItem} />
+                              <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItems.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={selectedSummaryItems} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
@@ -442,8 +456,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, 1fr))` }}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItem && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemName={selectedSummaryItem} />
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItems.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={selectedSummaryItems} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -452,8 +466,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItem && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemName={selectedSummaryItem} />
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItems.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0 w-[320px]">
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={selectedSummaryItems} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -466,7 +480,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItem={selectedSummaryItem} onItemSelect={setSelectedSummaryItem} />}
+        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} onClearAll={handleSummaryClearAll} />}
       </div>
 
       <AnimatePresence>
