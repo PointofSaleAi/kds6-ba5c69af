@@ -158,12 +158,6 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35 } }}
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300 relative`}
     >
-      {/* DEMO badge */}
-      {isDemo && (
-        <span className="absolute top-1 right-1 z-20 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-warning/90 text-white tracking-wider">
-          DEMO
-        </span>
-      )}
 
       {/* Header */}
       <div className={`flex items-center justify-between px-2 py-1.5 ${headerStyle.bg || ''} ${headerStyle.text}`} style={headerStyle.bgColor ? { backgroundColor: headerStyle.bgColor } : undefined}>
