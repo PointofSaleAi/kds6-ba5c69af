@@ -1,6 +1,7 @@
 import { RotateCcw } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order } from '@/types/kds';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
@@ -20,6 +21,8 @@ function formatDuration(seconds: number): string {
 
 export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardProps) {
   const { tp, timeFormat } = useLanguage();
+  const { orderTypeColors } = useKDSSettings();
+  const headerBgColor = orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType];
   const durationText = formatDuration(order.elapsedSeconds);
   const isOverTarget = order.elapsedSeconds > order.targetSeconds;
 
@@ -74,6 +77,12 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
           time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={order.tableName}
         />
+        <div
+          className="px-3 pb-2 text-[13px] font-medium text-primary-foreground"
+          style={{ backgroundColor: headerBgColor, marginTop: '-1px' }}
+        >
+          {order.guestName || '—'}
+        </div>
         <span className="absolute top-1.5 right-2 text-[10px] font-bold uppercase text-text-muted bg-muted/80 px-2 py-0.5 rounded">
           SERVED
         </span>
