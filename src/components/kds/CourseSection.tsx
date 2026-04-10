@@ -176,22 +176,22 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
     if (collectiveState === 'done') {
       return (
-        <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#DCFCE7' }}>
-          <CheckCircle size={14} color="#16A34A" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#DCFCE7' }}>
+          <CheckCircle size={16} color="#16A34A" strokeWidth={2.5} />
         </div>
       );
     }
     if (collectiveState === 'preparing') {
       return (
-        <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#1A1A2E' }}>
-          <Eye size={14} color="#FFFFFF" strokeWidth={2.5} fill="#1A1A2E" />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#3B82F6' }}>
+          <Eye size={16} color="#FFFFFF" strokeWidth={2.5} />
         </div>
       );
     }
-    // unseen - dark blue bg, white eye
+    // unseen - blue outline bg, white eye
     return (
-      <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#1A1A2E' }}>
-        <Eye size={14} color="#FFFFFF" strokeWidth={2.5} />
+      <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#3B82F6' }}>
+        <Eye size={16} color="#FFFFFF" strokeWidth={2.5} />
       </div>
     );
   };
