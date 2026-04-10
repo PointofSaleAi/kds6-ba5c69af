@@ -121,7 +121,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
           {selectionCount > 0 && (
             <span className="text-[11px] font-bold text-white rounded shrink-0 px-1.5 py-0.5" style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}>
-              {selectionCount} selected
+              {selectionLabel}
             </span>
           )}
         </div>
