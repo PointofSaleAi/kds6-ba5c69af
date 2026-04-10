@@ -9,6 +9,8 @@ interface ItemSummaryPanelProps {
   stationCourse?: string;
   selectedItems?: Set<string>;
   onItemToggle?: (itemName: string) => void;
+  selectedCategories?: Set<string>;
+  onCategoryToggle?: (category: string) => void;
   onClearAll?: () => void;
 }
 
@@ -48,7 +50,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, onClearAll }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
@@ -61,7 +63,20 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     : rawSummary;
 
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
-  const selectionCount = selectedItems?.size ?? 0;
+  const categoryCount = selectedCategories?.size ?? 0;
+  const itemCount = selectedItems?.size ?? 0;
+  const selectionCount = categoryCount + itemCount;
+
+  const selectionLabel = useMemo(() => {
+    if (selectionCount === 0) return '';
+    const parts: string[] = [];
+    if (categoryCount > 0) {
+      const cats = Array.from(selectedCategories ?? []);
+      parts.push(cats.join(', '));
+    }
+    if (itemCount > 0) parts.push(`${itemCount} item${itemCount > 1 ? 's' : ''}`);
+    return parts.join(' + ');
+  }, [selectionCount, categoryCount, itemCount, selectedCategories]);
 
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
   const toggleSection = (cat: string) => {
