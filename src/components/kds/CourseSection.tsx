@@ -1,12 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Languages } from 'lucide-react';
+import { Languages, Eye } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
-
-import fireIcon from '@/assets/fire-icon.png';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
