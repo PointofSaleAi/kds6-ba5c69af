@@ -64,6 +64,33 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
 
+  // Expo pinned ticket state
+  const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
+  const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
+
+  const handleExpoTogglePin = useCallback((ticketId: string) => {
+    setExpoPinnedIds(prev => {
+      if (prev.includes(ticketId)) return prev.filter(id => id !== ticketId);
+      return [...prev, ticketId];
+    });
+  }, []);
+
+  const handleExpoClearAllPins = useCallback(() => {
+    setExpoPinnedIds([]);
+  }, []);
+
+  const handleExpoFilterChange = useCallback(() => {
+    setExpoPinnedIds([]);
+  }, []);
+
+  const handleExpoTicketSentOut = useCallback((id: string) => {
+    setExpoPinnedIds(prev => prev.filter(pid => pid !== id));
+  }, []);
+
+  const handleExpoAllTicketsChange = useCallback((tickets: import('@/data/mock-expo-orders').ExpoTicket[]) => {
+    setExpoAllTickets(tickets);
+  }, []);
+
   const handleSummaryItemToggle = useCallback((itemName: string) => {
     setSelectedSummaryItems(prev => {
       const next = new Set(prev);
