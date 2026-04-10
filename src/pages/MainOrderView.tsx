@@ -286,6 +286,27 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setActiveNav('home');
   }, [historyOrders]);
 
+  const handleRecallItem = useCallback((orderId: string, item: OrderItem) => {
+    const historyOrder = historyOrders.find(o => o.id === orderId);
+    if (!historyOrder) return;
+    const newOrder: Order = {
+      id: `recalled-item-${item.id}-${Date.now()}`,
+      orderNumber: historyOrder.orderNumber,
+      orderType: historyOrder.orderType,
+      status: 'recalled',
+      tableName: historyOrder.tableName,
+      serverName: historyOrder.serverName,
+      guestName: historyOrder.guestName,
+      timeReceived: new Date(),
+      elapsedSeconds: 0,
+      targetSeconds: historyOrder.targetSeconds,
+      itemCount: item.quantity,
+      courses: [{ course: 'ENTREE', isFired: true, items: [{ ...item, isCompleted: false }] }],
+    };
+    setOrders((prev) => [newOrder, ...prev]);
+    toast.success('Item recalled to kitchen', { duration: 2000 });
+  }, [historyOrders]);
+
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history') {
       setActiveNav(target);
