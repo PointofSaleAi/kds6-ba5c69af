@@ -1,4 +1,3 @@
-import type { OrderStatus } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
@@ -12,58 +11,56 @@ const iconSrcMap = {
   undo: undoIcon,
 } as const;
 
+export type TicketState = 'seen' | 'in-progress' | 'done';
+
 interface OrderCardActionsProps {
   orderId: string;
-  status: OrderStatus;
-  isDineIn?: boolean;
-  onBump?: (orderId: string) => void;
-  onRecall?: (orderId: string) => void;
-  doneDisabled?: boolean;
+  ticketState: TicketState;
+  onTicketAdvance?: (orderId: string) => void;
+  onTicketRecall?: (orderId: string) => void;
 }
 
-export function OrderCardActions({ orderId, status, isDineIn, onBump, onRecall, doneDisabled }: OrderCardActionsProps) {
+export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTicketRecall }: OrderCardActionsProps) {
   const { t } = useLanguage();
-  const isServed = status === 'served';
 
-  // Dine-in skips SEEN (items have individual eye icons), starts from IN PROGRESS
-  const buttonLabel = isDineIn
-    ? (status === 'new' || status === 'seen' ? t.inProgress.toUpperCase() : t.done)
-    : (status === 'new' ? t.seen : status === 'seen' ? t.inProgress.toUpperCase() : t.done);
+  const buttonLabel = ticketState === 'seen'
+    ? t.seen
+    : ticketState === 'in-progress'
+      ? t.inProgress.toUpperCase()
+      : t.done;
 
-  const buttonIcon = isDineIn
-    ? (status === 'new' || status === 'seen' ? 'preparing' : 'ready')
-    : (status === 'new' ? 'seen' : status === 'seen' ? 'preparing' : 'ready');
+  const buttonIcon: keyof typeof iconSrcMap = ticketState === 'seen'
+    ? 'seen'
+    : ticketState === 'in-progress'
+      ? 'preparing'
+      : 'ready';
 
-  const buttonColorClass = isDineIn
-    ? (status === 'new' || status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done')
-    : (status === 'new' ? 'bg-btn-seen' : status === 'seen' ? 'bg-btn-in-progress' : 'bg-btn-done');
+  const buttonColorClass = ticketState === 'seen'
+    ? 'bg-btn-seen'
+    : ticketState === 'in-progress'
+      ? 'bg-btn-in-progress'
+      : 'bg-btn-done';
 
-  const showUndo = !isServed && status !== 'new';
-
-  // For dine-in DONE button, disable if not all active items are done
-  const isButtonDisabled = isDineIn && doneDisabled && !(status === 'new' || status === 'seen');
+  const showUndo = ticketState !== 'seen';
 
   return (
     <div className="p-1.5 border-t border-border flex gap-1.5">
       {showUndo && (
         <button
-          onClick={() => onRecall?.(orderId)}
+          onClick={() => onTicketRecall?.(orderId)}
           className="w-[44px] min-h-[44px] bg-muted rounded flex items-center justify-center hover:opacity-80 transition-colors shrink-0"
           title="Go back"
         >
           <img src={undoIcon} alt="Back" className="w-8 h-6" />
         </button>
       )}
-      {!isServed && (
-        <button
-          onClick={() => !isButtonDisabled && onBump?.(orderId)}
-          disabled={isButtonDisabled}
-          className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px] ${isButtonDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-        >
-          <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
-          {buttonLabel}
-        </button>
-      )}
+      <button
+        onClick={() => onTicketAdvance?.(orderId)}
+        className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
+      >
+        <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
+        {buttonLabel}
+      </button>
     </div>
   );
 }
