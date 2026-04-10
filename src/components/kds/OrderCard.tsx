@@ -17,8 +17,8 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { UserRound } from 'lucide-react';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
+import UsersBold from '@/assets/users-bold.svg';
 
 interface OrderCardProps {
   order: Order;
@@ -200,7 +200,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   </span>
                   {order.guestName ? (
                     <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                      <UserRound size={14} className="text-white" />
+                      <img src={UsersBold} alt="" width={14} height={14} className="invert" />
                       {order.guestName}
                     </span>
                   ) : (
