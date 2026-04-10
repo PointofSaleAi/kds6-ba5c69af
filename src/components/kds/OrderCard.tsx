@@ -239,15 +239,30 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [order.courses]);
 
-  if (compact) {
-    return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
-  }
-
   const isDineIn = order.orderType === 'dine-in';
 
   const displayCourses = (stationCourse && isDineIn)
     ? normalizeStationCourses(orderWithStations.courses, stationCourse)
     : orderWithStations.courses;
+
+  // Compute whether all active course items are done (for DONE button)
+  const allActiveItemsDone = useMemo(() => {
+    if (!isDineIn) return true;
+    const activeCourseItems = displayCourses
+      .filter(c => {
+        if (c.isFired) return false;
+        if (c.prepTimerLabel || c.fireInSeconds !== undefined) return true;
+        if (c.autoFireLabel || c.autoFireTargetSeconds !== undefined) return false;
+        return true;
+      })
+      .flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id));
+    if (activeCourseItems.length === 0) return false;
+    return activeCourseItems.every(id => itemStatuses.get(id) === 'done');
+  }, [isDineIn, displayCourses, itemStatuses]);
+
+  if (compact) {
+    return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
+  }
 
   const stationIdx = stationCourse
     ? displayCourses.findIndex(c => c.course === stationCourse)
@@ -259,21 +274,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     const stationName = stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase();
     return `${prevName} fired ${prevCourse.firedAgoLabel || 'recently'}, ${stationName.toLowerCase()} prep triggered automatically`;
   })() : null;
-
-  // Compute whether all active course items are done (for DONE button)
-  const allActiveItemsDone = useMemo(() => {
-    if (!isDineIn) return true; // Non-dine-in uses different flow
-    const activeCourseItems = displayCourses
-      .filter(c => {
-        if (c.isFired) return false;
-        if (c.prepTimerLabel || c.fireInSeconds !== undefined) return true;
-        if (c.autoFireLabel || c.autoFireTargetSeconds !== undefined) return false;
-        return true; // default active
-      })
-      .flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id));
-    if (activeCourseItems.length === 0) return false;
-    return activeCourseItems.every(id => itemStatuses.get(id) === 'done');
-  }, [isDineIn, displayCourses, itemStatuses]);
 
   return (
     <>
