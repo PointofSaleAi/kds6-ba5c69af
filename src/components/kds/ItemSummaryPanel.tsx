@@ -9,6 +9,8 @@ interface ItemSummaryPanelProps {
   stationCourse?: string;
   selectedItems?: Set<string>;
   onItemToggle?: (itemName: string) => void;
+  selectedCategories?: Set<string>;
+  onCategoryToggle?: (category: string) => void;
   onClearAll?: () => void;
 }
 
@@ -48,7 +50,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, onClearAll }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
@@ -61,7 +63,20 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     : rawSummary;
 
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
-  const selectionCount = selectedItems?.size ?? 0;
+  const categoryCount = selectedCategories?.size ?? 0;
+  const itemCount = selectedItems?.size ?? 0;
+  const selectionCount = categoryCount + itemCount;
+
+  const selectionLabel = useMemo(() => {
+    if (selectionCount === 0) return '';
+    const parts: string[] = [];
+    if (categoryCount > 0) {
+      const cats = Array.from(selectedCategories ?? []);
+      parts.push(cats.join(', '));
+    }
+    if (itemCount > 0) parts.push(`${itemCount} item${itemCount > 1 ? 's' : ''}`);
+    return parts.join(' + ');
+  }, [selectionCount, categoryCount, itemCount, selectedCategories]);
 
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
   const toggleSection = (cat: string) => {
@@ -106,7 +121,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
           {selectionCount > 0 && (
             <span className="text-[11px] font-bold text-white rounded shrink-0 px-1.5 py-0.5" style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}>
-              {selectionCount} selected
+              {selectionLabel}
             </span>
           )}
         </div>
@@ -139,6 +154,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             const isMuted = !!stationCourse && !isStation;
             const sectionTotal = cat.items.reduce((a, i) => a + i.remaining, 0);
             const isExpanded = !collapsedSections.has(cat.category);
+            const isCategorySelected = selectedCategories?.has(cat.category) ?? false;
 
             const displayItems = isUncategorized
               ? cat.items.filter(item => !assignedStations.has(item.name))
@@ -149,32 +165,50 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             return (
               <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
                 {/* Section header */}
-                <button
-                  onClick={() => toggleSection(cat.category)}
-                  className="w-full flex items-center justify-between px-3 py-2 bg-muted border-b border-border hover:bg-muted/90 transition-colors min-h-[36px]"
-                >
-                  <div className="flex items-center gap-1.5">
+                <div className="flex items-center border-b border-border min-h-[36px]">
+                  {/* Chevron toggle */}
+                  <button
+                    onClick={() => toggleSection(cat.category)}
+                    className="flex items-center justify-center px-1.5 py-2 shrink-0 min-w-[28px] min-h-[36px]"
+                    aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
+                  >
                     <ChevronDown
                       size={12}
-                      className={`text-text-muted transition-transform ${isExpanded ? '' : '-rotate-90'}`}
+                      className={`text-text-muted transition-transform duration-150 ${isExpanded ? '' : '-rotate-90'}`}
                     />
+                  </button>
+                  {/* Category label - tappable for filtering */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isUncategorized) onCategoryToggle?.(cat.category);
+                    }}
+                    className={`flex-1 flex items-center gap-1.5 py-2 pr-1 transition-all duration-150 rounded cursor-pointer ${
+                      !isUncategorized ? 'hover:bg-[rgba(59,130,246,0.06)]' : ''
+                    } ${isCategorySelected ? 'border-b-2 border-[#3B82F6]' : ''}`}
+                    style={{ borderRadius: '4px' }}
+                  >
                     {isUncategorized && (
                       <AlertTriangle size={12} className="text-warning shrink-0" />
                     )}
-                    <span className={`text-[12px] uppercase tracking-widest font-bold ${isStation ? 'text-text-primary' : 'text-text-secondary'}`}>
+                    <span className={`text-[12px] uppercase tracking-widest font-bold transition-colors duration-150 ${
+                      isCategorySelected ? 'text-[#1D4ED8]' : isStation ? 'text-text-primary' : 'text-text-secondary'
+                    }`}>
                       {cat.category}
                     </span>
-                  </div>
-                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
-                    sectionTotal >= 20
-                      ? 'bg-destructive text-destructive-foreground'
-                      : sectionTotal >= 10
-                        ? 'bg-warning text-warning-foreground'
-                        : 'bg-emerald-600 text-white'
+                  </button>
+                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
+                    isCategorySelected
+                      ? 'bg-[#3B82F6] text-white'
+                      : sectionTotal >= 20
+                        ? 'bg-destructive text-destructive-foreground'
+                        : sectionTotal >= 10
+                          ? 'bg-warning text-warning-foreground'
+                          : 'bg-emerald-600 text-white'
                   }`}>
                     {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
                   </span>
-                </button>
+                </div>
 
                 {/* Items */}
                 {isExpanded && (
