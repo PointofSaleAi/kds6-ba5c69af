@@ -184,7 +184,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
 
           <div
-            className="px-3 py-3 flex items-center justify-between transition-all duration-200"
+            className="px-3 py-3 flex items-stretch justify-between transition-all duration-200"
             style={{ backgroundColor: statusColor.color }}
           >
             {ticketHeaderLayout === 'kitchen' ? (
@@ -192,18 +192,18 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="text-order-num text-white leading-none">
                   {order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
+                <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
+                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
+                    <UtensilsCrossed size={14} className="text-white" />
+                    {order.serverName}
+                  </span>
                   {order.guestName && (
                     <span className="flex items-center gap-1 text-[13px] font-medium text-white">
                       <UserRound size={14} className="text-white" />
                       {order.guestName}
                     </span>
                   )}
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                    <UtensilsCrossed size={14} className="text-white" />
-                    {order.serverName}
-                  </span>
-                  <div className="mb-0.5">
+                  <div>
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
                   </div>
                 </div>
