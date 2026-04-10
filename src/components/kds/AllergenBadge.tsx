@@ -12,17 +12,21 @@ export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps
 
   if (variant === 'order') {
     return (
-      <span className="inline-flex items-center gap-0.5 text-allergen text-[11px] font-bold">
-        <span className="text-[10px]">{allergen.icon}</span>
+      <span
+        className="inline-flex items-center gap-0.5 text-allergen font-bold"
+        style={{ fontSize: 'var(--kds-allergen-font)', padding: `var(--kds-allergen-py) var(--kds-allergen-px)` }}
+      >
+        <span style={{ fontSize: 'var(--kds-allergen-font)' }}>{allergen.icon}</span>
         <span>{ta(allergen.label)}</span>
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-0.5 text-allergen/80 text-[10px] font-semibold">
-      <span>{allergen.icon}</span>
-      <span>{ta(allergen.label)}</span>
+    <span
+      className="inline-flex items-center gap-0.5 text-allergen/80 font-semibold"
+      style={{ fontSize: 'var(--kds-allergen-font)', padding: `var(--kds-allergen-py) var(--kds-allergen-px)` }}
+    >
     </span>
   );
 }

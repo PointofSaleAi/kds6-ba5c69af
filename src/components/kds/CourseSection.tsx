@@ -388,7 +388,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
                   {/* Dual-language secondary name */}
                   {displayMode === 'dual' && !item.isCancelled && (
-                    <div className="flex items-center gap-1.5 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
+                    <div className="flex items-center gap-1.5 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px', fontSize: 'var(--kds-modifier)' }}>
                       <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
                         <Languages size={10} className="text-text-secondary" />
                       </span>
@@ -409,7 +409,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                                 ? 'text-destructive line-through'
                                 : 'text-text-secondary'
                           }
-                          style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
+                          style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
                         >
                           {mod.text}
                         </div>
@@ -420,8 +420,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                   {/* Product notes */}
                   {item.notes && !item.isCancelled && (
                     <div
-                      className="text-[11px] text-text-muted italic leading-snug"
-                      style={{ paddingLeft: '20px', marginTop: '2px' }}
+                      className="text-text-muted italic leading-snug"
+                      style={{ paddingLeft: '20px', marginTop: '2px', fontSize: 'var(--kds-modifier)' }}
                     >
                       "{item.notes}"
                     </div>
