@@ -197,11 +197,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     <UtensilsCrossed size={14} className="text-white" />
                     {order.serverName}
                   </span>
-                  {order.guestName && (
+                  {order.guestName ? (
                     <span className="flex items-center gap-1 text-[13px] font-medium text-white">
                       <UserRound size={14} className="text-white" />
                       {order.guestName}
                     </span>
+                  ) : (
+                    <span className="h-[18px]" />
                   )}
                   <div>
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
