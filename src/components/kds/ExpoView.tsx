@@ -360,7 +360,15 @@ function ExpoTopControls({
 
 /* -- Main ExpoView -- */
 
-export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
+interface ExpoViewProps {
+  viewMode: ViewMode;
+  pinnedTicketIds?: string[];
+  onFilterChange?: () => void;
+  onTicketSentOut?: (id: string) => void;
+  onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
+}
+
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
 
