@@ -12,6 +12,7 @@ interface ItemSummaryPanelProps {
   selectedCategories?: Set<string>;
   onCategoryToggle?: (category: string) => void;
   onClearAll?: () => void;
+  matchingTicketCount?: number;
 }
 
 interface CategorySummary {
@@ -50,7 +51,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
@@ -120,8 +121,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
           {selectionCount > 0 && (
-            <span className="text-[11px] font-bold text-white rounded shrink-0 px-1.5 py-0.5" style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}>
-              {selectionLabel}
+            <span
+              className="text-[11px] font-bold text-white rounded shrink-0 px-1.5 py-0.5 transition-all duration-150"
+              style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}
+            >
+              {matchingTicketCount !== undefined ? `${matchingTicketCount} ticket${matchingTicketCount !== 1 ? 's' : ''}` : selectionLabel}
             </span>
           )}
         </div>

@@ -356,6 +356,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return order.courses.some(c => c.items.some(i => highlightItemNames.has(i.name) && !i.isCompleted && !i.isCancelled));
   }, [highlightItemNames]);
 
+  const matchingTicketCount = useMemo(() => {
+    if (highlightItemNames.size === 0) return 0;
+    return filteredOrders.filter(o => orderHasSelectedItem(o)).length;
+  }, [filteredOrders, highlightItemNames, orderHasSelectedItem]);
+
   const cardVariants = {
     initial: { opacity: 0, x: 80, scale: 0.95 },
     animate: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring' as const, damping: 20, stiffness: 200 } },
@@ -515,7 +520,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} />}
+        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />}
       </div>
 
       <AnimatePresence>
