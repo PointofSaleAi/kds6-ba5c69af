@@ -9,13 +9,14 @@ import { StationBadge } from './StationBadge';
 interface FlatItemListProps {
   courses: CourseGroup[];
   itemStatuses: Map<string, ItemStatus>;
+  itemTimestamps?: Map<string, { seenAt?: string; doneAt?: string }>;
   onAdvanceItem: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem: (itemId: string) => void;
   onReRouteItem?: (item: OrderItem) => void;
   showAllergens?: boolean;
 }
 
-export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary } = useLanguage();
 
   const allItems = courses.flatMap(c => c.items);
@@ -24,12 +25,14 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
     <div className="px-2 py-0.5">
       {allItems.map((item) => {
         const status = itemStatuses?.get(item.id);
+        const timestamps = itemTimestamps?.get(item.id);
+        const isDone = status === 'done';
 
         return (
           <div
             key={item.id}
-            className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' ? 'hidden' : ''}`}
-            style={{ padding: '4px 0 4px 4px', gap: 0 }}
+            className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''}`}
+            style={{ padding: '4px 0 4px 4px', gap: 0, opacity: isDone && !item.isCancelled ? 0.5 : undefined }}
             onClick={() => !item.isCancelled && onReRouteItem?.(item)}
           >
             <div className="flex-1 min-w-0">
@@ -54,6 +57,17 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
                 {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
+                {/* Item-level timestamps */}
+                {status === 'preparing' && timestamps?.seenAt && (
+                  <span className="text-[10px] text-text-muted font-normal ml-1">
+                    Seen {timestamps.seenAt}
+                  </span>
+                )}
+                {status === 'done' && timestamps?.doneAt && (
+                  <span className="text-[10px] text-text-muted font-normal ml-1">
+                    Done {timestamps.doneAt}
+                  </span>
+                )}
               </div>
 
               {displayMode === 'dual' && !item.isCancelled && (
@@ -97,15 +111,15 @@ export function FlatItemList({ courses, itemStatuses, onAdvanceItem, onUndoItem,
 
             {!item.isCancelled && (
               <div className="flex items-center shrink-0 ml-auto" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
-                {status === 'ready' ? (
+                {status === 'done' ? (
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
-                    <KdsActionIcon icon="ready" onClick={() => onAdvanceItem(item.id)} label="Mark done" />
+                    <KdsActionIcon icon="ready" disabled label="Done" />
                   </>
                 ) : status === 'preparing' ? (
                   <>
                     <KdsActionIcon icon="undo" onClick={() => onUndoItem(item.id)} label="Undo" />
-                    <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem(item.id)} label="Mark ready" />
+                    <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem(item.id)} label="Mark done" />
                   </>
                 ) : (
                   <KdsActionIcon icon="seen" onClick={() => onAdvanceItem(item.id)} label="Mark seen" />
