@@ -17,6 +17,7 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { UtensilsCrossed, UserRound } from 'lucide-react';
 
 interface OrderCardProps {
   order: Order;
@@ -51,7 +52,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed } = useStatusRules();
-  const { textSize } = useKDSSettings();
+  const { textSize, ticketHeaderLayout } = useKDSSettings();
   const statusColor = getStatusForElapsed(liveElapsed);
   const scaleFactor = TEXT_SIZE_SCALE[textSize] || 1;
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
