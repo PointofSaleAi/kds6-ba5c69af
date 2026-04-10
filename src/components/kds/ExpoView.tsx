@@ -650,7 +650,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             <AnimatePresence mode="popLayout">
               {sortedTickets.map(ticket => (
-                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ layout: { duration: 0.2, ease: 'easeInOut' } }}>
                   {renderTicketCard(ticket)}
                 </motion.div>
               ))}
