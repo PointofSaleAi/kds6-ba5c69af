@@ -572,10 +572,10 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
   const staggerColumns = useMemo(() => {
     const cols = Math.max(1, staggerColumnCount);
-    const columns: typeof filteredTickets[] = Array.from({ length: cols }, () => []);
-    filteredTickets.forEach((t, i) => columns[i % cols].push(t));
+    const columns: typeof sortedTickets[] = Array.from({ length: cols }, () => []);
+    sortedTickets.forEach((t, i) => columns[i % cols].push(t));
     return columns;
-  }, [filteredTickets, staggerColumnCount]);
+  }, [sortedTickets, staggerColumnCount]);
 
   const handleSendOutAny = useCallback((id: string) => {
     if (id.startsWith('demo-')) {
@@ -608,7 +608,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       <ExpoStationBar />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
-        {filteredTickets.length === 0 ? (
+        {sortedTickets.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
             <CheckCircle size={48} className="text-success/60" />
             <div className="text-center">
@@ -619,7 +619,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             <AnimatePresence mode="popLayout">
-              {filteredTickets.map(ticket => (
+              {sortedTickets.map(ticket => (
                 <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   {renderTicketCard(ticket)}
                 </motion.div>
@@ -629,7 +629,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         ) : viewMode === 'horizontal' ? (
           <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
-              {filteredTickets.map(ticket => (
+              {sortedTickets.map(ticket => (
                 <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[320px]">
                   {renderTicketCard(ticket)}
                 </motion.div>
