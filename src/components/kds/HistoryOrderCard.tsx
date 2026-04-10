@@ -74,6 +74,9 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
           time={formatTimeForKDS(order.timeReceived, timeFormat)}
           tableInfo={order.tableName}
         />
+        <div className="px-3 py-1 text-[13px] font-medium text-white" style={{ marginTop: '-2px' }}>
+          {order.guestName || '—'}
+        </div>
         <span className="absolute top-1.5 right-2 text-[10px] font-bold uppercase text-text-muted bg-muted/80 px-2 py-0.5 rounded">
           SERVED
         </span>
