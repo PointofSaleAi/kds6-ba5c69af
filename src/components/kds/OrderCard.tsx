@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, StationName, OrderItem } from '@/types/kds';
 import type { ItemStatus, StationStatus } from './CourseSection';
+import type { TicketState } from './OrderCardActions';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
 import { FlatItemList } from './FlatItemList';
