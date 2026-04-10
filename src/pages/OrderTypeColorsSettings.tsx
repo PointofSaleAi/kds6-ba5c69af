@@ -58,21 +58,33 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        {/* Dropdown selector */}
-        <div className="mb-6">
-          <label className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">
-            Select Order Type
-          </label>
-          <Select value={selectedType} onValueChange={setSelectedType}>
-            <SelectTrigger className="w-full bg-surface-card border-border text-text-primary">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {ORDER_TYPES.map(t => (
-                <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Chip navigation bar */}
+        <div
+          className="flex gap-2 pb-3 overflow-x-auto"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+        >
+          <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
+          {ORDER_TYPES.map(t => {
+            const isActive = selectedType === t.key;
+            const dotColor = (orderTypeDetailedColors?.[t.key]?.headerBg) || DEFAULT_ORDER_TYPE_COLORS[t.key];
+            return (
+              <button
+                key={t.key}
+                onClick={() => setSelectedType(t.key)}
+                className="shrink-0 flex items-center gap-2 rounded-full px-[14px] py-[6px] text-[13px] transition-all duration-150 ease-in-out cursor-pointer whitespace-nowrap"
+                style={isActive
+                  ? { background: '#1A1A2E', color: '#FFFFFF', fontWeight: 500, border: 'none' }
+                  : { background: 'var(--color-background-secondary, hsl(var(--muted)))', color: 'var(--color-text-primary, hsl(var(--foreground)))', fontWeight: 400, border: '0.5px solid var(--color-border-tertiary, hsl(var(--border)))' }
+                }
+              >
+                <span
+                  className="block w-[10px] h-[10px] rounded-full shrink-0"
+                  style={{ backgroundColor: dotColor }}
+                />
+                {t.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Two-column layout */}
