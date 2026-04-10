@@ -93,15 +93,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       else next.set(itemId, status);
       return next;
     });
-    // Sync to shared store so Expo view reflects item-level changes
-    if (status === 'done') {
-      // Find which order contains this item
-      const order = orders.find(o => o.courses.some(c => c.items.some(i => i.id === itemId)));
-      if (order) {
-        markItemDone(order.id, itemId);
-      }
-    }
-  }, [orders, markItemDone]);
+    // Do NOT sync 'done' to shared store here - that would auto-remove the ticket.
+    // The ticket is only removed when the DONE button is explicitly tapped (handleBump).
+  }, []);
 
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
