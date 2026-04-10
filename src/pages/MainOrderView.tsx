@@ -153,8 +153,26 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     } else {
       sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
+
+    // Reorder based on selected summary item
+    if (selectedSummaryItem) {
+      const matching: Order[] = [];
+      const nonMatching: Order[] = [];
+      for (const o of sorted) {
+        const hasItem = o.courses.some(c => c.items.some(i => i.name === selectedSummaryItem && !i.isCompleted && !i.isCancelled));
+        if (hasItem) matching.push(o);
+        else nonMatching.push(o);
+      }
+      return [...matching, ...nonMatching];
+    }
+
     return sorted;
-  }, [orders, activeFilter, sortMode]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItem]);
+
+  const orderHasSelectedItem = useCallback((order: Order): boolean => {
+    if (!selectedSummaryItem) return true;
+    return order.courses.some(c => c.items.some(i => i.name === selectedSummaryItem && !i.isCompleted && !i.isCancelled));
+  }, [selectedSummaryItem]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
