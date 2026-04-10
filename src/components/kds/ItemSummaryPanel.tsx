@@ -7,8 +7,9 @@ import type { Order, ProductCategory, StationName } from '@/types/kds';
 interface ItemSummaryPanelProps {
   orders: Order[];
   stationCourse?: string;
-  selectedItem?: string | null;
-  onItemSelect?: (itemName: string | null) => void;
+  selectedItems?: Set<string>;
+  onItemToggle?: (itemName: string) => void;
+  onClearAll?: () => void;
 }
 
 interface CategorySummary {
@@ -47,7 +48,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSelect }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, onClearAll }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
@@ -60,6 +61,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSe
     : rawSummary;
 
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
+  const selectionCount = selectedItems?.size ?? 0;
 
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
   const toggleSection = (cat: string) => {
@@ -71,9 +73,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSe
     });
   };
 
-  // Track which uncategorized items have an open assign dropdown
   const [assigningItem, setAssigningItem] = useState<string | null>(null);
-  // Track assigned stations for uncategorized items (item name -> station)
   const [assignedStations, setAssignedStations] = useState<Map<string, StationName>>(new Map());
 
   const handleAssignStation = (itemName: string, station: StationName) => {
@@ -100,14 +100,29 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSe
     <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2.5 bg-sidebar border-l border-sidebar-border">
-        <div className="flex items-center gap-2">
-          <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70" />
-          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide">Summary</span>
-          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center">{totalRemaining}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
+          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
+          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
+          {selectionCount > 0 && (
+            <span className="text-[11px] font-bold text-white rounded shrink-0 px-1.5 py-0.5" style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}>
+              {selectionCount} selected
+            </span>
+          )}
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Collapse panel">
-          <ChevronRight size={16} />
-        </button>
+        <div className="flex items-center gap-1 shrink-0">
+          {selectionCount > 0 && (
+            <button
+              onClick={onClearAll}
+              className="text-[11px] font-medium text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors whitespace-nowrap"
+            >
+              Clear all
+            </button>
+          )}
+          <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Collapse panel">
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
 
       {/* Categories section */}
@@ -125,12 +140,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSe
             const sectionTotal = cat.items.reduce((a, i) => a + i.remaining, 0);
             const isExpanded = !collapsedSections.has(cat.category);
 
-            // Filter out assigned items from uncategorized
             const displayItems = isUncategorized
               ? cat.items.filter(item => !assignedStations.has(item.name))
               : cat.items;
 
-            // Hide section if all uncategorized items are assigned
             if (isUncategorized && displayItems.length === 0) return null;
 
             return (
@@ -176,16 +189,15 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSe
                           : '';
                       const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
-
-                      const isSelected = selectedItem === item.name;
+                      const isSelected = selectedItems?.has(item.name) ?? false;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${tierClass}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass}`}>
                           <div
                             className="flex items-center justify-between py-[4px] cursor-pointer"
                             onClick={(e) => {
                               e.stopPropagation();
-                              onItemSelect?.(isSelected ? null : item.name);
+                              onItemToggle?.(item.name);
                             }}
                           >
                             <span
