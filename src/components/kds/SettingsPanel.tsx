@@ -425,6 +425,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                   LOG OUT
                 </button>
               </SettingsCard>
+
+              <div className="col-span-2 mt-2">
+                <span className="text-[12px] font-normal text-text-muted">
+                  Version <span className="font-mono">5.0.84</span>
+                  {'    '}FL <span className="font-mono">3.35.7</span>
+                  {'    '}BD <span className="font-mono">25.03.26</span>
+                </span>
+              </div>
             </div>
           )}
 
