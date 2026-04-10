@@ -41,7 +41,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {ORDER_TYPES.map(({ key, label, table, time }) => {
             const colors = getColors(key);
             return (
