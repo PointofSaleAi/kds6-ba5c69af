@@ -60,7 +60,20 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
-  const [selectedSummaryItem, setSelectedSummaryItem] = useState<string | null>(null);
+  const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
+
+  const handleSummaryItemToggle = useCallback((itemName: string) => {
+    setSelectedSummaryItems(prev => {
+      const next = new Set(prev);
+      if (next.has(itemName)) next.delete(itemName);
+      else next.add(itemName);
+      return next;
+    });
+  }, []);
+
+  const handleSummaryClearAll = useCallback(() => {
+    setSelectedSummaryItems(new Set());
+  }, []);
 
   const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
     setGlobalItemStatuses(prev => {
@@ -154,25 +167,26 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
 
-    // Reorder based on selected summary item
-    if (selectedSummaryItem) {
-      const matching: Order[] = [];
+    // Reorder based on selected summary items (multi-select)
+    if (selectedSummaryItems.size > 0) {
+      const matching: Array<{ order: Order; matchCount: number }> = [];
       const nonMatching: Order[] = [];
       for (const o of sorted) {
-        const hasItem = o.courses.some(c => c.items.some(i => i.name === selectedSummaryItem && !i.isCompleted && !i.isCancelled));
-        if (hasItem) matching.push(o);
+        const matchCount = o.courses.reduce((acc, c) => acc + c.items.filter(i => selectedSummaryItems.has(i.name) && !i.isCompleted && !i.isCancelled).length, 0);
+        if (matchCount > 0) matching.push({ order: o, matchCount });
         else nonMatching.push(o);
       }
-      return [...matching, ...nonMatching];
+      matching.sort((a, b) => b.matchCount - a.matchCount);
+      return [...matching.map(m => m.order), ...nonMatching];
     }
 
     return sorted;
-  }, [orders, activeFilter, sortMode, selectedSummaryItem]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems]);
 
   const orderHasSelectedItem = useCallback((order: Order): boolean => {
-    if (!selectedSummaryItem) return true;
-    return order.courses.some(c => c.items.some(i => i.name === selectedSummaryItem && !i.isCompleted && !i.isCancelled));
-  }, [selectedSummaryItem]);
+    if (selectedSummaryItems.size === 0) return true;
+    return order.courses.some(c => c.items.some(i => selectedSummaryItems.has(i.name) && !i.isCompleted && !i.isCancelled));
+  }, [selectedSummaryItems]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
