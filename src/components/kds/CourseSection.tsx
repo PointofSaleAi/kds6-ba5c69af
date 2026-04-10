@@ -122,12 +122,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     return 'unseen';
   }, [isActive, activeItemIds, itemStatuses]);
 
-  // Auto-collapse when all items in this course are done
+  // Auto-collapse when course becomes served or all items done
   useEffect(() => {
-    if (isActive && collectiveState === 'done') {
+    if (isServedByLifecycle) {
+      setIsExpanded(false);
+    } else if (isActive && collectiveState === 'done') {
       setIsExpanded(false);
     }
-  }, [isActive, collectiveState]);
+  }, [isActive, collectiveState, isServedByLifecycle]);
 
   // "Seen at" timestamp for course header (first item's seenAt)
   const courseSeenAt = useMemo(() => {
