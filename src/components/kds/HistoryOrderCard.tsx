@@ -69,13 +69,20 @@ export function HistoryOrderCard({ order, compact, onRecall }: HistoryOrderCardP
       style={{ minWidth: 'min(220px, 100%)' }}
     >
       <div className="relative">
-        <OrderTypeBadge
-          type={order.orderType}
-          time={formatTimeForKDS(order.timeReceived, timeFormat)}
-          tableInfo={order.tableName}
-        />
-        <div className="px-3 py-1 text-[13px] font-medium text-white" style={{ marginTop: '-2px' }}>
-          {order.guestName || '—'}
+        <div
+          className="rounded-t-lg"
+          style={{ backgroundColor: undefined }}
+        >
+          <OrderTypeBadge
+            type={order.orderType}
+            time={formatTimeForKDS(order.timeReceived, timeFormat)}
+            tableInfo={order.tableName}
+          />
+          <div className="px-3 pb-2 -mt-0.5 text-[13px] font-medium text-primary-foreground"
+            style={{ backgroundColor: 'inherit' }}
+          >
+            {order.guestName || '—'}
+          </div>
         </div>
         <span className="absolute top-1.5 right-2 text-[10px] font-bold uppercase text-text-muted bg-muted/80 px-2 py-0.5 rounded">
           SERVED
