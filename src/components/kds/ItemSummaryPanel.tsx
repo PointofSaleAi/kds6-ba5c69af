@@ -7,6 +7,8 @@ import type { Order, ProductCategory, StationName } from '@/types/kds';
 interface ItemSummaryPanelProps {
   orders: Order[];
   stationCourse?: string;
+  selectedItem?: string | null;
+  onItemSelect?: (itemName: string | null) => void;
 }
 
 interface CategorySummary {
@@ -45,7 +47,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItem, onItemSelect }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
@@ -175,10 +177,23 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                       const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
 
+                      const isSelected = selectedItem === item.name;
+
                       return (
                         <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${tierClass}`}>
-                          <div className="flex items-center justify-between py-[4px]">
-                            <span className="min-w-0 truncate text-[13px] font-medium uppercase leading-tight text-text-primary">{tp(item.name)}</span>
+                          <div
+                            className="flex items-center justify-between py-[4px] cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onItemSelect?.(isSelected ? null : item.name);
+                            }}
+                          >
+                            <span
+                              className={`min-w-0 truncate text-[13px] uppercase leading-tight ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                              style={isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : undefined}
+                            >
+                              {tp(item.name)}
+                            </span>
                             <div className="flex items-center gap-1.5 ml-2 shrink-0">
                               {isUncategorized && (
                                 <button
@@ -191,7 +206,12 @@ export function ItemSummaryPanel({ orders, stationCourse }: ItemSummaryPanelProp
                                   + Assign
                                 </button>
                               )}
-                              <span className={`text-right text-[14px] font-bold tabular-nums ${countColor}`}>{item.remaining}</span>
+                              <span
+                                className={`text-right text-[14px] font-bold tabular-nums ${isSelected ? '' : countColor}`}
+                                style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
+                              >
+                                {item.remaining}
+                              </span>
                             </div>
                           </div>
 
