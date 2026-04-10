@@ -9,6 +9,7 @@ import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
 import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
+import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
@@ -514,7 +515,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && <ItemSummaryPanel orders={kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />}
+        {!settingsOpen && (kdsMode === 'Expo'
+          ? <ExpoSummaryPanel tickets={expoTickets} />
+          : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
+        )}
       </div>
 
       <AnimatePresence>

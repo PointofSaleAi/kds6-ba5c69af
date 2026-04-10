@@ -20,8 +20,15 @@ function formatTimer(seconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+function formatClockTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 function allDone(t: ExpoTicket, holds?: Set<string>) {
   return t.stations.every(s => s.status === 'done' || holds?.has(`${t.id}-${s.name}`));
+}
+function allItemsDone(t: ExpoTicket) {
+  return t.items.every(i => i.status === 'done');
 }
 function isOvertime(t: ExpoTicket) {
   return t.timerSeconds >= 900;
@@ -31,7 +38,7 @@ function isWarning(t: ExpoTicket) {
 }
 
 function ticketBorderClass(t: ExpoTicket): string {
-  if (t.stations.every(s => s.status === 'done')) return 'border-l-success';
+  if (t.items.every(i => i.status === 'done')) return 'border-l-success';
   if (isOvertime(t)) return 'border-l-destructive';
   if (isWarning(t)) return 'border-l-border';
   return 'border-l-border';
@@ -50,65 +57,15 @@ const orderTypeLabel: Record<string, string> = {
   banquet: 'BANQUET',
 };
 
-const stationChipStyles: Record<string, { bg: string; text: string }> = {
-  done: { bg: 'bg-success/15', text: 'text-success' },
-  firing: { bg: 'bg-warning/15', text: 'text-warning' },
-  pending: { bg: 'bg-muted', text: 'text-text-muted' },
-  holding: { bg: 'bg-warning/30', text: 'text-warning' },
-};
+/* -- Item status helpers -- */
 
-/* -- Item status badge styles -- */
-function getItemStatusBadge(status: ExpoItemStatus, statusLabel?: string): { label: string; bg: string; text: string } | null {
-  if (status === 'done') return null; // strikethrough, no badge
-  if (statusLabel === 'Overdue') return { label: 'Overdue', bg: 'bg-destructive', text: 'text-white' };
-  if (status === 'firing' && statusLabel) return { label: statusLabel, bg: 'bg-warning/20', text: 'text-warning' };
-  if (status === 'pending' && statusLabel && !statusLabel.startsWith('Auto-fire')) {
-    return { label: statusLabel, bg: 'bg-muted', text: 'text-text-muted' };
-  }
-  if (status === 'pending') return { label: 'Pending', bg: 'bg-muted', text: 'text-text-muted' };
-  return null;
+function getItemDisplayStatus(status: ExpoItemStatus): { label: string; bg: string; text: string } {
+  if (status === 'done') return { label: 'Prepared', bg: 'bg-success/15', text: 'text-success' };
+  if (status === 'firing') return { label: 'Preparing', bg: 'bg-warning/20', text: 'text-warning' };
+  return { label: 'Pending', bg: 'bg-muted', text: 'text-text-muted' };
 }
 
-/* -- Auto-fire countdown badge -- */
-function AutoFireBadge({ ticket }: { ticket: ExpoTicket }) {
-  const [remaining, setRemaining] = useState(ticket.autoFireSeconds ?? 0);
-  const startRef = useRef(Date.now());
-  const initialRef = useRef(ticket.autoFireSeconds ?? 0);
-
-  useEffect(() => {
-    startRef.current = Date.now();
-    initialRef.current = ticket.autoFireSeconds ?? 0;
-    setRemaining(ticket.autoFireSeconds ?? 0);
-  }, [ticket.autoFireSeconds]);
-
-  useEffect(() => {
-    if (ticket.autoFireSeconds == null) return;
-    const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startRef.current) / 1000);
-      setRemaining(Math.max(0, initialRef.current - elapsed));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [ticket.autoFireSeconds]);
-
-  if (ticket.autoFireSeconds == null) return null;
-
-  const isFiring = remaining <= 0;
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-        isFiring
-          ? 'bg-success text-white'
-          : 'bg-warning text-white'
-      }`}
-    >
-      <Timer size={10} />
-      {isFiring ? 'Firing...' : `Auto-fire ${formatTimer(remaining)}`}
-    </span>
-  );
-}
-
-/* -- ExpoStationChips with Hold/Release -- */
+/* -- Station Chips with state-based coloring (Fix 5) -- */
 
 function ExpoStationChips({
   ticket,
@@ -126,20 +83,39 @@ function ExpoStationChips({
       {ticket.stations.map(s => {
         const holdKey = `${ticket.id}-${s.name}`;
         const isHolding = holdStations.has(holdKey);
-        const chipStatus = isHolding ? 'holding' : s.status;
-        const style = stationChipStyles[chipStatus];
         const showHoldToggle = !overtime && (s.status === 'done' || isHolding);
+
+        // Fix 5: Color-code by preparation state
+        let chipBg: string, chipText: string, chipBorder: string, indicator: string;
+        if (isHolding) {
+          chipBg = 'bg-warning/30';
+          chipText = 'text-warning';
+          chipBorder = '';
+          indicator = ' Holding';
+        } else if (s.status === 'done') {
+          chipBg = 'bg-success/15';
+          chipText = 'text-success';
+          chipBorder = '';
+          indicator = ' \u2713';
+        } else if (s.status === 'firing') {
+          chipBg = 'bg-warning/20';
+          chipText = 'text-warning';
+          chipBorder = '';
+          indicator = ' \u00B7\u00B7\u00B7';
+        } else {
+          chipBg = 'bg-transparent';
+          chipText = 'text-text-muted';
+          chipBorder = 'border border-border';
+          indicator = '';
+        }
 
         return (
           <span
             key={s.name}
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${style.bg} ${style.text} ${s.status === 'pending' && !isHolding ? 'border border-border' : ''} ${showHoldToggle ? 'cursor-pointer' : ''}`}
+            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${chipBg} ${chipText} ${chipBorder} ${showHoldToggle ? 'cursor-pointer' : ''}`}
             onClick={showHoldToggle ? () => onToggleHold(ticket.id, s.name) : undefined}
           >
-            {s.name}
-            {isHolding && ' Holding'}
-            {!isHolding && s.status === 'done' && ' \u2713'}
-            {s.status === 'firing' && ' ...'}
+            {s.name}{indicator}
             {showHoldToggle && (
               <span className="ml-0.5 text-[8px] opacity-70 font-normal">
                 {isHolding ? '(Release)' : '(Hold)'}
@@ -165,9 +141,9 @@ interface ExpoTicketCardProps {
 function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
-  const doneCount = ticket.stations.filter(s => s.status === 'done' || holdStations.has(`${ticket.id}-${s.name}`)).length;
-  const totalCount = ticket.stations.length;
-  const isDone = allDone(ticket, holdStations);
+  const doneCount = ticket.items.filter(i => i.status === 'done').length;
+  const totalCount = ticket.items.length;
+  const isReady = allItemsDone(ticket);
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
 
@@ -179,7 +155,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35 } }}
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300`}
     >
-      {/* Header */}
+      {/* Header - no AutoFireBadge (Fix 2) */}
       <div className={`flex items-center justify-between px-2 py-1.5 ${headerStyle.bg || ''} ${headerStyle.text}`} style={headerStyle.bgColor ? { backgroundColor: headerStyle.bgColor } : undefined}>
         <div className="flex flex-col">
           <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
@@ -189,62 +165,60 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
             #{ticket.orderNumber}
           </span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <AutoFireBadge ticket={ticket} />
-          <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
-        </div>
+        <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
       </div>
 
-      {/* Station chips with hold/release */}
+      {/* Station chips with state coloring (Fix 5) */}
       <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
 
-      {/* Item rows with status badges */}
+      {/* Item rows with live status (Fix 3) */}
       <div className="px-2 py-1.5 space-y-0.5">
         {ticket.items.map(item => {
-          const badge = getItemStatusBadge(item.status, item.statusLabel);
+          const display = getItemDisplayStatus(item.status);
+          const isPrepared = item.status === 'done';
+
           return (
-            <div key={item.id} className="flex items-start justify-between py-0.5">
+            <div
+              key={item.id}
+              className={`flex items-start justify-between py-0.5 ${isPrepared ? 'border-l-[3px] border-l-success pl-1.5 -ml-2' : ''}`}
+            >
               <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
-                <span className={`text-[13px] font-medium ${item.status === 'done' ? 'line-through text-text-muted' : 'text-text-primary'}`}>
+                <span className={`text-[13px] ${isPrepared ? 'font-bold text-text-primary' : 'font-medium text-text-primary'}`}>
                   {item.quantity}&times; {tp(item.name)}
                 </span>
-                {badge && (
-                  <span className={`inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold ${badge.bg} ${badge.text}`}>
-                    {badge.label}
-                  </span>
-                )}
+                <span className={`inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold ${display.bg} ${display.text}`}>
+                  {display.label}
+                </span>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Footer */}
-      <div className="p-1.5 border-t border-border flex gap-1.5">
-        {isDone ? (
+      {/* Footer with Rush + Send Out (Fix 4) */}
+      <div className="p-1.5 border-t border-border">
+        <div className="flex items-center justify-between mb-1 px-1">
+          <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
+        </div>
+        <div className="flex gap-1.5">
           <button
-            onClick={() => onSendOut(ticket.id)}
-            className="flex-1 py-2.5 bg-success text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:opacity-90 transition-colors min-h-[44px]"
+            onClick={() => onRush?.(ticket.id)}
+            className="px-3 py-2.5 border border-destructive text-destructive text-[12px] font-bold uppercase rounded hover:bg-destructive/10 transition-colors min-h-[44px]"
+          >
+            Rush
+          </button>
+          <button
+            onClick={() => isReady && onSendOut(ticket.id)}
+            disabled={!isReady}
+            className={`flex-1 py-2.5 text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 transition-colors min-h-[44px] ${
+              isReady
+                ? 'bg-success text-primary-foreground hover:opacity-90 cursor-pointer'
+                : 'bg-muted text-text-muted cursor-not-allowed'
+            }`}
           >
             Send out
           </button>
-        ) : overtime ? (
-          <>
-            <span className="flex-1 flex items-center justify-center text-[12px] font-bold text-destructive">
-              {doneCount} of {totalCount} done
-            </span>
-            <button
-              onClick={() => onRush?.(ticket.id)}
-              className="px-4 py-2.5 bg-destructive/10 border border-destructive text-destructive text-[12px] font-bold uppercase rounded hover:bg-destructive/20 transition-colors min-h-[44px]"
-            >
-              Rush
-            </button>
-          </>
-        ) : (
-          <span className="flex-1 flex items-center justify-center text-[12px] font-bold text-text-muted min-h-[44px]">
-            {doneCount} of {totalCount} done
-          </span>
-        )}
+        </div>
       </div>
     </motion.div>
   );
@@ -390,19 +364,19 @@ export default function ExpoView() {
   }, [tickets]);
 
   const filteredTickets = useMemo(() => {
-    if (filter === 'ready') return tickets.filter(t => allDone(t, holdStations));
+    if (filter === 'ready') return tickets.filter(t => allItemsDone(t));
     return tickets;
-  }, [tickets, filter, holdStations]);
+  }, [tickets, filter]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
-    const ready = tickets.filter(t => allDone(t, holdStations)).length;
+    const ready = tickets.filter(t => allItemsDone(t)).length;
     const overtime = tickets.filter(isOvertime).length;
     const avgTime = tickets.length > 0
       ? Math.round(tickets.reduce((sum, t) => sum + t.timerSeconds, 0) / tickets.length)
       : 0;
     return { open, ready, overtime, avgTime };
-  }, [tickets, holdStations]);
+  }, [tickets]);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -462,7 +436,7 @@ function ExpoBottomStats({
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <LegendDot color="bg-success" label="Ready" />
-          <LegendDot color="bg-warning" label="Firing" />
+          <LegendDot color="bg-warning" label="In progress" />
           <LegendDot color="bg-destructive" label="Overtime" />
           <LegendDot color="bg-text-muted" label="Pending" />
         </div>
