@@ -84,7 +84,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   } = useLanguage();
 
   const {
-    timezone, setTimezone,
     currency, setCurrency,
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
@@ -94,7 +93,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
-  const [tzOpen, setTzOpen] = useState(false);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
 
