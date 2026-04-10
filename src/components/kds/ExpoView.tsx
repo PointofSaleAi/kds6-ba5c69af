@@ -313,14 +313,10 @@ function ExpoTopControls({
   filter,
   onFilterChange,
   fulfilledTickets,
-  demoMode,
-  onToggleDemo,
 }: {
   filter: ExpoFilter;
   onFilterChange: (f: ExpoFilter) => void;
   fulfilledTickets: number[];
-  demoMode: boolean;
-  onToggleDemo: () => void;
 }) {
   const handleRecalledClick = () => {
     if (fulfilledTickets.length === 0) {
@@ -345,17 +341,6 @@ function ExpoTopControls({
       >
         Expediter
       </span>
-
-      <button
-        onClick={onToggleDemo}
-        className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider transition-colors min-h-[32px] ${
-          demoMode
-            ? 'bg-warning text-white'
-            : 'bg-transparent border border-border text-text-muted hover:text-text-secondary'
-        }`}
-      >
-        Demo Mode
-      </button>
 
       <div className="flex-1" />
 
