@@ -99,7 +99,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   return (
     <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2.5 bg-sidebar border-l border-sidebar-border">
+      <div className="flex items-center justify-between px-3 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-2 min-w-0">
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
