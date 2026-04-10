@@ -1,12 +1,11 @@
 import { useState, useMemo } from 'react';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Pin } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { ExpoTicket } from '@/data/mock-expo-orders';
 
 type TicketReadiness = 'ready' | 'in-progress' | 'pending';
 
 function getTicketReadiness(ticket: ExpoTicket): TicketReadiness {
-  const activeItems = ticket.items.filter(i => i.status !== 'done' || i.status === 'done');
   const allDone = ticket.items.every(i => i.status === 'done');
   const anyFiring = ticket.items.some(i => i.status === 'firing');
   if (allDone) return 'ready';
@@ -29,10 +28,16 @@ function formatElapsed(seconds: number): string {
 interface ExpoSummaryPanelProps {
   tickets: ExpoTicket[];
   onScrollToTicket?: (ticketId: string) => void;
+  pinnedTicketIds?: string[];
+  onTogglePin?: (ticketId: string) => void;
+  onClearAllPins?: () => void;
 }
 
-export function ExpoSummaryPanel({ tickets, onScrollToTicket }: ExpoSummaryPanelProps) {
+export function ExpoSummaryPanel({ tickets, onScrollToTicket, pinnedTicketIds = [], onTogglePin, onClearAllPins }: ExpoSummaryPanelProps) {
   const [collapsed, setCollapsed] = useState(false);
+
+  const pinnedSet = useMemo(() => new Set(pinnedTicketIds), [pinnedTicketIds]);
+  const pinnedCount = pinnedTicketIds.length;
 
   const { ready, inProgress, pending, ticketList } = useMemo(() => {
     let ready = 0, inProgress = 0, pending = 0;
@@ -64,6 +69,11 @@ export function ExpoSummaryPanel({ tickets, onScrollToTicket }: ExpoSummaryPanel
         <div className="flex items-center gap-2 min-w-0">
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
+          {pinnedCount > 0 && (
+            <span className="text-[10px] font-bold text-warning-foreground bg-warning rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">
+              {pinnedCount} pinned
+            </span>
+          )}
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground shrink-0" aria-label="Collapse panel">
           <ChevronRight size={16} />
@@ -78,20 +88,44 @@ export function ExpoSummaryPanel({ tickets, onScrollToTicket }: ExpoSummaryPanel
           <CounterRow label="Pending" count={pending} colorClass="text-text-muted" />
         </div>
 
+        {/* Clear all bar */}
+        {pinnedCount > 0 && (
+          <div className="flex items-center justify-end px-3 py-1.5 border-b border-border">
+            <button
+              onClick={onClearAllPins}
+              className="text-[11px] font-medium text-text-muted hover:text-text-secondary transition-colors"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
+
         {/* Section 2: Ticket list */}
         <div className="flex-1 overflow-y-auto">
           {ticketList.map(t => {
+            const isPinned = pinnedSet.has(t.id);
+            const isDemo = t.id.startsWith('demo-');
             const dotColor = t.readiness === 'ready'
               ? 'bg-success'
               : t.readiness === 'in-progress'
                 ? 'bg-warning'
                 : 'bg-text-muted';
 
+            const borderAccentColor = t.readiness === 'ready'
+              ? 'border-l-success'
+              : t.readiness === 'in-progress'
+                ? 'border-l-warning'
+                : 'border-l-text-muted';
+
             return (
               <button
                 key={t.id}
-                onClick={() => onScrollToTicket?.(t.id)}
-                className="w-full flex items-center gap-2 px-3 py-2 border-b border-border/30 hover:bg-muted/50 transition-colors text-left"
+                onClick={() => onTogglePin?.(t.id)}
+                className={`w-full flex items-center gap-2 px-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer ${
+                  isPinned
+                    ? `bg-secondary border-l-[3px] ${borderAccentColor}`
+                    : 'hover:bg-muted/50'
+                }`}
               >
                 <div className="flex-1 min-w-0">
                   <span className="text-[12px] font-bold text-text-primary">
@@ -99,12 +133,17 @@ export function ExpoSummaryPanel({ tickets, onScrollToTicket }: ExpoSummaryPanel
                   </span>
                   <span className="text-[11px] text-text-muted ml-1">
                     {orderTypeLabel[t.orderType] || t.orderType}
+                    {isDemo && ' \u00b7 DEMO'}
                   </span>
                   <div className="text-[10px] text-text-muted truncate">{t.tableName}</div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <span className="text-[10px] font-mono text-text-muted">{formatElapsed(t.timerSeconds)}</span>
-                  <span className={`w-2.5 h-2.5 rounded-full ${dotColor} shrink-0`} />
+                  {isPinned ? (
+                    <Pin size={12} className="text-text-muted shrink-0" />
+                  ) : (
+                    <span className={`w-2.5 h-2.5 rounded-full ${dotColor} shrink-0`} />
+                  )}
                 </div>
               </button>
             );

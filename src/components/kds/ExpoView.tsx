@@ -360,9 +360,22 @@ function ExpoTopControls({
 
 /* -- Main ExpoView -- */
 
-export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
+interface ExpoViewProps {
+  viewMode: ViewMode;
+  pinnedTicketIds?: string[];
+  onFilterChange?: () => void;
+  onTicketSentOut?: (id: string) => void;
+  onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
+}
+
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
+
+  const handleFilterChange = useCallback((f: ExpoFilter) => {
+    setFilter(f);
+    onFilterChange?.();
+  }, [onFilterChange]);
 
   // ResizeObserver for stagger column count
   const boardRef = useRef<HTMLDivElement | null>(null);
@@ -522,10 +535,30 @@ export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
     return [...tickets, ...visibleDemoTickets];
   }, [tickets, visibleDemoTickets]);
 
-  const filteredTickets = useMemo(() => {
-    if (filter === 'ready') return allTickets.filter(t => allItemsDone(t));
-    return allTickets;
-  }, [allTickets, filter]);
+  // Report allTickets to parent for summary panel
+  useEffect(() => {
+    onAllTicketsChange?.(allTickets);
+  }, [allTickets, onAllTicketsChange]);
+
+  // Reorder by pinned IDs then elapsed time
+  const sortedTickets = useMemo(() => {
+    const base = filter === 'ready' ? allTickets.filter(t => allItemsDone(t)) : allTickets;
+    if (pinnedTicketIds.length === 0) return base;
+
+    const pinnedSet = new Set(pinnedTicketIds);
+    const pinned: typeof base = [];
+    const unpinned: typeof base = [];
+
+    for (const t of base) {
+      if (pinnedSet.has(t.id)) pinned.push(t);
+      else unpinned.push(t);
+    }
+
+    // Sort pinned by their order in pinnedTicketIds
+    pinned.sort((a, b) => pinnedTicketIds.indexOf(a.id) - pinnedTicketIds.indexOf(b.id));
+
+    return [...pinned, ...unpinned];
+  }, [allTickets, filter, pinnedTicketIds]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
@@ -539,10 +572,10 @@ export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
 
   const staggerColumns = useMemo(() => {
     const cols = Math.max(1, staggerColumnCount);
-    const columns: typeof filteredTickets[] = Array.from({ length: cols }, () => []);
-    filteredTickets.forEach((t, i) => columns[i % cols].push(t));
+    const columns: typeof sortedTickets[] = Array.from({ length: cols }, () => []);
+    sortedTickets.forEach((t, i) => columns[i % cols].push(t));
     return columns;
-  }, [filteredTickets, staggerColumnCount]);
+  }, [sortedTickets, staggerColumnCount]);
 
   const handleSendOutAny = useCallback((id: string) => {
     if (id.startsWith('demo-')) {
@@ -550,32 +583,62 @@ export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
     } else {
       handleSendOut(id);
     }
-  }, [handleDemoSendOut, handleSendOut]);
+    onTicketSentOut?.(id);
+  }, [handleDemoSendOut, handleSendOut, onTicketSentOut]);
 
-  const renderTicketCard = (ticket: ExpoTicket) => (
-    <ExpoTicketCard
-      key={ticket.id}
-      ticket={ticket}
-      onSendOut={handleSendOutAny}
-      onRush={handleRush}
-      holdStations={holdStations}
-      onToggleHold={handleToggleHold}
-      isDemo={ticket.id.startsWith('demo-')}
-      onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
-    />
-  );
+  // Highlight pulse state for recently pinned tickets
+  const [pulsingIds, setPulsingIds] = useState<Set<string>>(new Set());
+  const prevPinnedRef = useRef<string[]>([]);
+  useEffect(() => {
+    const prevSet = new Set(prevPinnedRef.current);
+    const newlyPinned = pinnedTicketIds.filter(id => !prevSet.has(id));
+    prevPinnedRef.current = pinnedTicketIds;
+    if (newlyPinned.length === 0) return;
+
+    setPulsingIds(prev => {
+      const next = new Set(prev);
+      newlyPinned.forEach(id => next.add(id));
+      return next;
+    });
+    const timer = setTimeout(() => {
+      setPulsingIds(prev => {
+        const next = new Set(prev);
+        newlyPinned.forEach(id => next.delete(id));
+        return next;
+      });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [pinnedTicketIds]);
+
+  const renderTicketCard = (ticket: ExpoTicket) => {
+    const isPulsing = pulsingIds.has(ticket.id);
+    return (
+      <div className={isPulsing ? 'animate-expo-pin-pulse' : ''}>
+        <ExpoTicketCard
+          key={ticket.id}
+          ticket={ticket}
+          onSendOut={handleSendOutAny}
+          onRush={handleRush}
+          holdStations={holdStations}
+          onToggleHold={handleToggleHold}
+          isDemo={ticket.id.startsWith('demo-')}
+          onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <ExpoTopControls
         filter={filter}
-        onFilterChange={setFilter}
+        onFilterChange={handleFilterChange}
         fulfilledTickets={fulfilledTickets}
       />
       <ExpoStationBar />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
-        {filteredTickets.length === 0 ? (
+        {sortedTickets.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
             <CheckCircle size={48} className="text-success/60" />
             <div className="text-center">
@@ -586,8 +649,8 @@ export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             <AnimatePresence mode="popLayout">
-              {filteredTickets.map(ticket => (
-                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {sortedTickets.map(ticket => (
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ layout: { duration: 0.2, ease: 'easeInOut' } }}>
                   {renderTicketCard(ticket)}
                 </motion.div>
               ))}
@@ -596,7 +659,7 @@ export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
         ) : viewMode === 'horizontal' ? (
           <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
-              {filteredTickets.map(ticket => (
+              {sortedTickets.map(ticket => (
                 <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[320px]">
                   {renderTicketCard(ticket)}
                 </motion.div>
