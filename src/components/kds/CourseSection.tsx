@@ -366,11 +366,11 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     {isCourseCompleted ? (
                       <KdsActionIcon icon="acknowledged" disabled />
                     ) : isPending ? null : isActive ? (
-                      // 3-step workflow for active course items
+                      // 3-step workflow: seen → preparing → ready (done)
                       status === 'done' ? (
-                        <KdsActionIcon icon="done" disabled label="Done" />
+                        <KdsActionIcon icon="ready" disabled label="Done" />
                       ) : status === 'preparing' ? (
-                        <KdsActionIcon icon="seen-filled" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
+                        <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
                       ) : (
                         <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
                       )
