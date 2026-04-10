@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Languages, Eye, CheckCircle } from 'lucide-react';
+import { Languages, Eye, Check, ConciergeBell } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -170,28 +170,30 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     ? { color: '#7F77DD', fontWeight: 500 }
     : { fontWeight: 400 };
 
-  // Course-level icon for active courses
+  // Course-level icon for active courses - matches item-level icons
   const renderCourseIcon = () => {
     if (!isActive) return null;
 
     if (collectiveState === 'done') {
+      // Purple checkmark - same as item "ready/done" icon
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#DCFCE7' }}>
-          <CheckCircle size={16} color="#16A34A" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#EDE9FE' }}>
+          <Check size={16} color="#7C3AED" strokeWidth={2.5} />
         </div>
       );
     }
     if (collectiveState === 'preparing') {
+      // Red bell - same as item "preparing" icon
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#3B82F6' }}>
-          <Eye size={16} color="#FFFFFF" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFC5C5' }}>
+          <ConciergeBell size={16} color="#D32F2F" strokeWidth={2.5} />
         </div>
       );
     }
-    // unseen - blue outline bg, white eye
+    // Unseen - blue outlined eye, same as item "seen" icon
     return (
-      <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#3B82F6' }}>
-        <Eye size={16} color="#FFFFFF" strokeWidth={2.5} />
+      <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFFFFF', border: '2px solid #3B82F6' }}>
+        <Eye size={16} color="#3B82F6" strokeWidth={2.5} />
       </div>
     );
   };
@@ -366,11 +368,17 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     {isCourseCompleted ? (
                       <KdsActionIcon icon="acknowledged" disabled />
                     ) : isPending ? null : isActive ? (
-                      // 3-step workflow: seen → preparing → ready (done)
+                      // 3-step: seen (eye) → preparing (undo+bell) → done (undo+check)
                       status === 'done' ? (
-                        <KdsActionIcon icon="ready" disabled label="Done" />
+                        <>
+                          <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
+                          <KdsActionIcon icon="ready" disabled label="Done" />
+                        </>
                       ) : status === 'preparing' ? (
-                        <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
+                        <>
+                          <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
+                          <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
+                        </>
                       ) : (
                         <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
                       )
