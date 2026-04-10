@@ -190,12 +190,12 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
 
   const labelClass = isServedByLifecycle
-    ? 'text-[11px] uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    ? 'uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
     : coursingStatus === 'active'
-      ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+      ? 'uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
       : coursingStatus === 'fired'
-        ? 'text-[11px] uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-        : 'text-[11px] uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+        ? 'uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+        : 'uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: '#7F77DD', fontWeight: 500 }
@@ -236,8 +236,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           style={{ padding: '4px 8px' }}
         >
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
-            <span className="text-[11px] text-muted-foreground">▶</span>
-            <span className={labelClass} style={labelStyle}>
+            <span className="text-muted-foreground" style={{ fontSize: 'var(--kds-course-header)' }}>▶</span>
+            <span className={labelClass} style={{ ...labelStyle, fontSize: 'var(--kds-course-header)' }}>
               {courseLabel}
             </span>
           </div>
@@ -259,10 +259,10 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          <span className={`text-[11px] text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
+          <span className={`text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} style={{ fontSize: 'var(--kds-course-header)' }}>
             ▶
           </span>
-          <span className={labelClass} style={labelStyle}>
+          <span className={labelClass} style={{ ...labelStyle, fontSize: 'var(--kds-course-header)' }}>
             {courseLabel}
           </span>
         </div>
@@ -339,7 +339,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 key={item.id}
                 className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''}`}
                 style={{
-                  padding: '4px 0 4px 4px',
+                  padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`,
                   gap: 0,
                   ...(itemOpacity !== undefined ? { opacity: itemOpacity } : {}),
                   ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
@@ -349,13 +349,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 {/* Child 1 - item-main */}
                 <div className="flex-1 min-w-0">
                   {/* item-name-row */}
-                  <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
-                    <span className="text-[13px] font-normal text-text-secondary">
+                  <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+                    <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
                       {item.quantity}x
                     </span>
                     <span
-                      className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}
-                      style={isHighlighted && !item.isCancelled && !item.isCompleted ? { color: '#1D4ED8' } : undefined}
+                      className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}
+                      style={{ fontSize: 'var(--kds-item-name)', ...(isHighlighted && !item.isCancelled && !item.isCompleted ? { color: '#1D4ED8' } : {}) }}
                     >
                       {tp(item.name)}
                     </span>
