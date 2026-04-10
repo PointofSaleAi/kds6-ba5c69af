@@ -202,29 +202,6 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           {activeSection === 'display' && (
             <div className="grid grid-cols-2 gap-4">
               <SettingsCard>
-                <CardLabel label="Cards Per Row" />
-                <div className="flex items-center gap-3 mt-2">
-                  <button
-                    onClick={() => setCardsPerRow(Math.max(2, cardsPerRow - 1))}
-                    disabled={cardsPerRow <= 2}
-                    className="w-[44px] h-[44px] rounded-lg bg-muted flex items-center justify-center disabled:opacity-30 text-text-primary font-bold"
-                  >
-                    <Minus size={18} />
-                  </button>
-                  <span className="text-[48px] font-black text-text-primary leading-none min-w-[60px] text-center">
-                    {cardsPerRow}
-                  </span>
-                  <button
-                    onClick={() => setCardsPerRow(Math.min(8, cardsPerRow + 1))}
-                    disabled={cardsPerRow >= 8}
-                    className="w-[44px] h-[44px] rounded-lg bg-muted flex items-center justify-center disabled:opacity-30 text-text-primary font-bold"
-                  >
-                    <Plus size={18} />
-                  </button>
-                </div>
-              </SettingsCard>
-
-              <SettingsCard>
                 <CardLabel label="Language & Region" description="Set display language, region, date and time format preferences." />
                 <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
               </SettingsCard>
