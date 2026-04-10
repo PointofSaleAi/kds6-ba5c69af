@@ -178,12 +178,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
 
-    // Reorder based on selected summary items (multi-select)
-    if (selectedSummaryItems.size > 0) {
+    // Reorder based on selected summary items + categories
+    const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
+    if (hasFilters) {
       const matching: Array<{ order: Order; matchCount: number }> = [];
       const nonMatching: Order[] = [];
       for (const o of sorted) {
-        const matchCount = o.courses.reduce((acc, c) => acc + c.items.filter(i => selectedSummaryItems.has(i.name) && !i.isCompleted && !i.isCancelled).length, 0);
+        const matchCount = o.courses.reduce((acc, c) => acc + c.items.filter(i => {
+          if (i.isCompleted || i.isCancelled) return false;
+          return selectedSummaryItems.has(i.name) || (i.category && selectedSummaryCategories.has(i.category));
+        }).length, 0);
         if (matchCount > 0) matching.push({ order: o, matchCount });
         else nonMatching.push(o);
       }
@@ -192,12 +196,32 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
 
     return sorted;
-  }, [orders, activeFilter, sortMode, selectedSummaryItems]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories]);
+
+  // Build combined highlight set (explicit items + all items from selected categories)
+  const highlightItemNames = useMemo(() => {
+    const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
+    if (!hasFilters) return new Set<string>();
+    const set = new Set(selectedSummaryItems);
+    if (selectedSummaryCategories.size > 0) {
+      const sourceOrders = kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses;
+      for (const o of sourceOrders) {
+        for (const c of o.courses) {
+          for (const i of c.items) {
+            if (i.category && selectedSummaryCategories.has(i.category) && !i.isCompleted && !i.isCancelled) {
+              set.add(i.name);
+            }
+          }
+        }
+      }
+    }
+    return set;
+  }, [selectedSummaryItems, selectedSummaryCategories, kdsMode, expoSyntheticOrders, ordersWithItemStatuses]);
 
   const orderHasSelectedItem = useCallback((order: Order): boolean => {
-    if (selectedSummaryItems.size === 0) return true;
-    return order.courses.some(c => c.items.some(i => selectedSummaryItems.has(i.name) && !i.isCompleted && !i.isCancelled));
-  }, [selectedSummaryItems]);
+    if (highlightItemNames.size === 0) return true;
+    return order.courses.some(c => c.items.some(i => highlightItemNames.has(i.name) && !i.isCompleted && !i.isCancelled));
+  }, [highlightItemNames]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
