@@ -66,6 +66,7 @@ export const mockHistoryOrders: Order[] = [
     timeReceived: new Date(Date.now() - 7200000),
     elapsedSeconds: 1920,
     targetSeconds: 1200,
+    orderNotes: 'No contact delivery, leave at door',
     itemCount: 5,
     courses: [
       {
