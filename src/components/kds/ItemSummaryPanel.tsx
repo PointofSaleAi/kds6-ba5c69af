@@ -240,8 +240,9 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                             }}
                           >
                             <span
-                              className={`min-w-0 truncate text-[13px] uppercase leading-tight ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
-                              style={isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : undefined}
+                              className={`min-w-0 truncate uppercase leading-tight ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                              style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : {}) }}
+                              >
                             >
                               {tp(item.name)}
                             </span>
