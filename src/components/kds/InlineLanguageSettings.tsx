@@ -53,15 +53,6 @@ const moreLanguages = [
   'Urdu','Uyghur','Vietnamese','Welsh','Xhosa','Yiddish','Yoruba','Zulu',
 ];
 
-const timezoneOptions = [
-  { value: 'auto', label: 'Auto-detect (based on device)' },
-  { value: 'America/New_York', label: 'America/New_York (EST)' },
-  { value: 'America/Chicago', label: 'America/Chicago (CST)' },
-  { value: 'America/Los_Angeles', label: 'America/Los_Angeles (PST)' },
-  { value: 'Asia/Kolkata', label: 'Asia/Kolkata (IST)' },
-  { value: 'Europe/London', label: 'Europe/London (GMT)' },
-  { value: 'Asia/Dubai', label: 'Asia/Dubai (GST)' },
-];
 
 const currencyOptions = [
   { value: 'USD', label: 'USD ($)' },
