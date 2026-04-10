@@ -186,11 +186,80 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [onItemStatusChange, itemStatuses]);
 
-  useEffect(() => {
-    if (allItemIds.length > 0 && allItemIds.every(id => itemStatuses.get(id) === 'done')) {
-      onBump?.(order.id);
+  // Compute ticket-level collective state from item statuses
+  const ticketState: TicketState = useMemo(() => {
+    if (allItemIds.length === 0) return 'seen';
+    const allDone = allItemIds.every(id => itemStatuses.get(id) === 'done');
+    if (allDone) return 'done';
+    const anyUnseen = allItemIds.some(id => !itemStatuses.get(id));
+    if (anyUnseen) return 'seen';
+    return 'in-progress';
+  }, [allItemIds, itemStatuses]);
+
+  // Ticket-level advance: SEEN→all preparing, IN PROGRESS→all done, DONE→remove
+  const handleTicketAdvance = useCallback((orderId: string) => {
+    if (ticketState === 'done') {
+      onBump?.(orderId);
+      return;
     }
-  }, [itemStatuses, allItemIds, onBump, order.id]);
+    const now = formatStaticTime(new Date());
+    const targetStatus: ItemStatus = ticketState === 'seen' ? 'preparing' : 'done';
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      allItemIds.forEach(id => {
+        next.set(id, targetStatus);
+        onItemStatusChange?.(id, targetStatus);
+      });
+      return next;
+    });
+    setItemTimestamps(prev => {
+      const next = new Map(prev);
+      allItemIds.forEach(id => {
+        const existing = next.get(id) || {};
+        if (targetStatus === 'preparing') {
+          next.set(id, { ...existing, seenAt: existing.seenAt || now });
+        } else {
+          next.set(id, { ...existing, seenAt: existing.seenAt || now, doneAt: now });
+        }
+      });
+      return next;
+    });
+  }, [ticketState, allItemIds, onBump, onItemStatusChange]);
+
+  // Ticket-level recall: DONE→all preparing, IN PROGRESS→all unseen
+  const handleTicketRecall = useCallback((_orderId: string) => {
+    if (ticketState === 'done') {
+      // Back to in-progress: all items to preparing
+      const now = formatStaticTime(new Date());
+      setItemStatuses(prev => {
+        const next = new Map(prev);
+        allItemIds.forEach(id => {
+          next.set(id, 'preparing');
+          onItemStatusChange?.(id, 'preparing');
+        });
+        return next;
+      });
+      setItemTimestamps(prev => {
+        const next = new Map(prev);
+        allItemIds.forEach(id => {
+          const existing = next.get(id) || {};
+          next.set(id, { seenAt: existing.seenAt || now, doneAt: undefined });
+        });
+        return next;
+      });
+    } else {
+      // Back to seen: clear all statuses
+      setItemStatuses(prev => {
+        const next = new Map(prev);
+        allItemIds.forEach(id => {
+          next.delete(id);
+          onItemStatusChange?.(id, undefined);
+        });
+        return next;
+      });
+      setItemTimestamps(new Map());
+    }
+  }, [ticketState, allItemIds, onItemStatusChange]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
