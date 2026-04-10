@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Languages } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
@@ -55,7 +55,25 @@ function formatTimer(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-/** Live timer hook for a single course */
+/** Compute a static firing-at time for pending courses */
+function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): string | null {
+  if (courseGroup.autoFireTargetSeconds !== undefined && courseGroup._startedAt) {
+    const firingAt = new Date(courseGroup._startedAt.getTime() + courseGroup.autoFireTargetSeconds * 1000);
+    return formatTimeForKDS(firingAt, timeFormat);
+  }
+  if (courseGroup.autoFireLabel) {
+    // Parse "Auto-fire in M:SS" style labels to compute a target time
+    const match = courseGroup.autoFireLabel.match(/(\d+):(\d+)/);
+    if (match) {
+      const totalSec = parseInt(match[1]) * 60 + parseInt(match[2]);
+      const firingAt = new Date(Date.now() + totalSec * 1000);
+      return formatTimeForKDS(firingAt, timeFormat);
+    }
+  }
+  return null;
+}
+
+/** Live timer hook for active and fired courses only */
 function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
   label: string;
   urgency: FireUrgency;
@@ -63,6 +81,7 @@ function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
+    if (status === 'pending') return; // No live timer for pending
     if (status === 'fired' && !courseGroup.firedAt) return;
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
@@ -91,7 +110,6 @@ function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
       return { label: `Fire in ${formatTimer(remaining)}`, urgency: 'normal' };
     }
     if (courseGroup.prepTimerLabel) {
-      // Parse static label as seconds for live countdown
       const parts = courseGroup.prepTimerLabel.split(':').map(Number);
       const totalSec = (parts[0] || 0) * 60 + (parts[1] || 0);
       const elapsed = Math.floor((now - (courseGroup._startedAt?.getTime() ?? (now - totalSec * 1000))) / 1000);
@@ -107,17 +125,6 @@ function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
     return null;
   }
 
-  if (status === 'pending') {
-    if (courseGroup.autoFireTargetSeconds !== undefined) {
-      const remaining = courseGroup.autoFireTargetSeconds - Math.floor((now - (courseGroup._startedAt?.getTime() ?? now)) / 1000);
-      return { label: `Auto-fire in ${formatTimer(Math.max(0, remaining))}`, urgency: 'normal' };
-    }
-    if (courseGroup.autoFireLabel) {
-      return { label: courseGroup.autoFireLabel, urgency: 'normal' };
-    }
-    return null;
-  }
-
   return null;
 }
 
@@ -128,10 +135,9 @@ const urgencyChipStyles: Record<FireUrgency, string> = {
 };
 
 const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
-const pendingChipStyle = 'bg-muted text-muted-foreground';
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames }: CourseSectionProps) {
-  const { tp, tc, displayMode, tpSecondary } = useLanguage();
+  const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
@@ -139,20 +145,22 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
   
   const isDimmed = coursingStatus === 'fired' || coursingStatus === 'pending';
+  const isPending = coursingStatus === 'pending';
 
   const hasItems = courseGroup.items.length > 0;
-  const allItemsDone = hasItems && courseGroup.items
-    .filter(i => !i.isCancelled)
-    .every(i => itemStatuses?.get(i.id) === 'done');
 
-  // Course is completed if it's fired (already done) OR all items manually marked done
   const isCourseCompleted = coursingStatus === 'fired';
 
-  // All courses are collapsible; active & pending expanded by default, fired collapsed
   const [isExpanded, setIsExpanded] = useState(!isCourseCompleted);
 
-  // Live timer
+  // Live timer (only for active/fired)
   const timer = useCourseTimer(courseGroup, coursingStatus);
+
+  // Static firing-at label for pending courses (computed once via useMemo)
+  const firingAtLabel = useMemo(() => {
+    if (coursingStatus !== 'pending') return null;
+    return computeFiringAtTime(courseGroup, timeFormat as 0 | 1);
+  }, [coursingStatus, courseGroup, timeFormat]);
 
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
@@ -189,15 +197,12 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
     ? { color: '#7F77DD', fontWeight: 500 }
     : { fontWeight: 400 };
 
-  const showFireButton = coursingStatus !== 'fired' && !!onFireCourse;
-  const fireButtonDisabled = coursingStatus === 'pending';
+  const showFireButton = coursingStatus === 'active' && !!onFireCourse;
 
   // Timer chip style
   const chipStyle = coursingStatus === 'fired'
     ? firedChipStyle
-    : coursingStatus === 'pending'
-      ? pendingChipStyle
-      : timer ? urgencyChipStyles[timer.urgency] : '';
+    : timer ? urgencyChipStyles[timer.urgency] : '';
 
   return (
     <div className={containerClass} style={containerStyle}>
@@ -215,20 +220,23 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
           </span>
         </div>
         <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
-          {timer && (
+          {/* Fired/active timer chip */}
+          {timer && coursingStatus !== 'pending' && (
             <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums ${chipStyle}`}>
               {timer.label}
             </span>
           )}
+          {/* Pending: static "Firing at X:XX PM" label — no icon */}
+          {coursingStatus === 'pending' && firingAtLabel && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal bg-muted text-muted-foreground">
+              Firing at {firingAtLabel}
+            </span>
+          )}
+          {/* Fire button only for active courses */}
           {showFireButton && onFireCourse && (
             <button
               onClick={(e) => { e.stopPropagation(); onFireCourse(courseGroup.course); }}
-              disabled={fireButtonDisabled}
-              className={`rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 ${
-                fireButtonDisabled
-                  ? 'opacity-30 pointer-events-none'
-                  : 'hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(255,140,50,0.6)]'
-              }`}
+              className="rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(255,140,50,0.6)]"
               title={`Fire ${tc(courseGroup.course === 'APPETIZER' ? 'APPS' : courseGroup.course === 'ENTREE' ? 'MAINS' : courseGroup.course)}`}
             >
               <img src={fireIcon} alt="Fire" className="w-6 h-6" />
@@ -253,8 +261,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
             return (
               <div
                 key={item.id}
-                className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
-                style={{ padding: '4px 0 4px 4px', gap: 0, ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}) }}
+                className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
+                style={{
+                  padding: '4px 0 4px 4px',
+                  gap: 0,
+                  ...(isPending && !item.isCancelled ? { opacity: 0.4 } : {}),
+                  ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
+                }}
                 onClick={() => !item.isCancelled && onReRouteItem?.(item)}
               >
                 {/* Child 1 — item-main */}
@@ -328,29 +341,29 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                   )}
                 </div>
 
-                {/* Child 2 — item-action (stopPropagation to isolate from row tap) */}
+                {/* Child 2 — item-action */}
                 {!item.isCancelled && (
                   <div className="flex items-center shrink-0 ml-auto" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
                     {isCourseCompleted ? (
                       <KdsActionIcon icon="acknowledged" disabled />
-                    ) : !isDimmed && status === 'ready' ? (
+                    ) : isPending ? null : status === 'ready' ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
                       </>
-                    ) : !isDimmed && status === 'preparing' ? (
+                    ) : status === 'preparing' ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark ready" />
                       </>
-                    ) : !isDimmed && isFired ? (
+                    ) : isFired ? (
                       <>
                         <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
                         <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id, true)} label="Mark done" />
                       </>
-                    ) : !isDimmed ? (
+                    ) : (
                       <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
-                    ) : null}
+                    )}
                   </div>
                 )}
               </div>
