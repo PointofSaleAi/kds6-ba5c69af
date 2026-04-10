@@ -372,39 +372,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [order.courses]);
 
-  const isDineIn = order.orderType === 'dine-in';
-
-  const displayCourses = (stationCourse && isDineIn)
-    ? normalizeStationCourses(orderWithStations.courses, stationCourse)
-    : orderWithStations.courses;
-
-  // Track "Done at" timestamps per course
-  const [courseDoneTimestamps, setCourseDoneTimestamps] = useState<Map<string, string>>(new Map());
-
-  // Compute lifecycle status for each course: active (first not-all-done), pending (after active), served (before active / all done)
-  const courseLifecycleMap = useMemo(() => {
-    if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
-    const map = new Map<string, 'active' | 'pending' | 'served'>();
-    let foundActive = false;
-    for (const c of displayCourses) {
-      const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
-      const allDone = ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
-      if (c.isFired || allDone) {
-        if (!foundActive) {
-          map.set(c.course, 'served');
-        } else {
-          map.set(c.course, 'served');
-        }
-      } else if (!foundActive) {
-        map.set(c.course, 'active');
-        foundActive = true;
-      } else {
-        map.set(c.course, 'pending');
-      }
-    }
-    return map;
-  }, [isDineIn, displayCourses, itemStatuses]);
-
   // Record "Done at" timestamp when a course transitions to served
   useEffect(() => {
     if (!isDineIn) return;
@@ -432,15 +399,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       return priority[aStatus] - priority[bStatus];
     });
   }, [isDineIn, displayCourses, courseLifecycleMap]);
-
-  // DONE button: only active when ALL courses are served
-  const allActiveItemsDone = useMemo(() => {
-    if (!isDineIn) return true;
-    for (const status of courseLifecycleMap.values()) {
-      if (status !== 'served') return false;
-    }
-    return courseLifecycleMap.size > 0;
-  }, [isDineIn, courseLifecycleMap]);
 
   if (compact) {
     return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
