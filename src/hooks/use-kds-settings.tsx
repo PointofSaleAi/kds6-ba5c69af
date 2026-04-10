@@ -32,6 +32,7 @@ export interface KDSSettings {
   tempUnit: TempUnit;
   weekStart: WeekStart;
   orderTypeColors: OrderTypeColors;
+  ticketHeaderLayout: TicketHeaderLayout;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -46,6 +47,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTempUnit: (v: TempUnit) => void;
   setWeekStart: (v: WeekStart) => void;
   setOrderTypeColors: (v: OrderTypeColors) => void;
+  setTicketHeaderLayout: (v: TicketHeaderLayout) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings';
@@ -62,6 +64,7 @@ const defaults: KDSSettings = {
   tempUnit: 'F',
   weekStart: 'Sunday',
   orderTypeColors: { ...DEFAULT_ORDER_TYPE_COLORS },
+  ticketHeaderLayout: 'kitchen',
 };
 
 function loadSettings(): KDSSettings {
@@ -101,6 +104,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTempUnit: update('tempUnit'),
         setWeekStart: update('weekStart'),
         setOrderTypeColors: update('orderTypeColors'),
+        setTicketHeaderLayout: update('ticketHeaderLayout'),
       }}
     >
       {children}
