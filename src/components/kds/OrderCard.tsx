@@ -245,20 +245,69 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     ? normalizeStationCourses(orderWithStations.courses, stationCourse)
     : orderWithStations.courses;
 
-  // Compute whether all active course items are done (for DONE button)
+  // Track "Done at" timestamps per course
+  const [courseDoneTimestamps, setCourseDoneTimestamps] = useState<Map<string, string>>(new Map());
+
+  // Compute lifecycle status for each course: active (first not-all-done), pending (after active), served (before active / all done)
+  const courseLifecycleMap = useMemo(() => {
+    if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
+    const map = new Map<string, 'active' | 'pending' | 'served'>();
+    let foundActive = false;
+    for (const c of displayCourses) {
+      const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
+      const allDone = ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
+      if (c.isFired || allDone) {
+        if (!foundActive) {
+          map.set(c.course, 'served');
+        } else {
+          map.set(c.course, 'served');
+        }
+      } else if (!foundActive) {
+        map.set(c.course, 'active');
+        foundActive = true;
+      } else {
+        map.set(c.course, 'pending');
+      }
+    }
+    return map;
+  }, [isDineIn, displayCourses, itemStatuses]);
+
+  // Record "Done at" timestamp when a course transitions to served
+  useEffect(() => {
+    if (!isDineIn) return;
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setCourseDoneTimestamps(prev => {
+      let changed = false;
+      const next = new Map(prev);
+      for (const [course, status] of courseLifecycleMap) {
+        if (status === 'served' && !next.has(course)) {
+          next.set(course, now);
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [courseLifecycleMap, isDineIn]);
+
+  // Sort courses: active first, then pending, then served
+  const sortedDisplayCourses = useMemo(() => {
+    if (!isDineIn) return displayCourses;
+    const priority = { active: 0, pending: 1, served: 2 };
+    return [...displayCourses].sort((a, b) => {
+      const aStatus = courseLifecycleMap.get(a.course) || 'pending';
+      const bStatus = courseLifecycleMap.get(b.course) || 'pending';
+      return priority[aStatus] - priority[bStatus];
+    });
+  }, [isDineIn, displayCourses, courseLifecycleMap]);
+
+  // DONE button: only active when ALL courses are served
   const allActiveItemsDone = useMemo(() => {
     if (!isDineIn) return true;
-    const activeCourseItems = displayCourses
-      .filter(c => {
-        if (c.isFired) return false;
-        if (c.prepTimerLabel || c.fireInSeconds !== undefined) return true;
-        if (c.autoFireLabel || c.autoFireTargetSeconds !== undefined) return false;
-        return true;
-      })
-      .flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id));
-    if (activeCourseItems.length === 0) return false;
-    return activeCourseItems.every(id => itemStatuses.get(id) === 'done');
-  }, [isDineIn, displayCourses, itemStatuses]);
+    for (const status of courseLifecycleMap.values()) {
+      if (status !== 'served') return false;
+    }
+    return courseLifecycleMap.size > 0;
+  }, [isDineIn, courseLifecycleMap]);
 
   if (compact) {
     return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
@@ -366,19 +415,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
         <div className="border-t border-border">
           {isDineIn ? (
-            [...displayCourses]
-              .sort((a, b) => {
-                // Helper: is course "done" either by isFired or all items marked done
-                const isCourseDone = (c: typeof a) => {
-                  if (c.isFired) return true;
-                  const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
-                  return ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
-                };
-                const aDone = isCourseDone(a) ? 1 : 0;
-                const bDone = isCourseDone(b) ? 1 : 0;
-                return aDone - bDone;
-              })
-              .map((courseGroup) => {
+            sortedDisplayCourses.map((courseGroup) => {
+                const lifecycleStatus = courseLifecycleMap.get(courseGroup.course) || 'pending';
                 let forcedStatus: StationStatus | undefined;
                 if (stationCourse && stationIdx >= 0) {
                   const originalIdx = displayCourses.indexOf(courseGroup);
@@ -401,6 +439,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     onReRouteItem={(item) => setItemRouting(item)}
                     showAllergens={showAllergens}
                     highlightItemNames={highlightItemNames}
+                    lifecycleStatus={lifecycleStatus}
+                    courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
                   />
                 );
               })

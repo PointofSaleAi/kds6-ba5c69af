@@ -22,6 +22,8 @@ interface CourseSectionProps {
   onReRouteItem?: (item: OrderItem) => void;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
+  lifecycleStatus?: 'active' | 'pending' | 'served';
+  courseDoneAt?: string;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -70,13 +72,21 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
-  const coursingStatus = forcedStationStatus
-    ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
+  // If lifecycleStatus is provided (dine-in lifecycle), use it to override coursing status
+  const isServedByLifecycle = lifecycleStatus === 'served';
+  const isPendingByLifecycle = lifecycleStatus === 'pending';
+  const isActiveByLifecycle = lifecycleStatus === 'active';
+
+  const coursingStatus = isServedByLifecycle ? 'fired' as StationStatus
+    : isPendingByLifecycle ? 'pending' as StationStatus
+    : isActiveByLifecycle ? 'active' as StationStatus
+    : forcedStationStatus
+      ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
   
   const isDimmed = coursingStatus === 'fired' || coursingStatus === 'pending';
   const isPending = coursingStatus === 'pending';
@@ -85,7 +95,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   const hasItems = courseGroup.items.length > 0;
   const isCourseCompleted = coursingStatus === 'fired';
 
-  const [isExpanded, setIsExpanded] = useState(!isCourseCompleted);
+  const [isExpanded, setIsExpanded] = useState(!isCourseCompleted && !isServedByLifecycle);
 
   // Static firing-at label for pending courses
   const firingAtLabel = useMemo(() => {
@@ -112,12 +122,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     return 'unseen';
   }, [isActive, activeItemIds, itemStatuses]);
 
-  // Auto-collapse when all items in this course are done
+  // Auto-collapse when course becomes served or all items done
   useEffect(() => {
-    if (isActive && collectiveState === 'done') {
+    if (isServedByLifecycle) {
+      setIsExpanded(false);
+    } else if (isActive && collectiveState === 'done') {
       setIsExpanded(false);
     }
-  }, [isActive, collectiveState]);
+  }, [isActive, collectiveState, isServedByLifecycle]);
 
   // "Seen at" timestamp for course header (first item's seenAt)
   const courseSeenAt = useMemo(() => {
@@ -150,18 +162,20 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
-    : isDimmed
-      ? (isStationMode ? 'opacity-80 pointer-events-none' : '')
-      : '';
+    : isServedByLifecycle
+      ? 'opacity-60'
+      : isDimmed
+        ? (isStationMode ? 'opacity-80 pointer-events-none' : '')
+        : '';
 
   const containerStyle = coursingStatus === 'active'
-    ? { borderLeftColor: '#7F77DD' }
-    : undefined;
+    ? { borderLeftColor: '#7F77DD', transition: 'all 200ms ease-in-out' }
+    : { transition: 'all 200ms ease-in-out' };
 
   const headerBg = coursingStatus === 'active'
     ? ''
     : coursingStatus === 'fired'
-      ? 'bg-success/10'
+      ? 'bg-muted/50'
       : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
@@ -169,15 +183,19 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     : undefined;
 
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
-  const courseLabel = isStationMode
-    ? getStationLabel(courseGroup, coursingStatus, tc)
-    : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
+  const courseLabel = isServedByLifecycle
+    ? `${courseName} \u00B7 Served`
+    : isStationMode
+      ? getStationLabel(courseGroup, coursingStatus, tc)
+      : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
 
-  const labelClass = coursingStatus === 'active'
-    ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-    : coursingStatus === 'fired'
-      ? 'text-[11px] uppercase tracking-wider text-success font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-      : 'text-[11px] uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+  const labelClass = isServedByLifecycle
+    ? 'text-[11px] uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    : coursingStatus === 'active'
+      ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+      : coursingStatus === 'fired'
+        ? 'text-[11px] uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+        : 'text-[11px] uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: '#7F77DD', fontWeight: 500 }
@@ -208,6 +226,30 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       </div>
     );
   };
+
+  // Served courses: render a simple collapsed row with no expand
+  if (isServedByLifecycle) {
+    return (
+      <div className={containerClass} style={containerStyle}>
+        <div
+          className={`flex items-center justify-between flex-nowrap ${headerBg} select-none`}
+          style={{ padding: '4px 8px' }}
+        >
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <span className="text-[11px] text-muted-foreground">▶</span>
+            <span className={labelClass} style={labelStyle}>
+              {courseLabel}
+            </span>
+          </div>
+          {courseDoneAt && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-muted-foreground">
+              Done at {courseDoneAt}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={containerClass} style={containerStyle}>
