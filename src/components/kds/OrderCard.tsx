@@ -48,6 +48,11 @@ const statusBodyMap: Record<string, string> = {
   recalled: 'border-l-order-take-out',
 };
 
+/** Format a Date to HH:MM for timestamps */
+function formatStaticTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
@@ -57,6 +62,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const statusColor = getStatusForElapsed(liveElapsed);
   const scaleFactor = TEXT_SIZE_SCALE[textSize] || 1;
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+  const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
   // Station overrides for re-routing
   const [stationOverrides, setStationOverrides] = useState<Map<string, StationName>>(new Map());
@@ -85,7 +91,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     [order.courses]
   );
 
+  // 3-step advance: unseen → preparing → done (no 'ready' intermediate)
   const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
+    const now = formatStaticTime(new Date());
     setItemStatuses(prev => {
       const next = new Map(prev);
       let newStatus: ItemStatus;
@@ -94,14 +102,88 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       } else {
         const current = next.get(itemId);
         if (!current) newStatus = 'preparing';
-        else if (current === 'preparing') newStatus = 'ready';
+        else if (current === 'preparing') newStatus = 'done';
         else newStatus = 'done';
       }
       next.set(itemId, newStatus);
       onItemStatusChange?.(itemId, newStatus);
       return next;
     });
-  }, [onItemStatusChange]);
+    // Record timestamp
+    setItemTimestamps(prev => {
+      const next = new Map(prev);
+      const existing = next.get(itemId) || {};
+      const currentStatus = itemStatuses.get(itemId);
+      if (!currentStatus) {
+        // Moving to preparing - record seenAt
+        next.set(itemId, { ...existing, seenAt: existing.seenAt || now });
+      } else if (currentStatus === 'preparing' || skipToDone) {
+        // Moving to done - record doneAt
+        next.set(itemId, { ...existing, seenAt: existing.seenAt || now, doneAt: now });
+      }
+      return next;
+    });
+  }, [onItemStatusChange, itemStatuses]);
+
+  // Bulk advance course items
+  const handleBulkAdvanceCourse = useCallback((courseItemIds: string[]) => {
+    const now = formatStaticTime(new Date());
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      // Check collective state
+      const allPreparing = courseItemIds.every(id => {
+        const s = next.get(id);
+        return s === 'preparing' || s === 'done';
+      });
+      const allDone = courseItemIds.every(id => next.get(id) === 'done');
+
+      if (allDone) return prev; // No-op
+
+      if (allPreparing) {
+        // Advance all to done
+        courseItemIds.forEach(id => {
+          if (next.get(id) !== 'done') {
+            next.set(id, 'done');
+            onItemStatusChange?.(id, 'done');
+          }
+        });
+      } else {
+        // Advance all unseen to preparing
+        courseItemIds.forEach(id => {
+          if (!next.get(id)) {
+            next.set(id, 'preparing');
+            onItemStatusChange?.(id, 'preparing');
+          }
+        });
+      }
+      return next;
+    });
+    // Record timestamps
+    setItemTimestamps(prev => {
+      const next = new Map(prev);
+      const allPreparing = courseItemIds.every(id => {
+        const s = itemStatuses.get(id);
+        return s === 'preparing' || s === 'done';
+      });
+
+      if (allPreparing) {
+        courseItemIds.forEach(id => {
+          if (itemStatuses.get(id) !== 'done') {
+            const existing = next.get(id) || {};
+            next.set(id, { ...existing, seenAt: existing.seenAt || now, doneAt: now });
+          }
+        });
+      } else {
+        courseItemIds.forEach(id => {
+          if (!itemStatuses.get(id)) {
+            const existing = next.get(id) || {};
+            next.set(id, { ...existing, seenAt: existing.seenAt || now });
+          }
+        });
+      }
+      return next;
+    });
+  }, [onItemStatusChange, itemStatuses]);
 
   useEffect(() => {
     if (allItemIds.length > 0 && allItemIds.every(id => itemStatuses.get(id) === 'done')) {
@@ -113,12 +195,27 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     setItemStatuses(prev => {
       const next = new Map(prev);
       const current = next.get(itemId);
-      if (current === 'ready') {
+      if (current === 'done') {
         next.set(itemId, 'preparing');
         onItemStatusChange?.(itemId, 'preparing');
+        // Clear doneAt timestamp
+        setItemTimestamps(tsPrev => {
+          const tsNext = new Map(tsPrev);
+          const existing = tsNext.get(itemId);
+          if (existing) {
+            tsNext.set(itemId, { ...existing, doneAt: undefined });
+          }
+          return tsNext;
+        });
       } else {
         next.delete(itemId);
         onItemStatusChange?.(itemId, undefined);
+        // Clear all timestamps
+        setItemTimestamps(tsPrev => {
+          const tsNext = new Map(tsPrev);
+          tsNext.delete(itemId);
+          return tsNext;
+        });
       }
       return next;
     });
@@ -142,15 +239,30 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [order.courses]);
 
-  if (compact) {
-    return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
-  }
-
   const isDineIn = order.orderType === 'dine-in';
 
   const displayCourses = (stationCourse && isDineIn)
     ? normalizeStationCourses(orderWithStations.courses, stationCourse)
     : orderWithStations.courses;
+
+  // Compute whether all active course items are done (for DONE button)
+  const allActiveItemsDone = useMemo(() => {
+    if (!isDineIn) return true;
+    const activeCourseItems = displayCourses
+      .filter(c => {
+        if (c.isFired) return false;
+        if (c.prepTimerLabel || c.fireInSeconds !== undefined) return true;
+        if (c.autoFireLabel || c.autoFireTargetSeconds !== undefined) return false;
+        return true;
+      })
+      .flatMap(c => c.items.filter(i => !i.isCancelled).map(i => i.id));
+    if (activeCourseItems.length === 0) return false;
+    return activeCourseItems.every(id => itemStatuses.get(id) === 'done');
+  }, [isDineIn, displayCourses, itemStatuses]);
+
+  if (compact) {
+    return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
+  }
 
   const stationIdx = stationCourse
     ? displayCourses.findIndex(c => c.course === stationCourse)
@@ -274,8 +386,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     courseGroup={courseGroup}
                     onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
                     itemStatuses={itemStatuses}
+                    itemTimestamps={itemTimestamps}
                     onAdvanceItem={handleAdvanceItem}
                     onUndoItem={handleUndoItem}
+                    onBulkAdvanceCourse={handleBulkAdvanceCourse}
                     stationCourse={stationCourse}
                     forcedStationStatus={forcedStatus}
                     onReRouteItem={(item) => setItemRouting(item)}
@@ -302,6 +416,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           isDineIn={isDineIn}
           onBump={onBump}
           onRecall={onRecall}
+          doneDisabled={isDineIn && !allActiveItemsDone}
         />
       </div>
 

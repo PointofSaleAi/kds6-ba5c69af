@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Eye, Check, Undo2, ConciergeBell } from 'lucide-react';
+import { Eye, EyeOff, Check, Undo2, ConciergeBell, CheckCircle } from 'lucide-react';
 
-export type KdsIconType = 'seen' | 'preparing' | 'ready' | 'undo' | 'acknowledged';
+export type KdsIconType = 'seen' | 'preparing' | 'ready' | 'undo' | 'acknowledged' | 'done' | 'seen-filled';
 
 interface KdsActionIconProps {
   icon: KdsIconType;
@@ -16,6 +16,12 @@ const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: 
     bg: '#FFFFFF',
     border: '2px solid #3B82F6',
     iconColor: '#3B82F6',
+    IconComponent: Eye,
+  },
+  'seen-filled': {
+    bg: '#DBEAFE',
+    border: 'none',
+    iconColor: '#2563EB',
     IconComponent: Eye,
   },
   preparing: {
@@ -35,6 +41,12 @@ const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: 
     border: 'none',
     iconColor: '#7C3AED',
     IconComponent: Check,
+  },
+  done: {
+    bg: '#DCFCE7',
+    border: 'none',
+    iconColor: '#16A34A',
+    IconComponent: CheckCircle,
   },
   undo: {
     bg: '#FFFFFF',
