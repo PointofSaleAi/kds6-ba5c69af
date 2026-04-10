@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Languages, Eye, Check, ConciergeBell } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
@@ -111,6 +111,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     if (allSeen) return 'preparing';
     return 'unseen';
   }, [isActive, activeItemIds, itemStatuses]);
+
+  // Auto-collapse when all items in this course are done
+  useEffect(() => {
+    if (isActive && collectiveState === 'done') {
+      setIsExpanded(false);
+    }
+  }, [isActive, collectiveState]);
 
   // "Seen at" timestamp for course header (first item's seenAt)
   const courseSeenAt = useMemo(() => {
