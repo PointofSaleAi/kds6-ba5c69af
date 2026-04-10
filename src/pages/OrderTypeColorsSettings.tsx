@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, DEFAULT_ORDER_TYPE_DETAILED_COLORS, type OrderTypeColorSet } from '@/hooks/use-kds-settings';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RotateCcw } from 'lucide-react';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 
