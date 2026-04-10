@@ -248,12 +248,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
+            const isHighlighted = !!highlightItemName && item.name === highlightItemName;
 
             return (
               <div
                 key={item.id}
                 className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
-                style={{ padding: '4px 0 4px 4px', gap: 0 }}
+                style={{ padding: '4px 0 4px 4px', gap: 0, ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}) }}
                 onClick={() => !item.isCancelled && onReRouteItem?.(item)}
               >
                 {/* Child 1 — item-main */}
