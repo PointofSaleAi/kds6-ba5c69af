@@ -72,13 +72,21 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
-  const coursingStatus = forcedStationStatus
-    ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
+  // If lifecycleStatus is provided (dine-in lifecycle), use it to override coursing status
+  const isServedByLifecycle = lifecycleStatus === 'served';
+  const isPendingByLifecycle = lifecycleStatus === 'pending';
+  const isActiveByLifecycle = lifecycleStatus === 'active';
+
+  const coursingStatus = isServedByLifecycle ? 'fired' as StationStatus
+    : isPendingByLifecycle ? 'pending' as StationStatus
+    : isActiveByLifecycle ? 'active' as StationStatus
+    : forcedStationStatus
+      ?? (isStationMode ? getStationStatus(courseGroup, stationCourse) : getCoursingStatus(courseGroup));
   
   const isDimmed = coursingStatus === 'fired' || coursingStatus === 'pending';
   const isPending = coursingStatus === 'pending';
@@ -87,7 +95,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   const hasItems = courseGroup.items.length > 0;
   const isCourseCompleted = coursingStatus === 'fired';
 
-  const [isExpanded, setIsExpanded] = useState(!isCourseCompleted);
+  const [isExpanded, setIsExpanded] = useState(!isCourseCompleted && !isServedByLifecycle);
 
   // Static firing-at label for pending courses
   const firingAtLabel = useMemo(() => {
