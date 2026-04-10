@@ -186,15 +186,49 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [onItemStatusChange, itemStatuses]);
 
+  // For coursed orders: get active course item IDs
+  const activeCourseItemIds = useMemo(() => {
+    if (!isDineIn) return allItemIds;
+    for (const c of displayCourses) {
+      const lifecycle = courseLifecycleMap.get(c.course);
+      if (lifecycle === 'active') {
+        return c.items.filter(i => !i.isCancelled).map(i => i.id);
+      }
+    }
+    // All courses served - no active course
+    return [];
+  }, [isDineIn, displayCourses, courseLifecycleMap, allItemIds]);
+
+  // Check if all courses are served (for final DONE)
+  const allCoursesServed = useMemo(() => {
+    if (!isDineIn) return false;
+    if (courseLifecycleMap.size === 0) return false;
+    for (const status of courseLifecycleMap.values()) {
+      if (status !== 'served') return false;
+    }
+    return true;
+  }, [isDineIn, courseLifecycleMap]);
+
   // Compute ticket-level collective state from item statuses
   const ticketState: TicketState = useMemo(() => {
+    // For coursed orders: derive from active course only, or show final DONE if all served
+    if (isDineIn) {
+      if (allCoursesServed) return 'done';
+      if (activeCourseItemIds.length === 0) return 'seen';
+      const allDone = activeCourseItemIds.every(id => itemStatuses.get(id) === 'done');
+      if (allDone) return 'done';
+      const anyUnseen = activeCourseItemIds.some(id => !itemStatuses.get(id));
+      if (anyUnseen) return 'seen';
+      return 'in-progress';
+    }
+    // Non-coursed: use all items
     if (allItemIds.length === 0) return 'seen';
     const allDone = allItemIds.every(id => itemStatuses.get(id) === 'done');
     if (allDone) return 'done';
     const anyUnseen = allItemIds.some(id => !itemStatuses.get(id));
     if (anyUnseen) return 'seen';
     return 'in-progress';
-  }, [allItemIds, itemStatuses]);
+  }, [isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
 
   // Ticket-level advance: SEEN→all preparing, IN PROGRESS→all done, DONE→remove
   const handleTicketAdvance = useCallback((orderId: string) => {
