@@ -198,31 +198,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return sorted;
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories]);
 
-  // Build combined highlight set (explicit items + all items from selected categories)
-  const highlightItemNames = useMemo(() => {
-    const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
-    if (!hasFilters) return new Set<string>();
-    const set = new Set(selectedSummaryItems);
-    if (selectedSummaryCategories.size > 0) {
-      const sourceOrders = kdsMode === 'Expo' ? expoSyntheticOrders : ordersWithItemStatuses;
-      for (const o of sourceOrders) {
-        for (const c of o.courses) {
-          for (const i of c.items) {
-            if (i.category && selectedSummaryCategories.has(i.category) && !i.isCompleted && !i.isCancelled) {
-              set.add(i.name);
-            }
-          }
-        }
-      }
-    }
-    return set;
-  }, [selectedSummaryItems, selectedSummaryCategories, kdsMode, expoSyntheticOrders, ordersWithItemStatuses]);
-
-  const orderHasSelectedItem = useCallback((order: Order): boolean => {
-    if (highlightItemNames.size === 0) return true;
-    return order.courses.some(c => c.items.some(i => highlightItemNames.has(i.name) && !i.isCompleted && !i.isCancelled));
-  }, [highlightItemNames]);
-
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
     const q = historySearch.toLowerCase();
