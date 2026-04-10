@@ -16,7 +16,7 @@ import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { SettingsPanel } from '@/components/kds/SettingsPanel';
 import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
-import type { ViewMode, Order } from '@/types/kds';
+import type { ViewMode, Order, OrderItem } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
@@ -286,6 +286,27 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setActiveNav('home');
   }, [historyOrders]);
 
+  const handleRecallItem = useCallback((orderId: string, item: OrderItem) => {
+    const historyOrder = historyOrders.find(o => o.id === orderId);
+    if (!historyOrder) return;
+    const newOrder: Order = {
+      id: `recalled-item-${item.id}-${Date.now()}`,
+      orderNumber: historyOrder.orderNumber,
+      orderType: historyOrder.orderType,
+      status: 'recalled',
+      tableName: historyOrder.tableName,
+      serverName: historyOrder.serverName,
+      guestName: historyOrder.guestName,
+      timeReceived: new Date(),
+      elapsedSeconds: 0,
+      targetSeconds: historyOrder.targetSeconds,
+      itemCount: item.quantity,
+      courses: [{ course: 'ENTREE', isFired: true, items: [{ ...item, isCompleted: false }] }],
+    };
+    setOrders((prev) => [newOrder, ...prev]);
+    toast.success('Item recalled to kitchen', { duration: 2000 });
+  }, [historyOrders]);
+
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history') {
       setActiveNav(target);
@@ -433,7 +454,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                          <HistoryOrderCard order={order} onRecall={handleRecall} />
+                          <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                         </motion.div>
                       ))}
                     </div>
@@ -442,7 +463,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[320px]">
-                          <HistoryOrderCard order={order} onRecall={handleRecall} />
+                          <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                         </motion.div>
                       ))}
                     </div>
@@ -453,7 +474,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           {col.map((order) => (
                             <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
-                              <HistoryOrderCard order={order} onRecall={handleRecall} />
+                              <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                             </motion.div>
                           ))}
                         </div>
