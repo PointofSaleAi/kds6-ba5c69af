@@ -518,6 +518,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             <FlatItemList
               courses={orderWithStations.courses}
               itemStatuses={itemStatuses}
+              itemTimestamps={itemTimestamps}
               onAdvanceItem={handleAdvanceItem}
               onUndoItem={handleUndoItem}
               onReRouteItem={(item) => setItemRouting(item)}
