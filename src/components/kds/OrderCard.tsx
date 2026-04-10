@@ -92,6 +92,40 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     [order.courses]
   );
 
+  const isDineIn = order.orderType === 'dine-in';
+
+  const displayCourses = (stationCourse && isDineIn)
+    ? normalizeStationCourses(orderWithStations.courses, stationCourse)
+    : orderWithStations.courses;
+
+  // Track "Done at" timestamps per course
+  const [courseDoneTimestamps, setCourseDoneTimestamps] = useState<Map<string, string>>(new Map());
+
+  // Track which courses have been explicitly confirmed done via ticket button
+  const [confirmedCourses, setConfirmedCourses] = useState<Set<string>>(new Set());
+
+  // Compute lifecycle status for each course
+  // A course only becomes 'served' if all items are done AND the course is confirmed
+  const courseLifecycleMap = useMemo(() => {
+    if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
+    const map = new Map<string, 'active' | 'pending' | 'served'>();
+    let foundActive = false;
+    for (const c of displayCourses) {
+      const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
+      const allDone = ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
+      const isConfirmed = confirmedCourses.has(c.course);
+      if (c.isFired || (allDone && isConfirmed)) {
+        map.set(c.course, 'served');
+      } else if (!foundActive) {
+        map.set(c.course, 'active');
+        foundActive = true;
+      } else {
+        map.set(c.course, 'pending');
+      }
+    }
+    return map;
+  }, [isDineIn, displayCourses, itemStatuses, confirmedCourses]);
+
   // 3-step advance: unseen → preparing → done (no 'ready' intermediate)
   const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
     const now = formatStaticTime(new Date());
@@ -186,27 +220,86 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [onItemStatusChange, itemStatuses]);
 
+  // For coursed orders: get active course item IDs
+  const activeCourseItemIds = useMemo(() => {
+    if (!isDineIn) return allItemIds;
+    for (const c of displayCourses) {
+      const lifecycle = courseLifecycleMap.get(c.course);
+      if (lifecycle === 'active') {
+        return c.items.filter(i => !i.isCancelled).map(i => i.id);
+      }
+    }
+    // All courses served - no active course
+    return [];
+  }, [isDineIn, displayCourses, courseLifecycleMap, allItemIds]);
+
+  // Check if all courses are served (for final DONE)
+  const allCoursesServed = useMemo(() => {
+    if (!isDineIn) return false;
+    if (courseLifecycleMap.size === 0) return false;
+    for (const status of courseLifecycleMap.values()) {
+      if (status !== 'served') return false;
+    }
+    return true;
+  }, [isDineIn, courseLifecycleMap]);
+
   // Compute ticket-level collective state from item statuses
   const ticketState: TicketState = useMemo(() => {
+    // For coursed orders: derive from active course only, or show final DONE if all served
+    if (isDineIn) {
+      if (allCoursesServed) return 'done';
+      if (activeCourseItemIds.length === 0) return 'seen';
+      const allDone = activeCourseItemIds.every(id => itemStatuses.get(id) === 'done');
+      if (allDone) return 'done';
+      const anyUnseen = activeCourseItemIds.some(id => !itemStatuses.get(id));
+      if (anyUnseen) return 'seen';
+      return 'in-progress';
+    }
+    // Non-coursed: use all items
     if (allItemIds.length === 0) return 'seen';
     const allDone = allItemIds.every(id => itemStatuses.get(id) === 'done');
     if (allDone) return 'done';
     const anyUnseen = allItemIds.some(id => !itemStatuses.get(id));
     if (anyUnseen) return 'seen';
     return 'in-progress';
-  }, [allItemIds, itemStatuses]);
+  }, [isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
 
-  // Ticket-level advance: SEEN→all preparing, IN PROGRESS→all done, DONE→remove
+  // Ticket-level advance: operates on active course only for dine-in
+  // Find the currently active course name
+  const activeCourseName = useMemo(() => {
+    if (!isDineIn) return undefined;
+    for (const [course, status] of courseLifecycleMap) {
+      if (status === 'active') return course;
+    }
+    return undefined;
+  }, [isDineIn, courseLifecycleMap]);
+
   const handleTicketAdvance = useCallback((orderId: string) => {
     if (ticketState === 'done') {
+      if (isDineIn && activeCourseName) {
+        // Confirm this course as done - it will collapse and next course becomes active
+        setConfirmedCourses(prev => {
+          const next = new Set(prev);
+          next.add(activeCourseName);
+          return next;
+        });
+        return;
+      }
+      if (isDineIn && allCoursesServed) {
+        // All courses served, final DONE - remove ticket
+        onBump?.(orderId);
+        return;
+      }
+      // Non-coursed DONE - remove ticket
       onBump?.(orderId);
       return;
     }
     const now = formatStaticTime(new Date());
+    const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
     const targetStatus: ItemStatus = ticketState === 'seen' ? 'preparing' : 'done';
     setItemStatuses(prev => {
       const next = new Map(prev);
-      allItemIds.forEach(id => {
+      targetIds.forEach(id => {
         next.set(id, targetStatus);
         onItemStatusChange?.(id, targetStatus);
       });
@@ -214,7 +307,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
     setItemTimestamps(prev => {
       const next = new Map(prev);
-      allItemIds.forEach(id => {
+      targetIds.forEach(id => {
         const existing = next.get(id) || {};
         if (targetStatus === 'preparing') {
           next.set(id, { ...existing, seenAt: existing.seenAt || now });
@@ -224,16 +317,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, allItemIds, onBump, onItemStatusChange]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange]);
 
-  // Ticket-level recall: DONE→all preparing, IN PROGRESS→all unseen
+  // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
+    const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
     if (ticketState === 'done') {
-      // Back to in-progress: all items to preparing
+      // Back to in-progress: active course items to preparing
       const now = formatStaticTime(new Date());
       setItemStatuses(prev => {
         const next = new Map(prev);
-        allItemIds.forEach(id => {
+        targetIds.forEach(id => {
           next.set(id, 'preparing');
           onItemStatusChange?.(id, 'preparing');
         });
@@ -241,25 +335,29 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       setItemTimestamps(prev => {
         const next = new Map(prev);
-        allItemIds.forEach(id => {
+        targetIds.forEach(id => {
           const existing = next.get(id) || {};
           next.set(id, { seenAt: existing.seenAt || now, doneAt: undefined });
         });
         return next;
       });
     } else {
-      // Back to seen: clear all statuses
+      // Back to seen: clear active course statuses
       setItemStatuses(prev => {
         const next = new Map(prev);
-        allItemIds.forEach(id => {
+        targetIds.forEach(id => {
           next.delete(id);
           onItemStatusChange?.(id, undefined);
         });
         return next;
       });
-      setItemTimestamps(new Map());
+      setItemTimestamps(prev => {
+        const next = new Map(prev);
+        targetIds.forEach(id => next.delete(id));
+        return next;
+      });
     }
-  }, [ticketState, allItemIds, onItemStatusChange]);
+  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
@@ -309,39 +407,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [order.courses]);
 
-  const isDineIn = order.orderType === 'dine-in';
-
-  const displayCourses = (stationCourse && isDineIn)
-    ? normalizeStationCourses(orderWithStations.courses, stationCourse)
-    : orderWithStations.courses;
-
-  // Track "Done at" timestamps per course
-  const [courseDoneTimestamps, setCourseDoneTimestamps] = useState<Map<string, string>>(new Map());
-
-  // Compute lifecycle status for each course: active (first not-all-done), pending (after active), served (before active / all done)
-  const courseLifecycleMap = useMemo(() => {
-    if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
-    const map = new Map<string, 'active' | 'pending' | 'served'>();
-    let foundActive = false;
-    for (const c of displayCourses) {
-      const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
-      const allDone = ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
-      if (c.isFired || allDone) {
-        if (!foundActive) {
-          map.set(c.course, 'served');
-        } else {
-          map.set(c.course, 'served');
-        }
-      } else if (!foundActive) {
-        map.set(c.course, 'active');
-        foundActive = true;
-      } else {
-        map.set(c.course, 'pending');
-      }
-    }
-    return map;
-  }, [isDineIn, displayCourses, itemStatuses]);
-
   // Record "Done at" timestamp when a course transitions to served
   useEffect(() => {
     if (!isDineIn) return;
@@ -369,15 +434,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       return priority[aStatus] - priority[bStatus];
     });
   }, [isDineIn, displayCourses, courseLifecycleMap]);
-
-  // DONE button: only active when ALL courses are served
-  const allActiveItemsDone = useMemo(() => {
-    if (!isDineIn) return true;
-    for (const status of courseLifecycleMap.values()) {
-      if (status !== 'served') return false;
-    }
-    return courseLifecycleMap.size > 0;
-  }, [isDineIn, courseLifecycleMap]);
 
   if (compact) {
     return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
