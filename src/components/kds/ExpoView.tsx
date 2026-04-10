@@ -313,14 +313,10 @@ function ExpoTopControls({
   filter,
   onFilterChange,
   fulfilledTickets,
-  demoMode,
-  onToggleDemo,
 }: {
   filter: ExpoFilter;
   onFilterChange: (f: ExpoFilter) => void;
   fulfilledTickets: number[];
-  demoMode: boolean;
-  onToggleDemo: () => void;
 }) {
   const handleRecalledClick = () => {
     if (fulfilledTickets.length === 0) {
@@ -345,17 +341,6 @@ function ExpoTopControls({
       >
         Expediter
       </span>
-
-      <button
-        onClick={onToggleDemo}
-        className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider transition-colors min-h-[32px] ${
-          demoMode
-            ? 'bg-warning text-white'
-            : 'bg-transparent border border-border text-text-muted hover:text-text-secondary'
-        }`}
-      >
-        Demo Mode
-      </button>
 
       <div className="flex-1" />
 
@@ -383,28 +368,11 @@ function ExpoTopControls({
 export default function ExpoView() {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
-  const [demoMode, setDemoMode] = useState(false);
 
-  // Demo state - fully isolated
-  const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>([]);
+  // Demo tickets - always present alongside real tickets
+  const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>(() => createDemoTickets());
   const [sentDemoIds, setSentDemoIds] = useState<Set<string>>(new Set());
   const lastSentDemo = useRef<DemoExpoTicket | null>(null);
-
-  // Initialize demo tickets when toggling on
-  const handleToggleDemo = useCallback(() => {
-    setDemoMode(prev => {
-      if (!prev) {
-        setDemoTickets(createDemoTickets());
-        setSentDemoIds(new Set());
-        lastSentDemo.current = null;
-      } else {
-        setDemoTickets([]);
-        setSentDemoIds(new Set());
-        lastSentDemo.current = null;
-      }
-      return !prev;
-    });
-  }, []);
 
   // Demo item tap: cycle pending -> firing -> done
   const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
@@ -529,9 +497,8 @@ export default function ExpoView() {
 
   // Combine real + demo tickets
   const visibleDemoTickets = useMemo(() => {
-    if (!demoMode) return [];
     return demoTickets.filter(t => !sentDemoIds.has(t.id));
-  }, [demoMode, demoTickets, sentDemoIds]);
+  }, [demoTickets, sentDemoIds]);
 
   const allTickets = useMemo(() => {
     return [...tickets, ...visibleDemoTickets];
@@ -566,8 +533,6 @@ export default function ExpoView() {
         filter={filter}
         onFilterChange={setFilter}
         fulfilledTickets={fulfilledTickets}
-        demoMode={demoMode}
-        onToggleDemo={handleToggleDemo}
       />
       <ExpoStationBar />
 
@@ -603,7 +568,6 @@ export default function ExpoView() {
       <ExpoBottomStats
         stats={stats}
         fulfilledTickets={fulfilledTickets}
-        demoMode={demoMode}
         onDemoRecallLast={handleDemoRecallLast}
         hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
       />
@@ -616,13 +580,11 @@ export default function ExpoView() {
 function ExpoBottomStats({
   stats,
   fulfilledTickets,
-  demoMode,
   onDemoRecallLast,
   hasLastSentDemo,
 }: {
   stats: { open: number; ready: number; overtime: number; avgTime: number };
   fulfilledTickets: number[];
-  demoMode?: boolean;
   onDemoRecallLast?: () => void;
   hasLastSentDemo?: boolean;
 }) {
@@ -644,7 +606,7 @@ function ExpoBottomStats({
         </div>
         <button
           onClick={() => {
-            if (demoMode && hasLastSentDemo) {
+            if (hasLastSentDemo) {
               onDemoRecallLast?.();
               return;
             }
@@ -655,7 +617,7 @@ function ExpoBottomStats({
             }
           }}
           className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
-            demoMode && hasLastSentDemo
+            hasLastSentDemo
               ? 'border-warning text-warning bg-warning/10 animate-pulse'
               : 'border-border text-text-secondary hover:bg-muted'
           }`}
