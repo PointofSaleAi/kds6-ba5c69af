@@ -78,7 +78,7 @@ export function CourseBlockSection({
 function getDefaultLabel(course: CourseBlock): string {
   switch (course.status) {
     case 'fired':
-      return `${course.name} \u00B7 Fired`;
+      return `${course.name} \u00B7 Served`;
     case 'active':
       return `${course.name} \u00B7 Active`;
     case 'pending':
