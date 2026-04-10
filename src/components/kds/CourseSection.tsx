@@ -104,7 +104,7 @@ function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
       if (remaining <= 0) {
         return { label: `Overdue ${formatTimer(-remaining)}`, urgency: 'overdue' };
       }
-      return { label: `Preparing at ${timeStr}`, urgency: remaining <= 60 ? 'due-soon' : 'normal' };
+      return { label: `Started at ${timeStr}`, urgency: remaining <= 60 ? 'due-soon' : 'normal' };
     }
     if (courseGroup.prepTimerLabel) {
       const parts = courseGroup.prepTimerLabel.split(':').map(Number);
@@ -116,7 +116,7 @@ function useCourseTimer(courseGroup: CourseGroup, status: StationStatus): {
       if (remaining <= 0) {
         return { label: `Preparing now`, urgency: 'due-soon' };
       }
-      return { label: `Preparing at ${timeStr}`, urgency: remaining <= 60 ? 'due-soon' : 'normal' };
+      return { label: `Started at ${timeStr}`, urgency: remaining <= 60 ? 'due-soon' : 'normal' };
     }
     return null;
   }
