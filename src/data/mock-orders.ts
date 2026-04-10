@@ -803,9 +803,6 @@ export const mockOrders: Order[] = [
     courses: [
       {
         course: 'APPETIZER',
-        isFired: true,
-        firedAt: new Date(Date.now() - 30000),
-        firedAgoLabel: '0:30 ago',
         items: [
           {
             id: 'i-new-01',
