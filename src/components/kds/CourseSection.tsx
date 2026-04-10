@@ -176,30 +176,28 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     ? { color: '#7F77DD', fontWeight: 500 }
     : { fontWeight: 400 };
 
-  // Course-level icon for active courses - matches item-level icons
+  // Course-level icon for active courses - purple/violet to distinguish from item-level
   const renderCourseIcon = () => {
     if (!isActive) return null;
 
     if (collectiveState === 'done') {
-      // Purple checkmark - same as item "ready/done" icon
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#EDE9FE' }}>
+        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#EDE9FE', border: '2px solid #7C3AED' }}>
           <Check size={16} color="#7C3AED" strokeWidth={2.5} />
         </div>
       );
     }
     if (collectiveState === 'preparing') {
-      // Red bell - same as item "preparing" icon
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFC5C5' }}>
+        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FEE2E2', border: '2px solid #D32F2F' }}>
           <ConciergeBell size={16} color="#D32F2F" strokeWidth={2.5} />
         </div>
       );
     }
-    // Unseen - blue outlined eye, same as item "seen" icon
+    // Unseen - purple outlined eye
     return (
-      <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFFFFF', border: '2px solid #3B82F6' }}>
-        <Eye size={16} color="#3B82F6" strokeWidth={2.5} />
+      <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFFFFF', border: '2px solid #7C3AED' }}>
+        <Eye size={16} color="#7C3AED" strokeWidth={2.5} />
       </div>
     );
   };
@@ -238,11 +236,19 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               Preparing at {firingAtLabel}
             </span>
           )}
-          {/* Course-level undo + action icon for active courses */}
+          {/* Course-level undo + action icon for active courses - stopPropagation to prevent collapse */}
           {isActive && onBulkAdvanceCourse && (
-            <div className="flex items-center" style={{ gap: '2px' }}>
+            <div className="flex items-center" style={{ gap: '2px' }} onClick={(e) => e.stopPropagation()}>
               {collectiveState !== 'unseen' && (
-                <KdsActionIcon icon="undo" onClick={() => { handleCourseUndo(); }} label="Undo course" />
+                <button
+                  onClick={() => handleCourseUndo()}
+                  className="flex items-center justify-center min-w-[34px] min-h-[33px]"
+                  aria-label="Undo course"
+                >
+                  <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFFFFF', border: '2px solid #7C3AED', transition: 'all 150ms ease' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                  </div>
+                </button>
               )}
               <button
                 onClick={handleCourseEyeClick}
