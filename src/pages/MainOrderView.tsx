@@ -454,7 +454,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                          <HistoryOrderCard order={order} onRecall={handleRecall} />
+                          <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                         </motion.div>
                       ))}
                     </div>
@@ -463,7 +463,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[320px]">
-                          <HistoryOrderCard order={order} onRecall={handleRecall} />
+                          <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                         </motion.div>
                       ))}
                     </div>
@@ -474,7 +474,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           {col.map((order) => (
                             <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
-                              <HistoryOrderCard order={order} onRecall={handleRecall} />
+                              <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                             </motion.div>
                           ))}
                         </div>
