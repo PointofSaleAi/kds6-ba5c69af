@@ -37,30 +37,17 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
   onRecallItem?: (orderId: string, item: OrderItem) => void;
   tp: (s: string) => string;
 }) {
-  const [showConfirm, setShowConfirm] = useState(false);
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [animating, setAnimating] = useState(false);
 
-  const handlePointerDown = useCallback(() => {
-    longPressTimer.current = setTimeout(() => setShowConfirm(true), 500);
-  }, []);
-
-  const handlePointerUp = useCallback(() => {
-    if (longPressTimer.current) clearTimeout(longPressTimer.current);
-  }, []);
-
-  const handleConfirm = useCallback(() => {
+  const handleRecall = () => {
+    setAnimating(true);
+    setTimeout(() => setAnimating(false), 150);
     onRecallItem?.(orderId, item);
-    setShowConfirm(false);
-  }, [onRecallItem, orderId, item]);
+  };
 
   return (
-    <div>
-      <div
-        className={`py-1.5 ${item.isCancelled ? 'opacity-50' : ''} select-none`}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-      >
+    <div className={`flex items-center gap-0 py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
+      <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className={`text-item-name line-through ${item.isCancelled ? 'text-text-muted' : 'text-text-muted'}`}>
             {item.quantity}&times; {tp(item.name)}
@@ -82,24 +69,27 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
           <ModifierLine key={idx} modifier={mod} />
         ))}
       </div>
-      {showConfirm && (
-        <div className="flex items-center gap-2 py-1.5 pl-5">
-          <span className="text-[12px] text-text-secondary">Recall this item?</span>
-          <button
-            onClick={handleConfirm}
-            className="text-[12px] font-medium text-white rounded-[6px] px-3 py-1"
-            style={{ backgroundColor: '#2980B9' }}
+      {onRecallItem && !item.isCancelled && (
+        <button
+          onClick={handleRecall}
+          className="flex items-center justify-center min-w-[34px] min-h-[33px] shrink-0"
+          aria-label={`Recall ${item.name}`}
+          title="Recall item"
+        >
+          <div
+            className="flex items-center justify-center rounded-full"
+            style={{
+              width: 'var(--kds-eye-icon)',
+              height: 'var(--kds-eye-icon)',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #2980B9',
+              transition: 'all 150ms ease',
+              transform: animating ? 'scale(1.15)' : 'scale(1)',
+            }}
           >
-            Yes, Recall
-          </button>
-          <button
-            onClick={() => setShowConfirm(false)}
-            className="text-[12px] font-medium text-text-secondary rounded-[6px] px-3 py-1 bg-transparent"
-            style={{ border: '0.5px solid hsl(var(--border))' }}
-          >
-            Cancel
-          </button>
-        </div>
+            <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color="#2980B9" strokeWidth={2.5} />
+          </div>
+        </button>
       )}
     </div>
   );
