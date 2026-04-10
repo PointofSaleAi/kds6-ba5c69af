@@ -135,6 +135,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     onBulkAdvanceCourse(activeItemIds);
   };
 
+  const handleCourseUndo = () => {
+    if (!onUndoItem) return;
+    // Undo all items one step back
+    activeItemIds.forEach(id => onUndoItem(id));
+  };
+  };
+
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
     : isDimmed
