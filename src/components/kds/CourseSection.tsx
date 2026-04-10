@@ -243,7 +243,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           {isActive && onBulkAdvanceCourse && (
             <div className="flex items-center" style={{ gap: '2px' }}>
               {collectiveState !== 'unseen' && (
-                <KdsActionIcon icon="undo" onClick={(e?: React.MouseEvent) => { e?.stopPropagation?.(); handleCourseUndo(); }} label="Undo course" />
+                <KdsActionIcon icon="undo" onClick={() => { handleCourseUndo(); }} label="Undo course" />
               )}
               <button
                 onClick={handleCourseEyeClick}
