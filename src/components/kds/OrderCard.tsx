@@ -245,6 +245,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     forcedStationStatus={forcedStatus}
                     onReRouteItem={(item) => setItemRouting(item)}
                     showAllergens={showAllergens}
+                    highlightItemName={highlightItemName}
                   />
                 );
               })
