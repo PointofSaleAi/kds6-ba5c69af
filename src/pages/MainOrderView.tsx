@@ -430,7 +430,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
-                              <motion.div key={order.id} layout layoutTransition={{ type: 'spring', damping: 25, stiffness: 200 }} variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItem && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
+                              <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: selectedSummaryItem && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
                                 <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemName={selectedSummaryItem} />
                               </motion.div>
                             ))}
