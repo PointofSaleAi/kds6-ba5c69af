@@ -253,13 +253,22 @@
   }
 }
 
-/* Text scale utilities */
-.text-scale-compact {
-  font-size: 85%;
-}
-.text-scale-large {
-  font-size: 115%;
-}
+/* Text scale utilities - granular per element */
+.text-scale-compact .text-badge-type { font-size: 10px !important; }
+.text-scale-compact .text-order-num { font-size: 28px !important; }
+.text-scale-compact .text-item-name { font-size: 11px !important; }
+.text-scale-compact .text-modifier { font-size: 10px !important; }
+.text-scale-compact .text-section-label { font-size: 9px !important; }
+.text-scale-compact .text-cta { font-size: 12px !important; }
+.text-scale-compact [class*="allergen"] { font-size: 9px !important; }
+
+.text-scale-large .text-badge-type { font-size: 14px !important; }
+.text-scale-large .text-order-num { font-size: 52px !important; }
+.text-scale-large .text-item-name { font-size: 15px !important; }
+.text-scale-large .text-modifier { font-size: 13px !important; }
+.text-scale-large .text-section-label { font-size: 11px !important; }
+.text-scale-large .text-cta { font-size: 14px !important; }
+.text-scale-large [class*="allergen"] { font-size: 12px !important; }
 
 .scrollbar-hide {
   -ms-overflow-style: none;
