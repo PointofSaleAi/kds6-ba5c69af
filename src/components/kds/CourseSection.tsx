@@ -22,6 +22,8 @@ interface CourseSectionProps {
   onReRouteItem?: (item: OrderItem) => void;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
+  lifecycleStatus?: 'active' | 'pending' | 'served';
+  courseDoneAt?: string;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
