@@ -640,12 +640,22 @@ function ExpoBottomStats({
   fulfilledTickets,
   onDemoRecallLast,
   hasLastSentDemo,
+  viewMode,
+  onViewModeChange,
 }: {
   stats: { open: number; ready: number; overtime: number; avgTime: number };
   fulfilledTickets: number[];
   onDemoRecallLast?: () => void;
   hasLastSentDemo?: boolean;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
 }) {
+  const viewModes: { key: ViewMode; icon: typeof LayoutGrid; label: string }[] = [
+    { key: 'grid', icon: LayoutGrid, label: 'Grid' },
+    { key: 'horizontal', icon: GalleryHorizontalEnd, label: 'Horizontal' },
+    { key: 'stagger', icon: Columns3, label: 'Stagger' },
+  ];
+
   return (
     <div className="flex items-center justify-between px-4 py-1.5 bg-surface-card border-t border-border shrink-0">
       <div className="flex items-center gap-4">
@@ -656,6 +666,24 @@ function ExpoBottomStats({
       </div>
 
       <div className="flex items-center gap-3">
+        {/* View mode toggles */}
+        <div className="flex items-center bg-muted rounded-lg p-0.5 gap-0.5">
+          {viewModes.map(vm => (
+            <button
+              key={vm.key}
+              onClick={() => onViewModeChange(vm.key)}
+              className={`p-1.5 rounded transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center ${
+                viewMode === vm.key
+                  ? 'bg-brand-dark text-primary-foreground'
+                  : 'text-text-muted hover:text-text-primary'
+              }`}
+              title={vm.label}
+            >
+              <vm.icon size={14} />
+            </button>
+          ))}
+        </div>
+
         <div className="flex items-center gap-2">
           <LegendDot color="bg-success" label="Ready" />
           <LegendDot color="bg-warning" label="In progress" />
