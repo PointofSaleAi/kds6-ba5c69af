@@ -8,6 +8,15 @@ export type TicketHeaderLayout = 'kitchen' | 'guest';
 
 export type OrderTypeColors = Record<string, string>;
 
+export interface OrderTypeColorSet {
+  headerBg: string;
+  headerText: string;
+  ticketNumber: string;
+  bodyText: string;
+}
+
+export type OrderTypeDetailedColors = Record<string, OrderTypeColorSet>;
+
 export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
   'dine-in': '#1A1A2E',
   'take-out': '#2980B9',
