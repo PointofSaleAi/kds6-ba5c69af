@@ -11,6 +11,7 @@ import {
   type ExpoStation,
   type ExpoItemStatus,
 } from '@/data/mock-expo-orders';
+import { createDemoTickets, type DemoExpoTicket } from '@/data/mock-expo-demo';
 
 /* -- helpers -- */
 
@@ -65,7 +66,7 @@ function getItemDisplayStatus(status: ExpoItemStatus): { label: string; bg: stri
   return { label: 'Pending', bg: 'bg-muted', text: 'text-text-muted' };
 }
 
-/* -- Station Chips with state-based coloring (Fix 5) -- */
+/* -- Station Chips with state-based coloring -- */
 
 function ExpoStationChips({
   ticket,
@@ -85,7 +86,6 @@ function ExpoStationChips({
         const isHolding = holdStations.has(holdKey);
         const showHoldToggle = !overtime && (s.status === 'done' || isHolding);
 
-        // Fix 5: Color-code by preparation state
         let chipBg: string, chipText: string, chipBorder: string, indicator: string;
         if (isHolding) {
           chipBg = 'bg-warning/30';
@@ -136,13 +136,16 @@ interface ExpoTicketCardProps {
   onRush?: (id: string) => void;
   holdStations: Set<string>;
   onToggleHold: (ticketId: string, stationName: string) => void;
+  isDemo?: boolean;
+  onDemoItemTap?: (ticketId: string, itemId: string) => void;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
+  const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
   const doneCount = ticket.items.filter(i => i.status === 'done').length;
-  const totalCount = ticket.items.length;
+  const totalCount = ticket.items.length + (demoTicket?.coursing?.pending?.items?.length || 0);
   const isReady = allItemsDone(ticket);
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
@@ -153,13 +156,20 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35 } }}
-      className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300`}
+      className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300 relative`}
     >
-      {/* Header - no AutoFireBadge (Fix 2) */}
+      {/* DEMO badge */}
+      {isDemo && (
+        <span className="absolute top-1 right-1 z-20 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-warning/90 text-white tracking-wider">
+          DEMO
+        </span>
+      )}
+
+      {/* Header */}
       <div className={`flex items-center justify-between px-2 py-1.5 ${headerStyle.bg || ''} ${headerStyle.text}`} style={headerStyle.bgColor ? { backgroundColor: headerStyle.bgColor } : undefined}>
         <div className="flex flex-col">
           <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
-            {orderTypeLabel[ticket.orderType]} &middot; {ticket.tableName}
+            {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
           </span>
           <span className="text-[12px] font-bold opacity-85 leading-tight">
             #{ticket.orderNumber}
@@ -168,10 +178,30 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
         <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
       </div>
 
-      {/* Station chips with state coloring (Fix 5) */}
+      {/* Station chips */}
       <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
 
-      {/* Item rows with live status (Fix 3) */}
+      {/* Coursing: Served course (collapsed) for demo ticket 6 */}
+      {demoTicket?.coursing?.served && (
+        <div className="px-2 py-1 border-b border-border bg-muted/50">
+          <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
+            <span>&#9654;</span>
+            <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; SERVED</span>
+            <span className="ml-auto text-[10px]">Done at {demoTicket.coursing.served.doneAt}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Active course label for coursed demo tickets */}
+      {demoTicket?.coursing?.active && (
+        <div className="px-2 py-1 border-b border-border">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+            {demoTicket.coursing.active.course} &middot; {demoTicket.coursing.active.label}
+          </span>
+        </div>
+      )}
+
+      {/* Item rows */}
       <div className="px-2 py-1.5 space-y-0.5">
         {ticket.items.map(item => {
           const display = getItemDisplayStatus(item.status);
@@ -180,7 +210,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
           return (
             <div
               key={item.id}
-              className={`flex items-start justify-between py-0.5 ${isPrepared ? 'border-l-[3px] border-l-success pl-1.5 -ml-2' : ''}`}
+              className={`flex items-start justify-between py-0.5 ${isPrepared ? 'border-l-[3px] border-l-success pl-1.5 -ml-2' : ''} ${isDemo ? 'cursor-pointer' : ''}`}
+              onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
             >
               <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
                 <span className={`text-[13px] ${isPrepared ? 'font-bold text-text-primary' : 'font-medium text-text-primary'}`}>
@@ -189,13 +220,40 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
                 <span className={`inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold ${display.bg} ${display.text}`}>
                   {display.label}
                 </span>
+                {item.statusLabel && (
+                  <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Footer with Rush + Send Out (Fix 4) */}
+      {/* Pending course for demo ticket 6 */}
+      {demoTicket?.coursing?.pending && (
+        <>
+          <div className="px-2 py-1 border-t border-border">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+              {demoTicket.coursing.pending.course} &middot; {demoTicket.coursing.pending.label}
+            </span>
+          </div>
+          <div className="px-2 py-1 opacity-40">
+            {demoTicket.coursing.pending.items.map(pi => (
+              <div key={pi.id} className="flex items-center gap-1.5 py-0.5">
+                <span className="text-[13px] font-medium text-text-primary">
+                  {pi.quantity}&times; {pi.name}
+                </span>
+                <span className="inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold bg-muted text-text-muted">
+                  Pending
+                </span>
+                <span className="text-[10px] text-text-muted">{pi.timeLabel}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Footer */}
       <div className="p-1.5 border-t border-border">
         <div className="flex items-center justify-between mb-1 px-1">
           <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
@@ -203,7 +261,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold 
         <div className="flex gap-1.5">
           <button
             onClick={() => onRush?.(ticket.id)}
-            className="px-3 py-2.5 border border-destructive text-destructive text-[12px] font-bold uppercase rounded hover:bg-destructive/10 transition-colors min-h-[44px]"
+            className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
+              overtime
+                ? 'border-destructive bg-destructive/10 text-destructive'
+                : 'border-destructive text-destructive hover:bg-destructive/10'
+            }`}
           >
             Rush
           </button>
@@ -251,10 +313,14 @@ function ExpoTopControls({
   filter,
   onFilterChange,
   fulfilledTickets,
+  demoMode,
+  onToggleDemo,
 }: {
   filter: ExpoFilter;
   onFilterChange: (f: ExpoFilter) => void;
   fulfilledTickets: number[];
+  demoMode: boolean;
+  onToggleDemo: () => void;
 }) {
   const handleRecalledClick = () => {
     if (fulfilledTickets.length === 0) {
@@ -279,6 +345,17 @@ function ExpoTopControls({
       >
         Expediter
       </span>
+
+      <button
+        onClick={onToggleDemo}
+        className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider transition-colors min-h-[32px] ${
+          demoMode
+            ? 'bg-warning text-white'
+            : 'bg-transparent border border-border text-text-muted hover:text-text-secondary'
+        }`}
+      >
+        Demo Mode
+      </button>
 
       <div className="flex-1" />
 
@@ -306,6 +383,94 @@ function ExpoTopControls({
 export default function ExpoView() {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
+  const [demoMode, setDemoMode] = useState(false);
+
+  // Demo state - fully isolated
+  const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>([]);
+  const [sentDemoIds, setSentDemoIds] = useState<Set<string>>(new Set());
+  const lastSentDemo = useRef<DemoExpoTicket | null>(null);
+
+  // Initialize demo tickets when toggling on
+  const handleToggleDemo = useCallback(() => {
+    setDemoMode(prev => {
+      if (!prev) {
+        setDemoTickets(createDemoTickets());
+        setSentDemoIds(new Set());
+        lastSentDemo.current = null;
+      } else {
+        setDemoTickets([]);
+        setSentDemoIds(new Set());
+        lastSentDemo.current = null;
+      }
+      return !prev;
+    });
+  }, []);
+
+  // Demo item tap: cycle pending -> firing -> done
+  const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
+    setDemoTickets(prev => prev.map(t => {
+      if (t.id !== ticketId) return t;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const updatedItems = t.items.map(item => {
+        if (item.id !== itemId) return item;
+        if (item.status === 'pending') return { ...item, status: 'firing' as const, statusLabel: `Since ${timeStr}` };
+        if (item.status === 'firing') return { ...item, status: 'done' as const, statusLabel: `Done ${timeStr}` };
+        return item;
+      });
+
+      // Auto-update station chips based on item statuses
+      const updatedStations = t.stations.map(s => {
+        // Simple heuristic: if any item is firing, first pending station becomes firing
+        // If all items done, all stations done
+        return s;
+      });
+
+      // Smarter station update: derive from items
+      const anyFiring = updatedItems.some(i => i.status === 'firing');
+      const allDoneItems = updatedItems.every(i => i.status === 'done');
+      const smartStations = t.stations.map((s, idx) => {
+        if (allDoneItems) return { ...s, status: 'done' as const };
+        if (anyFiring && s.status === 'pending' && idx === t.stations.findIndex(st => st.status === 'pending')) {
+          return { ...s, status: 'firing' as const };
+        }
+        // If item that was firing is now done, check if station should be done
+        const firingItems = updatedItems.filter(i => i.status === 'firing');
+        const doneItems = updatedItems.filter(i => i.status === 'done');
+        if (doneItems.length > 0 && idx < doneItems.length && s.status !== 'done') {
+          // Mark stations done proportionally
+          if (idx < Math.floor((doneItems.length / updatedItems.length) * t.stations.length)) {
+            return { ...s, status: 'done' as const };
+          }
+        }
+        return s;
+      });
+
+      return { ...t, items: updatedItems, stations: smartStations };
+    }));
+  }, []);
+
+  // Demo send out
+  const handleDemoSendOut = useCallback((id: string) => {
+    const ticket = demoTickets.find(t => t.id === id);
+    if (!ticket) return;
+    lastSentDemo.current = ticket;
+    setSentDemoIds(prev => new Set(prev).add(id));
+    toast.success('Demo ticket sent out');
+  }, [demoTickets]);
+
+  // Demo recall last
+  const handleDemoRecallLast = useCallback(() => {
+    if (!lastSentDemo.current) return;
+    const ticket = lastSentDemo.current;
+    setSentDemoIds(prev => {
+      const next = new Set(prev);
+      next.delete(ticket.id);
+      return next;
+    });
+    lastSentDemo.current = null;
+    toast.success(`Demo ticket #${ticket.orderNumber} recalled`);
+  }, []);
 
   // Live tick every second to drive elapsed timers
   const [tick, setTick] = useState(0);
@@ -346,7 +511,6 @@ export default function ExpoView() {
     if (!ticket) return;
     setFulfilledTickets(prev => [ticket.orderNumber, ...prev]);
     sendOutOrder(id);
-    // Clear holds for this ticket
     setHoldStations(prev => {
       const next = new Set(prev);
       for (const key of prev) {
@@ -358,15 +522,25 @@ export default function ExpoView() {
   }, [tickets, sendOutOrder]);
 
   const handleRush = useCallback((id: string) => {
-    const ticket = tickets.find(t => t.id === id);
+    const ticket = [...tickets, ...demoTickets].find(t => t.id === id);
     if (!ticket) return;
     toast(`Rush alert sent for Ticket #${ticket.orderNumber}`);
-  }, [tickets]);
+  }, [tickets, demoTickets]);
+
+  // Combine real + demo tickets
+  const visibleDemoTickets = useMemo(() => {
+    if (!demoMode) return [];
+    return demoTickets.filter(t => !sentDemoIds.has(t.id));
+  }, [demoMode, demoTickets, sentDemoIds]);
+
+  const allTickets = useMemo(() => {
+    return [...tickets, ...visibleDemoTickets];
+  }, [tickets, visibleDemoTickets]);
 
   const filteredTickets = useMemo(() => {
-    if (filter === 'ready') return tickets.filter(t => allItemsDone(t));
-    return tickets;
-  }, [tickets, filter]);
+    if (filter === 'ready') return allTickets.filter(t => allItemsDone(t));
+    return allTickets;
+  }, [allTickets, filter]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
@@ -378,9 +552,23 @@ export default function ExpoView() {
     return { open, ready, overtime, avgTime };
   }, [tickets]);
 
+  const handleSendOutAny = useCallback((id: string) => {
+    if (id.startsWith('demo-')) {
+      handleDemoSendOut(id);
+    } else {
+      handleSendOut(id);
+    }
+  }, [handleDemoSendOut, handleSendOut]);
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <ExpoTopControls filter={filter} onFilterChange={setFilter} fulfilledTickets={fulfilledTickets} />
+      <ExpoTopControls
+        filter={filter}
+        onFilterChange={setFilter}
+        fulfilledTickets={fulfilledTickets}
+        demoMode={demoMode}
+        onToggleDemo={handleToggleDemo}
+      />
       <ExpoStationBar />
 
       <div className="flex-1 overflow-auto p-3">
@@ -399,10 +587,12 @@ export default function ExpoView() {
                 <ExpoTicketCard
                   key={ticket.id}
                   ticket={ticket}
-                  onSendOut={handleSendOut}
+                  onSendOut={handleSendOutAny}
                   onRush={handleRush}
                   holdStations={holdStations}
                   onToggleHold={handleToggleHold}
+                  isDemo={ticket.id.startsWith('demo-')}
+                  onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
                 />
               ))}
             </AnimatePresence>
@@ -410,7 +600,13 @@ export default function ExpoView() {
         )}
       </div>
 
-      <ExpoBottomStats stats={stats} fulfilledTickets={fulfilledTickets} />
+      <ExpoBottomStats
+        stats={stats}
+        fulfilledTickets={fulfilledTickets}
+        demoMode={demoMode}
+        onDemoRecallLast={handleDemoRecallLast}
+        hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
+      />
     </div>
   );
 }
@@ -420,9 +616,15 @@ export default function ExpoView() {
 function ExpoBottomStats({
   stats,
   fulfilledTickets,
+  demoMode,
+  onDemoRecallLast,
+  hasLastSentDemo,
 }: {
   stats: { open: number; ready: number; overtime: number; avgTime: number };
   fulfilledTickets: number[];
+  demoMode?: boolean;
+  onDemoRecallLast?: () => void;
+  hasLastSentDemo?: boolean;
 }) {
   return (
     <div className="flex items-center justify-between px-4 py-1.5 bg-surface-card border-t border-border shrink-0">
@@ -442,13 +644,21 @@ function ExpoBottomStats({
         </div>
         <button
           onClick={() => {
+            if (demoMode && hasLastSentDemo) {
+              onDemoRecallLast?.();
+              return;
+            }
             if (fulfilledTickets.length === 0) {
               toast('No recently fulfilled tickets.');
             } else {
               toast(`Last fulfilled: #${fulfilledTickets[0]}`);
             }
           }}
-          className="px-3 py-1.5 rounded-lg border border-border text-[11px] font-bold text-text-secondary hover:bg-muted transition-colors min-h-[36px]"
+          className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
+            demoMode && hasLastSentDemo
+              ? 'border-warning text-warning bg-warning/10 animate-pulse'
+              : 'border-border text-text-secondary hover:bg-muted'
+          }`}
         >
           Recall last
         </button>
