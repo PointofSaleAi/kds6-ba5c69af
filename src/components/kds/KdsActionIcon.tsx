@@ -79,15 +79,15 @@ export function KdsActionIcon({ icon, onClick, label, title, disabled }: KdsActi
       <div
         className="flex items-center justify-center rounded-full"
         style={{
-          width: 30,
-          height: 30,
+          width: 'var(--kds-eye-icon)',
+          height: 'var(--kds-eye-icon)',
           backgroundColor: style.bg,
           border: style.border,
           transition: 'all 150ms ease',
           transform: animating ? 'scale(1.15)' : 'scale(1)',
         }}
       >
-        {style.IconComponent && <style.IconComponent size={16} color={style.iconColor} strokeWidth={2.5} />}
+        {style.IconComponent && <style.IconComponent style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color={style.iconColor} strokeWidth={2.5} />}
       </div>
     </button>
   );

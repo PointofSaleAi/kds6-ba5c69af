@@ -27,6 +27,8 @@ export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps
       className="inline-flex items-center gap-0.5 text-allergen/80 font-semibold"
       style={{ fontSize: 'var(--kds-allergen-font)', padding: `var(--kds-allergen-py) var(--kds-allergen-px)` }}
     >
+      <span>{allergen.icon}</span>
+      <span>{ta(allergen.label)}</span>
     </span>
   );
 }
