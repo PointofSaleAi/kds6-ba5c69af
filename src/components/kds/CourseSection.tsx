@@ -162,18 +162,20 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
-    : isDimmed
-      ? (isStationMode ? 'opacity-80 pointer-events-none' : '')
-      : '';
+    : isServedByLifecycle
+      ? 'opacity-60'
+      : isDimmed
+        ? (isStationMode ? 'opacity-80 pointer-events-none' : '')
+        : '';
 
   const containerStyle = coursingStatus === 'active'
-    ? { borderLeftColor: '#7F77DD' }
-    : undefined;
+    ? { borderLeftColor: '#7F77DD', transition: 'all 200ms ease-in-out' }
+    : { transition: 'all 200ms ease-in-out' };
 
   const headerBg = coursingStatus === 'active'
     ? ''
     : coursingStatus === 'fired'
-      ? 'bg-success/10'
+      ? 'bg-muted/50'
       : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
@@ -181,15 +183,19 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     : undefined;
 
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
-  const courseLabel = isStationMode
-    ? getStationLabel(courseGroup, coursingStatus, tc)
-    : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
+  const courseLabel = isServedByLifecycle
+    ? `${courseName} \u00B7 Served`
+    : isStationMode
+      ? getStationLabel(courseGroup, coursingStatus, tc)
+      : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
 
-  const labelClass = coursingStatus === 'active'
-    ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-    : coursingStatus === 'fired'
-      ? 'text-[11px] uppercase tracking-wider text-success font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-      : 'text-[11px] uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+  const labelClass = isServedByLifecycle
+    ? 'text-[11px] uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    : coursingStatus === 'active'
+      ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+      : coursingStatus === 'fired'
+        ? 'text-[11px] uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+        : 'text-[11px] uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: '#7F77DD', fontWeight: 500 }
