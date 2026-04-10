@@ -53,15 +53,6 @@ const moreLanguages = [
   'Urdu','Uyghur','Vietnamese','Welsh','Xhosa','Yiddish','Yoruba','Zulu',
 ];
 
-const timezoneOptions = [
-  { value: 'auto', label: 'Auto-detect (based on device)' },
-  { value: 'America/New_York', label: 'America/New_York (EST)' },
-  { value: 'America/Chicago', label: 'America/Chicago (CST)' },
-  { value: 'America/Los_Angeles', label: 'America/Los_Angeles (PST)' },
-  { value: 'Asia/Kolkata', label: 'Asia/Kolkata (IST)' },
-  { value: 'Europe/London', label: 'Europe/London (GMT)' },
-  { value: 'Asia/Dubai', label: 'Asia/Dubai (GST)' },
-];
 
 const currencyOptions = [
   { value: 'USD', label: 'USD ($)' },
@@ -84,7 +75,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   } = useLanguage();
 
   const {
-    timezone, setTimezone,
     currency, setCurrency,
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
@@ -94,7 +84,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
-  const [tzOpen, setTzOpen] = useState(false);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
 
@@ -588,39 +577,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 </div>
               </div>
 
-              {/* Timezone - left */}
-              <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Timezone</div>
-                <div className="relative">
-                  <button
-                    onClick={() => setTzOpen(!tzOpen)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
-                    style={{ border: '1.5px solid hsl(var(--border))' }}
-                  >
-                    <span className="text-sm font-medium text-text-primary truncate">
-                      {timezoneOptions.find(tz => tz.value === timezone)?.label}
-                    </span>
-                    <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${tzOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {tzOpen && (
-                    <div className="absolute z-10 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
-                      {timezoneOptions.map((tz) => (
-                        <button
-                          key={tz.value}
-                          onClick={() => { setTimezone(tz.value); setTzOpen(false); }}
-                          className={`w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/50 min-h-[40px] ${
-                            timezone === tz.value ? 'font-semibold text-text-primary bg-muted/30' : 'text-text-secondary'
-                          }`}
-                        >
-                          {timezone === tz.value && <Check size={14} className="text-brand-primary shrink-0" />}
-                          <span className="truncate">{tz.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
               {/* Currency - read-only */}
               <div>
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Currency</div>
@@ -629,11 +585,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   style={{ border: '1.5px solid hsl(var(--border))' }}
                 >
                   <span className="text-sm font-medium text-text-primary">
-                    {currencyOptions.find(c => c.value === currency)?.label || '\u2014  Set in POS Dashboard'}
+                    {currencyOptions.find(c => c.value === currency)?.label || '\u2014  Set in Point of Sale Dashboard'}
                   </span>
                 </div>
                 <p className="text-[11px] text-text-muted mt-1.5">
-                  Currency is set at store level. Change it from your POS dashboard.
+                  Currency is set at store level. Change it from your Point of Sale dashboard.
                 </p>
               </div>
 
