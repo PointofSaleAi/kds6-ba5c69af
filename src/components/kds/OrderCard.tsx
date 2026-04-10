@@ -92,6 +92,35 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     [order.courses]
   );
 
+  const isDineIn = order.orderType === 'dine-in';
+
+  const displayCourses = (stationCourse && isDineIn)
+    ? normalizeStationCourses(orderWithStations.courses, stationCourse)
+    : orderWithStations.courses;
+
+  // Track "Done at" timestamps per course
+  const [courseDoneTimestamps, setCourseDoneTimestamps] = useState<Map<string, string>>(new Map());
+
+  // Compute lifecycle status for each course
+  const courseLifecycleMap = useMemo(() => {
+    if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
+    const map = new Map<string, 'active' | 'pending' | 'served'>();
+    let foundActive = false;
+    for (const c of displayCourses) {
+      const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
+      const allDone = ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
+      if (c.isFired || allDone) {
+        map.set(c.course, 'served');
+      } else if (!foundActive) {
+        map.set(c.course, 'active');
+        foundActive = true;
+      } else {
+        map.set(c.course, 'pending');
+      }
+    }
+    return map;
+  }, [isDineIn, displayCourses, itemStatuses]);
+
   // 3-step advance: unseen → preparing → done (no 'ready' intermediate)
   const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
     const now = formatStaticTime(new Date());
