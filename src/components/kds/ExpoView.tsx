@@ -592,22 +592,22 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   useEffect(() => {
     const prevSet = new Set(prevPinnedRef.current);
     const newlyPinned = pinnedTicketIds.filter(id => !prevSet.has(id));
-    if (newlyPinned.length > 0) {
+    prevPinnedRef.current = pinnedTicketIds;
+    if (newlyPinned.length === 0) return;
+
+    setPulsingIds(prev => {
+      const next = new Set(prev);
+      newlyPinned.forEach(id => next.add(id));
+      return next;
+    });
+    const timer = setTimeout(() => {
       setPulsingIds(prev => {
         const next = new Set(prev);
-        newlyPinned.forEach(id => next.add(id));
+        newlyPinned.forEach(id => next.delete(id));
         return next;
       });
-      const timer = setTimeout(() => {
-        setPulsingIds(prev => {
-          const next = new Set(prev);
-          newlyPinned.forEach(id => next.delete(id));
-          return next;
-        });
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-    prevPinnedRef.current = pinnedTicketIds;
+    }, 600);
+    return () => clearTimeout(timer);
   }, [pinnedTicketIds]);
 
   const renderTicketCard = (ticket: ExpoTicket) => {
