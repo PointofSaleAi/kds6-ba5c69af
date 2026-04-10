@@ -4,6 +4,7 @@ export type TextSize = 'Compact' | 'Standard' | 'Large';
 export type SortDefault = 'By Time' | 'By Table' | 'By Type';
 export type TempUnit = 'F' | 'C';
 export type WeekStart = 'Sunday' | 'Monday';
+export type TicketHeaderLayout = 'kitchen' | 'guest';
 
 export type OrderTypeColors = Record<string, string>;
 

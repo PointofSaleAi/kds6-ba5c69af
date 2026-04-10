@@ -72,6 +72,7 @@ export interface Order {
   status: OrderStatus;
   tableName: string;
   serverName: string;
+  guestName?: string;
   timeReceived: Date;
   elapsedSeconds: number;
   targetSeconds: number;
