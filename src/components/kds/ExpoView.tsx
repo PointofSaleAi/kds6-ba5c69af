@@ -629,7 +629,6 @@ export default function ExpoView() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
-      />
     </div>
   );
 }
