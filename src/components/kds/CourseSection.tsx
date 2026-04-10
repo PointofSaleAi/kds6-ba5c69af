@@ -227,6 +227,30 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     );
   };
 
+  // Served courses: render a simple collapsed row with no expand
+  if (isServedByLifecycle) {
+    return (
+      <div className={containerClass} style={containerStyle}>
+        <div
+          className={`flex items-center justify-between flex-nowrap ${headerBg} select-none`}
+          style={{ padding: '4px 8px' }}
+        >
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <span className="text-[11px] text-muted-foreground">▶</span>
+            <span className={labelClass} style={labelStyle}>
+              {courseLabel}
+            </span>
+          </div>
+          {courseDoneAt && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-muted-foreground">
+              Done at {courseDoneAt}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={containerClass} style={containerStyle}>
       <div
