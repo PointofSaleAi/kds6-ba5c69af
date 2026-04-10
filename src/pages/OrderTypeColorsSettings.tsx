@@ -1,26 +1,17 @@
-import { useState } from 'react';
-import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, DEFAULT_ORDER_TYPE_DETAILED_COLORS, type OrderTypeColorSet } from '@/hooks/use-kds-settings';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { RotateCcw } from 'lucide-react';
-import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 
 const ORDER_TYPES = [
-  { key: 'dine-in', label: 'Dine In', headerLabel: 'DINE IN', table: 'Table 4', server: 'Sarah', time: '2:35', orderNum: 142 },
-  { key: 'take-out', label: 'Take Out', headerLabel: 'TAKE OUT', table: '#1042', server: 'Mike', time: '1:12', orderNum: 318 },
-  { key: 'delivery', label: 'Delivery', headerLabel: 'DELIVERY', table: '#D-207', server: 'UberEats', time: '4:08', orderNum: 527 },
-  { key: 'banquet', label: 'Banquet', headerLabel: 'BANQUET', table: 'Hall B', server: 'James', time: '0:45', orderNum: 891 },
-  { key: 'drive-thru', label: 'Drive Thru', headerLabel: 'DRIVE THRU', table: 'Lane 2', server: 'Alex', time: '1:50', orderNum: 604 },
-  { key: 'curb-side', label: 'Curb Side', headerLabel: 'CURB SIDE', table: 'Spot 5', server: 'Lina', time: '3:20', orderNum: 735 },
-  { key: 'scheduled', label: 'Scheduled', headerLabel: 'SCHEDULED', table: '6:30 PM', server: 'Online', time: '0:00', orderNum: 412 },
-  { key: 'phone-in', label: 'Phone-In', headerLabel: 'PHONE-IN', table: '#P-88', server: 'Front', time: '2:10', orderNum: 263 },
-  { key: 'custom', label: 'Custom', headerLabel: 'CUSTOM', table: 'Event', server: 'Chef', time: '5:00', orderNum: 109 },
+  { key: 'dine-in', label: 'DINE IN', table: 'Table 4', time: '2:35' },
+  { key: 'take-out', label: 'TAKE OUT', table: '#1042', time: '1:12' },
+  { key: 'delivery', label: 'DELIVERY', table: '#D-207', time: '4:08' },
+  { key: 'banquet', label: 'BANQUET', table: 'Hall B', time: '0:45' },
+  { key: 'drive-thru', label: 'DRIVE THRU', table: 'Lane 2', time: '1:50' },
+  { key: 'curb-side', label: 'CURB SIDE', table: 'Spot 5', time: '3:20' },
+  { key: 'scheduled', label: 'SCHEDULED', table: '6:30 PM', time: '0:00' },
+  { key: 'phone-in', label: 'PHONE-IN', table: '#P-88', time: '2:10' },
+  { key: 'custom', label: 'CUSTOM', table: 'Event', time: '5:00' },
 ] as const;
-
-const COLOR_FIELDS: { key: keyof OrderTypeColorSet; label: string }[] = [
-  { key: 'headerBg', label: 'Header Background Color' },
-  { key: 'headerText', label: 'Header Text Color' },
-  { key: 'ticketNumber', label: 'Ticket Number Color' },
-  { key: 'bodyText', label: 'Body Text Color' },
-];
 
 interface OrderTypeColorsSettingsProps {
   onBack: () => void;
@@ -28,150 +19,103 @@ interface OrderTypeColorsSettingsProps {
 
 export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSettingsProps) {
   const { orderTypeColors, orderTypeDetailedColors, setOrderTypeColors, setOrderTypeDetailedColors } = useKDSSettings();
-  const [selectedType, setSelectedType] = useState('dine-in');
 
-  const selectedInfo = ORDER_TYPES.find(t => t.key === selectedType)!;
-  const colors: OrderTypeColorSet = orderTypeDetailedColors?.[selectedType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[selectedType];
+  const getColors = (key: string) => orderTypeDetailedColors?.[key] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[key];
 
-  const handleColorChange = (field: keyof OrderTypeColorSet, value: string) => {
-    const updated = {
+  const handleColorChange = (key: string, field: 'headerBg' | 'headerText', value: string) => {
+    const current = getColors(key);
+    setOrderTypeDetailedColors({
       ...orderTypeDetailedColors,
-      [selectedType]: { ...colors, [field]: value },
-    };
-    setOrderTypeDetailedColors(updated);
-    // Keep orderTypeColors in sync (headerBg is the legacy single color)
+      [key]: { ...current, [field]: value },
+    });
     if (field === 'headerBg') {
-      setOrderTypeColors({ ...orderTypeColors, [selectedType]: value });
+      setOrderTypeColors({ ...orderTypeColors, [key]: value });
     }
   };
 
   const handleReset = () => {
-    const defaultDetailed = DEFAULT_ORDER_TYPE_DETAILED_COLORS[selectedType];
-    const defaultBg = DEFAULT_ORDER_TYPE_COLORS[selectedType];
-    setOrderTypeDetailedColors({
-      ...orderTypeDetailedColors,
-      [selectedType]: { ...defaultDetailed },
-    });
-    setOrderTypeColors({ ...orderTypeColors, [selectedType]: defaultBg });
+    setOrderTypeColors({ ...DEFAULT_ORDER_TYPE_COLORS });
+    setOrderTypeDetailedColors({ ...DEFAULT_ORDER_TYPE_DETAILED_COLORS });
   };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        {/* Chip navigation bar */}
-        <div
-          className="flex gap-2 pb-3 overflow-x-auto"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
-        >
-          <style>{`.chip-scroll::-webkit-scrollbar { display: none; }`}</style>
-          {ORDER_TYPES.map(t => {
-            const isActive = selectedType === t.key;
-            const dotColor = (orderTypeDetailedColors?.[t.key]?.headerBg) || DEFAULT_ORDER_TYPE_COLORS[t.key];
+        <div className="flex flex-col gap-3">
+          {ORDER_TYPES.map(({ key, label, table, time }) => {
+            const colors = getColors(key);
             return (
-              <button
-                key={t.key}
-                onClick={() => setSelectedType(t.key)}
-                className="shrink-0 flex items-center gap-2 rounded-full px-[14px] py-[6px] text-[13px] transition-all duration-150 ease-in-out cursor-pointer whitespace-nowrap"
-                style={isActive
-                  ? { background: '#1A1A2E', color: '#FFFFFF', fontWeight: 500, border: 'none' }
-                  : { background: 'var(--color-background-secondary, hsl(var(--muted)))', color: 'var(--color-text-primary, hsl(var(--foreground)))', fontWeight: 400, border: '0.5px solid var(--color-border-tertiary, hsl(var(--border)))' }
-                }
-              >
-                <span
-                  className="block w-[10px] h-[10px] rounded-full shrink-0"
-                  style={{ backgroundColor: dotColor }}
-                />
-                {t.label}
-              </button>
+              <div key={key} className="rounded-xl border border-border overflow-hidden">
+                {/* Live header preview */}
+                <div
+                  className="px-3 py-2 flex items-center justify-between"
+                  style={{ backgroundColor: colors.headerBg }}
+                >
+                  <span
+                    className="text-[13px] font-bold uppercase tracking-wider"
+                    style={{ color: colors.headerText }}
+                  >
+                    {label}
+                  </span>
+                  <div
+                    className="flex items-center gap-2 text-[11px]"
+                    style={{ color: colors.headerText, opacity: 0.8 }}
+                  >
+                    <span>{time}</span>
+                    <span>{table}</span>
+                  </div>
+                </div>
+
+                {/* Color controls */}
+                <div className="bg-surface-card px-4 py-3 flex items-center gap-6">
+                  {/* Header Background */}
+                  <div className="flex items-center gap-2 flex-1">
+                    <label className="relative cursor-pointer shrink-0">
+                      <input
+                        type="color"
+                        value={colors.headerBg}
+                        onChange={(e) => handleColorChange(key, 'headerBg', e.target.value)}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      />
+                      <span
+                        className="block w-8 h-8 rounded-full border-2 border-border"
+                        style={{ backgroundColor: colors.headerBg }}
+                      />
+                    </label>
+                    <div className="min-w-0">
+                      <div className="text-[12px] font-semibold text-text-primary leading-tight">Background</div>
+                      <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerBg}</div>
+                    </div>
+                  </div>
+
+                  {/* Header Text */}
+                  <div className="flex items-center gap-2 flex-1">
+                    <label className="relative cursor-pointer shrink-0">
+                      <input
+                        type="color"
+                        value={colors.headerText}
+                        onChange={(e) => handleColorChange(key, 'headerText', e.target.value)}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      />
+                      <span
+                        className="block w-8 h-8 rounded-full border-2 border-border"
+                        style={{ backgroundColor: colors.headerText }}
+                      />
+                    </label>
+                    <div className="min-w-0">
+                      <div className="text-[12px] font-semibold text-text-primary leading-tight">Text</div>
+                      <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerText}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
 
-        {/* Two-column layout */}
-        <div className="grid grid-cols-[2fr_3fr] gap-6">
-          {/* Left: Live ticket preview */}
-          <div>
-            <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">
-              Live Preview
-            </span>
-            <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-              {/* Header bar */}
-              <div
-                className="px-3 py-2 flex items-center justify-between"
-                style={{ backgroundColor: colors.headerBg }}
-              >
-                <span
-                  className="text-[13px] font-bold uppercase tracking-wider"
-                  style={{ color: colors.headerText }}
-                >
-                  {selectedInfo.headerLabel}
-                </span>
-                <div
-                  className="flex items-center gap-2 text-[11px]"
-                  style={{ color: colors.headerText, opacity: 0.8 }}
-                >
-                  <span>{selectedInfo.time}</span>
-                  <span>{selectedInfo.table}</span>
-                </div>
-              </div>
-              {/* Body */}
-              <div className="bg-surface-card px-4 py-3">
-                <div
-                  className="text-[32px] font-black leading-none mb-1"
-                  style={{ color: colors.ticketNumber }}
-                >
-                  #{selectedInfo.orderNum}
-                </div>
-                <div
-                  className="flex items-center gap-1.5 text-[13px] justify-end"
-                  style={{ color: colors.bodyText }}
-                >
-                  <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="opacity-60" />
-                  <span>{selectedInfo.server}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Color settings */}
-          <div>
-            <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">
-              Color Settings
-            </span>
-            <div className="flex flex-col gap-3">
-              {COLOR_FIELDS.map(({ key, label }) => (
-                <div
-                  key={key}
-                  className="bg-surface-card border border-border rounded-xl px-4 py-3 flex items-center justify-between gap-3"
-                >
-                  <span className="text-[14px] font-semibold text-text-primary">{label}</span>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-[12px] text-text-muted font-mono uppercase">
-                      {colors[key]}
-                    </span>
-                    <label className="relative cursor-pointer shrink-0">
-                      <input
-                        type="color"
-                        value={colors[key]}
-                        onChange={(e) => handleColorChange(key, e.target.value)}
-                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                      />
-                      <span
-                        className="block w-9 h-9 rounded-full border-2 border-border"
-                        style={{ backgroundColor: colors[key] }}
-                      />
-                    </label>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Reset button */}
         <button
           onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-6"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
         >
           <RotateCcw size={14} />
           Reset to Defaults
