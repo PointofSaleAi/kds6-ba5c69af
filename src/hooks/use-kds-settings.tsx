@@ -29,6 +29,18 @@ export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
   'custom': '#6B7280',
 };
 
+export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
+  'dine-in': { headerBg: '#1A1A2E', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'take-out': { headerBg: '#2980B9', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'delivery': { headerBg: '#16A085', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'banquet': { headerBg: '#F59E0B', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'drive-thru': { headerBg: '#8E44AD', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'curb-side': { headerBg: '#10B981', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'scheduled': { headerBg: '#2C3E50', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'phone-in': { headerBg: '#D35400', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'custom': { headerBg: '#6B7280', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+};
+
 export interface KDSSettings {
   cardsPerRow: number;
   textSize: TextSize;
@@ -41,6 +53,7 @@ export interface KDSSettings {
   tempUnit: TempUnit;
   weekStart: WeekStart;
   orderTypeColors: OrderTypeColors;
+  orderTypeDetailedColors: OrderTypeDetailedColors;
   ticketHeaderLayout: TicketHeaderLayout;
 }
 
@@ -56,6 +69,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTempUnit: (v: TempUnit) => void;
   setWeekStart: (v: WeekStart) => void;
   setOrderTypeColors: (v: OrderTypeColors) => void;
+  setOrderTypeDetailedColors: (v: OrderTypeDetailedColors) => void;
   setTicketHeaderLayout: (v: TicketHeaderLayout) => void;
 }
 
@@ -73,6 +87,7 @@ const defaults: KDSSettings = {
   tempUnit: 'F',
   weekStart: 'Sunday',
   orderTypeColors: { ...DEFAULT_ORDER_TYPE_COLORS },
+  orderTypeDetailedColors: { ...DEFAULT_ORDER_TYPE_DETAILED_COLORS },
   ticketHeaderLayout: 'kitchen',
 };
 
@@ -113,6 +128,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTempUnit: update('tempUnit'),
         setWeekStart: update('weekStart'),
         setOrderTypeColors: update('orderTypeColors'),
+        setOrderTypeDetailedColors: update('orderTypeDetailedColors'),
         setTicketHeaderLayout: update('ticketHeaderLayout'),
       }}
     >
