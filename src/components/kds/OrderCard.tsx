@@ -259,17 +259,23 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return 'in-progress';
   }, [isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
 
-  // Ticket-level advance: SEEN→all preparing, IN PROGRESS→all done, DONE→remove
+  // Ticket-level advance: operates on active course only for dine-in
   const handleTicketAdvance = useCallback((orderId: string) => {
     if (ticketState === 'done') {
+      if (isDineIn && !allCoursesServed) {
+        // Active course done but more courses remain - no-op, course will auto-collapse via lifecycle
+        return;
+      }
+      // Final DONE or non-coursed DONE - remove ticket
       onBump?.(orderId);
       return;
     }
     const now = formatStaticTime(new Date());
+    const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
     const targetStatus: ItemStatus = ticketState === 'seen' ? 'preparing' : 'done';
     setItemStatuses(prev => {
       const next = new Map(prev);
-      allItemIds.forEach(id => {
+      targetIds.forEach(id => {
         next.set(id, targetStatus);
         onItemStatusChange?.(id, targetStatus);
       });
@@ -277,7 +283,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
     setItemTimestamps(prev => {
       const next = new Map(prev);
-      allItemIds.forEach(id => {
+      targetIds.forEach(id => {
         const existing = next.get(id) || {};
         if (targetStatus === 'preparing') {
           next.set(id, { ...existing, seenAt: existing.seenAt || now });
@@ -287,16 +293,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, allItemIds, onBump, onItemStatusChange]);
+  }, [ticketState, isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange]);
 
-  // Ticket-level recall: DONE→all preparing, IN PROGRESS→all unseen
+  // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
+    const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
     if (ticketState === 'done') {
-      // Back to in-progress: all items to preparing
+      // Back to in-progress: active course items to preparing
       const now = formatStaticTime(new Date());
       setItemStatuses(prev => {
         const next = new Map(prev);
-        allItemIds.forEach(id => {
+        targetIds.forEach(id => {
           next.set(id, 'preparing');
           onItemStatusChange?.(id, 'preparing');
         });
@@ -304,25 +311,29 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       setItemTimestamps(prev => {
         const next = new Map(prev);
-        allItemIds.forEach(id => {
+        targetIds.forEach(id => {
           const existing = next.get(id) || {};
           next.set(id, { seenAt: existing.seenAt || now, doneAt: undefined });
         });
         return next;
       });
     } else {
-      // Back to seen: clear all statuses
+      // Back to seen: clear active course statuses
       setItemStatuses(prev => {
         const next = new Map(prev);
-        allItemIds.forEach(id => {
+        targetIds.forEach(id => {
           next.delete(id);
           onItemStatusChange?.(id, undefined);
         });
         return next;
       });
-      setItemTimestamps(new Map());
+      setItemTimestamps(prev => {
+        const next = new Map(prev);
+        targetIds.forEach(id => next.delete(id));
+        return next;
+      });
     }
-  }, [ticketState, allItemIds, onItemStatusChange]);
+  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
