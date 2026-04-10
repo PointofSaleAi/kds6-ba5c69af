@@ -64,7 +64,7 @@ const orderTypeLabel: Record<string, string> = {
 function getItemDisplayStatus(status: ExpoItemStatus): { label: string; bg: string; text: string } {
   if (status === 'done') return { label: 'Prepared', bg: 'bg-success/15', text: 'text-success' };
   if (status === 'firing') return { label: 'Preparing', bg: 'bg-warning/20', text: 'text-warning' };
-  return { label: 'Pending', bg: 'bg-muted', text: 'text-text-muted' };
+  return { label: 'Queued', bg: 'bg-muted', text: 'text-text-muted' };
 }
 
 /* -- Station Chips with state-based coloring -- */
@@ -239,7 +239,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   {pi.quantity}&times; {pi.name}
                 </span>
                 <span className="inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold bg-muted text-text-muted">
-                  Pending
+                  Queued
                 </span>
                 <span className="text-[10px] text-text-muted">{pi.timeLabel}</span>
               </div>
@@ -720,7 +720,7 @@ function ExpoBottomStats({
           <LegendDot color="bg-success" label="Ready" />
           <LegendDot color="bg-warning" label="In progress" />
           <LegendDot color="bg-destructive" label="Overtime" />
-          <LegendDot color="bg-text-muted" label="Pending" />
+          <LegendDot color="bg-text-muted" label="Queued" />
         </div>
         <button
           onClick={() => {
