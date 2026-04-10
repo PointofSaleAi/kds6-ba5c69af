@@ -183,15 +183,15 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     }
     if (collectiveState === 'preparing') {
       return (
-        <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#DBEAFE' }}>
-          <Eye size={14} color="#2563EB" strokeWidth={2.5} fill="#BFDBFE" />
+        <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#1A1A2E' }}>
+          <Eye size={14} color="#FFFFFF" strokeWidth={2.5} fill="#1A1A2E" />
         </div>
       );
     }
-    // unseen - outlined eye
+    // unseen - dark blue bg, white eye
     return (
-      <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#DBEAFE' }}>
-        <Eye size={14} color="#3B82F6" strokeWidth={2.5} />
+      <div className="flex items-center justify-center w-6 h-6 rounded-full" style={{ backgroundColor: '#1A1A2E' }}>
+        <Eye size={14} color="#FFFFFF" strokeWidth={2.5} />
       </div>
     );
   };
