@@ -60,6 +60,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+  const [selectedSummaryItem, setSelectedSummaryItem] = useState<string | null>(null);
 
   const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
     setGlobalItemStatuses(prev => {
