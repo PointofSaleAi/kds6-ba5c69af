@@ -23,6 +23,7 @@ interface CourseSectionProps {
   forcedStationStatus?: StationStatus;
   onReRouteItem?: (item: OrderItem) => void;
   showAllergens?: boolean;
+  highlightItemName?: string | null;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -129,7 +130,7 @@ const urgencyChipStyles: Record<FireUrgency, string> = {
 const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
 const pendingChipStyle = 'bg-muted text-muted-foreground';
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemName }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -247,12 +248,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
+            const isHighlighted = !!highlightItemName && item.name === highlightItemName;
 
             return (
               <div
                 key={item.id}
                 className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${status === 'done' && !isCourseCompleted ? 'hidden' : ''} ${isDimmed && !item.isCancelled && !isCourseCompleted ? 'opacity-80' : ''} ${isCourseCompleted ? 'opacity-80' : ''}`}
-                style={{ padding: '4px 0 4px 4px', gap: 0 }}
+                style={{ padding: '4px 0 4px 4px', gap: 0, ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}) }}
                 onClick={() => !item.isCancelled && onReRouteItem?.(item)}
               >
                 {/* Child 1 — item-main */}
@@ -262,7 +264,10 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
                     <span className="text-[13px] font-normal text-text-secondary">
                       {item.quantity}×
                     </span>
-                    <span className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+                    <span
+                      className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}
+                      style={isHighlighted && !item.isCancelled && !item.isCompleted ? { color: '#1D4ED8' } : undefined}
+                    >
                       {tp(item.name)}
                     </span>
                     {item.station && !item.isCancelled && (

@@ -28,6 +28,7 @@ interface OrderCardProps {
   onAcknowledgeNotes?: (orderId: string) => void;
   stationCourse?: string;
   showAllergens?: boolean;
+  highlightItemName?: string | null;
 }
 
 const TEXT_SIZE_SCALE: Record<string, number> = {
@@ -45,7 +46,7 @@ const statusBodyMap: Record<string, string> = {
   recalled: 'border-l-order-take-out',
 };
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemName }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
@@ -244,6 +245,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     forcedStationStatus={forcedStatus}
                     onReRouteItem={(item) => setItemRouting(item)}
                     showAllergens={showAllergens}
+                    highlightItemName={highlightItemName}
                   />
                 );
               })
