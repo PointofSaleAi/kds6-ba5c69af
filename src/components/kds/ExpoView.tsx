@@ -538,6 +538,13 @@ export default function ExpoView() {
     return { open, ready, overtime, avgTime };
   }, [tickets]);
 
+  const staggerColumns = useMemo(() => {
+    const cols = Math.max(1, staggerColumnCount);
+    const columns: typeof filteredTickets[] = Array.from({ length: cols }, () => []);
+    filteredTickets.forEach((t, i) => columns[i % cols].push(t));
+    return columns;
+  }, [filteredTickets, staggerColumnCount]);
+
   const handleSendOutAny = useCallback((id: string) => {
     if (id.startsWith('demo-')) {
       handleDemoSendOut(id);
@@ -545,6 +552,19 @@ export default function ExpoView() {
       handleSendOut(id);
     }
   }, [handleDemoSendOut, handleSendOut]);
+
+  const renderTicketCard = (ticket: ExpoTicket) => (
+    <ExpoTicketCard
+      key={ticket.id}
+      ticket={ticket}
+      onSendOut={handleSendOutAny}
+      onRush={handleRush}
+      holdStations={holdStations}
+      onToggleHold={handleToggleHold}
+      isDemo={ticket.id.startsWith('demo-')}
+      onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
+    />
+  );
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -555,7 +575,7 @@ export default function ExpoView() {
       />
       <ExpoStationBar />
 
-      <div className="flex-1 overflow-auto p-3">
+      <div ref={boardRef} className="flex-1 overflow-auto p-3">
         {filteredTickets.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
             <CheckCircle size={48} className="text-success/60" />
@@ -564,22 +584,39 @@ export default function ExpoView() {
               <p className="text-success/50 text-sm mt-1">All tickets fulfilled, waiting for new orders</p>
             </div>
           </div>
-        ) : (
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             <AnimatePresence mode="popLayout">
               {filteredTickets.map(ticket => (
-                <ExpoTicketCard
-                  key={ticket.id}
-                  ticket={ticket}
-                  onSendOut={handleSendOutAny}
-                  onRush={handleRush}
-                  holdStations={holdStations}
-                  onToggleHold={handleToggleHold}
-                  isDemo={ticket.id.startsWith('demo-')}
-                  onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
-                />
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  {renderTicketCard(ticket)}
+                </motion.div>
               ))}
             </AnimatePresence>
+          </div>
+        ) : viewMode === 'horizontal' ? (
+          <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+            <AnimatePresence mode="popLayout">
+              {filteredTickets.map(ticket => (
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[320px]">
+                  {renderTicketCard(ticket)}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
+            {staggerColumns.map((col, colIdx) => (
+              <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                <AnimatePresence mode="popLayout">
+                  {col.map(ticket => (
+                    <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
+                      {renderTicketCard(ticket)}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -589,6 +626,9 @@ export default function ExpoView() {
         fulfilledTickets={fulfilledTickets}
         onDemoRecallLast={handleDemoRecallLast}
         hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
       />
     </div>
   );
