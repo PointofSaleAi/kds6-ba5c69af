@@ -533,8 +533,6 @@ export default function ExpoView() {
         filter={filter}
         onFilterChange={setFilter}
         fulfilledTickets={fulfilledTickets}
-        demoMode={demoMode}
-        onToggleDemo={handleToggleDemo}
       />
       <ExpoStationBar />
 
