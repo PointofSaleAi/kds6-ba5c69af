@@ -368,28 +368,11 @@ function ExpoTopControls({
 export default function ExpoView() {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
-  const [demoMode, setDemoMode] = useState(false);
 
-  // Demo state - fully isolated
-  const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>([]);
+  // Demo tickets - always present alongside real tickets
+  const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>(() => createDemoTickets());
   const [sentDemoIds, setSentDemoIds] = useState<Set<string>>(new Set());
   const lastSentDemo = useRef<DemoExpoTicket | null>(null);
-
-  // Initialize demo tickets when toggling on
-  const handleToggleDemo = useCallback(() => {
-    setDemoMode(prev => {
-      if (!prev) {
-        setDemoTickets(createDemoTickets());
-        setSentDemoIds(new Set());
-        lastSentDemo.current = null;
-      } else {
-        setDemoTickets([]);
-        setSentDemoIds(new Set());
-        lastSentDemo.current = null;
-      }
-      return !prev;
-    });
-  }, []);
 
   // Demo item tap: cycle pending -> firing -> done
   const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
