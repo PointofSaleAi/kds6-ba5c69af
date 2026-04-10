@@ -23,7 +23,7 @@ interface CourseSectionProps {
   forcedStationStatus?: StationStatus;
   onReRouteItem?: (item: OrderItem) => void;
   showAllergens?: boolean;
-  highlightItemName?: string | null;
+  highlightItemNames?: Set<string>;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -130,7 +130,7 @@ const urgencyChipStyles: Record<FireUrgency, string> = {
 const firedChipStyle = 'bg-order-take-out/15 text-order-take-out';
 const pendingChipStyle = 'bg-muted text-muted-foreground';
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemName }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvanceItem, onUndoItem, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -248,7 +248,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
         <div className="px-2 py-0.5">
           {courseGroup.items.map((item) => {
             const status = itemStatuses?.get(item.id);
-            const isHighlighted = !!highlightItemName && item.name === highlightItemName;
+            const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
 
             return (
               <div
