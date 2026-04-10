@@ -625,8 +625,6 @@ export default function ExpoView({ viewMode }: { viewMode: ViewMode }) {
         fulfilledTickets={fulfilledTickets}
         onDemoRecallLast={handleDemoRecallLast}
         hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
       />
     </div>
   );
