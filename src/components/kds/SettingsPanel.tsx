@@ -303,14 +303,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               <SettingsCard>
                 <CardLabel label="Ticket Header Layout" />
                 <PillToggle
-                  options={['Kitchen View', 'Guest View']}
-                  value={ticketHeaderLayout === 'guest' ? 'Guest View' : 'Kitchen View'}
-                  onChange={(v) => setTicketHeaderLayout(v === 'Guest View' ? 'guest' : 'kitchen')}
+                  options={['Order No. View', 'Guest Name View']}
+                  value={ticketHeaderLayout === 'guest' ? 'Guest Name View' : 'Order No. View'}
+                  onChange={(v) => setTicketHeaderLayout(v === 'Guest Name View' ? 'guest' : 'kitchen')}
                 />
                 <div className="mt-3 px-3 py-2 bg-muted rounded-lg text-[12px] text-text-secondary leading-relaxed">
                   {ticketHeaderLayout === 'kitchen'
-                    ? 'Shows order number as primary identifier. Best for kitchen staff.'
-                    : 'Shows guest name as primary identifier. Best for expediters and runners.'}
+                    ? 'Order number shown as primary identifier. Best for kitchen and prep stations.'
+                    : 'Guest name shown as primary identifier. Best for expediters and runners.'}
                 </div>
               </SettingsCard>
 
