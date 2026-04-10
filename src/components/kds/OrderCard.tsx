@@ -193,16 +193,16 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   {order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                    <UtensilsCrossed size={14} className="text-white" />
-                    {order.serverName}
-                  </span>
                   {order.guestName && (
                     <span className="flex items-center gap-1 text-[13px] font-medium text-white">
                       <UserRound size={14} className="text-white" />
                       {order.guestName}
                     </span>
                   )}
+                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
+                    <UtensilsCrossed size={14} className="text-white" />
+                    {order.serverName}
+                  </span>
                   <div className="mb-0.5">
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
                   </div>
