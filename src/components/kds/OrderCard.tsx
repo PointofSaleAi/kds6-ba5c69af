@@ -208,7 +208,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               </>
             ) : (
               <>
-                <div className="text-order-num text-white leading-none">
+                <div className="text-[28px] font-black text-white leading-none">
                   {order.guestName || order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
@@ -217,7 +217,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     {order.serverName}
                   </span>
                   <span className="text-[16px] font-semibold text-white">
-                    #{order.orderNumber}
+                    {order.orderNumber}
                   </span>
                   <div className="mb-0.5">
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
