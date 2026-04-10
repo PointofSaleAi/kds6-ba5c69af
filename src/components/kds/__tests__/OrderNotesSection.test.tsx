@@ -9,26 +9,17 @@ describe('OrderNotesSection', () => {
     expect(screen.getByText('Order Notes')).toBeInTheDocument();
   });
 
-  it('calls onAcknowledgeNotes when reaching acknowledged state', () => {
+  it('toggles between unseen and acknowledged on tap', () => {
     const onAck = vi.fn();
     render(<OrderNotesSection notes="Extra sauce" orderId="o1" onAcknowledgeNotes={onAck} />);
-    // First tap: unseen -> seen
-    fireEvent.click(screen.getByTitle('Acknowledge notes'));
-    expect(onAck).not.toHaveBeenCalled();
-    // Second tap: seen -> acknowledged
-    fireEvent.click(screen.getByTitle('Confirm acknowledged'));
-    expect(onAck).toHaveBeenCalledWith('o1');
-  });
-
-  it('progresses through three states: unseen -> seen -> acknowledged', () => {
-    render(<OrderNotesSection notes="Test" orderId="o1" />);
-    // Initial: unseen
+    // Initial: unseen (eye icon)
     expect(screen.getByTitle('Acknowledge notes')).toBeInTheDocument();
-    // Tap 1: seen
+    // Tap: unseen -> acknowledged (tick)
     fireEvent.click(screen.getByTitle('Acknowledge notes'));
-    expect(screen.getByTitle('Confirm acknowledged')).toBeInTheDocument();
-    // Tap 2: acknowledged (final)
-    fireEvent.click(screen.getByTitle('Confirm acknowledged'));
-    expect(screen.getByTitle('Acknowledged')).toBeInTheDocument();
+    expect(onAck).toHaveBeenCalledWith('o1');
+    expect(screen.getByTitle('Mark as unseen')).toBeInTheDocument();
+    // Tap again: acknowledged -> unseen (eye)
+    fireEvent.click(screen.getByTitle('Mark as unseen'));
+    expect(screen.getByTitle('Acknowledge notes')).toBeInTheDocument();
   });
 });
