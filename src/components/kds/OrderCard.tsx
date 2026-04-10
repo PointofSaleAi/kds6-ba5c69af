@@ -212,7 +212,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               </>
             ) : (
               <>
-                <div className="text-[28px] font-black text-white leading-none">
+                <div className="text-[28px] font-black text-white leading-none flex items-center">
                   {order.guestName || order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
