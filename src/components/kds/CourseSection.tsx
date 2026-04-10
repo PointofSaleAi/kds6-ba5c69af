@@ -42,7 +42,7 @@ function getCoursingStatus(courseGroup: CourseGroup): StationStatus {
 function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s: string) => string): string {
   const name = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   switch (status) {
-    case 'fired': return `${name} \u00B7 Fired`;
+    case 'fired': return `${name} \u00B7 Served`;
     case 'active': return `${name} \u00B7 Active`;
     case 'pending': return `${name} \u00B7 Pending`;
   }
@@ -177,7 +177,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, onAdvan
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   const courseLabel = isStationMode
     ? getStationLabel(courseGroup, coursingStatus, tc)
-    : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Fired' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
+    : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
 
   const labelClass = coursingStatus === 'active'
     ? 'text-[11px] uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
