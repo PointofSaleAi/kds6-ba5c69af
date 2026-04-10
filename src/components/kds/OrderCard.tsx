@@ -17,7 +17,8 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { UtensilsCrossed, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
+import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 
 interface OrderCardProps {
   order: Order;
@@ -194,7 +195,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 </div>
                 <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
                   <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                    <UtensilsCrossed size={14} className="text-white" />
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert" />
                     {order.serverName}
                   </span>
                   {order.guestName ? (
@@ -217,7 +218,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-0.5 shrink-0">
                   <span className="flex items-center gap-1 text-[13px] font-medium text-white whitespace-nowrap">
-                    <UtensilsCrossed size={14} className="text-white shrink-0" />
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert shrink-0" />
                     {order.serverName}
                   </span>
                   <span className="text-[16px] font-semibold text-white">
