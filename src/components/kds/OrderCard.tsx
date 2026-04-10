@@ -101,7 +101,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   // Track "Done at" timestamps per course
   const [courseDoneTimestamps, setCourseDoneTimestamps] = useState<Map<string, string>>(new Map());
 
+  // Track which courses have been explicitly confirmed done via ticket button
+  const [confirmedCourses, setConfirmedCourses] = useState<Set<string>>(new Set());
+
   // Compute lifecycle status for each course
+  // A course only becomes 'served' if all items are done AND the course is confirmed
   const courseLifecycleMap = useMemo(() => {
     if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
     const map = new Map<string, 'active' | 'pending' | 'served'>();
@@ -109,7 +113,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     for (const c of displayCourses) {
       const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
       const allDone = ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
-      if (c.isFired || allDone) {
+      const isConfirmed = confirmedCourses.has(c.course);
+      if (c.isFired || (allDone && isConfirmed)) {
         map.set(c.course, 'served');
       } else if (!foundActive) {
         map.set(c.course, 'active');
@@ -119,7 +124,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
     }
     return map;
-  }, [isDineIn, displayCourses, itemStatuses]);
+  }, [isDineIn, displayCourses, itemStatuses, confirmedCourses]);
 
   // 3-step advance: unseen → preparing → done (no 'ready' intermediate)
   const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
