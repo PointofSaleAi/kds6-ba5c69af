@@ -125,7 +125,7 @@ export function createDemoTickets(): DemoExpoTicket[] {
         active: { course: 'ENTREE', label: 'ACTIVE' },
         pending: {
           course: 'DESSERT',
-          label: 'PENDING',
+          label: 'QUEUED',
           items: [{ id: 'demo-6-3', name: 'Panna Cotta', quantity: 2, timeLabel: 'Preparing at 10:30 PM' }],
         },
       },

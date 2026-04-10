@@ -44,7 +44,7 @@ function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s
   switch (status) {
     case 'fired': return `${name} \u00B7 Served`;
     case 'active': return `${name} \u00B7 Active`;
-    case 'pending': return `${name} \u00B7 Pending`;
+    case 'pending': return `${name} \u00B7 Queued`;
   }
 }
 
@@ -187,7 +187,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     ? `${courseName} \u00B7 Served`
     : isStationMode
       ? getStationLabel(courseGroup, coursingStatus, tc)
-      : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Pending'}`;
+      : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Queued'}`;
 
   const labelClass = isServedByLifecycle
     ? 'uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'

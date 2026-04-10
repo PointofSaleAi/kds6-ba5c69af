@@ -82,7 +82,7 @@ function getDefaultLabel(course: CourseBlock): string {
     case 'active':
       return `${course.name} \u00B7 Active`;
     case 'pending':
-      return `${course.name} \u00B7 Pending`;
+      return `${course.name} \u00B7 Queued`;
   }
 }
 
