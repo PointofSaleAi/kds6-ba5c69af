@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle, Timer } from 'lucide-react';
+import { CheckCircle, Timer, LayoutGrid, GalleryHorizontalEnd, Columns3 } from 'lucide-react';
+import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
