@@ -212,12 +212,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               </>
             ) : (
               <>
-                <div className="text-[28px] font-black text-white leading-none flex items-center">
+                <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1">
                   {order.guestName || order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                    <UtensilsCrossed size={14} className="text-white" />
+                <div className="flex flex-col items-end justify-between self-stretch gap-0.5 shrink-0">
+                  <span className="flex items-center gap-1 text-[13px] font-medium text-white whitespace-nowrap">
+                    <UtensilsCrossed size={14} className="text-white shrink-0" />
                     {order.serverName}
                   </span>
                   <span className="text-[16px] font-semibold text-white">
