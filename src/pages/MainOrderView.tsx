@@ -61,6 +61,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const prevOrderCountRef = useRef(orders.length);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
+  const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
 
   const handleSummaryItemToggle = useCallback((itemName: string) => {
     setSelectedSummaryItems(prev => {
@@ -71,8 +72,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     });
   }, []);
 
+  const handleSummaryCategoryToggle = useCallback((category: string) => {
+    setSelectedSummaryCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  }, []);
+
   const handleSummaryClearAll = useCallback(() => {
     setSelectedSummaryItems(new Set());
+    setSelectedSummaryCategories(new Set());
   }, []);
 
   const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
