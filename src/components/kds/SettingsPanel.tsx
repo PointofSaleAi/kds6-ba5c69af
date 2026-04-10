@@ -102,6 +102,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     staggerMode, setStaggerMode,
     servableModifiers, setServableModifiers,
     sortDefault, setSortDefault,
+    ticketHeaderLayout, setTicketHeaderLayout,
   } = useKDSSettings();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { showBadge: enableBadge, setShowBadge: setEnableBadge } = useBadgeVisibility();
@@ -299,6 +300,19 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 )}
               </SettingsCard>
 
+              <SettingsCard>
+                <CardLabel label="Ticket Header Layout" />
+                <PillToggle
+                  options={['Kitchen View', 'Guest View']}
+                  value={ticketHeaderLayout === 'guest' ? 'Guest View' : 'Kitchen View'}
+                  onChange={(v) => setTicketHeaderLayout(v === 'Guest View' ? 'guest' : 'kitchen')}
+                />
+                <div className="mt-3 px-3 py-2 bg-muted rounded-lg text-[12px] text-text-secondary leading-relaxed">
+                  {ticketHeaderLayout === 'kitchen'
+                    ? 'Shows order number as primary identifier. Best for kitchen staff.'
+                    : 'Shows guest name as primary identifier. Best for expediters and runners.'}
+                </div>
+              </SettingsCard>
 
             </div>
           )}

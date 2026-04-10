@@ -17,6 +17,7 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { UtensilsCrossed, UserRound } from 'lucide-react';
 
 interface OrderCardProps {
   order: Order;
@@ -51,7 +52,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed } = useStatusRules();
-  const { textSize } = useKDSSettings();
+  const { textSize, ticketHeaderLayout } = useKDSSettings();
   const statusColor = getStatusForElapsed(liveElapsed);
   const scaleFactor = TEXT_SIZE_SCALE[textSize] || 1;
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
@@ -183,18 +184,47 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
 
           <div
-            className="px-3 py-3 flex items-center justify-between"
+            className="px-3 py-3 flex items-center justify-between transition-all duration-200"
             style={{ backgroundColor: statusColor.color }}
           >
-            <div className="text-order-num text-white leading-none">
-              {order.orderNumber}
-            </div>
-            <div className="flex flex-col items-end justify-between self-stretch">
-              <span className="text-sm font-semibold text-white mt-1">{order.serverName}</span>
-              <div className="mb-0.5">
-                <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
-              </div>
-            </div>
+            {ticketHeaderLayout === 'kitchen' ? (
+              <>
+                <div className="text-order-num text-white leading-none">
+                  {order.orderNumber}
+                </div>
+                <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
+                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
+                    <UtensilsCrossed size={14} className="text-white" />
+                    {order.serverName}
+                  </span>
+                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
+                    <UserRound size={14} className="text-white" />
+                    {order.guestName || '\u2014'}
+                  </span>
+                  <div className="mb-0.5">
+                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="text-order-num text-white leading-none">
+                  {order.guestName || order.orderNumber}
+                </div>
+                <div className="flex flex-col items-end justify-between self-stretch gap-0.5">
+                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
+                    <UtensilsCrossed size={14} className="text-white" />
+                    {order.serverName}
+                  </span>
+                  <span className="text-[16px] font-semibold text-white">
+                    #{order.orderNumber}
+                  </span>
+                  <div className="mb-0.5">
+                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {showAllergens && <OrderAllergenStrip order={order} />}
