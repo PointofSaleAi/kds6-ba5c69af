@@ -407,7 +407,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             initialSection={settingsSection as any}
           />
         ) : (
-        <div ref={boardContentRef} className="flex-1 flex flex-col overflow-hidden relative">
+        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -493,7 +493,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Expo' ? (
                 <ExpoView viewMode={viewMode} />
               ) : (
-                <div className={`flex-1 overflow-auto p-3 ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
+                <div className="flex-1 overflow-auto p-3">
                   {(staggerMode || viewMode === 'stagger') ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
