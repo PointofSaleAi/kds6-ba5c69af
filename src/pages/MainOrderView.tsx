@@ -16,7 +16,7 @@ import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { SettingsPanel } from '@/components/kds/SettingsPanel';
 import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
-import type { ViewMode, Order } from '@/types/kds';
+import type { ViewMode, Order, OrderItem } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
