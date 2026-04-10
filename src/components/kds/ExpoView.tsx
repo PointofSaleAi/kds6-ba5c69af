@@ -363,6 +363,30 @@ function ExpoTopControls({
 export default function ExpoView() {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+  // ResizeObserver for stagger column count
+  const boardRef = useRef<HTMLDivElement | null>(null);
+  const [boardWidth, setBoardWidth] = useState(0);
+  useEffect(() => {
+    const node = boardRef.current;
+    if (!node) return;
+    const observer = new ResizeObserver(entries => {
+      const [entry] = entries;
+      if (entry) setBoardWidth(entry.contentRect.width);
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const staggerColumnCount = useMemo(() => {
+    if (boardWidth <= 0) return 3;
+    if (boardWidth < 520) return 1;
+    if (boardWidth < 760) return 2;
+    if (boardWidth < 1160) return 3;
+    if (boardWidth < 1480) return 4;
+    return 5;
+  }, [boardWidth]);
 
   // Demo tickets - always present alongside real tickets
   const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>(() => createDemoTickets());
