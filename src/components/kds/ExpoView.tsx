@@ -628,18 +628,6 @@ function ExpoBottomStats({
     </div>
   );
 }
-          className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
-            demoMode && hasLastSentDemo
-              ? 'border-warning text-warning bg-warning/10 animate-pulse'
-              : 'border-border text-text-secondary hover:bg-muted'
-          }`}
-        >
-          Recall last
-        </button>
-      </div>
-    </div>
-  );
-}
 
 function StatCounter({ label, value, colorClass }: { label: string; value: number | string; colorClass?: string }) {
   return (
