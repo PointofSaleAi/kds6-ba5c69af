@@ -368,9 +368,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           {isDineIn ? (
             [...displayCourses]
               .sort((a, b) => {
-                const aFired = a.isFired ? 1 : 0;
-                const bFired = b.isFired ? 1 : 0;
-                return aFired - bFired;
+                // Helper: is course "done" either by isFired or all items marked done
+                const isCourseDone = (c: typeof a) => {
+                  if (c.isFired) return true;
+                  const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
+                  return ids.length > 0 && ids.every(id => itemStatuses.get(id) === 'done');
+                };
+                const aDone = isCourseDone(a) ? 1 : 0;
+                const bDone = isCourseDone(b) ? 1 : 0;
+                return aDone - bDone;
               })
               .map((courseGroup) => {
                 let forcedStatus: StationStatus | undefined;
