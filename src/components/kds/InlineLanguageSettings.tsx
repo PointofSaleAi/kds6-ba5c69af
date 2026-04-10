@@ -621,37 +621,20 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 </div>
               </div>
 
-              {/* Currency - right */}
+              {/* Currency - read-only */}
               <div>
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Currency</div>
-                <div className="relative">
-                  <button
-                    onClick={() => setCurrOpen(!currOpen)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
-                    style={{ border: '1.5px solid hsl(var(--border))' }}
-                  >
-                    <span className="text-sm font-medium text-text-primary">
-                      {currencyOptions.find(c => c.value === currency)?.label}
-                    </span>
-                    <ChevronDown size={14} className={`text-text-muted shrink-0 transition-transform ${currOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {currOpen && (
-                    <div className="absolute z-10 mt-1 w-full bg-surface-card border border-border rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
-                      {currencyOptions.map((c) => (
-                        <button
-                          key={c.value}
-                          onClick={() => { setCurrency(c.value); setCurrOpen(false); }}
-                          className={`w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/50 min-h-[40px] ${
-                            currency === c.value ? 'font-semibold text-text-primary bg-muted/30' : 'text-text-secondary'
-                          }`}
-                        >
-                          {currency === c.value && <Check size={14} className="text-brand-primary shrink-0" />}
-                          <span>{c.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                <div
+                  className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg min-h-[44px] bg-muted/50"
+                  style={{ border: '1.5px solid hsl(var(--border))' }}
+                >
+                  <span className="text-sm font-medium text-text-primary">
+                    {currencyOptions.find(c => c.value === currency)?.label || '\u2014  Set in POS Dashboard'}
+                  </span>
                 </div>
+                <p className="text-[11px] text-text-muted mt-1.5">
+                  Currency is set at store level. Change it from your POS dashboard.
+                </p>
               </div>
 
               {/* Temperature Unit - left */}
