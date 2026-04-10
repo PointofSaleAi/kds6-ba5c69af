@@ -497,9 +497,8 @@ export default function ExpoView() {
 
   // Combine real + demo tickets
   const visibleDemoTickets = useMemo(() => {
-    if (!demoMode) return [];
     return demoTickets.filter(t => !sentDemoIds.has(t.id));
-  }, [demoMode, demoTickets, sentDemoIds]);
+  }, [demoTickets, sentDemoIds]);
 
   const allTickets = useMemo(() => {
     return [...tickets, ...visibleDemoTickets];
