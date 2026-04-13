@@ -54,7 +54,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
-  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone } = useOrderStore();
+  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds } = useOrderStore();
   const { isPortrait } = usePortrait();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
