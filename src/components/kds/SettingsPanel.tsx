@@ -110,18 +110,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
   const [uploadingLogs, setUploadingLogs] = useState(false);
-  const [bugModalOpen, setBugModalOpen] = useState(false);
   const [featureModalOpen, setFeatureModalOpen] = useState(false);
-  const [bugText, setBugText] = useState('');
   const [featureText, setFeatureText] = useState('');
-
-  const handleBugSubmit = () => {
-    // TODO: send to backend API
-    console.info('[BugReport]', { text: bugText, stationId: 'STN-001', version: '5.0.84' });
-    setBugModalOpen(false);
-    setBugText('');
-    toast.success('Bug report submitted. Our team will look into it.');
-  };
 
   const handleFeatureSubmit = () => {
     // TODO: send to backend API
@@ -423,11 +413,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard className="col-span-2">
-                <CardLabel label="Feedback & Support" description="Report an issue or request a feature" />
-                <div className="flex gap-3">
-                  <ActionButton label="Report a Bug" onClick={() => setBugModalOpen(true)} />
-                  <ActionButton label="Request a Feature" onClick={() => setFeatureModalOpen(true)} />
-                </div>
+                <CardLabel label="Feedback & Support" description="Request a feature or share feedback" />
+                <ActionButton label="Request a Feature" onClick={() => setFeatureModalOpen(true)} />
               </SettingsCard>
 
 
