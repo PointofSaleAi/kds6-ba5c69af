@@ -27,6 +27,12 @@ interface OrderStoreContextValue {
 
   /** Update order status */
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
+
+  /** Set of order IDs that have been "seen" (eye icon tapped) */
+  seenOrderIds: Set<string>;
+
+  /** Toggle an order's seen/unseen state */
+  toggleOrderSeen: (orderId: string) => void;
 }
 
 const OrderStoreContext = createContext<OrderStoreContextValue | null>(null);
@@ -119,6 +125,16 @@ function orderToExpoTicket(order: Order): ExpoTicket {
 
 export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [seenOrderIds, setSeenOrderIds] = useState<Set<string>>(new Set());
+
+  const toggleOrderSeen = useCallback((orderId: string) => {
+    setSeenOrderIds(prev => {
+      const next = new Set(prev);
+      if (next.has(orderId)) next.delete(orderId);
+      else next.add(orderId);
+      return next;
+    });
+  }, []);
 
   const markItemDone = useCallback((orderId: string, itemId: string) => {
     setOrders(prev => prev.map(o => {
@@ -171,6 +187,19 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
       .map(orderToExpoTicket);
   }, [orders]);
 
+  // Clean up seenOrderIds when orders are removed
+  useMemo(() => {
+    const activeIds = new Set(orders.map(o => o.id));
+    setSeenOrderIds(prev => {
+      const next = new Set<string>();
+      for (const id of prev) {
+        if (activeIds.has(id)) next.add(id);
+      }
+      if (next.size !== prev.size) return next;
+      return prev;
+    });
+  }, [orders]);
+
   const value = useMemo<OrderStoreContextValue>(() => ({
     orders,
     setOrders,
@@ -179,7 +208,9 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     markAllItemsDone,
     sendOutOrder,
     updateOrderStatus,
-  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus]);
+    seenOrderIds,
+    toggleOrderSeen,
+  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen]);
 
   return (
     <OrderStoreContext.Provider value={value}>
