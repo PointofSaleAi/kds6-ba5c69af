@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { X, Volume2, VolumeX, Play, Upload, X as XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -6,6 +6,54 @@ interface SoundSettingsProps {
   open: boolean;
   onClose: () => void;
 }
+
+function beep(ctx: AudioContext, freq: number, start: number, dur: number, vol: number) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value = freq;
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(vol, start);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  osc.start(start);
+  osc.stop(start + dur);
+}
+
+const PRESET_PLAYERS: Record<string, (vol: number) => void> = {
+  'default-beep': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.4;
+      beep(ctx, 880, ctx.currentTime, 0.15, v);
+      beep(ctx, 1100, ctx.currentTime + 0.18, 0.2, v);
+    } catch {}
+  },
+  'double-chime': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.35;
+      beep(ctx, 659, ctx.currentTime, 0.2, v);
+      beep(ctx, 784, ctx.currentTime + 0.25, 0.25, v);
+    } catch {}
+  },
+  'urgent-alert': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.45;
+      beep(ctx, 1200, ctx.currentTime, 0.1, v);
+      beep(ctx, 1200, ctx.currentTime + 0.15, 0.1, v);
+      beep(ctx, 1500, ctx.currentTime + 0.3, 0.15, v);
+    } catch {}
+  },
+  'soft-ding': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.25;
+      beep(ctx, 1047, ctx.currentTime, 0.4, v);
+    } catch {}
+  },
+};
 
 const presetSounds = [
   { id: 'default-beep', label: 'Default Beep' },
