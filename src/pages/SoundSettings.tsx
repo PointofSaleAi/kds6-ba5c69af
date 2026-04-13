@@ -75,6 +75,16 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
   const [serviceBell, setServiceBell] = useState('Classic Bell');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const playPreset = useCallback((id: string) => {
+    if (muteAll) return;
+    PRESET_PLAYERS[id]?.(alertVolume);
+  }, [muteAll, alertVolume]);
+
+  const playMainVolume = useCallback(() => {
+    if (muteAll) return;
+    PRESET_PLAYERS['default-beep']?.(volume);
+  }, [muteAll, volume]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -152,6 +162,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                   {muteAll ? '0' : volume}%
                 </span>
                 <button
+                  onClick={playMainVolume}
                   className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
                   aria-label="Test sound"
                 >
@@ -194,7 +205,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        // TODO: play preview sound
+                        playPreset(preset.id);
                       }}
                       className={`p-1.5 rounded-md transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center ${
                         selectedPreset === preset.id && !customFile
