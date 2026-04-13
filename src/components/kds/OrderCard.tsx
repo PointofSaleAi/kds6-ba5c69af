@@ -24,6 +24,7 @@ import UsersBold from '@/assets/users-bold.svg';
 interface OrderCardProps {
   order: Order;
   compact?: boolean;
+  portraitMode?: boolean;
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
@@ -50,7 +51,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
+export function OrderCard({ order, compact, portraitMode, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
