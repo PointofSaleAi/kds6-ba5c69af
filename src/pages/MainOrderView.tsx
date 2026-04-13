@@ -574,7 +574,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && (kdsMode === 'Expo'
+        {!settingsOpen && viewMode !== 'portrait' && (kdsMode === 'Expo'
           ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} />
           : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
         )}
@@ -594,7 +594,50 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { setSettingsSection('language'); onNavigate('settings'); }} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} />
+      {/* Portrait summary overlay */}
+      <AnimatePresence>
+        {summaryOverlayOpen && viewMode === 'portrait' && (
+          <motion.div
+            className="fixed inset-0 z-50 flex flex-col justify-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="absolute inset-0 bg-black/40" onClick={() => setSummaryOverlayOpen(false)} />
+            <motion.div
+              className="relative bg-surface-card rounded-t-2xl max-h-[80vh] overflow-auto shadow-2xl"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+            >
+              <div className="sticky top-0 bg-surface-card z-10 flex items-center justify-between px-4 py-3 border-b border-border">
+                <span className="text-sm font-bold text-text-primary uppercase tracking-wider">Summary</span>
+                <button
+                  onClick={() => setSummaryOverlayOpen(false)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-muted transition-colors min-h-[44px] min-w-[44px]"
+                >
+                  <span className="text-text-secondary text-lg">&times;</span>
+                </button>
+              </div>
+              <div className="p-2">
+                <ItemSummaryPanel
+                  orders={ordersWithItemStatuses}
+                  stationCourse={resolvedStationCourse}
+                  selectedItems={selectedSummaryItems}
+                  onItemToggle={handleSummaryItemToggle}
+                  selectedCategories={selectedSummaryCategories}
+                  onCategoryToggle={handleSummaryCategoryToggle}
+                  onClearAll={handleSummaryClearAll}
+                  matchingTicketCount={matchingTicketCount}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { setSettingsSection('language'); onNavigate('settings'); }} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} onOpenSummaryOverlay={() => setSummaryOverlayOpen(true)} />
     </div>
   );
 }
