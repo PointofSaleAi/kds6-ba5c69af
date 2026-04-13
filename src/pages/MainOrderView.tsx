@@ -524,6 +524,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               )}
             </>
+          ) : isSeenScreen ? (
+            <SeenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} />
+          ) : isUnseenScreen ? (
+            <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} />
           ) : (
             <>
               {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
