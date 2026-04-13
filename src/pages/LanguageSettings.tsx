@@ -327,7 +327,6 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                   </div>
                 </div>
               </div>
-            </div>
           </div>
 
           {/* Footer */}
