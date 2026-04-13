@@ -1,5 +1,23 @@
-import type { Allergen } from '@/types/kds';
+import type { Allergen, AllergenType } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
+
+const allergenColors: Record<string, { bg: string; border: string; text: string }> = {
+  gluten:    { bg: 'bg-amber-100',   border: 'border-amber-400',   text: 'text-amber-900' },
+  dairy:     { bg: 'bg-sky-100',     border: 'border-sky-400',     text: 'text-sky-900' },
+  shellfish: { bg: 'bg-orange-100',  border: 'border-orange-400',  text: 'text-orange-900' },
+  egg:       { bg: 'bg-yellow-50',   border: 'border-yellow-400',  text: 'text-yellow-900' },
+  sesame:    { bg: 'bg-amber-200',   border: 'border-amber-600',   text: 'text-amber-950' },
+  fish:      { bg: 'bg-teal-100',    border: 'border-teal-400',    text: 'text-teal-900' },
+  peanut:    { bg: 'bg-red-100',     border: 'border-red-400',     text: 'text-red-900' },
+  'tree-nut': { bg: 'bg-red-100',    border: 'border-red-400',     text: 'text-red-900' },
+  soy:       { bg: 'bg-lime-100',    border: 'border-lime-400',    text: 'text-lime-900' },
+};
+
+const defaultColor = { bg: 'bg-muted', border: 'border-border', text: 'text-foreground' };
+
+function getColor(type: string) {
+  return allergenColors[type] || defaultColor;
+}
 
 interface AllergenBadgeProps {
   allergen: Allergen;
@@ -9,26 +27,18 @@ interface AllergenBadgeProps {
 
 export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps) {
   const { ta } = useLanguage();
-
-  if (variant === 'order') {
-    return (
-      <span
-        className="inline-flex items-center gap-0.5 text-allergen font-bold"
-        style={{ fontSize: 'var(--kds-allergen-font)', padding: `var(--kds-allergen-py) var(--kds-allergen-px)` }}
-      >
-        <span style={{ fontSize: 'var(--kds-allergen-font)' }}>{allergen.icon}</span>
-        <span>{ta(allergen.label)}</span>
-      </span>
-    );
-  }
+  const color = getColor(allergen.type);
 
   return (
     <span
-      className="inline-flex items-center gap-0.5 text-allergen/80 font-semibold"
-      style={{ fontSize: 'var(--kds-allergen-font)', padding: `var(--kds-allergen-py) var(--kds-allergen-px)` }}
+      className={`inline-flex items-center rounded border font-bold uppercase ${color.bg} ${color.border} ${color.text}`}
+      style={{
+        fontSize: variant === 'order' ? 'var(--kds-allergen-font)' : '10px',
+        padding: variant === 'order' ? 'var(--kds-allergen-py) var(--kds-allergen-px)' : '1px 5px',
+        lineHeight: 1.3,
+      }}
     >
-      <span>{allergen.icon}</span>
-      <span>{ta(allergen.label)}</span>
+      {ta(allergen.label)}
     </span>
   );
 }

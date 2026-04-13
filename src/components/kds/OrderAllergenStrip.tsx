@@ -12,8 +12,7 @@ export function OrderAllergenStrip({ order }: OrderAllergenStripProps) {
   if (unique.length === 0) return null;
 
   return (
-    <div className="px-2 py-1 flex items-center gap-1.5 bg-allergen/8 border-t border-allergen/15">
-      <span className="text-allergen text-[10px] font-bold">&#9888;</span>
+    <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-t border-border/40">
       {unique.map(a => (
         <AllergenBadge key={a.type} allergen={a} variant="order" />
       ))}
