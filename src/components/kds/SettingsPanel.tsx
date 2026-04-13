@@ -451,38 +451,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
         </div>
       </div>
 
-      {/* Bug Report Modal */}
-      {bugModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setBugModalOpen(false)} />
-          <div className="relative bg-surface-card rounded-xl shadow-xl w-[480px] max-w-[90vw] flex flex-col" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
-              <h3 className="text-[15px] font-bold text-text-primary">Report a Bug</h3>
-              <button onClick={() => setBugModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors min-h-[44px] min-w-[44px]">
-                <X size={18} className="text-text-muted" />
-              </button>
-            </div>
-            <div className="px-5 py-4">
-              <textarea
-                value={bugText}
-                onChange={(e) => setBugText(e.target.value)}
-                placeholder="Describe the issue you encountered..."
-                rows={5}
-                className="w-full bg-muted rounded-lg px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted outline-none resize-none min-h-[120px]"
-              />
-            </div>
-            <div className="px-5 pb-4">
-              <button
-                onClick={handleBugSubmit}
-                disabled={!bugText.trim()}
-                className="w-full py-3 rounded-lg text-[13px] font-bold uppercase tracking-wider bg-brand-dark text-primary-foreground hover:bg-brand-dark/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[48px]"
-              >
-                Submit Report
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Feature Request Modal */}
       {featureModalOpen && (
