@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter, Building2 } from 'lucide-react';
+import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useKDSMode } from '@/hooks/use-kds-mode';
@@ -52,6 +53,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
+  const { isPortrait } = usePortrait();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
@@ -86,7 +88,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   ];
 
   return (
-    <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
+    <div className={`h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10`}>
       <div className="flex items-center gap-3">
         <span className="text-primary-foreground font-bold">
           <span className="text-lg">{orderCount}</span> <span className="text-sm">{t.ordersInQueue}</span>
@@ -99,7 +101,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
 
       {!hideViewControls && (
-      <div className="flex items-center gap-3">
+      <div className={`flex items-center ${isPortrait ? 'gap-1.5' : 'gap-3'}`}>
         {/* Category filter */}
         <TooltipProvider delayDuration={300}>
           <Tooltip>
@@ -178,7 +180,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             <button
               key={mode}
               onClick={() => onViewModeChange(mode)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
+              className={`flex items-center gap-1.5 ${isPortrait ? 'px-2' : 'px-3'} py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
                 viewMode === mode
                   ? 'bg-primary-foreground text-brand-dark'
                   : 'text-primary-foreground/50 hover:text-primary-foreground/80'
@@ -186,14 +188,14 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
               aria-label={`Switch to ${label} view`}
             >
               <Icon size={14} />
-              <span>{label}</span>
+              {!isPortrait && <span>{label}</span>}
             </button>
           ))}
         </div>
       </div>
       )}
 
-      <div className="flex items-center gap-3">
+      <div className={`flex items-center ${isPortrait ? 'gap-1.5' : 'gap-3'}`}>
         <LanguageToggle onOpen={onOpenLanguageSettings} />
         <SoundToggle />
         <button
