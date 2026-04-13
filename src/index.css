@@ -330,5 +330,5 @@
 
 .animate-new-item {
   animation: new-item-blink 1.2s ease-in-out infinite;
-  border-left: 3px solid hsl(142 71% 45%);
+  border-left: 2px solid hsl(142 71% 45%);
 }
