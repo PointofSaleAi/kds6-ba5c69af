@@ -17,7 +17,7 @@ interface ItemSummaryPanelProps {
 
 interface CategorySummary {
   category: ProductCategory;
-  items: { name: string; remaining: number }[];
+  items: { name: string; remaining: number; hasNew: boolean }[];
 }
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
