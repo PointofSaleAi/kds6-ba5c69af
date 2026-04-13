@@ -287,7 +287,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 <div className="mt-3 px-3 py-2 bg-muted rounded-lg text-[12px] text-text-secondary leading-relaxed">
                   {ticketHeaderLayout === 'kitchen'
                     ? 'Order number shown as primary identifier. Best for kitchen and prep stations.'
-                    : 'Guest name shown as primary identifier. Best for expediters and runners.'}
+                    : 'Guest name or number shown as primary identifier. Best for expediters and runners.'}
                 </div>
               </SettingsCard>
 
