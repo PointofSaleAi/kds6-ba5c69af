@@ -233,7 +233,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item' : ''}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
                           <div
                             className="flex items-center justify-between py-[4px] cursor-pointer"
                             onClick={(e) => {
