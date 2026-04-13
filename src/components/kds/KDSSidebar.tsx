@@ -64,15 +64,17 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
               : 'hover:bg-white/20 border-2 border-transparent'
             }`}
         >
-          <item.icon size={22} className="text-sidebar-foreground shrink-0" />
+          <span className="relative shrink-0">
+            <item.icon size={22} className="text-sidebar-foreground" />
+            {showBadge && item.badge != null && item.badge > 0 && (
+              <span className={`absolute -top-1.5 -right-2 ${item.badgeColor || 'bg-brand-primary'} text-primary-foreground text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5`}>
+                {item.badge}
+              </span>
+            )}
+          </span>
           {expanded && (
             <span className="text-sidebar-foreground text-xs font-semibold whitespace-nowrap overflow-hidden">
               {item.label}
-            </span>
-          )}
-          {showBadge && item.badge != null && item.badge > 0 && (
-            <span className={`absolute top-1 right-1 ${item.badgeColor || 'bg-brand-primary'} text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center`}>
-              {item.badge}
             </span>
           )}
         </button>
