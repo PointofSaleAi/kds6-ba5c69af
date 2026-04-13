@@ -16,6 +16,7 @@ interface SeenOrdersScreenProps {
   onStepBack: (orderId: string) => void;
   onFireCourse: (orderId: string, course: string) => void;
   onItemStatusChange: (itemId: string, status: ItemStatus | undefined) => void;
+  onMarkSeen?: (orderId: string) => void;
 }
 
 const cardVariants = {
@@ -24,7 +25,7 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
-export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange }: SeenOrdersScreenProps) {
+export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen }: SeenOrdersScreenProps) {
   const { orders, seenOrderIds } = useOrderStore();
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
