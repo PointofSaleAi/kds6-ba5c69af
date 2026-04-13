@@ -23,7 +23,7 @@ interface CategorySummary {
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
 function buildSummary(orders: Order[]): CategorySummary[] {
-  const map = new Map<ProductCategory, Map<string, number>>();
+  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean }>>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
@@ -34,8 +34,10 @@ function buildSummary(orders: Order[]): CategorySummary[] {
         const cat = item.category || ('Uncategorized' as ProductCategory);
         if (!map.has(cat)) map.set(cat, new Map());
         const items = map.get(cat)!;
-        const existing = items.get(item.name) || 0;
-        items.set(item.name, existing + item.quantity);
+        const existing = items.get(item.name) || { remaining: 0, hasNew: false };
+        existing.remaining += item.quantity;
+        if (item.isNew) existing.hasNew = true;
+        items.set(item.name, existing);
       }
     }
   }
@@ -44,7 +46,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
     .map(([category, items]) => ({
       category,
       items: Array.from(items.entries())
-        .map(([name, remaining]) => ({ name, remaining }))
+        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew }))
         .filter(i => i.remaining > 0)
         .sort((a, b) => b.remaining - a.remaining),
     }))
