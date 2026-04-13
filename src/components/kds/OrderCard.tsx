@@ -472,8 +472,8 @@ export function OrderCard({ order, compact, portraitMode, onBump, onRecall, onFi
         >
           <OrderTypeBadge
             type={order.orderType}
-            time={formatTimeForKDS(order.timeReceived, timeFormat)}
-            tableInfo={getLocationLabel(order.orderType, order.tableName)}
+            time={portraitMode ? undefined : formatTimeForKDS(order.timeReceived, timeFormat)}
+            tableInfo={portraitMode ? undefined : getLocationLabel(order.orderType, order.tableName)}
             stationBadge={undefined}
           />
 
