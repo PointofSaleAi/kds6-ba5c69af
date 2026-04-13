@@ -65,6 +65,58 @@ const presetSounds = [
 const urgentOptions = ['Alarm', 'Double Bell', 'Pulse'];
 const serviceBellOptions = ['Classic Bell', 'Digital Chime', 'Soft Tone'];
 
+const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
+  'Alarm': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.45;
+      for (let i = 0; i < 4; i++) {
+        beep(ctx, 1400, ctx.currentTime + i * 0.12, 0.08, v);
+      }
+    } catch {}
+  },
+  'Double Bell': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.35;
+      beep(ctx, 900, ctx.currentTime, 0.25, v);
+      beep(ctx, 900, ctx.currentTime + 0.3, 0.25, v);
+    } catch {}
+  },
+  'Pulse': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.4;
+      for (let i = 0; i < 3; i++) {
+        beep(ctx, 1000, ctx.currentTime + i * 0.2, 0.1, v);
+      }
+    } catch {}
+  },
+  'Classic Bell': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.3;
+      beep(ctx, 1400, ctx.currentTime, 0.4, v);
+    } catch {}
+  },
+  'Digital Chime': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.3;
+      beep(ctx, 523, ctx.currentTime, 0.15, v);
+      beep(ctx, 659, ctx.currentTime + 0.15, 0.15, v);
+      beep(ctx, 784, ctx.currentTime + 0.3, 0.2, v);
+    } catch {}
+  },
+  'Soft Tone': (vol) => {
+    try {
+      const ctx = new AudioContext();
+      const v = vol / 100 * 0.2;
+      beep(ctx, 440, ctx.currentTime, 0.5, v);
+    } catch {}
+  },
+};
+
 export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
   const [volume, setVolume] = useState(75);
   const [alertVolume, setAlertVolume] = useState(80);
@@ -278,8 +330,8 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
             {/* Other alert sounds */}
             <div className="px-4 pt-2">
               <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Other Alert Sounds</div>
-              <SoundPicker label="Urgent / Overtime Alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} />
-              <SoundPicker label="Service Bell (Manual)" options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} />
+              <SoundPicker label="Urgent / Overtime Alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
+              <SoundPicker label="Service Bell (Manual)" options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
             </div>
 
             {/* Mute toggle */}
@@ -319,7 +371,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
   );
 }
 
-function SoundPicker({ label, options, value, onChange }: { label: string; options: string[]; value: string; onChange: (v: string) => void }) {
+function SoundPicker({ label, options, value, onChange, onPlay }: { label: string; options: string[]; value: string; onChange: (v: string) => void; onPlay?: (opt: string) => void }) {
   return (
     <div className="mb-4">
       <div className="text-sm font-medium text-text-primary mb-2">{label}</div>
@@ -327,13 +379,14 @@ function SoundPicker({ label, options, value, onChange }: { label: string; optio
         {options.map((opt) => (
           <button
             key={opt}
-            onClick={() => onChange(opt)}
-            className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors min-h-[44px] ${
+            onClick={() => { onChange(opt); onPlay?.(opt); }}
+            className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors min-h-[44px] flex items-center gap-1.5 ${
               value === opt
                 ? 'bg-brand-primary text-primary-foreground'
                 : 'bg-muted text-text-secondary hover:text-text-primary'
             }`}
           >
+            <Play size={12} />
             {opt}
           </button>
         ))}
