@@ -35,7 +35,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
   const filterItems: SidebarItem[] = [
     { icon: Eye, label: t.newOrders, action: 'new' },
-    { icon: CheckCircle, label: t.inProgress, action: 'in-progress' },
     { icon: EyeOff, label: t.hideCompleted, action: 'completed' },
   ];
 
