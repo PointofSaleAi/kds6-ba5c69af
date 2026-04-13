@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { Search } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
@@ -24,6 +24,8 @@ import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { toast } from 'sonner';
 import { usePortrait } from '@/hooks/use-portrait';
+import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
+import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 
 
 interface MainOrderViewProps {
@@ -52,7 +54,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
-  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone } = useOrderStore();
+  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds } = useOrderStore();
   const { isPortrait } = usePortrait();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -338,7 +340,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [historyOrders]);
 
   const handleNavigate = useCallback((target: string) => {
-    if (target === 'home' || target === 'history') {
+    if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
       setActiveNav(target);
       onCloseSettings?.();
     } else {
@@ -347,6 +349,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [onNavigate, onCloseSettings]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
+  const activeOrders = useMemo(() => orders.filter(o => o.status !== 'served'), [orders]);
+  const seenCount = useMemo(() => activeOrders.filter(o => seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
+  const unseenCount = useMemo(() => activeOrders.filter(o => !seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
 
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
@@ -416,6 +421,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const dateTabs = ['Today', 'Yesterday', 'Last 7 Days'];
 
   const isHistory = activeNav === 'history';
+  const isSeenScreen = activeNav === 'seen-orders';
+  const isUnseenScreen = activeNav === 'unseen-orders';
+  const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
@@ -426,6 +434,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           onNavigate={handleNavigate}
           activeNav={activeNav}
           settingsOpen={settingsOpen}
+          seenCount={seenCount}
+          unseenCount={unseenCount}
         />
 
         {settingsOpen ? (
@@ -514,6 +524,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               )}
             </>
+          ) : isSeenScreen ? (
+            <SeenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} />
+          ) : isUnseenScreen ? (
+            <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} />
           ) : (
             <>
               {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
@@ -576,7 +590,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && (kdsMode === 'Expo'
+        {!settingsOpen && !isSubScreen && (kdsMode === 'Expo'
           ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} />
           : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
         )}
