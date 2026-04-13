@@ -10,6 +10,7 @@ interface SidebarItem {
   icon: React.ElementType;
   label: string;
   badge?: number;
+  badgeColor?: string;
   action?: string;
 }
 
@@ -19,9 +20,11 @@ interface KDSSidebarProps {
   onNavigate: (screen: string) => void;
   activeNav?: string;
   settingsOpen?: boolean;
+  seenCount?: number;
+  unseenCount?: number;
 }
 
-export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen }: KDSSidebarProps) {
+export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen, seenCount = 0, unseenCount = 0 }: KDSSidebarProps) {
   const [expanded, setExpanded] = useState(false);
   const { showBadge } = useBadgeVisibility();
   const { t } = useLanguage();
@@ -34,8 +37,8 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
   ];
 
   const filterItems: SidebarItem[] = [
-    { icon: Eye, label: t.newOrders, action: 'new' },
-    { icon: EyeOff, label: t.hideCompleted, action: 'completed' },
+    { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
+    { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
   ];
 
   const w = expanded ? 'w-[200px]' : 'w-14';
@@ -75,18 +78,23 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
       <div className="mx-3 my-2 border-t border-sidebar-border" />
 
-      {/* Filters */}
+      {/* Seen / Unseen nav */}
       <nav className="flex flex-col gap-0.5 px-1.5">
         {filterItems.map((item) => (
           <button
             key={item.action}
-            onClick={() => onFilterChange(item.action!)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] ${
-              activeFilter === item.action ? 'border-l-2 border-brand-primary bg-sidebar-accent/50' : ''
+            onClick={() => onNavigate(item.action!)}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] relative ${
+              (!settingsOpen && activeNav === item.action) ? 'border-l-2 border-brand-primary bg-sidebar-accent/50' : ''
             }`}
           >
             <item.icon size={18} />
             {expanded && <span className="text-sm">{item.label}</span>}
+            {item.badge != null && item.badge > 0 && (
+              <span className={`absolute top-1.5 left-7 ${item.badgeColor || 'bg-brand-primary'} text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center`}>
+                {item.badge}
+              </span>
+            )}
           </button>
         ))}
       </nav>
