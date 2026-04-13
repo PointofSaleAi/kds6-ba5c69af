@@ -45,7 +45,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
-  const [activeTab, setActiveTab] = useState<'language' | 'region'>('language');
+  
 
   if (!open) return null;
 
