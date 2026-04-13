@@ -342,7 +342,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                   padding: '2px 0 2px 4px',
                   gap: 0,
                   ...(itemOpacity !== undefined ? { opacity: itemOpacity } : {}),
-                  ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
+                  ...(item.isNew && !item.isCancelled
+                    ? { backgroundColor: '#EFF6FF', borderLeft: '3px solid #3B82F6', paddingLeft: '6px' }
+                    : isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
                 }}
                 onClick={() => !item.isCancelled && onReRouteItem?.(item)}
               >
