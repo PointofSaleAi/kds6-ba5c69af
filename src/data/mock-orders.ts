@@ -50,6 +50,7 @@ export const mockOrders: Order[] = [
             notes: 'Make it extra spicy please',
             allergens: [],
             station: 'Grill',
+            isNew: true,
           },
           {
             id: 'i-003',
