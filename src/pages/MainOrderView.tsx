@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Search, Smartphone } from 'lucide-react';
+import { Search } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
