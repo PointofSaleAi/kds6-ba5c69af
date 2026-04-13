@@ -278,7 +278,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Ticket Header Layout" />
+                <CardLabel label="Ticket Identifier" />
                 <PillToggle
                   options={['Order No. View', 'Guest Name View']}
                   value={ticketHeaderLayout === 'guest' ? 'Guest Name View' : 'Order No. View'}
