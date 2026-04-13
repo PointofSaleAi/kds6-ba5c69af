@@ -216,15 +216,6 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           ) : (
             <div />
           )}
-          {activeSection === 'order-type-colors' && (
-            <button
-              onClick={onClose}
-              className="p-2.5 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-              aria-label="Close settings"
-            >
-              <X size={20} className="text-text-secondary" />
-            </button>
-          )}
         </div>
         {(activeSection === 'language' || activeSection === 'order-type-colors' || activeSection === 'status-settings') && <div className="mx-5 h-px bg-border mb-4" />}
 
