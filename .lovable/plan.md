@@ -1,73 +1,39 @@
 
 
-## Portrait/Vertical Mode for KDS Home Screen
+## Problem
 
-### Overview
-Add a responsive portrait layout that activates when the device is in portrait orientation (height > width). The main changes: single-column ticket cards, summary panel becomes a bottom drawer, and a dev-only portrait preview toggle.
+When a user taps the "SEEN" button on a ticket card, the order is not added to the `seenOrderIds` set in the global store. The Seen/Unseen screens filter orders based on this set, so tickets never move between screens.
 
-### Technical Approach
+`toggleOrderSeen` exists in the order store but is never called from `OrderCard`.
 
-**1. Portrait Detection Hook** (`src/hooks/use-portrait.ts`)
-- Create a custom hook `useIsPortrait()` that uses `window.matchMedia('(orientation: portrait)')` 
-- Also expose a `forcePortrait` override state for dev preview toggle
-- Store the force-portrait flag in a React context so it can be toggled from settings and consumed in MainOrderView
+## Plan
 
-**2. MainOrderView Layout Changes** (`src/pages/MainOrderView.tsx`)
-- Consume `useIsPortrait()` 
-- When portrait mode is active:
-  - The main content area renders tickets in a single-column vertical scroll (full width, one card per row)
-  - The `<ItemSummaryPanel>` is NOT rendered as a right sidebar
-  - Instead, render a new `<SummaryDrawer>` component at the bottom
+### 1. Wire `toggleOrderSeen` into OrderCard
 
-**3. Summary Drawer Component** (`src/components/kds/SummaryDrawer.tsx`)
-- A bottom-anchored collapsible drawer
-- **Collapsed state**: A small tab/handle bar showing "SUMMARY {count} ↑" positioned above the footer bar
-- **Expanded state**: Slides up to ~50% screen height, contains the existing `<ItemSummaryPanel>` content (reusing the same component)
-- Toggle on tap of the handle bar
-- Uses CSS transform + transition for the slide animation
+- Add an `onMarkSeen` optional prop to `OrderCardProps`
+- In `handleTicketAdvance`, when `ticketState === 'seen'` (the first tap), call `onMarkSeen?.(orderId)` to mark the order as seen in the global store
+- In `handleTicketRecall`, when recalling back to the initial "seen" state (clearing all statuses), call `onMarkSeen?.(orderId)` again to toggle it back to unseen
 
-**4. Footer Bar**
-- No changes. Footer stays fixed at bottom. Summary drawer handle sits just above it.
+**File**: `src/components/kds/OrderCard.tsx`
 
-**5. Left Sidebar**
-- No changes. Works as-is in portrait.
+### 2. Pass `toggleOrderSeen` from MainOrderView to OrderCard
 
-**6. Portrait Preview Toggle** (`src/pages/DevScenarioSelector.tsx` or MainOrderView)
-- Add a small dev-only toggle button (visible only in dev/preview) in the top-right area of the KDS view
-- When toggled, forces the portrait layout regardless of actual orientation
-- Uses the context from the portrait hook
+- Destructure `toggleOrderSeen` from `useOrderStore()` in MainOrderView
+- Pass it as `onMarkSeen={toggleOrderSeen}` to every `<OrderCard>` rendered on the Home screen
 
-### Files to Create/Edit
+**File**: `src/pages/MainOrderView.tsx`
 
-| File | Action |
-|------|--------|
-| `src/hooks/use-portrait.tsx` | **Create** - Portrait detection hook + context with force override |
-| `src/components/kds/SummaryDrawer.tsx` | **Create** - Bottom collapsible drawer wrapping ItemSummaryPanel |
-| `src/pages/MainOrderView.tsx` | **Edit** - Conditionally render single-column layout + SummaryDrawer in portrait mode |
+### 3. Pass `toggleOrderSeen` in SeenOrdersScreen and UnseenOrdersScreen
 
-### Layout Behavior
+- Import and use `toggleOrderSeen` from the order store in both screens
+- Pass it as `onMarkSeen` to every `<OrderCard>` rendered in those screens
+- This ensures tapping the eye/recall button on Seen or Unseen screens also syncs state
 
-```text
-LANDSCAPE (current, unchanged)        PORTRAIT (new)
-┌──┬──────────────────┬────┐          ┌──┬────────────────────┐
-│  │ Card Card Card   │ S  │          │  │ Card (full width)  │
-│  │ Card Card Card   │ U  │          │  │ Card (full width)  │
-│S │ Card Card        │ M  │          │S │ Card (full width)  │
-│B │                  │ M  │          │B │ Card (full width)  │
-│  │                  │    │          │  │                    │
-│  ├──────────────────┤    │          │  ├────────────────────┤
-│  │ Footer Bar       │    │          │  │ SUMMARY 88 ↑      │
-└──┴──────────────────┴────┘          │  ├────────────────────┤
-                                      │  │ Footer Bar         │
-                                      └──┴────────────────────┘
-```
+**Files**: `src/pages/SeenOrdersScreen.tsx`, `src/pages/UnseenOrdersScreen.tsx`
 
-### Implementation Details
-
-- Portrait grid: `grid-cols-1` with cards at full width
-- Summary drawer uses `fixed` positioning with `bottom` offset equal to footer height (52px)
-- Drawer expanded height: `50vh`
-- Drawer handle: 40px tall, dark background, centered text "SUMMARY {count} ↑"
-- Transition: `transform 300ms ease-in-out`
-- The dev portrait toggle will be a small phone-rotation icon button rendered conditionally when `import.meta.env.DEV` is true
+### What stays unchanged
+- KDS Home screen layout and behaviour (unchanged)
+- Sidebar navigation structure (unchanged)
+- Summary panel (unchanged)
+- Order store shape (no new fields, just wiring existing `toggleOrderSeen`)
 
