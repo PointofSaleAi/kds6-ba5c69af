@@ -339,7 +339,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 key={item.id}
                 className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''}`}
                 style={{
-                  padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`,
+                  padding: '2px 0 2px 4px',
                   gap: 0,
                   ...(itemOpacity !== undefined ? { opacity: itemOpacity } : {}),
                   ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
@@ -398,7 +398,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
                   {/* item-mods */}
                   {item.modifiers.length > 0 && (
-                    <div style={{ marginTop: '2px' }}>
+                    <div style={{ marginTop: '0px' }}>
                       {item.modifiers.map((mod, idx) => (
                         <div
                           key={idx}
