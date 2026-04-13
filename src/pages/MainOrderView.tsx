@@ -349,6 +349,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [onNavigate, onCloseSettings]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
+  const activeOrders = useMemo(() => orders.filter(o => o.status !== 'served'), [orders]);
+  const seenCount = useMemo(() => activeOrders.filter(o => seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
+  const unseenCount = useMemo(() => activeOrders.filter(o => !seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
 
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
