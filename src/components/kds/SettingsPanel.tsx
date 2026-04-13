@@ -109,7 +109,6 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
-  const [langTab, setLangTab] = useState<'language' | 'region'>('language');
   const [uploadingLogs, setUploadingLogs] = useState(false);
 
   const handleUploadLogs = () => {
@@ -199,17 +198,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               >
                 <ChevronLeft size={20} className="text-text-secondary" />
               </button>
-              {(['language', 'region'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setLangTab(tab)}
-                  className={`px-4 py-2 text-sm font-semibold transition-colors relative rounded-lg min-h-[44px] ${
-                    langTab === tab ? 'text-white bg-[#212121]' : 'text-text-muted hover:text-text-secondary'
-                  }`}
-                >
-                  {tab === 'language' ? 'Language' : 'Region'}
-                </button>
-              ))}
+              <h2 className="text-lg font-bold text-text-primary">Language</h2>
             </div>
           ) : activeSection === 'order-type-colors' || activeSection === 'status-settings' ? (
             <div className="flex items-center gap-2">
@@ -451,7 +440,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           )}
 
           {activeSection === 'language' && (
-            <InlineLanguageSettings activeTab={langTab} />
+            <InlineLanguageSettings activeTab="language" />
           )}
 
           {activeSection === 'order-type-colors' && (

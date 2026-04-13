@@ -183,7 +183,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     saveDateFormat(dateFormat);
     saveTimeFormat(timeFormat);
     // Language & display mode are already persisted on change via context
-    toast.success('Language and region settings saved');
+    toast.success('Language settings saved');
   };
 
   const selectedLangInList = displayMode === 'dual' ? secondaryLang : localSingleLang;
@@ -466,7 +466,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                         {hasVariants && (
                           <div>
                             <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
-                              Region / Dialect
+                              Dialect
                             </label>
                             <input
                               type="text"
