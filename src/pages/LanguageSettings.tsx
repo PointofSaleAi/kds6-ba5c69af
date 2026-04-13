@@ -124,35 +124,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
             </button>
           </div>
 
-          {/* Tab bar */}
-          <div className="flex border-b border-border shrink-0 px-5">
-            <button
-              onClick={() => setActiveTab('language')}
-              className={`px-4 py-2.5 text-sm font-semibold transition-colors relative ${
-                activeTab === 'language' ? 'text-text-primary' : 'text-text-muted hover:text-text-secondary'
-              }`}
-            >
-              Language
-              {activeTab === 'language' && (
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary rounded-full" />
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('region')}
-              className={`px-4 py-2.5 text-sm font-semibold transition-colors relative ${
-                activeTab === 'region' ? 'text-text-primary' : 'text-text-muted hover:text-text-secondary'
-              }`}
-            >
-              Region
-              {activeTab === 'region' && (
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary rounded-full" />
-              )}
-            </button>
-          </div>
-
           {/* Tab content */}
           <div className="flex-1 overflow-hidden">
-            {activeTab === 'language' ? (
               <div className="flex flex-col md:flex-row h-full">
                 {/* LEFT COLUMN */}
                 <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 min-w-0">
