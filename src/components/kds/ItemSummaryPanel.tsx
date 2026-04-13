@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
+import { usePortrait } from '@/hooks/use-portrait';
 import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
@@ -55,6 +56,7 @@ function buildSummary(orders: Order[]): CategorySummary[] {
 
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
+  const { isPortrait } = usePortrait();
   const [collapsed, setCollapsed] = useState(false);
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
 
@@ -235,19 +237,19 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       return (
                         <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
                           <div
-                            className="flex items-center justify-between py-[4px] cursor-pointer"
+                            className={`flex items-start justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
                             onClick={(e) => {
                               e.stopPropagation();
                               onItemToggle?.(item.name);
                             }}
                           >
                             <span
-                              className={`min-w-0 truncate uppercase leading-tight ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                              className={`min-w-0 uppercase leading-tight ${isPortrait ? 'break-words' : 'truncate'} ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
                               style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : {}) }}
                             >
                               {tp(item.name)}
                             </span>
-                            <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                            <div className={`flex items-center ${isPortrait ? 'gap-1' : 'gap-1.5'} ml-1 shrink-0`}>
                               {isUncategorized && (
                                 <button
                                   onClick={(e) => {

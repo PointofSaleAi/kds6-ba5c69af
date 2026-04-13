@@ -394,9 +394,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     >
                       {tp(item.name)}
                     </span>
-                    {item.station && !item.isCancelled && (
-                      <StationBadge station={item.station} />
-                    )}
                     {item.isCancelled && (
                       <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
                         CANCELLED
