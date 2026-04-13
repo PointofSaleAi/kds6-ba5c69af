@@ -182,7 +182,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 <span className="text-section-label uppercase text-text-muted tracking-widest">{t.hardware}</span>
               </div>
             </div>
-            <SettingsRow icon={Printer} label={t.mainPrintingDevice} description="Kitchen Epson TM-T88" onClick={() => onOpenSub('printer-settings')} />
+            <SettingsRow icon={Printer} label={t.mainPrintingDevice} description="Kitchen Epson TM-T88" onClick={() => onOpenSub('printer-routing')} />
             <SettingsRow icon={Volume2} label={t.soundSettings} description={t.volumeAndAlerts} onClick={() => onOpenSub('sound-settings')} />
             <SettingsRow icon={Server} label={t.connection} description={t.wsAndSync} onClick={() => onOpenSub('websocket-settings')} />
 
