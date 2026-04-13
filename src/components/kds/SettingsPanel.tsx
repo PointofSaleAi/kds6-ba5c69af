@@ -26,7 +26,6 @@ interface SettingsPanelProps {
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: 'display', label: 'Display', icon: Monitor },
-  { id: 'orders', label: 'Orders', icon: ShoppingBag },
   { id: 'hardware', label: 'Hardware', icon: Cpu },
   { id: 'account', label: 'Account', icon: User },
 ];
@@ -291,29 +290,6 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </div>
               </SettingsCard>
 
-            </div>
-          )}
-
-          {activeSection === 'orders' && (
-            <div className="grid grid-cols-2 gap-4">
-              <SettingsCard>
-                <CardLabel label="Category Filter" description="Manage active categories" />
-                <ActionButton label="Manage" onClick={() => onOpenSub('category-filter')} />
-              </SettingsCard>
-
-              <SettingsCard>
-                <CardLabel label="Revenue Center Filter" description="Manage station filters" />
-                <ActionButton label="Manage" onClick={() => onOpenSub('revenue-filter')} />
-              </SettingsCard>
-
-              <SettingsCard>
-                <CardLabel label="Stagger Mode" />
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-[13px] text-text-secondary font-medium">{staggerMode ? 'ON' : 'OFF'}</span>
-                  <LargeToggle checked={staggerMode} onChange={setStaggerMode} />
-                </div>
-              </SettingsCard>
-
               <SettingsCard>
                 <CardLabel label="Servable Modifiers" />
                 <div className="flex items-center justify-between mt-1">
@@ -322,12 +298,9 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </div>
               </SettingsCard>
 
-              <SettingsCard className="col-span-2">
-                <CardLabel label="Sort Default" />
-                <PillToggle options={['By Time', 'By Table', 'By Type']} value={sortDefault} onChange={setSortDefault} />
-              </SettingsCard>
             </div>
           )}
+
 
           {activeSection === 'hardware' && (
             <div className="grid grid-cols-2 gap-4">
