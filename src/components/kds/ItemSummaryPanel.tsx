@@ -22,8 +22,9 @@ interface CategorySummary {
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
-function buildSummary(orders: Order[]): CategorySummary[] {
+function buildSummary(orders: Order[]): { summaries: CategorySummary[]; newItemNames: Set<string> } {
   const map = new Map<ProductCategory, Map<string, number>>();
+  const newItemNames = new Set<string>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
@@ -36,11 +37,12 @@ function buildSummary(orders: Order[]): CategorySummary[] {
         const items = map.get(cat)!;
         const existing = items.get(item.name) || 0;
         items.set(item.name, existing + item.quantity);
+        if (item.isNew) newItemNames.add(item.name);
       }
     }
   }
 
-  return Array.from(map.entries())
+  const summaries = Array.from(map.entries())
     .map(([category, items]) => ({
       category,
       items: Array.from(items.entries())
@@ -49,12 +51,14 @@ function buildSummary(orders: Order[]): CategorySummary[] {
         .sort((a, b) => b.remaining - a.remaining),
     }))
     .filter(c => c.items.length > 0);
+
+  return { summaries, newItemNames };
 }
 
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
-  const rawSummary = useMemo(() => buildSummary(orders), [orders]);
+  const { summaries: rawSummary, newItemNames } = useMemo(() => buildSummary(orders), [orders]);
 
   const summary = stationCourse
     ? [
@@ -229,9 +233,12 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
+                      const isNewItem = newItemNames.has(item.name);
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass}`}
+                          style={isNewItem && !isSelected ? { backgroundColor: '#EFF6FF', borderLeft: '3px solid #3B82F6' } : undefined}
+                        >
                           <div
                             className="flex items-center justify-between py-[4px] cursor-pointer"
                             onClick={(e) => {
