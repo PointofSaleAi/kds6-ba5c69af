@@ -340,7 +340,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [historyOrders]);
 
   const handleNavigate = useCallback((target: string) => {
-    if (target === 'home' || target === 'history') {
+    if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
       setActiveNav(target);
       onCloseSettings?.();
     } else {
