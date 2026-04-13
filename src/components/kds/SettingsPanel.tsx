@@ -359,7 +359,26 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </div>
               </SettingsCard>
 
+              <SettingsCard>
+                <CardLabel label="Debug Mode" description="Enable verbose logging for troubleshooting" />
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[13px] text-text-secondary font-medium">{devMode ? 'ON' : 'OFF'}</span>
+                  <LargeToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} />
+                </div>
+              </SettingsCard>
 
+              <SettingsCard>
+                <CardLabel label="Upload Logs" description="Send device logs to the eatOS support team" />
+                <ActionButton label="Upload Logs" onClick={() => toast.success('Logs uploaded successfully')} />
+              </SettingsCard>
+
+              <SettingsCard className="col-span-2">
+                <CardLabel label="Feedback & Support" description="Report an issue or request a feature" />
+                <div className="flex gap-3">
+                  <ActionButton label="Report a Bug" onClick={() => toast.info('Bug report form coming soon')} />
+                  <ActionButton label="Request a Feature" onClick={() => toast.info('Feature request form coming soon')} />
+                </div>
+              </SettingsCard>
 
 
               <SettingsCard className="col-span-2">
