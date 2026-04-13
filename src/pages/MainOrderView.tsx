@@ -438,16 +438,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           />
         ) : (
         <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
-          {/* Dev-only portrait toggle */}
-          {import.meta.env.DEV && (
-            <button
-              onClick={() => setForcePortrait(!forcePortrait)}
-              className={`absolute top-2 right-2 z-30 p-1.5 rounded-md border text-[10px] font-bold flex items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-colors ${forcePortrait ? 'bg-brand-dark text-white border-brand-dark' : 'bg-surface-card text-text-secondary border-border hover:bg-muted'}`}
-              title="Toggle portrait preview"
-            >
-              <Smartphone size={14} />
-            </button>
-          )}
           {isHistory ? (
             <>
               {/* History filter bar */}
