@@ -54,7 +54,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
-  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds } = useOrderStore();
+  const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -525,9 +525,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               )}
             </>
           ) : isSeenScreen ? (
-            <SeenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} />
+            <SeenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} />
           ) : isUnseenScreen ? (
-            <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} />
+            <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} />
           ) : (
             <>
               {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
@@ -543,7 +543,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -555,7 +555,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => (
                               <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
                               </motion.div>
                             ))}
                           </AnimatePresence>
@@ -567,7 +567,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
@@ -577,7 +577,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => (
                           <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
                           </motion.div>
                         ))}
                       </AnimatePresence>
