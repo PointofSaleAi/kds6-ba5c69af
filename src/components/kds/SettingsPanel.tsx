@@ -410,7 +410,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
               <SettingsCard>
                 <CardLabel label="Upload Logs" description="Send device logs to the eatOS support team" />
-                <ActionButton label="Upload Logs" onClick={() => toast.success('Logs uploaded successfully')} />
+                <button
+                  onClick={handleUploadLogs}
+                  disabled={uploadingLogs}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw size={14} className={uploadingLogs ? 'animate-spin' : ''} />
+                  {uploadingLogs ? 'Uploading...' : 'Upload Logs'}
+                </button>
               </SettingsCard>
 
               <SettingsCard className="col-span-2">
