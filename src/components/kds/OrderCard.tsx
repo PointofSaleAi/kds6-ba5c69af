@@ -291,6 +291,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   }, [isDineIn, courseLifecycleMap]);
 
   const handleTicketAdvance = useCallback((orderId: string) => {
+    // Acknowledge new items on any advance (especially SEEN tap)
+    if (hasNewItems) {
+      acknowledgeNewItems(orderId);
+    }
     if (ticketState === 'done') {
       if (isDineIn && activeCourseName) {
         // Confirm this course as done - it will collapse and next course becomes active
