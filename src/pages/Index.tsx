@@ -13,8 +13,7 @@ import AlertsPanel from '@/pages/AlertsPanel';
 import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import LanguageSettings from '@/pages/LanguageSettings';
 import SoundSettings from '@/pages/SoundSettings';
-import PrinterSettings from '@/pages/PrinterSettings';
-import PrintersScreen from '@/pages/PrintersScreen';
+import PrinterRoutingModal from '@/pages/PrinterRoutingModal';
 import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
 import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
 import StaggerModeSettings from '@/pages/StaggerModeSettings';
@@ -44,13 +43,13 @@ const Index = () => {
   // Sub-screen states
   const [languageOpen, setLanguageOpen] = useState(false);
   const [soundOpen, setSoundOpen] = useState(false);
-  const [printerOpen, setPrinterOpen] = useState(false);
+  const [printerRoutingOpen, setPrinterRoutingOpen] = useState(false);
   const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
   const [revenueFilterOpen, setRevenueFilterOpen] = useState(false);
   const [staggerOpen, setStaggerOpen] = useState(false);
   
   const [websocketOpen, setWebsocketOpen] = useState(false);
-  const [printersScreenOpen, setPrintersScreenOpen] = useState(false);
+  
 
   // Track where to return for fallback flows
   const [returnToSelector, setReturnToSelector] = useState(false);
@@ -90,13 +89,13 @@ const Index = () => {
     switch (sub) {
       case 'language-settings': setLanguageOpen(true); break;
       case 'sound-settings': setSoundOpen(true); break;
-      case 'printer-settings': setPrinterOpen(true); break;
+      case 'printer-routing': setPrinterRoutingOpen(true); break;
       case 'category-filter': setCategoryFilterOpen(true); break;
       case 'revenue-filter': setRevenueFilterOpen(true); break;
       case 'stagger-mode': setStaggerOpen(true); break;
       case 'status-settings': break; // handled inline in SettingsPanel
       case 'websocket-settings': setWebsocketOpen(true); break;
-      case 'printers': setPrintersScreenOpen(true); break;
+      
     }
   }, []);
 
@@ -160,13 +159,13 @@ const Index = () => {
       <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
       <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <SoundSettings open={soundOpen} onClose={() => setSoundOpen(false)} />
-      <PrinterSettings open={printerOpen} onClose={() => setPrinterOpen(false)} />
+      <PrinterRoutingModal open={printerRoutingOpen} onClose={() => setPrinterRoutingOpen(false)} />
       <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} onApply={() => {}} />
       <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} onApply={() => {}} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
-      <PrintersScreen open={printersScreenOpen} onClose={() => setPrintersScreenOpen(false)} />
+      
     </>
   );
 };
