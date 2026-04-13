@@ -53,7 +53,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone } = useOrderStore();
-  const { isPortrait, forcePortrait, setForcePortrait } = usePortrait();
+  const { isPortrait } = usePortrait();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
