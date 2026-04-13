@@ -133,6 +133,7 @@ export const mockOrders: Order[] = [
             ],
             notes: 'Cook well done, no pink',
             allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }],
+            isNew: true,
             station: 'Grill',
           },
           {
