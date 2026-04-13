@@ -305,18 +305,13 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           {activeSection === 'hardware' && (
             <div className="grid grid-cols-2 gap-4">
               <SettingsCard>
-                <CardLabel label="Main Printing Device" description="Kitchen Epson TM-T88" />
-                <ActionButton label="Change" onClick={() => onOpenSub('printer-settings')} />
+                <CardLabel label="Printer Routing" description="Select where this KDS will send print jobs." />
+                <ActionButton label="Configure" onClick={() => onOpenSub('printer-routing')} />
               </SettingsCard>
 
               <SettingsCard>
                 <CardLabel label="Sound Settings" description="Volume and alert sounds" />
                 <ActionButton label="Configure" onClick={() => onOpenSub('sound-settings')} />
-              </SettingsCard>
-
-              <SettingsCard>
-                <CardLabel label="Printers" description="Manage paired printers" />
-                <ActionButton label="Manage" onClick={() => onOpenSub('printers')} />
               </SettingsCard>
 
               <SettingsCard>
