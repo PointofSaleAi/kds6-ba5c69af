@@ -96,6 +96,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   const isCourseCompleted = coursingStatus === 'fired';
 
   const [isExpanded, setIsExpanded] = useState(!isCourseCompleted && !isServedByLifecycle);
+  const [servedExpanded, setServedExpanded] = useState(false);
 
   // Static firing-at label for pending courses
   const firingAtLabel = useMemo(() => {
@@ -227,16 +228,17 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     );
   };
 
-  // Served courses: render a simple collapsed row with no expand
+  // Served courses: render a collapsible row (collapsed by default, tappable to expand)
   if (isServedByLifecycle) {
     return (
       <div className={containerClass} style={containerStyle}>
         <div
-          className={`flex items-center justify-between flex-nowrap ${headerBg} select-none`}
+          className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
           style={{ padding: '4px 8px' }}
+          onClick={() => setServedExpanded(prev => !prev)}
         >
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
-            <span className="text-muted-foreground" style={{ fontSize: 'var(--kds-course-header)' }}>▶</span>
+            <span className={`text-muted-foreground transition-transform duration-200 ${servedExpanded ? 'rotate-90' : ''}`} style={{ fontSize: 'var(--kds-course-header)' }}>▶</span>
             <span className={labelClass} style={{ ...labelStyle, fontSize: 'var(--kds-course-header)' }}>
               {courseLabel}
             </span>
@@ -247,6 +249,39 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             </span>
           )}
         </div>
+        {hasItems && (
+          <div
+            className="overflow-hidden transition-all duration-300 ease-in-out"
+            style={{
+              maxHeight: servedExpanded ? '500px' : '0px',
+              opacity: servedExpanded ? 1 : 0,
+            }}
+          >
+            <div className="px-2 py-0.5">
+              {courseGroup.items.map((item) => (
+                <div
+                  key={item.id}
+                  className={`flex items-center border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''}`}
+                  style={{ padding: '2px 0 2px 4px', opacity: 0.6 }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+                      <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
+                        {item.quantity}x
+                      </span>
+                      <span
+                        className={`font-medium uppercase line-through text-text-muted`}
+                        style={{ fontSize: 'var(--kds-item-name)' }}
+                      >
+                        {tp(item.name)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
