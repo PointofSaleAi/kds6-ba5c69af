@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter, Building2 } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Smartphone, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter, Building2, ClipboardList } from 'lucide-react';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useKDSMode } from '@/hooks/use-kds-mode';
@@ -21,6 +21,7 @@ interface BottomStatusBarProps {
   onOpenLanguageSettings?: () => void;
   onOpenCategoryFilter?: () => void;
   onOpenRevenueFilter?: () => void;
+  onOpenSummaryOverlay?: () => void;
 }
 
 function SoundToggle() {
@@ -49,7 +50,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, onOpenSummaryOverlay }: BottomStatusBarProps) {
   const { mode: kdsMode } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const [sortOpen, setSortOpen] = useState(false);
@@ -83,6 +84,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
     { mode: 'grid', icon: LayoutGrid, label: t.grid },
     { mode: 'horizontal', icon: Columns3, label: t.horizontal },
     { mode: 'stagger', icon: StretchHorizontal, label: t.stagger },
+    { mode: 'portrait', icon: Smartphone, label: 'Portrait' },
   ];
 
   return (
