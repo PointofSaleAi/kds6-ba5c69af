@@ -30,10 +30,10 @@ function SoundToggle() {
   return (
     <button
       onClick={toggleMute}
-      className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
+      className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
     >
-      {muted ? <VolumeX size={16} className="text-primary-foreground/70" /> : <Volume2 size={16} className="text-primary-foreground/70" />}
+      {muted ? <VolumeX size={15} className="text-primary-foreground/70" /> : <Volume2 size={15} className="text-primary-foreground/70" />}
     </button>
   );
 }
@@ -42,10 +42,10 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   return (
     <button
       onClick={onOpen}
-      className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px] gap-1"
+      className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label="Change language"
     >
-      <Globe size={16} className="text-primary-foreground/70" />
+      <Globe size={15} className="text-primary-foreground/70" />
     </button>
   );
 }
@@ -88,10 +88,12 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   ];
 
   return (
-    <div className={`h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10`}>
-      <div className="flex items-center gap-3">
+    <div className={`h-[52px] bg-brand-dark flex items-center ${isPortrait ? 'justify-evenly' : 'justify-between'} px-4 shrink-0 z-10`}>
+      {/* Order count */}
+      <div className="flex items-center gap-2 shrink-0">
         <span className="text-primary-foreground font-bold">
-          <span className="text-lg">{orderCount}</span> <span className="text-sm">{t.ordersInQueue}</span>
+          <span className="text-lg">{orderCount}</span>{' '}
+          {!isPortrait && <span className="text-sm">{t.ordersInQueue}</span>}
         </span>
         {kdsMode === 'Prep' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
@@ -101,7 +103,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
 
       {!hideViewControls && (
-      <div className={`flex items-center ${isPortrait ? 'gap-1.5' : 'gap-3'}`}>
+      <div className={`flex items-center ${isPortrait ? 'gap-2' : 'gap-3'}`}>
         {/* Category filter */}
         <TooltipProvider delayDuration={300}>
           <Tooltip>
@@ -111,7 +113,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
                 aria-label="Category filter"
               >
-                <Filter size={14} className="text-primary-foreground/70" />
+                <Filter size={15} className="text-primary-foreground/70" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="top"><p>{t.categoryFilter || 'Category Filter'}</p></TooltipContent>
@@ -127,7 +129,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
                 aria-label="Revenue center filter"
               >
-                <Building2 size={14} className="text-primary-foreground/70" />
+                <Building2 size={15} className="text-primary-foreground/70" />
               </button>
             </TooltipTrigger>
             <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue Center Filter'}</p></TooltipContent>
@@ -148,7 +150,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                   }`}
                   aria-label="Sort orders"
                 >
-                  <ArrowUpDown size={14} />
+                  <ArrowUpDown size={15} />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top"><p>{activeSort.label}</p></TooltipContent>
@@ -175,19 +177,19 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         </div>
 
         {/* View mode toggle */}
-        <div className="flex items-center bg-primary-foreground/10 rounded-full p-0.5">
+        <div className="flex items-center bg-primary-foreground/10 rounded-full p-0.5 gap-0.5">
           {viewModes.map(({ mode, icon: Icon, label }) => (
             <button
               key={mode}
               onClick={() => onViewModeChange(mode)}
-              className={`flex items-center gap-1.5 ${isPortrait ? 'px-2' : 'px-3'} py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
+              className={`flex items-center justify-center ${isPortrait ? 'w-9 h-9' : 'gap-1.5 px-3'} py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
                 viewMode === mode
                   ? 'bg-primary-foreground text-brand-dark'
                   : 'text-primary-foreground/50 hover:text-primary-foreground/80'
               }`}
               aria-label={`Switch to ${label} view`}
             >
-              <Icon size={14} />
+              <Icon size={15} />
               {!isPortrait && <span>{label}</span>}
             </button>
           ))}
@@ -195,19 +197,21 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
       )}
 
-      <div className={`flex items-center ${isPortrait ? 'gap-1.5' : 'gap-3'}`}>
+      <div className={`flex items-center ${isPortrait ? 'gap-2' : 'gap-3'}`}>
         <LanguageToggle onOpen={onOpenLanguageSettings} />
         <SoundToggle />
         <button
           onClick={onToggleTheme}
-          className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[44px] min-w-[44px]"
+          className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
-          {theme === 'light' ? <Moon size={16} className="text-primary-foreground/70" /> : <Sun size={16} className="text-warning" />}
+          {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
-        <span className="text-primary-foreground/80 text-sm">
-          {timeStr} &middot; {dateStr}
-        </span>
+        {!isPortrait && (
+          <span className="text-primary-foreground/80 text-sm">
+            {timeStr} &middot; {dateStr}
+          </span>
+        )}
       </div>
     </div>
   );
