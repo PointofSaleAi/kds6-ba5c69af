@@ -110,6 +110,26 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
   const [uploadingLogs, setUploadingLogs] = useState(false);
+  const [bugModalOpen, setBugModalOpen] = useState(false);
+  const [featureModalOpen, setFeatureModalOpen] = useState(false);
+  const [bugText, setBugText] = useState('');
+  const [featureText, setFeatureText] = useState('');
+
+  const handleBugSubmit = () => {
+    // TODO: send to backend API
+    console.info('[BugReport]', { text: bugText, stationId: 'STN-001', version: '5.0.84' });
+    setBugModalOpen(false);
+    setBugText('');
+    toast.success('Bug report submitted. Our team will look into it.');
+  };
+
+  const handleFeatureSubmit = () => {
+    // TODO: send to backend API
+    console.info('[FeatureRequest]', { text: featureText, stationId: 'STN-001', version: '5.0.84' });
+    setFeatureModalOpen(false);
+    setFeatureText('');
+    toast.success('Thank you for your feedback!');
+  };
 
   const handleUploadLogs = () => {
     setUploadingLogs(true);
@@ -405,8 +425,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               <SettingsCard className="col-span-2">
                 <CardLabel label="Feedback & Support" description="Report an issue or request a feature" />
                 <div className="flex gap-3">
-                  <ActionButton label="Report a Bug" onClick={() => toast.info('Bug report form coming soon')} />
-                  <ActionButton label="Request a Feature" onClick={() => toast.info('Feature request form coming soon')} />
+                  <ActionButton label="Report a Bug" onClick={() => setBugModalOpen(true)} />
+                  <ActionButton label="Request a Feature" onClick={() => setFeatureModalOpen(true)} />
                 </div>
               </SettingsCard>
 
@@ -443,6 +463,72 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           )}
         </div>
       </div>
+
+      {/* Bug Report Modal */}
+      {bugModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setBugModalOpen(false)} />
+          <div className="relative bg-surface-card rounded-xl shadow-xl w-[480px] max-w-[90vw] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
+              <h3 className="text-[15px] font-bold text-text-primary">Report a Bug</h3>
+              <button onClick={() => setBugModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors min-h-[44px] min-w-[44px]">
+                <X size={18} className="text-text-muted" />
+              </button>
+            </div>
+            <div className="px-5 py-4">
+              <textarea
+                value={bugText}
+                onChange={(e) => setBugText(e.target.value)}
+                placeholder="Describe the issue you encountered..."
+                rows={5}
+                className="w-full bg-muted rounded-lg px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted outline-none resize-none min-h-[120px]"
+              />
+            </div>
+            <div className="px-5 pb-4">
+              <button
+                onClick={handleBugSubmit}
+                disabled={!bugText.trim()}
+                className="w-full py-3 rounded-lg text-[13px] font-bold uppercase tracking-wider bg-brand-dark text-primary-foreground hover:bg-brand-dark/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[48px]"
+              >
+                Submit Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Feature Request Modal */}
+      {featureModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setFeatureModalOpen(false)} />
+          <div className="relative bg-surface-card rounded-xl shadow-xl w-[480px] max-w-[90vw] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
+              <h3 className="text-[15px] font-bold text-text-primary">Request a Feature</h3>
+              <button onClick={() => setFeatureModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors min-h-[44px] min-w-[44px]">
+                <X size={18} className="text-text-muted" />
+              </button>
+            </div>
+            <div className="px-5 py-4">
+              <textarea
+                value={featureText}
+                onChange={(e) => setFeatureText(e.target.value)}
+                placeholder="What would you like to see in the KDS?"
+                rows={5}
+                className="w-full bg-muted rounded-lg px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted outline-none resize-none min-h-[120px]"
+              />
+            </div>
+            <div className="px-5 pb-4">
+              <button
+                onClick={handleFeatureSubmit}
+                disabled={!featureText.trim()}
+                className="w-full py-3 rounded-lg text-[13px] font-bold uppercase tracking-wider bg-brand-dark text-primary-foreground hover:bg-brand-dark/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[48px]"
+              >
+                Submit Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
         <AlertDialogContent className="bg-surface-card border-border">
