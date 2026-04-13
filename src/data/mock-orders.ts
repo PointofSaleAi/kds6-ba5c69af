@@ -50,6 +50,7 @@ export const mockOrders: Order[] = [
             notes: 'Make it extra spicy please',
             allergens: [],
             station: 'Grill',
+            isNew: true,
           },
           {
             id: 'i-003',
@@ -133,6 +134,7 @@ export const mockOrders: Order[] = [
             ],
             notes: 'Cook well done, no pink',
             allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }],
+            isNew: true,
             station: 'Grill',
           },
           {

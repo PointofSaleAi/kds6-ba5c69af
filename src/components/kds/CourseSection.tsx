@@ -337,7 +337,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             return (
               <div
                 key={item.id}
-                className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''}`}
+                className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
                 style={{
                   padding: '2px 0 2px 4px',
                   gap: 0,
