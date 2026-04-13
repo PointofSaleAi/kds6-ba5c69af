@@ -481,7 +481,16 @@ export function OrderCard({ order, compact, portraitMode, onBump, onRecall, onFi
             className="flex items-stretch justify-between transition-all duration-200"
             style={{ backgroundColor: statusColor.color, padding: `var(--kds-card-padding)` }}
           >
-            {ticketHeaderLayout === 'kitchen' ? (
+            {portraitMode ? (
+              <>
+                <div className="text-white leading-none font-black flex items-center" style={{ fontSize: 'var(--kds-order-num)' }}>
+                  {order.orderNumber}
+                </div>
+                <div className="flex items-center">
+                  <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+                </div>
+              </>
+            ) : ticketHeaderLayout === 'kitchen' ? (
               <>
                 <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}
