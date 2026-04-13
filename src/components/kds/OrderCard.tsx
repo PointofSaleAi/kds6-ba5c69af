@@ -18,6 +18,7 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useOrderStore } from '@/hooks/use-order-store';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import UsersBold from '@/assets/users-bold.svg';
 
