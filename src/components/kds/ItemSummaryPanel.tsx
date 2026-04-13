@@ -22,8 +22,9 @@ interface CategorySummary {
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
-function buildSummary(orders: Order[]): CategorySummary[] {
+function buildSummary(orders: Order[]): { summaries: CategorySummary[]; newItemNames: Set<string> } {
   const map = new Map<ProductCategory, Map<string, number>>();
+  const newItemNames = new Set<string>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
@@ -36,11 +37,12 @@ function buildSummary(orders: Order[]): CategorySummary[] {
         const items = map.get(cat)!;
         const existing = items.get(item.name) || 0;
         items.set(item.name, existing + item.quantity);
+        if (item.isNew) newItemNames.add(item.name);
       }
     }
   }
 
-  return Array.from(map.entries())
+  const summaries = Array.from(map.entries())
     .map(([category, items]) => ({
       category,
       items: Array.from(items.entries())
@@ -49,6 +51,8 @@ function buildSummary(orders: Order[]): CategorySummary[] {
         .sort((a, b) => b.remaining - a.remaining),
     }))
     .filter(c => c.items.length > 0);
+
+  return { summaries, newItemNames };
 }
 
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
