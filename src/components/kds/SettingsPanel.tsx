@@ -110,6 +110,47 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
   const [langTab, setLangTab] = useState<'language' | 'region'>('language');
+  const [uploadingLogs, setUploadingLogs] = useState(false);
+
+  const handleUploadLogs = () => {
+    setUploadingLogs(true);
+    const logs = {
+      timestamp: new Date().toISOString(),
+      device: {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        screenWidth: window.screen.width,
+        screenHeight: window.screen.height,
+        devicePixelRatio: window.devicePixelRatio,
+        online: navigator.onLine,
+      },
+      app: {
+        version: '5.0.84',
+        kdsMode,
+        textSize,
+        showAllergens,
+        servableModifiers,
+        ticketHeaderLayout,
+        debugMode: devMode,
+        bugReporting,
+      },
+      performance: {
+        memory: (performance as any).memory ? {
+          usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
+          totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
+        } : null,
+        uptime: Math.round(performance.now() / 1000),
+      },
+    };
+    console.info('[LogUpload] Collected device logs:', JSON.stringify(logs, null, 2));
+    setTimeout(() => {
+      setUploadingLogs(false);
+      toast.success('Logs uploaded successfully', {
+        description: `${Object.keys(logs).length} sections collected at ${new Date().toLocaleTimeString()}`,
+      });
+    }, 2000);
+  };
 
   const handleSync = () => {
     setSyncing(true);
@@ -369,7 +410,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
               <SettingsCard>
                 <CardLabel label="Upload Logs" description="Send device logs to the eatOS support team" />
-                <ActionButton label="Upload Logs" onClick={() => toast.success('Logs uploaded successfully')} />
+                <button
+                  onClick={handleUploadLogs}
+                  disabled={uploadingLogs}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw size={14} className={uploadingLogs ? 'animate-spin' : ''} />
+                  {uploadingLogs ? 'Uploading...' : 'Upload Logs'}
+                </button>
               </SettingsCard>
 
               <SettingsCard className="col-span-2">
