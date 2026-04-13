@@ -63,6 +63,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
+  const [summaryOverlayOpen, setSummaryOverlayOpen] = useState(false);
 
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
