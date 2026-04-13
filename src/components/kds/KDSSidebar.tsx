@@ -1,10 +1,15 @@
-import { useState } from 'react';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useLanguage } from '@/hooks/use-language';
 import {
-  Home, Clock, Bell, Settings, Eye, CheckCircle, EyeOff,
-  ArrowLeftRight, Menu,
+  Home, Clock, Bell, Settings, Eye, EyeOff,
+  ArrowLeftRight,
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface SidebarItem {
   icon: React.ElementType;
@@ -25,7 +30,6 @@ interface KDSSidebarProps {
 }
 
 export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen, seenCount = 0, unseenCount = 0 }: KDSSidebarProps) {
-  const [expanded, setExpanded] = useState(false);
   const { showBadge } = useBadgeVisibility();
   const { t } = useLanguage();
 
@@ -41,75 +45,75 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
     { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
   ];
 
-  const w = expanded ? 'w-[200px]' : 'w-14';
+  const isActive = (item: SidebarItem) => {
+    if (item.action === 'settings') return settingsOpen;
+    return !settingsOpen && activeNav === item.action;
+  };
+
+  const renderButton = (item: SidebarItem) => (
+    <Tooltip key={item.action}>
+      <TooltipTrigger asChild>
+        <button
+          onClick={() => onNavigate(item.action!)}
+          className={`flex-1 flex items-center justify-center rounded-xl transition-all duration-200 min-h-[44px] relative
+            ${isActive(item)
+              ? 'bg-sidebar-accent border-2 border-white/80'
+              : 'hover:bg-white/20 border-2 border-transparent'
+            }`}
+        >
+          <item.icon size={22} className="text-sidebar-foreground" />
+          {showBadge && item.badge != null && item.badge > 0 && (
+            <span className={`absolute top-1 right-1 ${item.badgeColor || 'bg-brand-primary'} text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center`}>
+              {item.badge}
+            </span>
+          )}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="right" className="text-xs">
+        {item.label}
+      </TooltipContent>
+    </Tooltip>
+  );
 
   return (
-    <div className={`${w} bg-sidebar-bg flex flex-col h-full shrink-0 transition-all duration-200 z-20`}>
-      {/* Hamburger */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-3 px-4 py-3 text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px]"
-        aria-label="Toggle sidebar"
-      >
-        <Menu size={20} />
-        {expanded && <span className="text-sm font-semibold">{t.menu}</span>}
-      </button>
+    <TooltipProvider delayDuration={300}>
+      <div className="w-20 py-2 px-2 bg-sidebar-bg flex flex-col h-full shrink-0 z-20">
+        <div
+          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5"
+          style={{
+            background: '#7575754D',
+            boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
+          }}
+        >
+          {/* Main nav */}
+          <div className="flex flex-col gap-1 flex-[4]">
+            {navItems.map(renderButton)}
+          </div>
 
-      {/* Navigation */}
-      <nav className="flex flex-col gap-0.5 px-1.5">
-        {navItems.map((item) => (
-          <button
-            key={item.action}
-            onClick={() => onNavigate(item.action!)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] relative ${
-              (item.action === 'settings' ? settingsOpen : (!settingsOpen && activeNav === item.action)) ? 'border-l-2 border-brand-primary bg-sidebar-accent' : ''
-            }`}
-          >
-            <item.icon size={20} />
-            {expanded && <span className="text-sm">{item.label}</span>}
-            {showBadge && item.badge && (
-              <span className="absolute top-1.5 left-7 bg-brand-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                {item.badge}
-              </span>
-            )}
-          </button>
-        ))}
-      </nav>
+          <div className="mx-2 border-t border-white/10" />
 
-      <div className="mx-3 my-2 border-t border-sidebar-border" />
+          {/* Seen / Unseen */}
+          <div className="flex flex-col gap-1 flex-[2]">
+            {filterItems.map(renderButton)}
+          </div>
 
-      {/* Seen / Unseen nav */}
-      <nav className="flex flex-col gap-0.5 px-1.5">
-        {filterItems.map((item) => (
-          <button
-            key={item.action}
-            onClick={() => onNavigate(item.action!)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] relative ${
-              (!settingsOpen && activeNav === item.action) ? 'border-l-2 border-brand-primary bg-sidebar-accent/50' : ''
-            }`}
-          >
-            <item.icon size={18} />
-            {expanded && <span className="text-sm">{item.label}</span>}
-            {item.badge != null && item.badge > 0 && (
-              <span className={`absolute top-1.5 left-7 ${item.badgeColor || 'bg-brand-primary'} text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center`}>
-                {item.badge}
-              </span>
-            )}
-          </button>
-        ))}
-      </nav>
+          <div className="flex-1" />
 
-      <div className="flex-1" />
+          <div className="mx-2 border-t border-white/10" />
 
-      <div className="mx-3 my-2 border-t border-sidebar-border" />
-
-      {/* Switch to POS */}
-      <button
-        className="flex items-center gap-3 px-3 py-3 text-sidebar-foreground hover:bg-sidebar-accent transition-colors min-h-[44px] mx-1.5 mb-2 rounded-md"
-      >
-        <ArrowLeftRight size={18} />
-        {expanded && <span className="text-sm">{t.switchToPOS}</span>}
-      </button>
-    </div>
+          {/* Switch to POS */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="flex items-center justify-center rounded-xl hover:bg-white/20 transition-all duration-200 min-h-[44px] border-2 border-transparent">
+                <ArrowLeftRight size={20} className="text-sidebar-foreground" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-xs">
+              {t.switchToPOS}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+    </TooltipProvider>
   );
 }
