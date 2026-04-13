@@ -83,7 +83,7 @@ export interface Order {
   orderNotes?: string;
 }
 
-export type ViewMode = 'grid' | 'horizontal' | 'stagger';
+export type ViewMode = 'grid' | 'horizontal' | 'stagger' | 'portrait';
 export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
 
 export interface KDSFilter {

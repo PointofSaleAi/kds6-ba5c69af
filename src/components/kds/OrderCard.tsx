@@ -24,6 +24,7 @@ import UsersBold from '@/assets/users-bold.svg';
 interface OrderCardProps {
   order: Order;
   compact?: boolean;
+  portraitMode?: boolean;
   onBump?: (orderId: string) => void;
   onRecall?: (orderId: string) => void;
   onFireCourse?: (orderId: string, course: string) => void;
@@ -50,7 +51,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
+export function OrderCard({ order, compact, portraitMode, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
@@ -471,8 +472,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         >
           <OrderTypeBadge
             type={order.orderType}
-            time={formatTimeForKDS(order.timeReceived, timeFormat)}
-            tableInfo={getLocationLabel(order.orderType, order.tableName)}
+            time={portraitMode ? undefined : formatTimeForKDS(order.timeReceived, timeFormat)}
+            tableInfo={portraitMode ? undefined : getLocationLabel(order.orderType, order.tableName)}
             stationBadge={undefined}
           />
 
@@ -480,7 +481,16 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             className="flex items-stretch justify-between transition-all duration-200"
             style={{ backgroundColor: statusColor.color, padding: `var(--kds-card-padding)` }}
           >
-            {ticketHeaderLayout === 'kitchen' ? (
+            {portraitMode ? (
+              <>
+                <div className="text-white leading-none font-black flex items-center" style={{ fontSize: 'var(--kds-order-num)' }}>
+                  {order.orderNumber}
+                </div>
+                <div className="flex items-center">
+                  <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+                </div>
+              </>
+            ) : ticketHeaderLayout === 'kitchen' ? (
               <>
                 <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}

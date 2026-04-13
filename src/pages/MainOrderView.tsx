@@ -63,6 +63,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
+  const [summaryOverlayOpen, setSummaryOverlayOpen] = useState(false);
 
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
@@ -434,7 +435,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             initialSection={settingsSection as any}
           />
         ) : (
-        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
+        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${viewMode === 'portrait' ? 'text-scale-compact' : textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -521,7 +522,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
-                  {(staggerMode || viewMode === 'stagger') ? (
+                  {viewMode === 'portrait' ? (
+                    <div className="grid grid-cols-3 gap-2">
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
+                            <OrderCard order={order} portraitMode onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  ) : (staggerMode || viewMode === 'stagger') ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
@@ -563,7 +574,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && (kdsMode === 'Expo'
+        {!settingsOpen && viewMode !== 'portrait' && (kdsMode === 'Expo'
           ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} />
           : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
         )}
@@ -583,7 +594,50 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { setSettingsSection('language'); onNavigate('settings'); }} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} />
+      {/* Portrait summary overlay */}
+      <AnimatePresence>
+        {summaryOverlayOpen && viewMode === 'portrait' && (
+          <motion.div
+            className="fixed inset-0 z-50 flex flex-col justify-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="absolute inset-0 bg-black/40" onClick={() => setSummaryOverlayOpen(false)} />
+            <motion.div
+              className="relative bg-surface-card rounded-t-2xl max-h-[80vh] overflow-auto shadow-2xl"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+            >
+              <div className="sticky top-0 bg-surface-card z-10 flex items-center justify-between px-4 py-3 border-b border-border">
+                <span className="text-sm font-bold text-text-primary uppercase tracking-wider">Summary</span>
+                <button
+                  onClick={() => setSummaryOverlayOpen(false)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-muted transition-colors min-h-[44px] min-w-[44px]"
+                >
+                  <span className="text-text-secondary text-lg">&times;</span>
+                </button>
+              </div>
+              <div className="p-2">
+                <ItemSummaryPanel
+                  orders={ordersWithItemStatuses}
+                  stationCourse={resolvedStationCourse}
+                  selectedItems={selectedSummaryItems}
+                  onItemToggle={handleSummaryItemToggle}
+                  selectedCategories={selectedSummaryCategories}
+                  onCategoryToggle={handleSummaryCategoryToggle}
+                  onClearAll={handleSummaryClearAll}
+                  matchingTicketCount={matchingTicketCount}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { setSettingsSection('language'); onNavigate('settings'); }} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} onOpenSummaryOverlay={() => setSummaryOverlayOpen(true)} />
     </div>
   );
 }
