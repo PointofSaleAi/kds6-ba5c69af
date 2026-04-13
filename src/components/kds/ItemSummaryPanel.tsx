@@ -58,7 +58,7 @@ function buildSummary(orders: Order[]): { summaries: CategorySummary[]; newItemN
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
-  const rawSummary = useMemo(() => buildSummary(orders), [orders]);
+  const { summaries: rawSummary, newItemNames } = useMemo(() => buildSummary(orders), [orders]);
 
   const summary = stationCourse
     ? [
