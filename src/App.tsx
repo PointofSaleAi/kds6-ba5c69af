@@ -28,6 +28,7 @@ const App = () => (
       <BadgeVisibilityProvider>
       <StatusRulesProvider>
       <OrderStoreProvider>
+      <PortraitProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -41,6 +42,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </PortraitProvider>
       </OrderStoreProvider>
       </StatusRulesProvider>
       </BadgeVisibilityProvider>
