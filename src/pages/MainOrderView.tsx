@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Smartphone } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
@@ -23,6 +23,8 @@ import { useSound } from '@/hooks/use-sound';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { toast } from 'sonner';
+import { usePortrait } from '@/hooks/use-portrait';
+import { SummaryDrawer } from '@/components/kds/SummaryDrawer';
 
 interface MainOrderViewProps {
   onNavigate: (screen: string) => void;
