@@ -435,7 +435,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             initialSection={settingsSection as any}
           />
         ) : (
-        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
+        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${viewMode === 'portrait' ? 'text-scale-compact' : textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -522,7 +522,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
-                  {(staggerMode || viewMode === 'stagger') ? (
+                  {viewMode === 'portrait' ? (
+                    <div className="grid grid-cols-3 gap-2">
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
+                            <OrderCard order={order} portraitMode onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  ) : (staggerMode || viewMode === 'stagger') ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
