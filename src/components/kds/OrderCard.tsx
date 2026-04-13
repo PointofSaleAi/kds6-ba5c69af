@@ -355,7 +355,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return next;
       });
     } else {
-      // Back to seen: clear active course statuses
+      // Back to unseen: clear active course statuses and unmark seen
+      onMarkSeen?.(_orderId);
       setItemStatuses(prev => {
         const next = new Map(prev);
         targetIds.forEach(id => {
