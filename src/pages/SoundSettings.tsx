@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, Volume2, VolumeX, Play } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { X, Volume2, VolumeX, Play, Upload, X as XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SoundSettingsProps {
@@ -7,16 +7,48 @@ interface SoundSettingsProps {
   onClose: () => void;
 }
 
-const soundOptions = ['Bell', 'Chime', 'Ding', 'Buzz'];
+const presetSounds = [
+  { id: 'default-beep', label: 'Default Beep' },
+  { id: 'double-chime', label: 'Double Chime' },
+  { id: 'urgent-alert', label: 'Urgent Alert' },
+  { id: 'soft-ding', label: 'Soft Ding' },
+];
+
 const urgentOptions = ['Alarm', 'Double Bell', 'Pulse'];
 const serviceBellOptions = ['Classic Bell', 'Digital Chime', 'Soft Tone'];
 
 export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
   const [volume, setVolume] = useState(75);
+  const [alertVolume, setAlertVolume] = useState(80);
   const [muteAll, setMuteAll] = useState(false);
-  const [newOrderSound, setNewOrderSound] = useState('Bell');
+  const [selectedPreset, setSelectedPreset] = useState('default-beep');
+  const [customFile, setCustomFile] = useState<File | null>(null);
   const [urgentSound, setUrgentSound] = useState('Alarm');
   const [serviceBell, setServiceBell] = useState('Classic Bell');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File must be under 2MB');
+      return;
+    }
+    setCustomFile(file);
+    setSelectedPreset('');
+  };
+
+  const removeCustomFile = () => {
+    setCustomFile(null);
+    setSelectedPreset('default-beep');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const selectPreset = (id: string) => {
+    setSelectedPreset(id);
+    setCustomFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   if (!open) return null;
 
@@ -80,11 +112,113 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
               </div>
             </div>
 
-            {/* Sound type pickers */}
+            {/* New Order Alert Sound */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Alert Sounds</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">New Order Alert Sound</div>
 
-              <SoundPicker label="New Order Alert" options={soundOptions} value={newOrderSound} onChange={setNewOrderSound} />
+              {/* Preset Sounds */}
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">Preset Sounds</div>
+              <div className="flex flex-col gap-1.5 mb-4">
+                {presetSounds.map((preset) => (
+                  <div
+                    key={preset.id}
+                    onClick={() => selectPreset(preset.id)}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors min-h-[44px] ${
+                      selectedPreset === preset.id && !customFile
+                        ? 'bg-brand-dark text-primary-foreground'
+                        : 'bg-muted text-text-primary hover:bg-muted/80'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          selectedPreset === preset.id && !customFile
+                            ? 'border-primary-foreground'
+                            : 'border-text-muted'
+                        }`}
+                      >
+                        {selectedPreset === preset.id && !customFile && (
+                          <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                        )}
+                      </div>
+                      <span className="text-[13px] font-medium">{preset.label}</span>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: play preview sound
+                      }}
+                      className={`p-1.5 rounded-md transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center ${
+                        selectedPreset === preset.id && !customFile
+                          ? 'hover:bg-white/10'
+                          : 'hover:bg-muted/60'
+                      }`}
+                      aria-label={`Play ${preset.label}`}
+                    >
+                      <Play size={14} className={selectedPreset === preset.id && !customFile ? 'text-primary-foreground' : 'text-brand-primary'} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Custom Sound Upload */}
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">Upload Custom Sound</div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".mp3,.wav,audio/mpeg,audio/wav"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              {customFile ? (
+                <div className="flex items-center justify-between px-3 py-2 bg-brand-dark text-primary-foreground rounded-lg min-h-[44px] mb-1">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 rounded-full border-2 border-primary-foreground flex items-center justify-center shrink-0">
+                      <div className="w-2 h-2 rounded-full bg-primary-foreground" />
+                    </div>
+                    <span className="text-[13px] font-medium truncate max-w-[260px]">{customFile.name}</span>
+                  </div>
+                  <button
+                    onClick={removeCustomFile}
+                    className="p-1.5 hover:bg-white/10 rounded-md min-h-[32px] min-w-[32px] flex items-center justify-center"
+                    aria-label="Remove custom sound"
+                  >
+                    <XIcon size={14} className="text-primary-foreground" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 px-3 py-2 bg-muted text-text-primary rounded-lg text-[13px] font-medium hover:bg-muted/80 transition-colors min-h-[44px] mb-1"
+                >
+                  <Upload size={14} className="text-text-muted" />
+                  Choose File
+                </button>
+              )}
+              <p className="text-[11px] text-text-muted mb-4">Accepted formats: MP3, WAV - Max size: 2MB</p>
+
+              {/* Alert Volume */}
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">Alert Volume</div>
+              <div className="flex items-center gap-3 mb-4">
+                <Volume2 size={16} className="text-text-secondary shrink-0" />
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={muteAll ? 0 : alertVolume}
+                  onChange={(e) => setAlertVolume(Number(e.target.value))}
+                  disabled={muteAll}
+                  className="flex-1 h-2 rounded-full appearance-none bg-muted accent-brand-primary cursor-pointer disabled:opacity-50"
+                />
+                <span className="text-[13px] font-semibold text-text-primary w-10 text-right">
+                  {muteAll ? '0' : alertVolume}%
+                </span>
+              </div>
+            </div>
+
+            {/* Other alert sounds */}
+            <div className="px-4 pt-2">
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Other Alert Sounds</div>
               <SoundPicker label="Urgent / Overtime Alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} />
               <SoundPicker label="Service Bell (Manual)" options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} />
             </div>
