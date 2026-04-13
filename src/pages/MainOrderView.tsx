@@ -421,6 +421,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const dateTabs = ['Today', 'Yesterday', 'Last 7 Days'];
 
   const isHistory = activeNav === 'history';
+  const isSeenScreen = activeNav === 'seen-orders';
+  const isUnseenScreen = activeNav === 'unseen-orders';
+  const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
@@ -431,6 +434,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           onNavigate={handleNavigate}
           activeNav={activeNav}
           settingsOpen={settingsOpen}
+          seenCount={seenCount}
+          unseenCount={unseenCount}
         />
 
         {settingsOpen ? (
