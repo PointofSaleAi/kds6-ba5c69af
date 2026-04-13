@@ -487,11 +487,13 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
             <div className="px-5 py-3">
               <textarea
                 value={featureText}
-                onChange={(e) => setFeatureText(e.target.value)}
+                onChange={(e) => { if (e.target.value.length <= 150) setFeatureText(e.target.value); }}
+                maxLength={150}
                 placeholder="What would you like to see in the KDS?"
                 rows={5}
                 className="w-full bg-muted rounded-lg px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted outline-none resize-none min-h-[120px]"
               />
+              <p className="text-right text-[11px] text-text-muted mt-1">{featureText.length}/150</p>
             </div>
             <div className="px-5 pb-3">
               <div className="bg-muted/60 rounded-lg px-3 py-2.5 flex gap-4 text-[11px] text-text-muted">
