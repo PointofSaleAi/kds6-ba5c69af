@@ -233,9 +233,12 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
+                      const isNewItem = newItemNames.has(item.name);
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass}`}
+                          style={isNewItem && !isSelected ? { backgroundColor: '#EFF6FF', borderLeft: '3px solid #3B82F6' } : undefined}
+                        >
                           <div
                             className="flex items-center justify-between py-[4px] cursor-pointer"
                             onClick={(e) => {
