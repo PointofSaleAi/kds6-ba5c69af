@@ -412,7 +412,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </button>
               </SettingsCard>
 
-              <SettingsCard className="col-span-2">
+              <SettingsCard>
                 <CardLabel label="Feedback & Support" description="Request a feature or share feedback" />
                 <ActionButton label="Request a Feature" onClick={() => setFeatureModalOpen(true)} />
               </SettingsCard>
