@@ -24,6 +24,8 @@ import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { toast } from 'sonner';
 import { usePortrait } from '@/hooks/use-portrait';
+import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
+import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 
 
 interface MainOrderViewProps {
