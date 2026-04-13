@@ -327,60 +327,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                   </div>
                 </div>
               </div>
-            ) : (
-              /* REGION TAB */
-              <div className="flex flex-col sm:flex-row h-full p-4 md:p-5 gap-6 md:gap-8 overflow-y-auto">
-                {/* Left - Date format */}
-                <div className="flex-1">
-                  <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
-                  <div className="space-y-2">
-                    {dateFormats.map((fmt, i) => (
-                      <button
-                        key={fmt}
-                        onClick={() => setDateFormat(i as DateFormatIndex)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
-                        style={{
-                          border: dateFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))',
-                        }}
-                      >
-                        <div
-                          className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
-                          style={{ borderColor: dateFormat === i ? '#111' : 'hsl(var(--border))' }}
-                        >
-                          {dateFormat === i && <div className="w-2 h-2 rounded-full bg-text-primary" />}
-                        </div>
-                        <span className="text-sm font-medium text-text-primary">{fmt}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right - Time format */}
-                <div className="flex-1">
-                  <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time format</div>
-                  <div className="space-y-2">
-                    {timeFormats.map((fmt, i) => (
-                      <button
-                        key={fmt}
-                        onClick={() => setTimeFormat(i as TimeFormatIndex)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
-                        style={{
-                          border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))',
-                        }}
-                      >
-                        <div
-                          className="w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
-                          style={{ borderColor: timeFormat === i ? '#111' : 'hsl(var(--border))' }}
-                        >
-                          {timeFormat === i && <div className="w-2 h-2 rounded-full bg-text-primary" />}
-                        </div>
-                        <span className="text-sm font-medium text-text-primary">{fmt}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
 
           {/* Footer */}
