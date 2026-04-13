@@ -96,6 +96,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   const isCourseCompleted = coursingStatus === 'fired';
 
   const [isExpanded, setIsExpanded] = useState(!isCourseCompleted && !isServedByLifecycle);
+  const [servedExpanded, setServedExpanded] = useState(false);
 
   // Static firing-at label for pending courses
   const firingAtLabel = useMemo(() => {
