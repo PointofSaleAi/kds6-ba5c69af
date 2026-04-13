@@ -202,7 +202,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           {activeSection === 'display' && (
             <div className="grid grid-cols-2 gap-4">
               <SettingsCard>
-                <CardLabel label="Language & Region" description="Set display language, region, date and time format preferences." />
+                <CardLabel label="Language" description="Set your display language preferences." />
                 <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
               </SettingsCard>
 
