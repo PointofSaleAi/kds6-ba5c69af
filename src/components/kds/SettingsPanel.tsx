@@ -280,9 +280,9 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               <SettingsCard>
                 <CardLabel label="Ticket Identifier" />
                 <PillToggle
-                  options={['Order Number', 'Guest Name']}
-                  value={ticketHeaderLayout === 'guest' ? 'Guest Name' : 'Order Number'}
-                  onChange={(v) => setTicketHeaderLayout(v === 'Guest Name' ? 'guest' : 'kitchen')}
+                  options={['Order Number', 'Guest Name/Number']}
+                  value={ticketHeaderLayout === 'guest' ? 'Guest Name/Number' : 'Order Number'}
+                  onChange={(v) => setTicketHeaderLayout(v === 'Guest Name/Number' ? 'guest' : 'kitchen')}
                 />
                 <div className="mt-3 px-3 py-2 bg-muted rounded-lg text-[12px] text-text-secondary leading-relaxed">
                   {ticketHeaderLayout === 'kitchen'
