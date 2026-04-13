@@ -112,13 +112,15 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [uploadingLogs, setUploadingLogs] = useState(false);
   const [featureModalOpen, setFeatureModalOpen] = useState(false);
   const [featureText, setFeatureText] = useState('');
+  const [featureCategory, setFeatureCategory] = useState('');
 
   const handleFeatureSubmit = () => {
     // TODO: send to backend API
-    console.info('[FeatureRequest]', { text: featureText, stationId: 'STN-001', version: '5.0.84' });
+    console.info('[FeatureRequest]', { text: featureText, category: featureCategory, stationId: 'STN-001', device: 'Kitchen Display 1', version: '5.0.84' });
     setFeatureModalOpen(false);
     setFeatureText('');
-    toast.success('Thank you for your feedback!');
+    setFeatureCategory('');
+    toast.success('Thank you for your feedback! Our product team will review it.');
   };
 
   const handleUploadLogs = () => {
@@ -464,7 +466,25 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 <X size={18} className="text-text-muted" />
               </button>
             </div>
-            <div className="px-5 py-4">
+            <div className="px-5 pt-4 pb-2">
+              <p className="text-[12px] font-semibold text-text-secondary mb-2 uppercase tracking-wider">Category</p>
+              <div className="flex flex-wrap gap-2">
+                {['Display & Layout', 'Order Management', 'Coursing', 'Other'].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setFeatureCategory(cat)}
+                    className={`px-3 py-1.5 rounded-lg text-[12px] font-bold transition-colors min-h-[36px] ${
+                      featureCategory === cat
+                        ? 'bg-brand-dark text-primary-foreground'
+                        : 'bg-muted text-text-secondary hover:bg-muted/80'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="px-5 py-3">
               <textarea
                 value={featureText}
                 onChange={(e) => setFeatureText(e.target.value)}
@@ -473,10 +493,17 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 className="w-full bg-muted rounded-lg px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted outline-none resize-none min-h-[120px]"
               />
             </div>
+            <div className="px-5 pb-3">
+              <div className="bg-muted/60 rounded-lg px-3 py-2.5 flex gap-4 text-[11px] text-text-muted">
+                <span>Station ID: STN-001</span>
+                <span>Device: Kitchen Display 1</span>
+                <span>Version: 5.0.84</span>
+              </div>
+            </div>
             <div className="px-5 pb-4">
               <button
                 onClick={handleFeatureSubmit}
-                disabled={!featureText.trim()}
+                disabled={!featureText.trim() || !featureCategory}
                 className="w-full py-3 rounded-lg text-[13px] font-bold uppercase tracking-wider bg-brand-dark text-primary-foreground hover:bg-brand-dark/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[48px]"
               >
                 Submit Request
