@@ -88,12 +88,12 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   ];
 
   return (
-    <div className={`h-[52px] bg-brand-dark flex items-center ${isPortrait ? 'justify-evenly' : 'justify-between'} px-4 shrink-0 z-10`}>
+    <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
       {/* Order count */}
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-primary-foreground font-bold">
           <span className="text-lg">{orderCount}</span>{' '}
-          {!isPortrait && <span className="text-sm">{t.ordersInQueue}</span>}
+          <span className="text-sm">{t.ordersInQueue}</span>
         </span>
         {kdsMode === 'Prep' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
@@ -194,10 +194,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             </button>
           ))}
         </div>
-      </div>
-      )}
 
-      <div className={`flex items-center ${isPortrait ? 'gap-2' : 'gap-3'}`}>
+        {/* Language, Sound, Theme - grouped with layout icons */}
         <LanguageToggle onOpen={onOpenLanguageSettings} />
         <SoundToggle />
         <button
@@ -207,11 +205,13 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         >
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
-        {!isPortrait && (
-          <span className="text-primary-foreground/80 text-sm">
-            {timeStr} &middot; {dateStr}
-          </span>
-        )}
+      </div>
+      )}
+
+      <div className="flex items-center gap-3">
+        <span className="text-primary-foreground/80 text-sm">
+          {timeStr} &middot; {dateStr}
+        </span>
       </div>
     </div>
   );

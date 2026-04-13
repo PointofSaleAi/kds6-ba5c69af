@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Search, Smartphone } from 'lucide-react';
+import { Search } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
@@ -53,7 +53,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone } = useOrderStore();
-  const { isPortrait, forcePortrait, setForcePortrait } = usePortrait();
+  const { isPortrait } = usePortrait();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -438,16 +438,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           />
         ) : (
         <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
-          {/* Dev-only portrait toggle */}
-          {import.meta.env.DEV && (
-            <button
-              onClick={() => setForcePortrait(!forcePortrait)}
-              className={`absolute top-2 right-2 z-30 p-1.5 rounded-md border text-[10px] font-bold flex items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-colors ${forcePortrait ? 'bg-brand-dark text-white border-brand-dark' : 'bg-surface-card text-text-secondary border-border hover:bg-muted'}`}
-              title="Toggle portrait preview"
-            >
-              <Smartphone size={14} />
-            </button>
-          )}
           {isHistory ? (
             <>
               {/* History filter bar */}
