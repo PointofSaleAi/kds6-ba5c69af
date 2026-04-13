@@ -192,6 +192,18 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             </button>
           ))}
         </div>
+
+        {/* Summary button - only in portrait mode */}
+        {viewMode === 'portrait' && (
+          <button
+            onClick={onOpenSummaryOverlay}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground/90"
+            aria-label="Open summary panel"
+          >
+            <ClipboardList size={14} />
+            <span>Summary</span>
+          </button>
+        )}
       </div>
       )}
 
