@@ -57,7 +57,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed } = useStatusRules();
   const { ticketHeaderLayout } = useKDSSettings();
+  const { acknowledgeNewItems } = useOrderStore();
   const statusColor = getStatusForElapsed(liveElapsed);
+
+  // Check if order has any unacknowledged new items
+  const hasNewItems = useMemo(() =>
+    order.courses.some(c => c.items.some(i => i.isNew && !i.isCancelled)),
+    [order.courses]
+  );
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
