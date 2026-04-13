@@ -425,8 +425,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               <SettingsCard className="col-span-2">
                 <CardLabel label="Feedback & Support" description="Report an issue or request a feature" />
                 <div className="flex gap-3">
-                  <ActionButton label="Report a Bug" onClick={() => toast.info('Bug report form coming soon')} />
-                  <ActionButton label="Request a Feature" onClick={() => toast.info('Feature request form coming soon')} />
+                  <ActionButton label="Report a Bug" onClick={() => setBugModalOpen(true)} />
+                  <ActionButton label="Request a Feature" onClick={() => setFeatureModalOpen(true)} />
                 </div>
               </SettingsCard>
 
