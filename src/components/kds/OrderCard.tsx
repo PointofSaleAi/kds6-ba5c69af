@@ -29,6 +29,7 @@ interface OrderCardProps {
   onFireCourse?: (orderId: string, course: string) => void;
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
   onAcknowledgeNotes?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
@@ -50,7 +51,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
@@ -283,6 +284,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   }, [isDineIn, courseLifecycleMap]);
 
   const handleTicketAdvance = useCallback((orderId: string) => {
+    // Mark as seen in global store on first advance (unseen → preparing)
+    if (ticketState === 'seen') {
+      onMarkSeen?.(orderId);
+    }
     if (ticketState === 'done') {
       if (isDineIn && activeCourseName) {
         // Confirm this course as done - it will collapse and next course becomes active
@@ -325,7 +330,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
