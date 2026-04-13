@@ -327,7 +327,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard className="col-span-2">
-                <CardLabel label="Connection" description="WebSocket and sync settings" />
+                <CardLabel label="Connection" description="EdgeOS and sync settings" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Wifi size={14} className="text-status-done" />
