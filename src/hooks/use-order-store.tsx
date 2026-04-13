@@ -27,9 +27,6 @@ interface OrderStoreContextValue {
 
   /** Update order status */
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
-
-  /** Clear isNew flags on all items for a given order */
-  acknowledgeNewItems: (orderId: string) => void;
 }
 
 const OrderStoreContext = createContext<OrderStoreContextValue | null>(null);
@@ -168,21 +165,6 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     ));
   }, []);
 
-  const acknowledgeNewItems = useCallback((orderId: string) => {
-    setOrders(prev => prev.map(o => {
-      if (o.id !== orderId) return o;
-      const hasNew = o.courses.some(c => c.items.some(i => i.isNew));
-      if (!hasNew) return o;
-      return {
-        ...o,
-        courses: o.courses.map(c => ({
-          ...c,
-          items: c.items.map(i => i.isNew ? { ...i, isNew: false } : i),
-        })),
-      };
-    }));
-  }, []);
-
   const expoTickets = useMemo(() => {
     return orders
       .filter(o => o.status !== 'served')
@@ -197,8 +179,7 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     markAllItemsDone,
     sendOutOrder,
     updateOrderStatus,
-    acknowledgeNewItems,
-  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, acknowledgeNewItems]);
+  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus]);
 
   return (
     <OrderStoreContext.Provider value={value}>

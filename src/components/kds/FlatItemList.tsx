@@ -32,14 +32,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           <div
             key={item.id}
             className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''}`}
-            style={{
-              padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`,
-              gap: 0,
-              opacity: isDone && !item.isCancelled ? 0.5 : undefined,
-              ...(item.isNew && !item.isCancelled
-                ? { backgroundColor: '#EFF6FF', borderLeft: '3px solid #3B82F6', paddingLeft: '6px' }
-                : {}),
-            }}
+            style={{ padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`, gap: 0, opacity: isDone && !item.isCancelled ? 0.5 : undefined }}
             onClick={() => !item.isCancelled && onReRouteItem?.(item)}
           >
             <div className="flex-1 min-w-0">

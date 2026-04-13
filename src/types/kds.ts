@@ -43,8 +43,6 @@ export interface OrderItem {
   isCancelled?: boolean;
   isCompleted?: boolean;
   station?: StationName;
-  /** Indicates a newly added item on an in-progress ticket */
-  isNew?: boolean;
 }
 
 export interface CourseGroup {

@@ -18,7 +18,6 @@ import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { useOrderStore } from '@/hooks/use-order-store';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import UsersBold from '@/assets/users-bold.svg';
 
@@ -57,14 +56,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed } = useStatusRules();
   const { ticketHeaderLayout } = useKDSSettings();
-  const { acknowledgeNewItems } = useOrderStore();
   const statusColor = getStatusForElapsed(liveElapsed);
-
-  // Check if order has any unacknowledged new items
-  const hasNewItems = useMemo(() =>
-    order.courses.some(c => c.items.some(i => i.isNew && !i.isCancelled)),
-    [order.courses]
-  );
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
@@ -291,10 +283,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   }, [isDineIn, courseLifecycleMap]);
 
   const handleTicketAdvance = useCallback((orderId: string) => {
-    // Acknowledge new items on any advance (especially SEEN tap)
-    if (hasNewItems) {
-      acknowledgeNewItems(orderId);
-    }
     if (ticketState === 'done') {
       if (isDineIn && activeCourseName) {
         // Confirm this course as done - it will collapse and next course becomes active
@@ -337,7 +325,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, hasNewItems, acknowledgeNewItems]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
@@ -494,13 +482,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           >
             {ticketHeaderLayout === 'kitchen' ? (
               <>
-                <div className="text-white leading-none font-black relative" style={{ fontSize: 'var(--kds-order-num)' }}>
+                <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}
-                  {hasNewItems && (
-                    <span className="absolute -top-1 -right-2 bg-white text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-sm" style={{ color: '#2563EB' }}>
-                      NEW
-                    </span>
-                  )}
                 </div>
                 <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
                   <span className="flex items-center gap-1 text-[13px] font-medium text-white">
@@ -522,13 +505,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               </>
             ) : (
               <>
-                <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1 relative">
+                <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1">
                   {order.guestName || order.orderNumber}
-                  {hasNewItems && (
-                    <span className="ml-2 bg-white text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-sm" style={{ color: '#2563EB' }}>
-                      NEW
-                    </span>
-                  )}
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-0.5 shrink-0">
                   <span className="flex items-center gap-1 text-[13px] font-medium text-white whitespace-nowrap">
