@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Smartphone } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
@@ -23,6 +23,8 @@ import { useSound } from '@/hooks/use-sound';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { toast } from 'sonner';
+import { usePortrait } from '@/hooks/use-portrait';
+import { SummaryDrawer } from '@/components/kds/SummaryDrawer';
 
 interface MainOrderViewProps {
   onNavigate: (screen: string) => void;
@@ -51,6 +53,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone } = useOrderStore();
+  const { isPortrait, forcePortrait, setForcePortrait } = usePortrait();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -435,6 +438,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           />
         ) : (
         <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
+          {/* Dev-only portrait toggle */}
+          {import.meta.env.DEV && (
+            <button
+              onClick={() => setForcePortrait(!forcePortrait)}
+              className={`absolute top-2 right-2 z-30 p-1.5 rounded-md border text-[10px] font-bold flex items-center gap-1 min-w-[44px] min-h-[44px] justify-center transition-colors ${forcePortrait ? 'bg-brand-dark text-white border-brand-dark' : 'bg-surface-card text-text-secondary border-border hover:bg-muted'}`}
+              title="Toggle portrait preview"
+            >
+              <Smartphone size={14} />
+            </button>
+          )}
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -520,8 +533,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Expo' ? (
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} />
               ) : (
-                <div className="flex-1 overflow-auto p-3">
-                  {(staggerMode || viewMode === 'stagger') ? (
+                <div className={`flex-1 overflow-auto p-3 ${isPortrait ? 'pb-16' : ''}`}>
+                  {isPortrait ? (
+                    <div className="flex flex-col gap-3">
+                      <AnimatePresence mode="popLayout">
+                        {filteredOrders.map((order) => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
+                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  ) : (staggerMode || viewMode === 'stagger') ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
@@ -563,11 +586,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && (kdsMode === 'Expo'
+        {!settingsOpen && !isPortrait && (kdsMode === 'Expo'
           ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} />
           : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
         )}
       </div>
+
+      {/* Portrait summary drawer */}
+      {!settingsOpen && isPortrait && kdsMode !== 'Expo' && (
+        <SummaryDrawer orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
+      )}
 
       <AnimatePresence>
         {expandedOrderId && (() => {
