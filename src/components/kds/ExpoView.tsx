@@ -778,8 +778,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       if (!order) return;
       const nextCourse = order.courses.find(c => !c.isFired);
       if (nextCourse) {
-        // Fire through the shared store
-        const updatedOrders = orders.map(o => {
+        setOrders(prev => prev.map(o => {
           if (o.id !== ticketId) return o;
           return {
             ...o,
@@ -787,12 +786,11 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
               c.course === nextCourse.course ? { ...c, isFired: true, firedAt: new Date(), _startedAt: new Date() } : c
             ),
           };
-        });
-        // We can't call setOrders here directly, but we use sendOutOrder pattern
+        }));
         toast.success(`${nextCourse.course} fired`);
       }
     }
-  }, [handleDemoFireNextCourse, orders]);
+  }, [handleDemoFireNextCourse, orders, setOrders]);
 
   // Highlight pulse state for recently pinned tickets
   const [pulsingIds, setPulsingIds] = useState<Set<string>>(new Set());
