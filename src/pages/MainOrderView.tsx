@@ -263,7 +263,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
 
     return sorted;
-  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
