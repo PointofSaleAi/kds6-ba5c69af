@@ -619,6 +619,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               onUndoItem={handleUndoItem}
               onReRouteItem={(item) => setItemRouting(item)}
               showAllergens={showAllergens}
+              servableModifiersEnabled={servableModifiersEnabled}
+              modifierStatuses={modifierStatuses}
+              onAdvanceModifier={handleAdvanceModifier}
+              onUndoModifier={handleUndoModifier}
             />
           )}
         </div>
