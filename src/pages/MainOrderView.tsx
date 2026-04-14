@@ -219,6 +219,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // Station view: determine if we're in station-filtered mode
   const isStationView = kdsMode === 'Prep' && !!resolvedStationCourse;
 
+  // Helper: filter order courses/items to only show station-matching items
+  const getStationDisplayOrder = useCallback((order: Order): Order => {
+    if (!isStationView || !resolvedStationCourse) return order;
+    const filteredCourses = order.courses
+      .map(c => ({ ...c, items: c.items.filter(i => i.category === resolvedStationCourse) }))
+      .filter(c => c.items.length > 0);
+    return { ...order, courses: filteredCourses };
+  }, [isStationView, resolvedStationCourse]);
+
   const filteredOrders = useMemo(() => {
     let filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
