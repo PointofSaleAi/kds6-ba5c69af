@@ -27,6 +27,13 @@ const mockPrinters: PrinterDevice[] = [
   { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline' },
 ];
 
+const mockLabelPrinters: PrinterDevice[] = [
+  { id: 'lp1', name: 'Zebra ZD421', ip: '192.168.1.201', status: 'online' },
+  { id: 'lp2', name: 'Dymo LabelWriter 450', ip: '192.168.1.202', status: 'online' },
+  { id: 'lp3', name: 'Zebra ZD230', ip: '192.168.1.203', status: 'low-paper' },
+  { id: 'lp4', name: 'Dymo LabelWriter 550', ip: '192.168.1.204', status: 'offline' },
+];
+
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   const colors = {
     online: 'bg-status-done',
@@ -63,7 +70,8 @@ export default function PrinterRoutingModal({
   onConfirm,
   initialSelectedId,
 }: PrinterRoutingModalProps) {
-  const [selected, setSelected] = useState(initialSelectedId || 'p1');
+  const printers = type === 'label' ? mockLabelPrinters : mockPrinters;
+  const [selected, setSelected] = useState(initialSelectedId || printers[0]?.id || '');
   const [detecting, setDetecting] = useState(false);
 
   if (!open) return null;
@@ -81,7 +89,7 @@ export default function PrinterRoutingModal({
   };
 
   const handleConfirm = () => {
-    const printer = mockPrinters.find((p) => p.id === selected);
+    const printer = printers.find((p) => p.id === selected);
     if (printer) {
       toast.success(`Print destination set to ${printer.name}`);
       onConfirm?.({ id: printer.id, name: printer.name, status: printer.status });
@@ -130,10 +138,10 @@ export default function PrinterRoutingModal({
           {/* Printer list */}
           <div className="flex-1 overflow-y-auto px-4 pt-4">
             <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
-              Available Printers ({mockPrinters.length})
+              Available Printers ({printers.length})
             </div>
             <div className="space-y-2">
-              {mockPrinters.map((printer) => (
+              {printers.map((printer) => (
                 <div
                   key={printer.id}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-colors min-h-[56px] ${
