@@ -39,13 +39,10 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
   const navItems: SidebarItem[] = [
     { icon: Home, label: t.home, action: 'home' },
     { icon: Clock, label: t.history, badge: 6, action: 'history' },
-    { icon: Bell, label: t.alerts, badge: 3, action: 'alerts' },
-    { icon: Settings, label: t.settings, action: 'settings' },
-  ];
-
-  const filterItems: SidebarItem[] = [
     { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
     { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
+    { icon: Bell, label: t.alerts, badge: 3, action: 'alerts' },
+    { icon: Settings, label: t.settings, action: 'settings' },
   ];
 
   const isActive = (item: SidebarItem) => {
