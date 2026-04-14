@@ -85,6 +85,7 @@ export interface Order {
   courses: CourseGroup[];
   itemCount: number;
   orderNotes?: string;
+  sourceHistoryOrderId?: string;
 }
 
 export type ViewMode = 'grid' | 'horizontal' | 'stagger';
