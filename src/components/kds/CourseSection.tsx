@@ -167,6 +167,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     activeItemIds.forEach(id => onUndoItem(id));
   };
 
+  const agingColor = courseAgingColor?.color;
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
     : isServedByLifecycle
@@ -176,7 +177,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : '';
 
   const containerStyle = coursingStatus === 'active'
-    ? { borderLeftColor: '#7F77DD', transition: 'all 200ms ease-in-out' }
+    ? { borderLeftColor: agingColor || '#7F77DD', transition: 'all 200ms ease-in-out' }
     : { transition: 'all 200ms ease-in-out' };
 
   const headerBg = coursingStatus === 'active'
@@ -186,7 +187,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
-    ? { backgroundColor: '#EEEDFE' }
+    ? { backgroundColor: agingColor ? `${agingColor}18` : '#EEEDFE' }
     : undefined;
 
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
