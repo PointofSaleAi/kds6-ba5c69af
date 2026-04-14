@@ -672,10 +672,37 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           ) : isUnseenScreen ? (
             <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} />
           ) : (
-            <>
+              {/* Station View indicator bar */}
+              {isStationView && resolvedStationCourse && (
+                <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#111827' }}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
+                      {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()}
+                    </span>
+                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
+                  </div>
+                  <button
+                    onClick={() => setStationCourse(null)}
+                    style={{ fontSize: 12, color: '#818CF8' }}
+                    className="hover:underline"
+                  >
+                    Exit Station View
+                  </button>
+                </div>
+              )}
+
               {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
-                <EmptyState />
-              ) : kdsMode === 'Prep' ? (
+                isStationView && resolvedStationCourse ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-text-primary text-lg font-bold">No {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders right now</p>
+                      <p className="text-text-muted text-sm mt-1">You're all caught up. New {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders will appear here.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyState />
+                )
+              ) : kdsMode === 'Prep' && !resolvedStationCourse ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : kdsMode === 'Expo' ? (
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
