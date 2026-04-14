@@ -174,6 +174,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   }, [courseLifecycleMap, isDineIn, courseLevelAging]);
 
   // Compute per-course status colors when course-level aging is enabled
+  // Depends on liveElapsed to force recalculation every second
   const courseStatusColors = useMemo(() => {
     if (!courseLevelAging || !isDineIn) return new Map<string, { color: string; textColor: string }>();
     const now = Date.now();
@@ -187,7 +188,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
     }
     return map;
-  }, [courseLevelAging, isDineIn, displayCourses, courseActivatedAt, getStatusForElapsed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseLevelAging, isDineIn, displayCourses, courseActivatedAt, getStatusForElapsed, liveElapsed]);
 
   // Determine the effective header status color
   const effectiveStatusColor = useMemo(() => {
