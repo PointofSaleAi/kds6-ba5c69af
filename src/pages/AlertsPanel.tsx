@@ -1,33 +1,11 @@
 import { useState } from 'react';
-import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare } from 'lucide-react';
+import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
+import { useNotifications } from '@/hooks/use-notifications';
 import { KitchenReplyDialog } from '@/components/kds/KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
-
-interface Alert {
-  id: string;
-  type: 'overtime' | 'new-order' | 'recalled' | 'system';
-  message: string;
-  timestamp: string;
-  read: boolean;
-}
-
-// TODO: Replace with API data
-const mockAlerts: Alert[] = [
-  { id: 'a1', type: 'overtime', message: 'Order #22 is 10+ minutes overtime', timestamp: '2 min ago', read: false },
-  { id: 'a2', type: 'new-order', message: 'New order #27 received (DINE IN, Table 9)', timestamp: '3 min ago', read: false },
-  { id: 'a3', type: 'recalled', message: 'Order #18 recalled by Manager', timestamp: '12 min ago', read: false },
-  { id: 'a4', type: 'system', message: 'Printer "Kitchen HP" is offline', timestamp: '25 min ago', read: true },
-  { id: 'a5', type: 'new-order', message: 'New order #26 received (BANQUET)', timestamp: '30 min ago', read: true },
-];
-
-const alertIcons: Record<string, { icon: React.ElementType; color: string }> = {
-  overtime: { icon: AlertTriangle, color: 'text-destructive' },
-  'new-order': { icon: Bell, color: 'text-warning' },
-  recalled: { icon: Info, color: 'text-status-in-progress' },
-  system: { icon: Info, color: 'text-order-take-out' },
-};
+import type { NotificationType } from '@/types/notification';
 
 function timeAgo(date: Date): string {
   const mins = Math.floor((Date.now() - date.getTime()) / 60000);
@@ -40,21 +18,30 @@ function formatTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+const notifIcons: Record<NotificationType, { icon: React.ElementType; color: string }> = {
+  'table-transfer': { icon: ArrowRightLeft, color: 'text-status-in-progress' },
+  'item-moved': { icon: Utensils, color: 'text-order-take-out' },
+  'new-item-added': { icon: Plus, color: 'text-success' },
+  'course-fired': { icon: Flame, color: 'text-warning' },
+  'general-alert': { icon: Megaphone, color: 'text-[#7C3AED]' },
+  'overtime': { icon: AlertTriangle, color: 'text-destructive' },
+  'new-order': { icon: Bell, color: 'text-warning' },
+  'recalled': { icon: Info, color: 'text-status-in-progress' },
+  'system': { icon: Info, color: 'text-order-take-out' },
+};
+
 interface AlertsPanelProps {
   open: boolean;
   onClose: () => void;
 }
 
-type TabFilter = 'alerts' | 'messages';
+type TabFilter = 'notifications' | 'messages';
 
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
-  const [alerts, setAlerts] = useState(mockAlerts);
-  const [tab, setTab] = useState<TabFilter>('alerts');
+  const [tab, setTab] = useState<TabFilter>('notifications');
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
-
-  const markAllRead = () => setAlerts((prev) => prev.map((a) => ({ ...a, read: true })));
-  const dismiss = (id: string) => setAlerts((prev) => prev.filter((a) => a.id !== id));
+  const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
 
   // Sort messages: pending first, then by timestamp desc
   const sortedMessages = [...messages].sort((a, b) => {
@@ -82,10 +69,16 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <h2 className="text-lg font-bold text-text-primary">Alerts</h2>
+              <h2 className="text-lg font-bold text-text-primary">Notifications</h2>
               <div className="flex items-center gap-3">
-                {tab === 'alerts' && (
-                  <button onClick={markAllRead} className="text-sm text-brand-primary hover:underline">Mark all read</button>
+                {tab === 'notifications' && (
+                  <button
+                    onClick={clearAcknowledged}
+                    className="text-sm text-text-muted hover:text-destructive flex items-center gap-1 transition-colors"
+                  >
+                    <Trash2 size={14} />
+                    Clear read
+                  </button>
                 )}
                 <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close alerts">
                   <X size={20} className="text-text-secondary" />
@@ -96,11 +89,16 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             {/* Tab pills */}
             <div className="flex gap-2 px-4 py-3 border-b border-border">
               <button
-                onClick={() => setTab('alerts')}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px]
-                  ${tab === 'alerts' ? 'bg-brand-primary text-white' : 'bg-muted text-text-secondary hover:bg-muted/80'}`}
+                onClick={() => setTab('notifications')}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative
+                  ${tab === 'notifications' ? 'bg-brand-primary text-white' : 'bg-muted text-text-secondary hover:bg-muted/80'}`}
               >
-                Alerts
+                Notifications
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
+                    {unreadCount}
+                  </span>
+                )}
               </button>
               <button
                 onClick={() => setTab('messages')}
@@ -118,30 +116,48 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto">
-              {tab === 'alerts' ? (
-                /* Alerts tab */
-                alerts.length === 0 ? (
+              {tab === 'notifications' ? (
+                /* Notifications tab */
+                notifications.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center px-8">
                     <CheckCircle size={48} className="text-success mb-4" />
-                    <p className="text-text-primary font-semibold">No alerts, all clear</p>
+                    <p className="text-text-primary font-semibold">All clear, no notifications</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
-                    {alerts.map((alert) => {
-                      const config = alertIcons[alert.type];
+                    {notifications.map((notif) => {
+                      const config = notifIcons[notif.type] || notifIcons['system'];
+                      const Icon = config.icon;
                       return (
-                        <div key={alert.id} className={`flex gap-3 px-4 py-3 ${!alert.read ? 'bg-brand-primary/5' : ''}`}>
-                          <config.icon size={20} className={`${config.color} shrink-0 mt-0.5`} />
-                          <div className="flex-1 min-w-0">
-                            <p className={`text-sm ${!alert.read ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
-                              {alert.message}
-                            </p>
-                            <p className="text-xs text-text-muted mt-0.5">{alert.timestamp}</p>
+                        <button
+                          key={notif.id}
+                          onClick={() => !notif.acknowledged && acknowledge(notif.id)}
+                          className={`w-full text-left flex gap-3 px-4 py-3 transition-colors ${!notif.acknowledged ? 'hover:bg-muted/50' : ''}`}
+                        >
+                          {/* Unread dot */}
+                          <div className="flex items-start pt-1.5 w-3 shrink-0">
+                            {!notif.acknowledged && (
+                              <span className="w-2.5 h-2.5 rounded-full bg-warning shrink-0" />
+                            )}
                           </div>
-                          <button onClick={() => dismiss(alert.id)} className="p-1 hover:bg-muted rounded shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Dismiss alert">
-                            <X size={14} className="text-text-muted" />
-                          </button>
-                        </div>
+                          <Icon size={18} className={`${config.color} shrink-0 mt-0.5`} />
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-sm leading-snug ${!notif.acknowledged ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
+                              {notif.message}
+                            </p>
+                            <div className="flex items-center gap-1.5 mt-1 text-[10px] text-text-muted">
+                              <span className="px-1.5 py-0.5 rounded bg-muted text-text-secondary font-medium">{notif.station}</span>
+                              <span>·</span>
+                              <span>{timeAgo(notif.timestamp)}</span>
+                              {notif.acknowledged && (
+                                <>
+                                  <span>·</span>
+                                  <span className="text-success">Read</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </button>
                       );
                     })}
                   </div>
