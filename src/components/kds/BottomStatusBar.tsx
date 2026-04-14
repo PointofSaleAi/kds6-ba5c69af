@@ -51,7 +51,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
 }
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter }: BottomStatusBarProps) {
-  const { mode: kdsMode } = useKDSMode();
+  const { mode: kdsMode, stationCourse } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const { isPortrait } = usePortrait();
   const [sortOpen, setSortOpen] = useState(false);
@@ -97,7 +97,9 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         </span>
         {kdsMode === 'Prep' && (
           <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary-foreground/15 text-primary-foreground/80">
-            Prep Mode
+            {stationCourse
+              ? `${stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase()} Station Mode`
+              : 'Prep Mode'}
           </span>
         )}
       </div>
