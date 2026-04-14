@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import StatusSettings from '@/pages/StatusSettings';
@@ -6,7 +6,8 @@ import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
-import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
+import type { KDSMode } from '@/hooks/use-kds-mode';
+import type { Order } from '@/types/kds';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -24,6 +25,7 @@ interface SettingsPanelProps {
   onDevModeChange?: (enabled: boolean) => void;
   initialSection?: Section;
   onNavigateHome?: () => void;
+  orders?: Order[];
 }
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
