@@ -208,7 +208,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
 ];
 
 export default function StatusSettings({ onBack }: StatusSettingsProps) {
-  const { rules: savedRules, setRules: saveRules, resetToDefaults } = useStatusRules();
+  const { rules: savedRules, setRules: saveRules, resetToDefaults, courseLevelAging, setCourseLevelAging } = useStatusRules();
   const [draft, setDraft] = useState<StatusRule[]>(savedRules);
   const [selectedId, setSelectedId] = useState<string>(draft[0]?.id || '');
 
@@ -293,6 +293,24 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
         <p className="text-[12px] text-text-muted">
           Orders change colour as they age. Adjust thresholds based on your kitchen speed.
         </p>
+      </div>
+
+      {/* Course Level Toggle */}
+      <div className="px-6 pb-3">
+        <div className="flex items-center justify-between py-2">
+          <div className="flex-1 min-w-0">
+            <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
+            <div className="text-[11px] text-text-muted">When enabled, timing rules apply per course. Orders without courses use item-level timing.</div>
+          </div>
+          <button
+            onClick={() => setCourseLevelAging(!courseLevelAging)}
+            className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] shrink-0 ml-3 ${courseLevelAging ? 'bg-brand-primary' : 'bg-border'}`}
+            role="switch"
+            aria-checked={courseLevelAging}
+          >
+            <span className={`absolute top-1 left-1 w-4 h-4 bg-surface-card rounded-full transition-transform shadow-sm ${courseLevelAging ? 'translate-x-5' : ''}`} />
+          </button>
+        </div>
       </div>
 
       {/* Presets */}
