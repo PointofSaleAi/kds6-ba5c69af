@@ -189,7 +189,7 @@ export function ExpoSummaryPanel({
                     isSelected
                       ? 'bg-warning/10 border-l-[3px] border-l-warning'
                       : 'hover:bg-muted/50'
-                  } ${p.hasNew ? 'animate-new-item-warning' : ''}`}
+                  } ${p.hasNew ? (p.hasFiring ? 'animate-new-item-warning' : 'animate-new-item') : ''}`}
                 >
                   <span className={`text-[12px] font-medium ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {p.name}
