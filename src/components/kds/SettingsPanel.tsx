@@ -5,13 +5,14 @@ import StatusSettings from '@/pages/StatusSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug, Globe } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Tag, Bug, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
@@ -77,6 +78,63 @@ function LargeToggle({ checked, onChange }: { checked: boolean; onChange: (v: bo
     >
       <span className={`absolute top-1 left-1 w-7 h-7 bg-surface-card rounded-full transition-transform shadow-sm ${checked ? 'translate-x-8' : ''}`} />
     </button>
+  );
+}
+
+function PrinterStatusDot({ status }: { status: 'online' | 'offline' | 'low-paper' }) {
+  const colors = { online: 'bg-status-done', offline: 'bg-destructive', 'low-paper': 'bg-amber-500' };
+  const labels = { online: 'Online', offline: 'Offline', 'low-paper': 'Low Paper' };
+  return (
+    <span className="flex items-center gap-1.5">
+      <span className={`w-2 h-2 rounded-full ${colors[status]}`} />
+      <span className="text-[12px] text-text-muted">{labels[status]}</span>
+    </span>
+  );
+}
+
+function KotPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
+  const { kot } = usePrinterAssignments();
+  return (
+    <SettingsCard>
+      <CardLabel label="KOT Printer" description="Prints the full order ticket for this station" />
+      {kot.printerId ? (
+        <div className="flex items-center gap-2 mb-3">
+          <Printer size={14} className="text-text-muted" />
+          <span className="text-[13px] font-semibold text-text-primary">{kot.printerName}</span>
+          <PrinterStatusDot status={kot.status} />
+        </div>
+      ) : (
+        <div className="text-[13px] text-text-muted mb-3">No printer assigned</div>
+      )}
+      <ActionButton label="Configure ›" onClick={() => onOpenSub('printer-kot')} />
+    </SettingsCard>
+  );
+}
+
+function LabelPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
+  const { label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
+  return (
+    <SettingsCard>
+      <CardLabel label="Label Printer" description="Prints item stickers when an order is completed" />
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[13px] text-text-secondary font-medium">{labelEnabled ? 'Enabled' : 'Disabled'}</span>
+        <LargeToggle checked={labelEnabled} onChange={setLabelEnabled} />
+      </div>
+      {labelEnabled && (
+        <>
+          {label.printerId ? (
+            <div className="flex items-center gap-2 mb-3">
+              <Tag size={14} className="text-text-muted" />
+              <span className="text-[13px] font-semibold text-text-primary">{label.printerName}</span>
+              <PrinterStatusDot status={label.status} />
+            </div>
+          ) : (
+            <div className="text-[13px] text-text-muted mb-3">No printer assigned</div>
+          )}
+          <ActionButton label="Configure ›" onClick={() => onOpenSub('printer-label')} />
+        </>
+      )}
+    </SettingsCard>
   );
 }
 
@@ -339,10 +397,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
           {activeSection === 'hardware' && (
             <div className="grid grid-cols-2 gap-4">
-              <SettingsCard>
-                <CardLabel label="Printer Routing" description="Select where this KDS will send print jobs." />
-                <ActionButton label="Configure" onClick={() => onOpenSub('printer-routing')} />
-              </SettingsCard>
+              <KotPrinterCard onOpenSub={onOpenSub} />
+              <LabelPrinterCard onOpenSub={onOpenSub} />
 
               <SettingsCard>
                 <CardLabel label="Sound Settings" description="Volume and alert sounds" />

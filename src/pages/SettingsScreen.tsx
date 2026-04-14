@@ -4,7 +4,8 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug } from 'lucide-react';
+import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
 import { useLanguage } from '@/hooks/use-language';
@@ -97,6 +98,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
 export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsScreenProps) {
   const { theme, setTheme } = useTheme();
   const { t, languageName } = useLanguage();
+  const { kot, label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
@@ -182,7 +184,19 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 <span className="text-section-label uppercase text-text-muted tracking-widest">{t.hardware}</span>
               </div>
             </div>
-            <SettingsRow icon={Printer} label={t.mainPrintingDevice} description="Kitchen Epson TM-T88" onClick={() => onOpenSub('printer-routing')} />
+            <SettingsRow
+              icon={Printer}
+              label="KOT Printer"
+              description={kot.printerId ? kot.printerName : 'No printer assigned'}
+              onClick={() => onOpenSub('printer-kot')}
+            />
+            <SettingsRow
+              icon={Tag}
+              label="Label Printer"
+              description={labelEnabled ? (label.printerId ? label.printerName : 'No printer assigned') : 'Disabled'}
+              right={<Toggle checked={labelEnabled} onChange={setLabelEnabled} />}
+              onClick={labelEnabled ? () => onOpenSub('printer-label') : undefined}
+            />
             <SettingsRow icon={Volume2} label={t.soundSettings} description={t.volumeAndAlerts} onClick={() => onOpenSub('sound-settings')} />
             <SettingsRow icon={Server} label={t.connection} description={t.wsAndSync} onClick={() => onOpenSub('websocket-settings')} />
 
