@@ -341,6 +341,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       status: 'recalled',
       timeReceived: new Date(),
       elapsedSeconds: 0,
+      courses: historyOrder.courses.map(c => ({
+        ...c,
+        items: c.items.map(item => ({ ...item, isCompleted: false, isRecalled: true })),
+      })),
     };
     setOrders((prev) => [recalledOrder, ...prev]);
     setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
