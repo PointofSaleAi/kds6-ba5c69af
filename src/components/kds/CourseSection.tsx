@@ -29,6 +29,7 @@ interface CourseSectionProps {
   modifierStatuses?: Map<string, ModifierStatus>;
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
+  courseAgingColor?: { color: string; textColor: string };
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -77,7 +78,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -166,6 +167,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     activeItemIds.forEach(id => onUndoItem(id));
   };
 
+  const agingColor = courseAgingColor?.color;
   const containerClass = coursingStatus === 'active'
     ? 'border-l-[3px] rounded-l-none'
     : isServedByLifecycle
@@ -175,7 +177,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : '';
 
   const containerStyle = coursingStatus === 'active'
-    ? { borderLeftColor: '#7F77DD', transition: 'all 200ms ease-in-out' }
+    ? { borderLeftColor: agingColor || '#7F77DD', transition: 'all 200ms ease-in-out' }
     : { transition: 'all 200ms ease-in-out' };
 
   const headerBg = coursingStatus === 'active'
@@ -185,7 +187,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
-    ? { backgroundColor: '#EEEDFE' }
+    ? { backgroundColor: agingColor ? `${agingColor}18` : '#EEEDFE' }
     : undefined;
 
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
@@ -204,7 +206,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : 'uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
-    ? { color: '#7F77DD', fontWeight: 500 }
+    ? { color: agingColor || '#7F77DD', fontWeight: 500 }
     : { fontWeight: 400 };
 
   // Course-level icon for active courses - purple/violet to distinguish from item-level
