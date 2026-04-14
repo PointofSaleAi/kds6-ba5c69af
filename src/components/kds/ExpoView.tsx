@@ -602,13 +602,25 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     return () => clearInterval(id);
   }, []);
 
-  // Recompute timerSeconds live from order.timeReceived
+  // Recompute timerSeconds live from order.timeReceived or active course firedAt
   const tickets = useMemo(() => {
     const now = Date.now();
     return rawTickets.map(t => {
       const order = orders.find(o => o.id === t.id);
       if (!order) return t;
-      return { ...t, timerSeconds: Math.round((now - order.timeReceived.getTime()) / 1000) };
+
+      // Timer logic by order type:
+      // FSR coursed (dine-in with coursing): timer from active course firedAt
+      // FSR non-coursed (dine-in without coursing): timer from order placement
+      // QSR (take-out, delivery): timer from order placement
+      let timerSeconds: number;
+      if (t.hasCoursing && t.activeCourseFiredAt) {
+        timerSeconds = Math.round((now - t.activeCourseFiredAt.getTime()) / 1000);
+      } else {
+        timerSeconds = Math.round((now - order.timeReceived.getTime()) / 1000);
+      }
+
+      return { ...t, timerSeconds };
     });
   }, [rawTickets, orders, tick]);
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
