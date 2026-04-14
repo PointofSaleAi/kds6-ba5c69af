@@ -154,8 +154,8 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           )}
           {summary.map((cat) => {
             const isUncategorized = cat.category === ('Uncategorized' as ProductCategory);
-            const isStation = stationCourse === cat.category;
-            const isMuted = !!stationCourse && !isStation;
+            const isStation = false;
+            const isMuted = false;
             const sectionTotal = cat.items.reduce((a, i) => a + i.remaining, 0);
             const isExpanded = !collapsedSections.has(cat.category);
             const isCategorySelected = selectedCategories?.has(cat.category) ?? false;
@@ -167,9 +167,9 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             if (isUncategorized && displayItems.length === 0) return null;
 
             return (
-              <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
+              <div key={cat.category}>
                 {/* Section header */}
-                <div className="flex items-center border-b border-border min-h-[36px]" style={isStation ? { borderLeft: '2px solid #4F46E5' } : undefined}>
+                <div className="flex items-center border-b border-border min-h-[36px]">
                   {/* Chevron toggle */}
                   <button
                     onClick={() => toggleSection(cat.category)}
