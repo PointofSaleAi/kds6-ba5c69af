@@ -38,10 +38,13 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
   tp: (s: string) => string;
 }) {
   const [animating, setAnimating] = useState(false);
+  const [recalled, setRecalled] = useState(false);
 
   const handleRecall = () => {
+    if (recalled) return;
     setAnimating(true);
     setTimeout(() => setAnimating(false), 150);
+    setRecalled(true);
     onRecallItem?.(orderId, item);
   };
 
@@ -49,7 +52,7 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
     <div className={`flex items-center gap-0 py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className={`text-item-name line-through ${item.isCancelled ? 'text-text-muted' : 'text-text-muted'}`}>
+          <span className={`text-item-name ${recalled ? 'text-text-primary' : 'line-through text-text-muted'} ${item.isCancelled ? 'text-text-muted' : ''}`}>
             {item.quantity}&times; {tp(item.name)}
           </span>
           {item.isCancelled && (
@@ -72,22 +75,25 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
       {onRecallItem && !item.isCancelled && (
         <button
           onClick={handleRecall}
+          disabled={recalled}
           className="flex items-center justify-center min-w-[34px] min-h-[33px] shrink-0"
           aria-label={`Recall ${item.name}`}
-          title="Recall item"
+          title={recalled ? 'Already recalled' : 'Recall item'}
         >
           <div
             className="flex items-center justify-center rounded-full"
             style={{
               width: 'var(--kds-eye-icon)',
               height: 'var(--kds-eye-icon)',
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #2980B9',
+              backgroundColor: recalled ? '#F1F5F9' : '#FFFFFF',
+              border: `2px solid ${recalled ? '#CBD5E1' : '#2980B9'}`,
               transition: 'all 150ms ease',
               transform: animating ? 'scale(1.15)' : 'scale(1)',
+              cursor: recalled ? 'default' : 'pointer',
+              opacity: recalled ? 0.5 : 1,
             }}
           >
-            <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color="#2980B9" strokeWidth={2.5} />
+            <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color={recalled ? '#CBD5E1' : '#2980B9'} strokeWidth={2.5} />
           </div>
         </button>
       )}
