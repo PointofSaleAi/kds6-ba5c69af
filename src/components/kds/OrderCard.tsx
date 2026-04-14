@@ -17,8 +17,10 @@ import { OrderCardActions } from './OrderCardActions';
 import { normalizeStationCourses, getLocationLabel } from './station-utils';
 import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
+import { KitchenMessageSection } from './KitchenMessageSection';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import UsersBold from '@/assets/users-bold.svg';
 
@@ -55,6 +57,8 @@ function formatStaticTime(date: Date): string {
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
+  const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
+  const orderMessages = getMessagesForOrder(order.id);
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
@@ -620,6 +624,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             notes={order.orderNotes}
             orderId={order.id}
             onAcknowledgeNotes={onAcknowledgeNotes}
+          />
+        )}
+
+        {orderMessages.length > 0 && (
+          <KitchenMessageSection
+            messages={orderMessages}
+            replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
+            onAcknowledge={acknowledgeMessage}
+            onReply={sendReply}
           />
         )}
 
