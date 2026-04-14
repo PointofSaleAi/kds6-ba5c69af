@@ -14,6 +14,8 @@ import { OrderStoreProvider } from "@/hooks/use-order-store";
 import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
 import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
+import { NotificationsProvider } from "@/hooks/use-notifications";
+import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
