@@ -147,6 +147,61 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return map;
   }, [isDineIn, displayCourses, itemStatuses, confirmedCourses]);
 
+  // Track when each course became "active" for course-level aging
+  const [courseActivatedAt, setCourseActivatedAt] = useState<Map<string, Date>>(() => {
+    // First course starts when order was received
+    const map = new Map<string, Date>();
+    if (isDineIn && displayCourses.length > 0) {
+      map.set(displayCourses[0].course, order.timeReceived);
+    }
+    return map;
+  });
+
+  // When a course transitions to active, record the activation time
+  useEffect(() => {
+    if (!isDineIn || !courseLevelAging) return;
+    setCourseActivatedAt(prev => {
+      let changed = false;
+      const next = new Map(prev);
+      for (const [course, status] of courseLifecycleMap) {
+        if (status === 'active' && !next.has(course)) {
+          next.set(course, new Date());
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [courseLifecycleMap, isDineIn, courseLevelAging]);
+
+  // Compute per-course status colors when course-level aging is enabled
+  const courseStatusColors = useMemo(() => {
+    if (!courseLevelAging || !isDineIn) return new Map<string, { color: string; textColor: string }>();
+    const now = Date.now();
+    const map = new Map<string, { color: string; textColor: string }>();
+    for (const c of displayCourses) {
+      const activatedAt = courseActivatedAt.get(c.course);
+      if (activatedAt) {
+        const elapsed = Math.max(0, Math.floor((now - activatedAt.getTime()) / 1000));
+        const status = getStatusForElapsed(elapsed);
+        map.set(c.course, { color: status.color, textColor: status.textColor });
+      }
+    }
+    return map;
+  }, [courseLevelAging, isDineIn, displayCourses, courseActivatedAt, getStatusForElapsed]);
+
+  // Determine the effective header status color
+  const effectiveStatusColor = useMemo(() => {
+    if (!courseLevelAging || !isDineIn) return statusColor;
+    // Use active course's aging color for the header
+    for (const [course, status] of courseLifecycleMap) {
+      if (status === 'active') {
+        const courseColor = courseStatusColors.get(course);
+        if (courseColor) return { ...statusColor, color: courseColor.color, textColor: courseColor.textColor };
+      }
+    }
+    return statusColor;
+  }, [courseLevelAging, isDineIn, courseLifecycleMap, courseStatusColors, statusColor]);
+
   // 3-step advance: unseen → preparing → done (no 'ready' intermediate)
   const handleAdvanceItem = useCallback((itemId: string, skipToDone?: boolean) => {
     const now = formatStaticTime(new Date());
