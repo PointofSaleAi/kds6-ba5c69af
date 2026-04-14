@@ -106,7 +106,7 @@ function KotPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
       ) : (
         <div className="text-[13px] text-text-muted mb-3">No printer assigned</div>
       )}
-      <ActionButton label="Configure ›" onClick={() => onOpenSub('printer-kot')} />
+      <ActionButton label="Configure" onClick={() => onOpenSub('printer-kot')} />
     </SettingsCard>
   );
 }
@@ -131,7 +131,7 @@ function LabelPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
           ) : (
             <div className="text-[13px] text-text-muted mb-3">No printer assigned</div>
           )}
-          <ActionButton label="Configure ›" onClick={() => onOpenSub('printer-label')} />
+          <ActionButton label="Configure" onClick={() => onOpenSub('printer-label')} />
         </>
       )}
     </SettingsCard>
