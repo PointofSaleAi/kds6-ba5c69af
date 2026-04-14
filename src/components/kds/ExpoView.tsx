@@ -595,6 +595,36 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     toast.success(`Demo ticket #${ticket.orderNumber} recalled`);
   }, []);
 
+  // Demo fire next course: promote pending course to active
+  const handleDemoFireNextCourse = useCallback((ticketId: string) => {
+    setDemoTickets(prev => prev.map(t => {
+      if (t.id !== ticketId || !t.coursing?.pending) return t;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newServed = t.coursing.active
+        ? { course: t.coursing.active.course, doneAt: timeStr, items: t.items.map(i => ({ name: i.name, quantity: i.quantity })) }
+        : t.coursing.served;
+      const pendingItems = t.coursing.pending.items.map(pi => ({
+        id: pi.id,
+        name: pi.name,
+        quantity: pi.quantity,
+        status: 'firing' as const,
+        statusLabel: `Since ${timeStr}`,
+      }));
+      return {
+        ...t,
+        items: pendingItems,
+        stations: t.stations.map(s => ({ ...s, status: 'firing' as const })),
+        coursing: {
+          served: newServed,
+          active: { course: t.coursing.pending.course, label: 'ACTIVE' },
+          pending: undefined,
+        },
+      };
+    }));
+    toast.success('Next course fired');
+  }, []);
+
   // Live tick every second to drive elapsed timers
   const [tick, setTick] = useState(0);
   useEffect(() => {
