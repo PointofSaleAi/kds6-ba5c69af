@@ -72,6 +72,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
   const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
+  const [expoSelectedProducts, setExpoSelectedProducts] = useState<string[]>([]);
 
   const handleExpoTogglePin = useCallback((ticketId: string) => {
     setExpoPinnedIds(prev => {
@@ -94,6 +95,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const handleExpoAllTicketsChange = useCallback((tickets: import('@/data/mock-expo-orders').ExpoTicket[]) => {
     setExpoAllTickets(tickets);
+  }, []);
+
+  const handleExpoProductToggle = useCallback((productName: string) => {
+    setExpoSelectedProducts(prev =>
+      prev.includes(productName) ? prev.filter(p => p !== productName) : [...prev, productName]
+    );
   }, []);
 
   const handleSummaryItemToggle = useCallback((itemName: string) => {
