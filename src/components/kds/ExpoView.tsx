@@ -13,6 +13,7 @@ import {
   type ExpoItemStatus,
 } from '@/data/mock-expo-orders';
 import { createDemoTickets, type DemoExpoTicket } from '@/data/mock-expo-demo';
+import runnerIcon from '@/assets/person-simple-run-bold.svg';
 
 /* -- helpers -- */
 
@@ -139,9 +140,11 @@ interface ExpoTicketCardProps {
   onToggleHold: (ticketId: string, stationName: string) => void;
   isDemo?: boolean;
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
+  sentItemIds: Set<string>;
+  onItemSend?: (ticketId: string, itemId: string) => void;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
@@ -150,6 +153,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const isReady = allItemsDone(ticket);
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
+  const hasCoursingData = !!demoTicket?.coursing;
 
   return (
     <motion.div
@@ -199,17 +203,61 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Item rows */}
       <div className="px-2 py-1.5 space-y-0.5">
         {ticket.items.map(item => {
-          const display = getItemDisplayStatus(item.status);
+          const isSent = sentItemIds.has(item.id);
           const isPrepared = item.status === 'done';
+          const display = getItemDisplayStatus(item.status);
 
+          // Sent items: strikethrough, muted, no badge
+          if (isSent) {
+            return (
+              <div key={item.id} className="flex items-center py-0.5">
+                <div className="flex-1 min-w-0">
+                  <span className="text-[13px] font-medium text-text-muted line-through">
+                    {item.quantity}&times; {tp(item.name)}
+                  </span>
+                </div>
+              </div>
+            );
+          }
+
+          // Prepared but not sent: bold, green left border
+          if (isPrepared) {
+            return (
+              <div
+                key={item.id}
+                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''}`}
+                onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
+              >
+                <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
+                  <span className="text-[13px] font-medium text-text-primary">
+                    {item.quantity}&times; {tp(item.name)}
+                  </span>
+                  <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
+                    {display.label}
+                  </span>
+                  {item.statusLabel && (
+                    <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
+                  )}
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
+                  className="shrink-0 ml-1.5 px-2 py-0.5 rounded-full border border-success text-success text-[10px] font-bold hover:bg-success/10 transition-colors"
+                >
+                  Send
+                </button>
+              </div>
+            );
+          }
+
+          // Queued / Preparing: normal style
           return (
             <div
               key={item.id}
-              className={`flex items-start justify-between py-0.5 ${isPrepared ? 'border-l-[3px] border-l-success pl-1.5 -ml-2' : ''} ${isDemo ? 'cursor-pointer' : ''}`}
+              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''}`}
               onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
             >
               <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
-                <span className={`text-[13px] ${isPrepared ? 'font-bold text-text-primary' : 'font-medium text-text-primary'}`}>
+                <span className="text-[13px] font-medium text-text-primary">
                   {item.quantity}&times; {tp(item.name)}
                 </span>
                 <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
@@ -250,9 +298,39 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Footer */}
       <div className="p-1.5 border-t border-border">
-        <div className="flex items-center justify-between mb-1 px-1">
-          <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
-        </div>
+        {/* Course progress counters for coursed tickets */}
+        {hasCoursingData ? (
+          <div className="px-1 mb-1 space-y-0.5">
+            {demoTicket!.coursing!.served && (
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-text-secondary">{demoTicket!.coursing!.served.course}</span>
+                <span className="text-[12px] text-text-primary font-medium">
+                  {demoTicket!.coursing!.served.items.reduce((s, i) => s + i.quantity, 0)} of {demoTicket!.coursing!.served.items.reduce((s, i) => s + i.quantity, 0)} ready
+                </span>
+              </div>
+            )}
+            {demoTicket!.coursing!.active && (
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-text-secondary">{demoTicket!.coursing!.active.course}</span>
+                <span className="text-[12px] text-text-primary font-medium">
+                  {ticket.items.filter(i => i.status === 'done').length} of {ticket.items.length} ready
+                </span>
+              </div>
+            )}
+            {demoTicket!.coursing!.pending && (
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-text-secondary">{demoTicket!.coursing!.pending.course}</span>
+                <span className="text-[12px] text-text-primary font-medium">
+                  0 of {demoTicket!.coursing!.pending.items.length} ready
+                </span>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center justify-between mb-1 px-1">
+            <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
+          </div>
+        )}
         <div className="flex gap-1.5">
           <button
             onClick={() => onRush?.(ticket.id)}
@@ -273,6 +351,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 : 'bg-muted text-text-muted cursor-not-allowed'
             }`}
           >
+            <img src={runnerIcon} alt="" className="w-5 h-5 brightness-0 invert" />
             Send out
           </button>
         </div>
@@ -366,11 +445,22 @@ interface ExpoViewProps {
   onFilterChange?: () => void;
   onTicketSentOut?: (id: string) => void;
   onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
+  selectedProducts?: string[];
 }
 
-export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange }: ExpoViewProps) {
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
+  const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+
+  const handleItemSend = useCallback((ticketId: string, itemId: string) => {
+    setSentItemIds(prev => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+    toast.success('Item sent');
+  }, []);
 
   const handleFilterChange = useCallback((f: ExpoFilter) => {
     setFilter(f);
@@ -540,25 +630,41 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     onAllTicketsChange?.(allTickets);
   }, [allTickets, onAllTicketsChange]);
 
-  // Reorder by pinned IDs then elapsed time
+  // Reorder by pinned IDs, product selection, then elapsed time
+  const selectedProductSet = useMemo(() => new Set(selectedProducts), [selectedProducts]);
+
   const sortedTickets = useMemo(() => {
     const base = filter === 'ready' ? allTickets.filter(t => allItemsDone(t)) : allTickets;
-    if (pinnedTicketIds.length === 0) return base;
+
+    // Product filtering: tickets matching ALL selected products go to top
+    let result = base;
+    if (selectedProductSet.size > 0) {
+      const matching: typeof base = [];
+      const nonMatching: typeof base = [];
+      for (const t of base) {
+        const itemNames = new Set(t.items.map(i => i.name));
+        const hasAll = [...selectedProductSet].every(p => itemNames.has(p));
+        if (hasAll) matching.push(t);
+        else nonMatching.push(t);
+      }
+      result = [...matching, ...nonMatching];
+    }
+
+    if (pinnedTicketIds.length === 0) return result;
 
     const pinnedSet = new Set(pinnedTicketIds);
-    const pinned: typeof base = [];
-    const unpinned: typeof base = [];
+    const pinned: typeof result = [];
+    const unpinned: typeof result = [];
 
-    for (const t of base) {
+    for (const t of result) {
       if (pinnedSet.has(t.id)) pinned.push(t);
       else unpinned.push(t);
     }
 
-    // Sort pinned by their order in pinnedTicketIds
     pinned.sort((a, b) => pinnedTicketIds.indexOf(a.id) - pinnedTicketIds.indexOf(b.id));
 
     return [...pinned, ...unpinned];
-  }, [allTickets, filter, pinnedTicketIds]);
+  }, [allTickets, filter, pinnedTicketIds, selectedProductSet]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
@@ -612,8 +718,14 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
   const renderTicketCard = (ticket: ExpoTicket) => {
     const isPulsing = pulsingIds.has(ticket.id);
+    // Dim tickets not matching selected products
+    let isDimmed = false;
+    if (selectedProductSet.size > 0) {
+      const itemNames = new Set(ticket.items.map(i => i.name));
+      isDimmed = ![...selectedProductSet].every(p => itemNames.has(p));
+    }
     return (
-      <div className={isPulsing ? 'animate-expo-pin-pulse' : ''}>
+      <div className={`${isPulsing ? 'animate-expo-pin-pulse' : ''} ${isDimmed ? 'opacity-40' : ''} transition-opacity duration-300`}>
         <ExpoTicketCard
           key={ticket.id}
           ticket={ticket}
@@ -623,6 +735,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onToggleHold={handleToggleHold}
           isDemo={ticket.id.startsWith('demo-')}
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
+          sentItemIds={sentItemIds}
+          onItemSend={handleItemSend}
         />
       </div>
     );

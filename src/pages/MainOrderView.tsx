@@ -72,6 +72,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
   const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
+  const [expoSelectedProducts, setExpoSelectedProducts] = useState<string[]>([]);
 
   const handleExpoTogglePin = useCallback((ticketId: string) => {
     setExpoPinnedIds(prev => {
@@ -94,6 +95,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const handleExpoAllTicketsChange = useCallback((tickets: import('@/data/mock-expo-orders').ExpoTicket[]) => {
     setExpoAllTickets(tickets);
+  }, []);
+
+  const handleExpoProductToggle = useCallback((productName: string) => {
+    setExpoSelectedProducts(prev =>
+      prev.includes(productName) ? prev.filter(p => p !== productName) : [...prev, productName]
+    );
   }, []);
 
   const handleSummaryItemToggle = useCallback((itemName: string) => {
@@ -535,7 +542,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Prep' ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : kdsMode === 'Expo' ? (
-                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} />
+                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
                   {isPortrait ? (
@@ -591,7 +598,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         )}
 
         {!settingsOpen && !isSubScreen && (kdsMode === 'Expo'
-          ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} />
+          ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} />
           : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
         )}
       </div>
