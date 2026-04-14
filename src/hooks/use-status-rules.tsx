@@ -21,9 +21,13 @@ export interface StatusRulesContextValue {
   setRules: (rules: StatusRule[]) => void;
   resetToDefaults: () => void;
   getStatusForElapsed: (elapsedSeconds: number) => { color: string; textColor: string; label: string; ruleId: string };
+  courseLevelAging: boolean;
+  setCourseLevelAging: (v: boolean) => void;
 }
 
 const StatusRulesContext = createContext<StatusRulesContextValue | null>(null);
+
+const COURSE_LEVEL_KEY = 'posai-course-level-aging';
 
 const STORAGE_KEY = 'posai-status-rules';
 
@@ -37,6 +41,14 @@ function loadRules(): StatusRule[] {
 
 export function StatusRulesProvider({ children }: { children: ReactNode }) {
   const [rules, setRulesState] = useState<StatusRule[]>(loadRules);
+  const [courseLevelAging, setCourseLevelAgingState] = useState(() => {
+    try { return localStorage.getItem(COURSE_LEVEL_KEY) === 'true'; } catch { return false; }
+  });
+
+  const setCourseLevelAging = useCallback((v: boolean) => {
+    setCourseLevelAgingState(v);
+    localStorage.setItem(COURSE_LEVEL_KEY, String(v));
+  }, []);
 
   const setRules = useCallback((newRules: StatusRule[]) => {
     setRulesState(newRules);
@@ -66,7 +78,7 @@ export function StatusRulesProvider({ children }: { children: ReactNode }) {
   }, [rules]);
 
   return (
-    <StatusRulesContext.Provider value={{ rules, setRules, resetToDefaults, getStatusForElapsed }}>
+    <StatusRulesContext.Provider value={{ rules, setRules, resetToDefaults, getStatusForElapsed, courseLevelAging, setCourseLevelAging }}>
       {children}
     </StatusRulesContext.Provider>
   );
