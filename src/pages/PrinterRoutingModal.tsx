@@ -89,7 +89,7 @@ export default function PrinterRoutingModal({
   };
 
   const handleConfirm = () => {
-    const printer = mockPrinters.find((p) => p.id === selected);
+    const printer = printers.find((p) => p.id === selected);
     if (printer) {
       toast.success(`Print destination set to ${printer.name}`);
       onConfirm?.({ id: printer.id, name: printer.name, status: printer.status });
@@ -138,10 +138,10 @@ export default function PrinterRoutingModal({
           {/* Printer list */}
           <div className="flex-1 overflow-y-auto px-4 pt-4">
             <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
-              Available Printers ({mockPrinters.length})
+              Available Printers ({printers.length})
             </div>
             <div className="space-y-2">
-              {mockPrinters.map((printer) => (
+              {printers.map((printer) => (
                 <div
                   key={printer.id}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-colors min-h-[56px] ${
