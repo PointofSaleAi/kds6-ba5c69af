@@ -21,6 +21,7 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 import StationKDSView from "./pages/StationKDSView.tsx";
+import KdsReplyPage from "./pages/KdsReplyPage.tsx";
 
 const queryClient = new QueryClient();
 
