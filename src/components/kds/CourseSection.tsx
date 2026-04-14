@@ -206,7 +206,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : 'uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
-    ? { color: '#7F77DD', fontWeight: 500 }
+    ? { color: agingColor || '#7F77DD', fontWeight: 500 }
     : { fontWeight: 400 };
 
   // Course-level icon for active courses - purple/violet to distinguish from item-level
