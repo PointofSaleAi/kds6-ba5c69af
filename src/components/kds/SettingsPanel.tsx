@@ -327,7 +327,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 <div className="mt-3 px-3 py-2 bg-muted rounded-lg text-[12px] text-text-secondary leading-relaxed">
                   {kdsMode === 'Standard' && 'Full order cards with course sections, item-level tracking, and detailed modifiers. Best for line cooks.'}
                   {kdsMode === 'Expo' && 'Consolidated view across all stations. Best for the expediter managing the pass.'}
-                  {kdsMode === 'Prep' && 'Aggregated item board grouped by course type with quantities. Best for prep stations batching work.'}
+                  {kdsMode === 'Prep' && 'Filters orders to show only products or categories assigned to each station. Best for dedicated kitchen stations.'}
                 </div>
                 {kdsMode === 'Prep' && (
                   <div className="mt-3">
