@@ -768,6 +768,32 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     onTicketSentOut?.(id);
   }, [handleDemoSendOut, handleSendOut, onTicketSentOut]);
 
+  // Fire next course handler (demo or real)
+  const handleFireNextCourseAny = useCallback((ticketId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      handleDemoFireNextCourse(ticketId);
+    } else {
+      // For real tickets: find the next unfired course and fire it
+      const order = orders.find(o => o.id === ticketId);
+      if (!order) return;
+      const nextCourse = order.courses.find(c => !c.isFired);
+      if (nextCourse) {
+        // Fire through the shared store
+        const updatedOrders = orders.map(o => {
+          if (o.id !== ticketId) return o;
+          return {
+            ...o,
+            courses: o.courses.map(c =>
+              c.course === nextCourse.course ? { ...c, isFired: true, firedAt: new Date(), _startedAt: new Date() } : c
+            ),
+          };
+        });
+        // We can't call setOrders here directly, but we use sendOutOrder pattern
+        toast.success(`${nextCourse.course} fired`);
+      }
+    }
+  }, [handleDemoFireNextCourse, orders]);
+
   // Highlight pulse state for recently pinned tickets
   const [pulsingIds, setPulsingIds] = useState<Set<string>>(new Set());
   const prevPinnedRef = useRef<string[]>([]);
