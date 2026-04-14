@@ -63,7 +63,30 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
-  // Station overrides for re-routing
+  // Servable modifier statuses
+  const [modifierStatuses, setModifierStatuses] = useState<Map<string, ModifierStatus>>(new Map());
+
+  const handleAdvanceModifier = useCallback((modId: string) => {
+    setModifierStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(modId);
+      if (!current) next.set(modId, 'preparing');
+      else if (current === 'preparing') next.set(modId, 'done');
+      else next.set(modId, 'done');
+      return next;
+    });
+  }, []);
+
+  const handleUndoModifier = useCallback((modId: string) => {
+    setModifierStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(modId);
+      if (current === 'done') next.set(modId, 'preparing');
+      else next.delete(modId);
+      return next;
+    });
+  }, []);
+
   const [stationOverrides, setStationOverrides] = useState<Map<string, StationName>>(new Map());
 
   // Modal state
