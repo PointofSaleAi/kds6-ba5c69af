@@ -13,6 +13,7 @@ import {
   type ExpoItemStatus,
 } from '@/data/mock-expo-orders';
 import { createDemoTickets, type DemoExpoTicket } from '@/data/mock-expo-demo';
+import runnerIcon from '@/assets/person-simple-run-bold.svg';
 
 /* -- helpers -- */
 
