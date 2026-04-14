@@ -29,7 +29,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   return (
     <div className="flex items-center" style={{ paddingLeft: '20px' }}>
       <span
-        className={`flex-1 min-w-0 ${styles[modifier.type]} ${isDone ? 'line-through opacity-50' : ''}`}
+        className={`min-w-0 ${styles[modifier.type]} ${isDone ? 'line-through opacity-50' : ''}`}
         style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4' }}
       >
         {tm(modifier.text)}
