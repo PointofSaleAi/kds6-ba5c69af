@@ -5,6 +5,7 @@ import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
+import { ModifierLine, type ModifierStatus } from './ModifierLine';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -24,6 +25,10 @@ interface CourseSectionProps {
   highlightItemNames?: Set<string>;
   lifecycleStatus?: 'active' | 'pending' | 'served';
   courseDoneAt?: string;
+  servableModifiersEnabled?: boolean;
+  modifierStatuses?: Map<string, ModifierStatus>;
+  onAdvanceModifier?: (modId: string) => void;
+  onUndoModifier?: (modId: string) => void;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
