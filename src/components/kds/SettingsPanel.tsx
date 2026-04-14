@@ -5,13 +5,14 @@ import StatusSettings from '@/pages/StatusSettings';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Bug, Globe } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Tag, Bug, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
@@ -339,10 +340,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
           {activeSection === 'hardware' && (
             <div className="grid grid-cols-2 gap-4">
-              <SettingsCard>
-                <CardLabel label="Printer Routing" description="Select where this KDS will send print jobs." />
-                <ActionButton label="Configure" onClick={() => onOpenSub('printer-routing')} />
-              </SettingsCard>
+              <KotPrinterCard onOpenSub={onOpenSub} />
+              <LabelPrinterCard onOpenSub={onOpenSub} />
 
               <SettingsCard>
                 <CardLabel label="Sound Settings" description="Volume and alert sounds" />
