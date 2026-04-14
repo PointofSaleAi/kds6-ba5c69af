@@ -144,7 +144,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome }: SettingsPanelProps) {
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome, orders = [] }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
   const {
@@ -335,36 +335,35 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 {kdsMode === 'Prep' && (
                   <div className="mt-3">
                     <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Station</span>
-                    <div className="grid grid-cols-2 gap-2">
-                      {([
-                        { value: 'ENTREE' as StationCourse, label: 'Entree' },
-                        { value: 'APPETIZER' as StationCourse, label: 'Appetizer' },
-                        { value: 'DESSERT' as StationCourse, label: 'Dessert' },
-                        { value: 'SIDES' as StationCourse, label: 'Sides' },
-                      ]).map((station) => (
-                         <button
-                          key={station.value}
+                    {availableCategories.length === 0 ? (
+                      <p className="text-[12px] text-text-secondary">No categories available. Station chips will appear once orders are loaded.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        {availableCategories.map((cat) => (
+                          <button
+                            key={cat}
                             onClick={() => {
-                             const newValue = stationCourse === station.value ? null : station.value;
-                             setStationCourse(newValue);
-                             if (newValue) {
-                               onNavigateHome?.();
-                               onClose();
-                             }
-                           }}
-                          className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
-                            stationCourse === station.value
-                              ? 'bg-brand-dark text-primary-foreground border-brand-dark'
-                              : 'bg-surface-card text-text-secondary border-border hover:border-text-muted'
-                          }`}
-                        >
-                          {station.label}
-                        </button>
-                      ))}
-                    </div>
+                              const newValue = stationCourse === cat ? null : cat;
+                              setStationCourse(newValue);
+                              if (newValue) {
+                                onNavigateHome?.();
+                                onClose();
+                              }
+                            }}
+                            className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
+                              stationCourse === cat
+                                ? 'bg-brand-dark text-primary-foreground border-brand-dark'
+                                : 'bg-surface-card text-text-secondary border-border hover:border-text-muted'
+                            }`}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                     {stationCourse && (
                       <div className="mt-2 px-3 py-1.5 bg-muted rounded text-[11px] text-text-muted">
-                        Showing station view for {stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase()} station
+                        Showing station view for {stationCourse} station
                       </div>
                     )}
                   </div>
