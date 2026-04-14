@@ -13,6 +13,7 @@ import { KDSSettingsProvider } from "@/hooks/use-kds-settings";
 import { OrderStoreProvider } from "@/hooks/use-order-store";
 import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
+import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
