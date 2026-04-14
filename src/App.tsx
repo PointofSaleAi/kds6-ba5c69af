@@ -36,7 +36,9 @@ const App = () => (
       <PrinterAssignmentsProvider>
       <PortraitProvider>
       <KitchenMessagesProvider>
+      <NotificationsProvider>
       <TooltipProvider>
+        <NotificationToastStack />
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -49,6 +51,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </NotificationsProvider>
       </KitchenMessagesProvider>
       </PortraitProvider>
       </PrinterAssignmentsProvider>
