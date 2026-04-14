@@ -9,6 +9,8 @@ interface KdsActionIconProps {
   label?: string;
   title?: string;
   disabled?: boolean;
+  /** Circle diameter in px. Defaults to CSS var --kds-eye-icon */
+  size?: number;
 }
 
 const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: string; IconComponent: typeof Eye }> = {
@@ -56,7 +58,7 @@ const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: 
   },
 };
 
-export function KdsActionIcon({ icon, onClick, label, title, disabled }: KdsActionIconProps) {
+export function KdsActionIcon({ icon, onClick, label, title, disabled, size }: KdsActionIconProps) {
   const [animating, setAnimating] = useState(false);
   const style = stateStyles[icon];
   const { IconComponent } = style;
@@ -68,26 +70,31 @@ export function KdsActionIcon({ icon, onClick, label, title, disabled }: KdsActi
     onClick?.();
   };
 
+  const circleSize = size ? `${size}px` : 'var(--kds-eye-icon)';
+  const innerSize = size ? `${Math.round(size * 0.5)}px` : 'var(--kds-eye-inner)';
+  const touchSize = size ? Math.max(size + 2, 34) : 34;
+
   return (
     <button
       onClick={handleClick}
       disabled={disabled}
-      className={`flex items-center justify-center min-w-[34px] min-h-[33px] ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
+      className={`flex items-center justify-center ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
+      style={{ minWidth: touchSize, minHeight: touchSize - 1 }}
       aria-label={label ?? icon}
       title={title}
     >
       <div
         className="flex items-center justify-center rounded-full"
         style={{
-          width: 'var(--kds-eye-icon)',
-          height: 'var(--kds-eye-icon)',
+          width: circleSize,
+          height: circleSize,
           backgroundColor: style.bg,
           border: style.border,
           transition: 'all 150ms ease',
           transform: animating ? 'scale(1.15)' : 'scale(1)',
         }}
       >
-        {style.IconComponent && <style.IconComponent style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color={style.iconColor} strokeWidth={2.5} />}
+        {style.IconComponent && <style.IconComponent style={{ width: innerSize, height: innerSize }} color={style.iconColor} strokeWidth={2.5} />}
       </div>
     </button>
   );
