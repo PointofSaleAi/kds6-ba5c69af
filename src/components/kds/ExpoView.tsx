@@ -313,29 +313,29 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Footer */}
       <div className="p-1.5 border-t border-border">
         {/* Course progress counters for coursed tickets */}
-        {hasCoursingData ? (
+        {hasCoursingData && demoTicket?.coursing ? (
           <div className="px-1 mb-1 space-y-0.5">
-            {demoTicket!.coursing!.served && (
+            {demoTicket.coursing.served && (
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-text-secondary">{demoTicket!.coursing!.served.course}</span>
+                <span className="text-[12px] text-text-secondary">{demoTicket.coursing.served.course}</span>
                 <span className="text-[12px] text-text-primary font-medium">
-                  {demoTicket!.coursing!.served.items.reduce((s, i) => s + i.quantity, 0)} of {demoTicket!.coursing!.served.items.reduce((s, i) => s + i.quantity, 0)} ready
+                  {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} of {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} ready
                 </span>
               </div>
             )}
-            {demoTicket!.coursing!.active && (
+            {demoTicket.coursing.active && (
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-text-secondary">{demoTicket!.coursing!.active.course}</span>
+                <span className="text-[12px] text-text-secondary">{demoTicket.coursing.active.course}</span>
                 <span className="text-[12px] text-text-primary font-medium">
                   {ticket.items.filter(i => i.status === 'done').length} of {ticket.items.length} ready
                 </span>
               </div>
             )}
-            {demoTicket!.coursing!.pending && (
+            {demoTicket.coursing.pending && (
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-text-secondary">{demoTicket!.coursing!.pending.course}</span>
+                <span className="text-[12px] text-text-secondary">{demoTicket.coursing.pending.course}</span>
                 <span className="text-[12px] text-text-primary font-medium">
-                  0 of {demoTicket!.coursing!.pending.items.length} ready
+                  0 of {demoTicket.coursing.pending.items.length} ready
                 </span>
               </div>
             )}
