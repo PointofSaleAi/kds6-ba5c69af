@@ -10,6 +10,7 @@ interface KitchenMessagesContextValue {
   sendReply: (messageId: string, text: string) => void;
   getMessagesForOrder: (orderId: string) => KitchenMessage[];
   getRepliesForMessage: (messageId: string) => KitchenReply[];
+  simulateNewMessage: () => void;
 }
 
 const KitchenMessagesContext = createContext<KitchenMessagesContextValue | null>(null);
@@ -44,6 +45,25 @@ export function KitchenMessagesProvider({ children }: { children: ReactNode }) {
     setReplies(prev => [...prev, reply]);
   }, []);
 
+  const simulateNewMessage = useCallback(() => {
+    const samples = [
+      { text: 'Table 5 is asking about their entrees', terminal: 'POS-1', employee: 'Sarah' },
+      { text: '86 the salmon, switching to halibut', terminal: 'POS-2', employee: 'Mike' },
+      { text: 'VIP guest arriving in 10 mins, priority prep', terminal: 'POS-1', employee: 'Manager' },
+      { text: 'Customer wants extra sauce on the side', terminal: 'POS-3', employee: 'Alex' },
+    ];
+    const sample = samples[Math.floor(Math.random() * samples.length)];
+    const newMsg: KitchenMessage = {
+      message_id: `km-sim-${Date.now()}`,
+      message_text: sample.text,
+      employee_name: sample.employee,
+      terminal_name: sample.terminal,
+      timestamp: new Date(),
+      status: 'pending',
+    };
+    setMessages(prev => [...prev, newMsg]);
+  }, []);
+
   const getMessagesForOrder = useCallback(
     (orderId: string) => messages.filter(m => m.linked_order_id === orderId),
     [messages]
@@ -63,8 +83,9 @@ export function KitchenMessagesProvider({ children }: { children: ReactNode }) {
       sendReply,
       getMessagesForOrder,
       getRepliesForMessage,
+      simulateNewMessage,
     }),
-    [messages, replies, pendingCount, acknowledgeMessage, sendReply, getMessagesForOrder, getRepliesForMessage]
+    [messages, replies, pendingCount, acknowledgeMessage, sendReply, getMessagesForOrder, getRepliesForMessage, simulateNewMessage]
   );
 
   return (
