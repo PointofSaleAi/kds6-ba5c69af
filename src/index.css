@@ -340,6 +340,12 @@
   border-left: 2px solid hsl(var(--warning));
 }
 
+.animate-new-item-queued {
+  animation: new-item-pulse 1.2s ease-in-out infinite;
+  background-color: hsl(var(--text-muted) / 0.08);
+  border-left: 2px solid hsl(var(--text-muted));
+}
+
 @keyframes message-flash-in {
   0% { transform: translateY(-100%); opacity: 0; }
   15% { transform: translateY(0); opacity: 1; }
