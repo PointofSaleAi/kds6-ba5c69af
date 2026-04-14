@@ -23,13 +23,15 @@ interface CategorySummary {
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
-function buildSummary(orders: Order[]): CategorySummary[] {
+function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySummary[] {
   const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean }>>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
       if (cg.isFired) continue;
+      // In station view, only include items from matching course groups
+      if (stationCourseFilter && cg.course !== stationCourseFilter) continue;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
         const cat = item.category || ('Uncategorized' as ProductCategory);
@@ -58,11 +60,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const { tp } = useLanguage();
   const { isPortrait } = usePortrait();
   const [collapsed, setCollapsed] = useState(false);
-  const rawSummary = useMemo(() => buildSummary(orders), [orders]);
-
-  const summary = stationCourse
-    ? rawSummary.filter(c => c.category === stationCourse)
-    : rawSummary;
+  const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
   const categoryCount = selectedCategories?.size ?? 0;
