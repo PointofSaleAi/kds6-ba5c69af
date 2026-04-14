@@ -171,7 +171,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             return (
               <div key={cat.category} className={isMuted ? 'opacity-50' : ''}>
                 {/* Section header */}
-                <div className="flex items-center border-b border-border min-h-[36px]">
+                <div className="flex items-center border-b border-border min-h-[36px]" style={isStation ? { borderLeft: '2px solid #4F46E5' } : undefined}>
                   {/* Chevron toggle */}
                   <button
                     onClick={() => toggleSection(cat.category)}
