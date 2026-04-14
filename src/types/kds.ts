@@ -47,6 +47,8 @@ export interface OrderItem {
   station?: StationName;
   /** Newly added from POS to an existing ticket */
   isNew?: boolean;
+  /** Recalled from history */
+  isRecalled?: boolean;
 }
 
 export interface CourseGroup {

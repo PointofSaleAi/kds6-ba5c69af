@@ -363,7 +363,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       elapsedSeconds: 0,
       targetSeconds: historyOrder.targetSeconds,
       itemCount: item.quantity,
-      courses: [{ course: 'ENTREE', isFired: false, items: [{ ...item, isCompleted: false }] }],
+      courses: [{ course: 'ENTREE', isFired: false, items: [{ ...item, isCompleted: false, isRecalled: true }] }],
     };
     setOrders((prev) => [newOrder, ...prev]);
     toast.success('Item recalled to kitchen', { duration: 2000 });
