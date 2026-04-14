@@ -445,11 +445,22 @@ interface ExpoViewProps {
   onFilterChange?: () => void;
   onTicketSentOut?: (id: string) => void;
   onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
+  selectedProducts?: string[];
 }
 
-export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange }: ExpoViewProps) {
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
+  const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+
+  const handleItemSend = useCallback((ticketId: string, itemId: string) => {
+    setSentItemIds(prev => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+    toast.success('Item sent');
+  }, []);
 
   const handleFilterChange = useCallback((f: ExpoFilter) => {
     setFilter(f);
