@@ -150,7 +150,7 @@ export function ExpoSummaryPanel({
                   readyProducts.map(p => (
                     <div
                       key={p.name}
-                      className="w-full flex items-center justify-between px-3 py-2 border-b border-border/30"
+                      className="w-full flex items-center justify-between px-3 py-2 border-b border-border/30 animate-new-item"
                     >
                       <span className="text-[12px] font-medium text-text-primary truncate mr-1">{p.name}</span>
                       <div className="flex items-center gap-2 shrink-0">
@@ -189,7 +189,7 @@ export function ExpoSummaryPanel({
                     isSelected
                       ? 'bg-warning/10 border-l-[3px] border-l-warning'
                       : 'hover:bg-muted/50'
-                  } ${p.hasNew ? (p.hasFiring ? 'animate-new-item-warning' : 'animate-new-item') : ''}`}
+                  } ${p.hasFiring ? 'animate-new-item-warning' : 'animate-new-item-queued'}`}
                 >
                   <span className={`text-[12px] font-medium ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {p.name}
