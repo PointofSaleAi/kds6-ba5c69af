@@ -67,22 +67,23 @@ export function ExpoSummaryPanel({
       .map(([name, data]) => ({ name, count: data.total }));
   }, [tickets]);
 
-  // Aggregate products across all tickets with pending (not-done) counts + new item flag
+  // Aggregate products across all tickets with pending (not-done) counts + dominant status
   const productList = useMemo(() => {
-    const map = new Map<string, { count: number; hasNew: boolean }>();
+    const map = new Map<string, { count: number; hasNew: boolean; hasFiring: boolean }>();
     for (const t of tickets) {
       for (const item of t.items) {
         if (item.status !== 'done') {
-          const existing = map.get(item.name) || { count: 0, hasNew: false };
+          const existing = map.get(item.name) || { count: 0, hasNew: false, hasFiring: false };
           existing.count += item.quantity;
           if (item.isNew) existing.hasNew = true;
+          if (item.status === 'firing') existing.hasFiring = true;
           map.set(item.name, existing);
         }
       }
     }
     return Array.from(map.entries())
       .sort((a, b) => b[1].count - a[1].count)
-      .map(([name, data]) => ({ name, count: data.count, hasNew: data.hasNew }));
+      .map(([name, data]) => ({ name, count: data.count, hasNew: data.hasNew, hasFiring: data.hasFiring }));
   }, [tickets]);
 
   if (collapsed) {
