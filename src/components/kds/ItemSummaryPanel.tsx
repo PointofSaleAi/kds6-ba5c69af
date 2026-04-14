@@ -154,8 +154,8 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           )}
           {summary.map((cat) => {
             const isUncategorized = cat.category === ('Uncategorized' as ProductCategory);
-            const isStation = stationCourse === cat.category;
-            const isMuted = !!stationCourse && !isStation;
+            const isStation = false;
+            const isMuted = false;
             const sectionTotal = cat.items.reduce((a, i) => a + i.remaining, 0);
             const isExpanded = !collapsedSections.has(cat.category);
             const isCategorySelected = selectedCategories?.has(cat.category) ?? false;
