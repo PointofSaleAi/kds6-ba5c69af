@@ -156,7 +156,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const isReady = allItemsDone(ticket);
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
-  const hasCoursingData = !!demoTicket?.coursing;
+  const hasCoursingData = !!demoTicket?.coursing || ticket.hasCoursing;
+
+  // Determine if the active course is fully done (for "Fire next course" button)
+  const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
+  const hasPendingCourse = !!demoTicket?.coursing?.pending;
 
   return (
     <motion.div
