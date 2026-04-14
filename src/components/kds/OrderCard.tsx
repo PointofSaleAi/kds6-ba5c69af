@@ -564,7 +564,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
           <div
             className="flex items-stretch justify-between transition-all duration-200"
-            style={{ backgroundColor: statusColor.color, padding: `var(--kds-card-padding)` }}
+            style={{ backgroundColor: effectiveStatusColor.color, padding: `var(--kds-card-padding)` }}
           >
             {ticketHeaderLayout === 'kitchen' ? (
               <>
