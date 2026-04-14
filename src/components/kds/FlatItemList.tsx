@@ -84,19 +84,14 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
               {item.modifiers.length > 0 && (
                 <div style={{ marginTop: '2px' }}>
                   {item.modifiers.map((mod, idx) => (
-                    <div
-                      key={idx}
-                      className={
-                        mod.type === 'extra'
-                          ? 'text-modifier-extra'
-                          : mod.type === 'remove'
-                            ? 'text-destructive line-through'
-                            : 'text-text-secondary'
-                      }
-                      style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
-                    >
-                      {mod.text}
-                    </div>
+                    <ModifierLine
+                      key={mod.id || idx}
+                      modifier={mod}
+                      servableEnabled={servableModifiersEnabled}
+                      modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+                      onAdvanceModifier={onAdvanceModifier}
+                      onUndoModifier={onUndoModifier}
+                    />
                   ))}
                 </div>
               )}
