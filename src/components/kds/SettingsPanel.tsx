@@ -376,7 +376,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Servable Modifiers" />
+                <CardLabel label="Servable Modifiers" description="When enabled, only modifiers marked as servable in the POS dashboard will follow the same Queued → Preparing → Done flow as the main product." />
                 <div className="flex items-center justify-between mt-1">
                   <span className="text-[13px] text-text-secondary font-medium">{servableModifiers ? 'ON' : 'OFF'}</span>
                   <LargeToggle checked={servableModifiers} onChange={setServableModifiers} />
