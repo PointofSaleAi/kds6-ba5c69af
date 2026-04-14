@@ -20,7 +20,7 @@ import { NotificationToastStack } from "@/components/kds/NotificationToastStack"
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
-import StationKDSView from "./pages/StationKDSView.tsx";
+
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
 
 const queryClient = new QueryClient();
@@ -48,7 +48,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/kds/full" replace />} />
             <Route path="/kds/full" element={<Index />} />
-            <Route path="/kds/station" element={<StationKDSView />} />
+            
             <Route path="/kds-reply" element={<KdsReplyPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
