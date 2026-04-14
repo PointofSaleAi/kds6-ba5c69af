@@ -134,9 +134,6 @@ function LabelPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
           <ActionButton label="Configure ›" onClick={() => onOpenSub('printer-label')} />
         </>
       )}
-      {!labelEnabled && (
-        <div className="text-[13px] text-text-muted">Disabled</div>
-      )}
     </SettingsCard>
   );
 }
