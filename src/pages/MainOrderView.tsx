@@ -24,6 +24,8 @@ import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { toast } from 'sonner';
 import { usePortrait } from '@/hooks/use-portrait';
+import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
+import { Megaphone } from 'lucide-react';
 import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 
@@ -56,6 +58,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
+  const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -65,6 +68,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
+  const prevMessageCountRef = useRef(kitchenMessages.length);
+  const [messageFlash, setMessageFlash] = useState<{ text: string; from: string } | null>(null);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
@@ -192,6 +197,24 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
     prevOrderCountRef.current = currentCount;
   }, [orders.length, playSound]);
+
+  // Flash notification when new kitchen messages arrive
+  useEffect(() => {
+    const currentCount = kitchenMessages.length;
+    if (currentCount > prevMessageCountRef.current) {
+      const newest = kitchenMessages[kitchenMessages.length - 1];
+      if (newest) {
+        setMessageFlash({
+          text: newest.message_text,
+          from: newest.terminal_name || newest.employee_name,
+        });
+        playSound('newOrder');
+        const timer = setTimeout(() => setMessageFlash(null), 4000);
+        return () => clearTimeout(timer);
+      }
+    }
+    prevMessageCountRef.current = currentCount;
+  }, [kitchenMessages.length, kitchenMessages, playSound]);
 
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((o) => {
@@ -434,6 +457,26 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
+      {/* Kitchen message flash notification */}
+      <AnimatePresence>
+        {messageFlash && (
+          <motion.div
+            key="msg-flash"
+            initial={{ y: -60, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -60, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            className="absolute top-2 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2.5 px-5 py-3 rounded-xl shadow-lg"
+            style={{ backgroundColor: 'hsl(263 70% 50%)', color: '#fff', minWidth: 280, maxWidth: 520 }}
+          >
+            <Megaphone size={18} className="shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold opacity-80 truncate">Message from {messageFlash.from}</p>
+              <p className="text-[13px] font-medium truncate">{messageFlash.text}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="flex flex-1 overflow-hidden">
         <KDSSidebar
           activeFilter={activeFilter}
