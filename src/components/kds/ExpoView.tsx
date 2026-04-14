@@ -238,7 +238,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 <span className="text-[13px] font-medium text-text-primary">
                   {pi.quantity}&times; {pi.name}
                 </span>
-                <span className="inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold bg-muted text-text-muted">
+                <span className="inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] bg-muted text-text-muted">
                   Queued
                 </span>
                 <span className="text-[10px] text-text-muted">{pi.timeLabel}</span>
