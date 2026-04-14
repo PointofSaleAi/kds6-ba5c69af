@@ -52,7 +52,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
-  const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
+  const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
