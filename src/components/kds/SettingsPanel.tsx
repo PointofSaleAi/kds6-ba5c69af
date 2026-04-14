@@ -159,6 +159,18 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { showBadge: enableBadge, setShowBadge: setEnableBadge } = useBadgeVisibility();
   const { mode: kdsMode, setMode: setKdsMode, stationCourse, setStationCourse } = useKDSMode();
+  const availableCategories = useMemo(() => {
+    const cats = new Set<string>();
+    for (const order of orders) {
+      if (order.status === 'served') continue;
+      for (const cg of order.courses) {
+        for (const item of cg.items) {
+          if (item.category && !item.isCompleted && !item.isCancelled) cats.add(item.category);
+        }
+      }
+    }
+    return Array.from(cats).sort();
+  }, [orders]);
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
