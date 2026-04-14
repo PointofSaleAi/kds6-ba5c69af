@@ -52,7 +52,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
-  const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
+  const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
@@ -216,13 +216,23 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     prevMessageCountRef.current = currentCount;
   }, [kitchenMessages.length, kitchenMessages, playSound]);
 
+  // Station view: determine if we're in station-filtered mode
+  const isStationView = kdsMode === 'Prep' && !!resolvedStationCourse;
+
   const filteredOrders = useMemo(() => {
-    const filtered = orders.filter((o) => {
+    let filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
       if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
       if (activeFilter === 'completed') return o.status !== 'served';
       return true;
     });
+
+    // Station view: only show orders that have items in the active station's course
+    if (isStationView && resolvedStationCourse) {
+      filtered = filtered.filter(o =>
+        o.courses.some(c => c.course === resolvedStationCourse && c.items.some(i => !i.isCompleted && !i.isCancelled))
+      );
+    }
 
     const sorted = [...filtered];
     if (sortMode === 'table') {
@@ -253,7 +263,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
 
     return sorted;
-  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
   const filteredHistory = historyOrders.filter((o) => {
     if (!historySearch) return true;
@@ -663,9 +673,36 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} />
           ) : (
             <>
+              {isStationView && resolvedStationCourse && (
+                <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#111827' }}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
+                      {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()}
+                    </span>
+                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
+                  </div>
+                  <button
+                    onClick={() => setStationCourse(null)}
+                    style={{ fontSize: 12, color: '#818CF8' }}
+                    className="hover:underline"
+                  >
+                    Exit Station View
+                  </button>
+                </div>
+              )}
+
               {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
-                <EmptyState />
-              ) : kdsMode === 'Prep' ? (
+                isStationView && resolvedStationCourse ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-text-primary text-lg font-bold">No {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders right now</p>
+                      <p className="text-text-muted text-sm mt-1">You are all caught up. New {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders will appear here.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyState />
+                )
+              ) : kdsMode === 'Prep' && !resolvedStationCourse ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : kdsMode === 'Expo' ? (
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
@@ -674,11 +711,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   {isPortrait ? (
                     <div className="grid grid-cols-2 gap-3">
                       <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
-                          </motion.div>
-                        ))}
+                        {filteredOrders.map((order) => {
+                          const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                          return (
+                            <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
+                            </motion.div>
+                          );
+                        })}
                       </AnimatePresence>
                     </div>
                   ) : (staggerMode || viewMode === 'stagger') ? (
@@ -686,11 +726,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           <AnimatePresence mode="popLayout">
-                            {col.map((order) => (
-                              <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                                <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
-                              </motion.div>
-                            ))}
+                            {col.map((order) => {
+                              const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                              return (
+                                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
+                                  <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
+                                </motion.div>
+                              );
+                            })}
                           </AnimatePresence>
                         </div>
                       ))}
@@ -698,21 +741,27 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   ) : viewMode === 'grid' ? (
                     <div className="flex flex-row flex-wrap gap-3 p-3 items-start">
                       <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
-                          </motion.div>
-                        ))}
+                        {filteredOrders.map((order) => {
+                          const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                          return (
+                            <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
+                            </motion.div>
+                          );
+                        })}
                       </AnimatePresence>
                     </div>
                   ) : (
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => (
-                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0 w-[320px]">
-                            <OrderCard order={order} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} stationCourse={resolvedStationCourse} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
-                          </motion.div>
-                        ))}
+                        {filteredOrders.map((order) => {
+                          const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                          return (
+                            <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0 w-[320px]">
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
+                            </motion.div>
+                          );
+                        })}
                       </AnimatePresence>
                     </div>
                   )}
