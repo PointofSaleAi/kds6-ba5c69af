@@ -23,6 +23,7 @@ interface SettingsPanelProps {
   onLogOut?: () => void;
   onDevModeChange?: (enabled: boolean) => void;
   initialSection?: Section;
+  onNavigateHome?: () => void;
 }
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
@@ -141,7 +142,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display' }: SettingsPanelProps) {
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
   const {
@@ -341,11 +342,14 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                       ]).map((station) => (
                          <button
                           key={station.value}
-                          onClick={() => {
-                            const newValue = stationCourse === station.value ? null : station.value;
-                            setStationCourse(newValue);
-                            if (newValue) onClose();
-                          }}
+                            onClick={() => {
+                             const newValue = stationCourse === station.value ? null : station.value;
+                             setStationCourse(newValue);
+                             if (newValue) {
+                               onNavigateHome?.();
+                               onClose();
+                             }
+                           }}
                           className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
                             stationCourse === station.value
                               ? 'bg-brand-dark text-primary-foreground border-brand-dark'
