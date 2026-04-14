@@ -13,6 +13,8 @@ export interface ExpoItem {
   quantity: number;
   status: ExpoItemStatus;
   statusLabel?: string; // e.g. "Frying...", "On grill...", "Overdue"
+  /** Item was added after ticket creation (POS mid-service add) */
+  isNew?: boolean;
 }
 
 export interface ExpoTicket {
@@ -25,6 +27,10 @@ export interface ExpoTicket {
   items: ExpoItem[];
   /** Seconds remaining until auto-fire triggers. undefined = no auto-fire. 0 = firing now. */
   autoFireSeconds?: number;
+  /** Whether this ticket has coursing enabled (multi-course FSR) */
+  hasCoursing?: boolean;
+  /** Timestamp when the current active course was fired (for per-course timer reset) */
+  activeCourseFiredAt?: Date;
 }
 
 export interface KitchenStation {

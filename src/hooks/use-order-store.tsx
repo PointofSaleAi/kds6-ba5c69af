@@ -83,6 +83,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
         quantity: item.quantity,
         status,
         statusLabel,
+        isNew: item.isNew,
       });
     }
   }
