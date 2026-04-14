@@ -26,8 +26,10 @@ export interface Allergen {
 }
 
 export interface Modifier {
+  id?: string;
   text: string;
   type: 'extra' | 'remove' | 'neutral';
+  isServable?: boolean;
 }
 
 export type StationName = 'Grill' | 'Fry' | 'Salad' | 'Dessert' | 'Bar';
