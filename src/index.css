@@ -40,7 +40,7 @@
 
     /* Surfaces */
     --surface-card: 0 0% 100%;
-    --surface-bg: 220 14% 91%;
+    --surface-bg: 0 0% 100%;
 
     /* Text */
     --text-primary: 210 25% 24%;
@@ -48,7 +48,7 @@
     --text-muted: 210 10% 62%;
 
     /* Shadcn mappings */
-    --background: 220 14% 91%;
+    --background: 0 0% 100%;
     --foreground: 210 25% 24%;
     --card: 0 0% 100%;
     --card-foreground: 210 25% 24%;
