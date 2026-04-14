@@ -11,6 +11,7 @@ import { StatusRulesProvider } from "@/hooks/use-status-rules";
 import { LanguageProvider } from "@/hooks/use-language";
 import { KDSSettingsProvider } from "@/hooks/use-kds-settings";
 import { OrderStoreProvider } from "@/hooks/use-order-store";
+import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -29,6 +30,7 @@ const App = () => (
       <BadgeVisibilityProvider>
       <StatusRulesProvider>
       <OrderStoreProvider>
+      <PrinterAssignmentsProvider>
       <PortraitProvider>
       <TooltipProvider>
         <Toaster />
@@ -44,6 +46,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
       </PortraitProvider>
+      </PrinterAssignmentsProvider>
       </OrderStoreProvider>
       </StatusRulesProvider>
       </BadgeVisibilityProvider>
