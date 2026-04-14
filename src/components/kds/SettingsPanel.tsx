@@ -339,9 +339,13 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                         { value: 'DESSERT' as StationCourse, label: 'Dessert' },
                         { value: 'SIDES' as StationCourse, label: 'Sides' },
                       ]).map((station) => (
-                        <button
+                         <button
                           key={station.value}
-                          onClick={() => setStationCourse(stationCourse === station.value ? null : station.value)}
+                          onClick={() => {
+                            const newValue = stationCourse === station.value ? null : station.value;
+                            setStationCourse(newValue);
+                            if (newValue) onClose();
+                          }}
                           className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
                             stationCourse === station.value
                               ? 'bg-brand-dark text-primary-foreground border-brand-dark'

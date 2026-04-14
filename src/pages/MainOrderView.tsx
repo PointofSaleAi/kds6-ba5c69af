@@ -216,13 +216,23 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     prevMessageCountRef.current = currentCount;
   }, [kitchenMessages.length, kitchenMessages, playSound]);
 
+  // Station view: determine if we're in station-filtered mode
+  const isStationView = kdsMode === 'Prep' && !!resolvedStationCourse;
+
   const filteredOrders = useMemo(() => {
-    const filtered = orders.filter((o) => {
+    let filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
       if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
       if (activeFilter === 'completed') return o.status !== 'served';
       return true;
     });
+
+    // Station view: only show orders that have items in the active station's course
+    if (isStationView && resolvedStationCourse) {
+      filtered = filtered.filter(o =>
+        o.courses.some(c => c.course === resolvedStationCourse && c.items.some(i => !i.isCompleted && !i.isCancelled))
+      );
+    }
 
     const sorted = [...filtered];
     if (sortMode === 'table') {
