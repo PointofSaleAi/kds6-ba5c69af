@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useLanguage } from '@/hooks/use-language';
+import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import {
   Home, Clock, Bell, Settings, Eye, EyeOff,
   ArrowLeftRight,
@@ -34,6 +35,7 @@ interface KDSSidebarProps {
 export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen, seenCount = 0, unseenCount = 0 }: KDSSidebarProps) {
   const { showBadge } = useBadgeVisibility();
   const { t } = useLanguage();
+  const { pendingCount: pendingMessageCount } = useKitchenMessages();
   const [expanded, setExpanded] = useState(false);
 
   const navItems: SidebarItem[] = [
@@ -41,7 +43,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
     { icon: Clock, label: t.history, badge: 6, action: 'history' },
     { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
     { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
-    { icon: Bell, label: t.alerts, badge: 3, action: 'alerts' },
+    { icon: Bell, label: t.alerts, badge: 3 + pendingMessageCount, action: 'alerts' },
     { icon: Settings, label: t.settings, action: 'settings' },
   ];
 
