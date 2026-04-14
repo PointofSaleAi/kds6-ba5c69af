@@ -219,6 +219,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // Station view: determine if we're in station-filtered mode
   const isStationView = kdsMode === 'Prep' && !!resolvedStationCourse;
 
+  // Helper: filter order courses/items to only show station-matching items
+  const getStationDisplayOrder = useCallback((order: Order): Order => {
+    if (!isStationView || !resolvedStationCourse) return order;
+    const filteredCourses = order.courses
+      .map(c => ({ ...c, items: c.items.filter(i => i.category === resolvedStationCourse) }))
+      .filter(c => c.items.length > 0);
+    return { ...order, courses: filteredCourses };
+  }, [isStationView, resolvedStationCourse]);
+
   const filteredOrders = useMemo(() => {
     let filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
@@ -227,10 +236,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       return true;
     });
 
-    // Station view: only show orders that have items in the active station's course
+    // Station view: only show orders that have items matching the active station's category
     if (isStationView && resolvedStationCourse) {
       filtered = filtered.filter(o =>
-        o.courses.some(c => c.course === resolvedStationCourse && c.items.some(i => !i.isCompleted && !i.isCancelled))
+        o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse))
       );
     }
 
@@ -589,6 +598,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             onDevModeChange={onDevModeChange}
             initialSection={settingsSection as any}
             onNavigateHome={() => { setActiveNav('home'); }}
+            orders={orders}
           />
         ) : (
         <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
@@ -674,13 +684,30 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             <UnseenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} />
           ) : (
             <>
+              {isStationView && resolvedStationCourse && (
+                <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#111827' }}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
+                      {resolvedStationCourse}
+                    </span>
+                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
+                  </div>
+                  <button
+                    onClick={() => setStationCourse(null)}
+                    style={{ fontSize: 12, color: '#818CF8' }}
+                    className="hover:underline"
+                  >
+                    Exit Station View
+                  </button>
+                </div>
+              )}
 
               {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
                 isStationView && resolvedStationCourse ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
-                      <p className="text-text-primary text-lg font-bold">No {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders right now</p>
-                      <p className="text-text-muted text-sm mt-1">You are all caught up. New {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders will appear here.</p>
+                      <p className="text-text-primary text-lg font-bold">No {resolvedStationCourse} orders right now</p>
+                      <p className="text-text-muted text-sm mt-1">You are all caught up. New {resolvedStationCourse} orders will appear here automatically.</p>
                     </div>
                   </div>
                 ) : (
@@ -696,7 +723,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="grid grid-cols-2 gap-3">
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
-                          const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                          const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }}>
                               <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
@@ -711,7 +738,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           <AnimatePresence mode="popLayout">
                             {col.map((order) => {
-                              const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                              const displayOrder = getStationDisplayOrder(order);
                               return (
                                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
                                   <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
@@ -726,7 +753,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="flex flex-row flex-wrap gap-3 p-3 items-start">
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
-                          const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                          const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
                               <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />
@@ -739,7 +766,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
-                          const displayOrder = isStationView && resolvedStationCourse ? { ...order, courses: order.courses.filter(c => c.course === resolvedStationCourse) } : order;
+                          const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="shrink-0 w-[320px]">
                               <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} />

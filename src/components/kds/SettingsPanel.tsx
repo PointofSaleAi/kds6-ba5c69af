@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import StatusSettings from '@/pages/StatusSettings';
@@ -6,7 +6,8 @@ import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
-import type { KDSMode, StationCourse } from '@/hooks/use-kds-mode';
+import type { KDSMode } from '@/hooks/use-kds-mode';
+import type { Order } from '@/types/kds';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -24,6 +25,7 @@ interface SettingsPanelProps {
   onDevModeChange?: (enabled: boolean) => void;
   initialSection?: Section;
   onNavigateHome?: () => void;
+  orders?: Order[];
 }
 
 const sections: { id: Section; label: string; icon: React.ElementType }[] = [
@@ -142,7 +144,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome }: SettingsPanelProps) {
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome, orders = [] }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
   const {
@@ -157,6 +159,18 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { showBadge: enableBadge, setShowBadge: setEnableBadge } = useBadgeVisibility();
   const { mode: kdsMode, setMode: setKdsMode, stationCourse, setStationCourse } = useKDSMode();
+  const availableCategories = useMemo(() => {
+    const cats = new Set<string>();
+    for (const order of orders) {
+      if (order.status === 'served') continue;
+      for (const cg of order.courses) {
+        for (const item of cg.items) {
+          if (item.category && !item.isCompleted && !item.isCancelled) cats.add(item.category);
+        }
+      }
+    }
+    return Array.from(cats).sort();
+  }, [orders]);
   const [syncing, setSyncing] = useState(false);
   const [bugReporting, setBugReporting] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
@@ -333,36 +347,35 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 {kdsMode === 'Prep' && (
                   <div className="mt-3">
                     <span className="text-[11px] font-bold uppercase text-text-muted tracking-wider mb-2 block">Station</span>
-                    <div className="grid grid-cols-2 gap-2">
-                      {([
-                        { value: 'ENTREE' as StationCourse, label: 'Entree' },
-                        { value: 'APPETIZER' as StationCourse, label: 'Appetizer' },
-                        { value: 'DESSERT' as StationCourse, label: 'Dessert' },
-                        { value: 'SIDES' as StationCourse, label: 'Sides' },
-                      ]).map((station) => (
-                         <button
-                          key={station.value}
+                    {availableCategories.length === 0 ? (
+                      <p className="text-[12px] text-text-secondary">No categories available. Station chips will appear once orders are loaded.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        {availableCategories.map((cat) => (
+                          <button
+                            key={cat}
                             onClick={() => {
-                             const newValue = stationCourse === station.value ? null : station.value;
-                             setStationCourse(newValue);
-                             if (newValue) {
-                               onNavigateHome?.();
-                               onClose();
-                             }
-                           }}
-                          className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
-                            stationCourse === station.value
-                              ? 'bg-brand-dark text-primary-foreground border-brand-dark'
-                              : 'bg-surface-card text-text-secondary border-border hover:border-text-muted'
-                          }`}
-                        >
-                          {station.label}
-                        </button>
-                      ))}
-                    </div>
+                              const newValue = stationCourse === cat ? null : cat;
+                              setStationCourse(newValue);
+                              if (newValue) {
+                                onNavigateHome?.();
+                                onClose();
+                              }
+                            }}
+                            className={`px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors min-h-[44px] border ${
+                              stationCourse === cat
+                                ? 'bg-brand-dark text-primary-foreground border-brand-dark'
+                                : 'bg-surface-card text-text-secondary border-border hover:border-text-muted'
+                            }`}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                     {stationCourse && (
                       <div className="mt-2 px-3 py-1.5 bg-muted rounded text-[11px] text-text-muted">
-                        Showing station view for {stationCourse.charAt(0) + stationCourse.slice(1).toLowerCase()} station
+                        Showing station view for {stationCourse} station
                       </div>
                     )}
                   </div>
