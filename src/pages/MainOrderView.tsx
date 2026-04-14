@@ -198,6 +198,24 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     prevOrderCountRef.current = currentCount;
   }, [orders.length, playSound]);
 
+  // Flash notification when new kitchen messages arrive
+  useEffect(() => {
+    const currentCount = kitchenMessages.length;
+    if (currentCount > prevMessageCountRef.current) {
+      const newest = kitchenMessages[kitchenMessages.length - 1];
+      if (newest) {
+        setMessageFlash({
+          text: newest.message_text,
+          from: newest.terminal_name || newest.employee_name,
+        });
+        playSound('newOrder');
+        const timer = setTimeout(() => setMessageFlash(null), 4000);
+        return () => clearTimeout(timer);
+      }
+    }
+    prevMessageCountRef.current = currentCount;
+  }, [kitchenMessages.length, kitchenMessages, playSound]);
+
   const filteredOrders = useMemo(() => {
     const filtered = orders.filter((o) => {
       if (activeFilter === 'new') return o.status === 'new';
