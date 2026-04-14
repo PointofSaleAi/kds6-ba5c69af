@@ -227,10 +227,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       return true;
     });
 
-    // Station view: only show orders that have items in the active station's course
+    // Station view: only show orders that have items matching the active station's category
     if (isStationView && resolvedStationCourse) {
       filtered = filtered.filter(o =>
-        o.courses.some(c => c.course === resolvedStationCourse && c.items.some(i => !i.isCompleted && !i.isCancelled))
+        o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse))
       );
     }
 
