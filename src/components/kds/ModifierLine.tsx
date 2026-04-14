@@ -27,7 +27,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const isDone = isServable && modifierStatus === 'done';
 
   return (
-    <div className="flex items-center justify-between" style={{ paddingLeft: '20px' }}>
+    <div className="flex items-center" style={{ paddingLeft: '20px' }}>
       <span
         className={`flex-1 min-w-0 ${styles[modifier.type]} ${isDone ? 'line-through opacity-50' : ''}`}
         style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4' }}
@@ -35,7 +35,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         {tm(modifier.text)}
       </span>
       {isServable && modifier.id && (
-        <div className="flex items-center shrink-0 ml-auto" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center shrink-0" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
           {modifierStatus === 'done' ? (
             <>
               <KdsActionIcon icon="undo" size={MOD_ICON_SIZE} onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
