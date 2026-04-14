@@ -57,7 +57,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
-  const { getStatusForElapsed } = useStatusRules();
+  const { getStatusForElapsed, courseLevelAging } = useStatusRules();
   const { ticketHeaderLayout } = useKDSSettings();
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
