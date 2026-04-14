@@ -336,17 +336,52 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const handleRecall = useCallback((orderId: string) => {
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
-    const recalledOrder: Order = {
-      ...historyOrder,
-      status: 'recalled',
-      timeReceived: new Date(),
-      elapsedSeconds: 0,
-      courses: historyOrder.courses.map(c => ({
-        ...c,
-        items: c.items.map(item => ({ ...item, isCompleted: false, isRecalled: true })),
-      })),
-    };
-    setOrders((prev) => [recalledOrder, ...prev]);
+
+    const recalledItems = historyOrder.courses.flatMap(c =>
+      c.items.map(item => ({
+        ...item,
+        isCompleted: false,
+        isRecalled: true,
+      }))
+    );
+
+    setOrders((prev) => {
+      const existingIndex = prev.findIndex(o => o.sourceHistoryOrderId === orderId);
+
+      if (existingIndex >= 0) {
+        const existing = prev[existingIndex];
+        const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
+        const mergedItems = [
+          ...existing.courses.flatMap(c => c.items),
+          ...recalledItems.filter(item => !existingItemIds.has(item.id)),
+        ];
+        const mergedOrder: Order = {
+          ...existing,
+          status: 'recalled',
+          timeReceived: new Date(),
+          elapsedSeconds: 0,
+          itemCount: mergedItems.reduce((sum, item) => sum + item.quantity, 0),
+          courses: [{ course: 'ENTREE', isFired: false, items: mergedItems }],
+        };
+        return prev.map((order, index) => index === existingIndex ? mergedOrder : order);
+      }
+
+      const recalledOrder: Order = {
+        ...historyOrder,
+        status: 'recalled',
+        timeReceived: new Date(),
+        elapsedSeconds: 0,
+        sourceHistoryOrderId: orderId,
+        courses: [{
+          course: 'ENTREE',
+          isFired: false,
+          items: recalledItems,
+        }],
+        itemCount: recalledItems.reduce((sum, item) => sum + item.quantity, 0),
+      };
+      return [recalledOrder, ...prev];
+    });
+
     setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
     toast.success(`Order #${historyOrder.orderNumber} recalled and added to queue`);
     setActiveNav('home');
@@ -356,26 +391,36 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
 
-    // Count non-cancelled items across all courses
     const activeItems = historyOrder.courses.flatMap(c => c.items).filter(i => !i.isCancelled);
     const isOnlyItem = activeItems.length <= 1;
 
     if (isOnlyItem) {
-      // Single-item order: move the whole ticket to home, remove from history
-      const recalledOrder: Order = {
-        ...historyOrder,
-        status: 'recalled',
-        timeReceived: new Date(),
-        elapsedSeconds: 0,
-        courses: historyOrder.courses.map(c => ({
-          ...c,
-          items: c.items.map(i => ({ ...i, isCompleted: false, isRecalled: true })),
-        })),
-      };
-      setOrders((prev) => [recalledOrder, ...prev]);
-      setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
-    } else {
-      // Multi-item order: create a new ticket for the recalled item, remove it from the history order
+      handleRecall(orderId);
+      return;
+    }
+
+    const recalledItem = { ...item, isCompleted: false, isRecalled: true };
+
+    setOrders((prev) => {
+      const existingIndex = prev.findIndex(o => o.sourceHistoryOrderId === orderId);
+
+      if (existingIndex >= 0) {
+        const existing = prev[existingIndex];
+        const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
+        if (existingItemIds.has(recalledItem.id)) return prev;
+
+        const mergedItems = [...existing.courses.flatMap(c => c.items), recalledItem];
+        const mergedOrder: Order = {
+          ...existing,
+          status: 'recalled',
+          timeReceived: new Date(),
+          elapsedSeconds: 0,
+          itemCount: mergedItems.reduce((sum, currentItem) => sum + currentItem.quantity, 0),
+          courses: [{ course: 'ENTREE', isFired: false, items: mergedItems }],
+        };
+        return prev.map((order, index) => index === existingIndex ? mergedOrder : order);
+      }
+
       const newOrder: Order = {
         id: `recalled-item-${item.id}-${Date.now()}`,
         orderNumber: historyOrder.orderNumber,
@@ -388,21 +433,24 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         elapsedSeconds: 0,
         targetSeconds: historyOrder.targetSeconds,
         itemCount: item.quantity,
-        courses: [{ course: 'ENTREE', isFired: false, items: [{ ...item, isCompleted: false, isRecalled: true }] }],
+        sourceHistoryOrderId: orderId,
+        courses: [{ course: 'ENTREE', isFired: false, items: [recalledItem] }],
       };
-      setOrders((prev) => [newOrder, ...prev]);
-      // Remove the recalled item from the history order
-      setHistoryOrders((prev) => prev.map(o => {
-        if (o.id !== orderId) return o;
-        const updatedCourses = o.courses.map(c => ({
-          ...c,
-          items: c.items.filter(i => i.id !== item.id),
-        })).filter(c => c.items.length > 0);
-        return { ...o, courses: updatedCourses, itemCount: updatedCourses.reduce((sum, c) => sum + c.items.length, 0) };
-      }).filter(o => o.courses.length > 0));
-    }
+        return [newOrder, ...prev];
+    });
+
+    setHistoryOrders((prev) => prev.map(o => {
+      if (o.id !== orderId) return o;
+      const updatedCourses = o.courses.map(c => ({
+        ...c,
+        items: c.items.filter(i => i.id !== item.id),
+      })).filter(c => c.items.length > 0);
+      return { ...o, courses: updatedCourses, itemCount: updatedCourses.reduce((sum, c) => sum + c.items.reduce((itemSum, currentItem) => itemSum + currentItem.quantity, 0), 0) };
+    }).filter(o => o.courses.length > 0));
+
     toast.success('Item recalled to kitchen', { duration: 2000 });
-  }, [historyOrders]);
+    setActiveNav('home');
+  }, [handleRecall, historyOrders]);
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
