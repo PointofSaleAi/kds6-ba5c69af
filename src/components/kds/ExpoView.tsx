@@ -62,7 +62,7 @@ const orderTypeLabel: Record<string, string> = {
 /* -- Item status helpers -- */
 
 function getItemDisplayStatus(status: ExpoItemStatus): { label: string; bg: string; text: string } {
-  if (status === 'done') return { label: 'Prepared', bg: 'bg-success/15', text: 'text-success' };
+  if (status === 'done') return { label: 'Prepared', bg: 'bg-success/20', text: 'text-success' };
   if (status === 'firing') return { label: 'Preparing', bg: 'bg-warning/20', text: 'text-warning' };
   return { label: 'Queued', bg: 'bg-muted', text: 'text-text-muted' };
 }
@@ -166,7 +166,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
             {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
           </span>
-          <span className="text-[12px] font-bold opacity-85 leading-tight">
+          <span className="text-[12px] font-medium text-text-secondary leading-tight">
             #{ticket.orderNumber}
           </span>
         </div>
@@ -212,7 +212,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 <span className={`text-[13px] ${isPrepared ? 'font-bold text-text-primary' : 'font-medium text-text-primary'}`}>
                   {item.quantity}&times; {tp(item.name)}
                 </span>
-                <span className={`inline-flex items-center px-1.5 py-px rounded-full text-[10px] font-bold ${display.bg} ${display.text}`}>
+                <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
                   {display.label}
                 </span>
                 {item.statusLabel && (
@@ -370,7 +370,7 @@ interface ExpoViewProps {
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
-  const [filter, setFilter] = useState<ExpoFilter>('all');
+  const [filter, setFilter] = useState<ExpoFilter>('ready');
 
   const handleFilterChange = useCallback((f: ExpoFilter) => {
     setFilter(f);
