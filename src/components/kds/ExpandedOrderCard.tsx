@@ -157,6 +157,11 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                               {item.isCompleted && !item.isCancelled && (
                                 <span className="text-success text-sm">&#10003;</span>
                               )}
+                              {item.isRecalled && !item.isCancelled && (
+                                <span className="text-[9px] font-bold text-order-take-out bg-order-take-out/10 px-1 py-px rounded uppercase tracking-wide">
+                                  RECALLED
+                                </span>
+                              )}
                               {item.allergens.length > 0 && item.allergens.map((a) => (
                                 <AllergenBadge key={a.type} allergen={a} variant="item" />
                               ))}
