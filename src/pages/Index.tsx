@@ -14,9 +14,11 @@ import PerformanceDashboard from '@/pages/PerformanceDashboard';
 import LanguageSettings from '@/pages/LanguageSettings';
 import SoundSettings from '@/pages/SoundSettings';
 import PrinterRoutingModal from '@/pages/PrinterRoutingModal';
+import type { PrinterModalType } from '@/pages/PrinterRoutingModal';
 import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
 import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
 import StaggerModeSettings from '@/pages/StaggerModeSettings';
+import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
@@ -43,7 +45,9 @@ const Index = () => {
   // Sub-screen states
   const [languageOpen, setLanguageOpen] = useState(false);
   const [soundOpen, setSoundOpen] = useState(false);
+  const [printerModalType, setPrinterModalType] = useState<PrinterModalType>('kot');
   const [printerRoutingOpen, setPrinterRoutingOpen] = useState(false);
+  const printerAssignments = usePrinterAssignments();
   const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
   const [revenueFilterOpen, setRevenueFilterOpen] = useState(false);
   const [staggerOpen, setStaggerOpen] = useState(false);
@@ -89,7 +93,9 @@ const Index = () => {
     switch (sub) {
       case 'language-settings': setLanguageOpen(true); break;
       case 'sound-settings': setSoundOpen(true); break;
-      case 'printer-routing': setPrinterRoutingOpen(true); break;
+      case 'printer-routing': setPrinterModalType('kot'); setPrinterRoutingOpen(true); break;
+      case 'printer-kot': setPrinterModalType('kot'); setPrinterRoutingOpen(true); break;
+      case 'printer-label': setPrinterModalType('label'); setPrinterRoutingOpen(true); break;
       case 'category-filter': setCategoryFilterOpen(true); break;
       case 'revenue-filter': setRevenueFilterOpen(true); break;
       case 'stagger-mode': setStaggerOpen(true); break;
@@ -159,7 +165,19 @@ const Index = () => {
       <AlertsPanel open={alertsOpen} onClose={() => setAlertsOpen(false)} />
       <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <SoundSettings open={soundOpen} onClose={() => setSoundOpen(false)} />
-      <PrinterRoutingModal open={printerRoutingOpen} onClose={() => setPrinterRoutingOpen(false)} />
+      <PrinterRoutingModal
+        open={printerRoutingOpen}
+        onClose={() => setPrinterRoutingOpen(false)}
+        type={printerModalType}
+        initialSelectedId={printerModalType === 'kot' ? printerAssignments.kot.printerId : printerAssignments.label.printerId}
+        onConfirm={(printer) => {
+          if (printerModalType === 'kot') {
+            printerAssignments.setKotPrinter({ printerId: printer.id, printerName: printer.name, status: printer.status });
+          } else {
+            printerAssignments.setLabelPrinter({ printerId: printer.id, printerName: printer.name, status: printer.status });
+          }
+        }}
+      />
       <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} onApply={() => {}} />
       <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} onApply={() => {}} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
