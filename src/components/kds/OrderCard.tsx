@@ -603,6 +603,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     highlightItemNames={highlightItemNames}
                     lifecycleStatus={lifecycleStatus}
                     courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
+                    servableModifiersEnabled={servableModifiersEnabled}
+                    modifierStatuses={modifierStatuses}
+                    onAdvanceModifier={handleAdvanceModifier}
+                    onUndoModifier={handleUndoModifier}
                   />
                 );
               })
