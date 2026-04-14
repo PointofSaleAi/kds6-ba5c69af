@@ -128,13 +128,10 @@ export function ExpoSummaryPanel({
                     isSelected
                       ? 'bg-warning/10 border-l-[3px] border-l-warning'
                       : 'hover:bg-muted/50'
-                  }`}
+                  } ${p.hasNew ? 'animate-new-item' : ''}`}
                 >
-                  <span className={`text-[12px] font-medium flex items-center gap-1.5 ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[12px] font-medium ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {p.name}
-                    {p.hasNew && (
-                      <span className="w-2 h-2 rounded-full bg-warning inline-block shrink-0 animate-timer-pulse" />
-                    )}
                   </span>
                   <span className={`text-[13px] font-bold tabular-nums ${isSelected ? 'text-warning' : 'text-text-muted'}`}>
                     {p.count}
