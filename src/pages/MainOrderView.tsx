@@ -706,8 +706,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 isStationView && resolvedStationCourse ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
-                      <p className="text-text-primary text-lg font-bold">No {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders right now</p>
-                      <p className="text-text-muted text-sm mt-1">You are all caught up. New {resolvedStationCourse.charAt(0) + resolvedStationCourse.slice(1).toLowerCase()} orders will appear here.</p>
+                      <p className="text-text-primary text-lg font-bold">No {resolvedStationCourse} orders right now</p>
+                      <p className="text-text-muted text-sm mt-1">You are all caught up. New {resolvedStationCourse} orders will appear here automatically.</p>
                     </div>
                   </div>
                 ) : (
