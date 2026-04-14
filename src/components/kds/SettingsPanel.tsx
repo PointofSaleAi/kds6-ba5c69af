@@ -144,7 +144,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
       onClick={onClick}
       className="flex items-center gap-1 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors"
     >
-      {label} <ChevronRight size={14} />
+      {label}
     </button>
   );
 }
