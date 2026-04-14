@@ -27,6 +27,13 @@ const mockPrinters: PrinterDevice[] = [
   { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline' },
 ];
 
+const mockLabelPrinters: PrinterDevice[] = [
+  { id: 'lp1', name: 'Zebra ZD421', ip: '192.168.1.201', status: 'online' },
+  { id: 'lp2', name: 'Dymo LabelWriter 450', ip: '192.168.1.202', status: 'online' },
+  { id: 'lp3', name: 'Zebra ZD230', ip: '192.168.1.203', status: 'low-paper' },
+  { id: 'lp4', name: 'Dymo LabelWriter 550', ip: '192.168.1.204', status: 'offline' },
+];
+
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   const colors = {
     online: 'bg-status-done',
@@ -63,7 +70,8 @@ export default function PrinterRoutingModal({
   onConfirm,
   initialSelectedId,
 }: PrinterRoutingModalProps) {
-  const [selected, setSelected] = useState(initialSelectedId || 'p1');
+  const printers = type === 'label' ? mockLabelPrinters : mockPrinters;
+  const [selected, setSelected] = useState(initialSelectedId || printers[0]?.id || '');
   const [detecting, setDetecting] = useState(false);
 
   if (!open) return null;
