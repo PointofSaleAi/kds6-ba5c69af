@@ -61,10 +61,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const rawSummary = useMemo(() => buildSummary(orders), [orders]);
 
   const summary = stationCourse
-    ? [
-        ...rawSummary.filter(c => c.category === stationCourse),
-        ...rawSummary.filter(c => c.category !== stationCourse),
-      ]
+    ? rawSummary.filter(c => c.category === stationCourse)
     : rawSummary;
 
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
