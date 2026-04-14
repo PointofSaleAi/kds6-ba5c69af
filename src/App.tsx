@@ -40,6 +40,7 @@ const App = () => (
       <NotificationsProvider>
       <TooltipProvider>
         <NotificationToastStack />
+        <NotificationStationSync />
         <Toaster />
         <Sonner />
         <BrowserRouter>
