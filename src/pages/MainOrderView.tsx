@@ -542,7 +542,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Prep' ? (
                 <PrepBoard orders={filteredOrders} onBump={handleBump} />
               ) : kdsMode === 'Expo' ? (
-                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} />
+                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
               ) : (
                 <div className="flex-1 overflow-auto p-3">
                   {isPortrait ? (
