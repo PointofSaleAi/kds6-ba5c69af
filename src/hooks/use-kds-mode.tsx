@@ -2,7 +2,8 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 
 export type KDSMode = 'Standard' | 'Expo' | 'Prep';
 
-export type StationCourse = 'ENTREE' | 'APPETIZER' | 'DESSERT' | 'SIDES' | null;
+/** Now stores a ProductCategory string (e.g. 'Meat', 'Desserts') instead of CourseType */
+export type StationCourse = string | null;
 
 interface KDSModeContextType {
   mode: KDSMode;
