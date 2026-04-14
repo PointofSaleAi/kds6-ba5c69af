@@ -457,6 +457,26 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   return (
     <div className="fixed inset-0 flex flex-col bg-surface-bg">
+      {/* Kitchen message flash notification */}
+      <AnimatePresence>
+        {messageFlash && (
+          <motion.div
+            key="msg-flash"
+            initial={{ y: -60, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -60, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            className="absolute top-2 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2.5 px-5 py-3 rounded-xl shadow-lg"
+            style={{ backgroundColor: 'hsl(263 70% 50%)', color: '#fff', minWidth: 280, maxWidth: 520 }}
+          >
+            <Megaphone size={18} className="shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold opacity-80 truncate">Message from {messageFlash.from}</p>
+              <p className="text-[13px] font-medium truncate">{messageFlash.text}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="flex flex-1 overflow-hidden">
         <KDSSidebar
           activeFilter={activeFilter}
