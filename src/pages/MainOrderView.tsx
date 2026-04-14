@@ -588,6 +588,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             onLogOut={onLogOut}
             onDevModeChange={onDevModeChange}
             initialSection={settingsSection as any}
+            onNavigateHome={() => { setActiveNav('home'); }}
           />
         ) : (
         <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>

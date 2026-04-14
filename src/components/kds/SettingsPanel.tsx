@@ -142,7 +142,7 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
-export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display' }: SettingsPanelProps) {
+export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
   const {
