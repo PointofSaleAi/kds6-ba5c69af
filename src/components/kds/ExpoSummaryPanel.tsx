@@ -47,19 +47,22 @@ export function ExpoSummaryPanel({
     return { ready, inProgress, pending };
   }, [tickets]);
 
-  // Aggregate products across all tickets with pending (not-done) counts
+  // Aggregate products across all tickets with pending (not-done) counts + new item flag
   const productList = useMemo(() => {
-    const map = new Map<string, number>();
+    const map = new Map<string, { count: number; hasNew: boolean }>();
     for (const t of tickets) {
       for (const item of t.items) {
         if (item.status !== 'done') {
-          map.set(item.name, (map.get(item.name) || 0) + item.quantity);
+          const existing = map.get(item.name) || { count: 0, hasNew: false };
+          existing.count += item.quantity;
+          if (item.isNew) existing.hasNew = true;
+          map.set(item.name, existing);
         }
       }
     }
     return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .map(([name, count]) => ({ name, count }));
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([name, data]) => ({ name, count: data.count, hasNew: data.hasNew }));
   }, [tickets]);
 
   if (collapsed) {
@@ -127,8 +130,11 @@ export function ExpoSummaryPanel({
                       : 'hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`text-[12px] font-medium ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[12px] font-medium flex items-center gap-1.5 ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {p.name}
+                    {p.hasNew && (
+                      <span className="w-2 h-2 rounded-full bg-warning inline-block shrink-0 animate-timer-pulse" />
+                    )}
                   </span>
                   <span className={`text-[13px] font-bold tabular-nums ${isSelected ? 'text-warning' : 'text-text-muted'}`}>
                     {p.count}
