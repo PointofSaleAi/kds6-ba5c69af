@@ -108,6 +108,19 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     );
   }, []);
 
+  const handleExpoSendAllProduct = useCallback((productName: string) => {
+    setExpoAllTickets(prev => prev.map(t => ({
+      ...t,
+      items: t.items.map(i => i.name === productName ? { ...i, status: 'done' as const } : i),
+      stations: t.stations.map(s => {
+        const ticketHasProduct = t.items.some(i => i.name === productName);
+        if (!ticketHasProduct) return s;
+        const allDoneAfter = t.items.every(i => i.name === productName ? true : i.status === 'done');
+        return allDoneAfter ? { ...s, status: 'done' as const } : s;
+      }),
+    })));
+  }, []);
+
   const handleSummaryItemToggle = useCallback((itemName: string) => {
     setSelectedSummaryItems(prev => {
       const next = new Set(prev);
@@ -784,7 +797,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         )}
 
         {!settingsOpen && !isSubScreen && (kdsMode === 'Expo'
-          ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} />
+          ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
           : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
         )}
       </div>
