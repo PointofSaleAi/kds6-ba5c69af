@@ -83,6 +83,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
         quantity: item.quantity,
         status,
         statusLabel,
+        isNew: item.isNew,
       });
     }
   }
@@ -106,6 +107,32 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     }
   }
 
+  // Determine if coursing is enabled (multiple courses, at least one not fired)
+  const hasCoursing = order.courses.length > 1 && order.courses.some(c => !c.isFired);
+
+  // Find the current active course's firedAt for per-course timer reset
+  let activeCourseFiredAt: Date | undefined;
+  if (hasCoursing) {
+    // Active course = first fired course that isn't fully done
+    for (const course of order.courses) {
+      if (course.isFired) {
+        const allDone = course.items.every(i => i.isCompleted || i.isCancelled);
+        if (!allDone) {
+          activeCourseFiredAt = course.firedAt || course._startedAt;
+          break;
+        }
+      }
+    }
+    // Fallback: if no active fired course found, use the last fired course's time
+    if (!activeCourseFiredAt) {
+      const firedCourses = order.courses.filter(c => c.isFired);
+      if (firedCourses.length > 0) {
+        const last = firedCourses[firedCourses.length - 1];
+        activeCourseFiredAt = last.firedAt || last._startedAt;
+      }
+    }
+  }
+
   return {
     id: order.id,
     orderNumber: order.orderNumber,
@@ -118,6 +145,8 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     stations: deriveStations(order),
     items: deriveExpoItems(order),
     autoFireSeconds,
+    hasCoursing,
+    activeCourseFiredAt,
   };
 }
 

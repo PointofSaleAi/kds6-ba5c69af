@@ -142,9 +142,12 @@ interface ExpoTicketCardProps {
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
   sentItemIds: Set<string>;
   onItemSend?: (ticketId: string, itemId: string) => void;
+  acknowledgedNewItemIds: Set<string>;
+  onAcknowledgeNewItem?: (itemId: string) => void;
+  onFireNextCourse?: (ticketId: string) => void;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
@@ -153,7 +156,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const isReady = allItemsDone(ticket);
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
-  const hasCoursingData = !!demoTicket?.coursing;
+  const hasCoursingData = !!demoTicket?.coursing || ticket.hasCoursing;
+
+  // Determine if the active course is fully done (for "Fire next course" button)
+  const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
+  const hasPendingCourse = !!demoTicket?.coursing?.pending;
 
   return (
     <motion.div
@@ -206,6 +213,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           const isSent = sentItemIds.has(item.id);
           const isPrepared = item.status === 'done';
           const display = getItemDisplayStatus(item.status);
+          const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
 
           // Sent items: strikethrough, muted, no badge
           if (isSent) {
@@ -225,8 +233,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             return (
               <div
                 key={item.id}
-                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''}`}
-                onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
+                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+                onClick={() => {
+                  if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+                  if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+                }}
               >
                 <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
                   <span className="text-[13px] font-medium text-text-primary">
@@ -253,8 +264,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           return (
             <div
               key={item.id}
-              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''}`}
-              onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
+              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+              onClick={() => {
+                if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+                if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+              }}
             >
               <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
                 <span className="text-[13px] font-medium text-text-primary">
@@ -329,6 +343,17 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         ) : (
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
+          </div>
+        )}
+        {/* Fire next course button for coursed tickets */}
+        {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
+          <div className="flex items-center px-1 mb-1">
+            <button
+              onClick={() => onFireNextCourse?.(ticket.id)}
+              className="px-2.5 py-1.5 border border-text-secondary text-text-secondary text-[11px] font-bold rounded hover:bg-muted/50 transition-colors min-h-[36px]"
+            >
+              Fire next course
+            </button>
           </div>
         )}
         <div className="flex gap-1.5">
@@ -449,9 +474,18 @@ interface ExpoViewProps {
 }
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
-  const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
+  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+  const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
+
+  const handleAcknowledgeNewItem = useCallback((itemId: string) => {
+    setAcknowledgedNewItemIds(prev => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+  }, []);
 
   const handleItemSend = useCallback((ticketId: string, itemId: string) => {
     setSentItemIds(prev => {
@@ -561,6 +595,36 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     toast.success(`Demo ticket #${ticket.orderNumber} recalled`);
   }, []);
 
+  // Demo fire next course: promote pending course to active
+  const handleDemoFireNextCourse = useCallback((ticketId: string) => {
+    setDemoTickets(prev => prev.map(t => {
+      if (t.id !== ticketId || !t.coursing?.pending) return t;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newServed = t.coursing.active
+        ? { course: t.coursing.active.course, doneAt: timeStr, items: t.items.map(i => ({ name: i.name, quantity: i.quantity })) }
+        : t.coursing.served;
+      const pendingItems = t.coursing.pending.items.map(pi => ({
+        id: pi.id,
+        name: pi.name,
+        quantity: pi.quantity,
+        status: 'firing' as const,
+        statusLabel: `Since ${timeStr}`,
+      }));
+      return {
+        ...t,
+        items: pendingItems,
+        stations: t.stations.map(s => ({ ...s, status: 'firing' as const })),
+        coursing: {
+          served: newServed,
+          active: { course: t.coursing.pending.course, label: 'ACTIVE' },
+          pending: undefined,
+        },
+      };
+    }));
+    toast.success('Next course fired');
+  }, []);
+
   // Live tick every second to drive elapsed timers
   const [tick, setTick] = useState(0);
   useEffect(() => {
@@ -568,13 +632,25 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     return () => clearInterval(id);
   }, []);
 
-  // Recompute timerSeconds live from order.timeReceived
+  // Recompute timerSeconds live from order.timeReceived or active course firedAt
   const tickets = useMemo(() => {
     const now = Date.now();
     return rawTickets.map(t => {
       const order = orders.find(o => o.id === t.id);
       if (!order) return t;
-      return { ...t, timerSeconds: Math.round((now - order.timeReceived.getTime()) / 1000) };
+
+      // Timer logic by order type:
+      // FSR coursed (dine-in with coursing): timer from active course firedAt
+      // FSR non-coursed (dine-in without coursing): timer from order placement
+      // QSR (take-out, delivery): timer from order placement
+      let timerSeconds: number;
+      if (t.hasCoursing && t.activeCourseFiredAt) {
+        timerSeconds = Math.round((now - t.activeCourseFiredAt.getTime()) / 1000);
+      } else {
+        timerSeconds = Math.round((now - order.timeReceived.getTime()) / 1000);
+      }
+
+      return { ...t, timerSeconds };
     });
   }, [rawTickets, orders, tick]);
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
@@ -692,6 +768,30 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     onTicketSentOut?.(id);
   }, [handleDemoSendOut, handleSendOut, onTicketSentOut]);
 
+  // Fire next course handler (demo or real)
+  const handleFireNextCourseAny = useCallback((ticketId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      handleDemoFireNextCourse(ticketId);
+    } else {
+      // For real tickets: find the next unfired course and fire it
+      const order = orders.find(o => o.id === ticketId);
+      if (!order) return;
+      const nextCourse = order.courses.find(c => !c.isFired);
+      if (nextCourse) {
+        setOrders(prev => prev.map(o => {
+          if (o.id !== ticketId) return o;
+          return {
+            ...o,
+            courses: o.courses.map(c =>
+              c.course === nextCourse.course ? { ...c, isFired: true, firedAt: new Date(), _startedAt: new Date() } : c
+            ),
+          };
+        }));
+        toast.success(`${nextCourse.course} fired`);
+      }
+    }
+  }, [handleDemoFireNextCourse, orders, setOrders]);
+
   // Highlight pulse state for recently pinned tickets
   const [pulsingIds, setPulsingIds] = useState<Set<string>>(new Set());
   const prevPinnedRef = useRef<string[]>([]);
@@ -737,6 +837,9 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
           sentItemIds={sentItemIds}
           onItemSend={handleItemSend}
+          acknowledgedNewItemIds={acknowledgedNewItemIds}
+          onAcknowledgeNewItem={handleAcknowledgeNewItem}
+          onFireNextCourse={handleFireNextCourseAny}
         />
       </div>
     );
