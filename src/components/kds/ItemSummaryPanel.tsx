@@ -30,8 +30,8 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
       if (cg.isFired) continue;
-      // In station view, only include items from matching course groups
-      if (stationCourseFilter && cg.course !== stationCourseFilter) continue;
+      // In station view, only include items matching the active station's category
+      if (stationCourseFilter) continue; // Skip course-level filter; item-level filter below
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
         const cat = item.category || ('Uncategorized' as ProductCategory);
