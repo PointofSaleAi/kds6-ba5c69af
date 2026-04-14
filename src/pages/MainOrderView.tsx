@@ -355,21 +355,52 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const handleRecallItem = useCallback((orderId: string, item: OrderItem) => {
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
-    const newOrder: Order = {
-      id: `recalled-item-${item.id}-${Date.now()}`,
-      orderNumber: historyOrder.orderNumber,
-      orderType: historyOrder.orderType,
-      status: 'recalled',
-      tableName: historyOrder.tableName,
-      serverName: historyOrder.serverName,
-      guestName: historyOrder.guestName,
-      timeReceived: new Date(),
-      elapsedSeconds: 0,
-      targetSeconds: historyOrder.targetSeconds,
-      itemCount: item.quantity,
-      courses: [{ course: 'ENTREE', isFired: false, items: [{ ...item, isCompleted: false, isRecalled: true }] }],
-    };
-    setOrders((prev) => [newOrder, ...prev]);
+
+    // Count non-cancelled items across all courses
+    const activeItems = historyOrder.courses.flatMap(c => c.items).filter(i => !i.isCancelled);
+    const isOnlyItem = activeItems.length <= 1;
+
+    if (isOnlyItem) {
+      // Single-item order: move the whole ticket to home, remove from history
+      const recalledOrder: Order = {
+        ...historyOrder,
+        status: 'recalled',
+        timeReceived: new Date(),
+        elapsedSeconds: 0,
+        courses: historyOrder.courses.map(c => ({
+          ...c,
+          items: c.items.map(i => ({ ...i, isCompleted: false, isRecalled: true })),
+        })),
+      };
+      setOrders((prev) => [recalledOrder, ...prev]);
+      setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
+    } else {
+      // Multi-item order: create a new ticket for the recalled item, remove it from the history order
+      const newOrder: Order = {
+        id: `recalled-item-${item.id}-${Date.now()}`,
+        orderNumber: historyOrder.orderNumber,
+        orderType: historyOrder.orderType,
+        status: 'recalled',
+        tableName: historyOrder.tableName,
+        serverName: historyOrder.serverName,
+        guestName: historyOrder.guestName,
+        timeReceived: new Date(),
+        elapsedSeconds: 0,
+        targetSeconds: historyOrder.targetSeconds,
+        itemCount: item.quantity,
+        courses: [{ course: 'ENTREE', isFired: false, items: [{ ...item, isCompleted: false, isRecalled: true }] }],
+      };
+      setOrders((prev) => [newOrder, ...prev]);
+      // Remove the recalled item from the history order
+      setHistoryOrders((prev) => prev.map(o => {
+        if (o.id !== orderId) return o;
+        const updatedCourses = o.courses.map(c => ({
+          ...c,
+          items: c.items.filter(i => i.id !== item.id),
+        })).filter(c => c.items.length > 0);
+        return { ...o, courses: updatedCourses, itemCount: updatedCourses.reduce((sum, c) => sum + c.items.length, 0) };
+      }).filter(o => o.courses.length > 0));
+    }
     toast.success('Item recalled to kitchen', { duration: 2000 });
   }, [historyOrders]);
 
