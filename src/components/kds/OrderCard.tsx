@@ -556,11 +556,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
         style={{ minWidth: 'min(220px, 100%)' }}
       >
-        {/* Tappable header area - opens ticket routing modal */}
-        <div
-          className="cursor-pointer active:brightness-110 transition-all"
-          onClick={() => setShowTicketRouting(true)}
-        >
+        {/* Header area */}
+        <div>
           <OrderTypeBadge
             type={order.orderType}
             time={formatTimeForKDS(order.timeReceived, timeFormat)}
@@ -668,7 +665,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     onBulkAdvanceCourse={handleBulkAdvanceCourse}
                     stationCourse={stationCourse}
                     forcedStationStatus={forcedStatus}
-                    onReRouteItem={(item) => setItemRouting(item)}
+                    onReRouteItem={undefined}
                     showAllergens={showAllergens}
                     highlightItemNames={highlightItemNames}
                     lifecycleStatus={lifecycleStatus}
@@ -688,7 +685,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               itemTimestamps={itemTimestamps}
               onAdvanceItem={handleAdvanceItem}
               onUndoItem={handleUndoItem}
-              onReRouteItem={(item) => setItemRouting(item)}
+              onReRouteItem={undefined}
               showAllergens={showAllergens}
               servableModifiersEnabled={servableModifiersEnabled}
               modifierStatuses={modifierStatuses}
@@ -705,25 +702,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           onTicketRecall={handleTicketRecall}
         />
       </div>
-
-      {/* Item routing modal */}
-      {itemRouting && (
-        <ItemRoutingModal
-          item={itemRouting}
-          order={orderWithStations}
-          onClose={() => setItemRouting(null)}
-          onConfirm={handleItemReRoute}
-        />
-      )}
-
-      {/* Ticket routing modal */}
-      {showTicketRouting && (
-        <TicketRoutingModal
-          order={orderWithStations}
-          onClose={() => setShowTicketRouting(false)}
-          onConfirm={handleTicketReRoute}
-        />
-      )}
     </>
   );
 }
