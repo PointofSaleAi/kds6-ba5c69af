@@ -15,6 +15,7 @@ import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
 import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
 import { NotificationsProvider } from "@/hooks/use-notifications";
+import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -39,6 +40,7 @@ const App = () => (
       <NotificationsProvider>
       <TooltipProvider>
         <NotificationToastStack />
+        <NotificationStationSync />
         <Toaster />
         <Sonner />
         <BrowserRouter>
