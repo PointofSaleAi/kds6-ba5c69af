@@ -29,6 +29,7 @@ interface CourseSectionProps {
   modifierStatuses?: Map<string, ModifierStatus>;
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
+  courseAgingColor?: { color: string; textColor: string };
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
