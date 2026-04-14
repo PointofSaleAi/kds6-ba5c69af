@@ -783,6 +783,9 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
           sentItemIds={sentItemIds}
           onItemSend={handleItemSend}
+          acknowledgedNewItemIds={acknowledgedNewItemIds}
+          onAcknowledgeNewItem={handleAcknowledgeNewItem}
+          onFireNextCourse={handleDemoFireNextCourse}
         />
       </div>
     );
