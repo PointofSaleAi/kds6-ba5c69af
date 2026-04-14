@@ -112,28 +112,20 @@ function KotPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
 }
 
 function LabelPrinterCard({ onOpenSub }: { onOpenSub: (sub: string) => void }) {
-  const { label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
+  const { label } = usePrinterAssignments();
   return (
     <SettingsCard>
       <CardLabel label="Label Printer" description="Prints item stickers when an order is completed" />
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-[13px] text-text-secondary font-medium">{labelEnabled ? 'Enabled' : 'Disabled'}</span>
-        <LargeToggle checked={labelEnabled} onChange={setLabelEnabled} />
-      </div>
-      {labelEnabled && (
-        <>
-          {label.printerId ? (
-            <div className="flex items-center gap-2 mb-3">
-              <Tag size={14} className="text-text-muted" />
-              <span className="text-[13px] font-semibold text-text-primary">{label.printerName}</span>
-              <PrinterStatusDot status={label.status} />
-            </div>
-          ) : (
-            <div className="text-[13px] text-text-muted mb-3">No printer assigned</div>
-          )}
-          <ActionButton label="Configure" onClick={() => onOpenSub('printer-label')} />
-        </>
+      {label.printerId ? (
+        <div className="flex items-center gap-2 mb-3">
+          <Tag size={14} className="text-text-muted" />
+          <span className="text-[13px] font-semibold text-text-primary">{label.printerName}</span>
+          <PrinterStatusDot status={label.status} />
+        </div>
+      ) : (
+        <div className="text-[13px] text-text-muted mb-3">No printer assigned</div>
       )}
+      <ActionButton label="Configure" onClick={() => onOpenSub('printer-label')} />
     </SettingsCard>
   );
 }
