@@ -718,8 +718,14 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
   const renderTicketCard = (ticket: ExpoTicket) => {
     const isPulsing = pulsingIds.has(ticket.id);
+    // Dim tickets not matching selected products
+    let isDimmed = false;
+    if (selectedProductSet.size > 0) {
+      const itemNames = new Set(ticket.items.map(i => i.name));
+      isDimmed = ![...selectedProductSet].every(p => itemNames.has(p));
+    }
     return (
-      <div className={isPulsing ? 'animate-expo-pin-pulse' : ''}>
+      <div className={`${isPulsing ? 'animate-expo-pin-pulse' : ''} ${isDimmed ? 'opacity-40' : ''} transition-opacity duration-300`}>
         <ExpoTicketCard
           key={ticket.id}
           ticket={ticket}
@@ -729,6 +735,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onToggleHold={handleToggleHold}
           isDemo={ticket.id.startsWith('demo-')}
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
+          sentItemIds={sentItemIds}
+          onItemSend={handleItemSend}
         />
       </div>
     );
