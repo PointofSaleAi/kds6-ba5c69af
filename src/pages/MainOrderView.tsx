@@ -58,6 +58,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
+  const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
@@ -67,6 +68,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
+  const prevMessageCountRef = useRef(kitchenMessages.length);
+  const [messageFlash, setMessageFlash] = useState<{ text: string; from: string } | null>(null);
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
