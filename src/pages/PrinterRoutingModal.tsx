@@ -3,9 +3,14 @@ import { X, Printer, Search, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
+export type PrinterModalType = 'kot' | 'label';
+
 interface PrinterRoutingModalProps {
   open: boolean;
   onClose: () => void;
+  type?: PrinterModalType;
+  onConfirm?: (printer: { id: string; name: string; status: 'online' | 'offline' | 'low-paper' }) => void;
+  initialSelectedId?: string | null;
 }
 
 interface PrinterDevice {
@@ -24,7 +29,7 @@ const mockPrinters: PrinterDevice[] = [
 
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   const colors = {
-    online: 'bg-green-500',
+    online: 'bg-status-done',
     offline: 'bg-destructive',
     'low-paper': 'bg-amber-500',
   };
@@ -41,8 +46,24 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   );
 }
 
-export default function PrinterRoutingModal({ open, onClose }: PrinterRoutingModalProps) {
-  const [selected, setSelected] = useState('p1');
+const titles: Record<PrinterModalType, string> = {
+  kot: 'KOT Printer',
+  label: 'Label Printer',
+};
+
+const ctas: Record<PrinterModalType, string> = {
+  kot: 'SET AS KOT PRINTER',
+  label: 'SET AS LABEL PRINTER',
+};
+
+export default function PrinterRoutingModal({
+  open,
+  onClose,
+  type = 'kot',
+  onConfirm,
+  initialSelectedId,
+}: PrinterRoutingModalProps) {
+  const [selected, setSelected] = useState(initialSelectedId || 'p1');
   const [detecting, setDetecting] = useState(false);
 
   if (!open) return null;
@@ -63,6 +84,7 @@ export default function PrinterRoutingModal({ open, onClose }: PrinterRoutingMod
     const printer = mockPrinters.find((p) => p.id === selected);
     if (printer) {
       toast.success(`Print destination set to ${printer.name}`);
+      onConfirm?.({ id: printer.id, name: printer.name, status: printer.status });
     }
     onClose();
   };
@@ -87,7 +109,7 @@ export default function PrinterRoutingModal({ open, onClose }: PrinterRoutingMod
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Printer size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">Printer Routing</h2>
+            <h2 className="text-lg font-bold text-text-primary">{titles[type]}</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -156,7 +178,7 @@ export default function PrinterRoutingModal({ open, onClose }: PrinterRoutingMod
               onClick={handleConfirm}
               className="w-full py-3 bg-brand-dark text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-dark/90 min-h-[44px]"
             >
-              Set as Print Destination
+              {ctas[type]}
             </button>
           </div>
         </motion.div>
