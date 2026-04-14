@@ -409,6 +409,11 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     {item.isCompleted && !item.isCancelled && (
                       <span className="text-success text-xs">&#10003;</span>
                     )}
+                    {item.isRecalled && !item.isCancelled && (
+                      <span className="text-[9px] font-bold text-order-take-out bg-order-take-out/10 px-1 py-px rounded uppercase tracking-wide">
+                        RECALLED
+                      </span>
+                    )}
                     {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
                       <AllergenBadge key={a.type} allergen={a} variant="item" />
                     ))}
