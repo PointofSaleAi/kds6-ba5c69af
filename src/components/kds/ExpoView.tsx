@@ -213,6 +213,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           const isSent = sentItemIds.has(item.id);
           const isPrepared = item.status === 'done';
           const display = getItemDisplayStatus(item.status);
+          const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
 
           // Sent items: strikethrough, muted, no badge
           if (isSent) {
@@ -232,8 +233,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             return (
               <div
                 key={item.id}
-                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''}`}
-                onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
+                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+                onClick={() => {
+                  if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+                  if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+                }}
               >
                 <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
                   <span className="text-[13px] font-medium text-text-primary">
@@ -260,8 +264,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           return (
             <div
               key={item.id}
-              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''}`}
-              onClick={isDemo && onDemoItemTap ? () => onDemoItemTap(ticket.id, item.id) : undefined}
+              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+              onClick={() => {
+                if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+                if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+              }}
             >
               <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
                 <span className="text-[13px] font-medium text-text-primary">
@@ -336,6 +343,17 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         ) : (
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
+          </div>
+        )}
+        {/* Fire next course button for coursed tickets */}
+        {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
+          <div className="flex items-center px-1 mb-1">
+            <button
+              onClick={() => onFireNextCourse?.(ticket.id)}
+              className="px-2.5 py-1.5 border border-text-secondary text-text-secondary text-[11px] font-bold rounded hover:bg-muted/50 transition-colors min-h-[36px]"
+            >
+              Fire next course
+            </button>
           </div>
         )}
         <div className="flex gap-1.5">
@@ -459,6 +477,15 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const { expoTickets: rawTickets, sendOutOrder, orders } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+  const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
+
+  const handleAcknowledgeNewItem = useCallback((itemId: string) => {
+    setAcknowledgedNewItemIds(prev => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+  }, []);
 
   const handleItemSend = useCallback((ticketId: string, itemId: string) => {
     setSentItemIds(prev => {
