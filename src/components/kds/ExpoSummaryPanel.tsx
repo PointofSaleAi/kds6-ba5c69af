@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ChevronRight, ChevronLeft, Pin } from 'lucide-react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { ExpoTicket } from '@/data/mock-expo-orders';
 
@@ -21,6 +21,7 @@ interface ExpoSummaryPanelProps {
   onClearAllPins?: () => void;
   selectedProducts?: string[];
   onProductToggle?: (productName: string) => void;
+  onSendAllProduct?: (productName: string) => void;
 }
 
 export function ExpoSummaryPanel({
@@ -31,8 +32,10 @@ export function ExpoSummaryPanel({
   onClearAllPins,
   selectedProducts = [],
   onProductToggle,
+  onSendAllProduct,
 }: ExpoSummaryPanelProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [readySectionCollapsed, setReadySectionCollapsed] = useState(false);
 
   const selectedSet = useMemo(() => new Set(selectedProducts), [selectedProducts]);
 
@@ -45,6 +48,23 @@ export function ExpoSummaryPanel({
       else pending++;
     }
     return { ready, inProgress, pending };
+  }, [tickets]);
+
+  // Build ready products: products where ALL instances across all tickets are done
+  const readyProducts = useMemo(() => {
+    const totals = new Map<string, { total: number; done: number }>();
+    for (const t of tickets) {
+      for (const item of t.items) {
+        const existing = totals.get(item.name) || { total: 0, done: 0 };
+        existing.total += item.quantity;
+        if (item.status === 'done') existing.done += item.quantity;
+        totals.set(item.name, existing);
+      }
+    }
+    return Array.from(totals.entries())
+      .filter(([, data]) => data.total > 0 && data.done === data.total)
+      .sort((a, b) => b[1].total - a[1].total)
+      .map(([name, data]) => ({ name, count: data.total }));
   }, [tickets]);
 
   // Aggregate products across all tickets with pending (not-done) counts + new item flag
@@ -110,8 +130,48 @@ export function ExpoSummaryPanel({
           </div>
         )}
 
-        {/* Product list */}
+        {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto">
+          {/* Ready to send products section */}
+          <div>
+            <button
+              onClick={() => setReadySectionCollapsed(!readySectionCollapsed)}
+              className="w-full flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-muted/30 transition-colors"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-widest text-success">Ready to send</span>
+              <span className="text-[10px] text-text-muted">{readySectionCollapsed ? '+' : '-'}</span>
+            </button>
+            {!readySectionCollapsed && (
+              <>
+                {readyProducts.length === 0 ? (
+                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No items ready yet</div>
+                ) : (
+                  readyProducts.map(p => (
+                    <div
+                      key={p.name}
+                      className="w-full flex items-center justify-between px-3 py-2 border-b border-border/30"
+                    >
+                      <span className="text-[12px] font-medium text-text-primary truncate mr-1">{p.name}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[13px] font-bold tabular-nums text-success">{p.count}</span>
+                        <button
+                          onClick={() => onSendAllProduct?.(p.name)}
+                          className="text-[11px] font-medium text-success hover:text-success/80 transition-colors whitespace-nowrap"
+                        >
+                          Send all
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="border-b border-border" style={{ borderBottomWidth: '0.5px' }} />
+
+          {/* Products pending */}
           <div className="px-3 py-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products pending</span>
           </div>
