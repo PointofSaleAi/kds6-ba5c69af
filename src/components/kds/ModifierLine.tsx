@@ -5,6 +5,8 @@ import type { ItemStatus } from './CourseSection';
 
 export type ModifierStatus = ItemStatus;
 
+const MOD_ICON_SIZE = 26;
+
 interface ModifierLineProps {
   modifier: Modifier;
   servableEnabled?: boolean;
@@ -25,27 +27,27 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const isDone = isServable && modifierStatus === 'done';
 
   return (
-    <div className="flex items-center" style={{ paddingLeft: '20px', marginTop: '0px' }}>
+    <div className="flex items-center justify-between" style={{ paddingLeft: '20px' }}>
       <span
-        className={`block flex-1 min-w-0 -mt-0.5 ${styles[modifier.type]} ${isDone ? 'line-through opacity-50' : ''}`}
-        style={{ fontSize: 'var(--kds-modifier)' }}
+        className={`flex-1 min-w-0 ${styles[modifier.type]} ${isDone ? 'line-through opacity-50' : ''}`}
+        style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4' }}
       >
         {tm(modifier.text)}
       </span>
       {isServable && modifier.id && (
-        <div className="flex items-center shrink-0" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center shrink-0 ml-auto" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
           {modifierStatus === 'done' ? (
             <>
-              <KdsActionIcon icon="undo" onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
-              <KdsActionIcon icon="ready" disabled label="Modifier done" />
+              <KdsActionIcon icon="undo" size={MOD_ICON_SIZE} onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
+              <KdsActionIcon icon="ready" size={MOD_ICON_SIZE} disabled label="Modifier done" />
             </>
           ) : modifierStatus === 'preparing' ? (
             <>
-              <KdsActionIcon icon="undo" onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
-              <KdsActionIcon icon="preparing" onClick={() => onAdvanceModifier?.(modifier.id!)} label="Mark modifier done" />
+              <KdsActionIcon icon="undo" size={MOD_ICON_SIZE} onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
+              <KdsActionIcon icon="preparing" size={MOD_ICON_SIZE} onClick={() => onAdvanceModifier?.(modifier.id!)} label="Mark modifier done" />
             </>
           ) : (
-            <KdsActionIcon icon="seen" onClick={() => onAdvanceModifier?.(modifier.id!)} label="Mark modifier seen" />
+            <KdsActionIcon icon="seen" size={MOD_ICON_SIZE} onClick={() => onAdvanceModifier?.(modifier.id!)} label="Mark modifier seen" />
           )}
         </div>
       )}
