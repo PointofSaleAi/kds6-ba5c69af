@@ -5,6 +5,7 @@ import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
+import { ModifierLine, type ModifierStatus } from './ModifierLine';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -24,6 +25,10 @@ interface CourseSectionProps {
   highlightItemNames?: Set<string>;
   lifecycleStatus?: 'active' | 'pending' | 'served';
   courseDoneAt?: string;
+  servableModifiersEnabled?: boolean;
+  modifierStatuses?: Map<string, ModifierStatus>;
+  onAdvanceModifier?: (modId: string) => void;
+  onUndoModifier?: (modId: string) => void;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -72,7 +77,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -432,19 +437,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                   {item.modifiers.length > 0 && (
                     <div style={{ marginTop: '0px' }}>
                       {item.modifiers.map((mod, idx) => (
-                        <div
-                          key={idx}
-                          className={
-                            mod.type === 'extra'
-                              ? 'text-modifier-extra'
-                              : mod.type === 'remove'
-                                ? 'text-destructive line-through'
-                                : 'text-text-secondary'
-                          }
-                          style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
-                        >
-                          {mod.text}
-                        </div>
+                        <ModifierLine
+                          key={mod.id || idx}
+                          modifier={mod}
+                          servableEnabled={servableModifiersEnabled}
+                          modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+                          onAdvanceModifier={onAdvanceModifier}
+                          onUndoModifier={onUndoModifier}
+                        />
                       ))}
                     </div>
                   )}

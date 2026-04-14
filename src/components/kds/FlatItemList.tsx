@@ -5,6 +5,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
+import { ModifierLine, type ModifierStatus } from './ModifierLine';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
@@ -14,9 +15,13 @@ interface FlatItemListProps {
   onUndoItem: (itemId: string) => void;
   onReRouteItem?: (item: OrderItem) => void;
   showAllergens?: boolean;
+  servableModifiersEnabled?: boolean;
+  modifierStatuses?: Map<string, ModifierStatus>;
+  onAdvanceModifier?: (modId: string) => void;
+  onUndoModifier?: (modId: string) => void;
 }
 
-export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary } = useLanguage();
 
   const allItems = courses.flatMap(c => c.items);
@@ -79,19 +84,14 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
               {item.modifiers.length > 0 && (
                 <div style={{ marginTop: '2px' }}>
                   {item.modifiers.map((mod, idx) => (
-                    <div
-                      key={idx}
-                      className={
-                        mod.type === 'extra'
-                          ? 'text-modifier-extra'
-                          : mod.type === 'remove'
-                            ? 'text-destructive line-through'
-                            : 'text-text-secondary'
-                      }
-                      style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
-                    >
-                      {mod.text}
-                    </div>
+                    <ModifierLine
+                      key={mod.id || idx}
+                      modifier={mod}
+                      servableEnabled={servableModifiersEnabled}
+                      modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+                      onAdvanceModifier={onAdvanceModifier}
+                      onUndoModifier={onUndoModifier}
+                    />
                   ))}
                 </div>
               )}

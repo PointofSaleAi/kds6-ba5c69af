@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, StationName, OrderItem } from '@/types/kds';
 import type { ItemStatus, StationStatus } from './CourseSection';
+import type { ModifierStatus } from './ModifierLine';
 import type { TicketState } from './OrderCardActions';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { CourseSection } from './CourseSection';
@@ -53,6 +54,7 @@ function formatStaticTime(date: Date): string {
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
+  const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed } = useStatusRules();
@@ -61,7 +63,30 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
-  // Station overrides for re-routing
+  // Servable modifier statuses
+  const [modifierStatuses, setModifierStatuses] = useState<Map<string, ModifierStatus>>(new Map());
+
+  const handleAdvanceModifier = useCallback((modId: string) => {
+    setModifierStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(modId);
+      if (!current) next.set(modId, 'preparing');
+      else if (current === 'preparing') next.set(modId, 'done');
+      else next.set(modId, 'done');
+      return next;
+    });
+  }, []);
+
+  const handleUndoModifier = useCallback((modId: string) => {
+    setModifierStatuses(prev => {
+      const next = new Map(prev);
+      const current = next.get(modId);
+      if (current === 'done') next.set(modId, 'preparing');
+      else next.delete(modId);
+      return next;
+    });
+  }, []);
+
   const [stationOverrides, setStationOverrides] = useState<Map<string, StationName>>(new Map());
 
   // Modal state
@@ -578,6 +603,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     highlightItemNames={highlightItemNames}
                     lifecycleStatus={lifecycleStatus}
                     courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
+                    servableModifiersEnabled={servableModifiersEnabled}
+                    modifierStatuses={modifierStatuses}
+                    onAdvanceModifier={handleAdvanceModifier}
+                    onUndoModifier={handleUndoModifier}
                   />
                 );
               })
@@ -590,6 +619,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               onUndoItem={handleUndoItem}
               onReRouteItem={(item) => setItemRouting(item)}
               showAllergens={showAllergens}
+              servableModifiersEnabled={servableModifiersEnabled}
+              modifierStatuses={modifierStatuses}
+              onAdvanceModifier={handleAdvanceModifier}
+              onUndoModifier={handleUndoModifier}
             />
           )}
         </div>
