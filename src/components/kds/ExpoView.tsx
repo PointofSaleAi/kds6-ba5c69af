@@ -841,7 +841,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onItemSend={handleItemSend}
           acknowledgedNewItemIds={acknowledgedNewItemIds}
           onAcknowledgeNewItem={handleAcknowledgeNewItem}
-          onFireNextCourse={handleDemoFireNextCourse}
+          onFireNextCourse={handleFireNextCourseAny}
         />
       </div>
     );
