@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { X, Send } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { X, Send, RefreshCw, Smartphone } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import type { KitchenMessage } from '@/types/kitchen-message';
 
 const PRESET_REPLIES = [
@@ -12,6 +13,7 @@ const PRESET_REPLIES = [
 ];
 
 const MAX_CHARS = 100;
+const QR_EXPIRY_SECONDS = 600; // 10 minutes
 
 interface KitchenReplyDialogProps {
   message: KitchenMessage;
@@ -21,6 +23,22 @@ interface KitchenReplyDialogProps {
 
 export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDialogProps) {
   const [text, setText] = useState('');
+  const [qrToken, setQrToken] = useState(() => Date.now().toString(36));
+  const [secondsLeft, setSecondsLeft] = useState(QR_EXPIRY_SECONDS);
+
+  const qrUrl = `${window.location.origin}/kds-reply?messageId=${message.message_id}&token=${qrToken}`;
+
+  // Expiry countdown
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+    const t = setInterval(() => setSecondsLeft(s => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(t);
+  }, [secondsLeft, qrToken]);
+
+  const refreshQr = useCallback(() => {
+    setQrToken(Date.now().toString(36));
+    setSecondsLeft(QR_EXPIRY_SECONDS);
+  }, []);
 
   const handleSend = () => {
     const trimmed = text.trim();
@@ -33,10 +51,14 @@ export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDia
     setText(preset);
   };
 
+  const expired = secondsLeft <= 0;
+  const mins = Math.floor(secondsLeft / 60);
+  const secs = secondsLeft % 60;
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 z-50" onClick={onClose} />
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[420px] max-w-[90vw] bg-surface-card rounded-[20px] shadow-2xl overflow-hidden">
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[680px] max-w-[95vw] bg-surface-card rounded-[20px] shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h3 className="text-base font-bold text-text-primary">Reply to Message</h3>
@@ -57,37 +79,69 @@ export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDia
           <p className="text-sm text-text-primary leading-snug">{message.message_text}</p>
         </div>
 
-        {/* Preset chips */}
-        <div className="px-5 pt-4 pb-2">
-          <p className="text-xs font-semibold text-text-secondary mb-2">Quick replies</p>
-          <div className="flex flex-wrap gap-2">
-            {PRESET_REPLIES.map(preset => (
-              <button
-                key={preset}
-                onClick={() => handlePreset(preset)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all min-h-[36px]
-                  ${text === preset
-                    ? 'bg-brand-primary text-white border-brand-primary'
-                    : 'bg-surface-card text-text-primary border-border hover:bg-muted'
-                  }`}
-              >
-                {preset}
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* Two-column body */}
+        <div className="flex divide-x divide-border">
+          {/* Left: reply composer */}
+          <div className="flex-1 min-w-0">
+            {/* Preset chips */}
+            <div className="px-5 pt-4 pb-2">
+              <p className="text-xs font-semibold text-text-secondary mb-2">Quick replies</p>
+              <div className="flex flex-wrap gap-2">
+                {PRESET_REPLIES.map(preset => (
+                  <button
+                    key={preset}
+                    onClick={() => handlePreset(preset)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all min-h-[36px]
+                      ${text === preset
+                        ? 'bg-brand-primary text-white border-brand-primary'
+                        : 'bg-surface-card text-text-primary border-border hover:bg-muted'
+                      }`}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        {/* Free text input */}
-        <div className="px-5 py-3">
-          <textarea
-            value={text}
-            onChange={e => setText(e.target.value.slice(0, MAX_CHARS))}
-            placeholder="Type a custom reply..."
-            className="w-full h-20 px-3 py-2 text-sm border border-border rounded-lg bg-surface-card text-text-primary resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-          />
-          <p className="text-[10px] text-text-muted text-right mt-1">
-            {text.length}/{MAX_CHARS}
-          </p>
+            {/* Free text input */}
+            <div className="px-5 py-3">
+              <textarea
+                value={text}
+                onChange={e => setText(e.target.value.slice(0, MAX_CHARS))}
+                placeholder="Type a custom reply..."
+                className="w-full h-20 px-3 py-2 text-sm border border-border rounded-lg bg-surface-card text-text-primary resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+              />
+              <p className="text-[10px] text-text-muted text-right mt-1">
+                {text.length}/{MAX_CHARS}
+              </p>
+            </div>
+          </div>
+
+          {/* Right: QR code */}
+          <div className="w-[220px] flex flex-col items-center justify-center px-4 py-4 gap-3">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary">
+              <Smartphone size={14} />
+              Reply from your phone
+            </div>
+
+            <div className={`p-2 bg-white rounded-xl ${expired ? 'opacity-30' : ''}`}>
+              <QRCodeSVG value={qrUrl} size={140} level="M" />
+            </div>
+
+            {expired ? (
+              <button
+                onClick={refreshQr}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-brand-primary hover:bg-muted rounded-lg transition-colors min-h-[36px]"
+              >
+                <RefreshCw size={12} />
+                Refresh QR
+              </button>
+            ) : (
+              <p className="text-[11px] text-text-muted font-mono tabular-nums">
+                Expires in {mins}:{secs.toString().padStart(2, '0')}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Footer */}
