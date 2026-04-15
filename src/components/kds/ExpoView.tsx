@@ -1102,12 +1102,15 @@ function ExpoBottomStats({
   fulfilledTickets,
   onDemoRecallLast,
   hasLastSentDemo,
+  onRecallLast,
 }: {
   stats: { open: number; ready: number; overtime: number; avgTime: number };
   fulfilledTickets: number[];
   onDemoRecallLast?: () => void;
   hasLastSentDemo?: boolean;
+  onRecallLast?: () => void;
 }) {
+  const hasRecallable = hasLastSentDemo || !!onRecallLast;
   return (
     <div className="flex items-center justify-between px-4 py-1.5 bg-surface-card border-t border-border shrink-0">
       <div className="flex items-center gap-4">
@@ -1130,14 +1133,14 @@ function ExpoBottomStats({
               onDemoRecallLast?.();
               return;
             }
-            if (fulfilledTickets.length === 0) {
-              toast('No recently fulfilled tickets.');
-            } else {
-              toast(`Last fulfilled: #${fulfilledTickets[0]}`);
+            if (onRecallLast) {
+              onRecallLast();
+              return;
             }
+            toast('No recently sent tickets.');
           }}
           className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
-            hasLastSentDemo
+            hasRecallable
               ? 'border-warning text-warning bg-warning/10 animate-pulse'
               : 'border-border text-text-secondary hover:bg-muted'
           }`}
