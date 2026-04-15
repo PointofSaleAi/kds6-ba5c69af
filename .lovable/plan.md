@@ -1,26 +1,27 @@
 
 
-## Analysis
+## Plan: Replace Expo item "Send" button with runner icon circle
 
-The station-filtered Home screen logic exists but appears to not activate properly when navigating from Settings after selecting a station chip. The rendering flow in `MainOrderView.tsx` checks `kdsMode === 'Prep' && !!resolvedStationCourse` for station view, and shows `PrepBoard` when `kdsMode === 'Prep' && !resolvedStationCourse`. The screenshot confirms PrepBoard is rendering, meaning `resolvedStationCourse` is falsy at render time despite the Dessert chip being selected.
+### What changes
 
-**Root cause hypothesis**: The SettingsPanel's `onClose` callback and `setStationCourse` are called in sequence, but the `onClose` triggers `settingsOpen = false` in Index.tsx (parent), which may cause a re-render cycle where the context update hasn't propagated yet. Additionally, `activeNav` is never explicitly set to `'home'` when exiting settings via station chip selection.
+Replace the text "Send" button next to each prepared item in the Expo ticket card with a circular icon button using the runner SVG (`person-simple-run-bold.svg`), styled identically to how `KdsActionIcon` renders its circle buttons (colored circle background, centered icon, same sizing pattern).
 
-## Plan
+### Design
 
-### 1. SettingsPanel - Add navigation callback for station selection
-- Add an optional `onNavigateHome?: () => void` prop to `SettingsPanel`
-- When a station chip is tapped (and a station is selected), call `onNavigateHome?.()` in addition to `onClose()`
-- Pass this from `MainOrderView` to explicitly set `activeNav` to `'home'`
+- Circle with green (`#16A34A`) background, white runner icon inside
+- Same diameter as the existing KDS eye icon circles (~24-26px)
+- Same 150ms scale animation on tap as `KdsActionIcon`
+- Replaces the current `px-2 py-0.5 rounded-full border border-success text-success text-[10px]` text button
 
-### 2. MainOrderView - Wire up the navigation
-- Pass `onNavigateHome` to SettingsPanel that calls `setActiveNav('home')` and `onCloseSettings?.()`
-- This ensures the home screen renders with the station course already set in context
+### Technical details
 
-### 3. Defensive rendering fix
-- In the rendering logic, reorder the conditional: check `isStationView` BEFORE checking `kdsMode === 'Prep' && !resolvedStationCourse` for PrepBoard, to guarantee the station-filtered view takes priority even during edge-case state transitions
+**File: `src/components/kds/ExpoView.tsx`** (single file change)
 
-### Files to modify
-- `src/components/kds/SettingsPanel.tsx` - Add `onNavigateHome` prop and call it from station chip handler
-- `src/pages/MainOrderView.tsx` - Pass `onNavigateHome` callback, ensure `activeNav` is set to `'home'`
+- Lines 289-294: Replace the `<button>Send</button>` with a circular icon button
+- Import the runner SVG (already imported as `runnerIcon`)
+- Render a ~26px green circle with the runner icon centered, white-colored via CSS filters
+- Add `min-width`/`min-height` for touch target compliance
+- onClick behavior stays identical: `onItemSend?.(ticket.id, item.id)`
+
+No other files, components, or screens are affected.
 
