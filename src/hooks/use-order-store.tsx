@@ -71,7 +71,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
       let statusLabel: string | undefined;
       if (item.isCompleted) {
         status = 'done';
-      } else if (order.status === 'in-progress' || order.status === 'seen') {
+      } else if (course.isFired || order.status === 'in-progress' || order.status === 'seen') {
         status = 'firing';
         statusLabel = item.station ? `At ${item.station}...` : undefined;
       }
@@ -102,7 +102,7 @@ function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
   return order.courses.map(course => {
     const allDone = course.items.every(i => i.isCompleted || i.isCancelled);
     let status: ExpoCourseStatus;
-    if (allDone && course.isFired) {
+    if (allDone) {
       status = 'served';
     } else if (course.isFired) {
       status = 'active';
@@ -140,8 +140,8 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     }
   }
 
-  // Determine if coursing is enabled (multiple courses, at least one not fired)
-  const hasCoursing = order.courses.length > 1 && order.courses.some(c => !c.isFired);
+  // Determine if coursing is enabled (multiple courses)
+  const hasCoursing = order.courses.length > 1;
 
   // Find the current active course's firedAt for per-course timer reset
   let activeCourseFiredAt: Date | undefined;
