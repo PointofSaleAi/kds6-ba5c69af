@@ -83,6 +83,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
         quantity: item.quantity,
         status,
         statusLabel,
+        station: item.station,
         isNew: item.isNew,
         allergens: item.allergens.length > 0
           ? item.allergens.map(a => ({ type: a.type, label: a.label }))

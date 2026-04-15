@@ -27,9 +27,9 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Dessert', status: 'pending' },
       ],
       items: [
-        { id: 'demo-1-1', name: 'Wagyu Steak', quantity: 2, status: 'pending', allergens: [{ type: 'gluten', label: 'Gluten' }] },
-        { id: 'demo-1-2', name: 'Caesar Salad', quantity: 1, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'egg', label: 'Egg' }] },
-        { id: 'demo-1-3', name: 'Creme Brulee', quantity: 2, status: 'pending' },
+        { id: 'demo-1-1', name: 'Wagyu Steak', quantity: 2, status: 'pending', station: 'Grill', allergens: [{ type: 'gluten', label: 'Gluten' }] },
+        { id: 'demo-1-2', name: 'Caesar Salad', quantity: 1, status: 'pending', station: 'Salad', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'egg', label: 'Egg' }] },
+        { id: 'demo-1-3', name: 'Creme Brulee', quantity: 2, status: 'pending', station: 'Dessert' },
       ],
     },
     // DEMO 2: Kitchen In Progress
