@@ -554,7 +554,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     <>
       <div
         className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
-        style={{ minWidth: 'min(220px, 100%)' }}
+        style={{
+          minWidth: 'min(220px, 100%)',
+          borderLeft: order.isRushed ? '4px solid #c0392b' : undefined,
+        }}
       >
         {/* Header area */}
         <div>
@@ -567,7 +570,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
           <div
             className="flex items-stretch justify-between transition-all duration-200"
-            style={{ backgroundColor: effectiveStatusColor.color, padding: `var(--kds-card-padding)` }}
+            style={{
+              backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
+              padding: `var(--kds-card-padding)`,
+            }}
           >
             {ticketHeaderLayout === 'kitchen' ? (
               <>
@@ -587,7 +593,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   ) : (
                     <span className="h-[18px]" />
                   )}
-                  <div>
+                  <div className="flex items-center gap-1.5">
+                    {order.isRushed && (
+                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
+                    )}
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
                   </div>
                 </div>
@@ -605,7 +614,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   <span className="text-[16px] font-semibold text-white">
                     {order.orderNumber}
                   </span>
-                  <div className="mb-0.5">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    {order.isRushed && (
+                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
+                    )}
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
                   </div>
                 </div>

@@ -33,6 +33,9 @@ interface OrderStoreContextValue {
 
   /** Toggle an order's seen/unseen state */
   toggleOrderSeen: (orderId: string) => void;
+
+  /** Set isRushed on an order (from Expo Rush button) */
+  rushOrder: (orderId: string) => void;
 }
 
 const OrderStoreContext = createContext<OrderStoreContextValue | null>(null);
@@ -214,6 +217,29 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     ));
   }, []);
 
+  const rushOrder = useCallback((orderId: string) => {
+    setOrders(prev => prev.map(o =>
+      o.id === orderId ? { ...o, isRushed: true } : o
+    ));
+  }, []);
+
+  // Auto-clear isRushed when all items in a rushed order are done
+  useMemo(() => {
+    setOrders(prev => {
+      let changed = false;
+      const next = prev.map(o => {
+        if (!o.isRushed) return o;
+        const allDone = o.courses.every(c => c.items.every(i => i.isCompleted || i.isCancelled));
+        if (allDone) {
+          changed = true;
+          return { ...o, isRushed: false };
+        }
+        return o;
+      });
+      return changed ? next : prev;
+    });
+  }, [orders]);
+
   const expoTickets = useMemo(() => {
     return orders
       .filter(o => o.status !== 'served')
@@ -243,7 +269,8 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     updateOrderStatus,
     seenOrderIds,
     toggleOrderSeen,
-  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen]);
+    rushOrder,
+  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder]);
 
   return (
     <OrderStoreContext.Provider value={value}>

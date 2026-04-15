@@ -86,6 +86,8 @@ export interface Order {
   itemCount: number;
   orderNotes?: string;
   sourceHistoryOrderId?: string;
+  /** Set by Expo Rush - triggers visual + audio alert on KDS */
+  isRushed?: boolean;
 }
 
 export type ViewMode = 'grid' | 'horizontal' | 'stagger';

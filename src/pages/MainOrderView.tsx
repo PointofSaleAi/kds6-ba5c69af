@@ -211,6 +211,19 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     prevOrderCountRef.current = currentCount;
   }, [orders.length, playSound]);
 
+  // Play urgent sound when an order is rushed from Expo
+  const prevRushedIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const currentRushed = new Set(orders.filter(o => o.isRushed).map(o => o.id));
+    for (const id of currentRushed) {
+      if (!prevRushedIdsRef.current.has(id)) {
+        playSound('urgent');
+        break; // one sound per batch
+      }
+    }
+    prevRushedIdsRef.current = currentRushed;
+  }, [orders, playSound]);
+
   // Flash notification when new kitchen messages arrive
   useEffect(() => {
     const currentCount = kitchenMessages.length;
@@ -284,7 +297,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       return [...matching.map(m => m.order), ...nonMatching];
     }
 
-    return sorted;
+    // Rush override: rushed orders jump to position 1
+    const rushed = sorted.filter(o => o.isRushed);
+    const nonRushed = sorted.filter(o => !o.isRushed);
+    return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
   const filteredHistory = historyOrders.filter((o) => {
