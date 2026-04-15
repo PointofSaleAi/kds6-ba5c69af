@@ -171,6 +171,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const doneCount = ticket.items.filter(i => i.status === 'done').length;
   const totalCount = ticket.items.length + (demoTicket?.coursing?.pending?.items?.length || 0);
   const isReady = allItemsDone(ticket);
+  const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
   const hasCoursingData = !!demoTicket?.coursing || ticket.hasCoursing;
