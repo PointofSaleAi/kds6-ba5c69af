@@ -439,30 +439,42 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             </button>
           </div>
         )}
-        <div className="flex gap-1.5">
-          <button
-            onClick={() => onRush?.(ticket.id)}
-            className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
-              overtime
-                ? 'border-destructive bg-destructive/10 text-destructive'
-                : 'border-destructive text-destructive hover:bg-destructive/10'
-            }`}
-          >
-            Rush
-          </button>
-          <button
-            onClick={() => isReady && onSendOut(ticket.id)}
-            disabled={!isReady}
-            className={`flex-1 py-2.5 text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 transition-colors min-h-[44px] ${
-              isReady
-                ? 'bg-success text-primary-foreground hover:opacity-90 cursor-pointer'
-                : 'bg-muted text-text-muted cursor-not-allowed'
-            }`}
-          >
-            <img src={runnerIcon} alt="" className="w-5 h-5 brightness-0 invert" />
-            Send out
-          </button>
-        </div>
+        {isSentOut ? (
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => onRecallOrder?.(ticket.id)}
+              className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
+            >
+              <RotateCcw size={14} />
+              RECALL
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => onRush?.(ticket.id)}
+              className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
+                overtime
+                  ? 'border-destructive bg-destructive/10 text-destructive'
+                  : 'border-destructive text-destructive hover:bg-destructive/10'
+              }`}
+            >
+              Rush
+            </button>
+            <button
+              onClick={() => isReady && onSendOut(ticket.id)}
+              disabled={!isReady}
+              className={`flex-1 py-2.5 text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 transition-colors min-h-[44px] ${
+                isReady
+                  ? 'bg-success text-primary-foreground hover:opacity-90 cursor-pointer'
+                  : 'bg-muted text-text-muted cursor-not-allowed'
+              }`}
+            >
+              <img src={runnerIcon} alt="" className="w-5 h-5 brightness-0 invert" />
+              Send out
+            </button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
