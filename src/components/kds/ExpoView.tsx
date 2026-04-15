@@ -942,9 +942,10 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
   const renderTicketCard = (ticket: ExpoTicket) => {
     const isPulsing = pulsingIds.has(ticket.id);
+    const ticketIsSentOut = sentOutOrderIds.has(ticket.id);
     // Dim tickets not matching selected products
     let isDimmed = false;
-    if (selectedProductSet.size > 0) {
+    if (selectedProductSet.size > 0 && !ticketIsSentOut) {
       const itemNames = new Set(ticket.items.map(i => i.name));
       isDimmed = ![...selectedProductSet].every(p => itemNames.has(p));
     }
@@ -961,9 +962,12 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
           sentItemIds={sentItemIds}
           onItemSend={handleItemSend}
+          onItemRecall={handleItemRecall}
           acknowledgedNewItemIds={acknowledgedNewItemIds}
           onAcknowledgeNewItem={handleAcknowledgeNewItem}
           onFireNextCourse={handleFireNextCourseAny}
+          isSentOut={ticketIsSentOut}
+          onRecallOrder={handleRecallOrder}
         />
       </div>
     );
