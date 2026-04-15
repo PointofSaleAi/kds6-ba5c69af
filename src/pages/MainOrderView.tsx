@@ -284,7 +284,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       return [...matching.map(m => m.order), ...nonMatching];
     }
 
-    return sorted;
+    // Rush override: rushed orders jump to position 1
+    const rushed = sorted.filter(o => o.isRushed);
+    const nonRushed = sorted.filter(o => !o.isRushed);
+    return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
   const filteredHistory = historyOrders.filter((o) => {
