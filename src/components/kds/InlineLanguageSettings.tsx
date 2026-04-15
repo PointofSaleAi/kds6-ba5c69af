@@ -5,7 +5,7 @@ import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex,
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
 import { OrderCard } from './OrderCard';
-import { mockOrders } from '@/data/mock-orders';
+import { previewTicket } from '@/data/mock-preview-ticket';
 
 interface Language {
   code: LanguageCode;
