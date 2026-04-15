@@ -845,6 +845,20 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     toast(`Rush alert sent for Ticket #${ticket.orderNumber}`);
   }, [tickets, demoTickets, rushOrder]);
 
+  // Auto-send-out tickets when all items are individually sent
+  useEffect(() => {
+    const allCombined = [...rawTickets, ...demoTickets.filter(t => !sentDemoIds.has(t.id))];
+    for (const ticket of allCombined) {
+      if (ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id))) {
+        if (ticket.id.startsWith('demo-')) {
+          handleDemoSendOut(ticket.id);
+        } else {
+          handleSendOut(ticket.id);
+        }
+      }
+    }
+  }, [sentItemIds, rawTickets, demoTickets, sentDemoIds, handleDemoSendOut, handleSendOut]);
+
   // Combine real + demo tickets
   const visibleDemoTickets = useMemo(() => {
     return demoTickets.filter(t => !sentDemoIds.has(t.id));
