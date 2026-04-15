@@ -782,6 +782,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const handleSendOut = useCallback((id: string) => {
     const ticket = tickets.find(t => t.id === id);
     if (!ticket) return;
+    // Save ticket snapshot for recall
+    setSentOutOrders(prev => [ticket, ...prev]);
     setFulfilledTickets(prev => [ticket.orderNumber, ...prev]);
     sendOutOrder(id);
     setHoldStations(prev => {
@@ -793,6 +795,16 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     });
     toast.success(`Ticket #${ticket.orderNumber} sent out`);
   }, [tickets, sendOutOrder]);
+
+  const handleRecallOrder = useCallback((id: string) => {
+    const ticket = sentOutOrders.find(t => t.id === id);
+    if (!ticket) return;
+    // Restore order status to in-progress
+    updateOrderStatus(id, 'in-progress');
+    setSentOutOrders(prev => prev.filter(t => t.id !== id));
+    setFulfilledTickets(prev => prev.filter(n => n !== ticket.orderNumber));
+    toast.success(`Ticket #${ticket.orderNumber} recalled`);
+  }, [sentOutOrders, updateOrderStatus]);
 
   const handleRush = useCallback((id: string) => {
     const ticket = [...tickets, ...demoTickets].find(t => t.id === id);
