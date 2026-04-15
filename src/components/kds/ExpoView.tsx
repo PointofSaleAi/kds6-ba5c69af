@@ -448,6 +448,21 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               </div>
             )}
           </div>
+        ) : realCourses ? (
+          <div className="px-1 mb-1 space-y-0.5">
+            {realCourses.map(course => {
+              const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id));
+              const courseDone = courseItems.filter(i => i.status === 'done').length;
+              return (
+                <div key={course.name} className="flex items-center justify-between">
+                  <span className="text-[12px] text-text-secondary">{course.name}</span>
+                  <span className="text-[12px] text-text-primary font-medium">
+                    {courseDone} of {courseItems.length} ready
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <div className="flex items-center justify-between mb-1 px-1">
             <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
