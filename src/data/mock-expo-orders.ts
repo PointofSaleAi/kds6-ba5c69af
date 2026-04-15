@@ -13,6 +13,8 @@ export interface ExpoItem {
   quantity: number;
   status: ExpoItemStatus;
   statusLabel?: string; // e.g. "Frying...", "On grill...", "Overdue"
+  /** Station this item belongs to */
+  station?: string;
   /** Item was added after ticket creation (POS mid-service add) */
   isNew?: boolean;
   /** Allergens associated with this item */
