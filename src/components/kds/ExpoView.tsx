@@ -154,6 +154,7 @@ interface ExpoTicketCardProps {
 function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
+  const { getStatusForElapsed } = useStatusRules();
   const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
   const doneCount = ticket.items.filter(i => i.status === 'done').length;
   const totalCount = ticket.items.length + (demoTicket?.coursing?.pending?.items?.length || 0);
@@ -166,6 +167,15 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
   const hasPendingCourse = !!demoTicket?.coursing?.pending;
 
+  // Urgency color from status rules
+  const urgencyBgColor = getUrgencyBg(ticket.timerSeconds, getStatusForElapsed);
+
+  // Collect unique allergens across all items
+  const ticketAllergens = useMemo(() => {
+    const all = ticket.items.flatMap(i => i.allergens || []);
+    return Array.from(new Map(all.map(a => [a.type, a])).values());
+  }, [ticket.items]);
+
   return (
     <motion.div
       layout
@@ -175,18 +185,37 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${ticketBorderClass(ticket)} transition-all duration-300 relative`}
     >
 
-      {/* Header */}
-      <div className={`flex items-center justify-between px-2 py-1.5 ${headerStyle.bg || ''} ${headerStyle.text}`} style={headerStyle.bgColor ? { backgroundColor: headerStyle.bgColor } : undefined}>
-        <div className="flex flex-col">
-          <span className="text-[14px] font-bold uppercase tracking-wide leading-tight">
-            {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
-          </span>
-          <span className="text-[12px] font-medium text-text-secondary leading-tight">
-            #{ticket.orderNumber}
-          </span>
-        </div>
-        <span className="text-[11px] font-mono font-bold">{formatTimer(ticket.timerSeconds)}</span>
+      {/* Row 1: Order type strip */}
+      <div
+        className="flex items-center px-2"
+        style={{ backgroundColor: headerStyle.bgColor, height: '28px' }}
+      >
+        <span className="text-[11px] font-medium uppercase tracking-wide text-white leading-none">
+          {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
+        </span>
       </div>
+
+      {/* Row 2: Urgency row */}
+      <div
+        className="flex items-center justify-between px-2"
+        style={{ backgroundColor: urgencyBgColor, height: '36px' }}
+      >
+        <span className="text-[13px] font-medium text-white leading-none">
+          #{ticket.orderNumber}
+        </span>
+        <span className="text-[13px] font-medium font-mono text-white leading-none">
+          {formatTimer(ticket.timerSeconds)}
+        </span>
+      </div>
+
+      {/* Allergen badges */}
+      {ticketAllergens.length > 0 && (
+        <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-b border-border/40">
+          {ticketAllergens.map(a => (
+            <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
+          ))}
+        </div>
+      )}
 
       {/* Station chips */}
       <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
