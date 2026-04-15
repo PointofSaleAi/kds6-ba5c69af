@@ -259,19 +259,39 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           const display = getItemDisplayStatus(item.status);
           const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
 
-          // Sent items: strikethrough, muted
+          // Sent items: strikethrough, muted, with recall icon
           if (isSent) {
             return (
               <div key={item.id} className="py-0.5">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[13px] font-medium text-text-muted line-through">
-                    {item.quantity}&times; {tp(item.name)}
-                  </span>
-                  {item.station && stationColors[item.station as keyof typeof stationColors] && (
-                    <StationBadge station={item.station as any} />
-                  )}
-                  <span className="text-text-muted text-[10px]">&middot;</span>
-                  <ExpoStatusIcon status="sent" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span className="text-[13px] font-medium text-text-muted line-through">
+                      {item.quantity}&times; {tp(item.name)}
+                    </span>
+                    {item.station && stationColors[item.station as keyof typeof stationColors] && (
+                      <StationBadge station={item.station as any} />
+                    )}
+                    <span className="text-text-muted text-[10px]">&middot;</span>
+                    <ExpoStatusIcon status="sent" />
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onItemRecall?.(ticket.id, item.id); }}
+                    className="shrink-0 ml-1.5 flex items-center justify-center min-w-[34px] min-h-[33px]"
+                    aria-label="Recall item"
+                    title="Recall item"
+                  >
+                    <div
+                      className="flex items-center justify-center rounded-full active:scale-110 transition-transform duration-150"
+                      style={{
+                        width: 'var(--kds-eye-icon)',
+                        height: 'var(--kds-eye-icon)',
+                        backgroundColor: '#FFFFFF',
+                        border: '2px solid #2980B9',
+                      }}
+                    >
+                      <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color="#2980B9" strokeWidth={2.5} />
+                    </div>
+                  </button>
                 </div>
               </div>
             );
