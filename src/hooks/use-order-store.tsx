@@ -97,6 +97,32 @@ function deriveExpoItems(order: Order): ExpoItem[] {
   return items;
 }
 
+function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
+  if (order.courses.length <= 1) return undefined;
+  return order.courses.map(course => {
+    const allDone = course.items.every(i => i.isCompleted || i.isCancelled);
+    let status: ExpoCourseStatus;
+    if (allDone && course.isFired) {
+      status = 'served';
+    } else if (course.isFired) {
+      status = 'active';
+    } else {
+      status = 'queued';
+    }
+    // Build status label for queued courses
+    let statusLabel: string | undefined;
+    if (status === 'queued' && course._startedAt) {
+      statusLabel = `Preparing at ${course._startedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+    return {
+      name: course.course,
+      status,
+      itemIds: course.items.map(i => i.id),
+      statusLabel,
+    };
+  });
+}
+
 function orderToExpoTicket(order: Order): ExpoTicket {
   const timerSeconds = Math.round((Date.now() - order.timeReceived.getTime()) / 1000);
 
@@ -120,7 +146,6 @@ function orderToExpoTicket(order: Order): ExpoTicket {
   // Find the current active course's firedAt for per-course timer reset
   let activeCourseFiredAt: Date | undefined;
   if (hasCoursing) {
-    // Active course = first fired course that isn't fully done
     for (const course of order.courses) {
       if (course.isFired) {
         const allDone = course.items.every(i => i.isCompleted || i.isCancelled);
@@ -130,7 +155,6 @@ function orderToExpoTicket(order: Order): ExpoTicket {
         }
       }
     }
-    // Fallback: if no active fired course found, use the last fired course's time
     if (!activeCourseFiredAt) {
       const firedCourses = order.courses.filter(c => c.isFired);
       if (firedCourses.length > 0) {
@@ -154,6 +178,7 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     autoFireSeconds,
     hasCoursing,
     activeCourseFiredAt,
+    courses: deriveExpoCourses(order),
   };
 }
 
