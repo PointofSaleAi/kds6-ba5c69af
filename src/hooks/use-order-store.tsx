@@ -1,7 +1,7 @@
 // TODO: Replace with API endpoint - all data should come from backend
 import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react';
 import type { Order } from '@/types/kds';
-import type { ExpoTicket, ExpoStation, ExpoItem, ExpoItemStatus } from '@/data/mock-expo-orders';
+import type { ExpoTicket, ExpoStation, ExpoItem, ExpoItemStatus, ExpoCourse, ExpoCourseStatus } from '@/data/mock-expo-orders';
 import { mockOrders } from '@/data/mock-orders';
 
 /* ------------------------------------------------------------------ */
