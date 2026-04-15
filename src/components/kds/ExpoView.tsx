@@ -239,123 +239,44 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
-      {/* Item rows */}
-      <div className="px-2 py-1.5 space-y-0.5">
-        {ticket.items.map(item => {
-          const isSent = sentItemIds.has(item.id);
-          const isPrepared = item.status === 'done';
-          const display = getItemDisplayStatus(item.status);
-          const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
+      {/* Item rows - grouped by course for real multi-course orders */}
+      {realCourses ? (
+        <>
+          {realCourses.map(course => {
+            const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id));
+            if (courseItems.length === 0) return null;
+            const isServed = course.status === 'served';
+            const isQueued = course.status === 'queued';
+            const courseStatusLabel = isServed ? 'SERVED' : isQueued ? 'QUEUED' : 'ACTIVE';
 
-          // Sent items: strikethrough, muted, with recall icon
-          if (isSent) {
             return (
-              <div key={item.id} className="py-0.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                    <span className="text-[13px] font-medium text-text-muted line-through">
-                      {item.quantity}&times; {tp(item.name)}
+              <div key={course.name}>
+                {/* Course header */}
+                <div className={`px-2 py-1 border-b border-border ${isServed ? 'bg-muted/50' : ''}`}>
+                  <div className="flex items-center gap-1.5">
+                    {isServed && <span className="text-[10px] text-text-muted">&#9654;</span>}
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                      {course.name} &middot; {courseStatusLabel}
                     </span>
-                    {item.station && stationColors[item.station as keyof typeof stationColors] && (
-                      <StationBadge station={item.station as any} />
+                    {course.statusLabel && (
+                      <span className="ml-auto text-[10px] text-text-muted">{course.statusLabel}</span>
                     )}
-                    <span className="text-text-muted text-[10px]">&middot;</span>
-                    <ExpoStatusIcon status="sent" />
                   </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onItemRecall?.(ticket.id, item.id); }}
-                    className="shrink-0 ml-1.5 flex items-center justify-center min-w-[34px] min-h-[33px]"
-                    aria-label="Recall item"
-                    title="Recall item"
-                  >
-                    <div
-                      className="flex items-center justify-center rounded-full active:scale-110 transition-transform duration-150"
-                      style={{
-                        width: 'var(--kds-eye-icon)',
-                        height: 'var(--kds-eye-icon)',
-                        backgroundColor: '#FFFFFF',
-                        border: '2px solid #2980B9',
-                      }}
-                    >
-                      <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color="#2980B9" strokeWidth={2.5} />
-                    </div>
-                  </button>
+                </div>
+
+                {/* Course items */}
+                <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
+                  {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
                 </div>
               </div>
             );
-          }
-
-          const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
-            <StationBadge station={item.station as any} />
-          ) : null;
-
-          const statusIcon = <ExpoStatusIcon status={item.status} />;
-
-          const allergenRow = item.allergens && item.allergens.length > 0 ? (
-            <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
-              {item.allergens.map(a => (
-                <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-              ))}
-            </div>
-          ) : null;
-
-          // Prepared but not sent: bold, green left border
-          if (isPrepared) {
-            return (
-              <div
-                key={item.id}
-                className={`py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-                onClick={() => {
-                  if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-                  if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
-                    <span className="text-[13px] font-medium text-text-primary">
-                      {item.quantity}&times; {tp(item.name)}
-                    </span>
-                    {stationChip}
-                    <span className="text-text-muted text-[10px]">&middot;</span>
-                    {statusIcon}
-                  </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
-                    className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
-                    style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
-                    aria-label="Send item"
-                  >
-                    <img src={runnerIcon} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
-                  </button>
-                </div>
-                {allergenRow}
-              </div>
-            );
-          }
-
-          // Queued / Preparing: normal style
-          return (
-            <div
-              key={item.id}
-              className={`py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-              onClick={() => {
-                if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-                if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
-              }}
-            >
-              <div className="flex items-center flex-wrap gap-1.5">
-                <span className="text-[13px] font-medium text-text-primary">
-                  {item.quantity}&times; {tp(item.name)}
-                </span>
-                {stationChip}
-                <span className="text-text-muted text-[10px]">&middot;</span>
-                {statusIcon}
-              </div>
-              {allergenRow}
-            </div>
-          );
-        })}
-      </div>
+          })}
+        </>
+      ) : (
+        <div className="px-2 py-1.5 space-y-0.5">
+          {ticket.items.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
+        </div>
+      )}
 
       {/* Pending course for demo ticket 6 */}
       {demoTicket?.coursing?.pending && (
