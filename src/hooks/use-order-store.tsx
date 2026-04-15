@@ -84,6 +84,9 @@ function deriveExpoItems(order: Order): ExpoItem[] {
         status,
         statusLabel,
         isNew: item.isNew,
+        allergens: item.allergens.length > 0
+          ? item.allergens.map(a => ({ type: a.type, label: a.label }))
+          : undefined,
       });
     }
   }
