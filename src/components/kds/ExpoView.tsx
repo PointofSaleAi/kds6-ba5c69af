@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle } from 'lucide-react';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
 import { StationBadge, stationColors } from './StationBadge';
@@ -71,6 +71,13 @@ function getItemDisplayStatus(status: ExpoItemStatus): { label: string; bg: stri
   if (status === 'done') return { label: 'Prepared', bg: 'bg-success/20', text: 'text-success' };
   if (status === 'firing') return { label: 'Preparing', bg: 'bg-warning/20', text: 'text-warning' };
   return { label: 'Queued', bg: 'bg-muted', text: 'text-text-muted' };
+}
+
+function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
+  if (status === 'done') return <Check className="w-3.5 h-3.5 text-success" />;
+  if (status === 'firing') return <Flame className="w-3.5 h-3.5 text-warning" />;
+  if (status === 'sent') return <ArrowUpRight className="w-3.5 h-3.5 text-text-muted" />;
+  return <Hourglass className="w-3.5 h-3.5 text-text-muted" />;
 }
 
 /* -- Station Chips with state-based coloring -- */
