@@ -462,18 +462,20 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           </div>
         ) : (
           <div className="flex gap-1.5">
-            <button
-              onClick={() => onRush?.(ticket.id)}
-              className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
-                isRushed
-                  ? 'bg-destructive text-white border-destructive'
-                  : overtime
-                    ? 'border-destructive bg-destructive/10 text-destructive'
-                    : 'border-destructive text-destructive hover:bg-destructive/10'
-              }`}
-            >
-              Rush
-            </button>
+            {!isReady && (
+              <button
+                onClick={() => onRush?.(ticket.id)}
+                className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
+                  isRushed
+                    ? 'bg-destructive text-white border-destructive'
+                    : overtime
+                      ? 'border-destructive bg-destructive/10 text-destructive'
+                      : 'border-destructive text-destructive hover:bg-destructive/10'
+                }`}
+              >
+                Rush
+              </button>
+            )}
             <button
               onClick={() => isReady && onSendOut(ticket.id)}
               disabled={!isReady}
