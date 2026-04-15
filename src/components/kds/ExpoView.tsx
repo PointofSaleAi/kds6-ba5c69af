@@ -257,7 +257,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   }, []);
 
   // Determine if the active course is fully done (for "Fire next course" button)
-  const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
+  const activeCourseAllDone = hasCoursingData && visibleItems.every(i => i.status === 'done');
   const hasPendingCourse = !!demoTicket?.coursing?.pending || (realCourses?.some(c => c.status === 'queued') ?? false);
 
   // Urgency color from status rules
