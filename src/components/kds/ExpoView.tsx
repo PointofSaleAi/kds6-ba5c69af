@@ -437,7 +437,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         ) : realCourses ? (
           <div className="px-1 mb-1 space-y-0.5">
             {realCourses.map(course => {
-              const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id));
+              const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id) && !sentItemIds.has(i.id));
               const courseDone = courseItems.filter(i => i.status === 'done').length;
               return (
                 <div key={course.name} className="flex items-center justify-between">
