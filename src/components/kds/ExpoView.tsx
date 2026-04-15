@@ -269,7 +269,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
-  const realCourses = !demoTicket && ticket.courses && ticket.courses.length > 1 ? ticket.courses : null;
+  const realCourses = !demoTicket && ticket.courses && ticket.courses.length > 0 ? ticket.courses : null;
   const hasCoursingData = !!demoTicket?.coursing || !!realCourses;
 
   // Track which served courses are expanded
