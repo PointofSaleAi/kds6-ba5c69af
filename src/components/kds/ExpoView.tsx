@@ -570,10 +570,13 @@ interface ExpoViewProps {
 }
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
-  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders } = useOrderStore();
+  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
   const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
+
+  // Track recently sent-out orders for recall
+  const [sentOutOrders, setSentOutOrders] = useState<ExpoTicket[]>([]);
 
   const handleAcknowledgeNewItem = useCallback((itemId: string) => {
     setAcknowledgedNewItemIds(prev => {
@@ -590,6 +593,15 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       return next;
     });
     toast.success('Item sent');
+  }, []);
+
+  const handleItemRecall = useCallback((ticketId: string, itemId: string) => {
+    setSentItemIds(prev => {
+      const next = new Set(prev);
+      next.delete(itemId);
+      return next;
+    });
+    toast.success('Item recalled');
   }, []);
 
   const handleFilterChange = useCallback((f: ExpoFilter) => {
