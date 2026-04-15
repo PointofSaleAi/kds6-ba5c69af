@@ -269,7 +269,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
-  const realCourses = !demoTicket && ticket.courses && ticket.courses.length > 0 ? ticket.courses : null;
+  const realCourses = ticket.courses && ticket.courses.length > 0 ? ticket.courses : null;
   const hasCoursingData = !!demoTicket?.coursing || !!realCourses;
 
   // Track which served courses are expanded
@@ -898,7 +898,11 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const sentOutOrderIds = useMemo(() => new Set(sentOutOrders.map(t => t.id)), [sentOutOrders]);
 
   const sortedTickets = useMemo(() => {
-    const base = filter === 'ready' ? allTickets.filter(t => allItemsDone(t)) : allTickets;
+    const base = filter === 'ready'
+      ? allTickets.filter(t => allItemsDone(t))
+      : filter === 'recalled'
+      ? []
+      : allTickets;
 
     // Product filtering: tickets matching ALL selected products go to top
     let result = base;
