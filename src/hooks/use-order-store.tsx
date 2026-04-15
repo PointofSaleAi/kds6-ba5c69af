@@ -33,6 +33,9 @@ interface OrderStoreContextValue {
 
   /** Toggle an order's seen/unseen state */
   toggleOrderSeen: (orderId: string) => void;
+
+  /** Set isRushed on an order (from Expo Rush button) */
+  rushOrder: (orderId: string) => void;
 }
 
 const OrderStoreContext = createContext<OrderStoreContextValue | null>(null);
