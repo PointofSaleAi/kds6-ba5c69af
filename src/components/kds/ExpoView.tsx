@@ -197,7 +197,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.35 } }}
-      className={`rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 ${isSentOut ? 'border-l-text-muted' : ticketBorderClass(ticket)} transition-all duration-300 relative`}
+      className={`rounded-lg overflow-hidden bg-surface-card shadow-sm transition-all duration-300 relative`}
       style={isSentOut ? { opacity: 0.65 } : undefined}
     >
 
