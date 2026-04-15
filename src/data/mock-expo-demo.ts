@@ -103,32 +103,5 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { id: 'demo-5-2', name: 'Garlic Knots', quantity: 2, status: 'done', station: 'Grill', statusLabel: 'Done 22:00' },
       ],
     },
-    // DEMO 6: Coursed Table Order
-    {
-      id: 'demo-106',
-      isDemo: true,
-      orderNumber: 106,
-      orderType: 'dine-in',
-      tableName: 'TABLE 12',
-      timerSeconds: 1320,
-      stations: [
-        { name: 'Salad', status: 'done' },
-        { name: 'Grill', status: 'firing' },
-        { name: 'Dessert', status: 'pending' },
-      ],
-      items: [
-        { id: 'demo-6-1', name: 'Osso Buco', quantity: 2, status: 'firing', station: 'Grill', statusLabel: 'Since 21:30' },
-        { id: 'demo-6-2', name: 'Grilled Sea Bass', quantity: 1, status: 'done', station: 'Grill', statusLabel: 'Done 21:55' },
-      ],
-      coursing: {
-        served: { course: 'APPETIZER', doneAt: '19:45', items: [{ name: 'Bruschetta', quantity: 2 }] },
-        active: { course: 'ENTREE', label: 'ACTIVE' },
-        pending: {
-          course: 'DESSERT',
-          label: 'QUEUED',
-          items: [{ id: 'demo-6-3', name: 'Panna Cotta', quantity: 2, timeLabel: 'Preparing at 10:30 PM' }],
-        },
-      },
-    },
   ];
 }
