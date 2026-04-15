@@ -288,9 +288,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
-                  className="shrink-0 ml-1.5 px-2 py-0.5 rounded-full border border-success text-success text-[10px] font-bold hover:bg-success/10 transition-colors"
+                  className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
+                  style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
+                  aria-label="Send item"
                 >
-                  Send
+                  <img src={runnerIcon} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
                 </button>
               </div>
             );
