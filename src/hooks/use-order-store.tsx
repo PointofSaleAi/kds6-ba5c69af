@@ -98,7 +98,10 @@ function deriveExpoItems(order: Order): ExpoItem[] {
 }
 
 function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
-  if (order.courses.length <= 1) return undefined;
+  // Dine-in & banquet always show courses even with a single course
+  const alwaysShowCourses = order.orderType === 'dine-in' || order.orderType === 'banquet';
+  if (order.courses.length <= 1 && !alwaysShowCourses) return undefined;
+  if (order.courses.length === 0) return undefined;
   return order.courses.map(course => {
     const allDone = course.items.every(i => i.isCompleted || i.isCancelled);
     let status: ExpoCourseStatus;
@@ -140,8 +143,9 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     }
   }
 
-  // Determine if coursing is enabled (multiple courses)
-  const hasCoursing = order.courses.length > 1;
+  // Determine if coursing is enabled
+  const alwaysShowCourses = order.orderType === 'dine-in' || order.orderType === 'banquet';
+  const hasCoursing = order.courses.length > 1 || alwaysShowCourses;
 
   // Find the current active course's firedAt for per-course timer reset
   let activeCourseFiredAt: Date | undefined;
