@@ -208,17 +208,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </span>
       </div>
 
-      {/* Allergen badges */}
-      {ticketAllergens.length > 0 && (
-        <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-b border-border/40">
-          {ticketAllergens.map(a => (
-            <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
-          ))}
-        </div>
-      )}
-
-      {/* Station chips */}
-      <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
+      {/* Station chips and allergen badges removed from expo card header */}
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
