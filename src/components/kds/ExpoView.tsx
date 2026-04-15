@@ -48,13 +48,7 @@ const orderTypeLabel: Record<string, string> = {
   banquet: 'BANQUET',
 };
 
-/* -- Item status helpers -- */
-
-function getItemDisplayStatus(status: ExpoItemStatus): { label: string; bg: string; text: string } {
-  if (status === 'done') return { label: 'Prepared', bg: 'bg-success/20', text: 'text-success' };
-  if (status === 'firing') return { label: 'Preparing', bg: 'bg-warning/20', text: 'text-warning' };
-  return { label: 'Queued', bg: 'bg-muted', text: 'text-text-muted' };
-}
+/* -- Item status icon -- */
 
 function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
   if (status === 'done') return <Check className="w-3.5 h-3.5 text-success" />;
