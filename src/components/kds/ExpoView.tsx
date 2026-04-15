@@ -272,10 +272,10 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const realCourses = ticket.courses && ticket.courses.length > 0 ? ticket.courses : null;
   const hasCoursingData = !!demoTicket?.coursing || !!realCourses;
 
-  // Track which served courses are expanded
-  const [expandedServedCourses, setExpandedServedCourses] = useState<Set<string>>(new Set());
+  // Track which served/prepared courses are collapsed (expanded by default)
+  const [collapsedServedCourses, setCollapsedServedCourses] = useState<Set<string>>(new Set());
   const toggleServedCourse = useCallback((name: string) => {
-    setExpandedServedCourses(prev => {
+    setCollapsedServedCourses(prev => {
       const next = new Set(prev);
       if (next.has(name)) next.delete(name); else next.add(name);
       return next;
@@ -344,7 +344,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         <div className="px-2 py-1 border-b border-border bg-muted/50">
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
             <span>&#9654;</span>
-            <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; SERVED</span>
+            <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; PREPARED</span>
             <span className="ml-auto text-[10px]">Done at {demoTicket.coursing.served.doneAt}</span>
           </div>
         </div>
@@ -367,8 +367,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             if (courseItems.length === 0) return null;
             const isServed = course.status === 'served';
             const isQueued = course.status === 'queued';
-            const courseStatusLabel = isServed ? 'SERVED' : isQueued ? 'QUEUED' : 'ACTIVE';
-            const isExpanded = !isServed || expandedServedCourses.has(course.name);
+            const courseStatusLabel = isServed ? 'PREPARED' : isQueued ? 'QUEUED' : 'ACTIVE';
+            const isExpanded = !isServed || !collapsedServedCourses.has(course.name);
 
             return (
               <div key={course.name}>
