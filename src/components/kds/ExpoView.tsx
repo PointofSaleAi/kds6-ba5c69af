@@ -959,6 +959,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const renderTicketCard = (ticket: ExpoTicket) => {
     const isPulsing = pulsingIds.has(ticket.id);
     const ticketIsSentOut = sentOutOrderIds.has(ticket.id);
+    const order = orders.find(o => o.id === ticket.id);
+    const ticketIsRushed = order?.isRushed ?? false;
     // Dim tickets not matching selected products
     let isDimmed = false;
     if (selectedProductSet.size > 0 && !ticketIsSentOut) {
@@ -984,6 +986,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           onFireNextCourse={handleFireNextCourseAny}
           isSentOut={ticketIsSentOut}
           onRecallOrder={handleRecallOrder}
+          isRushed={ticketIsRushed}
         />
       </div>
     );
