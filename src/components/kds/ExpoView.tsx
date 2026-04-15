@@ -171,6 +171,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const doneCount = ticket.items.filter(i => i.status === 'done').length;
   const totalCount = ticket.items.length + (demoTicket?.coursing?.pending?.items?.length || 0);
   const isReady = allItemsDone(ticket);
+  const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
   const hasCoursingData = !!demoTicket?.coursing || ticket.hasCoursing;
@@ -440,10 +441,17 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             </button>
           </div>
         )}
-        {isSentOut ? (
+        {(isSentOut || allItemsSent) ? (
           <div className="flex gap-1.5">
             <button
-              onClick={() => onRecallOrder?.(ticket.id)}
+              onClick={() => {
+                if (isSentOut) {
+                  onRecallOrder?.(ticket.id);
+                } else {
+                  // Recall all individually sent items
+                  ticket.items.forEach(i => onItemRecall?.(ticket.id, i.id));
+                }
+              }}
               className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
             >
               <RotateCcw size={14} />
