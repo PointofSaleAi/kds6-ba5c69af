@@ -48,10 +48,12 @@ function ticketBorderClass(t: ExpoTicket): string {
 }
 
 function ticketHeaderBg(t: ExpoTicket, colors: OrderTypeColors): { bg?: string; bgColor?: string; text: string } {
-  if (isOvertime(t)) return { bg: 'bg-[#450a0a]', text: 'text-primary-foreground' };
-  if (isWarning(t)) return { bg: 'bg-warning/20', text: 'text-text-primary' };
   const color = colors[t.orderType] || DEFAULT_ORDER_TYPE_COLORS[t.orderType] || DEFAULT_ORDER_TYPE_COLORS['dine-in'];
   return { bgColor: color, text: 'text-primary-foreground' };
+}
+
+function getUrgencyBg(timerSeconds: number, getStatusForElapsed: (s: number) => { color: string }): string {
+  return getStatusForElapsed(timerSeconds).color;
 }
 
 const orderTypeLabel: Record<string, string> = {
