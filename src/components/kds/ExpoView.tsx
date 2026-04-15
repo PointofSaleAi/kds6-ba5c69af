@@ -72,14 +72,16 @@ function renderExpoItemRow(
   onAcknowledgeNewItem: ((itemId: string) => void) | undefined,
   runnerIconSrc: string,
 ) {
-  const isSent = sentItemIds.has(item.id);
+  // Hide sent items entirely — they are removed from the card
+  if (sentItemIds.has(item.id)) return null;
+
   const isPrepared = item.status === 'done';
   const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
 
   const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
     <StationBadge station={item.station as any} />
   ) : null;
-  const statusIcon = <ExpoStatusIcon status={isSent ? 'sent' : item.status} />;
+  const statusIcon = <ExpoStatusIcon status={item.status} />;
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
     <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
       {item.allergens.map(a => (
@@ -87,36 +89,6 @@ function renderExpoItemRow(
       ))}
     </div>
   ) : null;
-
-  if (isSent) {
-    return (
-      <div key={item.id} className="py-0.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 min-w-0 flex-1">
-            <span className="text-[13px] font-medium text-text-muted line-through">
-              {item.quantity}&times; {tp(item.name)}
-            </span>
-            {stationChip}
-            <span className="text-text-muted text-[10px]">&middot;</span>
-            {statusIcon}
-          </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onItemRecall?.(ticket.id, item.id); }}
-            className="shrink-0 ml-1.5 flex items-center justify-center min-w-[34px] min-h-[33px]"
-            aria-label="Recall item"
-            title="Recall item"
-          >
-            <div
-              className="flex items-center justify-center rounded-full active:scale-110 transition-transform duration-150"
-              style={{ width: 'var(--kds-eye-icon)', height: 'var(--kds-eye-icon)', backgroundColor: '#FFFFFF', border: '2px solid #2980B9' }}
-            >
-              <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color="#2980B9" strokeWidth={2.5} />
-            </div>
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   if (isPrepared) {
     return (
@@ -263,10 +235,12 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const { orderTypeColors } = useKDSSettings();
   const { getStatusForElapsed } = useStatusRules();
   const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
-  const doneCount = ticket.items.filter(i => i.status === 'done').length;
-  const totalCount = ticket.items.length + (demoTicket?.coursing?.pending?.items?.length || 0);
-  const isReady = allItemsDone(ticket);
-  const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
+  // Filter to only unsent items for display and counting
+  const visibleItems = ticket.items.filter(i => !sentItemIds.has(i.id));
+  const doneCount = visibleItems.filter(i => i.status === 'done').length;
+  const totalCount = visibleItems.length + (demoTicket?.coursing?.pending?.items?.length || 0);
+  const isReady = visibleItems.length > 0 && visibleItems.every(i => i.status === 'done');
+  const allItemsSent = visibleItems.length === 0 && ticket.items.length > 0;
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
   const realCourses = ticket.courses && ticket.courses.length > 0 ? ticket.courses : null;
@@ -283,7 +257,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   }, []);
 
   // Determine if the active course is fully done (for "Fire next course" button)
-  const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
+  const activeCourseAllDone = hasCoursingData && visibleItems.every(i => i.status === 'done');
   const hasPendingCourse = !!demoTicket?.coursing?.pending || (realCourses?.some(c => c.status === 'queued') ?? false);
 
   // Urgency color from status rules
@@ -363,7 +337,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {realCourses ? (
         <>
           {realCourses.map(course => {
-            const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id));
+            const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id) && !sentItemIds.has(i.id));
             if (courseItems.length === 0) return null;
             const isServed = course.status === 'served';
             const isQueued = course.status === 'queued';
@@ -463,7 +437,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         ) : realCourses ? (
           <div className="px-1 mb-1 space-y-0.5">
             {realCourses.map(course => {
-              const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id));
+              const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id) && !sentItemIds.has(i.id));
               const courseDone = courseItems.filter(i => i.status === 'done').length;
               return (
                 <div key={course.name} className="flex items-center justify-between">
@@ -491,17 +465,10 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             </button>
           </div>
         )}
-        {(isSentOut || allItemsSent) ? (
+      {isSentOut ? (
           <div className="flex gap-1.5">
             <button
-              onClick={() => {
-                if (isSentOut) {
-                  onRecallOrder?.(ticket.id);
-                } else {
-                  // Recall all individually sent items
-                  ticket.items.forEach(i => onItemRecall?.(ticket.id, i.id));
-                }
-              }}
+              onClick={() => onRecallOrder?.(ticket.id)}
               className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
             >
               <RotateCcw size={14} />
@@ -878,6 +845,20 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     toast(`Rush alert sent for Ticket #${ticket.orderNumber}`);
   }, [tickets, demoTickets, rushOrder]);
 
+  // Auto-send-out tickets when all items are individually sent
+  useEffect(() => {
+    const allCombined = [...rawTickets, ...demoTickets.filter(t => !sentDemoIds.has(t.id))];
+    for (const ticket of allCombined) {
+      if (ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id))) {
+        if (ticket.id.startsWith('demo-')) {
+          handleDemoSendOut(ticket.id);
+        } else {
+          handleSendOut(ticket.id);
+        }
+      }
+    }
+  }, [sentItemIds, rawTickets, demoTickets, sentDemoIds, handleDemoSendOut, handleSendOut]);
+
   // Combine real + demo tickets
   const visibleDemoTickets = useMemo(() => {
     return demoTickets.filter(t => !sentDemoIds.has(t.id));
@@ -935,9 +916,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       result = [...pinned, ...unpinned];
     }
 
-    // Append recently sent-out orders at the end for recall
-    return [...result, ...sentOutOrders];
-  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, sentOutOrders, orders]);
+    return result;
+  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, orders]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
@@ -1109,6 +1089,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         fulfilledTickets={fulfilledTickets}
         onDemoRecallLast={handleDemoRecallLast}
         hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
+        onRecallLast={sentOutOrders.length > 0 ? () => handleRecallOrder(sentOutOrders[0].id) : undefined}
       />
     </div>
   );
@@ -1121,12 +1102,15 @@ function ExpoBottomStats({
   fulfilledTickets,
   onDemoRecallLast,
   hasLastSentDemo,
+  onRecallLast,
 }: {
   stats: { open: number; ready: number; overtime: number; avgTime: number };
   fulfilledTickets: number[];
   onDemoRecallLast?: () => void;
   hasLastSentDemo?: boolean;
+  onRecallLast?: () => void;
 }) {
+  const hasRecallable = hasLastSentDemo || !!onRecallLast;
   return (
     <div className="flex items-center justify-between px-4 py-1.5 bg-surface-card border-t border-border shrink-0">
       <div className="flex items-center gap-4">
@@ -1149,14 +1133,14 @@ function ExpoBottomStats({
               onDemoRecallLast?.();
               return;
             }
-            if (fulfilledTickets.length === 0) {
-              toast('No recently fulfilled tickets.');
-            } else {
-              toast(`Last fulfilled: #${fulfilledTickets[0]}`);
+            if (onRecallLast) {
+              onRecallLast();
+              return;
             }
+            toast('No recently sent tickets.');
           }}
           className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
-            hasLastSentDemo
+            hasRecallable
               ? 'border-warning text-warning bg-warning/10 animate-pulse'
               : 'border-border text-text-secondary hover:bg-muted'
           }`}
