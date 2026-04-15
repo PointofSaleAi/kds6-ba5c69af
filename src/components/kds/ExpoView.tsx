@@ -277,7 +277,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                     {item.quantity}&times; {tp(item.name)}
                   </span>
                   {item.allergens?.map(a => (
-                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" style={{ fontSize: '9px', padding: '1px 5px' }} />
+                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
                   ))}
                   <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
                     {display.label}
@@ -311,7 +311,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   {item.quantity}&times; {tp(item.name)}
                 </span>
                 {item.allergens?.map(a => (
-                  <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" style={{ fontSize: '9px', padding: '1px 5px' }} />
+                  <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
                 ))}
                 <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
                   {display.label}
