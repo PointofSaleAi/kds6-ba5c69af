@@ -26,28 +26,11 @@ function formatTimer(seconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-function formatClockTime(date: Date): string {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-function allDone(t: ExpoTicket, holds?: Set<string>) {
-  return t.stations.every(s => s.status === 'done' || holds?.has(`${t.id}-${s.name}`));
-}
 function allItemsDone(t: ExpoTicket) {
   return t.items.every(i => i.status === 'done');
 }
 function isOvertime(t: ExpoTicket) {
   return t.timerSeconds >= 900;
-}
-function isWarning(t: ExpoTicket) {
-  return t.timerSeconds >= 600 && t.timerSeconds < 900;
-}
-
-function ticketBorderClass(t: ExpoTicket): string {
-  if (t.items.every(i => i.status === 'done')) return 'border-l-success';
-  if (isOvertime(t)) return 'border-l-destructive';
-  if (isWarning(t)) return 'border-l-border';
-  return 'border-l-border';
 }
 
 function ticketHeaderBg(t: ExpoTicket, colors: OrderTypeColors): { bg?: string; bgColor?: string; text: string } {
