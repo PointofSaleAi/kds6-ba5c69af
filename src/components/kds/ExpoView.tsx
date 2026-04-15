@@ -161,9 +161,11 @@ interface ExpoTicketCardProps {
   /** If true, the entire ticket is sent out and shown in recall mode */
   isSentOut?: boolean;
   onRecallOrder?: (id: string) => void;
+  /** Whether this ticket is in Rush state */
+  isRushed?: boolean;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const { getStatusForElapsed } = useStatusRules();
