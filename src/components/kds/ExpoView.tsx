@@ -829,6 +829,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   // Reorder by pinned IDs, product selection, then elapsed time
   const selectedProductSet = useMemo(() => new Set(selectedProducts), [selectedProducts]);
 
+  const sentOutOrderIds = useMemo(() => new Set(sentOutOrders.map(t => t.id)), [sentOutOrders]);
+
   const sortedTickets = useMemo(() => {
     const base = filter === 'ready' ? allTickets.filter(t => allItemsDone(t)) : allTickets;
 
@@ -846,21 +848,23 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       result = [...matching, ...nonMatching];
     }
 
-    if (pinnedTicketIds.length === 0) return result;
+    if (pinnedTicketIds.length > 0) {
+      const pinnedSet = new Set(pinnedTicketIds);
+      const pinned: typeof result = [];
+      const unpinned: typeof result = [];
 
-    const pinnedSet = new Set(pinnedTicketIds);
-    const pinned: typeof result = [];
-    const unpinned: typeof result = [];
+      for (const t of result) {
+        if (pinnedSet.has(t.id)) pinned.push(t);
+        else unpinned.push(t);
+      }
 
-    for (const t of result) {
-      if (pinnedSet.has(t.id)) pinned.push(t);
-      else unpinned.push(t);
+      pinned.sort((a, b) => pinnedTicketIds.indexOf(a.id) - pinnedTicketIds.indexOf(b.id));
+      result = [...pinned, ...unpinned];
     }
 
-    pinned.sort((a, b) => pinnedTicketIds.indexOf(a.id) - pinnedTicketIds.indexOf(b.id));
-
-    return [...pinned, ...unpinned];
-  }, [allTickets, filter, pinnedTicketIds, selectedProductSet]);
+    // Append recently sent-out orders at the end for recall
+    return [...result, ...sentOutOrders];
+  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, sentOutOrders]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
