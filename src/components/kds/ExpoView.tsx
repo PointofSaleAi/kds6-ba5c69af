@@ -901,7 +901,10 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     const base = filter === 'ready'
       ? allTickets.filter(t => allItemsDone(t))
       : filter === 'recalled'
-      ? []
+      ? allTickets.filter(t => {
+          const order = orders.find(o => o.id === t.id);
+          return order?.status === 'recalled';
+        })
       : allTickets;
 
     // Product filtering: tickets matching ALL selected products go to top
@@ -934,7 +937,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
     // Append recently sent-out orders at the end for recall
     return [...result, ...sentOutOrders];
-  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, sentOutOrders]);
+  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, sentOutOrders, orders]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
