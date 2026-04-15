@@ -512,12 +512,12 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             {/* VERTICAL DIVIDER */}
             <div className="hidden md:block w-px bg-border shrink-0" />
 
-            {/* RIGHT COLUMN - Live preview (actual card style) */}
+            {/* RIGHT COLUMN - Static preview (non-interactive) */}
             <div className="flex-1 flex flex-col min-w-0">
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                 Preview - KDS ticket
               </div>
-              <div className="flex-1">
+              <div className="flex-1 pointer-events-none select-none" aria-hidden="true">
                 <OrderCard order={mockOrders[0]} />
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
