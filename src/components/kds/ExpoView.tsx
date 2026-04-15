@@ -368,13 +368,19 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             const isServed = course.status === 'served';
             const isQueued = course.status === 'queued';
             const courseStatusLabel = isServed ? 'SERVED' : isQueued ? 'QUEUED' : 'ACTIVE';
+            const isExpanded = !isServed || expandedServedCourses.has(course.name);
 
             return (
               <div key={course.name}>
                 {/* Course header */}
-                <div className={`px-2 py-1 border-b border-border ${isServed ? 'bg-muted/50' : ''}`}>
+                <div
+                  className={`px-2 py-1 border-b border-border ${isServed ? 'bg-muted/50 cursor-pointer' : ''}`}
+                  onClick={isServed ? () => toggleServedCourse(course.name) : undefined}
+                >
                   <div className="flex items-center gap-1.5">
-                    {isServed && <span className="text-[10px] text-text-muted">&#9654;</span>}
+                    {isServed && (
+                      <span className="text-[10px] text-text-muted" style={{ transform: isExpanded ? 'rotate(90deg)' : undefined, transition: 'transform 150ms' }}>&#9654;</span>
+                    )}
                     <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       {course.name} &middot; {courseStatusLabel}
                     </span>
@@ -384,10 +390,12 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   </div>
                 </div>
 
-                {/* Course items */}
-                <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
-                  {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
-                </div>
+                {/* Course items (collapsible for served) */}
+                {isExpanded && (
+                  <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
+                    {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
+                  </div>
+                )}
               </div>
             );
           })}
