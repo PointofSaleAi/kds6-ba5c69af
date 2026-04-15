@@ -154,9 +154,13 @@ interface ExpoTicketCardProps {
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
   sentItemIds: Set<string>;
   onItemSend?: (ticketId: string, itemId: string) => void;
+  onItemRecall?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
   onFireNextCourse?: (ticketId: string) => void;
+  /** If true, the entire ticket is sent out and shown in recall mode */
+  isSentOut?: boolean;
+  onRecallOrder?: (id: string) => void;
 }
 
 function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse }: ExpoTicketCardProps) {
