@@ -15,6 +15,8 @@ export interface ExpoItem {
   statusLabel?: string; // e.g. "Frying...", "On grill...", "Overdue"
   /** Item was added after ticket creation (POS mid-service add) */
   isNew?: boolean;
+  /** Allergens associated with this item */
+  allergens?: { type: string; label: string }[];
 }
 
 export interface ExpoTicket {
@@ -60,9 +62,9 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Salad', status: 'done' },
     ],
     items: [
-      { id: 'e1-1', name: 'Wagyu Steak', quantity: 1, status: 'done' },
+      { id: 'e1-1', name: 'Wagyu Steak', quantity: 1, status: 'done', allergens: [{ type: 'gluten', label: 'Gluten' }, { type: 'dairy', label: 'Dairy' }] },
       { id: 'e1-2', name: 'French Fries', quantity: 2, status: 'done' },
-      { id: 'e1-3', name: 'Caesar Salad', quantity: 1, status: 'done' },
+      { id: 'e1-3', name: 'Caesar Salad', quantity: 1, status: 'done', allergens: [{ type: 'egg', label: 'Egg' }] },
     ],
   },
   {
@@ -95,9 +97,9 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Dessert', status: 'pending' },
     ],
     items: [
-      { id: 'e3-1', name: 'Grilled Salmon', quantity: 3, status: 'done' },
+      { id: 'e3-1', name: 'Grilled Salmon', quantity: 3, status: 'done', allergens: [{ type: 'fish', label: 'Fish' }, { type: 'shellfish', label: 'Shellfish' }] },
       { id: 'e3-2', name: 'Garden Salad', quantity: 3, status: 'pending', statusLabel: 'Overdue' },
-      { id: 'e3-3', name: 'Cheesecake', quantity: 3, status: 'pending' },
+      { id: 'e3-3', name: 'Cheesecake', quantity: 3, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
     ],
   },
   {
