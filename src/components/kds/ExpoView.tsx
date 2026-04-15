@@ -208,17 +208,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </span>
       </div>
 
-      {/* Allergen badges */}
-      {ticketAllergens.length > 0 && (
-        <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-b border-border/40">
-          {ticketAllergens.map(a => (
-            <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
-          ))}
-        </div>
-      )}
-
-      {/* Station chips */}
-      <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
+      {/* Station chips and allergen badges removed from expo card header */}
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
@@ -252,12 +242,21 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           if (isSent) {
             return (
               <div key={item.id} className="py-0.5">
-                <span className="text-[13px] font-medium text-text-muted line-through">
-                  {item.quantity}&times; {tp(item.name)}
-                </span>
+                <div>
+                  <span className="text-[13px] font-medium text-text-muted line-through">
+                    {item.quantity}&times; {tp(item.name)}
+                  </span>
+                </div>
                 {item.station && (
                   <div className="flex items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
                     <span className="text-[11px] text-text-muted font-normal uppercase">{item.station}</span>
+                  </div>
+                )}
+                {item.allergens && item.allergens.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
+                    {item.allergens.map(a => (
+                      <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+                    ))}
                   </div>
                 )}
               </div>
@@ -276,13 +275,10 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 }}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center flex-wrap gap-1.5">
+                  <div>
                     <span className="text-[13px] font-medium text-text-primary">
                       {item.quantity}&times; {tp(item.name)}
                     </span>
-                    {item.allergens?.map(a => (
-                      <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                    ))}
                   </div>
                   <div className="flex items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
                     {item.station && (
@@ -296,6 +292,13 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                       <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
                     )}
                   </div>
+                  {item.allergens && item.allergens.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
+                      {item.allergens.map(a => (
+                        <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
@@ -319,13 +322,10 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
               }}
             >
-              <div className="flex items-center flex-wrap gap-1.5">
+              <div>
                 <span className="text-[13px] font-medium text-text-primary">
                   {item.quantity}&times; {tp(item.name)}
                 </span>
-                {item.allergens?.map(a => (
-                  <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                ))}
               </div>
               <div className="flex items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
                 {item.station && (
@@ -339,6 +339,13 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
                 )}
               </div>
+              {item.allergens && item.allergens.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
+                  {item.allergens.map(a => (
+                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
