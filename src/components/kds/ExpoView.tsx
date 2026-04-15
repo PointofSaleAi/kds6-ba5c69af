@@ -255,14 +255,19 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           const display = getItemDisplayStatus(item.status);
           const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
 
-          // Sent items: strikethrough, muted, no badge
+          // Sent items: strikethrough, muted
           if (isSent) {
             return (
               <div key={item.id} className="py-0.5">
-                <div className="flex items-center">
+                <div className="flex items-center gap-1.5">
                   <span className="text-[13px] font-medium text-text-muted line-through">
                     {item.quantity}&times; {tp(item.name)}
                   </span>
+                  {item.station && stationColors[item.station as keyof typeof stationColors] && (
+                    <StationBadge station={item.station as any} />
+                  )}
+                  <span className="text-text-muted text-[10px]">&middot;</span>
+                  <ExpoStatusIcon status="sent" />
                 </div>
               </div>
             );
@@ -272,11 +277,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             <StationBadge station={item.station as any} />
           ) : null;
 
-          const statusPill = (
-            <span className={`inline-flex items-center justify-center px-2 rounded-full text-[10px] font-medium min-h-[20px] ${display.bg} ${display.text}`}>
-              {display.label}
-            </span>
-          );
+          const statusIcon = <ExpoStatusIcon status={item.status} />;
 
           const allergenRow = item.allergens && item.allergens.length > 0 ? (
             <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
@@ -304,7 +305,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                     </span>
                     {stationChip}
                     <span className="text-text-muted text-[10px]">&middot;</span>
-                    {statusPill}
+                    {statusIcon}
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
@@ -336,7 +337,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 </span>
                 {stationChip}
                 <span className="text-text-muted text-[10px]">&middot;</span>
-                {statusPill}
+                {statusIcon}
               </div>
               {allergenRow}
             </div>
@@ -991,11 +992,11 @@ function ExpoBottomStats({
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <LegendDot color="bg-success" label="Ready" />
-          <LegendDot color="bg-warning" label="In progress" />
-          <LegendDot color="bg-destructive" label="Overtime" />
-          <LegendDot color="bg-text-muted" label="Queued" />
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
         </div>
         <button
           onClick={() => {
