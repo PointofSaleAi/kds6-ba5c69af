@@ -518,7 +518,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 Preview - KDS ticket
               </div>
               <div className="flex-1 pointer-events-none select-none" aria-hidden="true">
-                <OrderCard order={mockOrders[0]} />
+                <OrderCard order={previewTicket} />
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
                 {displayMode === 'dual'
