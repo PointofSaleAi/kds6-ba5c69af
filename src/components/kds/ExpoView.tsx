@@ -63,6 +63,122 @@ function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
   return <Hourglass className="w-3.5 h-3.5 text-text-muted" />;
 }
 
+/* -- Reusable item row renderer for ExpoTicketCard -- */
+
+function renderExpoItemRow(
+  item: import('@/data/mock-expo-orders').ExpoItem,
+  ticket: ExpoTicket,
+  sentItemIds: Set<string>,
+  tp: (s: string) => string,
+  isDemo: boolean | undefined,
+  onDemoItemTap: ((ticketId: string, itemId: string) => void) | undefined,
+  onItemSend: ((ticketId: string, itemId: string) => void) | undefined,
+  onItemRecall: ((ticketId: string, itemId: string) => void) | undefined,
+  acknowledgedNewItemIds: Set<string>,
+  onAcknowledgeNewItem: ((itemId: string) => void) | undefined,
+  runnerIconSrc: string,
+) {
+  const isSent = sentItemIds.has(item.id);
+  const isPrepared = item.status === 'done';
+  const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
+
+  const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
+    <StationBadge station={item.station as any} />
+  ) : null;
+  const statusIcon = <ExpoStatusIcon status={isSent ? 'sent' : item.status} />;
+  const allergenRow = item.allergens && item.allergens.length > 0 ? (
+    <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
+      {item.allergens.map(a => (
+        <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+      ))}
+    </div>
+  ) : null;
+
+  if (isSent) {
+    return (
+      <div key={item.id} className="py-0.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 min-w-0 flex-1">
+            <span className="text-[13px] font-medium text-text-muted line-through">
+              {item.quantity}&times; {tp(item.name)}
+            </span>
+            {stationChip}
+            <span className="text-text-muted text-[10px]">&middot;</span>
+            {statusIcon}
+          </div>
+          <button
+            onClick={(e) => { e.stopPropagation(); onItemRecall?.(ticket.id, item.id); }}
+            className="shrink-0 ml-1.5 flex items-center justify-center min-w-[34px] min-h-[33px]"
+            aria-label="Recall item"
+            title="Recall item"
+          >
+            <div
+              className="flex items-center justify-center rounded-full active:scale-110 transition-transform duration-150"
+              style={{ width: 'var(--kds-eye-icon)', height: 'var(--kds-eye-icon)', backgroundColor: '#FFFFFF', border: '2px solid #2980B9' }}
+            >
+              <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color="#2980B9" strokeWidth={2.5} />
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isPrepared) {
+    return (
+      <div
+        key={item.id}
+        className={`py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+        onClick={() => {
+          if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+          if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
+            <span className="text-[13px] font-medium text-text-primary">
+              {item.quantity}&times; {tp(item.name)}
+            </span>
+            {stationChip}
+            <span className="text-text-muted text-[10px]">&middot;</span>
+            {statusIcon}
+          </div>
+          <button
+            onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
+            className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
+            style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
+            aria-label="Send item"
+          >
+            <img src={runnerIconSrc} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
+          </button>
+        </div>
+        {allergenRow}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      key={item.id}
+      className={`py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+      onClick={() => {
+        if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+        if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+      }}
+    >
+      <div className="flex items-center flex-wrap gap-1.5">
+        <span className="text-[13px] font-medium text-text-primary">
+          {item.quantity}&times; {tp(item.name)}
+        </span>
+        {stationChip}
+        <span className="text-text-muted text-[10px]">&middot;</span>
+        {statusIcon}
+      </div>
+      {allergenRow}
+    </div>
+  );
+}
+
 /* -- Station Chips with state-based coloring -- */
 
 function ExpoStationChips({
