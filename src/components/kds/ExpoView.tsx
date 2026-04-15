@@ -269,8 +269,18 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
-  const hasCoursingData = !!demoTicket?.coursing || (ticket.hasCoursing && ticket.courses && ticket.courses.length > 1);
   const realCourses = !demoTicket && ticket.courses && ticket.courses.length > 1 ? ticket.courses : null;
+  const hasCoursingData = !!demoTicket?.coursing || !!realCourses;
+
+  // Track which served courses are expanded
+  const [expandedServedCourses, setExpandedServedCourses] = useState<Set<string>>(new Set());
+  const toggleServedCourse = useCallback((name: string) => {
+    setExpandedServedCourses(prev => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name); else next.add(name);
+      return next;
+    });
+  }, []);
 
   // Determine if the active course is fully done (for "Fire next course" button)
   const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
