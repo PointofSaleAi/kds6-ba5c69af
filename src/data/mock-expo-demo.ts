@@ -27,9 +27,9 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Dessert', status: 'pending' },
       ],
       items: [
-        { id: 'demo-1-1', name: 'Wagyu Steak', quantity: 2, status: 'pending', station: 'Grill', allergens: [{ type: 'gluten', label: 'Gluten' }] },
-        { id: 'demo-1-2', name: 'Caesar Salad', quantity: 1, status: 'pending', station: 'Salad', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'egg', label: 'Egg' }] },
-        { id: 'demo-1-3', name: 'Creme Brulee', quantity: 2, status: 'pending', station: 'Dessert' },
+        { id: 'demo-1-1', name: 'Wagyu Steak', quantity: 2, status: 'pending', allergens: [{ type: 'gluten', label: 'Gluten' }] },
+        { id: 'demo-1-2', name: 'Caesar Salad', quantity: 1, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'egg', label: 'Egg' }] },
+        { id: 'demo-1-3', name: 'Creme Brulee', quantity: 2, status: 'pending' },
       ],
     },
     // DEMO 2: Kitchen In Progress
@@ -45,9 +45,9 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Fry', status: 'pending' },
       ],
       items: [
-        { id: 'demo-2-1', name: 'Ribeye Steak', quantity: 1, status: 'firing', station: 'Grill', statusLabel: 'Since 08:30' },
-        { id: 'demo-2-2', name: 'Garlic Bread', quantity: 2, status: 'pending', station: 'Fry' },
-        { id: 'demo-2-3', name: 'Chocolate Fondant', quantity: 1, status: 'pending', station: 'Dessert' },
+        { id: 'demo-2-1', name: 'Ribeye Steak', quantity: 1, status: 'firing', statusLabel: 'Since 08:30' },
+        { id: 'demo-2-2', name: 'Garlic Bread', quantity: 2, status: 'pending' },
+        { id: 'demo-2-3', name: 'Chocolate Fondant', quantity: 1, status: 'pending' },
       ],
     },
     // DEMO 3: Partially Prepared
@@ -63,9 +63,9 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Salad', status: 'firing' },
       ],
       items: [
-        { id: 'demo-3-1', name: 'Lamb Chops', quantity: 2, status: 'done', station: 'Grill', statusLabel: 'Done 14:10', allergens: [{ type: 'sesame', label: 'Sesame' }] },
-        { id: 'demo-3-2', name: 'Garden Salad', quantity: 1, status: 'firing', station: 'Salad', statusLabel: 'Since 14:05' },
-        { id: 'demo-3-3', name: 'Tiramisu', quantity: 1, status: 'pending', station: 'Dessert', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
+        { id: 'demo-3-1', name: 'Lamb Chops', quantity: 2, status: 'done', statusLabel: 'Done 14:10', allergens: [{ type: 'sesame', label: 'Sesame' }] },
+        { id: 'demo-3-2', name: 'Garden Salad', quantity: 1, status: 'firing', statusLabel: 'Since 14:05' },
+        { id: 'demo-3-3', name: 'Tiramisu', quantity: 1, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
       ],
     },
     // DEMO 4: Ready to Send Out
@@ -82,9 +82,9 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Bar', status: 'done' },
       ],
       items: [
-        { id: 'demo-4-1', name: 'Beef Wellington', quantity: 1, status: 'done', station: 'Grill', statusLabel: 'Done 17:55' },
-        { id: 'demo-4-2', name: 'Greek Salad', quantity: 2, status: 'done', station: 'Salad', statusLabel: 'Done 17:58' },
-        { id: 'demo-4-3', name: 'Sparkling Water', quantity: 2, status: 'done', station: 'Bar', statusLabel: 'Done 17:50' },
+        { id: 'demo-4-1', name: 'Beef Wellington', quantity: 1, status: 'done', statusLabel: 'Done 17:55' },
+        { id: 'demo-4-2', name: 'Greek Salad', quantity: 2, status: 'done', statusLabel: 'Done 17:58' },
+        { id: 'demo-4-3', name: 'Sparkling Water', quantity: 2, status: 'done', statusLabel: 'Done 17:50' },
       ],
     },
     // DEMO 5: Overtime / Urgent
@@ -99,8 +99,8 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Grill', status: 'firing' },
       ],
       items: [
-        { id: 'demo-5-1', name: 'Margherita Pizza', quantity: 3, status: 'firing', station: 'Grill', statusLabel: 'Since 20:10' },
-        { id: 'demo-5-2', name: 'Garlic Knots', quantity: 2, status: 'done', station: 'Grill', statusLabel: 'Done 22:00' },
+        { id: 'demo-5-1', name: 'Margherita Pizza', quantity: 3, status: 'firing', statusLabel: 'Since 20:10' },
+        { id: 'demo-5-2', name: 'Garlic Knots', quantity: 2, status: 'done', statusLabel: 'Done 22:00' },
       ],
     },
     // DEMO 6: Coursed Table Order
@@ -117,8 +117,8 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Dessert', status: 'pending' },
       ],
       items: [
-        { id: 'demo-6-1', name: 'Osso Buco', quantity: 2, status: 'firing', station: 'Grill', statusLabel: 'Since 21:30' },
-        { id: 'demo-6-2', name: 'Grilled Sea Bass', quantity: 1, status: 'done', station: 'Grill', statusLabel: 'Done 21:55' },
+        { id: 'demo-6-1', name: 'Osso Buco', quantity: 2, status: 'firing', statusLabel: 'Since 21:30' },
+        { id: 'demo-6-2', name: 'Grilled Sea Bass', quantity: 1, status: 'done', statusLabel: 'Done 21:55' },
       ],
       coursing: {
         served: { course: 'APPETIZER', doneAt: '19:45', items: [{ name: 'Bruschetta', quantity: 2 }] },

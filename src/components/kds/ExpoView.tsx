@@ -208,7 +208,17 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </span>
       </div>
 
-      {/* Station chips and allergen badges removed from expo card header */}
+      {/* Allergen badges */}
+      {ticketAllergens.length > 0 && (
+        <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-b border-border/40">
+          {ticketAllergens.map(a => (
+            <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
+          ))}
+        </div>
+      )}
+
+      {/* Station chips */}
+      <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
@@ -241,24 +251,12 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           // Sent items: strikethrough, muted, no badge
           if (isSent) {
             return (
-              <div key={item.id} className="py-0.5">
-                <div>
+              <div key={item.id} className="flex items-center py-0.5">
+                <div className="flex-1 min-w-0">
                   <span className="text-[13px] font-medium text-text-muted line-through">
                     {item.quantity}&times; {tp(item.name)}
                   </span>
                 </div>
-                {item.station && (
-                  <div className="flex items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
-                    <span className="text-[11px] text-text-muted font-normal uppercase">{item.station}</span>
-                  </div>
-                )}
-                {item.allergens && item.allergens.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
-                    {item.allergens.map(a => (
-                      <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                    ))}
-                  </div>
-                )}
               </div>
             );
           }
@@ -268,36 +266,24 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             return (
               <div
                 key={item.id}
-                className={`flex items-start justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
                 onClick={() => {
                   if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
                   if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
                 }}
               >
-                <div className="flex-1 min-w-0">
-                  <div>
-                    <span className="text-[13px] font-medium text-text-primary">
-                      {item.quantity}&times; {tp(item.name)}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
-                    {item.station && (
-                      <span className="text-[11px] text-text-secondary font-normal uppercase">{item.station}</span>
-                    )}
-                    {item.station && <span className="text-[11px] text-text-muted">&middot;</span>}
-                    <span className={`inline-flex items-center justify-center px-2 rounded-full text-[10px] font-medium min-h-[18px] ${display.bg} ${display.text}`}>
-                      {display.label}
-                    </span>
-                    {item.statusLabel && (
-                      <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
-                    )}
-                  </div>
-                  {item.allergens && item.allergens.length > 0 && (
-                    <div className="flex flex-wrap items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
-                      {item.allergens.map(a => (
-                        <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                      ))}
-                    </div>
+                <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
+                  <span className="text-[13px] font-medium text-text-primary">
+                    {item.quantity}&times; {tp(item.name)}
+                  </span>
+                  {item.allergens?.map(a => (
+                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+                  ))}
+                  <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
+                    {display.label}
+                  </span>
+                  {item.statusLabel && (
+                    <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
                   )}
                 </div>
                 <button
@@ -316,36 +302,26 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           return (
             <div
               key={item.id}
-              className={`py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
               onClick={() => {
                 if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
                 if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
               }}
             >
-              <div>
+              <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
                 <span className="text-[13px] font-medium text-text-primary">
                   {item.quantity}&times; {tp(item.name)}
                 </span>
-              </div>
-              <div className="flex items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
-                {item.station && (
-                  <span className="text-[11px] text-text-secondary font-normal uppercase">{item.station}</span>
-                )}
-                {item.station && <span className="text-[11px] text-text-muted">&middot;</span>}
-                <span className={`inline-flex items-center justify-center px-2 rounded-full text-[10px] font-medium min-h-[18px] ${display.bg} ${display.text}`}>
+                {item.allergens?.map(a => (
+                  <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+                ))}
+                <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
                   {display.label}
                 </span>
                 {item.statusLabel && (
                   <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
                 )}
               </div>
-              {item.allergens && item.allergens.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1 mt-0.5" style={{ paddingLeft: '20px' }}>
-                  {item.allergens.map(a => (
-                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                  ))}
-                </div>
-              )}
             </div>
           );
         })}
@@ -929,7 +905,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
             </div>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             <AnimatePresence mode="popLayout">
               {sortedTickets.map(ticket => (
                 <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ layout: { duration: 0.2, ease: 'easeInOut' } }}>
