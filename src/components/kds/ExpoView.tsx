@@ -619,25 +619,10 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     setSentItemIds(prev => {
       const next = new Set(prev);
       next.add(itemId);
-      // Check if all items in this ticket are now sent → auto send out
-      const ticket = [...rawTickets, ...demoTickets].find(t => t.id === ticketId);
-      if (ticket) {
-        const allSent = ticket.items.every(i => i.id === itemId || next.has(i.id));
-        if (allSent) {
-          // Schedule auto send-out after state update
-          setTimeout(() => {
-            if (ticketId.startsWith('demo-')) {
-              handleDemoSendOut(ticketId);
-            } else {
-              handleSendOut(ticketId);
-            }
-          }, 0);
-        }
-      }
       return next;
     });
     toast.success('Item sent');
-  }, [rawTickets, demoTickets, handleDemoSendOut, handleSendOut]);
+  }, []);
 
   const handleItemRecall = useCallback((ticketId: string, itemId: string) => {
     setSentItemIds(prev => {
