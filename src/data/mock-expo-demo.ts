@@ -27,8 +27,8 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Dessert', status: 'pending' },
       ],
       items: [
-        { id: 'demo-1-1', name: 'Wagyu Steak', quantity: 2, status: 'pending' },
-        { id: 'demo-1-2', name: 'Caesar Salad', quantity: 1, status: 'pending' },
+        { id: 'demo-1-1', name: 'Wagyu Steak', quantity: 2, status: 'pending', allergens: [{ type: 'gluten', label: 'Gluten' }] },
+        { id: 'demo-1-2', name: 'Caesar Salad', quantity: 1, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'egg', label: 'Egg' }] },
         { id: 'demo-1-3', name: 'Creme Brulee', quantity: 2, status: 'pending' },
       ],
     },
@@ -63,9 +63,9 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Salad', status: 'firing' },
       ],
       items: [
-        { id: 'demo-3-1', name: 'Lamb Chops', quantity: 2, status: 'done', statusLabel: 'Done 14:10' },
+        { id: 'demo-3-1', name: 'Lamb Chops', quantity: 2, status: 'done', statusLabel: 'Done 14:10', allergens: [{ type: 'sesame', label: 'Sesame' }] },
         { id: 'demo-3-2', name: 'Garden Salad', quantity: 1, status: 'firing', statusLabel: 'Since 14:05' },
-        { id: 'demo-3-3', name: 'Tiramisu', quantity: 1, status: 'pending' },
+        { id: 'demo-3-3', name: 'Tiramisu', quantity: 1, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
       ],
     },
     // DEMO 4: Ready to Send Out
