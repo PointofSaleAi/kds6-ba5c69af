@@ -465,9 +465,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             <button
               onClick={() => onRush?.(ticket.id)}
               className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
-                overtime
-                  ? 'border-destructive bg-destructive/10 text-destructive'
-                  : 'border-destructive text-destructive hover:bg-destructive/10'
+                isRushed
+                  ? 'bg-destructive text-white border-destructive'
+                  : overtime
+                    ? 'border-destructive bg-destructive/10 text-destructive'
+                    : 'border-destructive text-destructive hover:bg-destructive/10'
               }`}
             >
               Rush
