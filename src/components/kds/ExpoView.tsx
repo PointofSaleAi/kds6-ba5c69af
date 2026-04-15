@@ -2,6 +2,8 @@ import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
+import { useStatusRules } from '@/hooks/use-status-rules';
+import { AllergenBadge } from './AllergenBadge';
 import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
