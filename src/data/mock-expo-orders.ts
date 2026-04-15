@@ -13,6 +13,8 @@ export interface ExpoItem {
   quantity: number;
   status: ExpoItemStatus;
   statusLabel?: string; // e.g. "Frying...", "On grill...", "Overdue"
+  /** Station this item is assigned to */
+  station?: string;
   /** Item was added after ticket creation (POS mid-service add) */
   isNew?: boolean;
   /** Allergens associated with this item */
@@ -62,9 +64,9 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Salad', status: 'done' },
     ],
     items: [
-      { id: 'e1-1', name: 'Wagyu Steak', quantity: 1, status: 'done', allergens: [{ type: 'gluten', label: 'Gluten' }, { type: 'dairy', label: 'Dairy' }] },
-      { id: 'e1-2', name: 'French Fries', quantity: 2, status: 'done' },
-      { id: 'e1-3', name: 'Caesar Salad', quantity: 1, status: 'done', allergens: [{ type: 'egg', label: 'Egg' }] },
+      { id: 'e1-1', name: 'Wagyu Steak', quantity: 1, status: 'done', station: 'Grill', allergens: [{ type: 'gluten', label: 'Gluten' }, { type: 'dairy', label: 'Dairy' }] },
+      { id: 'e1-2', name: 'French Fries', quantity: 2, status: 'done', station: 'Fry' },
+      { id: 'e1-3', name: 'Caesar Salad', quantity: 1, status: 'done', station: 'Salad', allergens: [{ type: 'egg', label: 'Egg' }] },
     ],
   },
   {
@@ -80,9 +82,9 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Dessert', status: 'pending' },
     ],
     items: [
-      { id: 'e2-1', name: 'Beef Burger', quantity: 2, status: 'done' },
-      { id: 'e2-2', name: 'Onion Rings', quantity: 2, status: 'firing', statusLabel: 'Frying...' },
-      { id: 'e2-3', name: 'Creme Brulee', quantity: 1, status: 'pending' },
+      { id: 'e2-1', name: 'Beef Burger', quantity: 2, status: 'done', station: 'Grill' },
+      { id: 'e2-2', name: 'Onion Rings', quantity: 2, status: 'firing', station: 'Fry', statusLabel: 'Frying...' },
+      { id: 'e2-3', name: 'Creme Brulee', quantity: 1, status: 'pending', station: 'Dessert' },
     ],
   },
   {
@@ -97,9 +99,9 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Dessert', status: 'pending' },
     ],
     items: [
-      { id: 'e3-1', name: 'Grilled Salmon', quantity: 3, status: 'done', allergens: [{ type: 'fish', label: 'Fish' }, { type: 'shellfish', label: 'Shellfish' }] },
-      { id: 'e3-2', name: 'Garden Salad', quantity: 3, status: 'pending', statusLabel: 'Overdue' },
-      { id: 'e3-3', name: 'Cheesecake', quantity: 3, status: 'pending', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
+      { id: 'e3-1', name: 'Grilled Salmon', quantity: 3, status: 'done', station: 'Grill', allergens: [{ type: 'fish', label: 'Fish' }, { type: 'shellfish', label: 'Shellfish' }] },
+      { id: 'e3-2', name: 'Garden Salad', quantity: 3, status: 'pending', station: 'Salad', statusLabel: 'Overdue' },
+      { id: 'e3-3', name: 'Cheesecake', quantity: 3, status: 'pending', station: 'Dessert', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
     ],
   },
   {
@@ -114,8 +116,8 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Fry', status: 'pending' },
     ],
     items: [
-      { id: 'e4-1', name: 'Chicken Parmigiana', quantity: 1, status: 'firing', statusLabel: 'On grill...' },
-      { id: 'e4-2', name: 'Garlic Bread', quantity: 1, status: 'pending' },
+      { id: 'e4-1', name: 'Chicken Parmigiana', quantity: 1, status: 'firing', station: 'Grill', statusLabel: 'On grill...' },
+      { id: 'e4-2', name: 'Garlic Bread', quantity: 1, status: 'pending', station: 'Fry' },
     ],
   },
   {
@@ -129,8 +131,8 @@ export const mockExpoTickets: ExpoTicket[] = [
       { name: 'Salad', status: 'firing' },
     ],
     items: [
-      { id: 'e5-1', name: 'Spring Rolls', quantity: 2, status: 'done' },
-      { id: 'e5-2', name: 'Caprese Salad', quantity: 1, status: 'firing', statusLabel: 'Plating...' },
+      { id: 'e5-1', name: 'Spring Rolls', quantity: 2, status: 'done', station: 'Fry' },
+      { id: 'e5-2', name: 'Caprese Salad', quantity: 1, status: 'firing', station: 'Salad', statusLabel: 'Plating...' },
     ],
   },
 ];
