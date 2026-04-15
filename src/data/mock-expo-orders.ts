@@ -21,6 +21,17 @@ export interface ExpoItem {
   allergens?: { type: string; label: string }[];
 }
 
+export type ExpoCourseStatus = 'served' | 'active' | 'queued';
+
+export interface ExpoCourse {
+  name: string;
+  status: ExpoCourseStatus;
+  /** Item IDs belonging to this course */
+  itemIds: string[];
+  /** Label for queued courses, e.g. "Preparing at 05:15 AM" */
+  statusLabel?: string;
+}
+
 export interface ExpoTicket {
   id: string;
   orderNumber: number;
@@ -35,6 +46,8 @@ export interface ExpoTicket {
   hasCoursing?: boolean;
   /** Timestamp when the current active course was fired (for per-course timer reset) */
   activeCourseFiredAt?: Date;
+  /** Course grouping for multi-course orders */
+  courses?: ExpoCourse[];
 }
 
 export interface KitchenStation {
