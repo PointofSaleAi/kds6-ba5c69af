@@ -1,34 +1,32 @@
 
 
-## Issues Found
-
-**1. Recalled tab shows all tickets**
-In `sortedTickets` (line 900-933), the `recalled` filter has no dedicated branch. When `filter === 'recalled'`, it falls through to the else of `filter === 'ready'`, which returns `allTickets` (all active tickets). Then `sentOutOrders` are appended at the end. The Recalled tab should only show sent-out orders that can be recalled, not all active tickets.
-
-**2. Demo ticket 104 (Dine In) missing courses**
-Demo tickets like #104 don't have a `courses` array on the `ExpoTicket` object. Line 272 explicitly skips courses for demo tickets (`!demoTicket && ...`). Since demo dine-in tickets should also show courses per the rule "dine-in and banquet always show courses", we need to auto-generate course data for demo tickets that lack it.
+## Problem
+The "Recalled" tab in Expo view only shows locally tracked sent-out orders (tickets sent out from Expo that can be recalled back). It does not show orders recalled from History, which have `status: 'recalled'` in the order store. The user wants the Recalled tab to show ALL recalled orders/items from any source.
 
 ## Plan
 
-### Fix 1: Recalled filter logic
-In `sortedTickets` memo, add a branch for `filter === 'recalled'` that sets `base` to an empty array (no active tickets), so only the appended `sentOutOrders` are shown.
+### Update Recalled filter in `sortedTickets` memo (`ExpoView.tsx`)
+Currently the recalled filter sets `base = []` and only appends `sentOutOrders`. Change it to:
+1. Include orders with `status === 'recalled'` from the active tickets in the base list
+2. Continue appending `sentOutOrders` (sent-out tickets awaiting recall-back) at the end
 
+The logic change in the `sortedTickets` memo:
 ```
 const base = filter === 'ready'
   ? allTickets.filter(t => allItemsDone(t))
   : filter === 'recalled'
-  ? []
+  ? allTickets.filter(t => {
+      const order = orders.find(o => o.id === t.id);
+      return order?.status === 'recalled';
+    })
   : allTickets;
 ```
 
-### Fix 2: Auto-generate courses for demo dine-in tickets
-In the `ExpoTicketCard` component, update the `realCourses` derivation to also generate a single course for demo dine-in/banquet tickets that have no `coursing` data. Group all items into one "Main Course" (or derive from station grouping). This gives demo tickets the same course section UI as real orders.
-
-Alternatively, add `courses` data directly to the demo ticket definitions in `mock-expo-demo.ts` for tickets 101, 102, 103, 104, 105.
-
-**Recommended approach**: Add explicit `courses` arrays to all dine-in/banquet demo tickets in `mock-expo-demo.ts`. This is cleaner than runtime derivation and gives full control over course names and status.
+This ensures:
+- "All tickets" tab: shows everything (unchanged)
+- "Ready only" tab: shows tickets with all items done (unchanged)
+- "Recalled" tab: shows orders recalled from history (status `recalled`) plus sent-out orders available for recall-back
 
 ### Files to edit
-- `src/components/kds/ExpoView.tsx` - Fix recalled filter logic
-- `src/data/mock-expo-demo.ts` - Add `courses` arrays to dine-in/banquet demo tickets (101, 103, 104, 105)
+- `src/components/kds/ExpoView.tsx` - Update recalled filter branch in `sortedTickets` memo
 
