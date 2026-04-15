@@ -159,11 +159,12 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const allItemsSent = ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id));
   const overtime = isOvertime(ticket);
   const headerStyle = ticketHeaderBg(ticket, orderTypeColors);
-  const hasCoursingData = !!demoTicket?.coursing || ticket.hasCoursing;
+  const hasCoursingData = !!demoTicket?.coursing || (ticket.hasCoursing && ticket.courses && ticket.courses.length > 1);
+  const realCourses = !demoTicket && ticket.courses && ticket.courses.length > 1 ? ticket.courses : null;
 
   // Determine if the active course is fully done (for "Fire next course" button)
   const activeCourseAllDone = hasCoursingData && ticket.items.every(i => i.status === 'done');
-  const hasPendingCourse = !!demoTicket?.coursing?.pending;
+  const hasPendingCourse = !!demoTicket?.coursing?.pending || (realCourses?.some(c => c.status === 'queued') ?? false);
 
   // Urgency color from status rules
   const urgencyBgColor = getUrgencyBg(ticket.timerSeconds, getStatusForElapsed);
