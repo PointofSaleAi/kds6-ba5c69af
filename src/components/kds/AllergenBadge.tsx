@@ -21,22 +21,24 @@ function getColor(type: string) {
 
 interface AllergenBadgeProps {
   allergen: Allergen;
-  /** 'order' = prominent warning at top; 'item' = subtle inline */
-  variant?: 'order' | 'item';
+  /** 'order' = prominent warning at top; 'item' = subtle inline; 'expo-item' = smaller inline for expo */
+  variant?: 'order' | 'item' | 'expo-item';
 }
 
 export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps) {
   const { ta } = useLanguage();
   const color = getColor(allergen.type);
 
+  const sizeStyle = variant === 'order'
+    ? { fontSize: 'var(--kds-allergen-font)', padding: 'var(--kds-allergen-py) var(--kds-allergen-px)' }
+    : variant === 'expo-item'
+      ? { fontSize: '9px', padding: '1px 5px' }
+      : { fontSize: '10px', padding: '1px 5px' };
+
   return (
     <span
       className={`inline-flex items-center rounded border font-bold uppercase ${color.bg} ${color.border} ${color.text}`}
-      style={{
-        fontSize: variant === 'order' ? 'var(--kds-allergen-font)' : '10px',
-        padding: variant === 'order' ? 'var(--kds-allergen-py) var(--kds-allergen-px)' : '1px 5px',
-        lineHeight: 1.3,
-      }}
+      style={{ ...sizeStyle, lineHeight: 1.3 }}
     >
       {ta(allergen.label)}
     </span>
