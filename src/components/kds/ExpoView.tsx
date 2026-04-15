@@ -901,7 +901,10 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     const base = filter === 'ready'
       ? allTickets.filter(t => allItemsDone(t))
       : filter === 'recalled'
-      ? []
+      ? allTickets.filter(t => {
+          const order = orders.find(o => o.id === t.id);
+          return order?.status === 'recalled';
+        })
       : allTickets;
 
     // Product filtering: tickets matching ALL selected products go to top
