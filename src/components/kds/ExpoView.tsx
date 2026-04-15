@@ -337,7 +337,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {realCourses ? (
         <>
           {realCourses.map(course => {
-            const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id));
+            const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id) && !sentItemIds.has(i.id));
             if (courseItems.length === 0) return null;
             const isServed = course.status === 'served';
             const isQueued = course.status === 'queued';
