@@ -937,7 +937,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
     // Append recently sent-out orders at the end for recall
     return [...result, ...sentOutOrders];
-  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, sentOutOrders]);
+  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, sentOutOrders, orders]);
 
   const stats = useMemo(() => {
     const open = tickets.length;
