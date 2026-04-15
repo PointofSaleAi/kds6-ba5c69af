@@ -582,7 +582,7 @@ interface ExpoViewProps {
 }
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
-  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus } = useOrderStore();
+  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
   const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
@@ -821,8 +821,12 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const handleRush = useCallback((id: string) => {
     const ticket = [...tickets, ...demoTickets].find(t => t.id === id);
     if (!ticket) return;
+    // Set rush state in shared store (real orders only)
+    if (!id.startsWith('demo-')) {
+      rushOrder(id);
+    }
     toast(`Rush alert sent for Ticket #${ticket.orderNumber}`);
-  }, [tickets, demoTickets]);
+  }, [tickets, demoTickets, rushOrder]);
 
   // Combine real + demo tickets
   const visibleDemoTickets = useMemo(() => {
