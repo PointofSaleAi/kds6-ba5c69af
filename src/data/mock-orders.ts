@@ -241,6 +241,7 @@ export const mockOrders: Order[] = [
             quantity: 1,
             modifiers: [],
             allergens: [],
+            station: 'Dessert',
           },
         ],
       },
@@ -272,6 +273,7 @@ export const mockOrders: Order[] = [
             quantity: 6,
             modifiers: [{ text: 'Mignonette', type: 'extra' }],
             allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }],
+            station: 'Grill',
           },
         ],
       },
@@ -290,6 +292,7 @@ export const mockOrders: Order[] = [
               { text: '+ Truffle Butter', type: 'extra' },
             ],
             allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
+            station: 'Grill',
           },
           {
             id: 'i-011',
@@ -298,6 +301,7 @@ export const mockOrders: Order[] = [
             quantity: 1,
             modifiers: [{ text: '+ Garlic Butter', type: 'extra' }],
             allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }],
+            station: 'Grill',
           },
         ],
       },
@@ -314,6 +318,7 @@ export const mockOrders: Order[] = [
             quantity: 2,
             modifiers: [],
             allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }],
+            station: 'Dessert',
           },
         ],
       },
@@ -346,6 +351,7 @@ export const mockOrders: Order[] = [
             modifiers: [],
             allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }],
             isCompleted: true,
+            station: 'Fry',
           },
         ],
       },
@@ -362,6 +368,7 @@ export const mockOrders: Order[] = [
             modifiers: [{ text: '+ Extra Sauce', type: 'extra' }],
             notes: 'Cut into smaller portions for sharing',
             allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
+            station: 'Grill',
           },
           {
             id: 'i-014',
@@ -370,6 +377,7 @@ export const mockOrders: Order[] = [
             quantity: 4,
             modifiers: [{ text: 'No Parmesan', type: 'remove' }],
             allergens: [],
+            station: 'Salad',
           },
         ],
       },
@@ -390,6 +398,7 @@ export const mockOrders: Order[] = [
               { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' },
               { type: 'egg', label: 'EGG', icon: '\u{1F95A}' },
             ],
+            station: 'Dessert',
           },
         ],
       },
@@ -414,7 +423,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '30:00 ago',
         items: [
           { id: 'i-015b', name: 'Garlic Bread',
-            category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true },
+            category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, station: 'Fry' },
         ],
       },
       {
@@ -424,9 +433,9 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '20:00 ago',
         items: [
           { id: 'i-016', name: 'Fish and Chips',
-            category: 'Seafood', quantity: 2, modifiers: [{ text: 'Mushy Peas', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true },
+            category: 'Seafood', quantity: 2, modifiers: [{ text: 'Mushy Peas', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, station: 'Fry' },
           { id: 'i-017', name: 'Onion Rings',
-            category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, isCancelled: true },
+            category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, isCancelled: true, station: 'Fry' },
         ],
       },
       {
@@ -436,7 +445,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '10:00 ago',
         items: [
           { id: 'i-017b', name: 'Apple Pie',
-            category: 'Desserts', quantity: 1, modifiers: [{ text: '+ Vanilla Ice Cream', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], isCompleted: true },
+            category: 'Desserts', quantity: 1, modifiers: [{ text: '+ Vanilla Ice Cream', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], isCompleted: true, station: 'Dessert' },
         ],
       },
     ],
@@ -461,7 +470,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '1:30 ago',
         items: [
           { id: 'i-017c', name: 'Soup of the Day',
-            category: 'Soups', quantity: 1, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Soups', quantity: 1, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Salad' },
         ],
       },
       {
@@ -470,7 +479,7 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '1:30',
         items: [
           { id: 'i-018', name: 'Club Sandwich',
-            category: 'Sandwiches', quantity: 1, modifiers: [{ text: 'No Mayo', type: 'remove' }], notes: 'Toast the bread lightly', allergens: [] },
+            category: 'Sandwiches', quantity: 1, modifiers: [{ text: 'No Mayo', type: 'remove' }], notes: 'Toast the bread lightly', allergens: [], station: 'Grill' },
         ],
       },
       {
@@ -480,7 +489,7 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~8 min',
         items: [
           { id: 'i-018b', name: 'Brownie',
-            category: 'Desserts', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Desserts', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Dessert' },
         ],
       },
     ],
@@ -504,9 +513,9 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '9:00 ago',
         items: [
           { id: 'i-019', name: 'Soup of the Day',
-            category: 'Soups', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Soups', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Salad' },
           { id: 'i-020', name: 'Garlic Bread',
-            category: 'Sides', quantity: 1, modifiers: [{ text: '+ Extra Garlic Butter', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Sides', quantity: 1, modifiers: [{ text: '+ Extra Garlic Butter', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Fry' },
         ],
       },
       {
@@ -515,15 +524,15 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '9:00',
         items: [
           { id: 'i-021', name: 'Lamb Chops',
-            category: 'Meat', quantity: 2, modifiers: [{ text: 'Medium', type: 'neutral' }, { text: '+ Mint Sauce', type: 'extra' }], allergens: [] },
+            category: 'Meat', quantity: 2, modifiers: [{ text: 'Medium', type: 'neutral' }, { text: '+ Mint Sauce', type: 'extra' }], allergens: [], station: 'Grill' },
           { id: 'i-022', name: 'Mushroom Pasta',
-            category: 'Pasta', quantity: 1, modifiers: [{ text: 'Gluten Free Pasta', type: 'neutral' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
+            category: 'Pasta', quantity: 1, modifiers: [{ text: 'Gluten Free Pasta', type: 'neutral' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }], station: 'Grill' },
           { id: 'i-022b', name: 'Beef Wellington',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Medium Rare', type: 'neutral' }, { text: '+ Red Wine Jus', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Medium Rare', type: 'neutral' }, { text: '+ Red Wine Jus', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
           { id: 'i-022c', name: 'Grilled Halloumi',
-            category: 'Vegetarian', quantity: 2, modifiers: [{ text: '+ Pomegranate', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Vegetarian', quantity: 2, modifiers: [{ text: '+ Pomegranate', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Salad' },
           { id: 'i-022d', name: 'Pork Belly',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: '+ Apple Compote', type: 'extra' }], allergens: [] },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: '+ Apple Compote', type: 'extra' }], allergens: [], station: 'Grill' },
         ],
       },
       {
@@ -533,7 +542,7 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~6 min',
         items: [
           { id: 'i-023', name: 'Creme Brulee',
-            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
+            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }], station: 'Dessert' },
         ],
       },
     ],
@@ -557,7 +566,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '1:00 ago',
         items: [
           { id: 'i-023b', name: 'Garlic Knots',
-            category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Fry' },
         ],
       },
       {
@@ -566,7 +575,7 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '1:00',
         items: [
           { id: 'i-024', name: 'Margherita Pizza',
-            category: 'Pizza', quantity: 1, modifiers: [{ text: '+ Extra Mozzarella', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Pizza', quantity: 1, modifiers: [{ text: '+ Extra Mozzarella', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Grill' },
         ],
       },
       {
@@ -576,7 +585,7 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~18 min',
         items: [
           { id: 'i-025', name: 'Gelato',
-            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Dessert' },
         ],
       },
     ],
@@ -601,9 +610,9 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '6:00 ago',
         items: [
           { id: 'i-026', name: 'Calamari',
-            category: 'Seafood', quantity: 1, modifiers: [{ text: '+ Marinara', type: 'extra' }], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Seafood', quantity: 1, modifiers: [{ text: '+ Marinara', type: 'extra' }], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Fry' },
           { id: 'i-027', name: 'Caprese Salad',
-            category: 'Salads', quantity: 1, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Salads', quantity: 1, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Salad' },
         ],
       },
       {
@@ -612,11 +621,11 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '6:00',
         items: [
           { id: 'i-028', name: 'Ribeye Steak',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Rare', type: 'neutral' }, { text: '+ Peppercorn Sauce', type: 'extra' }, { text: 'No Asparagus', type: 'remove' }], allergens: [] },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Rare', type: 'neutral' }, { text: '+ Peppercorn Sauce', type: 'extra' }, { text: 'No Asparagus', type: 'remove' }], allergens: [], station: 'Grill' },
           { id: 'i-029', name: 'Sea Bass',
-            category: 'Seafood', quantity: 1, modifiers: [{ text: 'Pan Seared', type: 'neutral' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }] },
+            category: 'Seafood', quantity: 1, modifiers: [{ text: 'Pan Seared', type: 'neutral' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-030', name: 'Chicken Caesar Wrap',
-            category: 'Sandwiches', quantity: 1, modifiers: [{ text: '+ Avocado', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Sandwiches', quantity: 1, modifiers: [{ text: '+ Avocado', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
         ],
       },
       {
@@ -626,7 +635,7 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~10 min',
         items: [
           { id: 'i-031', name: 'Chocolate Lava Cake',
-            category: 'Desserts', quantity: 1, modifiers: [{ text: '+ Vanilla Ice Cream', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
+            category: 'Desserts', quantity: 1, modifiers: [{ text: '+ Vanilla Ice Cream', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }], station: 'Dessert' },
         ],
       },
     ],
@@ -650,7 +659,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '0:45 ago',
         items: [
           { id: 'i-031b', name: 'Nachos',
-            category: 'Appetizers', quantity: 1, modifiers: [{ text: '+ Jalapenos', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Appetizers', quantity: 1, modifiers: [{ text: '+ Jalapenos', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Fry' },
         ],
       },
       {
@@ -659,9 +668,9 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '0:45',
         items: [
           { id: 'i-032', name: 'Beef Burger',
-            category: 'Meat', quantity: 2, modifiers: [{ text: 'Well Done', type: 'neutral' }, { text: '+ Bacon', type: 'extra' }, { text: 'No Pickles', type: 'remove' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'sesame', label: 'SESAME', icon: '\u{1FAD8}' }] },
+            category: 'Meat', quantity: 2, modifiers: [{ text: 'Well Done', type: 'neutral' }, { text: '+ Bacon', type: 'extra' }, { text: 'No Pickles', type: 'remove' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'sesame', label: 'SESAME', icon: '\u{1FAD8}' }], station: 'Grill' },
           { id: 'i-033', name: 'Fries',
-            category: 'Sides', quantity: 1, modifiers: [{ text: 'Seasoned', type: 'neutral' }], allergens: [] },
+            category: 'Sides', quantity: 1, modifiers: [{ text: 'Seasoned', type: 'neutral' }], allergens: [], station: 'Fry' },
         ],
       },
       {
@@ -671,7 +680,7 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~8 min',
         items: [
           { id: 'i-033b', name: 'Milkshake',
-            category: 'Beverages', quantity: 2, modifiers: [{ text: 'Chocolate', type: 'neutral' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Beverages', quantity: 2, modifiers: [{ text: 'Chocolate', type: 'neutral' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Bar' },
         ],
       },
     ],
@@ -695,7 +704,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '4:20 ago',
         items: [
           { id: 'i-034', name: 'Garden Salad',
-            category: 'Salads', quantity: 5, modifiers: [{ text: 'Dressing on Side', type: 'neutral' }], allergens: [] },
+            category: 'Salads', quantity: 5, modifiers: [{ text: 'Dressing on Side', type: 'neutral' }], allergens: [], station: 'Salad' },
         ],
       },
       {
@@ -704,11 +713,11 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '6:42',
         items: [
           { id: 'i-035', name: 'Roasted Chicken',
-            category: 'Poultry', quantity: 3, modifiers: [{ id: 'mod-rosemary-jus-chicken', text: '+ Rosemary Jus', type: 'extra', isServable: true }], allergens: [] },
+            category: 'Poultry', quantity: 3, modifiers: [{ id: 'mod-rosemary-jus-chicken', text: '+ Rosemary Jus', type: 'extra', isServable: true }], allergens: [], station: 'Grill' },
           { id: 'i-036', name: 'Grilled Swordfish',
-            category: 'Seafood', quantity: 2, modifiers: [{ text: 'No Capers', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }] },
+            category: 'Seafood', quantity: 2, modifiers: [{ text: 'No Capers', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-037', name: 'Eggplant Parmesan',
-            category: 'Vegetarian', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Vegetarian', quantity: 2, modifiers: [], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Salad' },
         ],
       },
       {
@@ -718,7 +727,7 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~8 min',
         items: [
           { id: 'i-038', name: 'Panna Cotta',
-            category: 'Desserts', quantity: 5, modifiers: [{ id: 'mod-berry-coulis', text: '+ Berry Coulis', type: 'extra', isServable: true }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Desserts', quantity: 5, modifiers: [{ id: 'mod-berry-coulis', text: '+ Berry Coulis', type: 'extra', isServable: true }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Dessert' },
         ],
       },
     ],
@@ -743,13 +752,13 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '15:00 ago',
         items: [
           { id: 'i-100', name: 'Bruschetta',
-            category: 'Appetizers', quantity: 2, modifiers: [{ text: '+ Balsamic Glaze', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Appetizers', quantity: 2, modifiers: [{ text: '+ Balsamic Glaze', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Fry' },
           { id: 'i-101', name: 'Prawn Cocktail',
-            category: 'Seafood', quantity: 2, modifiers: [], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }] },
+            category: 'Seafood', quantity: 2, modifiers: [], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-102', name: 'Beef Carpaccio',
-            category: 'Meat', quantity: 1, modifiers: [{ text: '+ Truffle Oil', type: 'extra' }, { text: 'No Capers', type: 'remove' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
+            category: 'Meat', quantity: 1, modifiers: [{ text: '+ Truffle Oil', type: 'extra' }, { text: 'No Capers', type: 'remove' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }], station: 'Grill' },
           { id: 'i-103', name: 'Arancini',
-            category: 'Appetizers', quantity: 3, modifiers: [{ text: '+ Aioli', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Appetizers', quantity: 3, modifiers: [{ text: '+ Aioli', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Fry' },
         ],
       },
       {
@@ -758,17 +767,17 @@ export const mockOrders: Order[] = [
         prepTimerLabel: '15:00',
         items: [
           { id: 'i-104', name: 'Osso Buco',
-            category: 'Meat', quantity: 2, modifiers: [{ id: 'mod-gremolata', text: '+ Gremolata', type: 'extra', isServable: true }], allergens: [] },
+            category: 'Meat', quantity: 2, modifiers: [{ id: 'mod-gremolata', text: '+ Gremolata', type: 'extra', isServable: true }], allergens: [], station: 'Grill' },
           { id: 'i-105', name: 'Grilled Barramundi',
-            category: 'Seafood', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: 'No Fennel', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }] },
+            category: 'Seafood', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: 'No Fennel', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-106', name: 'Veal Scallopini',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Marsala Sauce', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Marsala Sauce', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
           { id: 'i-107', name: 'Lamb Rack',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Medium Rare', type: 'neutral' }, { id: 'mod-rosemary-jus-lamb', text: '+ Rosemary Jus', type: 'extra', isServable: true }], allergens: [] },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Medium Rare', type: 'neutral' }, { id: 'mod-rosemary-jus-lamb', text: '+ Rosemary Jus', type: 'extra', isServable: true }], allergens: [], station: 'Grill' },
           { id: 'i-108', name: 'Lobster Linguine',
-            category: 'Seafood', quantity: 2, modifiers: [{ id: 'mod-extra-lobster', text: '+ Extra Lobster', type: 'extra', isServable: true }], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }] },
+            category: 'Seafood', quantity: 2, modifiers: [{ id: 'mod-extra-lobster', text: '+ Extra Lobster', type: 'extra', isServable: true }], allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }, { type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
           { id: 'i-109', name: 'Truffle Risotto',
-            category: 'Vegetarian', quantity: 1, modifiers: [{ id: 'mod-parmesan-crisp', text: '+ Parmesan Crisp', type: 'extra', isServable: true }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Vegetarian', quantity: 1, modifiers: [{ id: 'mod-parmesan-crisp', text: '+ Parmesan Crisp', type: 'extra', isServable: true }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Salad' },
         ],
       },
       {
@@ -778,13 +787,13 @@ export const mockOrders: Order[] = [
         autoFireLabel: 'Auto-fires in ~2 min',
         items: [
           { id: 'i-110', name: 'Tiramisu',
-            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }] },
+            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }, { type: 'egg', label: 'EGG', icon: '\u{1F95A}' }], station: 'Dessert' },
           { id: 'i-111', name: 'Affogato',
-            category: 'Beverages', quantity: 2, modifiers: [{ text: '+ Frangelico', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Beverages', quantity: 2, modifiers: [{ text: '+ Frangelico', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Bar' },
           { id: 'i-112', name: 'Panna Cotta',
-            category: 'Desserts', quantity: 2, modifiers: [{ text: '+ Passion Fruit', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Desserts', quantity: 2, modifiers: [{ text: '+ Passion Fruit', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Dessert' },
           { id: 'i-113', name: 'Cannoli',
-            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }] },
+            category: 'Desserts', quantity: 2, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Dessert' },
          ],
       },
     ],
