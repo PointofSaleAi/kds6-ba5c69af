@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
+import { StationBadge, stationColors } from './StationBadge';
 import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
@@ -217,8 +218,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
-      {/* Station chips */}
-      <ExpoStationChips ticket={ticket} holdStations={holdStations} onToggleHold={onToggleHold} />
+      {/* Station chips removed from header per design update */}
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
@@ -251,8 +251,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           // Sent items: strikethrough, muted, no badge
           if (isSent) {
             return (
-              <div key={item.id} className="flex items-center py-0.5">
-                <div className="flex-1 min-w-0">
+              <div key={item.id} className="py-0.5">
+                <div className="flex items-center">
                   <span className="text-[13px] font-medium text-text-muted line-through">
                     {item.quantity}&times; {tp(item.name)}
                   </span>
@@ -261,39 +261,54 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             );
           }
 
+          const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
+            <StationBadge station={item.station as any} />
+          ) : null;
+
+          const statusPill = (
+            <span className={`inline-flex items-center justify-center px-2 rounded-full text-[10px] font-medium min-h-[20px] ${display.bg} ${display.text}`}>
+              {display.label}
+            </span>
+          );
+
+          const allergenRow = item.allergens && item.allergens.length > 0 ? (
+            <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
+              {item.allergens.map(a => (
+                <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
+              ))}
+            </div>
+          ) : null;
+
           // Prepared but not sent: bold, green left border
           if (isPrepared) {
             return (
               <div
                 key={item.id}
-                className={`flex items-center justify-between py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+                className={`py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
                 onClick={() => {
                   if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
                   if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
                 }}
               >
-                <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
-                  <span className="text-[13px] font-medium text-text-primary">
-                    {item.quantity}&times; {tp(item.name)}
-                  </span>
-                  {item.allergens?.map(a => (
-                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                  ))}
-                  <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
-                    {display.label}
-                  </span>
-                  {item.statusLabel && (
-                    <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
-                  )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
+                    <span className="text-[13px] font-medium text-text-primary">
+                      {item.quantity}&times; {tp(item.name)}
+                    </span>
+                    {stationChip}
+                    <span className="text-text-muted text-[10px]">&middot;</span>
+                    {statusPill}
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
+                    className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
+                    style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
+                    aria-label="Send item"
+                  >
+                    <img src={runnerIcon} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
+                  </button>
                 </div>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
-                  className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
-                  style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
-                  aria-label="Send item"
-                >
-                  <img src={runnerIcon} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
-                </button>
+                {allergenRow}
               </div>
             );
           }
@@ -302,26 +317,21 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           return (
             <div
               key={item.id}
-              className={`flex items-start justify-between py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+              className={`py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
               onClick={() => {
                 if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
                 if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
               }}
             >
-              <div className="flex-1 min-w-0 flex items-center flex-wrap gap-1.5">
+              <div className="flex items-center flex-wrap gap-1.5">
                 <span className="text-[13px] font-medium text-text-primary">
                   {item.quantity}&times; {tp(item.name)}
                 </span>
-                {item.allergens?.map(a => (
-                  <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-                ))}
-                <span className={`inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] ${display.bg} ${display.text}`}>
-                  {display.label}
-                </span>
-                {item.statusLabel && (
-                  <span className="text-[10px] text-text-muted">{item.statusLabel}</span>
-                )}
+                {stationChip}
+                <span className="text-text-muted text-[10px]">&middot;</span>
+                {statusPill}
               </div>
+              {allergenRow}
             </div>
           );
         })}
