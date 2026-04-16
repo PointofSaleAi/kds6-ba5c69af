@@ -12,7 +12,7 @@
 
     /* Action button colors */
     --btn-seen: 217 71% 53%;
-    --btn-in-progress: 217 33% 17%;
+    --btn-in-progress: 201 80% 24%;
     --btn-done: 143 64% 24%;
 
     /* Order type headers */
@@ -95,7 +95,7 @@
 
     /* Action button colors */
     --btn-seen: 217 71% 58%;
-    --btn-in-progress: 217 33% 22%;
+    --btn-in-progress: 201 80% 24%;
     --btn-done: 143 64% 29%;
 
     /* Order type headers - slightly brighter for dark bg contrast */
