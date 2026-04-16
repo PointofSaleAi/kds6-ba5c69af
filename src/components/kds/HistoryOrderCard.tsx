@@ -3,6 +3,7 @@ import { RotateCcw } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
