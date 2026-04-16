@@ -27,7 +27,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const isDone = isServable && modifierStatus === 'done';
 
   return (
-    <div className="flex items-center" style={{ paddingLeft: '20px', lineHeight: '1.3', paddingTop: '2px', paddingBottom: '2px', gap: '4px' }}>
+    <div className="flex items-center" style={{ paddingLeft: '20px', lineHeight: '1.3', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
       <span
         className={`min-w-0 ${styles[modifier.type]} ${isDone ? 'line-through opacity-50' : ''}`}
         style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.3' }}

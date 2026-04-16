@@ -15,8 +15,8 @@ interface KdsActionIconProps {
 
 const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: string; IconComponent: typeof Eye }> = {
   seen: {
-    bg: '#FFFFFF',
-    border: '2px solid #1E293B',
+    bg: 'transparent',
+    border: 'none',
     iconColor: '#1E293B',
     IconComponent: Eye,
   },
