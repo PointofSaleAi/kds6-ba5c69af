@@ -1,16 +1,6 @@
-import { Eye } from 'lucide-react';
+import { Eye, ConciergeBell, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
-import seenIcon from '@/assets/seen-icon.svg';
-import preparingIcon from '@/assets/preparing-icon.svg';
-import readyIcon from '@/assets/item-ready-icon.svg';
 import undoIcon from '@/assets/undo-icon.svg';
-
-const iconSrcMap = {
-  seen: seenIcon,
-  preparing: preparingIcon,
-  ready: readyIcon,
-  undo: undoIcon,
-} as const;
 
 export type TicketState = 'seen' | 'in-progress' | 'done';
 
@@ -30,19 +20,19 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
       ? t.inProgress.toUpperCase()
       : t.done;
 
-  const buttonIcon: keyof typeof iconSrcMap = ticketState === 'seen'
-    ? 'seen'
-    : ticketState === 'in-progress'
-      ? 'preparing'
-      : 'ready';
-
   const buttonColorClass = ticketState === 'seen'
-    ? 'bg-btn-seen'
+    ? ''
     : ticketState === 'in-progress'
       ? 'bg-btn-in-progress'
       : 'bg-btn-done';
 
   const showUndo = ticketState !== 'seen';
+
+  const IconComponent = ticketState === 'seen'
+    ? Eye
+    : ticketState === 'in-progress'
+      ? ConciergeBell
+      : CheckCircle;
 
   return (
     <div className="p-1.5 border-t border-border flex gap-1.5">
@@ -57,14 +47,10 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
       )}
       <button
         onClick={() => onTicketAdvance?.(orderId)}
-        className={`flex-1 py-2.5 ${ticketState === 'seen' ? '' : buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
-        style={{ fontSize: ticketState === 'seen' ? '16px' : 'var(--kds-cta)', fontWeight: ticketState === 'seen' ? 700 : undefined, ...(ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {}) }}
+        className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
+        style={{ fontSize: '16px', fontWeight: 700, ...(ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {}) }}
       >
-        {ticketState === 'seen' ? (
-          <Eye size={22} color="#FFFFFF" strokeWidth={2.5} />
-        ) : (
-          <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
-        )}
+        <IconComponent size={22} color="#FFFFFF" strokeWidth={2.5} />
         {buttonLabel}
       </button>
     </div>
