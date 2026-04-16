@@ -77,6 +77,12 @@ export default {
           served: "hsl(var(--status-served))",
           overtime: "hsl(var(--status-overtime))",
         },
+        aging: {
+          start: "hsl(var(--aging-start))",
+          medium: "hsl(var(--aging-medium))",
+          delay: "hsl(var(--aging-delay))",
+          overtime: "hsl(var(--aging-overtime))",
+        },
         allergen: "hsl(var(--allergen-alert))",
         modifier: {
           extra: "hsl(var(--modifier-extra))",
