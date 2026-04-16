@@ -1,3 +1,4 @@
+import { Eye, ConciergeBell, Check, Undo2 } from 'lucide-react';
 import type { Modifier } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { KdsActionIcon } from './KdsActionIcon';
@@ -13,6 +14,40 @@ interface ModifierLineProps {
   modifierStatus?: ModifierStatus;
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
+}
+
+function ModifierEyeIcon({ status, size, onClick, onUndo, disabled }: { status?: ModifierStatus; size: number; onClick?: () => void; onUndo?: () => void; disabled?: boolean }) {
+  const iconSize = Math.round(size * 0.55);
+
+  if (status === 'done') {
+    return (
+      <div className="flex items-center shrink-0" style={{ gap: '0px' }}>
+        <button onClick={onUndo} className="flex items-center justify-center" style={{ width: size, height: size }} aria-label="Undo modifier">
+          <Undo2 size={iconSize} color="#64748B" strokeWidth={2.5} />
+        </button>
+        <button disabled className="flex items-center justify-center opacity-40 pointer-events-none" style={{ width: size, height: size }} aria-label="Modifier done">
+          <Check size={iconSize} color="#7C3AED" strokeWidth={2.5} />
+        </button>
+      </div>
+    );
+  }
+  if (status === 'preparing') {
+    return (
+      <div className="flex items-center shrink-0" style={{ gap: '0px' }}>
+        <button onClick={onUndo} className="flex items-center justify-center" style={{ width: size, height: size }} aria-label="Undo modifier">
+          <Undo2 size={iconSize} color="#64748B" strokeWidth={2.5} />
+        </button>
+        <button onClick={onClick} className="flex items-center justify-center" style={{ width: size, height: size }} aria-label="Mark modifier done">
+          <ConciergeBell size={iconSize} color="#D32F2F" strokeWidth={2.5} />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <button onClick={onClick} className="flex items-center justify-center" style={{ width: size, height: size }} aria-label="Mark modifier seen">
+      <Eye size={iconSize} color="#1E293B" strokeWidth={2} />
+    </button>
+  );
 }
 
 export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdvanceModifier, onUndoModifier }: ModifierLineProps) {
@@ -36,19 +71,12 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
       </span>
       {isServable && modifier.id && (
         <div className="flex items-center shrink-0" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
-          {modifierStatus === 'done' ? (
-            <>
-              <KdsActionIcon icon="undo" size={MOD_ICON_SIZE} onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
-              <KdsActionIcon icon="ready" size={MOD_ICON_SIZE} disabled label="Modifier done" />
-            </>
-          ) : modifierStatus === 'preparing' ? (
-            <>
-              <KdsActionIcon icon="undo" size={MOD_ICON_SIZE} onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
-              <KdsActionIcon icon="preparing" size={MOD_ICON_SIZE} onClick={() => onAdvanceModifier?.(modifier.id!)} label="Mark modifier done" />
-            </>
-          ) : (
-            <KdsActionIcon icon="seen" size={MOD_ICON_SIZE} onClick={() => onAdvanceModifier?.(modifier.id!)} label="Mark modifier seen" />
-          )}
+          <ModifierEyeIcon
+            status={modifierStatus}
+            size={MOD_ICON_SIZE}
+            onClick={() => onAdvanceModifier?.(modifier.id!)}
+            onUndo={() => onUndoModifier?.(modifier.id!)}
+          />
         </div>
       )}
     </div>
