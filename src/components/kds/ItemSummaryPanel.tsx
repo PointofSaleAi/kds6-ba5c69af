@@ -223,19 +223,12 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 {isExpanded && (
                   <div className="px-3 py-1">
                     {displayItems.map((item) => {
-                      const isCritical = item.remaining >= 10;
-                      const isHigh = !isCritical && item.remaining >= 5;
-                      const tierClass = isCritical
-                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
-                        : isHigh
-                          ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
-                          : '';
-                      const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
+                      const itemAgingStatus = getStatusForElapsed(item.worstElapsed);
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
                           <div
                             className={`flex items-start justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
                             onClick={(e) => {
@@ -262,8 +255,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                                 </button>
                               )}
                               <span
-                                className={`text-right text-[14px] font-bold tabular-nums ${isSelected ? '' : countColor}`}
-                                style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
+                                className="text-right text-[14px] font-bold tabular-nums"
+                                style={isSelected
+                                  ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' }
+                                  : { backgroundColor: itemAgingStatus.color, color: itemAgingStatus.textColor, borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' }
+                                }
                               >
                                 {item.remaining}
                               </span>
