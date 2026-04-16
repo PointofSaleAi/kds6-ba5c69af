@@ -104,7 +104,7 @@ export default {
       },
       fontSize: {
         "order-num": ["4.5em", { lineHeight: "1", fontWeight: "900" }],
-        "badge-type": ["0.8125em", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.05em" }],
+        "badge-type": ["0.9375em", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.05em" }],
         "section-label": ["0.6875em", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.08em" }],
         "item-name": ["0.9375em", { lineHeight: "1.3", fontWeight: "600" }],
         "modifier": ["0.8125em", { lineHeight: "1.3", fontWeight: "400" }],
