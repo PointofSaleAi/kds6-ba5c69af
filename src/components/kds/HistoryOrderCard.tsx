@@ -23,12 +23,7 @@ function formatDuration(seconds: number): string {
   return `${min} min total`;
 }
 
-function getDurationBadgeStyle(seconds: number) {
-  const min = Math.round(seconds / 60);
-  if (min <= 20) return { bg: '#DCFCE7', color: '#15803D' };
-  if (min <= 30) return { bg: '#FEF9C3', color: '#A16207' };
-  return { bg: '#FEE2E2', color: '#B91C1C' };
-}
+// Duration badge style now uses aging colors from status rules (computed at render time)
 
 const DINE_IN_TYPES = new Set(['dine-in']);
 
