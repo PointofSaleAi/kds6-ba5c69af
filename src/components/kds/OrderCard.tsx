@@ -577,7 +577,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           >
             {ticketHeaderLayout === 'kitchen' ? (
               <>
-                <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
+                <div className="text-white font-black flex items-center" style={{ fontSize: 'var(--kds-order-num)', lineHeight: 1 }}>
                   {order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-center gap-0.5">
