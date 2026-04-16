@@ -87,7 +87,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
               )}
 
               {item.modifiers.length > 0 && (
-                <div style={{ marginTop: '2px' }}>
+                <div style={{ marginTop: '0px' }}>
                   {item.modifiers.map((mod, idx) => (
                     <ModifierLine
                       key={mod.id || idx}
