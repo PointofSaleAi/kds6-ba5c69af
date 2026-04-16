@@ -200,16 +200,16 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Queued'}`;
 
   const labelClass = isServedByLifecycle
-    ? 'uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    ? 'uppercase tracking-wider text-muted-foreground flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
     : coursingStatus === 'active'
-      ? 'uppercase tracking-wider font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+      ? 'uppercase tracking-wider font-semibold flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
       : coursingStatus === 'fired'
-        ? 'uppercase tracking-wider text-muted-foreground font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-        : 'uppercase text-muted-foreground tracking-wider font-normal flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+        ? 'uppercase tracking-wider text-muted-foreground flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+        : 'uppercase text-muted-foreground tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
-    ? { color: agingColor || '#7F77DD', fontWeight: 600, fontSize: 'var(--kds-item-name)' }
-    : { fontWeight: 400 };
+    ? { color: agingColor || '#7F77DD', fontWeight: 600, fontSize: '14px' }
+    : { fontWeight: 500 };
 
   // Course-level icon for active courses - purple/violet to distinguish from item-level
   const renderCourseIcon = () => {
@@ -305,7 +305,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           <span className={`text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} style={{ fontSize: 'var(--kds-course-header)' }}>
             ▶
           </span>
-          <span className={labelClass} style={{ ...labelStyle, fontSize: 'var(--kds-course-header)' }}>
+          <span className={labelClass} style={{ ...labelStyle, ...(coursingStatus !== 'active' ? { fontSize: 'var(--kds-course-header)' } : {}) }}>
             {courseLabel}
           </span>
         </div>
@@ -330,23 +330,23 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           )}
           {/* Course-level undo + action icon for active courses - stopPropagation to prevent collapse */}
           {isActive && onBulkAdvanceCourse && (
-            <div className="flex items-center" style={{ gap: '2px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center" style={{ gap: '4px' }} onClick={(e) => e.stopPropagation()}>
               {collectiveState !== 'unseen' && (
                 <button
                   onClick={() => handleCourseUndo()}
                   className="flex items-center justify-center"
-                  style={{ width: 24, height: 24, minWidth: 24 }}
+                  style={{ width: 20, height: 20 }}
                   aria-label="Undo course"
                 >
-                  <div className="flex items-center justify-center" style={{ width: 20, height: 20, transition: 'all 150ms ease' }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                  <div className="flex items-center justify-center" style={{ width: 18, height: 18 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
                   </div>
                 </button>
               )}
               <button
                 onClick={handleCourseEyeClick}
                 className="flex items-center justify-center transition-all duration-200 hover:scale-110"
-                style={{ width: 24, height: 24, minWidth: 24, flexShrink: 0 }}
+                style={{ width: 20, height: 20, flexShrink: 0 }}
                 title={collectiveState === 'unseen' ? 'Mark all seen' : collectiveState === 'preparing' ? 'Mark all done' : 'All done'}
               >
                 {renderCourseIcon()}
