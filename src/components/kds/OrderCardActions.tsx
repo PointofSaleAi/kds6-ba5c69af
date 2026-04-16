@@ -67,7 +67,6 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
         )}
         {buttonLabel}
       </button>
-      </button>
     </div>
   );
 }
