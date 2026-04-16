@@ -1,32 +1,45 @@
 
+Scope
 
-## Problem
-The "Recalled" tab in Expo view only shows locally tracked sent-out orders (tickets sent out from Expo that can be recalled back). It does not show orders recalled from History, which have `status: 'recalled'` in the order store. The user wants the Recalled tab to show ALL recalled orders/items from any source.
+Tighten only the Home screen ticket header block shown in the screenshot, which is the shared colored block under the order type bar in `src/components/kds/OrderCard.tsx`. No other card sections or screens will be changed.
 
-## Plan
+What I found
 
-### Update Recalled filter in `sortedTickets` memo (`ExpoView.tsx`)
-Currently the recalled filter sets `base = []` and only appends `sentOutOrders`. Change it to:
-1. Include orders with `status === 'recalled'` from the active tickets in the base list
-2. Continue appending `sentOutOrders` (sent-out tickets awaiting recall-back) at the end
+- The affected block is in the kitchen header layout branch of `OrderCard.tsx`.
+- That container already uses `padding: '12px'` and vertical centering.
+- The block still feels too tall because the right-side rows use default text line-height, so the employee name, guest name, and timer create extra vertical space even when the gap is small.
+- The employee and guest rows are already in a compact flex column, so the fix should target row line-height and stack spacing, not the broader card layout.
 
-The logic change in the `sortedTickets` memo:
-```
-const base = filter === 'ready'
-  ? allTickets.filter(t => allItemsDone(t))
-  : filter === 'recalled'
-  ? allTickets.filter(t => {
-      const order = orders.find(o => o.id === t.id);
-      return order?.status === 'recalled';
-    })
-  : allTickets;
-```
+Implementation plan
 
-This ensures:
-- "All tickets" tab: shows everything (unchanged)
-- "Ready only" tab: shows tickets with all items done (unchanged)
-- "Recalled" tab: shows orders recalled from history (status `recalled`) plus sent-out orders available for recall-back
+1. Update only the kitchen header block in `src/components/kds/OrderCard.tsx`
+   - Keep the order number, colors, radius, header bar, allergens, items, actions, and all other card behavior unchanged.
 
-### Files to edit
-- `src/components/kds/ExpoView.tsx` - Update recalled filter branch in `sortedTickets` memo
+2. Make the block feel evenly padded on all four sides
+   - Preserve the existing 12px outer padding on the colored header container.
+   - Remove any visual extra height caused by inner row spacing, not by changing the card height or adding fixed sizing.
 
+3. Tighten the employee and guest name spacing
+   - Add explicit compact line-height to the employee row and guest row.
+   - Keep the right-side group right-aligned and vertically centered.
+   - Reduce the visual space between employee and guest names without changing their font size, weight, color, or icon opacity.
+
+4. Keep the timer prominent but compact
+   - Keep the timer size and styling unchanged.
+   - Apply compact line-height so it does not add unnecessary top or bottom space inside the block.
+
+Technical details
+
+- Primary file: `src/components/kds/OrderCard.tsx`
+- Likely changes:
+  - add `leading-none` or equivalent compact line-height to the employee name row
+  - add `leading-none` or equivalent compact line-height to the guest name row
+  - pass compact line-height to `TimerBadge` through its existing `className` prop
+  - keep the colored header container padding at 12px and its `items-center` alignment intact
+
+Validation
+
+- Verify a Home screen ticket with employee name, guest name, and timer visible.
+- Confirm the colored block looks evenly padded top, right, bottom, and left.
+- Confirm the employee and guest names sit closer together.
+- Confirm nothing else changed in the ticket card, History, Expo, or other layouts.
