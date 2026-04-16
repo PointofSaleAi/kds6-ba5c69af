@@ -61,6 +61,7 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const { isPortrait } = usePortrait();
+  const { getStatusForElapsed } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
   const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
