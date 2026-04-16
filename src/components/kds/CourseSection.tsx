@@ -217,22 +217,22 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
     if (collectiveState === 'done') {
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#EDE9FE', border: '2px solid #7C3AED' }}>
-          <Check size={16} color="#7C3AED" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#EDE9FE' }}>
+          <Check size={14} color="#7C3AED" strokeWidth={2.5} />
         </div>
       );
     }
     if (collectiveState === 'preparing') {
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FEE2E2', border: '2px solid #D32F2F' }}>
-          <ConciergeBell size={16} color="#D32F2F" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#FEE2E2' }}>
+          <ConciergeBell size={14} color="#D32F2F" strokeWidth={2.5} />
         </div>
       );
     }
-    // Unseen - purple outlined eye
+    // Unseen - no outline eye
     return (
-      <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFFFFF', border: '2px solid #7C3AED' }}>
-        <Eye size={16} color="#7C3AED" strokeWidth={2.5} />
+      <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#F1F5F9' }}>
+        <Eye size={14} color="#1E293B" strokeWidth={2.5} />
       </div>
     );
   };
@@ -299,7 +299,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     <div className={containerClass} style={containerStyle}>
       <div
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
-        style={{ ...headerStyle, padding: isActive ? '6px 8px' : '4px 8px' }}
+        style={{ ...headerStyle, padding: '4px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -338,8 +338,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                   className="flex items-center justify-center min-w-[34px] min-h-[33px]"
                   aria-label="Undo course"
                 >
-                  <div className="flex items-center justify-center rounded-full" style={{ width: 30, height: 30, backgroundColor: '#FFFFFF', border: '2px solid #7C3AED', transition: 'all 150ms ease' }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                  <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#F1F5F9', transition: 'all 150ms ease' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
                   </div>
                 </button>
               )}
