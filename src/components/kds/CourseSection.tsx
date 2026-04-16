@@ -435,9 +435,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
                   {/* Dual-language secondary name */}
                   {displayMode === 'dual' && !item.isCancelled && (
-                    <div className="flex items-center gap-1.5 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px', fontSize: 'var(--kds-modifier)' }}>
-                      <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
-                        <Languages size={10} className="text-text-secondary" />
+                    <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1.1' }}>
+                      <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
+                        <Languages size={8} className="text-text-secondary" />
                       </span>
                       {tpSecondary(item.name)}
                     </div>
