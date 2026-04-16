@@ -26,6 +26,8 @@ export function ExpoOrderCard({ order, onBump }: ExpoOrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const agingStatus = getStatusForElapsed(liveElapsed);
 
   const totalItems = useMemo(() =>
     order.courses.reduce((sum, c) => sum + c.items.filter(i => !i.isCancelled).length, 0),
