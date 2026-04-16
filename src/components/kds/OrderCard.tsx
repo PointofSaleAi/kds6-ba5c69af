@@ -580,24 +580,24 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-center gap-0.5">
-                  <span className="flex items-center gap-1 text-[16px] font-medium text-white">
+                <div className="flex flex-col items-end justify-center" style={{ gap: '2px' }}>
+                  <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50" />
                     {order.serverName}
                   </span>
                   {order.guestName ? (
-                    <span className="flex items-center gap-1 text-[15px] font-medium text-white">
+                    <span className="flex items-center gap-1 text-[15px] leading-none font-medium text-white">
                       <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-50" />
                       {order.guestName}
                     </span>
                   ) : (
-                    <span className="h-[18px]" />
+                    <span className="h-[14px]" />
                   )}
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 leading-none">
                     {order.isRushed && (
                       <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
                     )}
-                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
+                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
                   </div>
                 </div>
               </>
