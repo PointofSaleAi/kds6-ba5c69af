@@ -581,13 +581,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   {order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert" />
+                  <span className="flex items-center gap-1 text-[16px] font-medium text-white">
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50" />
                     {order.serverName}
                   </span>
                   {order.guestName ? (
-                    <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                      <img src={UsersBold} alt="" width={14} height={14} className="invert" />
+                    <span className="flex items-center gap-1 text-[15px] font-normal text-white/70">
+                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-50" />
                       {order.guestName}
                     </span>
                   ) : (
@@ -597,7 +597,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     {order.isRushed && (
                       <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
                     )}
-                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
                   </div>
                 </div>
               </>
@@ -607,8 +607,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   {order.guestName || order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-0.5 shrink-0">
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white whitespace-nowrap">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert shrink-0" />
+                  <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50 shrink-0" />
                     {order.serverName}
                   </span>
                   <span className="text-[16px] font-semibold text-white">
@@ -618,7 +618,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     {order.isRushed && (
                       <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
                     )}
-                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
+                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
                   </div>
                 </div>
               </>

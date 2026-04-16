@@ -4,6 +4,7 @@ interface TimerBadgeProps {
   seconds: number;
   urgency?: string;
   invertColor?: boolean;
+  className?: string;
 }
 
 function formatTime(totalSeconds: number): string {
@@ -20,13 +21,13 @@ export function getTimerUrgency(elapsed: number, target: number): 'ok' | 'warnin
   return 'ok';
 }
 
-export function TimerBadge({ seconds, invertColor }: TimerBadgeProps) {
+export function TimerBadge({ seconds, invertColor, className }: TimerBadgeProps) {
   const { getStatusForElapsed } = useStatusRules();
   const status = getStatusForElapsed(seconds);
 
   return (
     <span
-      className="font-mono-timer text-timer font-bold"
+      className={`font-mono-timer text-timer font-bold ${className || ''}`}
       style={{ color: invertColor ? 'white' : status.color }}
     >
       {formatTime(seconds)}
