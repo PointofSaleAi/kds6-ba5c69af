@@ -572,7 +572,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             className="flex items-center justify-between transition-all duration-200"
             style={{
               backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
-              padding: '12px',
+              padding: '16px',
             }}
           >
             {ticketHeaderLayout === 'kitchen' ? (
@@ -580,7 +580,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="text-white font-black flex items-center" style={{ fontSize: 'var(--kds-order-num)', lineHeight: 1 }}>
                   {order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-center gap-0.5">
+                <div className="flex flex-col items-end justify-center" style={{ gap: '4px' }}>
                   <span className="flex items-center gap-1 text-[16px] font-medium text-white">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50" />
                     {order.serverName}
