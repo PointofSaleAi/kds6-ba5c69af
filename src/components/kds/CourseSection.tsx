@@ -217,22 +217,21 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
     if (collectiveState === 'done') {
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#EDE9FE' }}>
-          <Check size={14} color="#7C3AED" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 20, height: 20, backgroundColor: '#EDE9FE' }}>
+          <Check size={12} color="#7C3AED" strokeWidth={2.5} />
         </div>
       );
     }
     if (collectiveState === 'preparing') {
       return (
-        <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#FEE2E2' }}>
-          <ConciergeBell size={14} color="#D32F2F" strokeWidth={2.5} />
+        <div className="flex items-center justify-center rounded-full" style={{ width: 20, height: 20, backgroundColor: '#FEE2E2' }}>
+          <ConciergeBell size={12} color="#D32F2F" strokeWidth={2.5} />
         </div>
       );
     }
-    // Unseen - no outline eye
     return (
-      <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#F1F5F9' }}>
-        <Eye size={14} color="#1E293B" strokeWidth={2.5} />
+      <div className="flex items-center justify-center rounded-full" style={{ width: 20, height: 20, backgroundColor: '#F1F5F9' }}>
+        <Eye size={12} color="#1E293B" strokeWidth={2.5} />
       </div>
     );
   };
@@ -335,18 +334,19 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               {collectiveState !== 'unseen' && (
                 <button
                   onClick={() => handleCourseUndo()}
-                  className="flex items-center justify-center min-w-[34px] min-h-[33px]"
+                  className="flex items-center justify-center"
+                  style={{ width: 24, height: 24, minWidth: 24 }}
                   aria-label="Undo course"
                 >
-                  <div className="flex items-center justify-center rounded-full" style={{ width: 24, height: 24, backgroundColor: '#F1F5F9', transition: 'all 150ms ease' }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                  <div className="flex items-center justify-center rounded-full" style={{ width: 20, height: 20, backgroundColor: '#F1F5F9', transition: 'all 150ms ease' }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
                   </div>
                 </button>
               )}
               <button
                 onClick={handleCourseEyeClick}
                 className="flex items-center justify-center transition-all duration-200 hover:scale-110"
-                style={{ width: 32, height: 32, minWidth: 32, flexShrink: 0 }}
+                style={{ width: 24, height: 24, minWidth: 24, flexShrink: 0 }}
                 title={collectiveState === 'unseen' ? 'Mark all seen' : collectiveState === 'preparing' ? 'Mark all done' : 'All done'}
               >
                 {renderCourseIcon()}
