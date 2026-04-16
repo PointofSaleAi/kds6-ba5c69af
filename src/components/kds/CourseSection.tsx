@@ -173,12 +173,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     : isServedByLifecycle
       ? 'opacity-60'
       : isDimmed
-        ? (isStationMode ? 'opacity-80 pointer-events-none' : '')
+        ? (isStationMode ? 'opacity-80 pointer-events-none' : isPending ? '' : '')
         : '';
 
   const containerStyle = coursingStatus === 'active'
     ? { borderLeftColor: agingColor || '#7F77DD', transition: 'all 200ms ease-in-out' }
-    : { transition: 'all 200ms ease-in-out' };
+    : isPending
+      ? { transition: 'all 200ms ease-in-out', opacity: 0.75 }
+      : { transition: 'all 200ms ease-in-out' };
 
   const headerBg = coursingStatus === 'active'
     ? ''
@@ -297,7 +299,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     <div className={containerClass} style={containerStyle}>
       <div
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
-        style={{ ...headerStyle, padding: '4px 8px' }}
+        style={{ ...headerStyle, padding: isActive ? '6px 8px' : '4px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -343,7 +345,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               )}
               <button
                 onClick={handleCourseEyeClick}
-                className="rounded-full flex items-center justify-center min-h-[28px] min-w-[28px] p-0.5 transition-all duration-200 hover:scale-110"
+                className="flex items-center justify-center transition-all duration-200 hover:scale-110"
+                style={{ width: 32, height: 32, minWidth: 32, flexShrink: 0 }}
                 title={collectiveState === 'unseen' ? 'Mark all seen' : collectiveState === 'preparing' ? 'Mark all done' : 'All done'}
               >
                 {renderCourseIcon()}
@@ -367,9 +370,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             const timestamps = itemTimestamps?.get(item.id);
             const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
 
-            // Determine item opacity: STATE 3 (done) = 50%, pending = 40%, served course = 80%
+            // Determine item opacity: STATE 3 (done) = 50%, served course = 80% (pending handled at container level)
             const itemOpacity = isPending && !item.isCancelled
-              ? 0.4
+              ? undefined
               : (isActive && status === 'done' && !item.isCancelled)
                 ? 0.5
                 : isCourseCompleted
