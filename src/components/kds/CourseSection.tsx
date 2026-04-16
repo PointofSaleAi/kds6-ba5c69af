@@ -370,9 +370,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             const timestamps = itemTimestamps?.get(item.id);
             const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
 
-            // Determine item opacity: STATE 3 (done) = 50%, pending = 40%, served course = 80%
+            // Determine item opacity: STATE 3 (done) = 50%, served course = 80% (pending handled at container level)
             const itemOpacity = isPending && !item.isCancelled
-              ? 0.4
+              ? undefined
               : (isActive && status === 'done' && !item.isCancelled)
                 ? 0.5
                 : isCourseCompleted
