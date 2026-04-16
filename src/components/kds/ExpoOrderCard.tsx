@@ -12,6 +12,7 @@ function getLocationLabel(orderType: OrderType, tableName?: string): string | un
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import readyIcon from '@/assets/item-ready-icon.svg';
 
 interface ExpoOrderCardProps {
