@@ -1116,16 +1116,16 @@ function ExpoBottomStats({
       <div className="flex items-center gap-4">
         <StatCounter label="Open" value={stats.open} />
         <StatCounter label="Ready" value={stats.ready} colorClass="text-success" />
-        <StatCounter label="Overtime" value={stats.overtime} colorClass="text-destructive" />
+        <StatCounter label="Overtime" value={stats.overtime} colorClass="text-aging-overtime" />
         <StatCounter label="Avg time" value={formatTimer(stats.avgTime)} />
       </div>
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-aging-medium shrink-0" /><Flame className="w-3 h-3 text-aging-medium" /> In progress</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-aging-overtime shrink-0" /><AlertTriangle className="w-3 h-3 text-aging-overtime" /> Overtime</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-aging-start shrink-0" /><Hourglass className="w-3 h-3 text-aging-start" /> Queued</span>
         </div>
         <button
           onClick={() => {
