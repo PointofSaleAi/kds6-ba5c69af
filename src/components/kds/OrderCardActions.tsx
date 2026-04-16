@@ -44,7 +44,7 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
   const showUndo = ticketState !== 'seen';
 
   return (
-    <div className="p-1.5 border-t border-border flex items-center justify-center gap-1.5">
+    <div className="p-1.5 border-t border-border flex gap-1.5">
       {showUndo && (
         <button
           onClick={() => onTicketRecall?.(orderId)}
@@ -54,25 +54,14 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
           <img src={undoIcon} alt="Back" className="w-8 h-6" />
         </button>
       )}
-      {ticketState === 'seen' ? (
-        <button
-          onClick={() => onTicketAdvance?.(orderId)}
-          className="rounded-[6px] flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors"
-          style={{ fontSize: '12px', fontWeight: 500, backgroundColor: '#1E293B', color: '#FFFFFF', padding: '6px 20px' }}
-        >
-          <img src={iconSrcMap[buttonIcon]} alt="" className="w-5 h-4 rounded-sm" style={{ filter: 'brightness(0) invert(1)' }} />
-          {buttonLabel}
-        </button>
-      ) : (
-        <button
-          onClick={() => onTicketAdvance?.(orderId)}
-          className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
-          style={{ fontSize: 'var(--kds-cta)' }}
-        >
-          <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
-          {buttonLabel}
-        </button>
-      )}
+      <button
+        onClick={() => onTicketAdvance?.(orderId)}
+        className={`flex-1 py-2.5 ${ticketState === 'seen' ? '' : buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
+        style={{ fontSize: 'var(--kds-cta)', ...(ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {}) }}
+      >
+        <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
+        {buttonLabel}
+      </button>
     </div>
   );
 }
