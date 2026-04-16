@@ -1,3 +1,4 @@
+import { Eye } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
@@ -57,9 +58,13 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
       <button
         onClick={() => onTicketAdvance?.(orderId)}
         className={`flex-1 py-2.5 ${ticketState === 'seen' ? '' : buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
-        style={{ fontSize: 'var(--kds-cta)', ...(ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {}) }}
+        style={{ fontSize: ticketState === 'seen' ? '16px' : 'var(--kds-cta)', fontWeight: ticketState === 'seen' ? 700 : undefined, ...(ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {}) }}
       >
-        <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
+        {ticketState === 'seen' ? (
+          <Eye size={22} color="#FFFFFF" strokeWidth={2.5} />
+        ) : (
+          <img src={iconSrcMap[buttonIcon]} alt="" className="w-6 h-5 rounded-sm" />
+        )}
         {buttonLabel}
       </button>
     </div>
