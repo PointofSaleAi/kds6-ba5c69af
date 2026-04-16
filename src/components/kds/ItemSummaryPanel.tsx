@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
