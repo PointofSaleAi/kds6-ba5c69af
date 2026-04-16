@@ -12,6 +12,7 @@ function getLocationLabel(orderType: OrderType, tableName?: string): string | un
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { TimerBadge, getTimerUrgency } from './TimerBadge';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import readyIcon from '@/assets/item-ready-icon.svg';
 
 interface ExpoOrderCardProps {
@@ -25,6 +26,8 @@ export function ExpoOrderCard({ order, onBump }: ExpoOrderCardProps) {
   const { timeFormat } = useLanguage();
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const agingStatus = getStatusForElapsed(liveElapsed);
 
   const totalItems = useMemo(() =>
     order.courses.reduce((sum, c) => sum + c.items.filter(i => !i.isCancelled).length, 0),
@@ -56,15 +59,19 @@ export function ExpoOrderCard({ order, onBump }: ExpoOrderCardProps) {
         tableInfo={getLocationLabel(order.orderType, order.tableName)}
       />
 
-      <div className="px-3 pt-3 pb-2">
+      {/* Aging-colored header block */}
+      <div
+        className="px-3 pt-3 pb-2 transition-all duration-200"
+        style={{ backgroundColor: agingStatus.color }}
+      >
         <div className="flex items-center justify-between">
-          <div className="text-order-num text-text-primary leading-none">
+          <div className="text-order-num leading-none" style={{ color: agingStatus.textColor }}>
             {order.orderNumber}
           </div>
-          <TimerBadge seconds={liveElapsed} urgency={urgency} />
+          <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor />
         </div>
 
-        <div className="text-modifier text-text-secondary mt-1">{order.serverName}</div>
+        <div className="text-modifier mt-1" style={{ color: agingStatus.textColor, opacity: 0.8 }}>{order.serverName}</div>
 
         {/* Item progress bar */}
         <div className="mt-3">

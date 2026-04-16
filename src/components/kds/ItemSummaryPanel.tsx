@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
@@ -18,28 +19,29 @@ interface ItemSummaryPanelProps {
 
 interface CategorySummary {
   category: ProductCategory;
-  items: { name: string; remaining: number; hasNew: boolean }[];
+  items: { name: string; remaining: number; hasNew: boolean; worstElapsed: number }[];
 }
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
 function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySummary[] {
-  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean }>>();
+  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean; worstElapsed: number }>>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
+    const orderElapsed = Math.max(0, Math.round((Date.now() - order.timeReceived.getTime()) / 1000));
     for (const cg of order.courses) {
       if (cg.isFired) continue;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
         const cat = item.category || ('Uncategorized' as ProductCategory);
-        // In station view, only include items matching the active station's category
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
         if (!map.has(cat)) map.set(cat, new Map());
         const items = map.get(cat)!;
-        const existing = items.get(item.name) || { remaining: 0, hasNew: false };
+        const existing = items.get(item.name) || { remaining: 0, hasNew: false, worstElapsed: 0 };
         existing.remaining += item.quantity;
         if (item.isNew) existing.hasNew = true;
+        existing.worstElapsed = Math.max(existing.worstElapsed, orderElapsed);
         items.set(item.name, existing);
       }
     }
@@ -49,7 +51,7 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
     .map(([category, items]) => ({
       category,
       items: Array.from(items.entries())
-        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew }))
+        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew, worstElapsed: data.worstElapsed }))
         .filter(i => i.remaining > 0)
         .sort((a, b) => b.remaining - a.remaining),
     }))
@@ -59,6 +61,7 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const { isPortrait } = usePortrait();
+  const { getStatusForElapsed } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
   const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
@@ -166,6 +169,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
             if (isUncategorized && displayItems.length === 0) return null;
 
+            // Worst aging status across all items in this category
+            const worstCatElapsed = cat.items.reduce((max, i) => Math.max(max, i.worstElapsed), 0);
+            const catAgingStatus = getStatusForElapsed(worstCatElapsed);
+
             return (
               <div key={cat.category}>
                 {/* Section header */}
@@ -201,15 +208,13 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       {cat.category}
                     </span>
                   </button>
-                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
-                    isCategorySelected
-                      ? 'bg-[#3B82F6] text-white'
-                      : sectionTotal >= 20
-                        ? 'bg-destructive text-destructive-foreground'
-                        : sectionTotal >= 10
-                          ? 'bg-warning text-warning-foreground'
-                          : 'bg-emerald-600 text-white'
-                  }`}>
+                  <span
+                    className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150"
+                    style={isCategorySelected
+                      ? { backgroundColor: '#3B82F6', color: '#FFFFFF' }
+                      : { backgroundColor: catAgingStatus.color, color: catAgingStatus.textColor }
+                    }
+                  >
                     {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
                   </span>
                 </div>
@@ -218,19 +223,12 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 {isExpanded && (
                   <div className="px-3 py-1">
                     {displayItems.map((item) => {
-                      const isCritical = item.remaining >= 10;
-                      const isHigh = !isCritical && item.remaining >= 5;
-                      const tierClass = isCritical
-                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
-                        : isHigh
-                          ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
-                          : '';
-                      const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
+                      const itemAgingStatus = getStatusForElapsed(item.worstElapsed);
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
                           <div
                             className={`flex items-start justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
                             onClick={(e) => {
@@ -257,8 +255,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                                 </button>
                               )}
                               <span
-                                className={`text-right text-[14px] font-bold tabular-nums ${isSelected ? '' : countColor}`}
-                                style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
+                                className="text-right text-[14px] font-bold tabular-nums"
+                                style={isSelected
+                                  ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' }
+                                  : { backgroundColor: itemAgingStatus.color, color: itemAgingStatus.textColor, borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' }
+                                }
                               >
                                 {item.remaining}
                               </span>
