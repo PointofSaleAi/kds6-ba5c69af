@@ -2,7 +2,7 @@ import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderType } from '@/types/kds';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { TimerBadge } from './TimerBadge';
-import readyIcon from '@/assets/item-ready-icon.svg';
+import { CheckCircle } from 'lucide-react';
 
 function getLocationLabel(orderType: OrderType, tableName?: string): string | undefined {
   if (!tableName) return undefined;
@@ -56,9 +56,10 @@ export function CompactOrderCard({ order, liveElapsed, urgency, onBump }: Compac
       <div className="px-2 pb-2">
         <button
           onClick={() => onBump?.(order.id)}
-          className="w-full py-2 bg-btn-done text-primary-foreground text-cta rounded uppercase flex items-center justify-center gap-2"
+          className="w-full py-2 bg-btn-done text-primary-foreground rounded uppercase flex items-center justify-center gap-2"
+          style={{ fontSize: '16px', fontWeight: 700 }}
         >
-          <img src={readyIcon} alt="" className="w-6 h-5 rounded-sm" />
+          <CheckCircle size={22} color="#FFFFFF" strokeWidth={2.5} />
           {t.done}
         </button>
       </div>
