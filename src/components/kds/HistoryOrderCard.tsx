@@ -100,9 +100,11 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
 export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: HistoryOrderCardProps) {
   const { tp, timeFormat } = useLanguage();
   const { orderTypeColors, ticketHeaderLayout } = useKDSSettings();
+  const { getStatusForElapsed } = useStatusRules();
   const headerBgColor = orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType];
   const durationText = formatDuration(order.elapsedSeconds);
-  const durationStyle = getDurationBadgeStyle(order.elapsedSeconds);
+  const agingStatus = getStatusForElapsed(order.elapsedSeconds);
+  const durationStyle = { bg: `${agingStatus.color}26`, color: agingStatus.color };
   const showCourses = DINE_IN_TYPES.has(order.orderType);
   const allItems = order.courses.flatMap(c => c.items);
 
