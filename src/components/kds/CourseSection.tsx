@@ -365,19 +365,21 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           }}
         >
         <div className="px-2 py-0.5">
-          {courseGroup.items.map((item) => {
+          {courseGroup.items.filter((item) => {
+            const status = itemStatuses?.get(item.id);
+            // Hide done items from the ticket card
+            if (isActive && status === 'done' && !item.isCancelled) return false;
+            return true;
+          }).map((item) => {
             const status = itemStatuses?.get(item.id);
             const timestamps = itemTimestamps?.get(item.id);
             const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
 
-            // Determine item opacity: STATE 3 (done) = 50%, served course = 80% (pending handled at container level)
             const itemOpacity = isPending && !item.isCancelled
               ? undefined
-              : (isActive && status === 'done' && !item.isCancelled)
-                ? 0.5
-                : isCourseCompleted
-                  ? 0.8
-                  : undefined;
+              : isCourseCompleted
+                ? 0.8
+                : undefined;
 
             return (
               <div

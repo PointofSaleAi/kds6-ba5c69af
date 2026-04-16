@@ -28,16 +28,20 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
 
   return (
     <div className="px-2 py-0.5">
-      {allItems.map((item) => {
+      {allItems.filter((item) => {
+        const status = itemStatuses?.get(item.id);
+        // Hide done items from the ticket card
+        if (status === 'done' && !item.isCancelled) return false;
+        return true;
+      }).map((item) => {
         const status = itemStatuses?.get(item.id);
         const timestamps = itemTimestamps?.get(item.id);
-        const isDone = status === 'done';
 
         return (
           <div
             key={item.id}
             className={`flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
-            style={{ padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`, gap: 0, opacity: isDone && !item.isCancelled ? 0.5 : undefined }}
+            style={{ padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`, gap: 0 }}
             onClick={() => !item.isCancelled && onReRouteItem?.(item)}
           >
             <div className="flex-1 min-w-0">
