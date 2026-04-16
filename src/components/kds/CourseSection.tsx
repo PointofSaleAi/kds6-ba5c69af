@@ -338,8 +338,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                   style={{ width: 24, height: 24, minWidth: 24 }}
                   aria-label="Undo course"
                 >
-                  <div className="flex items-center justify-center rounded-full" style={{ width: 20, height: 20, backgroundColor: '#F1F5F9', transition: 'all 150ms ease' }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                  <div className="flex items-center justify-center" style={{ width: 20, height: 20, transition: 'all 150ms ease' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
                   </div>
                 </button>
               )}
