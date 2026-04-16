@@ -3,7 +3,6 @@ import { RotateCcw } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
-import { useStatusRules } from '@/hooks/use-status-rules';
 import { OrderTypeBadge } from './OrderTypeBadge';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
@@ -23,7 +22,12 @@ function formatDuration(seconds: number): string {
   return `${min} min total`;
 }
 
-// Duration badge style now uses aging colors from status rules (computed at render time)
+function getDurationBadgeStyle(seconds: number) {
+  const min = Math.round(seconds / 60);
+  if (min <= 20) return { bg: '#DCFCE7', color: '#15803D' };
+  if (min <= 30) return { bg: '#FEF9C3', color: '#A16207' };
+  return { bg: '#FEE2E2', color: '#B91C1C' };
+}
 
 const DINE_IN_TYPES = new Set(['dine-in']);
 
@@ -100,11 +104,9 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
 export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: HistoryOrderCardProps) {
   const { tp, timeFormat } = useLanguage();
   const { orderTypeColors, ticketHeaderLayout } = useKDSSettings();
-  const { getStatusForElapsed } = useStatusRules();
   const headerBgColor = orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType];
   const durationText = formatDuration(order.elapsedSeconds);
-  const agingStatus = getStatusForElapsed(order.elapsedSeconds);
-  const durationStyle = { bg: `${agingStatus.color}26`, color: agingStatus.color };
+  const durationStyle = getDurationBadgeStyle(order.elapsedSeconds);
   const showCourses = DINE_IN_TYPES.has(order.orderType);
   const allItems = order.courses.flatMap(c => c.items);
 

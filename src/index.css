@@ -21,18 +21,12 @@
     --order-delivery: 168 73% 36%;
     --order-banquet: 37 90% 51%;
 
-    /* Status (legacy) */
-    --status-new: 48 3% 52%;
-    --status-in-progress: 42 100% 45%;
+    /* Status */
+    --status-new: 4 76% 57%;
+    --status-in-progress: 24 80% 52%;
     --status-seen: 210 5% 53%;
     --status-served: 210 10% 62%;
-    --status-overtime: 4 72% 59%;
-
-    /* Aging status tokens */
-    --aging-start: 48 3% 52%;
-    --aging-medium: 42 100% 45%;
-    --aging-delay: 17 69% 52%;
-    --aging-overtime: 4 72% 59%;
+    --status-overtime: 4 57% 35%;
 
     /* Allergen */
     --allergen-alert: 4 70% 49%;
@@ -110,18 +104,12 @@
     --order-delivery: 168 63% 42%;
     --order-banquet: 37 85% 55%;
 
-    /* Status (legacy) */
-    --status-new: 48 3% 52%;
-    --status-in-progress: 42 100% 45%;
+    /* Status */
+    --status-new: 4 76% 57%;
+    --status-in-progress: 24 80% 55%;
     --status-seen: 210 5% 50%;
     --status-served: 210 8% 45%;
-    --status-overtime: 4 72% 59%;
-
-    /* Aging status tokens */
-    --aging-start: 48 3% 52%;
-    --aging-medium: 42 100% 45%;
-    --aging-delay: 17 69% 52%;
-    --aging-overtime: 4 72% 59%;
+    --status-overtime: 4 57% 40%;
 
     /* Allergen */
     --allergen-alert: 4 70% 55%;
