@@ -218,14 +218,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     if (collectiveState === 'done') {
       return (
         <div className="flex items-center justify-center" style={{ width: 20, height: 20 }}>
-          <Check size={18} color="#7C3AED" strokeWidth={2.5} />
+          <Check size={18} color="#166534" strokeWidth={2.5} />
         </div>
       );
     }
     if (collectiveState === 'preparing') {
       return (
         <div className="flex items-center justify-center" style={{ width: 20, height: 20 }}>
-          <ConciergeBell size={18} color="#D32F2F" strokeWidth={2.5} />
+          <ConciergeBell size={18} color="#0C4A6E" strokeWidth={2.5} />
         </div>
       );
     }

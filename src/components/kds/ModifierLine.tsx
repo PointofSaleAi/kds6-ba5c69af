@@ -26,7 +26,7 @@ function ModifierEyeIcon({ status, size, onClick, onUndo, disabled }: { status?:
           <Undo2 size={iconSize} color="#64748B" strokeWidth={2.5} />
         </button>
         <button disabled className="flex items-center justify-center opacity-40 pointer-events-none" style={{ width: size, height: size }} aria-label="Modifier done">
-          <Check size={iconSize} color="#7C3AED" strokeWidth={2.5} />
+          <Check size={iconSize} color="#166534" strokeWidth={2.5} />
         </button>
       </div>
     );
@@ -38,7 +38,7 @@ function ModifierEyeIcon({ status, size, onClick, onUndo, disabled }: { status?:
           <Undo2 size={iconSize} color="#64748B" strokeWidth={2.5} />
         </button>
         <button onClick={onClick} className="flex items-center justify-center" style={{ width: size, height: size }} aria-label="Mark modifier done">
-          <ConciergeBell size={iconSize} color="#D32F2F" strokeWidth={2.5} />
+          <ConciergeBell size={iconSize} color="#0C4A6E" strokeWidth={2.5} />
         </button>
       </div>
     );
