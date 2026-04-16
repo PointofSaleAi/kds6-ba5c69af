@@ -580,7 +580,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
+                <div className="flex flex-col items-end justify-end gap-1.5" style={{ paddingBottom: 6 }}>
                   <span className="flex items-center gap-1 text-[16px] font-medium text-white">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50" />
                     {order.serverName}
