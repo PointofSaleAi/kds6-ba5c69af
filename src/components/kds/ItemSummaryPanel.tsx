@@ -19,28 +19,29 @@ interface ItemSummaryPanelProps {
 
 interface CategorySummary {
   category: ProductCategory;
-  items: { name: string; remaining: number; hasNew: boolean }[];
+  items: { name: string; remaining: number; hasNew: boolean; worstElapsed: number }[];
 }
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
 function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySummary[] {
-  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean }>>();
+  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean; worstElapsed: number }>>();
 
   for (const order of orders) {
     if (order.status === 'served') continue;
+    const orderElapsed = Math.max(0, Math.round((Date.now() - order.timeReceived.getTime()) / 1000));
     for (const cg of order.courses) {
       if (cg.isFired) continue;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
         const cat = item.category || ('Uncategorized' as ProductCategory);
-        // In station view, only include items matching the active station's category
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
         if (!map.has(cat)) map.set(cat, new Map());
         const items = map.get(cat)!;
-        const existing = items.get(item.name) || { remaining: 0, hasNew: false };
+        const existing = items.get(item.name) || { remaining: 0, hasNew: false, worstElapsed: 0 };
         existing.remaining += item.quantity;
         if (item.isNew) existing.hasNew = true;
+        existing.worstElapsed = Math.max(existing.worstElapsed, orderElapsed);
         items.set(item.name, existing);
       }
     }
@@ -50,7 +51,7 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
     .map(([category, items]) => ({
       category,
       items: Array.from(items.entries())
-        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew }))
+        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew, worstElapsed: data.worstElapsed }))
         .filter(i => i.remaining > 0)
         .sort((a, b) => b.remaining - a.remaining),
     }))
