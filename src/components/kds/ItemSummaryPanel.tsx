@@ -169,6 +169,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
             if (isUncategorized && displayItems.length === 0) return null;
 
+            // Worst aging status across all items in this category
+            const worstCatElapsed = cat.items.reduce((max, i) => Math.max(max, i.worstElapsed), 0);
+            const catAgingStatus = getStatusForElapsed(worstCatElapsed);
+
             return (
               <div key={cat.category}>
                 {/* Section header */}
@@ -204,15 +208,13 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       {cat.category}
                     </span>
                   </button>
-                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
-                    isCategorySelected
-                      ? 'bg-[#3B82F6] text-white'
-                      : sectionTotal >= 20
-                        ? 'bg-destructive text-destructive-foreground'
-                        : sectionTotal >= 10
-                          ? 'bg-warning text-warning-foreground'
-                          : 'bg-emerald-600 text-white'
-                  }`}>
+                  <span
+                    className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150"
+                    style={isCategorySelected
+                      ? { backgroundColor: '#3B82F6', color: '#FFFFFF' }
+                      : { backgroundColor: catAgingStatus.color, color: catAgingStatus.textColor }
+                    }
+                  >
                     {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
                   </span>
                 </div>
