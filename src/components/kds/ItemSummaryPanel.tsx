@@ -208,7 +208,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                         ? 'bg-destructive text-destructive-foreground'
                         : sectionTotal >= 10
                           ? 'bg-warning text-warning-foreground'
-                          : 'bg-emerald-600 text-white'
+                          : 'bg-text-muted text-white'
                   }`}>
                     {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
                   </span>
