@@ -448,11 +448,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return next;
       });
     } else {
-      // Back to unseen: clear active course statuses and unmark seen
+      // Back to unseen: clear non-done items only, preserve done items
+      const nonDoneIds = targetIds.filter(id => itemStatuses.get(id) !== 'done');
+      if (nonDoneIds.length === 0) return;
       onMarkSeen?.(_orderId);
       setItemStatuses(prev => {
         const next = new Map(prev);
-        targetIds.forEach(id => {
+        nonDoneIds.forEach(id => {
           next.delete(id);
           onItemStatusChange?.(id, undefined);
         });
