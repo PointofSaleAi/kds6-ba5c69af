@@ -107,7 +107,7 @@ export default {
         "badge-type": ["0.8125em", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.05em" }],
         "section-label": ["0.6875em", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.08em" }],
         "item-name": ["0.9375em", { lineHeight: "1.3", fontWeight: "600" }],
-        "modifier": ["0.6875em", { lineHeight: "1.3", fontWeight: "400" }],
+        "modifier": ["0.8125em", { lineHeight: "1.3", fontWeight: "400" }],
         "timer": ["0.8125em", { lineHeight: "1", fontWeight: "600" }],
         "cta": ["0.875em", { lineHeight: "1", fontWeight: "700", letterSpacing: "0.03em" }],
       },
