@@ -399,6 +399,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     setItemStatuses(prev => {
       const next = new Map(prev);
       targetIds.forEach(id => {
+        const current = next.get(id);
+        // Skip items already at or past the target status
+        if (current === 'done') return;
+        if (current === 'preparing' && targetStatus === 'preparing') return;
         next.set(id, targetStatus);
         onItemStatusChange?.(id, targetStatus);
       });
@@ -407,6 +411,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     setItemTimestamps(prev => {
       const next = new Map(prev);
       targetIds.forEach(id => {
+        const currentStatus = itemStatuses.get(id);
+        // Skip items already done
+        if (currentStatus === 'done') return;
         const existing = next.get(id) || {};
         if (targetStatus === 'preparing') {
           next.set(id, { ...existing, seenAt: existing.seenAt || now });
