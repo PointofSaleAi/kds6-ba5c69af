@@ -569,10 +569,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
 
           <div
-            className="flex items-stretch justify-between transition-all duration-200"
+            className="flex items-center justify-between transition-all duration-200"
             style={{
               backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
-              padding: `var(--kds-card-padding)`,
+              padding: '12px',
             }}
           >
             {ticketHeaderLayout === 'kitchen' ? (
@@ -580,7 +580,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="text-white leading-none font-black" style={{ fontSize: 'var(--kds-order-num)' }}>
                   {order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-end gap-1.5" style={{ paddingBottom: 6 }}>
+                <div className="flex flex-col items-end justify-center gap-0.5">
                   <span className="flex items-center gap-1 text-[16px] font-medium text-white">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50" />
                     {order.serverName}
