@@ -6,7 +6,7 @@ import type { ItemStatus } from './CourseSection';
 
 export type ModifierStatus = ItemStatus;
 
-const MOD_ICON_SIZE = 26;
+const MOD_ICON_SIZE = 18;
 
 interface ModifierLineProps {
   modifier: Modifier;
