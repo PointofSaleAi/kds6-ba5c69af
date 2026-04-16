@@ -462,7 +462,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       setItemTimestamps(prev => {
         const next = new Map(prev);
-        targetIds.forEach(id => next.delete(id));
+        nonDoneIds.forEach(id => next.delete(id));
         return next;
       });
     }
