@@ -705,6 +705,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     onAdvanceModifier={handleAdvanceModifier}
                     onUndoModifier={handleUndoModifier}
                     courseAgingColor={courseStatusColors.get(courseGroup.course)}
+                    dismissedItemIds={dismissedItemIds}
+                    onDismissItem={handleDismissItem}
                   />
                 );
               })
@@ -721,6 +723,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               modifierStatuses={modifierStatuses}
               onAdvanceModifier={handleAdvanceModifier}
               onUndoModifier={handleUndoModifier}
+              dismissedItemIds={dismissedItemIds}
+              onDismissItem={handleDismissItem}
             />
           )}
         </div>
