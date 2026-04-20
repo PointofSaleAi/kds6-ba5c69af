@@ -242,7 +242,8 @@ function ExpoItemRow({
   if (isPrepared) {
     return (
       <div
-        className={`py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+        className={`border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+        style={{ paddingTop: '5px', paddingBottom: '5px' }}
         onClick={() => {
           if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
           if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
