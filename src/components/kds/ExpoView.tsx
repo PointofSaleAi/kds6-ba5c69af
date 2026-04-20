@@ -1114,7 +1114,7 @@ function ExpoBottomStats({
         <StatCounter label="Open" value={stats.open} />
         <StatCounter label="Ready" value={stats.ready} colorClass="text-success" />
         <StatCounter label="Overtime" value={stats.overtime} colorClass="text-destructive" />
-        <StatCounter label="Avg time" value={formatTimer(stats.avgTime)} />
+        
       </div>
 
       <div className="flex items-center gap-3">
