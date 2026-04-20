@@ -45,10 +45,10 @@ const stateStyles: Record<KdsIconType, { bg: string; border: string; iconColor: 
     IconComponent: Check,
   },
   done: {
-    bg: '#DCFCE7',
+    bg: '#16A34A',
     border: 'none',
-    iconColor: '#166534',
-    IconComponent: CheckCircle,
+    iconColor: '#FFFFFF',
+    IconComponent: Check,
   },
   undo: {
     bg: '#FFFFFF',

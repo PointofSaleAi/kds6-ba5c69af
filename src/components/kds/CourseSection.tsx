@@ -482,7 +482,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
 
                 {/* Modifiers as siblings of item row - each modifier row spans full width so its right-aligned eye icon lines up with item eye column */}
                 {item.modifiers.length > 0 && (
-                  <div>
+                  <div className={status === 'done' ? 'line-through opacity-60' : ''}>
                     {item.modifiers.map((mod, idx) => (
                       <ModifierLine
                         key={mod.id || idx}
