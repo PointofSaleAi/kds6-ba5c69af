@@ -32,7 +32,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         style={{ paddingLeft: '20px', paddingTop: '4px', paddingBottom: '4px', gap: '4px' }}
       >
         <span
-          className={`min-w-0 font-medium uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
+          className={`min-w-0 font-semibold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
           style={{ fontSize: 'var(--kds-item-name)', lineHeight: '1.2' }}
         >
           {tm(modifier.text)}
@@ -60,7 +60,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   return (
     <div className="flex items-center" style={{ paddingLeft: '20px', lineHeight: '1.1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
       <span
-        className={`min-w-0 ${styles[modifier.type]}`}
+        className={`min-w-0 font-medium ${styles[modifier.type]}`}
         style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.3' }}
       >
         {tm(modifier.text)}
