@@ -49,6 +49,8 @@ export interface OrderItem {
   isNew?: boolean;
   /** Recalled from history */
   isRecalled?: boolean;
+  /** Item is flagged to-go within an otherwise dine-in order */
+  isToGo?: boolean;
 }
 
 export interface CourseGroup {
