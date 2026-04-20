@@ -534,7 +534,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             const isExpanded = !collapsedServedCourses.has(course.name);
 
             return (
-              <div key={course.name}>
+              <div key={course.name} style={{ marginBottom: '5px' }}>
                 {/* Course header — collapsible */}
                 <div
                   className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
