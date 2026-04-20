@@ -28,19 +28,21 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
 
   return (
     <div className="px-2 py-0.5">
-      {allItems.filter((item) => {
-        const status = itemStatuses?.get(item.id);
-        // Hide done items from the ticket card
-        if (status === 'done' && !item.isCancelled) return false;
-        return true;
-      }).map((item) => {
+      {(() => {
+        const visibleItems = allItems.filter((item) => {
+          const status = itemStatuses?.get(item.id);
+          if (status === 'done' && !item.isCancelled) return false;
+          return true;
+        });
+        return visibleItems.map((item, visibleIdx) => {
+        const isLastVisible = visibleIdx === visibleItems.length - 1;
         const status = itemStatuses?.get(item.id);
         const timestamps = itemTimestamps?.get(item.id);
 
         return (
           <div
             key={item.id}
-            className={`border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
+            className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
           >
             <div
               className="flex items-center cursor-pointer active:bg-muted/50 transition-colors"
