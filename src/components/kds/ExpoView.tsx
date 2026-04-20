@@ -475,7 +475,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Order notes (expo packaging + special instructions) */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
-        <div className="px-2 py-1 border-b border-border/40 border-l-2 border-l-amber-500">
+        <div className="border-b border-border/40 border-l-2 border-l-amber-500" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '8px' }}>
           <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
             Order Notes
           </div>
