@@ -302,7 +302,8 @@ interface ExpoTicketCardProps {
   isDemo?: boolean;
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
   sentItemIds: Set<string>;
-  onItemSend?: (ticketId: string, itemId: string) => void;
+  sentQuantities: Map<string, number>;
+  onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
   onItemRecall?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
