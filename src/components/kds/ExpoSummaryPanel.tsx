@@ -147,23 +147,34 @@ export function ExpoSummaryPanel({
                 {readyProducts.length === 0 ? (
                   <div className="px-3 py-3 text-[11px] text-text-muted text-center">No items ready yet</div>
                 ) : (
-                  readyProducts.map(p => (
-                    <div
-                      key={p.name}
-                      className="w-full flex items-center justify-between px-3 py-2 border-b border-border/30 animate-new-item"
-                    >
-                      <span className="text-[12px] font-medium text-text-primary truncate mr-1">{p.name}</span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[13px] font-bold tabular-nums text-success">{p.count}</span>
-                        <button
-                          onClick={() => onSendAllProduct?.(p.name)}
-                          className="text-[11px] font-medium text-success hover:text-success/80 transition-colors whitespace-nowrap"
-                        >
-                          Send all
-                        </button>
-                      </div>
-                    </div>
-                  ))
+                  readyProducts.map(p => {
+                    const isSelected = selectedSet.has(p.name);
+                    return (
+                      <button
+                        key={p.name}
+                        onClick={() => onProductToggle?.(p.name)}
+                        className={`w-full flex items-center justify-between px-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer animate-new-item ${
+                          isSelected
+                            ? 'bg-success/10 border-l-[3px] border-l-success'
+                            : 'hover:bg-muted/50'
+                        }`}
+                      >
+                        <span className={`text-[12px] font-medium truncate mr-1 ${isSelected ? 'text-text-primary' : 'text-text-primary'}`}>{p.name}</span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[13px] font-bold tabular-nums text-success">{p.count}</span>
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            onClick={(e) => { e.stopPropagation(); onSendAllProduct?.(p.name); }}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); onSendAllProduct?.(p.name); } }}
+                            className="text-[11px] font-medium text-success hover:text-success/80 transition-colors whitespace-nowrap cursor-pointer"
+                          >
+                            Send all
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })
                 )}
               </>
             )}
