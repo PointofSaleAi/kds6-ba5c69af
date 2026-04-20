@@ -5,6 +5,7 @@ export type SortDefault = 'By Time' | 'By Table' | 'By Type';
 export type TempUnit = 'F' | 'C';
 export type WeekStart = 'Sunday' | 'Monday';
 export type TicketHeaderLayout = 'kitchen' | 'guest';
+export type ExpoSendButtonMode = 'always' | 'when-ready';
 
 export type OrderTypeColors = Record<string, string>;
 
