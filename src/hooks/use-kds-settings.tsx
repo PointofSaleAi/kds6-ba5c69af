@@ -56,6 +56,7 @@ export interface KDSSettings {
   orderTypeColors: OrderTypeColors;
   orderTypeDetailedColors: OrderTypeDetailedColors;
   ticketHeaderLayout: TicketHeaderLayout;
+  expoSendButtonMode: ExpoSendButtonMode;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -72,6 +73,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setOrderTypeColors: (v: OrderTypeColors) => void;
   setOrderTypeDetailedColors: (v: OrderTypeDetailedColors) => void;
   setTicketHeaderLayout: (v: TicketHeaderLayout) => void;
+  setExpoSendButtonMode: (v: ExpoSendButtonMode) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings';
