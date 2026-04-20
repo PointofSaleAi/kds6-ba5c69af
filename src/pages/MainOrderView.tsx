@@ -500,6 +500,57 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setActiveNav('home');
   }, [handleRecall, historyOrders]);
 
+  /** Move a single done item from active order into history (preserving order metadata) */
+  const handleItemDismiss = useCallback((orderId: string, item: OrderItem) => {
+    const sourceOrder = orders.find(o => o.id === orderId);
+    if (!sourceOrder) return;
+
+    const dismissedItem: OrderItem = { ...item, isCompleted: true };
+
+    // 1) Append/merge into history under a stable per-active-order history id
+    const historyId = `dismiss-${orderId}`;
+    setHistoryOrders(prev => {
+      const idx = prev.findIndex(o => o.id === historyId);
+      if (idx >= 0) {
+        const existing = prev[idx];
+        const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
+        if (existingItemIds.has(dismissedItem.id)) return prev;
+        const mergedCourses = existing.courses.length > 0
+          ? [{ ...existing.courses[0], items: [...existing.courses[0].items, dismissedItem] }]
+          : [{ course: 'ENTREE' as const, isFired: true, items: [dismissedItem] }];
+        const mergedItemCount = mergedCourses.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0), 0);
+        const updated: Order = { ...existing, courses: mergedCourses, itemCount: mergedItemCount };
+        const next = [...prev];
+        next[idx] = updated;
+        return next;
+      }
+      const elapsedSeconds = Math.round((Date.now() - sourceOrder.timeReceived.getTime()) / 1000);
+      const newHistoryEntry: Order = {
+        ...sourceOrder,
+        id: historyId,
+        status: 'served',
+        elapsedSeconds,
+        sourceHistoryOrderId: undefined,
+        itemCount: dismissedItem.quantity,
+        courses: [{ course: 'ENTREE', isFired: true, items: [dismissedItem] }],
+      };
+      return [newHistoryEntry, ...prev];
+    });
+
+    // 2) Remove the item from the active order; if order becomes empty, drop it
+    setOrders(prev => prev.flatMap(o => {
+      if (o.id !== orderId) return [o];
+      const updatedCourses = o.courses
+        .map(c => ({ ...c, items: c.items.filter(i => i.id !== item.id) }))
+        .filter(c => c.items.length > 0);
+      if (updatedCourses.length === 0) return [];
+      const newItemCount = updatedCourses.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0), 0);
+      return [{ ...o, courses: updatedCourses, itemCount: newItemCount }];
+    }));
+
+    toast.success(`${item.name} sent to history`, { duration: 1800 });
+  }, [orders, setOrders]);
+
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
       setActiveNav(target);
