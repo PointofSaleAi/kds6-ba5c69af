@@ -501,9 +501,9 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                     <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       {course.name} &middot; {courseStatusLabel}
                     </span>
-                    {course.statusLabel && (
-                      <span className="ml-auto text-[10px] text-text-muted">{course.statusLabel}</span>
-                    )}
+                    <span className="ml-auto text-[10px] text-text-muted">
+                      {courseItems.filter(i => i.status === 'done').length} of {courseItems.length} ready
+                    </span>
                   </div>
                 </div>
 
