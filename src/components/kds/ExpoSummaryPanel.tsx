@@ -153,15 +153,22 @@ export function ExpoSummaryPanel({
                       <button
                         key={p.name}
                         onClick={() => onProductToggle?.(p.name)}
-                        className={`w-full flex items-center justify-between px-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer animate-new-item ${
+                        aria-pressed={isSelected}
+                        className={`relative w-full flex items-center justify-between pr-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer animate-new-item ${
                           isSelected
-                            ? 'bg-success/10 border-l-[3px] border-l-success'
-                            : 'hover:bg-muted/50'
+                            ? 'bg-success/25 ring-1 ring-inset ring-success pl-3'
+                            : 'pl-3 hover:bg-muted/50'
                         }`}
                       >
-                        <span className={`text-[12px] font-medium truncate mr-1 ${isSelected ? 'text-text-primary' : 'text-text-primary'}`}>{p.name}</span>
+                        {isSelected && (
+                          <span className="absolute left-0 top-0 bottom-0 w-1 bg-success" aria-hidden="true" />
+                        )}
+                        <span className={`text-[12px] truncate mr-1 ${isSelected ? 'font-bold text-text-primary' : 'font-medium text-text-primary'}`}>
+                          {isSelected && <span className="text-success mr-1">✓</span>}
+                          {p.name}
+                        </span>
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-[13px] font-bold tabular-nums text-success">{p.count}</span>
+                          <span className={`text-[13px] tabular-nums text-success ${isSelected ? 'font-extrabold' : 'font-bold'}`}>{p.count}</span>
                           <span
                             role="button"
                             tabIndex={0}
@@ -196,16 +203,21 @@ export function ExpoSummaryPanel({
                 <button
                   key={p.name}
                   onClick={() => onProductToggle?.(p.name)}
-                  className={`w-full flex items-center justify-between px-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer ${
+                  aria-pressed={isSelected}
+                  className={`relative w-full flex items-center justify-between pr-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer pl-3 ${
                     isSelected
-                      ? 'bg-warning/10 border-l-[3px] border-l-warning'
+                      ? 'bg-warning/25 ring-1 ring-inset ring-warning'
                       : 'hover:bg-muted/50'
                   } ${p.hasFiring ? 'animate-new-item-warning' : 'animate-new-item-queued'}`}
                 >
-                  <span className={`text-[12px] font-medium ${isSelected ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  {isSelected && (
+                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-warning" aria-hidden="true" />
+                  )}
+                  <span className={`text-[12px] ${isSelected ? 'font-bold text-text-primary' : 'font-medium text-text-secondary'}`}>
+                    {isSelected && <span className="text-warning mr-1">✓</span>}
                     {p.name}
                   </span>
-                  <span className={`text-[13px] font-bold tabular-nums ${isSelected ? 'text-warning' : 'text-text-muted'}`}>
+                  <span className={`text-[13px] tabular-nums ${isSelected ? 'font-extrabold text-warning' : 'font-bold text-text-muted'}`}>
                     {p.count}
                   </span>
                 </button>
