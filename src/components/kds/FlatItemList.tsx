@@ -55,7 +55,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                   <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
                     {item.quantity}&times;
                   </span>
-                  <span className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`} style={{ fontSize: 'var(--kds-item-name)' }}>
+                  <span className={`font-semibold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`} style={{ fontSize: 'var(--kds-item-name)' }}>
                     {tp(item.name)}
                   </span>
                   {item.isCancelled && (
