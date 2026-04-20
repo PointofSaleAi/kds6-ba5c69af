@@ -466,7 +466,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Allergen badges */}
       {ticketAllergens.length > 0 && (
-        <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-b border-border/40">
+        <div className="flex flex-wrap items-center gap-1 border-b border-border/40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px', marginBottom: '6px' }}>
           {ticketAllergens.map(a => (
             <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
           ))}
