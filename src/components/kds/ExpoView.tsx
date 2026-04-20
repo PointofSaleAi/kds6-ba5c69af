@@ -627,54 +627,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Footer */}
       <div className="p-1.5 border-t border-border">
-        {/* Course progress counters for coursed tickets */}
-        {hasCoursingData && demoTicket?.coursing ? (
-          <div className="px-1 mb-1 space-y-0.5">
-            {demoTicket.coursing.served && (
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] text-text-secondary">{demoTicket.coursing.served.course}</span>
-                <span className="text-[12px] text-text-primary font-medium">
-                  {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} of {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} ready
-                </span>
-              </div>
-            )}
-            {demoTicket.coursing.active && (
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] text-text-secondary">{demoTicket.coursing.active.course}</span>
-                <span className="text-[12px] text-text-primary font-medium">
-                  {ticket.items.filter(i => i.status === 'done').length} of {ticket.items.length} ready
-                </span>
-              </div>
-            )}
-            {demoTicket.coursing.pending && (
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] text-text-secondary">{demoTicket.coursing.pending.course}</span>
-                <span className="text-[12px] text-text-primary font-medium">
-                  0 of {demoTicket.coursing.pending.items.length} ready
-                </span>
-              </div>
-            )}
-          </div>
-        ) : realCourses ? (
-          <div className="px-1 mb-1 space-y-0.5">
-            {realCourses.map(course => {
-              const courseItems = ticket.items.filter(i => course.itemIds.includes(i.id) && !sentItemIds.has(i.id));
-              const courseDone = courseItems.filter(i => i.status === 'done').length;
-              return (
-                <div key={course.name} className="flex items-center justify-between">
-                  <span className="text-[12px] text-text-secondary">{course.name}</span>
-                  <span className="text-[12px] text-text-primary font-medium">
-                    {courseDone} of {courseItems.length} ready
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="flex items-center justify-between mb-1 px-1">
-            <span className="text-[11px] font-bold text-text-muted">{doneCount} of {totalCount} done</span>
-          </div>
-        )}
+        {/* Course counters now render inline on each course header row */}
         {/* Fire next course button for coursed tickets */}
         {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
           <div className="flex items-center px-1 mb-1">
