@@ -406,8 +406,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                         {item.quantity}x
                       </span>
                       <span
-                        className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}
-                        style={{ fontSize: 'var(--kds-item-name)', ...(isHighlighted && !item.isCancelled && !item.isCompleted ? { color: '#1D4ED8' } : {}) }}
+                        className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : status === 'done' ? 'line-through text-success' : 'text-text-primary'} ${item.isCompleted && status !== 'done' ? 'text-success' : ''}`}
+                        style={{ fontSize: 'var(--kds-item-name)', ...(isHighlighted && !item.isCancelled && !item.isCompleted && status !== 'done' ? { color: '#1D4ED8' } : {}) }}
                       >
                         {tp(item.name)}
                       </span>
@@ -440,7 +440,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     </div>
 
                     {displayMode === 'dual' && !item.isCancelled && (
-                      <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
+                      <div className={`flex items-center gap-1 font-semibold uppercase ${status === 'done' ? 'line-through text-success/70' : 'text-text-muted'}`} style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
                         <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                           <Languages size={8} className="text-text-secondary" />
                         </span>
@@ -458,7 +458,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                         status === 'done' ? (
                           <>
                             <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
-                            <KdsActionIcon icon="ready" disabled label="Done" />
+                            <KdsActionIcon icon="done" onClick={() => onDismissItem?.(item.id)} label="Dismiss" />
                           </>
                         ) : status === 'preparing' ? (
                           <>
