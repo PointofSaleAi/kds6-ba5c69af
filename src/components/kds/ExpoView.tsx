@@ -260,6 +260,7 @@ function ExpoItemRow({
           </div>
           {showQtySelector ? partialSendControl : simpleSendButton}
         </div>
+        {modifierRow}
         {allergenRow}
       </div>
     );
@@ -285,6 +286,7 @@ function ExpoItemRow({
         </div>
         {showSendAlways && simpleSendButton}
       </div>
+      {modifierRow}
       {allergenRow}
     </div>
   );
