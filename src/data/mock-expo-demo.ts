@@ -33,7 +33,7 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { id: 'demo-1-3', name: 'Creme Brulee', quantity: 2, status: 'pending', station: 'Dessert' },
       ],
       courses: [
-        { name: 'Main Course', status: 'active' as const, itemIds: ['demo-1-1', 'demo-1-2'] },
+        { name: 'Entree', status: 'active' as const, itemIds: ['demo-1-1', 'demo-1-2'] },
         { name: 'Dessert', status: 'queued' as const, itemIds: ['demo-1-3'], statusLabel: 'Queued' },
       ],
     },
@@ -74,7 +74,7 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { id: 'demo-3-3', name: 'Tiramisu', quantity: 1, status: 'pending', station: 'Dessert', allergens: [{ type: 'dairy', label: 'Dairy' }, { type: 'gluten', label: 'Gluten' }] },
       ],
       courses: [
-        { name: 'Main Course', status: 'active' as const, itemIds: ['demo-3-1', 'demo-3-2'] },
+        { name: 'Entree', status: 'active' as const, itemIds: ['demo-3-1', 'demo-3-2'] },
         { name: 'Dessert', status: 'queued' as const, itemIds: ['demo-3-3'], statusLabel: 'Queued' },
       ],
     },
@@ -98,7 +98,7 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { id: 'demo-4-3', name: 'Sparkling Water', quantity: 2, status: 'done', station: 'Bar', statusLabel: 'Done 17:50' },
       ],
       courses: [
-        { name: 'Main Course', status: 'served' as const, itemIds: ['demo-4-1', 'demo-4-2', 'demo-4-3'] },
+        { name: 'Entree', status: 'served' as const, itemIds: ['demo-4-1', 'demo-4-2', 'demo-4-3'] },
       ],
     },
     // DEMO 5: Overtime / Urgent
@@ -118,7 +118,7 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { id: 'demo-5-2', name: 'Garlic Knots', quantity: 2, status: 'done', station: 'Grill', statusLabel: 'Done 22:00' },
       ],
       courses: [
-        { name: 'Main Course', status: 'active' as const, itemIds: ['demo-5-1', 'demo-5-2'] },
+        { name: 'Entree', status: 'active' as const, itemIds: ['demo-5-1', 'demo-5-2'] },
       ],
     },
   ];
