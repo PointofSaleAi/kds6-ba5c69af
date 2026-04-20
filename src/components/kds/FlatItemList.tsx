@@ -44,7 +44,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           >
             <div
               className="flex items-center cursor-pointer active:bg-muted/50 transition-colors"
-              style={{ padding: `var(--kds-item-gap) 0 var(--kds-item-gap) 4px`, gap: 0 }}
+              style={{ padding: `var(--kds-item-gap) 0 0 4px`, gap: 0 }}
               onClick={() => !item.isCancelled && onReRouteItem?.(item)}
             >
               <div className="flex-1 min-w-0">
@@ -84,7 +84,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                 </div>
 
                 {displayMode === 'dual' && !item.isCancelled && (
-                  <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1.1' }}>
+                  <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
                     <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                       <Languages size={8} className="text-text-secondary" />
                     </span>
