@@ -67,6 +67,33 @@ const orderTypeLabel: Record<string, string> = {
   banquet: 'BANQUET',
 };
 
+/**
+ * Filter modifiers to only those relevant to the expediter:
+ *   - Removals/substitutions ("No X", "Without X", "Sub", "Replace") -> red
+ *   - Add-ons ("+ X", "Extra X")                                     -> green
+ * Cooking temperature, cooking style, and sauce preparations are hidden.
+ */
+function getExpoRelevantModifiers(
+  modifiers?: { text: string; type: 'extra' | 'remove' | 'neutral' }[],
+): { text: string; kind: 'remove' | 'add' }[] {
+  if (!modifiers || modifiers.length === 0) return [];
+  const out: { text: string; kind: 'remove' | 'add' }[] = [];
+  for (const m of modifiers) {
+    const t = m.text.trim();
+    const lower = t.toLowerCase();
+    if (m.type === 'remove' || /^(no |without |sub |replace )/i.test(t)) {
+      out.push({ text: t, kind: 'remove' });
+      continue;
+    }
+    if (m.type === 'extra' || t.startsWith('+') || /^extra /i.test(t)) {
+      out.push({ text: t.startsWith('+') ? t : `+ ${t}`, kind: 'add' });
+      continue;
+    }
+    // neutral cooking instructions / sauce prep -> hidden on expo
+  }
+  return out;
+}
+
 /* -- Item status icon -- */
 
 function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
