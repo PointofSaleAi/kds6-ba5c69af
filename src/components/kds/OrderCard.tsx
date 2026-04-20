@@ -66,6 +66,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
+  const [dismissedItemIds, setDismissedItemIds] = useState<Set<string>>(new Set());
+
+  const handleDismissItem = useCallback((itemId: string) => {
+    setDismissedItemIds(prev => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+  }, []);
 
   // Servable modifier statuses
   const [modifierStatuses, setModifierStatuses] = useState<Map<string, ModifierStatus>>(new Map());
