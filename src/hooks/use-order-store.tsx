@@ -88,6 +88,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
         statusLabel,
         station: item.station,
         isNew: item.isNew,
+        isToGo: item.isToGo,
         allergens: item.allergens.length > 0
           ? item.allergens.map(a => ({ type: a.type, label: a.label }))
           : undefined,
