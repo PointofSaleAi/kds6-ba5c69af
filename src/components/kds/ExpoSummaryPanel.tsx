@@ -36,6 +36,7 @@ export function ExpoSummaryPanel({
 }: ExpoSummaryPanelProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [readySectionCollapsed, setReadySectionCollapsed] = useState(false);
+  const [pendingSectionCollapsed, setPendingSectionCollapsed] = useState(false);
 
   const selectedSet = useMemo(() => new Set(selectedProducts), [selectedProducts]);
 
