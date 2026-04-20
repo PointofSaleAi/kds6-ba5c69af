@@ -27,7 +27,7 @@ export function CourseBlockSection({
       className={`border-b border-border ${
         course.status === 'active' ? 'border-l-[3px]' : ''
       }`}
-      style={course.status === 'active' ? { borderLeftColor: '#7F77DD' } : undefined}
+      style={course.status === 'active' ? { borderLeftColor: '#0F4C81' } : undefined}
     >
       {/* Header */}
       <div
@@ -91,7 +91,7 @@ function getHeaderBg(status: CourseBlock['status']): string {
     case 'fired':
       return 'bg-success/10';
     case 'active':
-      return 'bg-[#EEEDFE]';
+      return 'bg-[#EFF6FF]';
     case 'pending':
       return 'bg-surface-card';
   }
@@ -102,7 +102,7 @@ function getNameColor(status: CourseBlock['status']): string {
     case 'fired':
       return 'text-success font-normal';
     case 'active':
-      return 'text-[#7F77DD] font-medium';
+      return 'text-[#0F4C81] font-medium';
     case 'pending':
       return 'text-muted-foreground font-normal';
   }
