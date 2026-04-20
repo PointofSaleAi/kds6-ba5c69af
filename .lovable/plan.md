@@ -1,51 +1,37 @@
 
-Scope
+The user reports the active course color change didn't take effect visually. Looking at `CourseBlockSection.tsx`, the colors are correctly set to `#0F4C81` and `#EFF6FF`. Let me check if there's another component rendering the active course header, since this one may not be the one used on the KDS Home screen.
 
-- Adjust only the colored ticket header block in `src/components/kds/OrderCard.tsx` for the Home screen kitchen layout.
-- Leave the order type bar, allergens row, ticket body, compact cards, History, Expo, and all other screens untouched.
+Let me investigate where active courses are actually rendered on the home screen ticket cards.
+<lov-tool-use id="toolu_vrtx_017SQQANC8UtBYD5tENRYfi3" name="code--search_files" integration-id="code" data="{\"query\": \"ACTIVE\", \"include_patterns\": \"src/components/kds/**/*.tsx\"}">
+</lov-tool-use>
 
-What is still causing the uneven top and bottom space
+<lov-tool-use id="toolu_vrtx_01EqsWtmHPPqS7uWrgvubTaM" name="code--search_files" integration-id="code" data="{\"query\": \"CourseSection|CourseBlockSection|courseBlocks|courses\\\\.map\", \"include_patterns\": \"src/**/*.tsx\"}">
+</lov-tool-use>
 
-- The block already has `padding: 12px`.
-- The remaining extra height is coming from the content box inside it, not from the outer padding:
-  - the large order number still has a tall font box, so the header height is being driven by the number more than the visible digits
-  - the employee, guest, and timer rows are close, but their text rows can still contribute a bit of vertical bulk
-- Because both sides are vertically centered, the right-side group sits inside that taller number-driven area, which makes the top and bottom feel larger than the left and right.
+<lov-tool-use id="toolu_vrtx_01DWR5tXgh3L4UJ3eWamNB8S" name="code--search_files" integration-id="code" data="{\"query\": \"CourseSection|CourseBlockSection\", \"include_patterns\": \"src/**/*.tsx\"}">
+</lov-tool-use>
 
-Implementation plan
+<lov-tool-use id="toolu_vrtx_01X1FvYFJK47EzGWs4ebZ8FA" name="code--view" integration-id="code" data="{\"file_path\": \"src/components/kds/CourseSection.tsx\"}">
+</lov-tool-use>
+Found it. The KDS Home Screen uses `CourseSection.tsx` (not `CourseBlockSection.tsx` which I edited last time). The active course styling is at lines 180, 192, 211, and 321 with `#7F77DD` and `#EEEDFE`.
 
-1. Tighten the order number line box
-   - In the kitchen header branch, apply an explicit compact line-height to the order number so the visible digits sit closer to the top and bottom bounds.
-   - Keep the same font size, weight, color, and left-side position.
+<lov-plan>
+## Issue
+My previous edit modified `CourseBlockSection.tsx`, but the KDS Home Screen ticket cards actually render via `CourseSection.tsx` (used by `OrderCard.tsx`). That file still has the old purple/violet `#7F77DD` and `#EEEDFE` values, which is why the active course color did not change.
 
-2. Compress the right-side stack
-   - Keep it as a right-aligned vertical column with centered placement.
-   - Reduce the employee and guest rows to an explicit compact line-height.
-   - Keep the gap between employee, guest, and timer at exactly 2px.
-   - Do not change icon size, text size, weight, or color.
+## Fix
+Update `src/components/kds/CourseSection.tsx`, replacing the violet fallbacks for the ACTIVE course state only:
 
-3. Keep the timer visually compact
-   - Keep the current timer size and styling.
-   - Ensure the timer row and `TimerBadge` use compact line-height so the monospace digits do not add hidden vertical space.
+1. **Left border accent (line 180)** — fallback `'#7F77DD'` → `'#0F4C81'`
+2. **Header background tint (line 192)** — fallback `'#EEEDFE'` → `'#EFF6FF'`
+3. **Label text color (line 211)** — fallback `'#7F77DD'` → `'#0F4C81'`
+4. **"Seen at HH:MM" pill (line 321)** — text `text-[#7F77DD]` → `text-[#0F4C81]`, background `#EEEDFE` → `#EFF6FF`
 
-4. Preserve equal outer padding
-   - Keep the colored block at `12px` on all four sides.
-   - Do not add a fixed height or any extra top or bottom padding.
-   - Let the final height be driven only by the tightened content plus the existing 12px padding.
+Note: these are fallbacks. When the course-aging engine supplies `courseAgingColor`, that color still wins (existing behavior preserved). The change only affects courses without an explicit aging color override.
 
-Validation
-
-- Confirm the colored block now looks evenly padded on top, bottom, left, and right.
-- Confirm the guest name sits closer to the employee name.
-- Confirm the order number remains the same size and position.
-- Confirm nothing else in the ticket card or other screens changes.
-
-Technical details
-
-- Primary file: `src/components/kds/OrderCard.tsx`
-- Likely updates:
-  - tighten the order number line-height
-  - keep header padding at `12px`
-  - keep the right-side stack as `flex-col`, `items-end`, `justify-center`
-  - keep stack gap at `2px`
-  - apply compact line-height to employee, guest, and timer rows
+## Out of Scope (unchanged)
+- Queued and Served course label, color, background, opacity
+- Course icons (eye, ConciergeBell, Check), undo button, ▶ collapse arrow
+- Item rows, modifier rows, allergen tags
+- Course-level aging color overrides (still respected)
+- Any other component or screen
