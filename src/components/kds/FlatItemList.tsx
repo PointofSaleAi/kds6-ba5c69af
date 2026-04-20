@@ -139,7 +139,8 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             )}
           </div>
         );
-      })}
+      });
+      })()}
     </div>
   );
 }
