@@ -92,6 +92,7 @@ const defaults: KDSSettings = {
   orderTypeColors: { ...DEFAULT_ORDER_TYPE_COLORS },
   orderTypeDetailedColors: { ...DEFAULT_ORDER_TYPE_DETAILED_COLORS },
   ticketHeaderLayout: 'kitchen',
+  expoSendButtonMode: 'when-ready',
 };
 
 function loadSettings(): KDSSettings {
