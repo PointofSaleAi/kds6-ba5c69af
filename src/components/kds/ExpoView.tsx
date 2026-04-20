@@ -810,10 +810,14 @@ function ExpoTopControls({
   filter,
   onFilterChange,
   fulfilledTickets,
+  onRecallLast,
+  hasRecallable,
 }: {
   filter: ExpoFilter;
   onFilterChange: (f: ExpoFilter) => void;
   fulfilledTickets: number[];
+  onRecallLast?: () => void;
+  hasRecallable?: boolean;
 }) {
   const handleRecalledClick = () => {
     if (fulfilledTickets.length === 0) {
@@ -856,6 +860,20 @@ function ExpoTopControls({
           </button>
         ))}
       </div>
+
+      <button
+        onClick={() => {
+          if (onRecallLast) onRecallLast();
+          else toast('No recently sent tickets.');
+        }}
+        className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
+          hasRecallable
+            ? 'border-warning text-warning bg-warning/10 animate-pulse'
+            : 'border-border text-text-secondary hover:bg-muted'
+        }`}
+      >
+        Recall last
+      </button>
     </div>
   );
 }
