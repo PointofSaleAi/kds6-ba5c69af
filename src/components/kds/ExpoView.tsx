@@ -475,7 +475,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Order notes (expo packaging + special instructions) */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
-        <div className="border-b border-border/40 border-l-2 border-l-amber-500" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '8px' }}>
+        <div className="border-b border-border/40 border-l-2 border-l-amber-500" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '4px' }}>
           <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
             Order Notes
           </div>
@@ -497,7 +497,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
-        <div className="border-b border-border bg-muted/50" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '5px' }}>
+        <div className="border-b border-border bg-muted/50" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '2px' }}>
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
             <span>&#9654;</span>
             <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; PREPARED</span>
