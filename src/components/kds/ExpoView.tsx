@@ -294,9 +294,20 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         className="flex items-center justify-between px-2"
         style={{ backgroundColor: urgencyBgColor, height: '36px' }}
       >
-        <span className="text-[13px] font-medium text-white leading-none">
-          #{ticket.orderNumber}
-        </span>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-[13px] font-medium text-white leading-none">
+            #{ticket.orderNumber}
+          </span>
+          {isRushed && (
+            <span
+              className="inline-flex items-center bg-destructive text-white rounded-full leading-none uppercase"
+              style={{ fontSize: '10px', fontWeight: 500, padding: '2px 10px' }}
+              aria-label="Rush"
+            >
+              RUSH
+            </span>
+          )}
+        </div>
         <span className="text-[13px] font-medium font-mono text-white leading-none">
           {formatTimer(ticket.timerSeconds)}
         </span>
@@ -477,20 +488,6 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           </div>
         ) : (
           <div className="flex gap-1.5">
-            {!isReady && (
-              <button
-                onClick={() => onRush?.(ticket.id)}
-                className={`px-3 py-2.5 border text-[12px] font-bold uppercase rounded transition-colors min-h-[44px] ${
-                  isRushed
-                    ? 'bg-destructive text-white border-destructive'
-                    : overtime
-                      ? 'border-destructive bg-destructive/10 text-destructive'
-                      : 'border-destructive text-destructive hover:bg-destructive/10'
-                }`}
-              >
-                Rush
-              </button>
-            )}
             <button
               onClick={() => isReady && onSendOut(ticket.id)}
               disabled={!isReady}
@@ -1117,7 +1114,7 @@ function ExpoBottomStats({
         <StatCounter label="Open" value={stats.open} />
         <StatCounter label="Ready" value={stats.ready} colorClass="text-success" />
         <StatCounter label="Overtime" value={stats.overtime} colorClass="text-destructive" />
-        <StatCounter label="Avg time" value={formatTimer(stats.avgTime)} />
+        
       </div>
 
       <div className="flex items-center gap-3">
