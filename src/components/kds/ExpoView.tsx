@@ -366,7 +366,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   const hasPendingCourse = !!demoTicket?.coursing?.pending || (realCourses?.some(c => c.status === 'queued') ?? false);
 
   // Urgency color from status rules
-  const urgencyBgColor = getUrgencyBg(ticket.timerSeconds, getStatusForElapsed);
+  const urgencyBgColor = getUrgencyBg(ticket.timerSeconds, rules);
 
   // Collect unique allergens across all items
   const ticketAllergens = useMemo(() => {
