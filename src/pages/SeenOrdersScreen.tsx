@@ -17,6 +17,7 @@ interface SeenOrdersScreenProps {
   onFireCourse: (orderId: string, course: string) => void;
   onItemStatusChange: (itemId: string, status: ItemStatus | undefined) => void;
   onMarkSeen?: (orderId: string) => void;
+  onItemDismiss?: (orderId: string, item: import("@/types/kds").OrderItem) => void;
 }
 
 const cardVariants = {
@@ -25,7 +26,7 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
-export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen }: SeenOrdersScreenProps) {
+export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
   const { orders, seenOrderIds } = useOrderStore();
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
@@ -63,7 +64,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} />
+                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -73,7 +74,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} />
+                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -83,7 +84,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[320px]">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} />
+                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -93,7 +94,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} />
+                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
                 </motion.div>
               ))}
             </AnimatePresence>
