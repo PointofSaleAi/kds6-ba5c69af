@@ -116,7 +116,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             </div>
 
             {item.modifiers.length > 0 && (
-              <div>
+              <div className={status === 'done' ? 'line-through opacity-60' : ''}>
                 {item.modifiers.map((mod, idx) => (
                   <ModifierLine
                     key={mod.id || idx}
