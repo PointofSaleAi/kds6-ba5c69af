@@ -537,7 +537,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               <div key={course.name}>
                 {/* Course header — collapsible */}
                 <div
-                  className={`px-2 py-1 border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
+                  className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
+                  style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}
                   onClick={() => toggleServedCourse(course.name)}
                   role="button"
                   aria-expanded={isExpanded}
