@@ -717,11 +717,17 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   );
 }
 
-/* -- Station Status Bar -- */
+/* -- Station Status Bar (with legend + Recall last) -- */
 
-function ExpoStationBar() {
-  return (
-    <div className="flex items-center gap-2 px-3 py-2 bg-surface-card border-b border-border shrink-0">
+function ExpoStationBar({
+  onRecallLast,
+  hasRecallable,
+}: {
+  onRecallLast?: () => void;
+  hasRecallable?: boolean;
+}) {
+  const stationsBlock = (
+    <div className="flex items-center flex-wrap gap-2">
       <span className="text-[10px] font-bold uppercase text-text-muted tracking-widest mr-1">Stations</span>
       {kitchenStations.map(s => (
         <span
@@ -732,6 +738,52 @@ function ExpoStationBar() {
           {s.name}
         </span>
       ))}
+    </div>
+  );
+
+  const legendBlock = (
+    <div className="flex items-center flex-wrap gap-3">
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
+    </div>
+  );
+
+  const recallButton = (
+    <button
+      onClick={() => {
+        if (onRecallLast) onRecallLast();
+        else toast('No recently sent tickets.');
+      }}
+      className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
+        hasRecallable
+          ? 'border-warning text-warning bg-warning/10 animate-pulse'
+          : 'border-border text-text-secondary hover:bg-muted'
+      }`}
+    >
+      Recall last
+    </button>
+  );
+
+  return (
+    <div className="bg-surface-card border-b border-border shrink-0">
+      {/* Single row on md+, stacked on smaller screens */}
+      <div className="hidden md:flex items-center gap-3 px-3 py-2">
+        {stationsBlock}
+        <div className="h-5 w-px bg-border-tertiary mx-1" style={{ width: '0.5px', backgroundColor: 'hsl(var(--border))' }} />
+        <div className="ml-auto flex items-center gap-3">
+          {legendBlock}
+          {recallButton}
+        </div>
+      </div>
+      <div className="flex md:hidden flex-col gap-2 px-3 py-2">
+        {stationsBlock}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          {legendBlock}
+          {recallButton}
+        </div>
+      </div>
     </div>
   );
 }
@@ -1268,7 +1320,20 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         onFilterChange={handleFilterChange}
         fulfilledTickets={fulfilledTickets}
       />
-      <ExpoStationBar />
+      <ExpoStationBar
+        onRecallLast={() => {
+          if (lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) {
+            handleDemoRecallLast();
+            return;
+          }
+          if (sentOutOrders.length > 0) {
+            handleRecallOrder(sentOutOrders[0].id);
+          } else {
+            toast('No recently sent tickets.');
+          }
+        }}
+        hasRecallable={(!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) || sentOutOrders.length > 0}
+      />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
         {sortedTickets.length === 0 ? (
@@ -1316,88 +1381,6 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         )}
       </div>
 
-      <ExpoBottomStats
-        stats={stats}
-        fulfilledTickets={fulfilledTickets}
-        onDemoRecallLast={handleDemoRecallLast}
-        hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
-        onRecallLast={sentOutOrders.length > 0 ? () => handleRecallOrder(sentOutOrders[0].id) : undefined}
-      />
     </div>
-  );
-}
-
-/* -- Expo Bottom Stats -- */
-
-function ExpoBottomStats({
-  stats,
-  fulfilledTickets,
-  onDemoRecallLast,
-  hasLastSentDemo,
-  onRecallLast,
-}: {
-  stats: { open: number; ready: number; overtime: number; avgTime: number };
-  fulfilledTickets: number[];
-  onDemoRecallLast?: () => void;
-  hasLastSentDemo?: boolean;
-  onRecallLast?: () => void;
-}) {
-  const hasRecallable = hasLastSentDemo || !!onRecallLast;
-  return (
-    <div className="flex items-center justify-between px-4 py-1.5 bg-surface-card border-t border-border shrink-0">
-      <div className="flex items-center gap-4">
-        <StatCounter label="Open" value={stats.open} />
-        <StatCounter label="Ready" value={stats.ready} colorClass="text-success" />
-        <StatCounter label="Overtime" value={stats.overtime} colorClass="text-destructive" />
-        
-      </div>
-
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
-          <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
-        </div>
-        <button
-          onClick={() => {
-            if (hasLastSentDemo) {
-              onDemoRecallLast?.();
-              return;
-            }
-            if (onRecallLast) {
-              onRecallLast();
-              return;
-            }
-            toast('No recently sent tickets.');
-          }}
-          className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
-            hasRecallable
-              ? 'border-warning text-warning bg-warning/10 animate-pulse'
-              : 'border-border text-text-secondary hover:bg-muted'
-          }`}
-        >
-          Recall last
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function StatCounter({ label, value, colorClass }: { label: string; value: number | string; colorClass?: string }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-[10px] font-bold uppercase text-text-muted tracking-wider">{label}</span>
-      <span className={`text-sm font-bold ${colorClass || 'text-text-primary'}`}>{value}</span>
-    </div>
-  );
-}
-
-function LegendDot({ color, label }: { color: string; label: string }) {
-  return (
-    <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
-      <span className={`w-2 h-2 rounded-full ${color} shrink-0`} />
-      {label}
-    </span>
   );
 }
