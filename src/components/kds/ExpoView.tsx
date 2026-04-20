@@ -173,7 +173,7 @@ function ExpoItemRow({
     </div>
   ) : null;
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
-    <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
+    <div className="flex flex-wrap gap-1 pl-4" style={{ marginTop: '3px' }}>
       {item.allergens.map(a => (
         <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
       ))}
