@@ -30,9 +30,17 @@ const StatusRulesContext = createContext<StatusRulesContextValue | null>(null);
 const COURSE_LEVEL_KEY = 'posai-course-level-aging';
 
 const STORAGE_KEY = 'posai-status-rules';
+const STORAGE_VERSION_KEY = 'posai-status-rules-version';
+const CURRENT_VERSION = '2';
 
 function loadRules(): StatusRule[] {
   try {
+    const version = localStorage.getItem(STORAGE_VERSION_KEY);
+    if (version !== CURRENT_VERSION) {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.setItem(STORAGE_VERSION_KEY, CURRENT_VERSION);
+      return DEFAULT_RULES;
+    }
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) return JSON.parse(stored);
   } catch { /* ignore */ }
