@@ -232,7 +232,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       return (
                         <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
                           <div
-                            className={`flex items-start justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
+                            className={`flex items-center justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
                             onClick={(e) => {
                               e.stopPropagation();
                               onItemToggle?.(item.name);
