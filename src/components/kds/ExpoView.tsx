@@ -1381,13 +1381,6 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         )}
       </div>
 
-      <ExpoBottomStats
-        stats={stats}
-        fulfilledTickets={fulfilledTickets}
-        onDemoRecallLast={handleDemoRecallLast}
-        hasLastSentDemo={!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)}
-        onRecallLast={sentOutOrders.length > 0 ? () => handleRecallOrder(sentOutOrders[0].id) : undefined}
-      />
     </div>
   );
 }
