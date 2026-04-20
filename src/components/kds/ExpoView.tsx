@@ -497,7 +497,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
-        <div className="px-2 py-1 border-b border-border bg-muted/50">
+        <div className="border-b border-border bg-muted/50" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '5px' }}>
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
             <span>&#9654;</span>
             <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; PREPARED</span>
@@ -510,7 +510,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Active course label for coursed demo tickets */}
       {demoTicket?.coursing?.active && (
-        <div className="px-2 py-1 border-b border-border">
+        <div className="border-b border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
               {demoTicket.coursing.active.course} &middot; {demoTicket.coursing.active.label}
@@ -561,7 +561,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
+                  <div className={`${isQueued ? 'opacity-40' : ''}`} style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px', marginBottom: '5px' }}>
                     {courseItems.map(item => (
                       <ExpoItemRow
                         key={item.id}
@@ -587,7 +587,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div className="px-2 py-1.5 space-y-0.5">
+        <div style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
           {ticket.items.map(item => (
             <ExpoItemRow
               key={item.id}
@@ -612,12 +612,12 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Pending course for demo ticket 6 */}
       {demoTicket?.coursing?.pending && (
         <>
-          <div className="px-2 py-1 border-t border-border">
+          <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
               {demoTicket.coursing.pending.course} &middot; {demoTicket.coursing.pending.label}
             </span>
           </div>
-          <div className="px-2 py-1 opacity-40">
+          <div className="opacity-40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
             {demoTicket.coursing.pending.items.map(pi => (
               <div key={pi.id} className="flex items-center gap-1.5 py-0.5">
                 <span className="text-[13px] font-medium text-text-primary">
@@ -634,7 +634,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       )}
 
       {/* Footer */}
-      <div className="p-1.5 border-t border-border">
+      <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '8px', paddingBottom: '8px' }}>
         {/* Course counters now render inline on each course header row */}
         {/* Fire next course button for coursed tickets */}
         {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
