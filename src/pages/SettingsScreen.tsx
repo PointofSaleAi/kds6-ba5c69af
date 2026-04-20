@@ -100,6 +100,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const { theme, setTheme } = useTheme();
   const { t, languageName } = useLanguage();
   const { kot, label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
+  const { expoSendButtonMode, setExpoSendButtonMode } = useKDSSettings();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
