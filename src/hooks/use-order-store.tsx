@@ -92,6 +92,9 @@ function deriveExpoItems(order: Order): ExpoItem[] {
         allergens: item.allergens.length > 0
           ? item.allergens.map(a => ({ type: a.type, label: a.label }))
           : undefined,
+        modifiers: item.modifiers && item.modifiers.length > 0
+          ? item.modifiers.map(m => ({ text: m.text, type: m.type }))
+          : undefined,
       });
     }
   }

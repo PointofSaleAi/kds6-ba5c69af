@@ -67,6 +67,33 @@ const orderTypeLabel: Record<string, string> = {
   banquet: 'BANQUET',
 };
 
+/**
+ * Filter modifiers to only those relevant to the expediter:
+ *   - Removals/substitutions ("No X", "Without X", "Sub", "Replace") -> red
+ *   - Add-ons ("+ X", "Extra X")                                     -> green
+ * Cooking temperature, cooking style, and sauce preparations are hidden.
+ */
+function getExpoRelevantModifiers(
+  modifiers?: { text: string; type: 'extra' | 'remove' | 'neutral' }[],
+): { text: string; kind: 'remove' | 'add' }[] {
+  if (!modifiers || modifiers.length === 0) return [];
+  const out: { text: string; kind: 'remove' | 'add' }[] = [];
+  for (const m of modifiers) {
+    const t = m.text.trim();
+    const lower = t.toLowerCase();
+    if (m.type === 'remove' || /^(no |without |sub |replace )/i.test(t)) {
+      out.push({ text: t, kind: 'remove' });
+      continue;
+    }
+    if (m.type === 'extra' || t.startsWith('+') || /^extra /i.test(t)) {
+      out.push({ text: t.startsWith('+') ? t : `+ ${t}`, kind: 'add' });
+      continue;
+    }
+    // neutral cooking instructions / sauce prep -> hidden on expo
+  }
+  return out;
+}
+
 /* -- Item status icon -- */
 
 function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
@@ -130,6 +157,21 @@ function ExpoItemRow({
     <StationBadge station={item.station as any} />
   ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
+  const expoModifiers = getExpoRelevantModifiers(item.modifiers);
+  const modifierRow = expoModifiers.length > 0 ? (
+    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4 mt-0.5">
+      {expoModifiers
+        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+        .map((m, idx) => (
+          <span
+            key={idx}
+            className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
+          >
+            {m.text}
+          </span>
+        ))}
+    </div>
+  ) : null;
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
     <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
       {item.allergens.map(a => (
@@ -218,6 +260,7 @@ function ExpoItemRow({
           </div>
           {showQtySelector ? partialSendControl : simpleSendButton}
         </div>
+        {modifierRow}
         {allergenRow}
       </div>
     );
@@ -243,6 +286,7 @@ function ExpoItemRow({
         </div>
         {showSendAlways && simpleSendButton}
       </div>
+      {modifierRow}
       {allergenRow}
     </div>
   );
