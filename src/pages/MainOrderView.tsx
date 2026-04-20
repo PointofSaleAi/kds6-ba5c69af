@@ -394,26 +394,28 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     );
 
     setOrders((prev) => {
-      const existingIndex = prev.findIndex(o => o.sourceHistoryOrderId === orderId);
-
-      if (existingIndex >= 0) {
-        const existing = prev[existingIndex];
+      // SCENARIO 1: original ticket still active on home — merge into it
+      const activeIndex = prev.findIndex(o => o.orderNumber === historyOrder.orderNumber);
+      if (activeIndex >= 0) {
+        const existing = prev[activeIndex];
         const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
-        const mergedItems = [
-          ...existing.courses.flatMap(c => c.items),
-          ...recalledItems.filter(item => !existingItemIds.has(item.id)),
-        ];
-        const mergedOrder: Order = {
+        const newRecalled = recalledItems.filter(i => !existingItemIds.has(i.id));
+        if (newRecalled.length === 0) return prev;
+        // Prepend recalled items to the FIRST course so they're immediately visible
+        const updatedCourses = existing.courses.length > 0
+          ? existing.courses.map((c, idx) =>
+              idx === 0 ? { ...c, items: [...newRecalled, ...c.items] } : c
+            )
+          : [{ course: 'ENTREE' as const, isFired: false, items: newRecalled }];
+        const merged: Order = {
           ...existing,
-          status: 'recalled',
-          timeReceived: new Date(),
-          elapsedSeconds: 0,
-          itemCount: mergedItems.reduce((sum, item) => sum + item.quantity, 0),
-          courses: [{ course: 'ENTREE', isFired: false, items: mergedItems }],
+          courses: updatedCourses,
+          itemCount: updatedCourses.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0), 0),
         };
-        return prev.map((order, index) => index === existingIndex ? mergedOrder : order);
+        return prev.map((o, i) => i === activeIndex ? merged : o);
       }
 
+      // SCENARIO 2: original ticket is gone — re-open it as a single ticket
       const recalledOrder: Order = {
         ...historyOrder,
         status: 'recalled',
@@ -439,36 +441,30 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
 
-    const activeItems = historyOrder.courses.flatMap(c => c.items).filter(i => !i.isCancelled);
-    const isOnlyItem = activeItems.length <= 1;
-
-    if (isOnlyItem) {
-      handleRecall(orderId);
-      return;
-    }
-
     const recalledItem = { ...item, isCompleted: false, isRecalled: true };
 
     setOrders((prev) => {
-      const existingIndex = prev.findIndex(o => o.sourceHistoryOrderId === orderId);
-
-      if (existingIndex >= 0) {
-        const existing = prev[existingIndex];
+      // SCENARIO 1: original ticket still active on home — merge into it
+      const activeIndex = prev.findIndex(o => o.orderNumber === historyOrder.orderNumber);
+      if (activeIndex >= 0) {
+        const existing = prev[activeIndex];
         const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
         if (existingItemIds.has(recalledItem.id)) return prev;
-
-        const mergedItems = [...existing.courses.flatMap(c => c.items), recalledItem];
-        const mergedOrder: Order = {
+        // Prepend to TOP of first course so it's immediately visible
+        const updatedCourses = existing.courses.length > 0
+          ? existing.courses.map((c, idx) =>
+              idx === 0 ? { ...c, items: [recalledItem, ...c.items] } : c
+            )
+          : [{ course: 'ENTREE' as const, isFired: false, items: [recalledItem] }];
+        const merged: Order = {
           ...existing,
-          status: 'recalled',
-          timeReceived: new Date(),
-          elapsedSeconds: 0,
-          itemCount: mergedItems.reduce((sum, currentItem) => sum + currentItem.quantity, 0),
-          courses: [{ course: 'ENTREE', isFired: false, items: mergedItems }],
+          courses: updatedCourses,
+          itemCount: updatedCourses.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0), 0),
         };
-        return prev.map((order, index) => index === existingIndex ? mergedOrder : order);
+        return prev.map((o, i) => i === activeIndex ? merged : o);
       }
 
+      // SCENARIO 2: original ticket is gone — re-open as single-item ticket using original order number
       const newOrder: Order = {
         id: `recalled-item-${item.id}-${Date.now()}`,
         orderNumber: historyOrder.orderNumber,
@@ -484,9 +480,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         sourceHistoryOrderId: orderId,
         courses: [{ course: 'ENTREE', isFired: false, items: [recalledItem] }],
       };
-        return [newOrder, ...prev];
+      return [newOrder, ...prev];
     });
 
+    // Remove the recalled item from the history entry
     setHistoryOrders((prev) => prev.map(o => {
       if (o.id !== orderId) return o;
       const updatedCourses = o.courses.map(c => ({
@@ -498,7 +495,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
     toast.success('Item recalled to kitchen', { duration: 2000 });
     setActiveNav('home');
-  }, [handleRecall, historyOrders]);
+  }, [historyOrders]);
 
   /** Move a single done item from active order into history (preserving order metadata) */
   const handleItemDismiss = useCallback((orderId: string, item: OrderItem) => {
