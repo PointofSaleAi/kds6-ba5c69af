@@ -739,6 +739,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+  const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
   const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
 
   // Track recently sent-out orders for recall
@@ -752,18 +753,42 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     });
   }, []);
 
-  const handleItemSend = useCallback((ticketId: string, itemId: string) => {
-    setSentItemIds(prev => {
-      const next = new Set(prev);
-      next.add(itemId);
+  const handleItemSend = useCallback((ticketId: string, itemId: string, qty: number) => {
+    // Look up total quantity from current rawTickets/demoTickets to know when fully sent
+    const allItems = [...rawTickets, ...demoTickets].flatMap(t => t.items);
+    const item = allItems.find(i => i.id === itemId);
+    const totalQty = item?.quantity ?? qty;
+
+    setSentQuantities(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId) ?? 0;
+      const updated = Math.min(totalQty, current + qty);
+      next.set(itemId, updated);
       return next;
     });
-    toast.success('Item sent');
-  }, []);
+
+    // If fully sent, also flag in sentItemIds so existing hide / auto-send-out logic engages
+    const currentSent = sentQuantities.get(itemId) ?? 0;
+    if (currentSent + qty >= totalQty) {
+      setSentItemIds(prev => {
+        const next = new Set(prev);
+        next.add(itemId);
+        return next;
+      });
+      toast.success('Item sent');
+    } else {
+      toast.success(`Sent ${qty} of ${totalQty}`);
+    }
+  }, [rawTickets, demoTickets, sentQuantities]);
 
   const handleItemRecall = useCallback((ticketId: string, itemId: string) => {
     setSentItemIds(prev => {
       const next = new Set(prev);
+      next.delete(itemId);
+      return next;
+    });
+    setSentQuantities(prev => {
+      const next = new Map(prev);
       next.delete(itemId);
       return next;
     });
