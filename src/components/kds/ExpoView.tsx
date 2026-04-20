@@ -159,7 +159,7 @@ function ExpoItemRow({
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4 mt-0.5">
+    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4" style={{ marginTop: '3px' }}>
       {expoModifiers
         .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
         .map((m, idx) => (
@@ -173,7 +173,7 @@ function ExpoItemRow({
     </div>
   ) : null;
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
-    <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
+    <div className="flex flex-wrap gap-1 pl-4" style={{ marginTop: '3px' }}>
       {item.allergens.map(a => (
         <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
       ))}
@@ -242,7 +242,8 @@ function ExpoItemRow({
   if (isPrepared) {
     return (
       <div
-        className={`py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+        className={`border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+        style={{ paddingTop: '5px', paddingBottom: '5px' }}
         onClick={() => {
           if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
           if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
@@ -268,7 +269,8 @@ function ExpoItemRow({
 
   return (
     <div
-      className={`py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+      className={`${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
+      style={{ paddingTop: '5px', paddingBottom: '5px' }}
       onClick={() => {
         if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
         if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
@@ -464,7 +466,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Allergen badges */}
       {ticketAllergens.length > 0 && (
-        <div className="px-2 py-1 flex flex-wrap items-center gap-1 border-b border-border/40">
+        <div className="flex flex-wrap items-center gap-1 border-b border-border/40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px', marginBottom: '6px' }}>
           {ticketAllergens.map(a => (
             <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
           ))}
@@ -473,7 +475,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Order notes (expo packaging + special instructions) */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
-        <div className="px-2 py-1 border-b border-border/40 border-l-2 border-l-amber-500">
+        <div className="border-b border-border/40 border-l-2 border-l-amber-500" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '8px' }}>
           <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
             Order Notes
           </div>
@@ -495,7 +497,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
-        <div className="px-2 py-1 border-b border-border bg-muted/50">
+        <div className="border-b border-border bg-muted/50" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '5px' }}>
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
             <span>&#9654;</span>
             <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; PREPARED</span>
@@ -508,7 +510,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Active course label for coursed demo tickets */}
       {demoTicket?.coursing?.active && (
-        <div className="px-2 py-1 border-b border-border">
+        <div className="border-b border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
               {demoTicket.coursing.active.course} &middot; {demoTicket.coursing.active.label}
@@ -532,10 +534,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             const isExpanded = !collapsedServedCourses.has(course.name);
 
             return (
-              <div key={course.name}>
+              <div key={course.name} style={{ marginBottom: '5px' }}>
                 {/* Course header — collapsible */}
                 <div
-                  className={`px-2 py-1 border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
+                  className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
+                  style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}
                   onClick={() => toggleServedCourse(course.name)}
                   role="button"
                   aria-expanded={isExpanded}
@@ -559,7 +562,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
+                  <div className={`${isQueued ? 'opacity-40' : ''}`} style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px', marginBottom: '5px' }}>
                     {courseItems.map(item => (
                       <ExpoItemRow
                         key={item.id}
@@ -585,7 +588,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div className="px-2 py-1.5 space-y-0.5">
+        <div style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
           {ticket.items.map(item => (
             <ExpoItemRow
               key={item.id}
@@ -610,12 +613,12 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Pending course for demo ticket 6 */}
       {demoTicket?.coursing?.pending && (
         <>
-          <div className="px-2 py-1 border-t border-border">
+          <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
             <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
               {demoTicket.coursing.pending.course} &middot; {demoTicket.coursing.pending.label}
             </span>
           </div>
-          <div className="px-2 py-1 opacity-40">
+          <div className="opacity-40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
             {demoTicket.coursing.pending.items.map(pi => (
               <div key={pi.id} className="flex items-center gap-1.5 py-0.5">
                 <span className="text-[13px] font-medium text-text-primary">
@@ -632,7 +635,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       )}
 
       {/* Footer */}
-      <div className="p-1.5 border-t border-border">
+      <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '8px', paddingBottom: '8px' }}>
         {/* Course counters now render inline on each course header row */}
         {/* Fire next course button for coursed tickets */}
         {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
