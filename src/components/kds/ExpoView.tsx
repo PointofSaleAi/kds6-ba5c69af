@@ -337,7 +337,7 @@ interface ExpoTicketCardProps {
 function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, sentQuantities, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors, expoSendButtonMode } = useKDSSettings();
-  const { getStatusForElapsed } = useStatusRules();
+  const { rules } = useStatusRules();
   const showSendAlways = expoSendButtonMode === 'always';
   const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
   // Filter to only unsent items for display and counting
