@@ -1177,6 +1177,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           isDemo={ticket.id.startsWith('demo-')}
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
           sentItemIds={sentItemIds}
+          sentQuantities={sentQuantities}
           onItemSend={handleItemSend}
           onItemRecall={handleItemRecall}
           acknowledgedNewItemIds={acknowledgedNewItemIds}
