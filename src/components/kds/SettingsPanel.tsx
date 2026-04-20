@@ -301,8 +301,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           {activeSection === 'display' && (
             <div className="grid grid-cols-2 gap-4">
               <SettingsCard>
-                <CardLabel label="Language" description="Set your display language preferences." />
-                <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
+                <div className="flex items-center justify-between">
+                  <CardLabel label="Language" description="Set your display language preferences." />
+                  <ActionButton label="Configure" onClick={() => setActiveSection('language')} />
+                </div>
               </SettingsCard>
 
               <SettingsCard>
@@ -311,13 +313,17 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Status Colours" description="Customise order status colours" />
-                <ActionButton label="Customise" onClick={() => setActiveSection('status-settings')} />
+                <div className="flex items-center justify-between">
+                  <CardLabel label="Status Colours" description="Customise order status colours" />
+                  <ActionButton label="Customise" onClick={() => setActiveSection('status-settings')} />
+                </div>
               </SettingsCard>
 
               <SettingsCard>
-                <CardLabel label="Order Type Colors" description="Customise order type header colors" />
-                <ActionButton label="Customise" onClick={() => setActiveSection('order-type-colors')} />
+                <div className="flex items-center justify-between">
+                  <CardLabel label="Order Type Colors" description="Customise order type header colors" />
+                  <ActionButton label="Customise" onClick={() => setActiveSection('order-type-colors')} />
+                </div>
               </SettingsCard>
 
               <SettingsCard>
