@@ -33,6 +33,7 @@ interface OrderCardProps {
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
   onAcknowledgeNotes?: (orderId: string) => void;
   onMarkSeen?: (orderId: string) => void;
+  onItemDismiss?: (orderId: string, item: OrderItem) => void;
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
@@ -54,7 +55,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
@@ -70,11 +71,20 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
   const handleDismissItem = useCallback((itemId: string) => {
     setDismissedItemIds(prev => {
+      if (prev.has(itemId)) return prev;
       const next = new Set(prev);
       next.add(itemId);
       return next;
     });
-  }, []);
+    // Find the OrderItem and notify parent so it can move to history
+    for (const c of order.courses) {
+      const found = c.items.find(i => i.id === itemId);
+      if (found) {
+        onItemDismiss?.(order.id, found);
+        break;
+      }
+    }
+  }, [order, onItemDismiss]);
 
   // Servable modifier statuses
   const [modifierStatuses, setModifierStatuses] = useState<Map<string, ModifierStatus>>(new Map());
