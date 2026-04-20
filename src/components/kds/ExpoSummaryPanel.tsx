@@ -192,39 +192,50 @@ export function ExpoSummaryPanel({
           <div className="border-b border-border" style={{ borderBottomWidth: '0.5px' }} />
 
           {/* Products pending */}
-          <div className="px-3 py-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products pending</span>
+          <div>
+            <button
+              onClick={() => setPendingSectionCollapsed(!pendingSectionCollapsed)}
+              className="w-full flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-muted/30 transition-colors"
+              aria-expanded={!pendingSectionCollapsed}
+            >
+              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products pending</span>
+              <span className="text-[10px] text-text-muted">{pendingSectionCollapsed ? '+' : '-'}</span>
+            </button>
+            {!pendingSectionCollapsed && (
+              <>
+                {productList.length === 0 ? (
+                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All items prepared</div>
+                ) : (
+                  productList.map(p => {
+                    const isSelected = selectedSet.has(p.name);
+                    return (
+                      <button
+                        key={p.name}
+                        onClick={() => onProductToggle?.(p.name)}
+                        aria-pressed={isSelected}
+                        className={`relative w-full flex items-center justify-between pr-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer pl-3 ${
+                          isSelected
+                            ? 'bg-warning/25 ring-1 ring-inset ring-warning'
+                            : 'hover:bg-muted/50'
+                        } ${p.hasFiring ? 'animate-new-item-warning' : 'animate-new-item-queued'}`}
+                      >
+                        {isSelected && (
+                          <span className="absolute left-0 top-0 bottom-0 w-1 bg-warning" aria-hidden="true" />
+                        )}
+                        <span className={`text-[12px] ${isSelected ? 'font-bold text-text-primary' : 'font-medium text-text-secondary'}`}>
+                          {isSelected && <span className="text-warning mr-1">✓</span>}
+                          {p.name}
+                        </span>
+                        <span className={`text-[13px] tabular-nums ${isSelected ? 'font-extrabold text-warning' : 'font-bold text-text-muted'}`}>
+                          {p.count}
+                        </span>
+                      </button>
+                    );
+                  })
+                )}
+              </>
+            )}
           </div>
-          {productList.length === 0 ? (
-            <div className="px-3 py-4 text-[12px] text-text-muted text-center">All items prepared</div>
-          ) : (
-            productList.map(p => {
-              const isSelected = selectedSet.has(p.name);
-              return (
-                <button
-                  key={p.name}
-                  onClick={() => onProductToggle?.(p.name)}
-                  aria-pressed={isSelected}
-                  className={`relative w-full flex items-center justify-between pr-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer pl-3 ${
-                    isSelected
-                      ? 'bg-warning/25 ring-1 ring-inset ring-warning'
-                      : 'hover:bg-muted/50'
-                  } ${p.hasFiring ? 'animate-new-item-warning' : 'animate-new-item-queued'}`}
-                >
-                  {isSelected && (
-                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-warning" aria-hidden="true" />
-                  )}
-                  <span className={`text-[12px] ${isSelected ? 'font-bold text-text-primary' : 'font-medium text-text-secondary'}`}>
-                    {isSelected && <span className="text-warning mr-1">✓</span>}
-                    {p.name}
-                  </span>
-                  <span className={`text-[13px] tabular-nums ${isSelected ? 'font-extrabold text-warning' : 'font-bold text-text-muted'}`}>
-                    {p.count}
-                  </span>
-                </button>
-              );
-            })
-          )}
         </div>
       </div>
     </div>
