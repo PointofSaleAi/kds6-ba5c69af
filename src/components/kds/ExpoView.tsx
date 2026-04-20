@@ -484,7 +484,24 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 {/* Course items (collapsible for served) */}
                 {isExpanded && (
                   <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
-                    {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon, showSendAlways))}
+                    {courseItems.map(item => (
+                      <ExpoItemRow
+                        key={item.id}
+                        item={item}
+                        ticket={ticket}
+                        sentItemIds={sentItemIds}
+                        sentQuantities={sentQuantities}
+                        tp={tp}
+                        isDemo={isDemo}
+                        onDemoItemTap={onDemoItemTap}
+                        onItemSend={onItemSend}
+                        onItemRecall={onItemRecall}
+                        acknowledgedNewItemIds={acknowledgedNewItemIds}
+                        onAcknowledgeNewItem={onAcknowledgeNewItem}
+                        runnerIconSrc={runnerIcon}
+                        showSendAlways={showSendAlways}
+                      />
+                    ))}
                   </div>
                 )}
               </div>
