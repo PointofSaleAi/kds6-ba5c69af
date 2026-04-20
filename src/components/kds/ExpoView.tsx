@@ -71,12 +71,15 @@ function renderExpoItemRow(
   acknowledgedNewItemIds: Set<string>,
   onAcknowledgeNewItem: ((itemId: string) => void) | undefined,
   runnerIconSrc: string,
+  showSendAlways: boolean,
 ) {
   // Hide sent items entirely — they are removed from the card
   if (sentItemIds.has(item.id)) return null;
 
   const isPrepared = item.status === 'done';
   const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
+  // To-Go badge only relevant for mixed dine-in orders
+  const showToGoBadge = !!item.isToGo && ticket.orderType === 'dine-in';
 
   const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
     <StationBadge station={item.station as any} />
@@ -89,6 +92,27 @@ function renderExpoItemRow(
       ))}
     </div>
   ) : null;
+
+  const toGoBadge = showToGoBadge ? (
+    <span
+      className="inline-flex items-center bg-text-primary text-white rounded-full uppercase leading-none"
+      style={{ fontSize: '9px', fontWeight: 500, padding: '1px 6px' }}
+      aria-label="To go item"
+    >
+      TO GO
+    </span>
+  ) : null;
+
+  const sendButton = (
+    <button
+      onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
+      className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
+      style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
+      aria-label="Send item"
+    >
+      <img src={runnerIconSrc} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
+    </button>
+  );
 
   if (isPrepared) {
     return (
@@ -105,18 +129,12 @@ function renderExpoItemRow(
             <span className="text-[13px] font-medium text-text-primary">
               {item.quantity}&times; {tp(item.name)}
             </span>
+            {toGoBadge}
             {stationChip}
             <span className="text-text-muted text-[10px]">&middot;</span>
             {statusIcon}
           </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
-            className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
-            style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
-            aria-label="Send item"
-          >
-            <img src={runnerIconSrc} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
-          </button>
+          {sendButton}
         </div>
         {allergenRow}
       </div>
@@ -132,13 +150,17 @@ function renderExpoItemRow(
         if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
       }}
     >
-      <div className="flex items-center flex-wrap gap-1.5">
-        <span className="text-[13px] font-medium text-text-primary">
-          {item.quantity}&times; {tp(item.name)}
-        </span>
-        {stationChip}
-        <span className="text-text-muted text-[10px]">&middot;</span>
-        {statusIcon}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
+          <span className="text-[13px] font-medium text-text-primary">
+            {item.quantity}&times; {tp(item.name)}
+          </span>
+          {toGoBadge}
+          {stationChip}
+          <span className="text-text-muted text-[10px]">&middot;</span>
+          {statusIcon}
+        </div>
+        {showSendAlways && sendButton}
       </div>
       {allergenRow}
     </div>
@@ -232,8 +254,9 @@ interface ExpoTicketCardProps {
 
 function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
-  const { orderTypeColors } = useKDSSettings();
+  const { orderTypeColors, expoSendButtonMode } = useKDSSettings();
   const { getStatusForElapsed } = useStatusRules();
+  const showSendAlways = expoSendButtonMode === 'always';
   const demoTicket = isDemo ? (ticket as DemoExpoTicket) : null;
   // Filter to only unsent items for display and counting
   const visibleItems = ticket.items.filter(i => !sentItemIds.has(i.id));
@@ -322,6 +345,26 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
+      {/* Order notes (expo packaging + special instructions) */}
+      {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
+        <div className="px-2 py-1 border-b border-border/40 border-l-2 border-l-amber-500">
+          <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
+            Order Notes
+          </div>
+          <div
+            className="text-[12px] italic text-text-primary leading-snug"
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {ticket.orderNotes}
+          </div>
+        </div>
+      )}
+
       {/* Station chips removed from header per design update */}
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
@@ -378,7 +421,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 {/* Course items (collapsible for served) */}
                 {isExpanded && (
                   <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
-                    {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
+                    {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon, showSendAlways))}
                   </div>
                 )}
               </div>
@@ -387,7 +430,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </>
       ) : (
         <div className="px-2 py-1.5 space-y-0.5">
-          {ticket.items.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
+          {ticket.items.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon, showSendAlways))}
         </div>
       )}
 

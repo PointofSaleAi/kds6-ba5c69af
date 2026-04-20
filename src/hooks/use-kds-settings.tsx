@@ -5,6 +5,7 @@ export type SortDefault = 'By Time' | 'By Table' | 'By Type';
 export type TempUnit = 'F' | 'C';
 export type WeekStart = 'Sunday' | 'Monday';
 export type TicketHeaderLayout = 'kitchen' | 'guest';
+export type ExpoSendButtonMode = 'always' | 'when-ready';
 
 export type OrderTypeColors = Record<string, string>;
 
@@ -55,6 +56,7 @@ export interface KDSSettings {
   orderTypeColors: OrderTypeColors;
   orderTypeDetailedColors: OrderTypeDetailedColors;
   ticketHeaderLayout: TicketHeaderLayout;
+  expoSendButtonMode: ExpoSendButtonMode;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -71,6 +73,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setOrderTypeColors: (v: OrderTypeColors) => void;
   setOrderTypeDetailedColors: (v: OrderTypeDetailedColors) => void;
   setTicketHeaderLayout: (v: TicketHeaderLayout) => void;
+  setExpoSendButtonMode: (v: ExpoSendButtonMode) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings';
@@ -89,6 +92,7 @@ const defaults: KDSSettings = {
   orderTypeColors: { ...DEFAULT_ORDER_TYPE_COLORS },
   orderTypeDetailedColors: { ...DEFAULT_ORDER_TYPE_DETAILED_COLORS },
   ticketHeaderLayout: 'kitchen',
+  expoSendButtonMode: 'when-ready',
 };
 
 function loadSettings(): KDSSettings {
@@ -130,6 +134,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setOrderTypeColors: update('orderTypeColors'),
         setOrderTypeDetailedColors: update('orderTypeDetailedColors'),
         setTicketHeaderLayout: update('ticketHeaderLayout'),
+        setExpoSendButtonMode: update('expoSendButtonMode'),
       }}
     >
       {children}

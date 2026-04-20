@@ -433,7 +433,7 @@ export const mockOrders: Order[] = [
         firedAgoLabel: '20:00 ago',
         items: [
           { id: 'i-016', name: 'Fish and Chips',
-            category: 'Seafood', quantity: 2, modifiers: [{ text: 'Mushy Peas', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, station: 'Fry' },
+            category: 'Seafood', quantity: 2, modifiers: [{ text: 'Mushy Peas', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, station: 'Fry', isToGo: true },
           { id: 'i-017', name: 'Onion Rings',
             category: 'Sides', quantity: 1, modifiers: [], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], isCompleted: true, isCancelled: true, station: 'Fry' },
         ],

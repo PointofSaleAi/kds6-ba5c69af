@@ -4,11 +4,12 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send } from 'lucide-react';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 
 interface SettingsScreenProps {
   open: boolean;
@@ -99,6 +100,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const { theme, setTheme } = useTheme();
   const { t, languageName } = useLanguage();
   const { kot, label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
+  const { expoSendButtonMode, setExpoSendButtonMode } = useKDSSettings();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
@@ -176,6 +178,26 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow icon={ShoppingBag} label={t.servableModifiers} right={<Toggle checked={servableModifiers} onChange={setServableModifiers} />} />
             <SettingsRow icon={ShoppingBag} label={t.showAllergenBadges} right={<Toggle checked={showAllergens} onChange={setShowAllergens} />} />
             <SettingsRow icon={ShoppingBag} label={t.sortDefault} right={<SegmentedToggle options={[t.byTime, t.byTable, t.byType]} value={sortDefault} onChange={setSortDefault} />} />
+
+            {/* EXPO VIEW */}
+            <div className="px-4 pt-4 pb-1">
+              <div className="flex items-center gap-2 mb-1">
+                <Send size={14} className="text-text-muted" />
+                <span className="text-section-label uppercase text-text-muted tracking-widest">Expo View</span>
+              </div>
+            </div>
+            <SettingsRow
+              icon={Send}
+              label="Show Send button"
+              description={expoSendButtonMode === 'always' ? 'Always — show on all items' : 'When ready — only when item is marked done on KDS'}
+              right={
+                <SegmentedToggle
+                  options={['Always', 'When ready']}
+                  value={expoSendButtonMode === 'always' ? 'Always' : 'When ready'}
+                  onChange={(v) => setExpoSendButtonMode(v === 'Always' ? 'always' : 'when-ready')}
+                />
+              }
+            />
 
             {/* HARDWARE */}
             <div className="px-4 pt-4 pb-1">

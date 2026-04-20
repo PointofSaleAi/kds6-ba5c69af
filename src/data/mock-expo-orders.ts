@@ -19,6 +19,8 @@ export interface ExpoItem {
   isNew?: boolean;
   /** Allergens associated with this item */
   allergens?: { type: string; label: string }[];
+  /** Item is flagged to-go within an otherwise dine-in order */
+  isToGo?: boolean;
 }
 
 export type ExpoCourseStatus = 'served' | 'active' | 'queued';
@@ -48,6 +50,8 @@ export interface ExpoTicket {
   activeCourseFiredAt?: Date;
   /** Course grouping for multi-course orders */
   courses?: ExpoCourse[];
+  /** Order-level notes from POS / server (for expo packaging + special instructions) */
+  orderNotes?: string;
 }
 
 export interface KitchenStation {
