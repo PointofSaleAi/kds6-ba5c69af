@@ -420,7 +420,17 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                         <span className="text-success text-xs">&#10003;</span>
                       )}
                       {item.isRecalled && !item.isCancelled && (
-                        <span className="text-[9px] font-bold text-order-take-out bg-order-take-out/10 px-1 py-px rounded uppercase tracking-wide">
+                        <span
+                          className="uppercase tracking-wide"
+                          style={{
+                            backgroundColor: '#E24B4A',
+                            color: '#FFFFFF',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                          }}
+                        >
                           RECALLED
                         </span>
                       )}

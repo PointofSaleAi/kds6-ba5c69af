@@ -19,9 +19,10 @@ interface OrderTypeBadgeProps {
   time?: string;
   tableInfo?: string;
   stationBadge?: string;
+  hasRecalled?: boolean;
 }
 
-export function OrderTypeBadge({ type, time, tableInfo, stationBadge }: OrderTypeBadgeProps) {
+export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalled }: OrderTypeBadgeProps) {
   const { to } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const bgColor = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
@@ -47,6 +48,21 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge }: OrderTyp
       <div className="flex items-center gap-2 text-primary-foreground/80 text-modifier shrink-0">
         {time && <span>{time}</span>}
         {tableInfo && <span>{tableInfo}</span>}
+        {hasRecalled && (
+          <span
+            className="uppercase tracking-wide whitespace-nowrap"
+            style={{
+              color: '#E24B4A',
+              fontSize: '11px',
+              fontWeight: 600,
+              backgroundColor: '#FFFFFF',
+              padding: '2px 8px',
+              borderRadius: '4px',
+            }}
+          >
+            RECALLED
+          </span>
+        )}
       </div>
     </div>
   );

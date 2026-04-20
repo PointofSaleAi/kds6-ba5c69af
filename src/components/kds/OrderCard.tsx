@@ -594,6 +594,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             time={formatTimeForKDS(order.timeReceived, timeFormat)}
             tableInfo={getLocationLabel(order.orderType, order.tableName)}
             stationBadge={undefined}
+            hasRecalled={order.courses.some(c => c.items.some(i => i.isRecalled && !i.isCancelled))}
           />
 
           <div
