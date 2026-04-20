@@ -1163,8 +1163,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       const nonMatching: typeof base = [];
       for (const t of base) {
         const itemNames = new Set(t.items.map(i => i.name));
-        const hasAll = [...selectedProductSet].every(p => itemNames.has(p));
-        if (hasAll) matching.push(t);
+        const hasAny = [...selectedProductSet].some(p => itemNames.has(p));
+        if (hasAny) matching.push(t);
         else nonMatching.push(t);
       }
       result = [...matching, ...nonMatching];
