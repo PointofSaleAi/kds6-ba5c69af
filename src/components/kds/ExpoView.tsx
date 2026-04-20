@@ -1270,7 +1270,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     let isDimmed = false;
     if (selectedProductSet.size > 0 && !ticketIsSentOut) {
       const itemNames = new Set(ticket.items.map(i => i.name));
-      isDimmed = ![...selectedProductSet].every(p => itemNames.has(p));
+      isDimmed = ![...selectedProductSet].some(p => itemNames.has(p));
     }
     return (
       <div className={`${isPulsing ? 'animate-expo-pin-pulse' : ''} ${isDimmed ? 'opacity-40' : ''} transition-opacity duration-300`}>
