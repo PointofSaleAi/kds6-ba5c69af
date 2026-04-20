@@ -21,6 +21,8 @@ export interface ExpoItem {
   allergens?: { type: string; label: string }[];
   /** Item is flagged to-go within an otherwise dine-in order */
   isToGo?: boolean;
+  /** Modifiers attached to this item (filtered for expo relevance at render time) */
+  modifiers?: { text: string; type: 'extra' | 'remove' | 'neutral' }[];
 }
 
 export type ExpoCourseStatus = 'served' | 'active' | 'queued';
