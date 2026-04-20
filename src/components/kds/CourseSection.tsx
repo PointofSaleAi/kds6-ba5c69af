@@ -30,6 +30,8 @@ interface CourseSectionProps {
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
   courseAgingColor?: { color: string; textColor: string };
+  dismissedItemIds?: Set<string>;
+  onDismissItem?: (itemId: string) => void;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -78,7 +80,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -367,8 +369,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         <div className="px-2 py-0.5">
           {(() => {
           const visibleItems = courseGroup.items.filter((item) => {
-            const status = itemStatuses?.get(item.id);
-            if (isActive && status === 'done' && !item.isCancelled) return false;
+            if (dismissedItemIds?.has(item.id)) return false;
             return true;
           });
           return visibleItems.map((item, visibleIdx) => {
@@ -405,8 +406,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                         {item.quantity}x
                       </span>
                       <span
-                        className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}
-                        style={{ fontSize: 'var(--kds-item-name)', ...(isHighlighted && !item.isCancelled && !item.isCompleted ? { color: '#1D4ED8' } : {}) }}
+                        className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : status === 'done' ? 'line-through text-success' : 'text-text-primary'} ${item.isCompleted && status !== 'done' ? 'text-success' : ''}`}
+                        style={{ fontSize: 'var(--kds-item-name)', ...(isHighlighted && !item.isCancelled && !item.isCompleted && status !== 'done' ? { color: '#1D4ED8' } : {}) }}
                       >
                         {tp(item.name)}
                       </span>
@@ -439,7 +440,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     </div>
 
                     {displayMode === 'dual' && !item.isCancelled && (
-                      <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
+                      <div className={`flex items-center gap-1 font-semibold uppercase ${status === 'done' ? 'line-through text-success/70' : 'text-text-muted'}`} style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
                         <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                           <Languages size={8} className="text-text-secondary" />
                         </span>
@@ -457,7 +458,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                         status === 'done' ? (
                           <>
                             <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
-                            <KdsActionIcon icon="ready" disabled label="Done" />
+                            <KdsActionIcon icon="done" onClick={() => onDismissItem?.(item.id)} label="Dismiss" />
                           </>
                         ) : status === 'preparing' ? (
                           <>

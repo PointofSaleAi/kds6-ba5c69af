@@ -19,9 +19,11 @@ interface FlatItemListProps {
   modifierStatuses?: Map<string, ModifierStatus>;
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
+  dismissedItemIds?: Set<string>;
+  onDismissItem?: (itemId: string) => void;
 }
 
-export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary } = useLanguage();
 
   const allItems = courses.flatMap(c => c.items);
@@ -30,8 +32,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
     <div className="px-2 py-0.5">
       {(() => {
         const visibleItems = allItems.filter((item) => {
-          const status = itemStatuses?.get(item.id);
-          if (status === 'done' && !item.isCancelled) return false;
+          if (dismissedItemIds?.has(item.id)) return false;
           return true;
         });
         return visibleItems.map((item, visibleIdx) => {
