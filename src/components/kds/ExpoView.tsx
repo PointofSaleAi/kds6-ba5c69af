@@ -159,7 +159,7 @@ function ExpoItemRow({
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4" style={{ marginTop: '3px' }}>
+    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4" style={{ marginTop: '2px' }}>
       {expoModifiers
         .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
         .map((m, idx) => (
@@ -173,7 +173,7 @@ function ExpoItemRow({
     </div>
   ) : null;
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
-    <div className="flex flex-wrap gap-1 pl-4" style={{ marginTop: '3px' }}>
+    <div className="flex flex-wrap gap-1 pl-4" style={{ marginTop: '2px' }}>
       {item.allergens.map(a => (
         <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
       ))}
@@ -243,7 +243,7 @@ function ExpoItemRow({
     return (
       <div
         className={`border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-        style={{ paddingTop: '5px', paddingBottom: '5px' }}
+        style={{ paddingTop: '5px', paddingBottom: '4px' }}
         onClick={() => {
           if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
           if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
@@ -270,7 +270,7 @@ function ExpoItemRow({
   return (
     <div
       className={`${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-      style={{ paddingTop: '5px', paddingBottom: '5px' }}
+      style={{ paddingTop: '5px', paddingBottom: '4px' }}
       onClick={() => {
         if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
         if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
