@@ -369,8 +369,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         <div className="px-2 py-0.5">
           {(() => {
           const visibleItems = courseGroup.items.filter((item) => {
-            const status = itemStatuses?.get(item.id);
-            if (isActive && status === 'done' && !item.isCancelled) return false;
+            if (dismissedItemIds?.has(item.id)) return false;
             return true;
           });
           return visibleItems.map((item, visibleIdx) => {
