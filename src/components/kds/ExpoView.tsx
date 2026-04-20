@@ -529,19 +529,25 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             const isServed = course.status === 'served';
             const isQueued = course.status === 'queued';
             const courseStatusLabel = isServed ? 'PREPARED' : isQueued ? 'QUEUED' : 'ACTIVE';
-            const isExpanded = !isServed || !collapsedServedCourses.has(course.name);
+            const isExpanded = !collapsedServedCourses.has(course.name);
 
             return (
               <div key={course.name}>
-                {/* Course header */}
+                {/* Course header — collapsible */}
                 <div
-                  className={`px-2 py-1 border-b border-border ${isServed ? 'bg-muted/50 cursor-pointer' : ''}`}
-                  onClick={isServed ? () => toggleServedCourse(course.name) : undefined}
+                  className={`px-2 py-1 border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
+                  onClick={() => toggleServedCourse(course.name)}
+                  role="button"
+                  aria-expanded={isExpanded}
                 >
                   <div className="flex items-center gap-1.5">
-                    {isServed && (
-                      <span className="text-[10px] text-text-muted" style={{ transform: isExpanded ? 'rotate(90deg)' : undefined, transition: 'transform 150ms' }}>&#9654;</span>
-                    )}
+                    <span
+                      className="text-[10px] text-text-muted inline-block"
+                      style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms' }}
+                      aria-hidden="true"
+                    >
+                      &#9654;
+                    </span>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       {course.name} &middot; {courseStatusLabel}
                     </span>
@@ -551,7 +557,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   </div>
                 </div>
 
-                {/* Course items (collapsible for served) */}
+                {/* Course items (collapsible) */}
                 {isExpanded && (
                   <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
                     {courseItems.map(item => (
