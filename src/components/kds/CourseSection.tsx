@@ -177,7 +177,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : '';
 
   const containerStyle = coursingStatus === 'active'
-    ? { borderLeftColor: agingColor || '#7F77DD', transition: 'all 200ms ease-in-out' }
+    ? { borderLeftColor: agingColor || '#0F4C81', transition: 'all 200ms ease-in-out' }
     : isPending
       ? { transition: 'all 200ms ease-in-out', opacity: 0.75 }
       : { transition: 'all 200ms ease-in-out' };
