@@ -381,6 +381,33 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     toast.success(`${course} fired!`);
   }, []);
 
+  /**
+   * Insert recalled items into the correct (active, not-served) course of an existing order.
+   * Avoids dropping recalled items into a fired/served course block.
+   */
+  const insertRecalledIntoActiveCourse = (existing: Order, newItems: OrderItem[]): Order['courses'] => {
+    if (newItems.length === 0) return existing.courses;
+    if (existing.courses.length === 0) {
+      return [{ course: 'ENTREE', isFired: false, items: newItems }];
+    }
+    // Pick the first non-fired course that still has at least one not-completed item
+    const activeIdx = existing.courses.findIndex(c =>
+      !c.isFired && c.items.some(i => !i.isCompleted && !i.isCancelled)
+    );
+    // Fallback: first non-fired course
+    const targetIdx = activeIdx >= 0
+      ? activeIdx
+      : existing.courses.findIndex(c => !c.isFired);
+
+    if (targetIdx >= 0) {
+      return existing.courses.map((c, idx) =>
+        idx === targetIdx ? { ...c, items: [...newItems, ...c.items] } : c
+      );
+    }
+    // All existing courses are fired/served — create a fresh ENTREE course at the front
+    return [{ course: 'ENTREE' as const, isFired: false, items: newItems }, ...existing.courses];
+  };
+
   const handleRecall = useCallback((orderId: string) => {
     const historyOrder = historyOrders.find(o => o.id === orderId);
     if (!historyOrder) return;
@@ -401,12 +428,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
         const newRecalled = recalledItems.filter(i => !existingItemIds.has(i.id));
         if (newRecalled.length === 0) return prev;
-        // Prepend recalled items to the FIRST course so they're immediately visible
-        const updatedCourses = existing.courses.length > 0
-          ? existing.courses.map((c, idx) =>
-              idx === 0 ? { ...c, items: [...newRecalled, ...c.items] } : c
-            )
-          : [{ course: 'ENTREE' as const, isFired: false, items: newRecalled }];
+        const updatedCourses = insertRecalledIntoActiveCourse(existing, newRecalled);
         const merged: Order = {
           ...existing,
           courses: updatedCourses,
@@ -450,12 +472,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         const existing = prev[activeIndex];
         const existingItemIds = new Set(existing.courses.flatMap(c => c.items.map(i => i.id)));
         if (existingItemIds.has(recalledItem.id)) return prev;
-        // Prepend to TOP of first course so it's immediately visible
-        const updatedCourses = existing.courses.length > 0
-          ? existing.courses.map((c, idx) =>
-              idx === 0 ? { ...c, items: [recalledItem, ...c.items] } : c
-            )
-          : [{ course: 'ENTREE' as const, isFired: false, items: [recalledItem] }];
+        const updatedCourses = insertRecalledIntoActiveCourse(existing, [recalledItem]);
         const merged: Order = {
           ...existing,
           courses: updatedCourses,
