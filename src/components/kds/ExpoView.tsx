@@ -130,6 +130,21 @@ function ExpoItemRow({
     <StationBadge station={item.station as any} />
   ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
+  const expoModifiers = getExpoRelevantModifiers(item.modifiers);
+  const modifierRow = expoModifiers.length > 0 ? (
+    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4 mt-0.5">
+      {expoModifiers
+        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+        .map((m, idx) => (
+          <span
+            key={idx}
+            className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
+          >
+            {m.text}
+          </span>
+        ))}
+    </div>
+  ) : null;
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
     <div className="flex flex-wrap gap-1 pl-4 mt-0.5">
       {item.allergens.map(a => (
