@@ -4,11 +4,12 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send } from 'lucide-react';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 
 interface SettingsScreenProps {
   open: boolean;
