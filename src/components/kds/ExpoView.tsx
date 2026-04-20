@@ -754,22 +754,21 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   }, []);
 
   const handleItemSend = useCallback((ticketId: string, itemId: string, qty: number) => {
-    // Look up total quantity from current rawTickets/demoTickets to know when fully sent
-    const allItems = [...rawTickets, ...demoTickets].flatMap(t => t.items);
-    const item = allItems.find(i => i.id === itemId);
+    // Look up total quantity from current rawTickets to know when fully sent
+    const item = rawTickets.flatMap(t => t.items).find(i => i.id === itemId);
     const totalQty = item?.quantity ?? qty;
 
+    let willBeFullySent = false;
     setSentQuantities(prev => {
       const next = new Map(prev);
       const current = next.get(itemId) ?? 0;
       const updated = Math.min(totalQty, current + qty);
       next.set(itemId, updated);
+      willBeFullySent = updated >= totalQty;
       return next;
     });
 
-    // If fully sent, also flag in sentItemIds so existing hide / auto-send-out logic engages
-    const currentSent = sentQuantities.get(itemId) ?? 0;
-    if (currentSent + qty >= totalQty) {
+    if (willBeFullySent) {
       setSentItemIds(prev => {
         const next = new Set(prev);
         next.add(itemId);
@@ -779,7 +778,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     } else {
       toast.success(`Sent ${qty} of ${totalQty}`);
     }
-  }, [rawTickets, demoTickets, sentQuantities]);
+  }, [rawTickets]);
 
   const handleItemRecall = useCallback((ticketId: string, itemId: string) => {
     setSentItemIds(prev => {
