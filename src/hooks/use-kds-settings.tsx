@@ -134,6 +134,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setOrderTypeColors: update('orderTypeColors'),
         setOrderTypeDetailedColors: update('orderTypeDetailedColors'),
         setTicketHeaderLayout: update('ticketHeaderLayout'),
+        setExpoSendButtonMode: update('expoSendButtonMode'),
       }}
     >
       {children}
