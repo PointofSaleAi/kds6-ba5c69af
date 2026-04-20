@@ -154,7 +154,7 @@ function ExpoItemRow({
   const showQtySelector = isPrepared && remainingQty > 1;
 
   const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
-    <StationBadge station={item.station as any} />
+    <ExpoStationBadge station={item.station} />
   ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
