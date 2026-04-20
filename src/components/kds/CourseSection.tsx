@@ -365,12 +365,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           }}
         >
         <div className="px-2 py-0.5">
-          {courseGroup.items.filter((item) => {
+          {(() => {
+          const visibleItems = courseGroup.items.filter((item) => {
             const status = itemStatuses?.get(item.id);
-            // Hide done items from the ticket card
             if (isActive && status === 'done' && !item.isCancelled) return false;
             return true;
-          }).map((item) => {
+          });
+          return visibleItems.map((item, visibleIdx) => {
+            const isLastVisible = visibleIdx === visibleItems.length - 1;
             const status = itemStatuses?.get(item.id);
             const timestamps = itemTimestamps?.get(item.id);
             const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
@@ -384,7 +386,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             return (
               <div
                 key={item.id}
-                className={`border-b border-border/50 ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
+                className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
                 style={{
                   ...(itemOpacity !== undefined ? { opacity: itemOpacity } : {}),
                   ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
