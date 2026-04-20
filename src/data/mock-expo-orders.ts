@@ -50,6 +50,8 @@ export interface ExpoTicket {
   activeCourseFiredAt?: Date;
   /** Course grouping for multi-course orders */
   courses?: ExpoCourse[];
+  /** Order-level notes from POS / server (for expo packaging + special instructions) */
+  orderNotes?: string;
 }
 
 export interface KitchenStation {
