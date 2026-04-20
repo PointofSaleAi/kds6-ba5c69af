@@ -294,9 +294,20 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         className="flex items-center justify-between px-2"
         style={{ backgroundColor: urgencyBgColor, height: '36px' }}
       >
-        <span className="text-[13px] font-medium text-white leading-none">
-          #{ticket.orderNumber}
-        </span>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-[13px] font-medium text-white leading-none">
+            #{ticket.orderNumber}
+          </span>
+          {isRushed && (
+            <span
+              className="inline-flex items-center bg-destructive text-white rounded-full leading-none uppercase"
+              style={{ fontSize: '10px', fontWeight: 500, padding: '2px 10px' }}
+              aria-label="Rush"
+            >
+              RUSH
+            </span>
+          )}
+        </div>
         <span className="text-[13px] font-medium font-mono text-white leading-none">
           {formatTimer(ticket.timerSeconds)}
         </span>
