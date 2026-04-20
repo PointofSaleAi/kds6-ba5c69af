@@ -159,7 +159,7 @@ function ExpoItemRow({
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4 mt-0.5">
+    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4" style={{ marginTop: '3px' }}>
       {expoModifiers
         .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
         .map((m, idx) => (
