@@ -48,7 +48,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
                   mod.type === 'extra'
                     ? 'text-modifier-extra'
                     : mod.type === 'remove'
-                      ? 'text-destructive line-through'
+                      ? 'text-destructive'
                       : 'text-text-secondary'
                 }
                 style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}

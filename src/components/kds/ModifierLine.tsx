@@ -54,7 +54,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const { tm } = useLanguage();
   const styles = {
     extra: 'text-modifier-extra',
-    remove: 'text-modifier-remove line-through',
+    remove: 'text-modifier-remove',
     neutral: 'text-text-secondary',
   };
 
