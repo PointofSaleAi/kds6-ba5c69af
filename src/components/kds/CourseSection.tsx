@@ -177,7 +177,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : '';
 
   const containerStyle = coursingStatus === 'active'
-    ? { borderLeftColor: agingColor || '#7F77DD', transition: 'all 200ms ease-in-out' }
+    ? { borderLeftColor: agingColor || '#0F4C81', transition: 'all 200ms ease-in-out' }
     : isPending
       ? { transition: 'all 200ms ease-in-out', opacity: 0.75 }
       : { transition: 'all 200ms ease-in-out' };
@@ -189,7 +189,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
-    ? { backgroundColor: agingColor ? `${agingColor}18` : '#EEEDFE' }
+    ? { backgroundColor: agingColor ? `${agingColor}18` : '#EFF6FF' }
     : undefined;
 
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
@@ -208,7 +208,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : 'uppercase text-muted-foreground tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
-    ? { color: agingColor || '#7F77DD', fontWeight: 600, fontSize: '14px' }
+    ? { color: agingColor || '#0F4C81', fontWeight: 600, fontSize: '14px' }
     : { fontWeight: 500 };
 
   // Course-level icon for active courses - purple/violet to distinguish from item-level
@@ -318,7 +318,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           )}
           {/* Active course: "Seen at HH:MM" after first acknowledgement */}
           {isActive && courseSeenAt && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-[#7F77DD]" style={{ backgroundColor: '#EEEDFE' }}>
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-[#0F4C81]" style={{ backgroundColor: '#EFF6FF' }}>
               Seen at {courseSeenAt}
             </span>
           )}
