@@ -430,7 +430,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </>
       ) : (
         <div className="px-2 py-1.5 space-y-0.5">
-          {ticket.items.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon))}
+          {ticket.items.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon, showSendAlways))}
         </div>
       )}
 
