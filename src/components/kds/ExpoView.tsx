@@ -345,6 +345,26 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
+      {/* Order notes (expo packaging + special instructions) */}
+      {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
+        <div className="px-2 py-1 border-b border-border/40 border-l-2 border-l-amber-500">
+          <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
+            Order Notes
+          </div>
+          <div
+            className="text-[12px] italic text-text-primary leading-snug"
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {ticket.orderNotes}
+          </div>
+        </div>
+      )}
+
       {/* Station chips removed from header per design update */}
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
