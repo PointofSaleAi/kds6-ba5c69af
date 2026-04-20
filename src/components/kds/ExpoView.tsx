@@ -717,11 +717,17 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   );
 }
 
-/* -- Station Status Bar -- */
+/* -- Station Status Bar (with legend + Recall last) -- */
 
-function ExpoStationBar() {
-  return (
-    <div className="flex items-center gap-2 px-3 py-2 bg-surface-card border-b border-border shrink-0">
+function ExpoStationBar({
+  onRecallLast,
+  hasRecallable,
+}: {
+  onRecallLast?: () => void;
+  hasRecallable?: boolean;
+}) {
+  const stationsBlock = (
+    <div className="flex items-center flex-wrap gap-2">
       <span className="text-[10px] font-bold uppercase text-text-muted tracking-widest mr-1">Stations</span>
       {kitchenStations.map(s => (
         <span
@@ -732,6 +738,52 @@ function ExpoStationBar() {
           {s.name}
         </span>
       ))}
+    </div>
+  );
+
+  const legendBlock = (
+    <div className="flex items-center flex-wrap gap-3">
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
+    </div>
+  );
+
+  const recallButton = (
+    <button
+      onClick={() => {
+        if (onRecallLast) onRecallLast();
+        else toast('No recently sent tickets.');
+      }}
+      className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
+        hasRecallable
+          ? 'border-warning text-warning bg-warning/10 animate-pulse'
+          : 'border-border text-text-secondary hover:bg-muted'
+      }`}
+    >
+      Recall last
+    </button>
+  );
+
+  return (
+    <div className="bg-surface-card border-b border-border shrink-0">
+      {/* Single row on md+, stacked on smaller screens */}
+      <div className="hidden md:flex items-center gap-3 px-3 py-2">
+        {stationsBlock}
+        <div className="h-5 w-px bg-border-tertiary mx-1" style={{ width: '0.5px', backgroundColor: 'hsl(var(--border))' }} />
+        <div className="ml-auto flex items-center gap-3">
+          {legendBlock}
+          {recallButton}
+        </div>
+      </div>
+      <div className="flex md:hidden flex-col gap-2 px-3 py-2">
+        {stationsBlock}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          {legendBlock}
+          {recallButton}
+        </div>
+      </div>
     </div>
   );
 }
