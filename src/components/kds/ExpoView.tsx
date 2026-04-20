@@ -455,7 +455,9 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
             <span>&#9654;</span>
             <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; PREPARED</span>
-            <span className="ml-auto text-[10px]">Done at {demoTicket.coursing.served.doneAt}</span>
+            <span className="ml-auto text-[10px] text-text-muted">
+              {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} of {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} ready
+            </span>
           </div>
         </div>
       )}
@@ -463,9 +465,14 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Active course label for coursed demo tickets */}
       {demoTicket?.coursing?.active && (
         <div className="px-2 py-1 border-b border-border">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-            {demoTicket.coursing.active.course} &middot; {demoTicket.coursing.active.label}
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+              {demoTicket.coursing.active.course} &middot; {demoTicket.coursing.active.label}
+            </span>
+            <span className="text-[10px] text-text-muted">
+              {ticket.items.filter(i => i.status === 'done').length} of {ticket.items.length} ready
+            </span>
+          </div>
         </div>
       )}
 
@@ -494,9 +501,9 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                     <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       {course.name} &middot; {courseStatusLabel}
                     </span>
-                    {course.statusLabel && (
-                      <span className="ml-auto text-[10px] text-text-muted">{course.statusLabel}</span>
-                    )}
+                    <span className="ml-auto text-[10px] text-text-muted">
+                      {courseItems.filter(i => i.status === 'done').length} of {courseItems.length} ready
+                    </span>
                   </div>
                 </div>
 
