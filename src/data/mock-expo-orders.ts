@@ -19,6 +19,8 @@ export interface ExpoItem {
   isNew?: boolean;
   /** Allergens associated with this item */
   allergens?: { type: string; label: string }[];
+  /** Item is flagged to-go within an otherwise dine-in order */
+  isToGo?: boolean;
 }
 
 export type ExpoCourseStatus = 'served' | 'active' | 'queued';
