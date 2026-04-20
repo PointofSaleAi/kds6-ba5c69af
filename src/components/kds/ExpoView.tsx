@@ -154,7 +154,7 @@ function ExpoItemRow({
   const showQtySelector = isPrepared && remainingQty > 1;
 
   const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
-    <StationBadge station={item.station as any} />
+    <ExpoStationBadge station={item.station} />
   ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
@@ -717,27 +717,60 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
   );
 }
 
-/* -- Station Status Bar (with legend + Recall last) -- */
+/* -- Expo-specific station color palette (avoids clashing with status & order-type colors) -- */
 
-function ExpoStationBar({
-  onRecallLast,
-  hasRecallable,
-}: {
-  onRecallLast?: () => void;
-  hasRecallable?: boolean;
-}) {
+const expoStationPalette: Record<string, { bg: string; text: string; border: string }> = {
+  Grill:   { bg: '#FAECE7', text: '#993C1D', border: '#F0997B' },
+  Fry:     { bg: '#EEEDFE', text: '#534AB7', border: '#AFA9EC' },
+  Salad:   { bg: '#E1F5EE', text: '#0F6E56', border: '#5DCAA5' },
+  Dessert: { bg: '#FBEAF0', text: '#993556', border: '#ED93B1' },
+  Bar:     { bg: '#FAEEDA', text: '#854F0B', border: '#EF9F27' },
+};
+
+function ExpoStationBadge({ station }: { station: string }) {
+  const palette = expoStationPalette[station] || { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' };
+  return (
+    <span
+      className="inline-flex items-center rounded shrink-0"
+      style={{
+        fontSize: '9px',
+        fontWeight: 600,
+        padding: '1px 5px',
+        borderRadius: '4px',
+        backgroundColor: palette.bg,
+        color: palette.text,
+        border: `1px solid ${palette.border}`,
+        lineHeight: '1.4',
+      }}
+    >
+      {station}
+    </span>
+  );
+}
+
+/* -- Station Status Bar (with legend) -- */
+
+function ExpoStationBar() {
   const stationsBlock = (
     <div className="flex items-center flex-wrap gap-2">
       <span className="text-[10px] font-bold uppercase text-text-muted tracking-widest mr-1">Stations</span>
-      {kitchenStations.map(s => (
-        <span
-          key={s.name}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-muted text-[11px] font-bold text-text-secondary"
-        >
-          <span className={`w-2 h-2 rounded-full ${s.dotClass} shrink-0`} />
-          {s.name}
-        </span>
-      ))}
+      {kitchenStations.map(s => {
+        const palette = expoStationPalette[s.name] || { bg: 'hsl(var(--muted))', text: 'hsl(var(--text-secondary))', border: 'hsl(var(--border))' };
+        return (
+          <span
+            key={s.name}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold"
+            style={{
+              backgroundColor: palette.bg,
+              color: palette.text,
+              border: `1px solid ${palette.border}`,
+            }}
+          >
+            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: palette.border }} />
+            {s.name}
+          </span>
+        );
+      })}
     </div>
   );
 
@@ -750,38 +783,19 @@ function ExpoStationBar({
     </div>
   );
 
-  const recallButton = (
-    <button
-      onClick={() => {
-        if (onRecallLast) onRecallLast();
-        else toast('No recently sent tickets.');
-      }}
-      className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
-        hasRecallable
-          ? 'border-warning text-warning bg-warning/10 animate-pulse'
-          : 'border-border text-text-secondary hover:bg-muted'
-      }`}
-    >
-      Recall last
-    </button>
-  );
-
   return (
     <div className="bg-surface-card border-b border-border shrink-0">
-      {/* Single row on md+, stacked on smaller screens */}
       <div className="hidden md:flex items-center gap-3 px-3 py-2">
         {stationsBlock}
-        <div className="h-5 w-px bg-border-tertiary mx-1" style={{ width: '0.5px', backgroundColor: 'hsl(var(--border))' }} />
+        <div className="h-5 mx-1" style={{ width: '0.5px', backgroundColor: 'hsl(var(--border))' }} />
         <div className="ml-auto flex items-center gap-3">
           {legendBlock}
-          {recallButton}
         </div>
       </div>
       <div className="flex md:hidden flex-col gap-2 px-3 py-2">
         {stationsBlock}
         <div className="flex items-center justify-between gap-2 flex-wrap">
           {legendBlock}
-          {recallButton}
         </div>
       </div>
     </div>
@@ -796,10 +810,14 @@ function ExpoTopControls({
   filter,
   onFilterChange,
   fulfilledTickets,
+  onRecallLast,
+  hasRecallable,
 }: {
   filter: ExpoFilter;
   onFilterChange: (f: ExpoFilter) => void;
   fulfilledTickets: number[];
+  onRecallLast?: () => void;
+  hasRecallable?: boolean;
 }) {
   const handleRecalledClick = () => {
     if (fulfilledTickets.length === 0) {
@@ -842,6 +860,20 @@ function ExpoTopControls({
           </button>
         ))}
       </div>
+
+      <button
+        onClick={() => {
+          if (onRecallLast) onRecallLast();
+          else toast('No recently sent tickets.');
+        }}
+        className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
+          hasRecallable
+            ? 'border-warning text-warning bg-warning/10 animate-pulse'
+            : 'border-border text-text-secondary hover:bg-muted'
+        }`}
+      >
+        Recall last
+      </button>
     </div>
   );
 }
@@ -1313,27 +1345,29 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     );
   };
 
+  const hasRecallable = (!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) || sentOutOrders.length > 0;
+  const handleRecallLast = () => {
+    if (lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) {
+      handleDemoRecallLast();
+      return;
+    }
+    if (sentOutOrders.length > 0) {
+      handleRecallOrder(sentOutOrders[0].id);
+    } else {
+      toast('No recently sent tickets.');
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <ExpoTopControls
         filter={filter}
         onFilterChange={handleFilterChange}
         fulfilledTickets={fulfilledTickets}
+        onRecallLast={handleRecallLast}
+        hasRecallable={hasRecallable}
       />
-      <ExpoStationBar
-        onRecallLast={() => {
-          if (lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) {
-            handleDemoRecallLast();
-            return;
-          }
-          if (sentOutOrders.length > 0) {
-            handleRecallOrder(sentOutOrders[0].id);
-          } else {
-            toast('No recently sent tickets.');
-          }
-        }}
-        hasRecallable={(!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) || sentOutOrders.length > 0}
-      />
+      <ExpoStationBar />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
         {sortedTickets.length === 0 ? (
