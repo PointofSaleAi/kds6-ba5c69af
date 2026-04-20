@@ -506,7 +506,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 )}
               </div>
             );
-          })}
+          });
+          })()}
         </div>
         </div>
       )}
