@@ -184,6 +184,7 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     hasCoursing,
     activeCourseFiredAt,
     courses: deriveExpoCourses(order),
+    orderNotes: order.orderNotes,
   };
 }
 
