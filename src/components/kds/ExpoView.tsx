@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw } from 'lucide-react';
+import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, Minus, Plus } from 'lucide-react';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
 import { StationBadge, stationColors } from './StationBadge';
@@ -59,27 +59,53 @@ function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
 
 /* -- Reusable item row renderer for ExpoTicketCard -- */
 
-function renderExpoItemRow(
-  item: import('@/data/mock-expo-orders').ExpoItem,
-  ticket: ExpoTicket,
-  sentItemIds: Set<string>,
-  tp: (s: string) => string,
-  isDemo: boolean | undefined,
-  onDemoItemTap: ((ticketId: string, itemId: string) => void) | undefined,
-  onItemSend: ((ticketId: string, itemId: string) => void) | undefined,
-  onItemRecall: ((ticketId: string, itemId: string) => void) | undefined,
-  acknowledgedNewItemIds: Set<string>,
-  onAcknowledgeNewItem: ((itemId: string) => void) | undefined,
-  runnerIconSrc: string,
-  showSendAlways: boolean,
-) {
+interface ExpoItemRowProps {
+  item: import('@/data/mock-expo-orders').ExpoItem;
+  ticket: ExpoTicket;
+  sentItemIds: Set<string>;
+  sentQuantities: Map<string, number>;
+  tp: (s: string) => string;
+  isDemo?: boolean;
+  onDemoItemTap?: (ticketId: string, itemId: string) => void;
+  onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
+  onItemRecall?: (ticketId: string, itemId: string) => void;
+  acknowledgedNewItemIds: Set<string>;
+  onAcknowledgeNewItem?: (itemId: string) => void;
+  runnerIconSrc: string;
+  showSendAlways: boolean;
+}
+
+function ExpoItemRow({
+  item,
+  ticket,
+  sentItemIds,
+  sentQuantities,
+  tp,
+  isDemo,
+  onDemoItemTap,
+  onItemSend,
+  onAcknowledgeNewItem,
+  acknowledgedNewItemIds,
+  runnerIconSrc,
+  showSendAlways,
+}: ExpoItemRowProps) {
+  const sentQty = sentQuantities.get(item.id) ?? 0;
+  const remainingQty = Math.max(0, item.quantity - sentQty);
+
+  // Selected qty to send (default = full remaining)
+  const [sendQty, setSendQty] = useState<number>(remainingQty);
+  // Keep sendQty bounded if remainingQty changes from outside
+  useEffect(() => {
+    setSendQty(prev => Math.max(1, Math.min(prev, remainingQty || 1)));
+  }, [remainingQty]);
+
   // Hide sent items entirely — they are removed from the card
-  if (sentItemIds.has(item.id)) return null;
+  if (sentItemIds.has(item.id) || remainingQty <= 0) return null;
 
   const isPrepared = item.status === 'done';
   const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
-  // To-Go badge only relevant for mixed dine-in orders
   const showToGoBadge = !!item.isToGo && ticket.orderType === 'dine-in';
+  const showQtySelector = isPrepared && remainingQty > 1;
 
   const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
     <StationBadge station={item.station as any} />
@@ -103,9 +129,9 @@ function renderExpoItemRow(
     </span>
   ) : null;
 
-  const sendButton = (
+  const simpleSendButton = (
     <button
-      onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id); }}
+      onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id, remainingQty); }}
       className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
       style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
       aria-label="Send item"
@@ -114,10 +140,47 @@ function renderExpoItemRow(
     </button>
   );
 
+  const partialSendControl = (
+    <div
+      className="shrink-0 ml-1.5 flex items-center gap-1"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={() => setSendQty(q => Math.max(1, q - 1))}
+        disabled={sendQty <= 1}
+        className="w-6 h-6 min-w-[28px] min-h-[28px] rounded bg-muted flex items-center justify-center disabled:opacity-30"
+        aria-label="Decrease quantity to send"
+      >
+        <Minus size={12} />
+      </button>
+      <span
+        className="min-w-[18px] text-center text-[12px] font-mono font-semibold text-text-primary tabular-nums"
+        aria-label="Quantity to send"
+      >
+        {sendQty}
+      </span>
+      <button
+        onClick={() => setSendQty(q => Math.min(remainingQty, q + 1))}
+        disabled={sendQty >= remainingQty}
+        className="w-6 h-6 min-w-[28px] min-h-[28px] rounded bg-muted flex items-center justify-center disabled:opacity-30"
+        aria-label="Increase quantity to send"
+      >
+        <Plus size={12} />
+      </button>
+      <button
+        onClick={() => onItemSend?.(ticket.id, item.id, sendQty)}
+        className="ml-1 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
+        style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
+        aria-label={`Send ${sendQty} of ${remainingQty}`}
+      >
+        <img src={runnerIconSrc} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
+      </button>
+    </div>
+  );
+
   if (isPrepared) {
     return (
       <div
-        key={item.id}
         className={`py-0.5 border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
         onClick={() => {
           if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
@@ -127,14 +190,14 @@ function renderExpoItemRow(
         <div className="flex items-center justify-between">
           <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
             <span className="text-[13px] font-medium text-text-primary">
-              {item.quantity}&times; {tp(item.name)}
+              {remainingQty}&times; {tp(item.name)}
             </span>
             {toGoBadge}
             {stationChip}
             <span className="text-text-muted text-[10px]">&middot;</span>
             {statusIcon}
           </div>
-          {sendButton}
+          {showQtySelector ? partialSendControl : simpleSendButton}
         </div>
         {allergenRow}
       </div>
@@ -143,7 +206,6 @@ function renderExpoItemRow(
 
   return (
     <div
-      key={item.id}
       className={`py-0.5 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
       onClick={() => {
         if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
@@ -153,14 +215,14 @@ function renderExpoItemRow(
       <div className="flex items-center justify-between">
         <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
           <span className="text-[13px] font-medium text-text-primary">
-            {item.quantity}&times; {tp(item.name)}
+            {remainingQty}&times; {tp(item.name)}
           </span>
           {toGoBadge}
           {stationChip}
           <span className="text-text-muted text-[10px]">&middot;</span>
           {statusIcon}
         </div>
-        {showSendAlways && sendButton}
+        {showSendAlways && simpleSendButton}
       </div>
       {allergenRow}
     </div>
@@ -240,7 +302,8 @@ interface ExpoTicketCardProps {
   isDemo?: boolean;
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
   sentItemIds: Set<string>;
-  onItemSend?: (ticketId: string, itemId: string) => void;
+  sentQuantities: Map<string, number>;
+  onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
   onItemRecall?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
@@ -252,7 +315,7 @@ interface ExpoTicketCardProps {
   isRushed?: boolean;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, sentQuantities, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors, expoSendButtonMode } = useKDSSettings();
   const { getStatusForElapsed } = useStatusRules();
@@ -421,7 +484,24 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 {/* Course items (collapsible for served) */}
                 {isExpanded && (
                   <div className={`px-2 py-1.5 space-y-0.5 ${isQueued ? 'opacity-40' : ''}`}>
-                    {courseItems.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon, showSendAlways))}
+                    {courseItems.map(item => (
+                      <ExpoItemRow
+                        key={item.id}
+                        item={item}
+                        ticket={ticket}
+                        sentItemIds={sentItemIds}
+                        sentQuantities={sentQuantities}
+                        tp={tp}
+                        isDemo={isDemo}
+                        onDemoItemTap={onDemoItemTap}
+                        onItemSend={onItemSend}
+                        onItemRecall={onItemRecall}
+                        acknowledgedNewItemIds={acknowledgedNewItemIds}
+                        onAcknowledgeNewItem={onAcknowledgeNewItem}
+                        runnerIconSrc={runnerIcon}
+                        showSendAlways={showSendAlways}
+                      />
+                    ))}
                   </div>
                 )}
               </div>
@@ -430,7 +510,24 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </>
       ) : (
         <div className="px-2 py-1.5 space-y-0.5">
-          {ticket.items.map(item => renderExpoItemRow(item, ticket, sentItemIds, tp, isDemo, onDemoItemTap, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, runnerIcon, showSendAlways))}
+          {ticket.items.map(item => (
+            <ExpoItemRow
+              key={item.id}
+              item={item}
+              ticket={ticket}
+              sentItemIds={sentItemIds}
+              sentQuantities={sentQuantities}
+              tp={tp}
+              isDemo={isDemo}
+              onDemoItemTap={onDemoItemTap}
+              onItemSend={onItemSend}
+              onItemRecall={onItemRecall}
+              acknowledgedNewItemIds={acknowledgedNewItemIds}
+              onAcknowledgeNewItem={onAcknowledgeNewItem}
+              runnerIconSrc={runnerIcon}
+              showSendAlways={showSendAlways}
+            />
+          ))}
         </div>
       )}
 
@@ -642,6 +739,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+  const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
   const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
 
   // Track recently sent-out orders for recall
@@ -655,18 +753,41 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     });
   }, []);
 
-  const handleItemSend = useCallback((ticketId: string, itemId: string) => {
-    setSentItemIds(prev => {
-      const next = new Set(prev);
-      next.add(itemId);
+  const handleItemSend = useCallback((ticketId: string, itemId: string, qty: number) => {
+    // Look up total quantity from current rawTickets to know when fully sent
+    const item = rawTickets.flatMap(t => t.items).find(i => i.id === itemId);
+    const totalQty = item?.quantity ?? qty;
+
+    let willBeFullySent = false;
+    setSentQuantities(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId) ?? 0;
+      const updated = Math.min(totalQty, current + qty);
+      next.set(itemId, updated);
+      willBeFullySent = updated >= totalQty;
       return next;
     });
-    toast.success('Item sent');
-  }, []);
+
+    if (willBeFullySent) {
+      setSentItemIds(prev => {
+        const next = new Set(prev);
+        next.add(itemId);
+        return next;
+      });
+      toast.success('Item sent');
+    } else {
+      toast.success(`Sent ${qty} of ${totalQty}`);
+    }
+  }, [rawTickets]);
 
   const handleItemRecall = useCallback((ticketId: string, itemId: string) => {
     setSentItemIds(prev => {
       const next = new Set(prev);
+      next.delete(itemId);
+      return next;
+    });
+    setSentQuantities(prev => {
+      const next = new Map(prev);
       next.delete(itemId);
       return next;
     });
@@ -1056,6 +1177,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           isDemo={ticket.id.startsWith('demo-')}
           onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
           sentItemIds={sentItemIds}
+          sentQuantities={sentQuantities}
           onItemSend={handleItemSend}
           onItemRecall={handleItemRecall}
           acknowledgedNewItemIds={acknowledgedNewItemIds}
