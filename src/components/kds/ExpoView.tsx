@@ -1327,27 +1327,29 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     );
   };
 
+  const hasRecallable = (!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) || sentOutOrders.length > 0;
+  const handleRecallLast = () => {
+    if (lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) {
+      handleDemoRecallLast();
+      return;
+    }
+    if (sentOutOrders.length > 0) {
+      handleRecallOrder(sentOutOrders[0].id);
+    } else {
+      toast('No recently sent tickets.');
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <ExpoTopControls
         filter={filter}
         onFilterChange={handleFilterChange}
         fulfilledTickets={fulfilledTickets}
+        onRecallLast={handleRecallLast}
+        hasRecallable={hasRecallable}
       />
-      <ExpoStationBar
-        onRecallLast={() => {
-          if (lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) {
-            handleDemoRecallLast();
-            return;
-          }
-          if (sentOutOrders.length > 0) {
-            handleRecallOrder(sentOutOrders[0].id);
-          } else {
-            toast('No recently sent tickets.');
-          }
-        }}
-        hasRecallable={(!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) || sentOutOrders.length > 0}
-      />
+      <ExpoStationBar />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
         {sortedTickets.length === 0 ? (
