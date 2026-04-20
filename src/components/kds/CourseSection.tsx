@@ -30,6 +30,8 @@ interface CourseSectionProps {
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
   courseAgingColor?: { color: string; textColor: string };
+  dismissedItemIds?: Set<string>;
+  onDismissItem?: (itemId: string) => void;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -78,7 +80,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
