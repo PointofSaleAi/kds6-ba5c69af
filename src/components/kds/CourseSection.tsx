@@ -453,9 +453,10 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // FIX 1: Very light green highlight for tapped rows
-  const stateBg = tappable ? (isDone ? '#161B28' : isSeen ? '#1E2438' : undefined) : undefined;
-  const stateOpacity = isDone && tappable ? 0.5 : itemOpacity;
+  // Tapped rows (seen / done) use ONLY a very light green tint.
+  // No dark overlay, no opacity dim, no text color or strikethrough changes.
+  const stateBg = tappable && (isSeen || isDone) ? 'rgba(29, 158, 117, 0.10)' : undefined;
+  const stateOpacity = itemOpacity;
 
   return (
     <div
@@ -474,16 +475,15 @@ function CourseItemTapRow({
           <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
             <span
               className="font-normal"
-              style={{ fontSize: 'var(--kds-item-qty)', color: isDone && tappable ? '#555555' : 'hsl(var(--text-secondary))' }}
+              style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))' }}
             >
               {item.quantity}x
             </span>
             <span
-              className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone && tappable ? 'line-through' : 'text-text-primary'}`}
+              className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
               style={{
                 fontSize: 'var(--kds-item-name)',
-                ...(isDone && tappable ? { color: '#888888' } : {}),
-                ...(isHighlighted && !item.isCancelled && !(isDone && tappable) ? { color: '#1D4ED8' } : {}),
+                ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
               }}
             >
               {tp(item.name)}
@@ -526,14 +526,13 @@ function CourseItemTapRow({
           {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
-              className={`relative flex items-center font-semibold uppercase ${isDone && tappable ? 'line-through' : 'text-text-muted'}`}
+              className="relative flex items-center font-semibold uppercase text-text-muted"
               style={{
                 gap: 'var(--kds-item-gap)',
                 marginTop: '0px',
                 marginBottom: '0px',
                 fontSize: 'var(--kds-modifier)',
                 lineHeight: '1',
-                ...(isDone && tappable ? { color: '#444444' } : {}),
               }}
             >
               <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
@@ -551,10 +550,7 @@ function CourseItemTapRow({
       </div>
 
       {item.modifiers.length > 0 && (
-        <div
-          className={isDone && tappable ? 'line-through' : ''}
-          style={isDone && tappable ? { color: '#555555' } : {}}
-        >
+        <div>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
@@ -575,8 +571,8 @@ function CourseItemTapRow({
             {item.quantity}&times;
           </span>
           <div
-            className={`italic leading-snug min-w-0 ${isDone && tappable ? 'line-through' : 'text-text-muted'}`}
-            style={{ fontSize: 'var(--kds-modifier)', ...(isDone && tappable ? { color: '#555555' } : {}) }}
+            className="italic leading-snug min-w-0 text-text-muted"
+            style={{ fontSize: 'var(--kds-modifier)' }}
           >
             "{item.notes}"
           </div>
