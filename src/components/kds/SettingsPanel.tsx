@@ -104,14 +104,12 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 }
 
 function RowGrid({ children, itemCount }: { children: React.ReactNode; itemCount: number }) {
-  // Determine empty cells needed to fill the grid based on viewport (3 cols >=1024, 2 cols <1024)
-  // We render padding cells for both layouts; CSS hides extras. Simplest: compute for both via a small helper rendered as filler.
+  // Responsive: 2 columns by default, 3 columns at xl (>=1280px) breakpoint.
+  // This avoids the third column being clipped on narrower viewports.
   return (
     <div
-      className="settings-row-grid"
+      className="settings-row-grid grid grid-cols-2 xl:grid-cols-3"
       style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '1px',
         backgroundColor: '#e0e0e0',
         border: '0.5px solid #e0e0e0',
