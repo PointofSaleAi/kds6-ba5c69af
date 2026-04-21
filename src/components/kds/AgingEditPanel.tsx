@@ -12,9 +12,6 @@ interface AgingEditPanelProps {
 
 const textColorOptions = ['white', 'grey', 'black'] as const;
 
-
-const textColorOptions = ['white', 'grey', 'black'] as const;
-
 function getContrastRatio(hex: string, textColor: string): { ratio: number; passes: boolean } {
   const hexToLuminance = (h: string) => {
     const r = parseInt(h.slice(1, 3), 16) / 255;
