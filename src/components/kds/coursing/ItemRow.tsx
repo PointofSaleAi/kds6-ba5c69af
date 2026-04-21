@@ -10,7 +10,7 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, dimmed }: ItemRowProps) {
-  const { tp, tm, displayMode, tpSecondary } = useLanguage();
+  const { tp, tm, displayMode, tpSecondary, showSecondaryMenu } = useLanguage();
 
   return (
     <div
@@ -30,7 +30,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           ))}
         </div>
 
-        {displayMode === 'dual' && (
+        {displayMode === 'dual' && showSecondaryMenu && (
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
             <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
               <Languages size={10} className="text-text-secondary" />
