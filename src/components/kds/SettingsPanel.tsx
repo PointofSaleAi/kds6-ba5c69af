@@ -144,6 +144,112 @@ function ActionButton({ label, onClick }: { label: string; onClick: () => void }
   );
 }
 
+// Compact row used inside the new row-based grid layout
+function RowCell({ name, subtitle, control }: { name: string; subtitle?: string; control?: React.ReactNode }) {
+  return (
+    <div
+      className="flex items-center justify-between gap-3 bg-surface-card"
+      style={{ padding: '9px 12px' }}
+    >
+      <div className="min-w-0 flex-1">
+        <div style={{ fontSize: '11px', fontWeight: 500, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
+        {subtitle && (
+          <div style={{ fontSize: '10px', color: '#999', marginTop: '1px' }} className="truncate">{subtitle}</div>
+        )}
+      </div>
+      {control && <div className="shrink-0">{control}</div>}
+    </div>
+  );
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        fontSize: '10px',
+        fontWeight: 500,
+        letterSpacing: '0.07em',
+        textTransform: 'uppercase',
+        color: '#999',
+        marginBottom: '7px',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function RowGrid({ children, itemCount }: { children: React.ReactNode; itemCount: number }) {
+  // Determine empty cells needed to fill the grid based on viewport (3 cols >=1024, 2 cols <1024)
+  // We render padding cells for both layouts; CSS hides extras. Simplest: compute for both via a small helper rendered as filler.
+  return (
+    <div
+      className="settings-row-grid"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '1px',
+        backgroundColor: '#e0e0e0',
+        border: '0.5px solid #e0e0e0',
+        borderRadius: '8px',
+        overflow: 'hidden',
+      }}
+    >
+      {children}
+      {/* Filler cells: enough to top up to a multiple of 3 (covers both 3-col and 2-col). */}
+      {Array.from({ length: (3 - (itemCount % 3)) % 3 }).map((_, i) => (
+        <div key={`f-${i}`} style={{ background: '#fafafa' }} />
+      ))}
+    </div>
+  );
+}
+
+function SmallToggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      onClick={() => onChange(!checked)}
+      className={`relative w-10 h-5 rounded-full transition-colors ${checked ? 'bg-brand-primary' : 'bg-border'}`}
+      role="switch"
+      aria-checked={checked}
+    >
+      <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-surface-card rounded-full transition-transform shadow-sm ${checked ? 'translate-x-5' : ''}`} />
+    </button>
+  );
+}
+
+function ChipGroup({ options, value, onChange }: { options: string[]; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="flex gap-1">
+      {options.map((opt) => (
+        <button
+          key={opt}
+          onClick={() => onChange(opt)}
+          style={{ fontSize: '10px', padding: '4px 8px' }}
+          className={`rounded-full font-semibold transition-colors ${
+            value === opt ? 'bg-brand-dark text-primary-foreground' : 'bg-muted text-text-secondary'
+          }`}
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function RowButton({ label, onClick, disabled, icon }: { label: string; onClick: () => void; disabled?: boolean; icon?: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{ fontSize: '10px', padding: '4px 10px' }}
+      className="rounded-md bg-muted text-text-primary font-semibold flex items-center gap-1 hover:bg-muted/80 transition-colors disabled:opacity-50"
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
 export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome, orders = [] }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
