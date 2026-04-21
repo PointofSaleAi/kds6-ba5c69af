@@ -35,12 +35,12 @@ function RowCell({ name, subtitle, control }: { name: string; subtitle?: string;
   return (
     <div
       className="flex items-center justify-between gap-3 bg-surface-card"
-      style={{ padding: '12px 16px' }}
+      style={{ padding: '18px 22px', minHeight: '76px' }}
     >
       <div className="min-w-0 flex-1">
-        <div style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
+        <div style={{ fontSize: '17px', fontWeight: 600, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
         {subtitle && (
-          <div style={{ fontSize: '12px', color: '#999', marginTop: '2px' }} className="truncate">{subtitle}</div>
+          <div style={{ fontSize: '14px', color: '#999', marginTop: '4px' }} className="truncate">{subtitle}</div>
         )}
       </div>
       {control && <div className="shrink-0">{control}</div>}
@@ -52,12 +52,12 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: '10px',
+        fontSize: '12px',
         fontWeight: 500,
         letterSpacing: '0.07em',
         textTransform: 'uppercase',
         color: '#999',
-        marginBottom: '7px',
+        marginBottom: '10px',
       }}
     >
       {children}
@@ -94,11 +94,11 @@ function SmallToggle({ checked, onChange }: { checked: boolean; onChange: (v: bo
   return (
     <button
       onClick={() => onChange(!checked)}
-      className={`relative w-10 h-5 rounded-full transition-colors ${checked ? 'bg-brand-primary' : 'bg-border'}`}
+      className={`relative w-12 h-6 rounded-full transition-colors ${checked ? 'bg-brand-primary' : 'bg-border'}`}
       role="switch"
       aria-checked={checked}
     >
-      <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-surface-card rounded-full transition-transform shadow-sm ${checked ? 'translate-x-5' : ''}`} />
+      <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-surface-card rounded-full transition-transform shadow-sm ${checked ? 'translate-x-6' : ''}`} />
     </button>
   );
 }
@@ -110,7 +110,7 @@ function ChipGroup({ options, value, onChange }: { options: string[]; value: str
         <button
           key={opt}
           onClick={() => onChange(opt)}
-          style={{ fontSize: '10px', padding: '4px 8px' }}
+          style={{ fontSize: '13px', padding: '7px 14px' }}
           className={`rounded-full font-semibold transition-colors ${
             value === opt ? 'bg-brand-dark text-primary-foreground' : 'bg-muted text-text-secondary'
           }`}
@@ -144,9 +144,9 @@ function EditIconButton({ onClick, title }: { onClick: () => void; title?: strin
       title={title}
       className="flex items-center justify-center cursor-pointer flex-shrink-0"
       style={{
-        width: '32px',
-        height: '32px',
-        borderRadius: '8px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '10px',
         backgroundColor: '#F5F5F5',
         border: '0.5px solid #E0E0E0',
         display: 'flex',
@@ -154,7 +154,7 @@ function EditIconButton({ onClick, title }: { onClick: () => void; title?: strin
         justifyContent: 'center',
       }}
     >
-      <Pencil size={16} strokeWidth={2} color="#888888" />
+      <Pencil size={20} strokeWidth={2} color="#888888" />
     </button>
   );
 }
@@ -166,9 +166,9 @@ function ChevronIconButton({ onClick, title }: { onClick: () => void; title?: st
       title={title}
       className="flex items-center justify-center cursor-pointer flex-shrink-0"
       style={{
-        width: '32px',
-        height: '32px',
-        borderRadius: '8px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '10px',
         backgroundColor: '#F5F5F5',
         border: '0.5px solid #E0E0E0',
         display: 'flex',
@@ -176,7 +176,7 @@ function ChevronIconButton({ onClick, title }: { onClick: () => void; title?: st
         justifyContent: 'center',
       }}
     >
-      <ChevronRight size={16} strokeWidth={2} color="#888888" />
+      <ChevronRight size={20} strokeWidth={2} color="#888888" />
     </button>
   );
 }
@@ -188,9 +188,9 @@ function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: (
       title={title}
       className="flex items-center justify-center cursor-pointer flex-shrink-0"
       style={{
-        width: '32px',
-        height: '32px',
-        borderRadius: '8px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '10px',
         backgroundColor: '#F5F5F5',
         border: '0.5px solid #E0E0E0',
         display: 'flex',
@@ -198,7 +198,7 @@ function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: (
         justifyContent: 'center',
       }}
     >
-      <Icon size={16} strokeWidth={2} color="#888888" className={spinning ? 'animate-spin' : ''} />
+      <Icon size={20} strokeWidth={2} color="#888888" className={spinning ? 'animate-spin' : ''} />
     </button>
   );
 }
@@ -353,8 +353,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
         <div className={`flex-1 overflow-hidden ${activeSection === 'status-settings' ? 'flex flex-col' : 'overflow-y-auto'}`}>
           {!inSubScreen && (
-            <div className="px-6 py-5 max-w-[1200px] mx-auto w-full">
-              <h2 className="text-lg font-bold text-text-primary mb-4">Settings</h2>
+            <div className="px-10 py-7 w-full">
+              <h2 className="text-2xl font-bold text-text-primary mb-6">Settings</h2>
 
               <SectionHeading>Display</SectionHeading>
               <RowGrid itemCount={displayRows.length}>
@@ -381,10 +381,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                   background: '#fff5f5',
                   border: '0.5px solid #fccaca',
                   borderRadius: '8px',
-                  padding: '10px 12px',
+                  padding: '16px 12px',
                   textAlign: 'center',
                   color: '#c0392b',
-                  fontSize: '12px',
+                  fontSize: '16px',
                   fontWeight: 500,
                   width: '100%',
                   marginTop: '18px',
