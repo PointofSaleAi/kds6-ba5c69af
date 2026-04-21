@@ -24,7 +24,8 @@ interface FlatItemListProps {
 }
 
 export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem }: FlatItemListProps) {
-  const { tp, displayMode, tpSecondary, t, showSecondaryMenu } = useLanguage();
+  const { tp, displayMode, tpSecondary, t, showSecondaryMenu, secondaryLang } = useLanguage();
+  const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
 
   const allItems = courses.flatMap(c => c.items);
 
@@ -98,6 +99,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
 
                 {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
                   <div
+                    dir={secondaryDir}
                     className="flex items-center text-text-muted font-semibold uppercase"
                     style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
                   >
