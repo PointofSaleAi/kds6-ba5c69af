@@ -48,6 +48,44 @@ function RowCell({ name, subtitle, control }: { name: string; subtitle?: string;
   );
 }
 
+// Destructive variant of RowCell used for the Account "Log Out" entry.
+// Keeps grid alignment with RowCell while applying the destructive palette.
+function LogOutRowCell({
+  name = 'Log Out',
+  subtitle = 'Sign out of this device',
+  onClick,
+}: {
+  name?: string;
+  subtitle?: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center justify-between gap-3 bg-surface-card text-left"
+      style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
+    >
+      <div className="min-w-0 flex-1">
+        <div style={{ fontSize: '11px', fontWeight: 500, color: '#C0392B' }} className="truncate">{name}</div>
+        <div style={{ fontSize: '10px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">{subtitle}</div>
+      </div>
+      <div
+        className="shrink-0 flex items-center justify-center"
+        style={{
+          width: '32px',
+          height: '32px',
+          background: '#FFF5F5',
+          border: '0.5px solid #FCCACA',
+          borderRadius: '8px',
+        }}
+      >
+        <LogOut size={16} strokeWidth={2} color="#C0392B" />
+      </div>
+    </button>
+  );
+}
+
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <div
@@ -372,29 +410,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 <SectionHeading>Account</SectionHeading>
                 <RowGrid itemCount={accountRows.length + 1}>
                   {accountRows.map((r) => <RowCell key={r.name} name={r.name} subtitle={r.subtitle} control={r.control} />)}
-                  <button
-                    type="button"
-                    onClick={() => setShowLogoutConfirm(true)}
-                    className="flex items-center justify-between gap-3 bg-surface-card text-left"
-                    style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div style={{ fontSize: '11px', fontWeight: 500, color: '#C0392B' }} className="truncate">Log Out</div>
-                      <div style={{ fontSize: '10px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">Sign out of this device</div>
-                    </div>
-                    <div
-                      className="shrink-0 flex items-center justify-center"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        background: '#FFF5F5',
-                        border: '0.5px solid #FCCACA',
-                        borderRadius: '8px',
-                      }}
-                    >
-                      <LogOut size={16} strokeWidth={2} color="#C0392B" />
-                    </div>
-                  </button>
+                  <LogOutRowCell onClick={() => setShowLogoutConfirm(true)} />
                 </RowGrid>
               </div>
 
