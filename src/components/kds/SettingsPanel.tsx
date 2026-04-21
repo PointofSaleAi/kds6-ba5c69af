@@ -144,9 +144,9 @@ function EditIconButton({ onClick, title }: { onClick: () => void; title?: strin
       title={title}
       className="flex items-center justify-center cursor-pointer flex-shrink-0"
       style={{
-        width: '32px',
-        height: '32px',
-        borderRadius: '8px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '10px',
         backgroundColor: '#F5F5F5',
         border: '0.5px solid #E0E0E0',
         display: 'flex',
@@ -154,7 +154,7 @@ function EditIconButton({ onClick, title }: { onClick: () => void; title?: strin
         justifyContent: 'center',
       }}
     >
-      <Pencil size={16} strokeWidth={2} color="#888888" />
+      <Pencil size={20} strokeWidth={2} color="#888888" />
     </button>
   );
 }
@@ -166,9 +166,9 @@ function ChevronIconButton({ onClick, title }: { onClick: () => void; title?: st
       title={title}
       className="flex items-center justify-center cursor-pointer flex-shrink-0"
       style={{
-        width: '32px',
-        height: '32px',
-        borderRadius: '8px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '10px',
         backgroundColor: '#F5F5F5',
         border: '0.5px solid #E0E0E0',
         display: 'flex',
@@ -176,7 +176,7 @@ function ChevronIconButton({ onClick, title }: { onClick: () => void; title?: st
         justifyContent: 'center',
       }}
     >
-      <ChevronRight size={16} strokeWidth={2} color="#888888" />
+      <ChevronRight size={20} strokeWidth={2} color="#888888" />
     </button>
   );
 }
@@ -188,9 +188,9 @@ function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: (
       title={title}
       className="flex items-center justify-center cursor-pointer flex-shrink-0"
       style={{
-        width: '32px',
-        height: '32px',
-        borderRadius: '8px',
+        width: '40px',
+        height: '40px',
+        borderRadius: '10px',
         backgroundColor: '#F5F5F5',
         border: '0.5px solid #E0E0E0',
         display: 'flex',
@@ -198,7 +198,7 @@ function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: (
         justifyContent: 'center',
       }}
     >
-      <Icon size={16} strokeWidth={2} color="#888888" className={spinning ? 'animate-spin' : ''} />
+      <Icon size={20} strokeWidth={2} color="#888888" className={spinning ? 'animate-spin' : ''} />
     </button>
   );
 }
