@@ -10,7 +10,7 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, dimmed }: ItemRowProps) {
-  const { tp, displayMode, tpSecondary } = useLanguage();
+  const { tp, tm, displayMode, tpSecondary } = useLanguage();
 
   return (
     <div
@@ -53,7 +53,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
                 }
                 style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
               >
-                {mod.text}
+                {tm(mod.text)}
               </div>
             ))}
           </div>

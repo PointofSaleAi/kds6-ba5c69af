@@ -1286,18 +1286,24 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const tc = useCallback((course: string) => {
     if (scope === 'interface') return course;
-    return courseNames[language]?.[course] || course;
-  }, [language, scope]);
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = courseNames[lang] || {};
+    return dict[course] || dict[course.toUpperCase()] || course;
+  }, [language, displayMode, primaryLang, scope]);
 
   const ta = useCallback((label: string) => {
     if (scope === 'interface') return label;
-    return allergenLabels[language]?.[label] || label;
-  }, [language, scope]);
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = allergenLabels[lang] || {};
+    return dict[label] || dict[label.toUpperCase()] || label;
+  }, [language, displayMode, primaryLang, scope]);
 
   const to = useCallback((label: string) => {
     if (scope === 'interface') return label;
-    return orderTypeLabels[language]?.[label] || label;
-  }, [language, scope]);
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = orderTypeLabels[lang] || {};
+    return dict[label] || dict[label.toUpperCase()] || label;
+  }, [language, displayMode, primaryLang, scope]);
 
 
   const value: LanguageContextType = {

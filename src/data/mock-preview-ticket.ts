@@ -1,5 +1,7 @@
 // TODO: Replace with API endpoint - all data should come from backend
 // Static preview ticket for Settings > Language preview. Non-interactive, showcases all features.
+// All strings here MUST exist in translation dictionaries (productNames, modifierTexts, allergenLabels)
+// in src/hooks/use-language.tsx so the preview reliably reflects the active language.
 import type { Order } from '@/types/kds';
 
 export const previewTicket: Order = {
@@ -13,7 +15,7 @@ export const previewTicket: Order = {
   timeReceived: new Date(Date.now() - 480000),
   elapsedSeconds: 480,
   targetSeconds: 900,
-  itemCount: 6,
+  itemCount: 5,
   orderNotes: 'Birthday dinner, please bring candle with dessert',
   courses: [
     {
@@ -24,15 +26,16 @@ export const previewTicket: Order = {
       items: [
         {
           id: 'prev-i-001',
-          name: 'Bruschetta',
-          category: 'Appetizers',
+          name: 'Caesar Salad',
+          category: 'Salads',
           quantity: 2,
           modifiers: [
-            { id: 'prev-m-001', text: 'Extra basil', type: 'extra' },
-            { id: 'prev-m-002', text: 'No onion', type: 'remove' },
+            { id: 'prev-m-001', text: '+ Extra Croutons', type: 'extra' },
+            { id: 'prev-m-002', text: 'Dressing on Side', type: 'neutral' },
           ],
           allergens: [
-            { type: 'gluten', label: 'Gluten', icon: '🌾' },
+            { type: 'gluten', label: 'GLUTEN', icon: '🌾' },
+            { type: 'dairy', label: 'DAIRY', icon: '🥛' },
           ],
         },
         {
@@ -41,10 +44,10 @@ export const previewTicket: Order = {
           category: 'Soups',
           quantity: 1,
           modifiers: [
-            { id: 'prev-m-003', text: 'Side bread', type: 'extra', isServable: true },
+            { id: 'prev-m-003', text: '+ Garlic Butter', type: 'extra', isServable: true },
           ],
           allergens: [
-            { type: 'dairy', label: 'Dairy', icon: '🥛' },
+            { type: 'dairy', label: 'DAIRY', icon: '🥛' },
           ],
         },
       ],
@@ -61,11 +64,11 @@ export const previewTicket: Order = {
           category: 'Seafood',
           quantity: 1,
           modifiers: [
-            { id: 'prev-m-004', text: 'Medium rare', type: 'neutral' },
-            { id: 'prev-m-005', text: 'Extra lemon', type: 'extra' },
+            { id: 'prev-m-004', text: 'Medium Rare', type: 'neutral' },
+            { id: 'prev-m-005', text: '+ Lemon Sauce', type: 'extra' },
           ],
           allergens: [
-            { type: 'shellfish', label: 'Shellfish', icon: '🦐' },
+            { type: 'shellfish', label: 'SHELLFISH', icon: '🦐' },
           ],
         },
         {
@@ -74,8 +77,8 @@ export const previewTicket: Order = {
           category: 'Meat',
           quantity: 1,
           modifiers: [
-            { id: 'prev-m-006', text: 'Well done', type: 'neutral' },
-            { id: 'prev-m-007', text: 'No mushroom sauce', type: 'remove' },
+            { id: 'prev-m-006', text: 'Well Done', type: 'neutral' },
+            { id: 'prev-m-007', text: 'No Butter', type: 'remove' },
           ],
           allergens: [],
         },
@@ -91,21 +94,9 @@ export const previewTicket: Order = {
           quantity: 1,
           modifiers: [],
           allergens: [
-            { type: 'gluten', label: 'Gluten', icon: '🌾' },
-            { type: 'dairy', label: 'Dairy', icon: '🥛' },
-            { type: 'egg', label: 'Egg', icon: '🥚' },
-          ],
-        },
-        {
-          id: 'prev-i-006',
-          name: 'Fresh Fruit Platter',
-          category: 'Desserts',
-          quantity: 1,
-          modifiers: [
-            { id: 'prev-m-008', text: 'No pineapple', type: 'remove' },
-          ],
-          allergens: [
-            { type: 'tree-nut', label: 'Tree Nut', icon: '🥜' },
+            { type: 'gluten', label: 'GLUTEN', icon: '🌾' },
+            { type: 'dairy', label: 'DAIRY', icon: '🥛' },
+            { type: 'egg', label: 'EGG', icon: '🥚' },
           ],
         },
       ],
