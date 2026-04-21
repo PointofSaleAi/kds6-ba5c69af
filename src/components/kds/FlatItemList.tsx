@@ -24,7 +24,7 @@ interface FlatItemListProps {
 }
 
 export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem }: FlatItemListProps) {
-  const { tp, displayMode, tpSecondary } = useLanguage();
+  const { tp, displayMode, tpSecondary, t, showSecondaryMenu } = useLanguage();
 
   const allItems = courses.flatMap(c => c.items);
 
@@ -86,17 +86,17 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                   ))}
                   {status === 'preparing' && timestamps?.seenAt && (
                     <span className="text-[10px] text-text-muted font-normal ml-1">
-                      Seen {timestamps.seenAt}
+                      {t.seenAt} {timestamps.seenAt}
                     </span>
                   )}
                   {status === 'done' && timestamps?.doneAt && (
                     <span className="text-[10px] text-text-muted font-normal ml-1">
-                      Done {timestamps.doneAt}
+                      {t.doneAt} {timestamps.doneAt}
                     </span>
                   )}
                 </div>
 
-                {displayMode === 'dual' && !item.isCancelled && (
+                {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
                   <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
                     <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                       <Languages size={8} className="text-text-secondary" />
