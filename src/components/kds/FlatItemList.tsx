@@ -135,13 +135,13 @@ function ItemTapRow({
           <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
             <span
               className="font-normal"
-              style={{ fontSize: 'var(--kds-item-qty)', color: isDone ? '#555555' : undefined }}
+              style={{ fontSize: 'var(--kds-item-qty)' }}
             >
               {item.quantity}&times;
             </span>
             <span
-              className={`font-semibold uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through' : 'text-text-primary'}`}
-              style={{ fontSize: 'var(--kds-item-name)', color: isDone ? '#888888' : undefined }}
+              className={`font-semibold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
+              style={{ fontSize: 'var(--kds-item-name)' }}
             >
               {tp(item.name)}
             </span>
@@ -183,8 +183,8 @@ function ItemTapRow({
           {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
-              className={`flex items-center font-semibold uppercase ${isDone ? 'line-through' : 'text-text-muted'}`}
-              style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1', color: isDone ? '#444444' : undefined }}
+              className="flex items-center font-semibold uppercase text-text-muted"
+              style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
               <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
@@ -201,10 +201,7 @@ function ItemTapRow({
       </div>
 
       {item.modifiers.length > 0 && (
-        <div
-          className={isDone ? 'line-through' : ''}
-          style={{ color: isDone ? '#555555' : undefined }}
-        >
+        <div>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
@@ -225,8 +222,8 @@ function ItemTapRow({
             {item.quantity}&times;
           </span>
           <div
-            className={`italic leading-snug min-w-0 ${isDone ? 'line-through' : 'text-text-muted'}`}
-            style={{ fontSize: 'var(--kds-modifier)', color: isDone ? '#555555' : undefined }}
+            className="italic leading-snug min-w-0 text-text-muted"
+            style={{ fontSize: 'var(--kds-modifier)' }}
           >
             "{item.notes}"
           </div>
