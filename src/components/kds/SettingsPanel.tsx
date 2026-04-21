@@ -67,8 +67,8 @@ function LogOutRowCell({
       style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
     >
       <div className="min-w-0 flex-1">
-        <div style={{ fontSize: '11px', fontWeight: 500, color: '#C0392B' }} className="truncate">{name}</div>
-        <div style={{ fontSize: '10px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">{subtitle}</div>
+        <div style={{ fontSize: '17px', fontWeight: 600, color: '#C0392B' }} className="truncate">{name}</div>
+        <div style={{ fontSize: '14px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">{subtitle}</div>
       </div>
       <div
         className="shrink-0 flex items-center justify-center"
