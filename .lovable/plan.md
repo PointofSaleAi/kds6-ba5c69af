@@ -1,43 +1,57 @@
 
 
+## Finding: Language Scope is NOT wired
+
+In `InlineLanguageSettings.tsx`, the "Language Scope" segmented control (App Interface / Menu Items / Both) only updates a local `useState` (`scope`). It is:
+- Not stored in the `useLanguage` context
+- Not persisted to localStorage
+- Not read by any translation function (`t`, `tp`, `tm`, `tc`, `ta`, `to`)
+- Not read by the preview ticket or any consumer in the app
+
+Result: changing scope today does nothing. Currently every translation function translates regardless of scope, so it behaves as if "Both" is permanently selected.
+
 ## Goal
-Fix the Language sub-screen layout so horizontal padding is consistent with the rest of Settings, and constrain the KDS preview ticket on the right so it doesn't balloon on wide landscape screens.
+Wire Language Scope so it actually controls what gets translated across the KDS:
+- **App Interface**: only UI chrome (sidebar, buttons, settings labels, status chips, empty states) translates. Menu data (item names, modifiers, courses, allergens, order types) stays in the source language (English).
+- **Menu Items**: only menu data translates. UI chrome stays English.
+- **Both** (default): everything translates (current behaviour).
 
-## Scope
-Two files only:
-- `src/components/kds/SettingsPanel.tsx` (sub-screen header padding)
-- `src/components/kds/InlineLanguageSettings.tsx` (content padding + preview width)
+## Scope of changes
 
-No logic changes. No changes to other sub-screens, modals, sidebar, or bottom bar.
+### 1. `src/hooks/use-language.tsx` (context)
+- Add type `LanguageScope = 'interface' | 'menu' | 'both'`.
+- Add `scope` state with localStorage persistence (`posai-language-scope`, default `'both'`).
+- Expose `scope` and `setScope` on the context.
+- Gate translators by scope:
+  - `t` (UI strings): when `scope === 'menu'`, return `translations['en-US']` instead of the active language.
+  - `tp`, `tm`, `tc`, `ta`, `to`, `tpSecondary`, `tmSecondary` (menu data): when `scope === 'interface'`, return the source key (English) instead of looking up the active language.
+- `'both'` keeps the existing behaviour for all translators.
 
-## Changes
+### 2. `src/components/kds/InlineLanguageSettings.tsx`
+- Remove the local `useState` for `scope`.
+- Read `scope` and `setScope` from `useLanguage()`.
+- The segmented control already calls `setScope`; no UI rework needed.
+- The right-column preview ticket will automatically reflect the new behaviour because `OrderCard`/`ItemRow` already use `tp` / `tpSecondary`.
 
-### 1. Consistent horizontal padding for the Language sub-screen
-In `SettingsPanel.tsx`, the sub-screen header currently uses `px-5` while the main Settings page uses `px-10`. Align the sub-screen so its left/right gutters match the main page.
+### 3. `src/pages/LanguageSettings.tsx` (legacy modal)
+- Same swap as InlineLanguageSettings: replace local `scope` state with context-backed `scope`/`setScope` so the two entry points stay in sync.
 
-- Sub-screen header row: `px-5 py-3` to `px-10 py-5`
-- Divider under header: `mx-5` to `mx-10`
-- Wrap the `<InlineLanguageSettings />` render in a `px-10 pb-7` container so the inner content respects the same gutter as the main settings grid (currently it has zero horizontal padding, which is why content sits too close to edges).
-
-### 2. Cap the preview ticket width on the right column
-In `InlineLanguageSettings.tsx`, the right "Preview - KDS ticket" column uses `flex-1` and renders a full-bleed `OrderCard`, so on a 1119px canvas it stretches to ~500px wide and looks oversized.
-
-- Change the right column wrapper from `flex-1 flex flex-col min-w-0` to a fixed-width column: `w-[360px] shrink-0 flex flex-col` (matches the typical KDS card width specced in project knowledge: ~280-400px Grid view).
-- Wrap the `<OrderCard />` in a `max-w-[340px] w-full mx-auto` container so the ticket renders at a realistic KDS size regardless of canvas width.
-- Keep the left column as `flex-1 min-w-0` so it absorbs all the freed horizontal space (language list, scope chips, and display-mode cards become wider and easier to read).
-
-### 3. Left/right column gap
-The flex row uses `gap-4`. Increase to `gap-8` so the divider + preview don't crowd the language list now that the preview is narrower and the left column is wider.
+### 4. Sanity sweep
+- Verify all UI chrome strings already go through `t.*` (sidebar, settings, bottom bar, empty states, history). Spot-check a handful; no string changes required.
+- Verify all menu-derived strings go through `tp/tm/tc/ta/to`. The grep already shows usage in `ItemRow`, `OrderCard`, `CourseSection`, `OrderTypeBadge`, `AllergenBadge`, etc.
 
 ## Out of scope
-- All toggle/chip/button logic, language selection, save behaviour
-- Region tab, Request-a-language modal styling
-- Other sub-screens (Status Colours, Order Type Colors)
-- Sidebar, bottom bar, main Settings grid (already correctly padded)
+- No new translations added.
+- No changes to the language list, dual-language pair, swap button, date/time format, currency, or "Request a language" modal.
+- No changes to `OrderCard` or `ItemRow`; the gating happens inside the translator hooks so all consumers update for free.
+- No changes to the Settings panel layout or the preview ticket sizing.
 
 ## Acceptance
-- On the 1119px landscape preview, the Language sub-screen left/right gutters visually match the main Settings page (no more flush-to-edge content vs `px-10` mismatch).
-- The "Preview - KDS ticket" card renders at ~340px wide (realistic KDS card size), not stretched across half the canvas.
-- The left column (scope, display mode, language list) gains the freed width and reads more comfortably.
-- Save button, language selection, swap, and all other interactions behave exactly as before.
+- Switching scope in Settings > Language now produces a visible change in the preview ticket and across the live KDS:
+  - **Interface** + Spanish: sidebar / buttons / settings labels show Spanish, item names stay English.
+  - **Menu Items** + Spanish: sidebar / buttons stay English, item names show Spanish.
+  - **Both** + Spanish: everything shows Spanish (matches today).
+- Choice persists across reloads (localStorage `posai-language-scope`).
+- Dual-language mode still shows secondary translations for menu data when scope includes menu; secondary line is hidden/source when scope is `interface`.
+- No regressions to language switching, swap, save toast, or other settings.
 
