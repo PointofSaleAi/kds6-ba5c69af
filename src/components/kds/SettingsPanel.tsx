@@ -63,7 +63,7 @@ function LogOutRowCell({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center justify-between gap-3 bg-surface-card text-left"
+      className="flex items-center justify-between gap-3 bg-surface-card text-left rounded-lg border border-border"
       style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
     >
       <div className="min-w-0 flex-1">
