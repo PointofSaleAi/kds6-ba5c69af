@@ -189,7 +189,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     label: 'Standard',
     description: 'Balanced timing for most restaurants',
     rules: [
-      { id: 'start', label: 'Start (New)', color: '#22C55E', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
+      { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
       { id: 'medium', label: 'Medium (In Progress)', color: '#EAB308', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
       { id: 'delay', label: 'Delay (Warning)', color: '#F97316', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
       { id: 'overtime', label: 'Overtime (Critical)', color: '#EF4444', textColor: 'white', minMinutes: 21, maxMinutes: null },
