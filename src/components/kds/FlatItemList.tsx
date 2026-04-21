@@ -115,13 +115,17 @@ function ItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
+  // FIX 1: Very light green highlight for tapped/highlighted rows
   const rowBg = isDone ? '#161B28' : isSeen ? '#1E2438' : undefined;
   const rowOpacity = isDone ? 0.5 : undefined;
 
   return (
     <div
       className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
-      style={{ backgroundColor: rowBg, opacity: rowOpacity }}
+      style={{ 
+        backgroundColor: isHighlighted ? 'rgba(29, 158, 117, 0.10)' : rowBg, 
+        opacity: rowOpacity 
+      }}
     >
       <div
         className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
