@@ -353,8 +353,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
         <div className={`flex-1 overflow-hidden ${activeSection === 'status-settings' ? 'flex flex-col' : 'overflow-y-auto'}`}>
           {!inSubScreen && (
-            <div className="px-6 py-5 max-w-[1200px] mx-auto w-full">
-              <h2 className="text-lg font-bold text-text-primary mb-4">Settings</h2>
+            <div className="px-10 py-7 w-full">
+              <h2 className="text-2xl font-bold text-text-primary mb-6">Settings</h2>
 
               <SectionHeading>Display</SectionHeading>
               <RowGrid itemCount={displayRows.length}>
@@ -381,10 +381,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                   background: '#fff5f5',
                   border: '0.5px solid #fccaca',
                   borderRadius: '8px',
-                  padding: '10px 12px',
+                  padding: '16px 12px',
                   textAlign: 'center',
                   color: '#c0392b',
-                  fontSize: '12px',
+                  fontSize: '16px',
                   fontWeight: 500,
                   width: '100%',
                   marginTop: '18px',
