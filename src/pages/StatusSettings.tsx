@@ -312,27 +312,29 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
           </button>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap py-3 px-4 rounded-lg bg-muted/60">
-          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets</span>
-          {PRESETS.map((preset) => {
-            const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
-              draft[i] && pr.color === draft[i].color && pr.minMinutes === draft[i].minMinutes && pr.maxMinutes === draft[i].maxMinutes && pr.label === draft[i].label
-            );
-            return (
-              <button
-                key={preset.label}
-                onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
-                className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg transition-colors min-h-[32px] ${
-                  isActive
-                    ? 'bg-foreground text-background'
-                    : 'bg-muted text-text-secondary hover:bg-accent hover:text-text-primary'
-                }`}
-                title={preset.description}
-              >
-                {preset.label}
-              </button>
-            );
-          })}
+        <div className="py-3 px-4 rounded-lg bg-muted/60">
+          <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Presets</div>
+          <div className="flex items-center gap-2 flex-wrap">
+            {PRESETS.map((preset) => {
+              const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
+                draft[i] && pr.color === draft[i].color && pr.minMinutes === draft[i].minMinutes && pr.maxMinutes === draft[i].maxMinutes && pr.label === draft[i].label
+              );
+              return (
+                <button
+                  key={preset.label}
+                  onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
+                  className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-colors min-h-[32px] ${
+                    isActive
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-surface-card text-text-primary border-border hover:bg-accent'
+                  }`}
+                  title={preset.description}
+                >
+                  {preset.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
