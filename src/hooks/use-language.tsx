@@ -1427,6 +1427,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setTimeFormat,
     scope,
     setScope,
+    showSecondaryMenu,
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
