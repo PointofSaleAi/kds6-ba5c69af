@@ -1400,6 +1400,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [language, displayMode, primaryLang, scope]);
 
 
+  const showSecondaryMenu = scope !== 'interface';
+
   const value: LanguageContextType = {
     language,
     setLanguage,
