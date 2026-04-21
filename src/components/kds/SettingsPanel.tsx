@@ -103,9 +103,8 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RowGrid({ children, itemCount }: { children: React.ReactNode; itemCount: number }) {
+function RowGrid({ children }: { children: React.ReactNode; itemCount?: number }) {
   // Responsive: 2 columns by default, 3 columns at xl (>=1280px) breakpoint.
-  // This avoids the third column being clipped on narrower viewports.
   return (
     <div
       className="settings-row-grid grid grid-cols-2 xl:grid-cols-3"
@@ -118,10 +117,6 @@ function RowGrid({ children, itemCount }: { children: React.ReactNode; itemCount
       }}
     >
       {children}
-      {/* Filler cells: top up to a multiple of 6 so both 2-col and 3-col grids are flush. */}
-      {Array.from({ length: (6 - (itemCount % 6)) % 6 }).map((_, i) => (
-        <div key={`f-${i}`} style={{ background: '#fafafa' }} />
-      ))}
     </div>
   );
 }
