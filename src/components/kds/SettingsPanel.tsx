@@ -191,14 +191,14 @@ function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: (
         width: '32px',
         height: '32px',
         borderRadius: '8px',
-        backgroundColor: '#EBF5FF',
-        border: '0.5px solid #B5D4F4',
+        backgroundColor: '#F5F5F5',
+        border: '0.5px solid #E0E0E0',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      <Icon size={16} strokeWidth={2} color="#185FA5" className={spinning ? 'animate-spin' : ''} />
+      <Icon size={16} strokeWidth={2} color="#888888" className={spinning ? 'animate-spin' : ''} />
     </button>
   );
 }
