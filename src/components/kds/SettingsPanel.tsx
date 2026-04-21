@@ -34,7 +34,7 @@ interface SettingsPanelProps {
 function RowCell({ name, subtitle, control }: { name: string; subtitle?: string; control?: React.ReactNode }) {
   return (
     <div
-      className="flex items-center justify-between gap-3 bg-surface-card"
+      className="flex items-center justify-between gap-3 bg-surface-card rounded-lg border border-border"
       style={{ padding: '18px 22px', minHeight: '76px' }}
     >
       <div className="min-w-0 flex-1">
@@ -63,7 +63,7 @@ function LogOutRowCell({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center justify-between gap-3 bg-surface-card text-left"
+      className="flex items-center justify-between gap-3 bg-surface-card text-left rounded-lg border border-border"
       style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
     >
       <div className="min-w-0 flex-1">
@@ -105,16 +105,10 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function RowGrid({ children }: { children: React.ReactNode; itemCount?: number }) {
   // Responsive: 2 columns by default, 3 columns at xl (>=1280px) breakpoint.
+  // No outer border / grey gap so empty grid area blends with the settings background.
   return (
     <div
-      className="settings-row-grid grid grid-cols-2 xl:grid-cols-3"
-      style={{
-        gap: '1px',
-        backgroundColor: '#e0e0e0',
-        border: '0.5px solid #e0e0e0',
-        borderRadius: '8px',
-        overflow: 'hidden',
-      }}
+      className="settings-row-grid grid grid-cols-2 xl:grid-cols-3 gap-2"
     >
       {children}
     </div>
