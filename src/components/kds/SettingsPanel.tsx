@@ -13,7 +13,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Tag, Bug, Globe } from 'lucide-react';
+import { X, Monitor, ShoppingBag, Cpu, User, Minus, Plus, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Tag, Bug, Globe, Pencil, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
@@ -250,6 +250,73 @@ function RowButton({ label, onClick, disabled, icon }: { label: string; onClick:
   );
 }
 
+// Icon-only button components for settings rows
+function EditIconButton({ onClick, title }: { onClick: () => void; title?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="flex items-center justify-center cursor-pointer flex-shrink-0"
+      style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        backgroundColor: '#F0FFF4',
+        border: '0.5px solid #C0DD97',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Pencil size={16} strokeWidth={2} color="#3B6D11" />
+    </button>
+  );
+}
+
+function ChevronIconButton({ onClick, title }: { onClick: () => void; title?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="flex items-center justify-center cursor-pointer flex-shrink-0"
+      style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        backgroundColor: '#F5F5F5',
+        border: '0.5px solid #E0E0E0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <ChevronRight size={16} strokeWidth={2} color="#888888" />
+    </button>
+  );
+}
+
+function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: () => void; title?: string; icon: React.ElementType; spinning?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="flex items-center justify-center cursor-pointer flex-shrink-0"
+      style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        backgroundColor: '#EBF5FF',
+        border: '0.5px solid #B5D4F4',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Icon size={16} strokeWidth={2} color="#185FA5" className={spinning ? 'animate-spin' : ''} />
+    </button>
+  );
+}
+
 export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome, orders = [] }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
@@ -347,10 +414,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
   // Display section rows
   const displayRows = [
-    { name: 'Language', subtitle: 'Display language', control: <RowButton label="Configure →" onClick={() => setActiveSection('language')} /> },
+    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
     { name: 'Text Size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
-    { name: 'Status Colours', subtitle: 'Ticket aging colours', control: <RowButton label="Customise →" onClick={() => setActiveSection('status-settings')} /> },
-    { name: 'Order Type Colors', subtitle: 'Header colours', control: <RowButton label="Customise →" onClick={() => setActiveSection('order-type-colors')} /> },
+    { name: 'Status Colours', subtitle: 'Ticket aging colours', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colours" /> },
+    { name: 'Order Type Colors', subtitle: 'Header colours', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
     { name: 'Allergen Badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
     { name: 'Enable Badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
     { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order Number', 'Guest Name']} value={ticketHeaderLayout === 'guest' ? 'Guest Name' : 'Order Number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest Name' ? 'guest' : 'kitchen')} /> },
@@ -359,11 +426,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   ];
 
   const hardwareRows = [
-    { name: 'KOT Printer', subtitle: 'No printer assigned', control: <RowButton label="Configure →" onClick={() => onOpenSub('printer-kot')} /> },
-    { name: 'Label Printer', subtitle: 'No printer assigned', control: <RowButton label="Configure →" onClick={() => onOpenSub('printer-label')} /> },
-    { name: 'Sound Settings', subtitle: 'Volume & alerts', control: <RowButton label="Configure →" onClick={() => onOpenSub('sound-settings')} /> },
-    { name: 'Sync', subtitle: 'Orders & settings', control: <RowButton label={syncing ? 'Syncing…' : 'Sync Now'} onClick={handleSync} disabled={syncing} icon={<RefreshCw size={11} className={syncing ? 'animate-spin' : ''} />} /> },
-    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <RowButton label="Configure →" onClick={() => onOpenSub('websocket-settings')} /> },
+    { name: 'KOT Printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
+    { name: 'Label Printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
+    { name: 'Sound Settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
+    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
+    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure Connection" /> },
   ];
 
   const accountRows = [
@@ -371,8 +438,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     { name: 'Station ID', subtitle: 'STN-001', control: null },
     { name: 'Bug Reporting', subtitle: 'In-app reporting tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
     { name: 'Debug Mode', subtitle: 'Verbose logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
-    { name: 'Upload Logs', subtitle: 'Send to eatOS support', control: <RowButton label={uploadingLogs ? 'Uploading…' : '↑ Upload'} onClick={handleUploadLogs} disabled={uploadingLogs} /> },
-    { name: 'Feedback & Support', subtitle: 'Request a feature', control: <RowButton label="Request →" onClick={() => setFeatureModalOpen(true)} /> },
+    { name: 'Upload Logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
+    { name: 'Feedback & Support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
   ];
 
   return (
