@@ -66,6 +66,28 @@ describe('Language Scope gating', () => {
     expect(localStorage.getItem('posai-language-scope')).toBe('interface');
   });
 
+  it('showSecondaryMenu reflects scope (false for interface, true otherwise)', () => {
+    const { result } = renderHook(() => useLanguage(), { wrapper });
+    act(() => { result.current.setScope('interface'); });
+    expect(result.current.showSecondaryMenu).toBe(false);
+    act(() => { result.current.setScope('menu'); });
+    expect(result.current.showSecondaryMenu).toBe(true);
+    act(() => { result.current.setScope('both'); });
+    expect(result.current.showSecondaryMenu).toBe(true);
+  });
+
+  it('Interface scope translates UI chrome keys including new ones', () => {
+    const { result } = renderHook(() => useLanguage(), { wrapper });
+    act(() => {
+      result.current.setLanguage('es');
+      result.current.setScope('interface');
+    });
+    expect(result.current.t.save).toBe('Guardar');
+    expect(result.current.t.active).toBe('Activo');
+    expect(result.current.t.served).toBe('Servido');
+    expect(result.current.t.previewKDS).toBe('Vista previa - Ticket KDS');
+  });
+
   it('Dual mode: changing primary language changes tp/tc/ta/to', () => {
     const { result } = renderHook(() => useLanguage(), { wrapper });
     act(() => {
