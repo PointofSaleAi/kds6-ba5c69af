@@ -598,7 +598,18 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
 
           <div
-            className="flex items-center justify-between transition-all duration-200"
+            role="button"
+            tabIndex={0}
+            aria-label={`Advance ticket (currently ${ticketState})`}
+            title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
+            onClick={() => handleTicketAdvance(order.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleTicketAdvance(order.id);
+              }
+            }}
+            className="flex items-center justify-between transition-all duration-200 cursor-pointer select-none active:brightness-95"
             style={{
               backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
               padding: '12px',
