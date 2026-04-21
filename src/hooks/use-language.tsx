@@ -1251,6 +1251,8 @@ interface LanguageContextType {
   setTimeFormat: (f: TimeFormatIndex) => void;
   scope: LanguageScope;
   setScope: (s: LanguageScope) => void;
+  /** True when dual-mode secondary line should render (i.e. menu translation is enabled). */
+  showSecondaryMenu: boolean;
 }
 
 const defaultLanguageContext: LanguageContextType = {
@@ -1278,6 +1280,7 @@ const defaultLanguageContext: LanguageContextType = {
   tmSecondary: (text: string) => text,
   scope: 'both',
   setScope: () => {},
+  showSecondaryMenu: true,
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
