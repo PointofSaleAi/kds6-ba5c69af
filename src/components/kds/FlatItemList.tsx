@@ -151,11 +151,16 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             )}
 
             {item.notes && !item.isCancelled && (
-              <div
-                className="text-text-muted italic leading-snug"
-                style={{ paddingLeft: '20px', marginTop: '2px', fontSize: 'var(--kds-modifier)' }}
-              >
-                "{item.notes}"
+              <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
+                <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+                  {item.quantity}x
+                </span>
+                <div
+                  className="text-text-muted italic leading-snug min-w-0"
+                  style={{ fontSize: 'var(--kds-modifier)' }}
+                >
+                  "{item.notes}"
+                </div>
               </div>
             )}
           </div>
