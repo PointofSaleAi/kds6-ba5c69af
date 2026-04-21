@@ -279,27 +279,25 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             />
           </div>
         </div>
-      </div>
-
-      {/* Text Colour */}
-      <div>
-        <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-          Text Colour
-        </label>
-        <div className="flex gap-2">
-          {textColorOptions.map((tc) => (
-            <button
-              key={tc}
-              onClick={() => onChange({ textColor: tc })}
-              className={`px-3 py-2 rounded-lg text-xs font-semibold capitalize transition-colors min-h-[36px] flex-1 ${
-                rule.textColor === tc
-                  ? 'bg-foreground text-background'
-                  : 'bg-muted text-text-secondary hover:bg-muted/80'
-              }`}
-            >
-              {tc}
-            </button>
-          ))}
+        <div className="shrink-0 basis-full sm:basis-auto">
+          <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+            Text Colour
+          </label>
+          <div className="flex gap-1.5">
+            {textColorOptions.map((tc) => (
+              <button
+                key={tc}
+                onClick={() => onChange({ textColor: tc })}
+                className={`px-2.5 py-2 rounded-lg text-[11px] font-semibold capitalize transition-colors min-h-[36px] w-14 ${
+                  rule.textColor === tc
+                    ? 'bg-foreground text-background'
+                    : 'bg-muted text-text-secondary hover:bg-muted/80'
+                }`}
+              >
+                {tc}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
