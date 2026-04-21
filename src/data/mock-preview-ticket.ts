@@ -68,7 +68,7 @@ export const previewTicket: Order = {
             { id: 'prev-m-005', text: '+ Lemon Sauce', type: 'extra' },
           ],
           allergens: [
-            { type: 'fish', label: 'FISH', icon: '🐟' },
+            { type: 'shellfish', label: 'SHELLFISH', icon: '🦐' },
           ],
         },
         {
