@@ -414,10 +414,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
   // Display section rows
   const displayRows = [
-    { name: 'Language', subtitle: 'Display language', control: <RowButton label="Configure →" onClick={() => setActiveSection('language')} /> },
+    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
     { name: 'Text Size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
-    { name: 'Status Colours', subtitle: 'Ticket aging colours', control: <RowButton label="Customise →" onClick={() => setActiveSection('status-settings')} /> },
-    { name: 'Order Type Colors', subtitle: 'Header colours', control: <RowButton label="Customise →" onClick={() => setActiveSection('order-type-colors')} /> },
+    { name: 'Status Colours', subtitle: 'Ticket aging colours', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colours" /> },
+    { name: 'Order Type Colors', subtitle: 'Header colours', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
     { name: 'Allergen Badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
     { name: 'Enable Badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
     { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order Number', 'Guest Name']} value={ticketHeaderLayout === 'guest' ? 'Guest Name' : 'Order Number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest Name' ? 'guest' : 'kitchen')} /> },
