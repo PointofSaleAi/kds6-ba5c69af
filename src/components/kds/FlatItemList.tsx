@@ -3,9 +3,8 @@ import { Languages } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
-import { KdsActionIcon } from './KdsActionIcon';
-import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
+import { useRowTap } from '@/hooks/use-row-tap';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
