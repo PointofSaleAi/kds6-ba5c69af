@@ -28,11 +28,14 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   if (isServable && modifier.id) {
     return (
       <div
-        className="flex items-center justify-between"
-        style={{ paddingLeft: '20px', paddingTop: '4px', paddingBottom: '4px', gap: '4px' }}
+        className="flex items-center"
+        style={{ paddingTop: '4px', paddingBottom: '4px', gap: '6px' }}
       >
+        <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+          1x
+        </span>
         <span
-          className={`min-w-0 font-semibold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
+          className={`flex-1 min-w-0 font-semibold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
           style={{ fontSize: 'var(--kds-item-name)', lineHeight: '1.2' }}
         >
           {tm(modifier.text)}
@@ -58,7 +61,10 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
 
   // Non-servable modifier: keep existing small muted style
   return (
-    <div className="flex items-center" style={{ paddingLeft: '20px', lineHeight: '1.1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
+    <div className="flex items-center" style={{ lineHeight: '1.1', paddingTop: '0px', paddingBottom: '0px', gap: '6px' }}>
+      <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+        1x
+      </span>
       <span
         className={`min-w-0 font-medium ${styles[modifier.type]}`}
         style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.3' }}
