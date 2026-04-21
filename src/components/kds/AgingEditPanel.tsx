@@ -232,7 +232,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
         <div className="shrink-0 basis-full sm:basis-auto">
           <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-            Colour
+            Color
           </label>
           <div className="flex items-center gap-2">
             <label
@@ -248,7 +248,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
                   onChange({ color: hex });
                 }}
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                aria-label="Pick status colour"
+                aria-label="Pick status color"
               />
             </label>
             <input
@@ -267,7 +267,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
         <div className="shrink-0 basis-full sm:basis-auto">
           <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-            Text Colour
+            Text Color
           </label>
           <div className="flex gap-1.5">
             {textColorOptions.map((tc) => (
