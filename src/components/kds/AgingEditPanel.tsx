@@ -10,12 +10,6 @@ interface AgingEditPanelProps {
   errors: string[];
 }
 
-const palettes = {
-  warm: ['#E84C3D', '#C0392B', '#922B21', '#E67E22', '#F39C12', '#D4AC0D'],
-  cool: ['#2980B9', '#2471A3', '#16A085', '#27AE60', '#1ABC9C', '#3498DB'],
-  neutral: ['#1A1A2E', '#2C3E50', '#7F8C8D', '#95A5A6', '#BDC3C7', '#8E44AD'],
-};
-
 const textColorOptions = ['white', 'grey', 'black'] as const;
 
 function getContrastRatio(hex: string, textColor: string): { ratio: number; passes: boolean } {
@@ -194,44 +188,41 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
       {/* Time Range */}
       <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
 
-      {/* Colour Picker - Grouped */}
+      {/* Colour Picker */}
       <div>
         <label className="text-[11px] font-semibold text-text-muted mb-2 block uppercase tracking-wider">
           Colour
         </label>
-        {Object.entries(palettes).map(([group, colors]) => (
-          <div key={group} className="mb-2">
-            <span className="text-[10px] text-text-muted capitalize mb-1 block">{group}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {colors.map((hex) => (
-                <button
-                  key={hex}
-                  onClick={() => onChange({ color: hex })}
-                  className={`w-8 h-8 rounded-lg border-2 transition-all min-w-[32px] min-h-[32px] ${
-                    rule.color === hex ? 'border-text-primary scale-110 shadow-md' : 'border-transparent hover:scale-105'
-                  }`}
-                  style={{ backgroundColor: hex }}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex items-center gap-3">
+          <label
+            className="relative w-10 h-10 rounded-lg border border-border overflow-hidden cursor-pointer shrink-0"
+            style={{ backgroundColor: rule.color }}
+          >
+            <input
+              type="color"
+              value={rule.color}
+              onChange={(e) => {
+                const hex = e.target.value.toUpperCase();
+                setCustomHex(hex);
+                onChange({ color: hex });
+              }}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+              aria-label="Pick status colour"
+            />
+          </label>
           <input
             type="text"
-            value={customHex}
-            onChange={(e) => setCustomHex(e.target.value)}
-            placeholder="#RRGGBB"
-            className="w-24 px-2 py-1.5 text-xs bg-muted rounded-lg border border-border text-text-primary"
-          />
-          <button
-            onClick={() => {
-              if (/^#[0-9A-Fa-f]{6}$/.test(customHex)) onChange({ color: customHex });
+            value={customHex || rule.color}
+            onChange={(e) => {
+              const v = e.target.value;
+              setCustomHex(v);
+              if (/^#[0-9A-Fa-f]{6}$/.test(v)) onChange({ color: v.toUpperCase() });
             }}
-            className="text-xs font-semibold text-text-secondary hover:text-text-primary min-h-[32px] px-2 transition-colors"
-          >
-            Apply
-          </button>
+            placeholder="#RRGGBB"
+            maxLength={7}
+            className="w-28 px-2 py-2 text-xs font-mono bg-muted rounded-lg border border-border text-text-primary uppercase focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          <span className="text-[11px] text-text-muted">Tap swatch to pick</span>
         </div>
       </div>
 
