@@ -44,6 +44,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
+  const [editTarget, setEditTarget] = useState<'primary' | 'secondary'>('secondary');
   
 
   if (!open) return null;
@@ -74,11 +75,14 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
     onClose();
   };
 
-  const selectedLangInList = displayMode === 'dual' ? secondaryLang : localSingleLang;
+  const selectedLangInList = displayMode === 'dual'
+    ? (editTarget === 'primary' ? primaryLang : secondaryLang)
+    : localSingleLang;
 
   const handleSelectLang = (code: LanguageCode) => {
     if (displayMode === 'dual') {
-      setSecondaryLang(code);
+      if (editTarget === 'primary') setPrimaryLang(code);
+      else setSecondaryLang(code);
     } else {
       setLocalSingleLang(code);
       setLanguage(code);
@@ -210,13 +214,18 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                     <div>
                       <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">Language pair</div>
                       <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-muted rounded-lg px-2.5 py-2">
-                          <div className="text-[9px] text-text-muted uppercase tracking-wider mb-0.5">Primary</div>
+                        <button
+                          type="button"
+                          onClick={() => setEditTarget('primary')}
+                          className="flex-1 bg-muted rounded-lg px-2.5 py-2 text-left transition-all"
+                          style={{ border: editTarget === 'primary' ? '1.5px solid hsl(var(--brand-primary))' : '1.5px solid transparent' }}
+                        >
+                          <div className="text-[9px] text-text-muted uppercase tracking-wider mb-0.5">Primary {editTarget === 'primary' ? '· editing' : ''}</div>
                           <div className="flex items-center gap-1.5">
                             <span className="text-sm">{primaryInfo.flag}</span>
                             <span className="text-xs font-medium text-text-primary">{primaryInfo.name}</span>
                           </div>
-                        </div>
+                        </button>
                         <button
                           onClick={handleSwap}
                           className="shrink-0 w-8 h-8 rounded-full bg-brand-primary text-primary-foreground flex items-center justify-center hover:bg-brand-primary/90 transition-colors"
@@ -224,22 +233,27 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                         >
                           <ArrowLeftRight size={14} />
                         </button>
-                        <div className="flex-1 bg-muted rounded-lg px-2.5 py-2">
-                          <div className="text-[9px] text-text-muted uppercase tracking-wider mb-0.5">Secondary</div>
+                        <button
+                          type="button"
+                          onClick={() => setEditTarget('secondary')}
+                          className="flex-1 bg-muted rounded-lg px-2.5 py-2 text-left transition-all"
+                          style={{ border: editTarget === 'secondary' ? '1.5px solid hsl(var(--brand-primary))' : '1.5px solid transparent' }}
+                        >
+                          <div className="text-[9px] text-text-muted uppercase tracking-wider mb-0.5">Secondary {editTarget === 'secondary' ? '· editing' : ''}</div>
                           <div className="flex items-center gap-1.5">
                             <span className="text-sm">{secondaryInfo.flag}</span>
                             <span className="text-xs font-medium text-text-primary">{secondaryInfo.name}</span>
                           </div>
-                        </div>
+                        </button>
                       </div>
-                      <div className="text-[9px] text-text-muted text-center mt-1">tap ⇆ to swap primary and secondary</div>
+                      <div className="text-[9px] text-text-muted text-center mt-1">tap a card to choose which side to edit, or ⇆ to swap</div>
                     </div>
                   )}
 
                   {/* Section D: Language list */}
                   <div>
                     <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5">
-                      {displayMode === 'dual' ? 'Select secondary language' : 'Select language'}
+                      {displayMode === 'dual' ? `Select ${editTarget} language` : 'Select language'}
                     </div>
                     <div className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-1.5 mb-1.5">
                       <Search size={14} className="text-text-muted" />
