@@ -106,7 +106,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [showAllergens, setShowAllergens] = useState(true);
   const [staggerMode, setStaggerMode] = useState(false);
-  const [servableModifiers, setServableModifiers] = useState(true);
+  const [servableModifiers, setServableModifiers] = useState(false);
   const [sortDefault, setSortDefault] = useState('By Time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
