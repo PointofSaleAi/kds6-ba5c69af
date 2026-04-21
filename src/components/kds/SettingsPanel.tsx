@@ -333,7 +333,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
       <div className="flex-1 flex flex-col overflow-hidden">
         {inSubScreen && (
           <>
-            <div className="flex items-center justify-between px-5 py-3 shrink-0">
+            <div className="flex items-center justify-between px-10 py-5 shrink-0">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveSection('display')}
@@ -347,7 +347,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </h2>
               </div>
             </div>
-            <div className="mx-5 h-px bg-border mb-4" />
+            <div className="mx-10 h-px bg-border mb-4" />
           </>
         )}
 
@@ -400,7 +400,9 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           )}
 
           {activeSection === 'language' && (
-            <InlineLanguageSettings activeTab="language" />
+            <div className="px-10 pb-7 h-full">
+              <InlineLanguageSettings activeTab="language" />
+            </div>
           )}
 
           {activeSection === 'order-type-colors' && (

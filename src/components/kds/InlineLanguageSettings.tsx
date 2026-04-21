@@ -212,7 +212,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
       {/* Tab content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'language' ? (
-          <div className="flex flex-col md:flex-row h-full gap-4">
+          <div className="flex flex-col md:flex-row h-full gap-8">
             {/* LEFT COLUMN */}
             <div className="flex-1 overflow-y-auto space-y-4 min-w-0">
               {/* Language scope */}
@@ -513,11 +513,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             <div className="hidden md:block w-px bg-border shrink-0" />
 
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="w-[360px] shrink-0 flex flex-col">
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                 Preview - KDS ticket
               </div>
-              <div className="flex-1 pointer-events-none select-none" aria-hidden="true">
+              <div className="flex-1 pointer-events-none select-none max-w-[340px] w-full mx-auto" aria-hidden="true">
                 <OrderCard order={previewTicket} />
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
