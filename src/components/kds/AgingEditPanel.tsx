@@ -202,20 +202,6 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-lg border border-border"
-          style={{ backgroundColor: rule.color }}
-        />
-        <div>
-          <h3 className="text-sm font-bold text-text-primary">{rule.label}</h3>
-          <p className="text-[11px] text-text-muted">
-            Applies from {rule.minMinutes}-{rule.maxMinutes ?? '∞'} min
-          </p>
-        </div>
-      </div>
-
       {/* Errors */}
       {errors.length > 0 && (
         <div className="space-y-1">
