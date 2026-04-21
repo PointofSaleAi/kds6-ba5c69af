@@ -94,11 +94,11 @@ function SmallToggle({ checked, onChange }: { checked: boolean; onChange: (v: bo
   return (
     <button
       onClick={() => onChange(!checked)}
-      className={`relative w-10 h-5 rounded-full transition-colors ${checked ? 'bg-brand-primary' : 'bg-border'}`}
+      className={`relative w-12 h-6 rounded-full transition-colors ${checked ? 'bg-brand-primary' : 'bg-border'}`}
       role="switch"
       aria-checked={checked}
     >
-      <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-surface-card rounded-full transition-transform shadow-sm ${checked ? 'translate-x-5' : ''}`} />
+      <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-surface-card rounded-full transition-transform shadow-sm ${checked ? 'translate-x-6' : ''}`} />
     </button>
   );
 }
@@ -110,7 +110,7 @@ function ChipGroup({ options, value, onChange }: { options: string[]; value: str
         <button
           key={opt}
           onClick={() => onChange(opt)}
-          style={{ fontSize: '10px', padding: '4px 8px' }}
+          style={{ fontSize: '13px', padding: '7px 14px' }}
           className={`rounded-full font-semibold transition-colors ${
             value === opt ? 'bg-brand-dark text-primary-foreground' : 'bg-muted text-text-secondary'
           }`}
