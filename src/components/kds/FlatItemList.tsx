@@ -145,15 +145,16 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                     modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
                     onAdvanceModifier={onAdvanceModifier}
                     onUndoModifier={onUndoModifier}
+                    parentQuantity={item.quantity}
                   />
                 ))}
               </div>
             )}
 
             {item.notes && !item.isCancelled && (
-              <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
+              <div className="flex items-start" style={{ gap: '6px', marginTop: '2px', paddingLeft: '4px' }}>
                 <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                  {item.quantity}x
+                  {item.quantity}&times;
                 </span>
                 <div
                   className="text-text-muted italic leading-snug min-w-0"
