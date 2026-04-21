@@ -1185,6 +1185,8 @@ const defaultLanguageContext: LanguageContextType = {
   setSecondaryLang: () => {},
   tpSecondary: (name: string) => name,
   tmSecondary: (text: string) => text,
+  scope: 'both',
+  setScope: () => {},
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
