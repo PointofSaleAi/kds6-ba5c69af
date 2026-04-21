@@ -37,9 +37,12 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             className="flex items-center text-[11px] text-text-muted font-semibold uppercase"
             style={{ gap: '6px', marginTop: '1px' }}
           >
-            <span className="inline-flex items-center justify-center shrink-0" style={{ minWidth: '1.5em' }}>
-              <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
-                <Languages size={10} className="text-text-secondary" />
+            <span className="relative text-[13px] font-normal shrink-0">
+              <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
+              <span className="absolute inset-0 flex items-center justify-center">
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
+                  <Languages size={10} className="text-text-secondary" />
+                </span>
               </span>
             </span>
             <span>{tpSecondary(item.name)}</span>
