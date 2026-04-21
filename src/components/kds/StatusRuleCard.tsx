@@ -138,7 +138,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
 
               {/* Colour swatches */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Colour</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Color</label>
                 <div className="flex flex-wrap gap-1.5">
                   {swatches.map((hex) => (
                     <button
@@ -175,7 +175,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
 
               {/* Text colour */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text Colour</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text Color</label>
                 <div className="flex gap-2">
                   {textColorOptions.map((tc) => (
                     <button

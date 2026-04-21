@@ -327,8 +327,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const displayRows = [
     { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
     { name: 'Text Size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
-    { name: 'Status Colours', subtitle: 'Ticket aging colours', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colours" /> },
-    { name: 'Order Type Colors', subtitle: 'Header colours', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
+    { name: 'Status Colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
+    { name: 'Order Type Colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
     { name: 'Allergen Badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
     { name: 'Enable Badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
     { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order Number', 'Guest Name']} value={ticketHeaderLayout === 'guest' ? 'Guest Name' : 'Order Number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest Name' ? 'guest' : 'kitchen')} /> },
@@ -373,7 +373,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                   </h2>
                   {activeSection === 'status-settings' && (
                     <p className="text-[12px] text-text-muted mt-1">
-                      Orders change colour as they age. Adjust thresholds based on your kitchen speed.
+                      Orders change color as they age. Adjust thresholds based on your kitchen speed.
                     </p>
                   )}
                 </div>
