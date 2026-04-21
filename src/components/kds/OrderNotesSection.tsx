@@ -31,6 +31,7 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           role="button"
           tabIndex={0}
           aria-label={acknowledged ? 'Mark notes as unseen' : 'Acknowledge notes'}
+          title={acknowledged ? 'Tap to mark notes as unseen' : 'Tap to acknowledge notes'}
           onClick={toggle}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {

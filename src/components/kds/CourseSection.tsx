@@ -470,6 +470,7 @@ function CourseItemTapRow({
         className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{ padding: '2px 0 0 4px', gap: 0 }}
         onClick={tappable ? handleTap : undefined}
+        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
