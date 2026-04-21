@@ -182,6 +182,12 @@
   .font-mono-timer {
     font-family: 'JetBrains Mono', monospace;
   }
+
+  @media (max-width: 1024px) {
+    .settings-row-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
 }
 
 @layer utilities {
