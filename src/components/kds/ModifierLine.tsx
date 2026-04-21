@@ -56,12 +56,12 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
     );
   }
 
-  // Non-servable modifier: small muted indented line aligned with shared 22px left column
+  // Non-servable modifier: keep existing small muted style
   return (
-    <div className="flex items-center" style={{ paddingLeft: '28px', lineHeight: '1.2', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
+    <div className="flex items-center" style={{ paddingLeft: '20px', lineHeight: '1.1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
       <span
         className={`min-w-0 font-medium ${styles[modifier.type]}`}
-        style={{ fontSize: '10px', color: modifier.type === 'remove' ? '#ff6b6b' : modifier.type === 'extra' ? undefined : '#aaaaaa', lineHeight: '1.3' }}
+        style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.3' }}
       >
         {tm(modifier.text)}
       </span>

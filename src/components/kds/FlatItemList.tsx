@@ -47,15 +47,12 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           >
             <div
               className="flex items-center cursor-pointer active:bg-muted/50 transition-colors"
-              style={{ padding: `6px 0 6px 0`, gap: 0 }}
+              style={{ padding: `var(--kds-item-gap) 0 0 4px`, gap: 0 }}
               onClick={() => !item.isCancelled && onReRouteItem?.(item)}
             >
               <div className="flex-1 min-w-0">
-                <div className="flex items-start flex-wrap" style={{ gap: '6px' }}>
-                  <span
-                    className="font-normal text-text-secondary shrink-0"
-                    style={{ fontSize: 'var(--kds-item-qty)', width: '22px', textAlign: 'right', display: 'inline-block' }}
-                  >
+                <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+                  <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
                     {item.quantity}&times;
                   </span>
                   <span className={`font-semibold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`} style={{ fontSize: 'var(--kds-item-name)' }}>
@@ -100,22 +97,11 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                 </div>
 
                 {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
-                  <div
-                    className="flex items-center"
-                    style={{ gap: '6px', marginTop: '2px' }}
-                  >
-                    <span
-                      className="shrink-0"
-                      style={{ width: '22px', textAlign: 'right', display: 'inline-block', fontSize: '9px', color: '#555555', fontStyle: 'italic' }}
-                    >
-                      ✱
+                  <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
+                    <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
+                      <Languages size={8} className="text-text-secondary" />
                     </span>
-                    <span
-                      className="font-semibold uppercase"
-                      style={{ fontSize: '9px', color: '#555555', fontStyle: 'italic', lineHeight: '1.2' }}
-                    >
-                      {tpSecondary(item.name)}
-                    </span>
+                    {tpSecondary(item.name)}
                   </div>
                 )}
               </div>
@@ -156,8 +142,8 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
 
             {item.notes && !item.isCancelled && (
               <div
-                className="italic leading-snug"
-                style={{ paddingLeft: '28px', marginTop: '2px', fontSize: '10px', color: '#ff6b6b' }}
+                className="text-text-muted italic leading-snug"
+                style={{ paddingLeft: '20px', marginTop: '2px', fontSize: 'var(--kds-modifier)' }}
               >
                 "{item.notes}"
               </div>
