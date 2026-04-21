@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { KdsActionIcon } from './KdsActionIcon';
 
 interface OrderNotesSectionProps {
   notes: string;
@@ -18,6 +17,8 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
     }
   };
 
+  const rowBg = acknowledged ? 'rgba(29, 158, 117, 0.10)' : undefined;
+
   return (
     <div className="border-t border-border">
       <div className="flex items-center justify-between bg-muted" style={{ padding: '4px 8px' }}>
@@ -25,20 +26,25 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           Order Notes
         </span>
       </div>
-      <div className="px-2 py-0.5">
-        <div className={`flex items-center border-b border-border/50 ${acknowledged ? 'opacity-50' : ''}`} style={{ padding: '4px 0 4px 4px', gap: 0 }}>
+      <div className="px-2 py-0.5" style={{ backgroundColor: rowBg }}>
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={acknowledged ? 'Mark notes as unseen' : 'Acknowledge notes'}
+          onClick={toggle}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggle();
+            }
+          }}
+          className="flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors select-none"
+          style={{ padding: '4px 0 4px 4px', gap: 0 }}
+        >
           <div className="flex-1 min-w-0">
             <div className="text-[13px] text-text-primary leading-snug">
               {notes}
             </div>
-          </div>
-          <div className="flex items-center shrink-0 ml-auto">
-            <KdsActionIcon
-              icon={acknowledged ? 'acknowledged' : 'seen'}
-              onClick={toggle}
-              title={acknowledged ? 'Mark as unseen' : 'Acknowledge notes'}
-              label={acknowledged ? 'Mark as unseen' : 'Acknowledge notes'}
-            />
           </div>
         </div>
       </div>
