@@ -31,11 +31,19 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         </div>
 
         {displayMode === 'dual' && showSecondaryMenu && (
-          <div className="flex items-center gap-1.5 text-[11px] text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '1px' }}>
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
+          <div
+            className="flex items-center justify-between text-[11px] text-text-muted font-semibold uppercase"
+            style={{ marginTop: '1px' }}
+          >
+            <span className="flex items-center" style={{ gap: '6px' }}>
+              <span className="text-[13px] font-normal invisible">
+                {item.quantity}&times;
+              </span>
+              <span>{tpSecondary(item.name)}</span>
+            </span>
+            <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0 ml-2">
               <Languages size={10} className="text-text-secondary" />
             </span>
-            {tpSecondary(item.name)}
           </div>
         )}
 
