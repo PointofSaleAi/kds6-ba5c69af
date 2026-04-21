@@ -50,16 +50,6 @@ export function CompactOrderCard({ order, liveElapsed, urgency, onBump }: Compac
           <TimerBadge seconds={liveElapsed} urgency={urgency} />
         </div>
       </div>
-      <div className="px-2 pb-2">
-        <button
-          onClick={() => onBump?.(order.id)}
-          className="w-full py-2 bg-btn-done text-primary-foreground rounded uppercase flex items-center justify-center gap-2"
-          style={{ fontSize: '16px', fontWeight: 700 }}
-        >
-          <CheckCircle size={22} color="#FFFFFF" strokeWidth={2.5} />
-          {t.done}
-        </button>
-      </div>
     </div>
   );
 }

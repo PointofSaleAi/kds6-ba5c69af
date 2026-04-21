@@ -739,13 +739,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             />
           )}
         </div>
-
-        <OrderCardActions
-          orderId={order.id}
-          ticketState={ticketState}
-          onTicketAdvance={handleTicketAdvance}
-          onTicketRecall={handleTicketRecall}
-        />
       </div>
     </>
   );

@@ -326,42 +326,11 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               {firedTimerLabel}
             </span>
           )}
-          {/* Active course: "Seen at HH:MM" after first acknowledgement */}
-          {isActive && courseSeenAt && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-[#0F4C81]" style={{ backgroundColor: '#EFF6FF' }}>
-              {t.seenAt} {courseSeenAt}
-            </span>
-          )}
           {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted" style={{ color: '#AAAAAA' }}>
               {t.preparingAt} {firingAtLabel}
             </span>
-          )}
-          {/* Course-level undo + action icon for active courses - stopPropagation to prevent collapse */}
-          {isActive && onBulkAdvanceCourse && (
-            <div className="flex items-center" style={{ gap: '4px' }} onClick={(e) => e.stopPropagation()}>
-              {collectiveState !== 'unseen' && (
-                <button
-                  onClick={() => handleCourseUndo()}
-                  className="flex items-center justify-center"
-                  style={{ width: 20, height: 20 }}
-                  aria-label="Undo course"
-                >
-                  <div className="flex items-center justify-center" style={{ width: 18, height: 18 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1E293B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
-                  </div>
-                </button>
-              )}
-              <button
-                onClick={handleCourseEyeClick}
-                className="flex items-center justify-center transition-all duration-200 hover:scale-110"
-                style={{ width: 20, height: 20, flexShrink: 0 }}
-                title={collectiveState === 'unseen' ? 'Mark all seen' : collectiveState === 'preparing' ? 'Mark all done' : 'All done'}
-              >
-                {renderCourseIcon()}
-              </button>
-            </div>
           )}
         </div>
       </div>
@@ -484,6 +453,7 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
+  // FIX 1: Very light green highlight for tapped rows
   const stateBg = tappable ? (isDone ? '#161B28' : isSeen ? '#1E2438' : undefined) : undefined;
   const stateOpacity = isDone && tappable ? 0.5 : itemOpacity;
 
@@ -492,7 +462,7 @@ function CourseItemTapRow({
       className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
-        ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : stateBg ? { backgroundColor: stateBg } : {}),
+        ...(isHighlighted ? { backgroundColor: 'rgba(29, 158, 117, 0.10)' } : stateBg ? { backgroundColor: stateBg } : {}),
       }}
     >
       <div
