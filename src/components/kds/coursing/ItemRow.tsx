@@ -10,7 +10,8 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, dimmed }: ItemRowProps) {
-  const { tp, tm, displayMode, tpSecondary, showSecondaryMenu } = useLanguage();
+  const { tp, tm, displayMode, tpSecondary, showSecondaryMenu, secondaryLang } = useLanguage();
+  const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
 
   return (
     <div
