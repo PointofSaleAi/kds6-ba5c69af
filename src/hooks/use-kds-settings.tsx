@@ -84,7 +84,7 @@ const defaults: KDSSettings = {
   showAllergens: true,
   sortDefault: 'By Time',
   staggerMode: false,
-  servableModifiers: true,
+  servableModifiers: false,
   timezone: 'auto',
   currency: 'USD',
   tempUnit: 'F',
