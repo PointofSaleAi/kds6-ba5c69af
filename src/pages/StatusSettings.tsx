@@ -295,8 +295,8 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
 
-      {/* Course Level Toggle */}
-      <div className="px-6 pb-3">
+      {/* Course Level Toggle + Presets (2-col) */}
+      <div className="px-6 pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
         <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-muted/60">
           <div className="flex-1 min-w-0">
             <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
@@ -311,11 +311,8 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
             <span className={`absolute top-1 left-1 w-4 h-4 bg-surface-card rounded-full transition-transform shadow-sm ${courseLevelAging ? 'translate-x-5' : ''}`} />
           </button>
         </div>
-      </div>
 
-      {/* Presets */}
-      <div className="px-6 pb-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap py-3 px-4 rounded-lg bg-muted/60">
           <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider shrink-0">Presets</span>
           {PRESETS.map((preset) => {
             const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
