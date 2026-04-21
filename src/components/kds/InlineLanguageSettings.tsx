@@ -85,6 +85,8 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
+  // Which side of the dual pair the language list is editing
+  const [editTarget, setEditTarget] = useState<'primary' | 'secondary'>('secondary');
 
   // Request language form state
   const [requestFormOpen, setRequestFormOpen] = useState(false);
@@ -185,11 +187,14 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     toast.success('Language settings saved');
   };
 
-  const selectedLangInList = displayMode === 'dual' ? secondaryLang : localSingleLang;
+  const selectedLangInList = displayMode === 'dual'
+    ? (editTarget === 'primary' ? primaryLang : secondaryLang)
+    : localSingleLang;
 
   const handleSelectLang = (code: LanguageCode) => {
     if (displayMode === 'dual') {
-      setSecondaryLang(code);
+      if (editTarget === 'primary') setPrimaryLang(code);
+      else setSecondaryLang(code);
     } else {
       setLocalSingleLang(code);
       setLanguage(code);
