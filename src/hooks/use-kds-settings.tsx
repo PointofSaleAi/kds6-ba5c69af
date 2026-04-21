@@ -76,7 +76,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setExpoSendButtonMode: (v: ExpoSendButtonMode) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings';
+const STORAGE_KEY = 'posai-kds-settings-v2';
 
 const defaults: KDSSettings = {
   cardsPerRow: 4,
@@ -84,7 +84,7 @@ const defaults: KDSSettings = {
   showAllergens: true,
   sortDefault: 'By Time',
   staggerMode: false,
-  servableModifiers: true,
+  servableModifiers: false,
   timezone: 'auto',
   currency: 'USD',
   tempUnit: 'F',
