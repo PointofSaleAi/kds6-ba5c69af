@@ -72,6 +72,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     primaryLang, setPrimaryLang, secondaryLang, setSecondaryLang,
     dateFormat: savedDateFormat, setDateFormat: saveDateFormat,
     timeFormat: savedTimeFormat, setTimeFormat: saveTimeFormat,
+    scope, setScope,
   } = useLanguage();
 
   const {
@@ -79,8 +80,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
   } = useKDSSettings();
-
-  const [scope, setScope] = useState<'interface' | 'menu' | 'both'>('both');
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);

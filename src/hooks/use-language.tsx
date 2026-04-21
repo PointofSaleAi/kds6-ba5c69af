@@ -1114,6 +1114,8 @@ const languageFlags: Record<LanguageCode, string> = {
 
 export type DisplayMode = 'single' | 'dual';
 
+export type LanguageScope = 'interface' | 'menu' | 'both';
+
 /** 0 = '27 March 2026', 1 = 'March 27, 2026', 2 = '27/03/2026' */
 export type DateFormatIndex = 0 | 1 | 2;
 /** 0 = 12h, 1 = 24h */
@@ -1156,6 +1158,8 @@ interface LanguageContextType {
   setDateFormat: (f: DateFormatIndex) => void;
   timeFormat: TimeFormatIndex;
   setTimeFormat: (f: TimeFormatIndex) => void;
+  scope: LanguageScope;
+  setScope: (s: LanguageScope) => void;
 }
 
 const defaultLanguageContext: LanguageContextType = {
@@ -1181,6 +1185,8 @@ const defaultLanguageContext: LanguageContextType = {
   setSecondaryLang: () => {},
   tpSecondary: (name: string) => name,
   tmSecondary: (text: string) => text,
+  scope: 'both',
+  setScope: () => {},
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
@@ -1216,6 +1222,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return (saved !== null ? Number(saved) : 0) as TimeFormatIndex;
   });
 
+  const [scope, setScopeState] = useState<LanguageScope>(() => {
+    const saved = localStorage.getItem('posai-language-scope');
+    return (saved as LanguageScope) || 'both';
+  });
+
+  const setScope = useCallback((s: LanguageScope) => {
+    setScopeState(s);
+    localStorage.setItem('posai-language-scope', s);
+  }, []);
+
   const setLanguage = useCallback((lang: LanguageCode) => {
     setLanguageState(lang);
     localStorage.setItem('posai-language', lang);
@@ -1247,39 +1263,47 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const tp = useCallback((name: string) => {
+    if (scope === 'interface') return name;
     const lang = displayMode === 'dual' ? primaryLang : language;
     return productNames[lang]?.[name] || name;
-  }, [language, displayMode, primaryLang]);
+  }, [language, displayMode, primaryLang, scope]);
 
   const tm = useCallback((text: string) => {
+    if (scope === 'interface') return text;
     const lang = displayMode === 'dual' ? primaryLang : language;
     return modifierTexts[lang]?.[text] || text;
-  }, [language, displayMode, primaryLang]);
+  }, [language, displayMode, primaryLang, scope]);
 
   const tpSecondary = useCallback((name: string) => {
+    if (scope === 'interface') return name;
     return productNames[secondaryLang]?.[name] || name;
-  }, [secondaryLang]);
+  }, [secondaryLang, scope]);
 
   const tmSecondary = useCallback((text: string) => {
+    if (scope === 'interface') return text;
     return modifierTexts[secondaryLang]?.[text] || text;
-  }, [secondaryLang]);
+  }, [secondaryLang, scope]);
 
   const tc = useCallback((course: string) => {
+    if (scope === 'interface') return course;
     return courseNames[language]?.[course] || course;
-  }, [language]);
+  }, [language, scope]);
 
   const ta = useCallback((label: string) => {
+    if (scope === 'interface') return label;
     return allergenLabels[language]?.[label] || label;
-  }, [language]);
+  }, [language, scope]);
 
   const to = useCallback((label: string) => {
+    if (scope === 'interface') return label;
     return orderTypeLabels[language]?.[label] || label;
-  }, [language]);
+  }, [language, scope]);
+
 
   const value: LanguageContextType = {
     language,
     setLanguage,
-    t: translations[language],
+    t: scope === 'menu' ? translations['en-US'] : translations[language],
     tp,
     tm,
     tc,
@@ -1299,6 +1323,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setDateFormat,
     timeFormat,
     setTimeFormat,
+    scope,
+    setScope,
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
