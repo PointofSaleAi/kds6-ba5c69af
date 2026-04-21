@@ -41,9 +41,6 @@ export function CompactOrderCard({ order, liveElapsed, urgency, onBump }: Compac
       />
       <div className="p-3 text-center">
         <div className="text-order-num text-text-primary">{order.orderNumber}</div>
-        <div className="flex items-center justify-center gap-1 mt-2">
-          <span className="text-modifier text-text-secondary">{order.itemCount} {t.products}</span>
-        </div>
         {hasAllergens && (
           <div className="mt-1.5 text-[11px] font-bold text-allergen flex items-center justify-center gap-1">
             <span>{'\u{1F95C}'}</span> {t.hasAllergens}
