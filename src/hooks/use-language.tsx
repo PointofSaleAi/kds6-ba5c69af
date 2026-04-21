@@ -1158,6 +1158,8 @@ interface LanguageContextType {
   setDateFormat: (f: DateFormatIndex) => void;
   timeFormat: TimeFormatIndex;
   setTimeFormat: (f: TimeFormatIndex) => void;
+  scope: LanguageScope;
+  setScope: (s: LanguageScope) => void;
 }
 
 const defaultLanguageContext: LanguageContextType = {
