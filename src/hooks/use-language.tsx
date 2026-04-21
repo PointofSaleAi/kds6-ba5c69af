@@ -1222,6 +1222,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return (saved !== null ? Number(saved) : 0) as TimeFormatIndex;
   });
 
+  const [scope, setScopeState] = useState<LanguageScope>(() => {
+    const saved = localStorage.getItem('posai-language-scope');
+    return (saved as LanguageScope) || 'both';
+  });
+
+  const setScope = useCallback((s: LanguageScope) => {
+    setScopeState(s);
+    localStorage.setItem('posai-language-scope', s);
+  }, []);
+
   const setLanguage = useCallback((lang: LanguageCode) => {
     setLanguageState(lang);
     localStorage.setItem('posai-language', lang);
