@@ -214,7 +214,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       ? 'uppercase tracking-wider font-semibold flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
       : coursingStatus === 'fired'
         ? 'uppercase tracking-wider text-muted-foreground flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-        : 'uppercase text-muted-foreground tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+        : 'uppercase text-text-secondary tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: agingColor || '#0F4C81', fontWeight: 600, fontSize: '14px' }
@@ -333,7 +333,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           )}
           {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted text-muted-foreground">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted" style={{ color: '#AAAAAA' }}>
               {t.preparingAt} {firingAtLabel}
             </span>
           )}
