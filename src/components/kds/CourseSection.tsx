@@ -459,14 +459,16 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                     {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
                       <div
                         dir={secondaryDir}
-                        className={`flex items-center font-semibold uppercase ${status === 'done' ? 'line-through text-success/70' : 'text-text-muted'}`}
+                        className={`relative flex items-center font-semibold uppercase ${status === 'done' ? 'line-through text-success/70' : 'text-text-muted'}`}
                         style={{ gap: 'var(--kds-item-gap)', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
                       >
-                        <span className="font-normal invisible shrink-0" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                          {item.quantity}x
-                        </span>
-                        <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0 -ml-1">
-                          <Languages size={8} className="text-text-secondary" />
+                        <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
+                          <span className="invisible" aria-hidden="true">{item.quantity}x</span>
+                          <span className="absolute inset-0 flex items-center justify-center">
+                            <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
+                              <Languages size={8} className="text-text-secondary" />
+                            </span>
+                          </span>
                         </span>
                         <span>{tpSecondary(item.name)}</span>
                       </div>
