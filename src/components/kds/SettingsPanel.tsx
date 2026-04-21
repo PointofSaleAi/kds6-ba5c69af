@@ -196,8 +196,8 @@ function RowGrid({ children, itemCount }: { children: React.ReactNode; itemCount
       }}
     >
       {children}
-      {/* Filler cells: enough to top up to a multiple of 3 (covers both 3-col and 2-col). */}
-      {Array.from({ length: (3 - (itemCount % 3)) % 3 }).map((_, i) => (
+      {/* Filler cells: top up to a multiple of 6 so both 2-col and 3-col grids are flush. */}
+      {Array.from({ length: (6 - (itemCount % 6)) % 6 }).map((_, i) => (
         <div key={`f-${i}`} style={{ background: '#fafafa' }} />
       ))}
     </div>
