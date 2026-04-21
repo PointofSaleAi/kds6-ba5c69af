@@ -531,7 +531,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
             <div className="w-[360px] shrink-0 flex flex-col">
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
-                Preview - KDS ticket
+                {t.previewKDS}
               </div>
               <div className="flex-1 pointer-events-none select-none max-w-[340px] w-full mx-auto" aria-hidden="true">
                 <OrderCard order={previewTicket} />
@@ -665,7 +665,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
           onClick={handleSave}
           className="w-full py-2.5 rounded-lg text-sm font-semibold text-primary-foreground bg-brand-primary hover:bg-brand-primary/90 transition-colors min-h-[44px]"
         >
-          Save
+          {t.save}
         </button>
       </div>
     </div>
