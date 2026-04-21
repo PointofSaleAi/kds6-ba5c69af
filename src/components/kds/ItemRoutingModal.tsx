@@ -22,7 +22,7 @@ interface ItemRoutingModalProps {
 
 export function ItemRoutingModal({ item, order, onClose, onConfirm }: ItemRoutingModalProps) {
   const [selected, setSelected] = useState<StationName | null>(null);
-  const { tp, tpSecondary, displayMode } = useLanguage();
+  const { tp, tpSecondary, displayMode, showSecondaryMenu } = useLanguage();
   const currentStation = item.station;
 
   const orderTypeLabel = order.orderType === 'dine-in' ? 'Dine In' : order.orderType === 'take-out' ? 'Take Out' : order.orderType === 'delivery' ? 'Delivery' : 'Banquet';
@@ -79,7 +79,7 @@ export function ItemRoutingModal({ item, order, onClose, onConfirm }: ItemRoutin
             <div className="bg-muted/60 rounded-xl border border-border p-4">
               <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Item being re-routed</div>
               <div className="text-[15px] font-bold text-text-primary uppercase tracking-wide">{tp(item.name)}</div>
-              {displayMode === 'dual' && (
+              {displayMode === 'dual' && showSecondaryMenu && (
                 <div className="text-[12px] text-text-secondary mt-0.5 font-medium">{tpSecondary(item.name)}</div>
               )}
               {item.modifiers.length > 0 && (

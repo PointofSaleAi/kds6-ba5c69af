@@ -152,7 +152,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
 
                   {/* Section B: Display mode */}
                   <div>
-                    <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">Display mode</div>
+                    <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.displayMode}</div>
                     <div className="flex gap-2">
                       {/* Single language card */}
                       <button
@@ -170,7 +170,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                             {displayMode === 'single' && <div className="w-1.5 h-1.5 rounded-full bg-text-primary" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold text-text-primary">Single language</div>
+                            <div className="text-xs font-semibold text-text-primary">{t.singleLanguage}</div>
                             <div className="text-[10px] text-text-muted mt-0.5">One language on KDS</div>
                             <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                               <span className="text-[11px] font-medium text-text-primary">2x French Fries</span>
@@ -195,7 +195,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                             {displayMode === 'dual' && <div className="w-1.5 h-1.5 rounded-full bg-text-primary" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold text-text-primary">Dual language</div>
+                            <div className="text-xs font-semibold text-text-primary">{t.dualLanguage}</div>
                             <div className="text-[10px] text-text-muted mt-0.5">Two languages per item</div>
                             <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                               <div className="text-[11px] font-bold text-text-primary">2x French Fries</div>
@@ -212,7 +212,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                   {/* Section C: Language pair (dual only) */}
                   {displayMode === 'dual' && (
                     <div>
-                      <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">Language pair</div>
+                      <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.languagePair}</div>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -253,7 +253,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                   {/* Section D: Language list */}
                   <div>
                     <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5">
-                      {displayMode === 'dual' ? `Select ${editTarget} language` : 'Select language'}
+                      {displayMode === 'dual' ? `${t.selectLanguage} (${editTarget})` : t.selectLanguage}
                     </div>
                     <div className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-1.5 mb-1.5">
                       <Search size={14} className="text-text-muted" />
@@ -290,7 +290,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                           className="w-full flex items-center gap-2.5 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[40px]"
                         >
                           <span className="text-base">🌐</span>
-                          <span className="text-xs font-semibold text-brand-primary">Request a language</span>
+                          <span className="text-xs font-semibold text-brand-primary">{t.requestLanguage}</span>
                         </button>
                       </div>
                     </div>
@@ -305,7 +305,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                 {/* RIGHT COLUMN - Live preview */}
                 <div className="flex-1 p-3 md:p-4 flex flex-col min-w-0">
                   <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
-                    Preview - KDS ticket
+                    {t.previewKDS}
                   </div>
                   <div className="rounded-lg p-3 flex-1" style={{ backgroundColor: '#1a1a2e' }}>
                     {/* Header */}
@@ -348,7 +348,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
               onClick={handleSave}
               className="w-full py-2.5 rounded-lg text-sm font-semibold text-primary-foreground bg-brand-primary hover:bg-brand-primary/90 transition-colors min-h-[44px]"
             >
-              Save
+              {t.save}
             </button>
           </div>
         </motion.div>

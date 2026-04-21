@@ -47,12 +47,17 @@ function getCoursingStatus(courseGroup: CourseGroup): StationStatus {
   return 'active';
 }
 
-function getStationLabel(courseGroup: CourseGroup, status: StationStatus, tc: (s: string) => string): string {
+function getStationLabel(
+  courseGroup: CourseGroup,
+  status: StationStatus,
+  tc: (s: string) => string,
+  labels: { active: string; queued: string; served: string },
+): string {
   const name = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   switch (status) {
-    case 'fired': return `${name} \u00B7 Served`;
-    case 'active': return `${name} \u00B7 Active`;
-    case 'pending': return `${name} \u00B7 Queued`;
+    case 'fired': return `${name} \u00B7 ${labels.served}`;
+    case 'active': return `${name} \u00B7 ${labels.active}`;
+    case 'pending': return `${name} \u00B7 ${labels.queued}`;
   }
 }
 
@@ -81,7 +86,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
 }
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem }: CourseSectionProps) {
-  const { tp, tc, displayMode, tpSecondary, timeFormat } = useLanguage();
+  const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu } = useLanguage();
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
@@ -153,7 +158,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   // Fired course timer for served courses
   const firedTimerLabel = useMemo(() => {
     if (coursingStatus !== 'fired') return null;
-    if (courseGroup.firedAgoLabel) return `Done ${courseGroup.firedAgoLabel}`;
+    if (courseGroup.firedAgoLabel) return `${t.doneAt} ${courseGroup.firedAgoLabel}`;
     return null;
   }, [coursingStatus, courseGroup.firedAgoLabel]);
 
@@ -195,11 +200,12 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     : undefined;
 
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
+  const statusWord = coursingStatus === 'fired' ? t.served : coursingStatus === 'active' ? t.active : t.queued;
   const courseLabel = isServedByLifecycle
-    ? `${courseName} \u00B7 Served`
+    ? `${courseName} \u00B7 ${t.served}`
     : isStationMode
-      ? getStationLabel(courseGroup, coursingStatus, tc)
-      : `${courseName} \u00B7 ${coursingStatus === 'fired' ? 'Served' : coursingStatus === 'active' ? 'Active' : 'Queued'}`;
+      ? getStationLabel(courseGroup, coursingStatus, tc, { active: t.active, queued: t.queued, served: t.served })
+      : `${courseName} \u00B7 ${statusWord}`;
 
   const labelClass = isServedByLifecycle
     ? 'uppercase tracking-wider text-muted-foreground flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
@@ -255,7 +261,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           </div>
           {courseDoneAt && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-muted-foreground">
-              Done at {courseDoneAt}
+              {t.doneAt} {courseDoneAt}
             </span>
           )}
         </div>
@@ -321,13 +327,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           {/* Active course: "Seen at HH:MM" after first acknowledgement */}
           {isActive && courseSeenAt && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-normal text-[#0F4C81]" style={{ backgroundColor: '#EFF6FF' }}>
-              Seen at {courseSeenAt}
+              {t.seenAt} {courseSeenAt}
             </span>
           )}
           {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted text-muted-foreground">
-              Preparing at {firingAtLabel}
+              {t.preparingAt} {firingAtLabel}
             </span>
           )}
           {/* Course-level undo + action icon for active courses - stopPropagation to prevent collapse */}
@@ -439,17 +445,17 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                       ))}
                       {isActive && status === 'preparing' && timestamps?.seenAt && (
                         <span className="text-[10px] text-text-muted font-normal ml-1">
-                          Seen {timestamps.seenAt}
+                          {t.seenAt} {timestamps.seenAt}
                         </span>
                       )}
                       {isActive && status === 'done' && timestamps?.doneAt && (
                         <span className="text-[10px] text-text-muted font-normal ml-1">
-                          Done {timestamps.doneAt}
+                          {t.doneAt} {timestamps.doneAt}
                         </span>
                       )}
                     </div>
 
-                    {displayMode === 'dual' && !item.isCancelled && (
+                    {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
                       <div className={`flex items-center gap-1 font-semibold uppercase ${status === 'done' ? 'line-through text-success/70' : 'text-text-muted'}`} style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
                         <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                           <Languages size={8} className="text-text-secondary" />

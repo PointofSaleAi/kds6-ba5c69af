@@ -100,6 +100,19 @@ interface Translations {
   regionalFormat: string;
   dateFormat: string;
   timeFormat: string;
+  singleLanguage: string;
+  dualLanguage: string;
+  languagePair: string;
+  selectLanguage: string;
+  requestLanguage: string;
+  save: string;
+  previewKDS: string;
+  active: string;
+  queued: string;
+  served: string;
+  doneAt: string;
+  seenAt: string;
+  preparingAt: string;
 }
 
 const translations: Record<LanguageCode, Translations> = {
@@ -188,6 +201,19 @@ const translations: Record<LanguageCode, Translations> = {
     regionalFormat: 'Regional Format',
     dateFormat: 'Date Format',
     timeFormat: 'Time Format',
+    singleLanguage: 'Single language',
+    dualLanguage: 'Dual language',
+    languagePair: 'Language pair',
+    selectLanguage: 'Select language',
+    requestLanguage: 'Request a language',
+    save: 'Save',
+    previewKDS: 'Preview - KDS ticket',
+    active: 'Active',
+    queued: 'Queued',
+    served: 'Served',
+    doneAt: 'Done at',
+    seenAt: 'Seen at',
+    preparingAt: 'Preparing at',
   },
   'en-GB': {
     ordersInQueue: 'Orders in Queue',
@@ -274,6 +300,19 @@ const translations: Record<LanguageCode, Translations> = {
     regionalFormat: 'Regional Format',
     dateFormat: 'Date Format',
     timeFormat: 'Time Format',
+    singleLanguage: 'Single language',
+    dualLanguage: 'Dual language',
+    languagePair: 'Language pair',
+    selectLanguage: 'Select language',
+    requestLanguage: 'Request a language',
+    save: 'Save',
+    previewKDS: 'Preview - KDS ticket',
+    active: 'Active',
+    queued: 'Queued',
+    served: 'Served',
+    doneAt: 'Done at',
+    seenAt: 'Seen at',
+    preparingAt: 'Preparing at',
   },
   ar: {
     ordersInQueue: 'الطلبات في الانتظار',
@@ -360,6 +399,19 @@ const translations: Record<LanguageCode, Translations> = {
     regionalFormat: 'التنسيق الإقليمي',
     dateFormat: 'تنسيق التاريخ',
     timeFormat: 'تنسيق الوقت',
+    singleLanguage: 'لغة واحدة',
+    dualLanguage: 'لغتان',
+    languagePair: 'زوج اللغات',
+    selectLanguage: 'اختر اللغة',
+    requestLanguage: 'طلب لغة',
+    save: 'حفظ',
+    previewKDS: 'معاينة - بطاقة KDS',
+    active: 'نشط',
+    queued: 'في الانتظار',
+    served: 'تم التقديم',
+    doneAt: 'تم في',
+    seenAt: 'شوهد في',
+    preparingAt: 'قيد التحضير في',
   },
   es: {
     ordersInQueue: 'Pedidos en cola',
@@ -446,6 +498,19 @@ const translations: Record<LanguageCode, Translations> = {
     regionalFormat: 'Formato regional',
     dateFormat: 'Formato de fecha',
     timeFormat: 'Formato de hora',
+    singleLanguage: 'Un idioma',
+    dualLanguage: 'Dos idiomas',
+    languagePair: 'Par de idiomas',
+    selectLanguage: 'Seleccionar idioma',
+    requestLanguage: 'Solicitar un idioma',
+    save: 'Guardar',
+    previewKDS: 'Vista previa - Ticket KDS',
+    active: 'Activo',
+    queued: 'En cola',
+    served: 'Servido',
+    doneAt: 'Listo a las',
+    seenAt: 'Visto a las',
+    preparingAt: 'Preparando a las',
   },
   zh: {
     ordersInQueue: '排队订单',
@@ -532,6 +597,19 @@ const translations: Record<LanguageCode, Translations> = {
     regionalFormat: '地区格式',
     dateFormat: '日期格式',
     timeFormat: '时间格式',
+    singleLanguage: '单语言',
+    dualLanguage: '双语言',
+    languagePair: '语言对',
+    selectLanguage: '选择语言',
+    requestLanguage: '申请新语言',
+    save: '保存',
+    previewKDS: '预览 - KDS 订单',
+    active: '进行中',
+    queued: '排队中',
+    served: '已送出',
+    doneAt: '完成于',
+    seenAt: '查看于',
+    preparingAt: '预计开始',
   },
   vi: {
     ordersInQueue: 'Don hang trong hang doi',
@@ -618,6 +696,19 @@ const translations: Record<LanguageCode, Translations> = {
     regionalFormat: 'Dinh dang khu vuc',
     dateFormat: 'Dinh dang ngay',
     timeFormat: 'Dinh dang gio',
+    singleLanguage: 'Mot ngon ngu',
+    dualLanguage: 'Hai ngon ngu',
+    languagePair: 'Cap ngon ngu',
+    selectLanguage: 'Chon ngon ngu',
+    requestLanguage: 'Yeu cau ngon ngu',
+    save: 'Luu',
+    previewKDS: 'Xem truoc - The KDS',
+    active: 'Dang hoat dong',
+    queued: 'Trong hang doi',
+    served: 'Da phuc vu',
+    doneAt: 'Xong luc',
+    seenAt: 'Da xem luc',
+    preparingAt: 'Chuan bi luc',
   },
 };
 
@@ -703,6 +794,18 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'Pez Espada a la Parrilla',
     'Eggplant Parmesan': 'Berenjena a la Parmesana',
     'Panna Cotta': 'Panna Cotta',
+    'Bruschetta': 'Bruschetta',
+    'Cheesecake': 'Tarta de Queso',
+    'Mango Sticky Rice': 'Arroz Glutinoso con Mango',
+    'Brownie': 'Brownie',
+    'Apple Pie': 'Tarta de Manzana',
+    'Beef Wellington': 'Wellington de Res',
+    'Grilled Halloumi': 'Halloumi a la Parrilla',
+    'Pork Belly': 'Panza de Cerdo',
+    'Oysters': 'Ostras',
+    'Gelato': 'Gelato',
+    'Nachos': 'Nachos',
+    'Milkshake': 'Batido',
   },
   zh: {
     'Cheese Selection': '芝士拼盘',
@@ -1160,6 +1263,8 @@ interface LanguageContextType {
   setTimeFormat: (f: TimeFormatIndex) => void;
   scope: LanguageScope;
   setScope: (s: LanguageScope) => void;
+  /** True when dual-mode secondary line should render (i.e. menu translation is enabled). */
+  showSecondaryMenu: boolean;
 }
 
 const defaultLanguageContext: LanguageContextType = {
@@ -1187,6 +1292,7 @@ const defaultLanguageContext: LanguageContextType = {
   tmSecondary: (text: string) => text,
   scope: 'both',
   setScope: () => {},
+  showSecondaryMenu: true,
 };
 
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
@@ -1306,6 +1412,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [language, displayMode, primaryLang, scope]);
 
 
+  const showSecondaryMenu = scope !== 'interface';
+
   const value: LanguageContextType = {
     language,
     setLanguage,
@@ -1331,6 +1439,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setTimeFormat,
     scope,
     setScope,
+    showSecondaryMenu,
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
