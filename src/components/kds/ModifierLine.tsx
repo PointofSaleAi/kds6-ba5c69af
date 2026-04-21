@@ -29,11 +29,14 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
     return (
       <div
         className="flex items-center justify-between"
-        style={{ paddingLeft: '20px', paddingTop: '4px', paddingBottom: '4px', gap: '4px' }}
+        style={{ paddingTop: '4px', paddingBottom: '4px', gap: '6px' }}
       >
+        <span className="invisible shrink-0" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+          1x
+        </span>
         <span
-          className={`min-w-0 font-semibold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
-          style={{ fontSize: 'var(--kds-item-name)', lineHeight: '1.2' }}
+          className={`flex-1 min-w-0 font-semibold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
+          style={{ fontSize: 'var(--kds-item-name)', lineHeight: '1.2', marginLeft: '-6px' }}
         >
           {tm(modifier.text)}
         </span>
