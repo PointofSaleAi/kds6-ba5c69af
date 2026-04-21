@@ -33,6 +33,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
         {displayMode === 'dual' && showSecondaryMenu && (
           <div
+            dir={secondaryDir}
             className="flex items-center text-[11px] text-text-muted font-semibold uppercase"
             style={{ gap: '6px', marginTop: '1px' }}
           >
