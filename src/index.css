@@ -185,9 +185,15 @@
     font-family: 'JetBrains Mono', monospace;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1024px) and (min-width: 768px) {
     .settings-row-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .settings-row-grid {
+      grid-template-columns: 1fr !important;
     }
   }
 }

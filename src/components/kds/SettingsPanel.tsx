@@ -108,7 +108,7 @@ function RowGrid({ children }: { children: React.ReactNode; itemCount?: number }
   // No outer border / grey gap so empty grid area blends with the settings background.
   return (
     <div
-      className="settings-row-grid grid grid-cols-2 xl:grid-cols-3 gap-2"
+      className="settings-row-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2"
     >
       {children}
     </div>
