@@ -410,29 +410,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 <SectionHeading>Account</SectionHeading>
                 <RowGrid itemCount={accountRows.length + 1}>
                   {accountRows.map((r) => <RowCell key={r.name} name={r.name} subtitle={r.subtitle} control={r.control} />)}
-                  <button
-                    type="button"
-                    onClick={() => setShowLogoutConfirm(true)}
-                    className="flex items-center justify-between gap-3 bg-surface-card text-left"
-                    style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div style={{ fontSize: '11px', fontWeight: 500, color: '#C0392B' }} className="truncate">Log Out</div>
-                      <div style={{ fontSize: '10px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">Sign out of this device</div>
-                    </div>
-                    <div
-                      className="shrink-0 flex items-center justify-center"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        background: '#FFF5F5',
-                        border: '0.5px solid #FCCACA',
-                        borderRadius: '8px',
-                      }}
-                    >
-                      <LogOut size={16} strokeWidth={2} color="#C0392B" />
-                    </div>
-                  </button>
+                  <LogOutRowCell onClick={() => setShowLogoutConfirm(true)} />
                 </RowGrid>
               </div>
 
