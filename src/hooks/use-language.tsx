@@ -100,6 +100,19 @@ interface Translations {
   regionalFormat: string;
   dateFormat: string;
   timeFormat: string;
+  singleLanguage: string;
+  dualLanguage: string;
+  languagePair: string;
+  selectLanguage: string;
+  requestLanguage: string;
+  save: string;
+  previewKDS: string;
+  active: string;
+  queued: string;
+  served: string;
+  doneAt: string;
+  seenAt: string;
+  preparingAt: string;
 }
 
 const translations: Record<LanguageCode, Translations> = {
