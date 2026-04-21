@@ -34,10 +34,10 @@ interface SettingsPanelProps {
 function RowCell({ name, subtitle, control }: { name: string; subtitle?: string; control?: React.ReactNode }) {
   return (
     <div
-      className="flex items-center justify-between gap-3 bg-surface-card rounded-lg border border-border"
+      className="flex items-center justify-between gap-3 bg-surface-card rounded-lg border border-border flex-wrap @container"
       style={{ padding: '18px 22px', minHeight: '76px' }}
     >
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1" style={{ minWidth: '120px' }}>
         <div style={{ fontSize: '17px', fontWeight: 600, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
         {subtitle && (
           <div style={{ fontSize: '14px', color: '#999', marginTop: '4px' }} className="truncate">{subtitle}</div>
