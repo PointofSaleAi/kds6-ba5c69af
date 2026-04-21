@@ -1,125 +1,181 @@
 
 ## Goal
-Make Language settings work end-to-end so Primary and Secondary languages visibly change in both the preview ticket and live KDS cards, and Language Scope reliably affects UI chrome, menu items, or both.
+Make Settings > Language work visibly and reliably so:
+- changing Primary/Secondary languages updates the preview ticket and live KDS cards,
+- Language Scope clearly affects app chrome vs menu content,
+- saving is no longer misleading.
 
-## What is broken now
+## Root issue summary
 
-### 1. Primary and Secondary selection is not fully controllable
-In the current Language screen, the language list only changes:
-- `secondaryLang` in dual mode
-- `language` in single mode
+### 1. The state layer is mostly present; the visible UI layer is what is broken
+`src/hooks/use-language.tsx` already persists:
+- `primaryLang`
+- `secondaryLang`
+- `displayMode`
+- `scope`
 
-There is no way to directly choose `primaryLang` from the list, so the preview often appears stuck even after selecting another language.
+So the main failure is not “save doesn’t store it”. The bigger problem is that many rendered surfaces still do not show those state changes clearly or consistently.
 
-### 2. The preview ticket uses data that mostly has no translations
-`InlineLanguageSettings` renders `previewTicket` through `<OrderCard />`, but many preview item names and modifiers are not present in `use-language.tsx` dictionaries:
+### 2. The preview and seeded live cards contain many untranslated strings
+Several strings used in preview/live data are not covered by the current dictionaries, so the card appears unchanged even when language state changes.
+
+Examples found in seeded data:
 - `Bruschetta`
-- `Fresh Fruit Platter`
-- several modifier strings like `Extra basil`, `No onion`, `Extra lemon`
-- mixed allergen label formats like `Gluten`, `Dairy`, `Tree Nut`
+- `Cheesecake`
+- `Mango Sticky Rice`
+- `Pan-Seared Salmon`
+- `Greek Salad`
+- `Chicken Wrap`
+- `Chocolate Brownie`
+- modifiers like `No Dill`, `No Onions`, `Vanilla Ice Cream`, `Extra Croutons` without the canonical `+ ` prefix
 
-Result: even when language state changes, much of the preview remains English, which makes it look broken.
+This affects:
+- `src/data/mock-preview-ticket.ts`
+- `src/data/mock-orders.ts`
+- `src/data/mock-coursing-order.ts`
+- `src/data/mock-expo-orders.ts`
 
-### 3. Some live card content still bypasses or mismatches the translator layer
-A few places still prevent visible language changes:
-- `CourseSection` passes title-cased course names into `tc(...)` while dictionaries are primarily uppercase
-- `AllergenBadge` receives title-case labels in preview data, but dictionaries are uppercase
-- `ItemRow` in `src/components/kds/coursing/ItemRow.tsx` still renders `mod.text` directly instead of `tm(mod.text)`
-- `tp`, `tm`, `tc`, `ta`, `to` are inconsistent in dual mode because only item and modifier translators use `primaryLang`, while course, allergen, and order-type translators still use `language`
+### 3. Some visible order-card labels are still hardcoded English
+Even with scope gating in the hook, parts of the ticket UI stay English because they do not use translated keys:
+- `CourseSection.tsx` hardcodes `Served`, `Active`, `Queued`, `Done at`
+- Language screen labels are also partly hardcoded: `Display mode`, `Single language`, `Dual language`, `Language pair`, `Select language`, `Request a language`, `Save`, `Preview - KDS ticket`
 
-### 4. Language Scope is partially wired, but the broken preview hides it
-The `scope` state exists in `use-language.tsx`, but because the preview data and some render paths do not translate correctly, switching Interface / Menu / Both does not produce a trustworthy visible change.
+That makes “Interface / Menu / Both” look broken, because important chrome text ignores the translator.
+
+### 4. Dual mode still shows a second line even when scope excludes menu translation
+When `scope === 'interface'`, menu translators intentionally return source text. In dual mode that can produce two identical lines, which makes it look like Primary/Secondary selection is not doing anything.
+
+This affects live card renderers such as:
+- `src/components/kds/coursing/ItemRow.tsx`
+- `src/components/kds/CourseSection.tsx`
+- `src/components/kds/FlatItemList.tsx`
+- `src/components/kds/ItemRoutingModal.tsx`
+
+### 5. Existing tests validate hook output, not what the user actually sees
+Current coverage proves the hook can return translated strings, but not that:
+- the preview ticket changes,
+- the live order card changes,
+- the app chrome changes,
+- scope visually behaves correctly.
 
 ## Implementation plan
 
-### 1. Fix translator consistency in `src/hooks/use-language.tsx`
-Update the translation helpers so all menu-facing translators use the same active menu language:
-- In single mode: use `language`
-- In dual mode: use `primaryLang`
+### 1. Make the language system expose what the UI needs
+Update `src/hooks/use-language.tsx` to provide a small, explicit render contract for components:
+- keep current persistence for `language`, `primaryLang`, `secondaryLang`, `displayMode`, `scope`
+- add a helper/flag for whether secondary menu text should render in the UI when scope excludes menu translation
+- expand `Translations` with missing interface strings used in the Language screen and order-card chrome
 
-Apply this to:
-- `tp`
-- `tm`
-- `tc`
-- `ta`
-- `to`
+Add translation keys for items like:
+- display mode labels
+- single/dual language labels
+- language pair labels
+- select language labels
+- preview title
+- request language CTA
+- save button text
+- course status words such as active/queued/served
+- timestamp labels like done/seen where they are part of UI chrome
 
-Keep scope gating:
-- `scope === 'interface'` returns source strings for menu content
-- `scope === 'menu'` keeps UI chrome English via `t`
-- `scope === 'both'` translates both
+### 2. Replace hardcoded Language-screen text with translated UI strings
+Update:
+- `src/components/kds/InlineLanguageSettings.tsx`
+- `src/pages/LanguageSettings.tsx`
+- any related Settings header text if needed
 
-Also normalize lookup input before searching dictionaries:
-- course labels: uppercase fallback support
-- allergen labels: uppercase fallback support
-- order-type labels: uppercase fallback support
+So the Language settings screen itself responds to scope correctly:
+- Interface scope: Language screen chrome translates
+- Menu scope: Language screen chrome stays English
+- Both: both change as expected
 
-### 2. Make the Language screen actually choose Primary vs Secondary
-In `src/components/kds/InlineLanguageSettings.tsx`:
-- Add explicit selection target for dual mode: `primary` or `secondary`
-- Let the user tap the Primary card or Secondary card to decide which side they are editing
-- Make the language list update the selected target, not always `secondaryLang`
-- Keep swap behavior, but preserve the active selection target logically
+### 3. Fix order-card chrome so scope is visibly correct
+Update `src/components/kds/CourseSection.tsx` to stop mixing translated course names with hardcoded English status labels.
 
-Mirror the same fix in `src/pages/LanguageSettings.tsx` so both entry points behave the same.
+Use:
+- `tc(...)` for course names
+- `t...` keys for card chrome/status words like `Active`, `Queued`, `Served`, `Done at`, `Seen`
 
-### 3. Use preview data that is guaranteed to translate
-Replace or revise `previewTicket` in `src/data/mock-preview-ticket.ts` so it only uses strings already covered by translation dictionaries for supported languages.
+This makes scope behavior intuitive:
+- Interface only: status/chrome can translate while menu names stay source
+- Menu only: item/course/order-type/allergen content translates while chrome stays English
 
-Example direction:
-- items like `Grilled Salmon`, `Caesar Salad`, `Tiramisu`
-- modifiers like `No Butter`, `+ Lemon Sauce`, `Medium Rare`
-- allergens using canonical uppercase labels like `GLUTEN`, `DAIRY`, `SHELLFISH`
+### 4. Hide or suppress duplicate secondary lines when scope is Interface
+In dual mode, if menu translation is excluded, do not render a misleading second line that is identical to the primary line.
 
-This ensures the preview is a reliable proof that language switching works.
-
-### 4. Fix remaining live order-card translation gaps
-Update components that still bypass translator helpers:
-
+Apply consistently in:
 - `src/components/kds/coursing/ItemRow.tsx`
-  - render modifiers with `tm(mod.text)`
-
 - `src/components/kds/CourseSection.tsx`
-  - normalize course lookup so `APPETIZER`, `ENTREE`, `DESSERT` translate correctly in both active and served labels
+- `src/components/kds/FlatItemList.tsx`
+- `src/components/kds/ItemRoutingModal.tsx`
 
-- `src/components/kds/AllergenBadge.tsx`
-  - support canonical lookup regardless of incoming label case
+Result:
+- Primary/Secondary changes are obvious when scope includes menu
+- Interface scope no longer looks “stuck” because duplicate English lines disappear
 
-If needed, apply the same normalization anywhere else menu labels are displayed from raw source strings.
+### 5. Normalize preview and seeded demo data to strings that are actually translatable
+Revise preview and seeded mock data so visible demo items/modifiers/allergens use canonical dictionary-backed values.
 
-### 5. Add automated tests for the real failure modes
-Keep the existing hook test and extend coverage with component tests that verify visible UI:
+Priority files:
+- `src/data/mock-preview-ticket.ts`
+- `src/data/mock-orders.ts`
+- `src/data/mock-coursing-order.ts`
+- `src/data/mock-expo-orders.ts`
 
-#### New tests to add
-- `InlineLanguageSettings`:
-  - dual mode, selecting Primary changes preview main line
-  - dual mode, selecting Secondary changes preview secondary line
-  - Interface scope changes UI chrome but not menu item text
-  - Menu scope changes menu item text but not UI chrome
-  - Both changes both
+Two acceptable approaches:
+- add missing dictionary entries for all currently used strings, or
+- replace mock strings with already-supported canonical strings
 
-- translator/component tests:
-  - `CourseSection` translates course header in menu/both scope
-  - `AllergenBadge` translates canonical allergen labels
-  - `coursing/ItemRow` translates modifiers via `tm`
+Preferred approach:
+- keep the preview strictly canonical and translation-safe
+- optionally expand dictionaries for live seeded data where needed
 
-This closes the gap between hook-only tests and what the user actually sees.
+### 6. Do a translation sweep on visible live KDS surfaces
+Audit the main user-visible KDS surfaces and move any remaining hardcoded UI chrome to `t`:
+- Language screen
+- Settings sub-screen titles where relevant
+- order-card chrome
+- any nearby ticket labels surfaced in preview/live KDS
+
+This is a focused sweep, not a full app rewrite.
+
+### 7. Add rendered component tests for real user behavior
+Add component-level tests that render actual UI, not only the hook.
+
+#### New tests
+1. `InlineLanguageSettings`
+- dual mode + changing Primary updates preview main line
+- dual mode + changing Secondary updates preview secondary line
+- Interface scope changes UI chrome but not menu item text
+- Menu scope changes menu item text but not UI chrome
+- Both changes both
+
+2. Live KDS card rendering
+- render a real `OrderCard` with `previewTicket` or a controlled mock
+- verify primary line, secondary line, course label, allergen, and order type react correctly to scope/language changes
+
+3. Course chrome test
+- `CourseSection` shows translated course name and correct scope-gated status words
 
 ## Files to update
 - `src/hooks/use-language.tsx`
 - `src/components/kds/InlineLanguageSettings.tsx`
 - `src/pages/LanguageSettings.tsx`
-- `src/data/mock-preview-ticket.ts`
-- `src/components/kds/coursing/ItemRow.tsx`
 - `src/components/kds/CourseSection.tsx`
-- `src/components/kds/AllergenBadge.tsx`
-- relevant test files under `src/components/kds/__tests__` and/or `src/hooks/__tests__`
+- `src/components/kds/coursing/ItemRow.tsx`
+- `src/components/kds/FlatItemList.tsx`
+- `src/components/kds/ItemRoutingModal.tsx`
+- `src/data/mock-preview-ticket.ts`
+- `src/data/mock-orders.ts`
+- `src/data/mock-coursing-order.ts`
+- `src/data/mock-expo-orders.ts`
+- new/updated tests under `src/components/kds/__tests__` and `src/hooks/__tests__`
 
 ## Acceptance criteria
-- In dual mode, changing Primary visibly changes the main item line in preview and live order cards.
-- In dual mode, changing Secondary visibly changes the secondary language line in preview and live order cards.
-- Interface scope translates settings labels, buttons, and other app chrome, while menu item names stay in source language.
-- Menu scope translates item names, modifiers, course labels, allergens, and order type labels, while UI chrome stays English.
-- Both scope translates both UI chrome and menu content.
-- Preview ticket always demonstrates the selected language clearly, with no misleading untranslated sample strings.
-- Automated tests cover both translation state and visible rendered output.
+- Changing Primary language visibly changes the main item line in the preview ticket and live KDS cards.
+- Changing Secondary language visibly changes the secondary line when dual mode is active and scope includes menu translation.
+- Interface scope changes Language-screen/UI chrome and ticket chrome, while menu item names/modifiers/course names stay source language.
+- Menu scope changes menu-facing content on preview/live cards, while UI chrome remains English.
+- Both changes both.
+- In Interface scope, dual mode does not show a confusing duplicate secondary line.
+- Preview/demo data always demonstrates language changes clearly.
+- Rendered tests cover preview and live order-card behavior, not just hook return values.
