@@ -384,6 +384,19 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                   {activeSection === 'language' ? 'Language' : activeSection === 'order-type-colors' ? 'Order Type Colors' : 'Ticket Aging Rules'}
                 </h2>
               </div>
+              {activeSection === 'status-settings' && (
+                <button
+                  onClick={() => {
+                    const handler = (window as unknown as { __agingResetHandler?: () => void }).__agingResetHandler;
+                    handler?.();
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted text-text-primary text-[11px] font-bold uppercase tracking-wider min-h-[36px] hover:bg-muted/80 transition-colors shrink-0"
+                  title="Reset all status colors and thresholds to defaults"
+                >
+                  <RefreshCw size={13} />
+                  Reset to Defaults
+                </button>
+              )}
             </div>
             <div className="mx-10 h-px bg-border mb-4" />
           </>
