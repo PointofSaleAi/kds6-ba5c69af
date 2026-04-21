@@ -105,16 +105,10 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function RowGrid({ children }: { children: React.ReactNode; itemCount?: number }) {
   // Responsive: 2 columns by default, 3 columns at xl (>=1280px) breakpoint.
+  // No outer border / grey gap so empty grid area blends with the settings background.
   return (
     <div
-      className="settings-row-grid grid grid-cols-2 xl:grid-cols-3"
-      style={{
-        gap: '1px',
-        backgroundColor: '#e0e0e0',
-        border: '0.5px solid #e0e0e0',
-        borderRadius: '8px',
-        overflow: 'hidden',
-      }}
+      className="settings-row-grid grid grid-cols-2 xl:grid-cols-3 gap-2"
     >
       {children}
     </div>
