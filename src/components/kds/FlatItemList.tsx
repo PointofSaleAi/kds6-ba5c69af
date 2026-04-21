@@ -130,6 +130,7 @@ function ItemTapRow({
         className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
         style={{ padding: `var(--kds-item-gap) 0 0 4px`, gap: 0 }}
         onClick={handleTap}
+        title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
