@@ -484,6 +484,7 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
+  // FIX 1: Very light green highlight for tapped rows
   const stateBg = tappable ? (isDone ? '#161B28' : isSeen ? '#1E2438' : undefined) : undefined;
   const stateOpacity = isDone && tappable ? 0.5 : itemOpacity;
 
@@ -492,7 +493,7 @@ function CourseItemTapRow({
       className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
-        ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : stateBg ? { backgroundColor: stateBg } : {}),
+        ...(isHighlighted ? { backgroundColor: 'rgba(29, 158, 117, 0.10)' } : stateBg ? { backgroundColor: stateBg } : {}),
       }}
     >
       <div
