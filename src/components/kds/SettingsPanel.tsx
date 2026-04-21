@@ -250,6 +250,73 @@ function RowButton({ label, onClick, disabled, icon }: { label: string; onClick:
   );
 }
 
+// Icon-only button components for settings rows
+function EditIconButton({ onClick, title }: { onClick: () => void; title?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="flex items-center justify-center cursor-pointer flex-shrink-0"
+      style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        backgroundColor: '#F0FFF4',
+        border: '0.5px solid #C0DD97',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Pencil size={16} strokeWidth={2} color="#3B6D11" />
+    </button>
+  );
+}
+
+function ChevronIconButton({ onClick, title }: { onClick: () => void; title?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="flex items-center justify-center cursor-pointer flex-shrink-0"
+      style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        backgroundColor: '#F5F5F5',
+        border: '0.5px solid #E0E0E0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <ChevronRight size={16} strokeWidth={2} color="#888888" />
+    </button>
+  );
+}
+
+function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: () => void; title?: string; icon: React.ElementType; spinning?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className="flex items-center justify-center cursor-pointer flex-shrink-0"
+      style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        backgroundColor: '#EBF5FF',
+        border: '0.5px solid #B5D4F4',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Icon size={16} strokeWidth={2} color="#185FA5" className={spinning ? 'animate-spin' : ''} />
+    </button>
+  );
+}
+
 export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome, orders = [] }: SettingsPanelProps) {
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
