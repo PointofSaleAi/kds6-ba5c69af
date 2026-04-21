@@ -147,14 +147,14 @@ function EditIconButton({ onClick, title }: { onClick: () => void; title?: strin
         width: '32px',
         height: '32px',
         borderRadius: '8px',
-        backgroundColor: '#F0FFF4',
-        border: '0.5px solid #C0DD97',
+        backgroundColor: '#F5F5F5',
+        border: '0.5px solid #E0E0E0',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      <Pencil size={16} strokeWidth={2} color="#3B6D11" />
+      <Pencil size={16} strokeWidth={2} color="#888888" />
     </button>
   );
 }
