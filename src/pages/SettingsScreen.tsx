@@ -245,14 +245,11 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 />
               }
             />
-            <div className="px-4 py-3">
-              <button
-                onClick={() => setShowLogoutConfirm(true)}
-                className="w-full py-2.5 text-primary text-cta font-bold hover:bg-primary/10 rounded-lg transition-colors min-h-[44px]"
-              >
-                {t.logOut}
-              </button>
-            </div>
+            <SettingsRow
+              icon={User}
+              label={t.logOut}
+              onClick={() => setShowLogoutConfirm(true)}
+            />
 
 
 
