@@ -123,7 +123,7 @@ function ItemTapRow({
     <div
       className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{ 
-        backgroundColor: isHighlighted ? 'rgba(29, 158, 117, 0.10)' : rowBg, 
+        backgroundColor: rowBg, 
         opacity: rowOpacity 
       }}
     >
