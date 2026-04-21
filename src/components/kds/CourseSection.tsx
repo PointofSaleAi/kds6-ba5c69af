@@ -86,7 +86,8 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
 }
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem }: CourseSectionProps) {
-  const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu } = useLanguage();
+  const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang } = useLanguage();
+  const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
 
