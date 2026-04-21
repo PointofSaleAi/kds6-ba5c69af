@@ -294,12 +294,6 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Description */}
-      <div className="px-6 pb-3">
-        <p className="text-[12px] text-text-muted">
-          Orders change colour as they age. Adjust thresholds based on your kitchen speed.
-        </p>
-      </div>
 
       {/* Course Level Toggle */}
       <div className="px-6 pb-3">

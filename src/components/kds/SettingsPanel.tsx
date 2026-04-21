@@ -371,18 +371,25 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
       <div className="flex-1 flex flex-col overflow-hidden">
         {inSubScreen && (
           <>
-            <div className="flex items-center justify-between px-10 py-5 shrink-0">
-              <div className="flex items-center gap-2">
+            <div className="flex items-start justify-between px-10 py-5 shrink-0 gap-3">
+              <div className="flex items-start gap-2 min-w-0">
                 <button
                   onClick={() => setActiveSection('display')}
-                  className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
                   aria-label="Back"
                 >
                   <ChevronLeft size={20} className="text-text-secondary" />
                 </button>
-                <h2 className="text-lg font-bold text-text-primary">
-                  {activeSection === 'language' ? 'Language' : activeSection === 'order-type-colors' ? 'Order Type Colors' : 'Ticket Aging Rules'}
-                </h2>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-bold text-text-primary leading-tight">
+                    {activeSection === 'language' ? 'Language' : activeSection === 'order-type-colors' ? 'Order Type Colors' : 'Ticket Aging Rules'}
+                  </h2>
+                  {activeSection === 'status-settings' && (
+                    <p className="text-[12px] text-text-muted mt-1">
+                      Orders change colour as they age. Adjust thresholds based on your kitchen speed.
+                    </p>
+                  )}
+                </div>
               </div>
               {activeSection === 'status-settings' && (
                 <button
