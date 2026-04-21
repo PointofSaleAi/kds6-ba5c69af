@@ -35,12 +35,12 @@ function RowCell({ name, subtitle, control }: { name: string; subtitle?: string;
   return (
     <div
       className="flex items-center justify-between gap-3 bg-surface-card"
-      style={{ padding: '12px 16px' }}
+      style={{ padding: '18px 22px', minHeight: '76px' }}
     >
       <div className="min-w-0 flex-1">
-        <div style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
+        <div style={{ fontSize: '17px', fontWeight: 600, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
         {subtitle && (
-          <div style={{ fontSize: '12px', color: '#999', marginTop: '2px' }} className="truncate">{subtitle}</div>
+          <div style={{ fontSize: '14px', color: '#999', marginTop: '4px' }} className="truncate">{subtitle}</div>
         )}
       </div>
       {control && <div className="shrink-0">{control}</div>}
