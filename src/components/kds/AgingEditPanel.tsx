@@ -227,8 +227,8 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
       )}
 
-      {/* Status Name */}
-      <div className="flex items-start gap-3">
+      {/* Status Name + Time Range + Colour */}
+      <div className="flex flex-wrap items-start gap-3">
         <div className="w-40 shrink-0">
           <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
             Status Name
@@ -241,46 +241,43 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             className="w-full px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-[220px]">
           <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
         </div>
-      </div>
-
-      {/* Colour Picker */}
-      <div>
-        <label className="text-[11px] font-semibold text-text-muted mb-2 block uppercase tracking-wider">
-          Colour
-        </label>
-        <div className="flex items-center gap-3">
-          <label
-            className="relative w-10 h-10 rounded-lg border border-border overflow-hidden cursor-pointer shrink-0"
-            style={{ backgroundColor: rule.color }}
-          >
-            <input
-              type="color"
-              value={rule.color}
-              onChange={(e) => {
-                const hex = e.target.value.toUpperCase();
-                setCustomHex(hex);
-                onChange({ color: hex });
-              }}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              aria-label="Pick status colour"
-            />
+        <div className="shrink-0 basis-full sm:basis-auto">
+          <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+            Colour
           </label>
-          <input
-            type="text"
-            value={customHex || rule.color}
-            onChange={(e) => {
-              const v = e.target.value;
-              setCustomHex(v);
-              if (/^#[0-9A-Fa-f]{6}$/.test(v)) onChange({ color: v.toUpperCase() });
-            }}
-            placeholder="#RRGGBB"
-            maxLength={7}
-            className="w-28 px-2 py-2 text-xs font-mono bg-muted rounded-lg border border-border text-text-primary uppercase focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <span className="text-[11px] text-text-muted">Tap swatch to pick</span>
+          <div className="flex items-center gap-2">
+            <label
+              className="relative w-10 h-10 rounded-lg border border-border overflow-hidden cursor-pointer shrink-0"
+              style={{ backgroundColor: rule.color }}
+            >
+              <input
+                type="color"
+                value={rule.color}
+                onChange={(e) => {
+                  const hex = e.target.value.toUpperCase();
+                  setCustomHex(hex);
+                  onChange({ color: hex });
+                }}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                aria-label="Pick status colour"
+              />
+            </label>
+            <input
+              type="text"
+              value={customHex || rule.color}
+              onChange={(e) => {
+                const v = e.target.value;
+                setCustomHex(v);
+                if (/^#[0-9A-Fa-f]{6}$/.test(v)) onChange({ color: v.toUpperCase() });
+              }}
+              placeholder="#RRGGBB"
+              maxLength={7}
+              className="w-28 px-2 py-2 text-xs font-mono bg-muted rounded-lg border border-border text-text-primary uppercase focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
         </div>
       </div>
 
