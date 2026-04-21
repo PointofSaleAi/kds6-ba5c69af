@@ -286,21 +286,19 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
     if (selectedId === id) setSelectedId(rechained[0].id);
   };
 
+  // Allow the parent SettingsPanel header to trigger reset via a window event
+  // so the Reset button can sit visually next to the "Ticket Aging Rules" title.
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __agingResetHandler?: () => void }).__agingResetHandler = handleReset;
+  }
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Description */}
-      <div className="px-6 pb-3 flex items-start justify-between gap-3">
+      <div className="px-6 pb-3">
         <p className="text-[12px] text-text-muted">
           Orders change colour as they age. Adjust thresholds based on your kitchen speed.
         </p>
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted text-text-primary text-[11px] font-bold uppercase tracking-wider min-h-[36px] hover:bg-muted/80 transition-colors shrink-0"
-          title="Reset all status colors and thresholds to defaults"
-        >
-          <RotateCcw size={13} />
-          Reset to Defaults
-        </button>
       </div>
 
       {/* Course Level Toggle */}
