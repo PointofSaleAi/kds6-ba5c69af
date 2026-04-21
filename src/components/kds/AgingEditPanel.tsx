@@ -241,7 +241,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             className="w-full px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
-        <div className="flex-1 min-w-[220px]">
+        <div className="shrink-0 min-w-[220px]">
           <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
         </div>
         <div className="shrink-0 basis-full sm:basis-auto">
