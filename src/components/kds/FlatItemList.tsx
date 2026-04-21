@@ -50,9 +50,12 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
               style={{ padding: `var(--kds-item-gap) 0 0 4px`, gap: 0 }}
               onClick={() => !item.isCancelled && onReRouteItem?.(item)}
             >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
-                  <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
+              <div className="min-w-0">
+                <div className="flex items-start flex-wrap" style={{ gap: '6px' }}>
+                  <span
+                    className="font-normal text-text-secondary shrink-0"
+                    style={{ fontSize: 'var(--kds-item-qty)', width: '22px', textAlign: 'right', display: 'inline-block' }}
+                  >
                     {item.quantity}&times;
                   </span>
                   <span className={`font-semibold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`} style={{ fontSize: 'var(--kds-item-name)' }}>
@@ -96,14 +99,14 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                   )}
                 </div>
 
-                {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
-                  <div className="flex items-center gap-1 text-text-muted font-semibold uppercase" style={{ paddingLeft: '20px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}>
-                    <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
-                      <Languages size={8} className="text-text-secondary" />
-                    </span>
-                    {tpSecondary(item.name)}
-                  </div>
-                )}
+{displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
+  <div className="flex items-start font-semibold uppercase" style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: '9px', color: '#555555', lineHeight: '1.2' }}>
+    <span className="shrink-0" style={{ width: '22px', textAlign: 'right', display: 'inline-block' }}>
+      <Languages size={8} style={{ color: '#555555' }} />
+    </span>
+    <span>{tpSecondary(item.name)}</span>
+  </div>
+)}
               </div>
 
               {!item.isCancelled && (
