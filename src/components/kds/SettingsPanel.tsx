@@ -28,11 +28,6 @@ interface SettingsPanelProps {
   orders?: Order[];
 }
 
-const sections: { id: Section; label: string; icon: React.ElementType }[] = [
-  { id: 'display', label: 'Display', icon: Monitor },
-  { id: 'hardware', label: 'Hardware', icon: Cpu },
-  { id: 'account', label: 'Account', icon: User },
-];
 
 function SettingsCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
