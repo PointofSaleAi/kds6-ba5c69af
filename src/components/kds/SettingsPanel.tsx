@@ -13,7 +13,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, Monitor, ShoppingBag, Cpu, User, ChevronRight, ChevronLeft, Wifi, BadgeCheck, Layers, RefreshCw, Printer, Tag, Bug, Globe, Pencil, Upload } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, RefreshCw, Pencil, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
