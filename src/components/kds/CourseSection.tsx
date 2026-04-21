@@ -393,152 +393,32 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 : undefined;
 
             return (
-              <div
+              <CourseItemTapRow
                 key={item.id}
-                className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
-                style={{
-                  ...(itemOpacity !== undefined ? { opacity: itemOpacity } : {}),
-                  ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : {}),
-                }}
-              >
-                {/* Item primary row - name + item-level action icons */}
-                <div
-                  className="flex items-center cursor-pointer active:bg-muted/50 transition-colors"
-                  style={{ padding: '2px 0 0 4px', gap: 0 }}
-                  onClick={() => !item.isCancelled && onReRouteItem?.(item)}
-                >
-                  {/* Child 1 - item-main (name + translation only) */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
-                      <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                        {item.quantity}x
-                      </span>
-                      <span
-                        className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : status === 'done' ? 'line-through text-success' : 'text-text-primary'} ${item.isCompleted && status !== 'done' ? 'text-success' : ''}`}
-                        style={{ fontSize: 'var(--kds-item-name)', ...(isHighlighted && !item.isCancelled && !item.isCompleted && status !== 'done' ? { color: '#1D4ED8' } : {}) }}
-                      >
-                        {tp(item.name)}
-                      </span>
-                      {item.isCancelled && (
-                        <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
-                          CANCELLED
-                        </span>
-                      )}
-                      {item.isCompleted && !item.isCancelled && (
-                        <span className="text-success text-xs">&#10003;</span>
-                      )}
-                      {item.isRecalled && !item.isCancelled && (
-                        <span
-                          className="uppercase tracking-wide"
-                          style={{
-                            backgroundColor: '#E24B4A',
-                            color: '#FFFFFF',
-                            fontSize: '11px',
-                            fontWeight: 600,
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                          }}
-                        >
-                          RECALLED
-                        </span>
-                      )}
-                      {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
-                        <AllergenBadge key={a.type} allergen={a} variant="item" />
-                      ))}
-                      {isActive && status === 'preparing' && timestamps?.seenAt && (
-                        <span className="text-[10px] text-text-muted font-normal ml-1">
-                          {t.seenAt} {timestamps.seenAt}
-                        </span>
-                      )}
-                      {isActive && status === 'done' && timestamps?.doneAt && (
-                        <span className="text-[10px] text-text-muted font-normal ml-1">
-                          {t.doneAt} {timestamps.doneAt}
-                        </span>
-                      )}
-                    </div>
-
-                    {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
-                      <div
-                        dir={secondaryDir}
-                        className={`relative flex items-center font-semibold uppercase ${status === 'done' ? 'line-through text-success/70' : 'text-text-muted'}`}
-                        style={{ gap: 'var(--kds-item-gap)', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
-                      >
-                        <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                          <span className="invisible" aria-hidden="true">{item.quantity}x</span>
-                          <span className="absolute inset-0 flex items-center justify-center">
-                            <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
-                              <Languages size={8} className="text-text-secondary" />
-                            </span>
-                          </span>
-                        </span>
-                        <span>{tpSecondary(item.name)}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Child 2 - item-action icons */}
-                  {!item.isCancelled && (
-                    <div className="flex items-center shrink-0 ml-auto" style={{ gap: '0px' }} onClick={(e) => e.stopPropagation()}>
-                      {isCourseCompleted ? (
-                        <KdsActionIcon icon="acknowledged" disabled />
-                      ) : isPending ? null : isActive ? (
-                        status === 'done' ? (
-                          <>
-                            <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
-                            <KdsActionIcon icon="done" onClick={() => onDismissItem?.(item.id)} label="Dismiss" />
-                          </>
-                        ) : status === 'preparing' ? (
-                          <>
-                            <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
-                            <KdsActionIcon icon="preparing" onClick={() => onAdvanceItem?.(item.id)} label="Mark done" />
-                          </>
-                        ) : (
-                          <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
-                        )
-                      ) : isFired ? (
-                        <>
-                          <KdsActionIcon icon="undo" onClick={() => onUndoItem?.(item.id)} label="Undo" />
-                          <KdsActionIcon icon="ready" onClick={() => onAdvanceItem?.(item.id, true)} label="Mark done" />
-                        </>
-                      ) : (
-                        <KdsActionIcon icon="seen" onClick={() => onAdvanceItem?.(item.id)} label="Mark seen" />
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Modifiers as siblings of item row - each modifier row spans full width so its right-aligned eye icon lines up with item eye column */}
-                {item.modifiers.length > 0 && (
-                  <div className={status === 'done' ? 'line-through opacity-60' : ''}>
-                    {item.modifiers.map((mod, idx) => (
-                      <ModifierLine
-                        key={mod.id || idx}
-                        modifier={mod}
-                        servableEnabled={servableModifiersEnabled}
-                        modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
-                        onAdvanceModifier={onAdvanceModifier}
-                        onUndoModifier={onUndoModifier}
-                        parentQuantity={item.quantity}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {/* Product notes */}
-                {item.notes && !item.isCancelled && (
-                  <div className="flex items-start" style={{ gap: '6px', paddingBottom: '2px', paddingLeft: '4px' }}>
-                    <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                      {item.quantity}&times;
-                    </span>
-                    <div
-                      className="text-text-muted italic leading-snug min-w-0"
-                      style={{ fontSize: 'var(--kds-modifier)' }}
-                    >
-                      "{item.notes}"
-                    </div>
-                  </div>
-                )}
-              </div>
+                item={item}
+                status={status}
+                timestamps={timestamps}
+                isLastVisible={isLastVisible}
+                isHighlighted={isHighlighted}
+                itemOpacity={itemOpacity}
+                isActive={isActive}
+                isPending={isPending}
+                isCourseCompleted={isCourseCompleted}
+                showAllergens={showAllergens}
+                displayMode={displayMode}
+                showSecondaryMenu={showSecondaryMenu}
+                secondaryDir={secondaryDir}
+                tp={tp}
+                tpSecondary={tpSecondary}
+                t={t}
+                servableModifiersEnabled={servableModifiersEnabled}
+                modifierStatuses={modifierStatuses}
+                onAdvanceModifier={onAdvanceModifier}
+                onUndoModifier={onUndoModifier}
+                onAdvanceItem={onAdvanceItem}
+                onUndoItem={onUndoItem}
+                onDismissItem={onDismissItem}
+              />
             );
           });
           })()}
