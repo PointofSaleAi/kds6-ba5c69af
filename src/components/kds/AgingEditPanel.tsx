@@ -31,10 +31,30 @@ function resolveTextColor(tc: string) {
   return tc === 'white' ? '#FFFFFF' : tc === 'black' ? '#000000' : '#6C7A89';
 }
 
+const MAX_MINUTES = 999;
+
+function validateTimeRange(min: number, max: number | null | undefined, isLast: boolean): string | null {
+  if (!Number.isFinite(min) || !Number.isInteger(min)) return 'From must be a whole number';
+  if (min < 0) return 'From cannot be negative';
+  if (min > MAX_MINUTES) return `From cannot exceed ${MAX_MINUTES} min`;
+  if (isLast) return null;
+  if (max == null || !Number.isFinite(max) || !Number.isInteger(max)) return 'To is required';
+  if (max < 0) return 'To cannot be negative';
+  if (max > MAX_MINUTES) return `To cannot exceed ${MAX_MINUTES} min`;
+  if (max <= min) return 'To must be greater than From';
+  return null;
+}
+
+function clampMinutes(v: number) {
+  if (!Number.isFinite(v)) return 0;
+  return Math.max(0, Math.min(MAX_MINUTES, Math.round(v)));
+}
+
 function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: boolean; onChange: (u: Partial<StatusRule>) => void }) {
   const [openPicker, setOpenPicker] = useState<'from' | 'to' | null>(null);
   const fromRef = useRef<HTMLDivElement>(null);
   const toRef = useRef<HTMLDivElement>(null);
+  const error = validateTimeRange(rule.minMinutes, rule.maxMinutes, isLast);
 
   useEffect(() => {
     if (!openPicker) return;
@@ -47,6 +67,9 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
     return () => document.removeEventListener('mousedown', handler);
   }, [openPicker]);
 
+  const invalidFrom = error?.toLowerCase().includes('from');
+  const invalidTo = error && !invalidFrom;
+
   return (
     <div>
       <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
@@ -56,12 +79,24 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
         <div ref={fromRef} className="relative">
           <button
             onClick={() => setOpenPicker(openPicker === 'from' ? null : 'from')}
-            className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${openPicker === 'from' ? 'border-ring ring-2 ring-ring' : 'border-border'}`}
+            aria-invalid={invalidFrom || undefined}
+            className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${
+              invalidFrom
+                ? 'border-destructive ring-2 ring-destructive/40'
+                : openPicker === 'from'
+                ? 'border-ring ring-2 ring-ring'
+                : 'border-border'
+            }`}
           >
             {rule.minMinutes}
           </button>
           {openPicker === 'from' && (
-            <WheelPopover value={rule.minMinutes} min={0} max={60} onChange={(v) => onChange({ minMinutes: v })} />
+            <WheelPopover
+              value={rule.minMinutes}
+              min={0}
+              max={60}
+              onChange={(v) => onChange({ minMinutes: clampMinutes(v) })}
+            />
           )}
         </div>
         <span className="text-text-muted text-xs font-medium">to</span>
@@ -73,17 +108,38 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
           <div ref={toRef} className="relative">
             <button
               onClick={() => setOpenPicker(openPicker === 'to' ? null : 'to')}
-              className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${openPicker === 'to' ? 'border-ring ring-2 ring-ring' : 'border-border'}`}
+              aria-invalid={invalidTo || undefined}
+              className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${
+                invalidTo
+                  ? 'border-destructive ring-2 ring-destructive/40'
+                  : openPicker === 'to'
+                  ? 'border-ring ring-2 ring-ring'
+                  : 'border-border'
+              }`}
             >
               {rule.maxMinutes ?? ''}
             </button>
             {openPicker === 'to' && (
-              <WheelPopover value={rule.maxMinutes ?? 1} min={0} max={60} onChange={(v) => onChange({ maxMinutes: Math.max(1, v) })} />
+              <WheelPopover
+                value={rule.maxMinutes ?? Math.min(rule.minMinutes + 1, 60)}
+                min={0}
+                max={60}
+                onChange={(v) => onChange({ maxMinutes: clampMinutes(v) })}
+              />
             )}
           </div>
         )}
         <span className="text-[11px] text-text-muted font-medium">min</span>
       </div>
+      {error && (
+        <div
+          role="alert"
+          className="mt-1 flex items-center gap-1 text-[11px] font-medium text-destructive"
+        >
+          <AlertTriangle size={11} />
+          <span>{error}</span>
+        </div>
+      )}
     </div>
   );
 }
