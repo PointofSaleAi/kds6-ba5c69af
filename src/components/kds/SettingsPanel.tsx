@@ -34,7 +34,7 @@ interface SettingsPanelProps {
 function RowCell({ name, subtitle, control }: { name: string; subtitle?: string; control?: React.ReactNode }) {
   return (
     <div
-      className="flex items-center justify-between gap-3 bg-surface-card"
+      className="flex items-center justify-between gap-3 bg-surface-card rounded-lg border border-border"
       style={{ padding: '18px 22px', minHeight: '76px' }}
     >
       <div className="min-w-0 flex-1">
