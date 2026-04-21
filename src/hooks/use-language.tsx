@@ -1263,34 +1263,42 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const tp = useCallback((name: string) => {
+    if (scope === 'interface') return name;
     const lang = displayMode === 'dual' ? primaryLang : language;
     return productNames[lang]?.[name] || name;
-  }, [language, displayMode, primaryLang]);
+  }, [language, displayMode, primaryLang, scope]);
 
   const tm = useCallback((text: string) => {
+    if (scope === 'interface') return text;
     const lang = displayMode === 'dual' ? primaryLang : language;
     return modifierTexts[lang]?.[text] || text;
-  }, [language, displayMode, primaryLang]);
+  }, [language, displayMode, primaryLang, scope]);
 
   const tpSecondary = useCallback((name: string) => {
+    if (scope === 'interface') return name;
     return productNames[secondaryLang]?.[name] || name;
-  }, [secondaryLang]);
+  }, [secondaryLang, scope]);
 
   const tmSecondary = useCallback((text: string) => {
+    if (scope === 'interface') return text;
     return modifierTexts[secondaryLang]?.[text] || text;
-  }, [secondaryLang]);
+  }, [secondaryLang, scope]);
 
   const tc = useCallback((course: string) => {
+    if (scope === 'interface') return course;
     return courseNames[language]?.[course] || course;
-  }, [language]);
+  }, [language, scope]);
 
   const ta = useCallback((label: string) => {
+    if (scope === 'interface') return label;
     return allergenLabels[language]?.[label] || label;
-  }, [language]);
+  }, [language, scope]);
 
   const to = useCallback((label: string) => {
+    if (scope === 'interface') return label;
     return orderTypeLabels[language]?.[label] || label;
-  }, [language]);
+  }, [language, scope]);
+
 
   const value: LanguageContextType = {
     language,
