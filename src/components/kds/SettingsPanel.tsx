@@ -38,7 +38,7 @@ function RowCell({ name, subtitle, control }: { name: string; subtitle?: string;
       style={{ padding: '12px 16px' }}
     >
       <div className="min-w-0 flex-1">
-        <div style={{ fontSize: '14px', fontWeight: 500, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
+        <div style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(var(--text-primary))' }} className="truncate">{name}</div>
         {subtitle && (
           <div style={{ fontSize: '12px', color: '#999', marginTop: '2px' }} className="truncate">{subtitle}</div>
         )}
