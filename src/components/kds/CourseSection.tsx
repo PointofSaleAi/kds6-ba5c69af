@@ -428,3 +428,190 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     </div>
   );
 }
+
+interface CourseItemTapRowProps {
+  item: OrderItem;
+  status?: ItemStatus;
+  timestamps?: { seenAt?: string; doneAt?: string };
+  isLastVisible: boolean;
+  isHighlighted: boolean;
+  itemOpacity?: number;
+  isActive: boolean;
+  isPending: boolean;
+  isCourseCompleted: boolean;
+  showAllergens: boolean;
+  displayMode: string;
+  showSecondaryMenu: boolean;
+  secondaryDir: 'rtl' | 'ltr';
+  tp: (s: string) => string;
+  tpSecondary: (s: string) => string;
+  t: { seenAt: string; doneAt: string };
+  servableModifiersEnabled?: boolean;
+  modifierStatuses?: Map<string, ModifierStatus>;
+  onAdvanceModifier?: (id: string) => void;
+  onUndoModifier?: (id: string) => void;
+  onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
+  onUndoItem?: (itemId: string) => void;
+  onDismissItem?: (itemId: string) => void;
+}
+
+function CourseItemTapRow({
+  item, status, timestamps, isLastVisible, isHighlighted, itemOpacity,
+  isActive, isPending, isCourseCompleted,
+  showAllergens, displayMode, showSecondaryMenu, secondaryDir,
+  tp, tpSecondary, t,
+  servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
+  onAdvanceItem, onUndoItem, onDismissItem,
+}: CourseItemTapRowProps) {
+  const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
+
+  const handleSingle = () => {
+    if (!tappable) return;
+    if (status === 'done') {
+      onDismissItem?.(item.id);
+    } else {
+      onAdvanceItem?.(item.id);
+    }
+  };
+  const handleDouble = () => {
+    if (!tappable) return;
+    if (status === 'preparing' || status === 'done') {
+      onUndoItem?.(item.id);
+    }
+  };
+  const handleTap = useRowTap(handleSingle, handleDouble);
+
+  const isDone = status === 'done';
+  const isSeen = status === 'preparing';
+
+  const stateBg = tappable ? (isDone ? '#161B28' : isSeen ? '#1E2438' : undefined) : undefined;
+  const stateOpacity = isDone && tappable ? 0.5 : itemOpacity;
+
+  return (
+    <div
+      className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
+      style={{
+        ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
+        ...(isHighlighted ? { backgroundColor: '#EFF6FF' } : stateBg ? { backgroundColor: stateBg } : {}),
+      }}
+    >
+      <div
+        className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
+        style={{ padding: '2px 0 0 4px', gap: 0 }}
+        onClick={tappable ? handleTap : undefined}
+      >
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+            <span
+              className="font-normal"
+              style={{ fontSize: 'var(--kds-item-qty)', color: isDone && tappable ? '#555555' : 'hsl(var(--text-secondary))' }}
+            >
+              {item.quantity}x
+            </span>
+            <span
+              className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone && tappable ? 'line-through' : 'text-text-primary'}`}
+              style={{
+                fontSize: 'var(--kds-item-name)',
+                ...(isDone && tappable ? { color: '#888888' } : {}),
+                ...(isHighlighted && !item.isCancelled && !(isDone && tappable) ? { color: '#1D4ED8' } : {}),
+              }}
+            >
+              {tp(item.name)}
+            </span>
+            {item.isCancelled && (
+              <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
+                CANCELLED
+              </span>
+            )}
+            {item.isRecalled && !item.isCancelled && (
+              <span
+                className="uppercase tracking-wide"
+                style={{
+                  backgroundColor: '#E24B4A',
+                  color: '#FFFFFF',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  padding: '2px 8px',
+                  borderRadius: '4px',
+                }}
+              >
+                RECALLED
+              </span>
+            )}
+            {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
+              <AllergenBadge key={a.type} allergen={a} variant="item" />
+            ))}
+            {tappable && isSeen && timestamps?.seenAt && (
+              <span style={{ fontSize: '9px', color: '#AAAAAA' }} className="font-normal ml-1">
+                {t.seenAt} {timestamps.seenAt}
+              </span>
+            )}
+            {tappable && isDone && timestamps?.doneAt && (
+              <span style={{ fontSize: '9px', color: '#AAAAAA' }} className="font-normal ml-1">
+                {t.doneAt} {timestamps.doneAt}
+              </span>
+            )}
+          </div>
+
+          {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
+            <div
+              dir={secondaryDir}
+              className={`relative flex items-center font-semibold uppercase ${isDone && tappable ? 'line-through' : 'text-text-muted'}`}
+              style={{
+                gap: 'var(--kds-item-gap)',
+                marginTop: '0px',
+                marginBottom: '0px',
+                fontSize: 'var(--kds-modifier)',
+                lineHeight: '1',
+                ...(isDone && tappable ? { color: '#444444' } : {}),
+              }}
+            >
+              <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
+                <span className="invisible" aria-hidden="true">{item.quantity}x</span>
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
+                    <Languages size={8} className="text-text-secondary" />
+                  </span>
+                </span>
+              </span>
+              <span>{tpSecondary(item.name)}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {item.modifiers.length > 0 && (
+        <div
+          className={isDone && tappable ? 'line-through' : ''}
+          style={isDone && tappable ? { color: '#555555' } : {}}
+        >
+          {item.modifiers.map((mod, idx) => (
+            <ModifierLine
+              key={mod.id || idx}
+              modifier={mod}
+              servableEnabled={servableModifiersEnabled}
+              modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+              onAdvanceModifier={onAdvanceModifier}
+              onUndoModifier={onUndoModifier}
+              parentQuantity={item.quantity}
+            />
+          ))}
+        </div>
+      )}
+
+      {item.notes && !item.isCancelled && (
+        <div className="flex items-start" style={{ gap: '6px', paddingBottom: '2px', paddingLeft: '4px' }}>
+          <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+            {item.quantity}&times;
+          </span>
+          <div
+            className={`italic leading-snug min-w-0 ${isDone && tappable ? 'line-through' : 'text-text-muted'}`}
+            style={{ fontSize: 'var(--kds-modifier)', ...(isDone && tappable ? { color: '#555555' } : {}) }}
+          >
+            "{item.notes}"
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
