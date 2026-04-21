@@ -19,7 +19,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const styles = {
     extra: 'text-modifier-extra',
     remove: 'text-modifier-remove',
-    neutral: 'text-text-secondary',
+    neutral: 'text-modifier-neutral',
   };
 
   const isServable = servableEnabled && modifier.isServable && modifier.type !== 'remove' && modifier.id;

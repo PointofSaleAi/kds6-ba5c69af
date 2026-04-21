@@ -81,6 +81,7 @@ export default {
         modifier: {
           extra: "hsl(var(--modifier-extra))",
           remove: "hsl(var(--modifier-remove))",
+          neutral: "hsl(var(--modifier-neutral))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
