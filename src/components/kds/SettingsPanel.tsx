@@ -426,11 +426,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   ];
 
   const hardwareRows = [
-    { name: 'KOT Printer', subtitle: 'No printer assigned', control: <RowButton label="Configure →" onClick={() => onOpenSub('printer-kot')} /> },
-    { name: 'Label Printer', subtitle: 'No printer assigned', control: <RowButton label="Configure →" onClick={() => onOpenSub('printer-label')} /> },
-    { name: 'Sound Settings', subtitle: 'Volume & alerts', control: <RowButton label="Configure →" onClick={() => onOpenSub('sound-settings')} /> },
-    { name: 'Sync', subtitle: 'Orders & settings', control: <RowButton label={syncing ? 'Syncing…' : 'Sync Now'} onClick={handleSync} disabled={syncing} icon={<RefreshCw size={11} className={syncing ? 'animate-spin' : ''} />} /> },
-    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <RowButton label="Configure →" onClick={() => onOpenSub('websocket-settings')} /> },
+    { name: 'KOT Printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
+    { name: 'Label Printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
+    { name: 'Sound Settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
+    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
+    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure Connection" /> },
   ];
 
   const accountRows = [
@@ -438,8 +438,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     { name: 'Station ID', subtitle: 'STN-001', control: null },
     { name: 'Bug Reporting', subtitle: 'In-app reporting tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
     { name: 'Debug Mode', subtitle: 'Verbose logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
-    { name: 'Upload Logs', subtitle: 'Send to eatOS support', control: <RowButton label={uploadingLogs ? 'Uploading…' : '↑ Upload'} onClick={handleUploadLogs} disabled={uploadingLogs} /> },
-    { name: 'Feedback & Support', subtitle: 'Request a feature', control: <RowButton label="Request →" onClick={() => setFeatureModalOpen(true)} /> },
+    { name: 'Upload Logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
+    { name: 'Feedback & Support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
   ];
 
   return (
