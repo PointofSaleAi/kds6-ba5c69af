@@ -99,14 +99,14 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
                   )}
                 </div>
 
-                {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
-                  <div className="flex items-start font-semibold uppercase" style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: '9px', color: '#555555', lineHeight: '1.2' }}>
-                    <span className="shrink-0 inline-flex items-center justify-end" style={{ width: '22px' }}>
-                      <Languages size={8} style={{ color: '#555555' }} />
-                    </span>
-                    <span>{tpSecondary(item.name)}</span>
-                  </div>
-                )}
+{displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
+  <div className="flex items-start font-semibold uppercase" style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: '9px', color: '#555555', lineHeight: '1.2' }}>
+    <span className="shrink-0" style={{ width: '22px', textAlign: 'right', display: 'inline-block' }}>
+      <Languages size={8} style={{ color: '#555555' }} />
+    </span>
+    <span>{tpSecondary(item.name)}</span>
+  </div>
+)}
               </div>
 
               {!item.isCancelled && (

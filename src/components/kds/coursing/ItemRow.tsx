@@ -33,14 +33,14 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           ))}
         </div>
 
-        {displayMode === 'dual' && showSecondaryMenu && (
-          <div className="flex items-start font-semibold uppercase" style={{ gap: '6px', marginTop: '1px', fontSize: '9px', color: '#555555', lineHeight: '1.2' }}>
-            <span className="shrink-0 inline-flex items-center justify-end" style={{ width: '22px' }}>
-              <Languages size={8} style={{ color: '#555555' }} />
-            </span>
-            <span>{tpSecondary(item.name)}</span>
-          </div>
-        )}
+{displayMode === 'dual' && showSecondaryMenu && (
+  <div className="flex items-start font-semibold uppercase" style={{ gap: '6px', marginTop: '1px', fontSize: '9px', color: '#555555', lineHeight: '1.2' }}>
+    <span className="shrink-0" style={{ width: '22px', textAlign: 'right', display: 'inline-block' }}>
+      <Languages size={8} style={{ color: '#555555' }} />
+    </span>
+    <span>{tpSecondary(item.name)}</span>
+  </div>
+)}
 
         {item.modifiers.length > 0 && (
           <div style={{ marginTop: '2px' }}>
