@@ -1303,7 +1303,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const value: LanguageContextType = {
     language,
     setLanguage,
-    t: translations[language],
+    t: scope === 'menu' ? translations['en-US'] : translations[language],
     tp,
     tm,
     tc,
@@ -1323,6 +1323,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setDateFormat,
     timeFormat,
     setTimeFormat,
+    scope,
+    setScope,
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
