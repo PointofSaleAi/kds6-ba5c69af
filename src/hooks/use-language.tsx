@@ -1114,6 +1114,8 @@ const languageFlags: Record<LanguageCode, string> = {
 
 export type DisplayMode = 'single' | 'dual';
 
+export type LanguageScope = 'interface' | 'menu' | 'both';
+
 /** 0 = '27 March 2026', 1 = 'March 27, 2026', 2 = '27/03/2026' */
 export type DateFormatIndex = 0 | 1 | 2;
 /** 0 = 12h, 1 = 24h */
