@@ -32,18 +32,15 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
         {displayMode === 'dual' && showSecondaryMenu && (
           <div
-            className="flex items-center justify-between text-[11px] text-text-muted font-semibold uppercase"
-            style={{ marginTop: '1px' }}
+            className="flex items-center text-[11px] text-text-muted font-semibold uppercase"
+            style={{ gap: '6px', marginTop: '1px' }}
           >
-            <span className="flex items-center" style={{ gap: '6px' }}>
-              <span className="text-[13px] font-normal invisible">
-                {item.quantity}&times;
+            <span className="inline-flex items-center justify-center shrink-0" style={{ minWidth: '1.5em' }}>
+              <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
+                <Languages size={10} className="text-text-secondary" />
               </span>
-              <span>{tpSecondary(item.name)}</span>
             </span>
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0 ml-2">
-              <Languages size={10} className="text-text-secondary" />
-            </span>
+            <span>{tpSecondary(item.name)}</span>
           </div>
         )}
 
