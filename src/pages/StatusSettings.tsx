@@ -179,7 +179,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     label: 'Fast Kitchen',
     description: 'Tight thresholds for high-volume kitchens',
     rules: [
-      { id: 'start', label: 'Start (New)', color: '#22C55E', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
+      { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
       { id: 'medium', label: 'Medium (In Progress)', color: '#EAB308', textColor: 'white', minMinutes: 4, maxMinutes: 6 },
       { id: 'delay', label: 'Delay (Warning)', color: '#F97316', textColor: 'white', minMinutes: 7, maxMinutes: 12 },
       { id: 'overtime', label: 'Overtime (Critical)', color: '#EF4444', textColor: 'white', minMinutes: 13, maxMinutes: null },
