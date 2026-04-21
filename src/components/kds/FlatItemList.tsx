@@ -51,7 +51,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
               onClick={() => !item.isCancelled && onReRouteItem?.(item)}
             >
               <div className="flex-1 min-w-0">
-                <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+                <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
                   <span className="font-normal text-text-secondary" style={{ fontSize: 'var(--kds-item-qty)' }}>
                     {item.quantity}&times;
                   </span>
