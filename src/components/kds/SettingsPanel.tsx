@@ -52,12 +52,12 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        fontSize: '10px',
+        fontSize: '12px',
         fontWeight: 500,
         letterSpacing: '0.07em',
         textTransform: 'uppercase',
         color: '#999',
-        marginBottom: '7px',
+        marginBottom: '10px',
       }}
     >
       {children}
