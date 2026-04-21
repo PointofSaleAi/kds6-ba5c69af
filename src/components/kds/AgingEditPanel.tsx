@@ -10,11 +10,8 @@ interface AgingEditPanelProps {
   errors: string[];
 }
 
-const palettes = {
-  warm: ['#E84C3D', '#C0392B', '#922B21', '#E67E22', '#F39C12', '#D4AC0D'],
-  cool: ['#2980B9', '#2471A3', '#16A085', '#27AE60', '#1ABC9C', '#3498DB'],
-  neutral: ['#1A1A2E', '#2C3E50', '#7F8C8D', '#95A5A6', '#BDC3C7', '#8E44AD'],
-};
+const textColorOptions = ['white', 'grey', 'black'] as const;
+
 
 const textColorOptions = ['white', 'grey', 'black'] as const;
 
