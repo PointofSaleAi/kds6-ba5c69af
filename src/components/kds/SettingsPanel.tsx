@@ -13,7 +13,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, ChevronLeft, RefreshCw, Pencil, Upload } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, RefreshCw, Pencil, Upload, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
@@ -370,28 +370,33 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
               <div style={{ marginTop: '18px' }}>
                 <SectionHeading>Account</SectionHeading>
-                <RowGrid itemCount={accountRows.length}>
+                <RowGrid itemCount={accountRows.length + 1}>
                   {accountRows.map((r) => <RowCell key={r.name} name={r.name} subtitle={r.subtitle} control={r.control} />)}
+                  <button
+                    type="button"
+                    onClick={() => setShowLogoutConfirm(true)}
+                    className="flex items-center justify-between gap-3 bg-surface-card text-left"
+                    style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div style={{ fontSize: '11px', fontWeight: 500, color: '#C0392B' }} className="truncate">Log Out</div>
+                      <div style={{ fontSize: '10px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">Sign out of this device</div>
+                    </div>
+                    <div
+                      className="shrink-0 flex items-center justify-center"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        background: '#FFF5F5',
+                        border: '0.5px solid #FCCACA',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      <LogOut size={16} strokeWidth={2} color="#C0392B" />
+                    </div>
+                  </button>
                 </RowGrid>
               </div>
-
-              <button
-                onClick={() => setShowLogoutConfirm(true)}
-                style={{
-                  background: '#fff5f5',
-                  border: '0.5px solid #fccaca',
-                  borderRadius: '8px',
-                  padding: '16px 12px',
-                  textAlign: 'center',
-                  color: '#c0392b',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  width: '100%',
-                  marginTop: '18px',
-                }}
-              >
-                Log Out
-              </button>
 
               <div style={{ fontSize: '10px', color: '#ccc', textAlign: 'center', marginTop: '10px' }}>
                 Version 5.0.84 FL 3.35.7 BD 25.03.26
