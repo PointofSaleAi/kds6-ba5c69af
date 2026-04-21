@@ -172,21 +172,23 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
       )}
 
       {/* Status Name */}
-      <div>
-        <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-          Status Name
-        </label>
-        <input
-          type="text"
-          value={rule.label}
-          onChange={(e) => onChange({ label: e.target.value })}
-          maxLength={40}
-          className="w-full px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-ring"
-        />
+      <div className="flex items-start gap-3">
+        <div className="w-40 shrink-0">
+          <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+            Status Name
+          </label>
+          <input
+            type="text"
+            value={rule.label}
+            onChange={(e) => onChange({ label: e.target.value })}
+            maxLength={40}
+            className="w-full px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
+        </div>
       </div>
-
-      {/* Time Range */}
-      <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
 
       {/* Colour Picker */}
       <div>
