@@ -54,27 +54,32 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             {item.modifiers.map((mod, idx) => (
               <div
                 key={idx}
-                className={
+                className={`flex items-center ${
                   mod.type === 'extra'
                     ? 'text-modifier-extra'
                     : mod.type === 'remove'
                       ? 'text-destructive'
                       : 'text-text-secondary'
-                }
-                style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, paddingLeft: '20px' }}
+                }`}
+                style={{ fontSize: '11px', lineHeight: '1.4', marginBottom: 0, gap: '6px' }}
               >
-                {tm(mod.text)}
+                <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true">
+                  {item.quantity}x
+                </span>
+                <span className="min-w-0">{tm(mod.text)}</span>
               </div>
             ))}
           </div>
         )}
 
         {item.notes && (
-          <div
-            className="text-[11px] text-text-muted italic leading-snug"
-            style={{ paddingLeft: '20px', marginTop: '2px' }}
-          >
-            "{item.notes}"
+          <div className="flex items-start" style={{ marginTop: '2px', gap: '6px' }}>
+            <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true">
+              {item.quantity}x
+            </span>
+            <div className="text-[11px] text-text-muted italic leading-snug min-w-0">
+              "{item.notes}"
+            </div>
           </div>
         )}
       </div>
