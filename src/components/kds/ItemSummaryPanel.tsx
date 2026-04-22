@@ -91,41 +91,48 @@ interface ItemSummaryPanelProps {
 
 interface CategorySummary {
   category: ProductCategory;
-  items: { name: string; remaining: number; hasNew: boolean }[];
+  hasOvertime: boolean;
+  items: { name: string; remaining: number; hasNew: boolean; isOvertime: boolean }[];
 }
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
-function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySummary[] {
-  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean }>>();
+function buildSummary(records: ReturnType<typeof collectActiveItems>): CategorySummary[] {
+  const map = new Map<
+    ProductCategory,
+    Map<string, { remaining: number; hasNew: boolean; isOvertime: boolean }>
+  >();
 
-  for (const order of orders) {
-    if (order.status === 'served') continue;
-    for (const cg of order.courses) {
-      if (cg.isFired) continue;
-      for (const item of cg.items) {
-        if (item.isCompleted || item.isCancelled) continue;
-        const cat = item.category || ('Uncategorized' as ProductCategory);
-        // In station view, only include items matching the active station's category
-        if (stationCourseFilter && cat !== stationCourseFilter) continue;
-        if (!map.has(cat)) map.set(cat, new Map());
-        const items = map.get(cat)!;
-        const existing = items.get(item.name) || { remaining: 0, hasNew: false };
-        existing.remaining += item.quantity;
-        if (item.isNew) existing.hasNew = true;
-        items.set(item.name, existing);
-      }
-    }
+  for (const r of records) {
+    if (!map.has(r.category)) map.set(r.category, new Map());
+    const items = map.get(r.category)!;
+    const existing = items.get(r.name) || { remaining: 0, hasNew: false, isOvertime: false };
+    existing.remaining += r.quantity;
+    if (r.isNew) existing.hasNew = true;
+    if (r.isOvertime) existing.isOvertime = true;
+    items.set(r.name, existing);
   }
 
   return Array.from(map.entries())
-    .map(([category, items]) => ({
-      category,
-      items: Array.from(items.entries())
-        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew }))
+    .map(([category, items]) => {
+      const itemList = Array.from(items.entries())
+        .map(([name, data]) => ({
+          name,
+          remaining: data.remaining,
+          hasNew: data.hasNew,
+          isOvertime: data.isOvertime,
+        }))
         .filter(i => i.remaining > 0)
-        .sort((a, b) => b.remaining - a.remaining),
-    }))
+        .sort((a, b) => {
+          if (a.isOvertime !== b.isOvertime) return a.isOvertime ? -1 : 1;
+          return b.remaining - a.remaining;
+        });
+      return {
+        category,
+        hasOvertime: itemList.some(i => i.isOvertime),
+        items: itemList,
+      };
+    })
     .filter(c => c.items.length > 0);
 }
 
@@ -134,7 +141,6 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
-  const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
   // Tick every 10s to refresh live elapsed times
   const [nowMs, setNowMs] = useState(() => Date.now());
@@ -148,10 +154,15 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     const last = rules[rules.length - 1];
     return (last?.minMinutes ?? 21) * 60;
   }, [rules]);
-  const overtimeItems = useMemo(
-    () => buildOvertimeItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
+
+  // Single pass over orders → records used by both Overtime + category sections.
+  // Uses unified aging (matches OrderCard) so overtime stays in sync with cards.
+  const activeRecords = useMemo(
+    () => collectActiveItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
     [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse]
   );
+  const summary = useMemo(() => buildSummary(activeRecords), [activeRecords]);
+  const overtimeItems = useMemo(() => buildOvertimeItems(activeRecords), [activeRecords]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
