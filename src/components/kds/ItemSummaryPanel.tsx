@@ -8,7 +8,7 @@ import type { Order, ProductCategory, StationName } from '@/types/kds';
 
 interface OvertimeItem {
   name: string;
-  remaining: number;
+  count: number;
   oldestSeconds: number;
 }
 
@@ -17,28 +17,37 @@ function liveElapsed(order: Order, now: number): number {
   return Math.max(order.elapsedSeconds || 0, fromTime);
 }
 
-function buildOvertimeItems(orders: Order[], thresholdSeconds: number, now: number, stationCourseFilter?: string): OvertimeItem[] {
-  const map = new Map<string, { remaining: number; oldestSeconds: number }>();
+function buildOvertimeItems(
+  orders: Order[],
+  thresholdSeconds: number,
+  now: number,
+  courseLevelAging: boolean,
+  stationCourseFilter?: string,
+): OvertimeItem[] {
+  const map = new Map<string, { count: number; oldestSeconds: number }>();
   for (const order of orders) {
     if (order.status === 'served') continue;
-    const elapsed = liveElapsed(order, now);
-    if (elapsed < thresholdSeconds) continue;
     for (const cg of order.courses) {
       if (cg.isFired) continue;
+      const courseElapsed = cg._startedAt
+        ? Math.max(0, Math.floor((now - cg._startedAt.getTime()) / 1000))
+        : liveElapsed(order, now);
+      const elapsed = courseLevelAging ? courseElapsed : liveElapsed(order, now);
+      if (elapsed < thresholdSeconds) continue;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
         const cat = item.category || ('Uncategorized' as ProductCategory);
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
-        const existing = map.get(item.name) || { remaining: 0, oldestSeconds: 0 };
-        existing.remaining += item.quantity;
+        const existing = map.get(item.name) || { count: 0, oldestSeconds: 0 };
+        existing.count += 1;
         if (elapsed > existing.oldestSeconds) existing.oldestSeconds = elapsed;
         map.set(item.name, existing);
       }
     }
   }
   return Array.from(map.entries())
-    .map(([name, d]) => ({ name, remaining: d.remaining, oldestSeconds: d.oldestSeconds }))
-    .sort((a, b) => b.oldestSeconds - a.oldestSeconds);
+    .map(([name, d]) => ({ name, count: d.count, oldestSeconds: d.oldestSeconds }))
+    .sort((a, b) => b.oldestSeconds - a.oldestSeconds || b.count - a.count || a.name.localeCompare(b.name));
 }
 
 function formatMins(seconds: number): string {
@@ -99,7 +108,7 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const { isPortrait } = usePortrait();
-  const { rules } = useStatusRules();
+  const { rules, courseLevelAging } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
   const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
@@ -116,10 +125,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     return (last?.minMinutes ?? 21) * 60;
   }, [rules]);
   const overtimeItems = useMemo(
-    () => buildOvertimeItems(orders, overtimeThresholdSec, nowMs, stationCourse),
-    [orders, overtimeThresholdSec, nowMs, stationCourse]
+    () => buildOvertimeItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
+    [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse]
   );
-  const overtimeTotal = overtimeItems.reduce((a, i) => a + i.remaining, 0);
+  const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
   const categoryCount = selectedCategories?.size ?? 0;
@@ -264,7 +273,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                               className={`text-right text-[14px] font-bold tabular-nums ${isSelected ? '' : 'text-destructive'}`}
                               style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
                             >
-                              {item.remaining}
+                              {item.count}
                             </span>
                           </div>
                         </div>
@@ -359,7 +368,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? '-mx-3 px-3' : ''}`}>
                           <div
                             className={`flex items-center justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
                             onClick={(e) => {
