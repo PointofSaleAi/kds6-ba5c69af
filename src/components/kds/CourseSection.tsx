@@ -566,7 +566,7 @@ function CourseItemTapRow({
       )}
 
       {item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', paddingBottom: '2px', paddingLeft: '4px' }}>
+        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
           </span>
