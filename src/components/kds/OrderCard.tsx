@@ -284,6 +284,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       onItemStatusChange?.(itemId, newStatus);
       return next;
     });
+    // Assign seen index on first transition (unseen → preparing/done)
+    const prevStatus = itemStatuses.get(itemId);
+    if (!prevStatus) {
+      assignSeenIndex([itemId]);
+    }
     // Record timestamp
     setItemTimestamps(prev => {
       const next = new Map(prev);
@@ -298,7 +303,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
       return next;
     });
-  }, [onItemStatusChange, itemStatuses]);
+  }, [onItemStatusChange, itemStatuses, assignSeenIndex]);
 
   // Bulk advance course items
   const handleBulkAdvanceCourse = useCallback((courseItemIds: string[]) => {
