@@ -572,7 +572,7 @@ function CourseItemTapRow({
             )}
           </div>
 
-          {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
+          {showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
               className={`relative flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
@@ -596,7 +596,7 @@ function CourseItemTapRow({
             </div>
           )}
 
-          {showAllergens && item.allergens.length > 0 && (
+          {showDetails && showAllergens && item.allergens.length > 0 && (
             <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}x
@@ -611,7 +611,7 @@ function CourseItemTapRow({
         </div>
       </div>
 
-      {item.modifiers.length > 0 && (
+      {showDetails && item.modifiers.length > 0 && (
         <div className={isDone ? 'line-through' : ''}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
@@ -627,7 +627,7 @@ function CourseItemTapRow({
         </div>
       )}
 
-      {item.notes && !item.isCancelled && (
+      {showDetails && item.notes && !item.isCancelled && (
         <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
