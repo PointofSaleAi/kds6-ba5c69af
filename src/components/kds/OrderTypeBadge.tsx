@@ -4,6 +4,7 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-setti
 
 const typeLabels: Record<OrderType, string> = {
   'dine-in': 'DINE IN',
+  'table': 'TABLE',
   'take-out': 'TAKE OUT',
   'delivery': 'DELIVERY',
   'banquet': 'BANQUET',

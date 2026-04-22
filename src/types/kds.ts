@@ -1,4 +1,4 @@
-export type OrderType = 'dine-in' | 'take-out' | 'delivery' | 'banquet' | 'drive-thru' | 'curb-side' | 'scheduled' | 'phone-in' | 'custom';
+export type OrderType = 'dine-in' | 'table' | 'take-out' | 'delivery' | 'banquet' | 'drive-thru' | 'curb-side' | 'scheduled' | 'phone-in' | 'custom';
 export type OrderStatus = 'new' | 'in-progress' | 'seen' | 'served' | 'overtime' | 'cancelled' | 'recalled';
 export type CourseType = 'APPETIZER' | 'SALAD' | 'ENTREE' | 'DESSERT' | 'BEVERAGE';
 export type TimerUrgency = 'ok' | 'warning' | 'critical' | 'overtime';
