@@ -4,7 +4,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send, Rows3 } from 'lucide-react';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -151,18 +151,6 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow icon={Monitor} label={t.displayMode} right={<SegmentedToggle options={[t.grid, t.horizontal, t.stagger]} value={displayMode} onChange={setDisplayMode} />} />
             <SettingsRow icon={Monitor} label={t.cardsPerRow} right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
             <SettingsRow icon={Monitor} label={t.textSize} right={<SegmentedToggle options={[t.compact, t.standard, t.large]} value={textSize} onChange={setTextSize} />} />
-            <SettingsRow
-              icon={Monitor}
-              label="Ticket Density"
-              description={ticketDensity === 'compact' ? 'Compact, smaller fonts and tighter rows' : 'Large, default spacious layout'}
-              right={
-                <SegmentedToggle
-                  options={['Large', 'Compact']}
-                  value={ticketDensity === 'compact' ? 'Compact' : 'Large'}
-                  onChange={(v) => setTicketDensity(v === 'Compact' ? 'compact' : 'large')}
-                />
-              }
-            />
             <SettingsRow icon={Palette} label={t.statusColours} description={t.customiseStatusColours} onClick={() => onOpenSub('status-settings')} />
             <SettingsRow
               icon={theme === 'dark' ? Moon : Sun}
@@ -176,6 +164,27 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
               }
             />
             <SettingsRow icon={Globe} label={'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
+
+            {/* TICKET LAYOUT */}
+            <div className="px-4 pt-4 pb-1">
+              <div className="flex items-center gap-2 mb-1">
+                <Rows3 size={14} className="text-text-muted" />
+                <span className="text-section-label uppercase text-text-muted tracking-widest">Ticket Layout</span>
+              </div>
+            </div>
+            <SettingsRow
+              icon={Rows3}
+              label="Ticket Density"
+              description={ticketDensity === 'compact' ? 'Compact, denser tickets with smaller fonts' : 'Large, default spacious layout'}
+              right={
+                <SegmentedToggle
+                  options={['Large', 'Compact']}
+                  value={ticketDensity === 'compact' ? 'Compact' : 'Large'}
+                  onChange={(v) => setTicketDensity(v === 'Compact' ? 'compact' : 'large')}
+                />
+              }
+            />
+
 
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">
