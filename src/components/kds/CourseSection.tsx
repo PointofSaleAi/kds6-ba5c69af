@@ -343,7 +343,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             opacity: isExpanded ? 1 : 0,
           }}
         >
-        <div className="px-2 py-0.5">
+        <div className="px-2">
           {(() => {
           const visibleItems = courseGroup.items.filter((item) => {
             if (dismissedItemIds?.has(item.id)) return false;
