@@ -58,9 +58,9 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
           {seenOrders.length}
         </span>
       </div>
-      <div className="flex-1 overflow-auto p-2">
+      <div className="flex-1 overflow-auto p-1.5">
         {isPortrait ? (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
@@ -70,7 +70,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             </AnimatePresence>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid gap-2 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-1.5 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
@@ -80,7 +80,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             </AnimatePresence>
           </div>
         ) : viewMode === 'horizontal' ? (
-          <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+          <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">

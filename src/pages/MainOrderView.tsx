@@ -737,9 +737,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   <p className="text-text-muted text-sm">No orders served yet today</p>
                 </div>
               ) : (
-                <div className="flex-1 overflow-auto p-2">
+                <div className="flex-1 overflow-auto p-1.5">
                   {viewMode === 'grid' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5">
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
@@ -748,7 +748,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     </div>
                   )}
                   {viewMode === 'horizontal' && (
-                    <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                    <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[280px]">
                           <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
@@ -812,9 +812,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Expo' ? (
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
               ) : (
-                <div className="flex-1 overflow-auto p-2">
+                <div className="flex-1 overflow-auto p-1.5">
                   {isPortrait ? (
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1.5">
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
@@ -844,7 +844,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   ) : viewMode === 'grid' ? (
-                    <div className="grid gap-2 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid gap-1.5 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
@@ -857,7 +857,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       </AnimatePresence>
                     </div>
                   ) : (
-                    <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                    <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
