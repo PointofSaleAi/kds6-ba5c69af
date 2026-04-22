@@ -565,10 +565,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           tsNext.delete(itemId);
           return tsNext;
         });
+        // Clear seen index when item drops back to unseen
+        clearSeenIndex(itemId);
       }
       return next;
     });
-  }, [onItemStatusChange]);
+  }, [onItemStatusChange, clearSeenIndex]);
 
   const handleItemReRoute = useCallback((itemId: string, newStation: StationName) => {
     setStationOverrides(prev => {
