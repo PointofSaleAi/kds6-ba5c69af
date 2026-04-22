@@ -78,7 +78,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
             </AnimatePresence>
           </div>
         ) : viewMode === 'horizontal' ? (
-          <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+          <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
               {unseenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
