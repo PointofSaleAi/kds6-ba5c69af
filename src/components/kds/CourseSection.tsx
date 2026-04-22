@@ -214,16 +214,16 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : `${courseName} \u00B7 ${statusWord}`;
 
   const labelClass = isServedByLifecycle
-    ? 'uppercase tracking-wider text-muted-foreground flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    ? 'uppercase tracking-wider text-text-secondary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
     : coursingStatus === 'active'
       ? 'uppercase tracking-wider font-semibold flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
       : coursingStatus === 'fired'
-        ? 'uppercase tracking-wider text-muted-foreground flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
-        : 'uppercase text-text-secondary tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
+        ? 'uppercase tracking-wider text-text-secondary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+        : 'uppercase text-text-primary tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
     ? { color: agingColor || '#0F4C81', fontWeight: 600, fontSize: 'var(--kds-course-header)' }
-    : { fontWeight: 500 };
+    : { fontWeight: 600 };
 
   // Course-level icon for active courses - purple/violet to distinguish from item-level
   const renderCourseIcon = () => {
