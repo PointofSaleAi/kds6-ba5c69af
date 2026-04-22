@@ -177,6 +177,27 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             />
             <SettingsRow icon={Globe} label={'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
 
+            {/* TICKET LAYOUT */}
+            <div className="px-4 pt-4 pb-1">
+              <div className="flex items-center gap-2 mb-1">
+                <Rows3 size={14} className="text-text-muted" />
+                <span className="text-section-label uppercase text-text-muted tracking-widest">Ticket Layout</span>
+              </div>
+            </div>
+            <SettingsRow
+              icon={Rows3}
+              label="Ticket Density"
+              description={ticketDensity === 'compact' ? 'Compact, denser tickets with smaller fonts' : 'Large, default spacious layout'}
+              right={
+                <SegmentedToggle
+                  options={['Large', 'Compact']}
+                  value={ticketDensity === 'compact' ? 'Compact' : 'Large'}
+                  onChange={(v) => setTicketDensity(v === 'Compact' ? 'compact' : 'large')}
+                />
+              }
+            />
+
+
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
