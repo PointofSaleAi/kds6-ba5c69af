@@ -208,10 +208,12 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   const courseName = tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase());
   const statusWord = coursingStatus === 'fired' ? t.served : coursingStatus === 'active' ? t.active : t.queued;
   const courseLabel = isServedByLifecycle
-    ? `${courseName} \u00B7 ${t.served}`
+    ? courseName
     : isStationMode
       ? getStationLabel(courseGroup, coursingStatus, tc, { active: t.active, queued: t.queued, served: t.served })
-      : `${courseName} \u00B7 ${statusWord}`;
+      : coursingStatus === 'active'
+        ? `${courseName} \u00B7 ${statusWord}`
+        : courseName;
 
   const labelClass = isServedByLifecycle
     ? 'uppercase tracking-wider text-text-primary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
