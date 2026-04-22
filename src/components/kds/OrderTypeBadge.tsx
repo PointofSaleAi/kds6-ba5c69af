@@ -28,9 +28,9 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
   const { orderTypeColors } = useKDSSettings();
   const bgColor = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
 
-  const showTableAsLabel = (type === 'dine-in' || type === 'banquet') && tableInfo;
+  const showTableAsLabel = (type === 'table' || type === 'banquet') && tableInfo;
   const labelText = showTableAsLabel
-    ? type === 'dine-in'
+    ? type === 'table'
       ? `Table ${tableInfo}`
       : `Banquet ${tableInfo}`
     : to(typeLabels[type]);
