@@ -844,7 +844,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   ) : viewMode === 'grid' ? (
-                    <div className="grid gap-3 p-3 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid gap-2 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
