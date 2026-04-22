@@ -65,7 +65,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
-  const { ticketHeaderLayout } = useKDSSettings();
+  const { ticketHeaderLayout, ticketDensity } = useKDSSettings();
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
@@ -636,7 +636,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   return (
     <>
       <div
-        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
+        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300 ${ticketDensity === 'compact' ? 'kds-density-compact' : ''}`}
         style={{
           minWidth: 'min(220px, 100%)',
           borderLeft: order.isRushed ? '4px solid #c0392b' : undefined,
