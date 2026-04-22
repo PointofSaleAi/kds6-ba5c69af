@@ -239,6 +239,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     servableModifiers, setServableModifiers,
     sortDefault, setSortDefault,
     ticketHeaderLayout, setTicketHeaderLayout,
+    ticketLayout, setTicketLayout,
   } = useKDSSettings();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { showBadge: enableBadge, setShowBadge: setEnableBadge } = useBadgeVisibility();
@@ -327,6 +328,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   const displayRows = [
     { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
     { name: 'Text Size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
+    { name: 'Ticket Layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
     { name: 'Status Colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
     { name: 'Order Type Colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
     { name: 'Allergen Badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
