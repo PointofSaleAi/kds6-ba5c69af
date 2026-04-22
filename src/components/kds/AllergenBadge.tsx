@@ -32,13 +32,13 @@ export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps
   const sizeStyle = variant === 'order'
     ? { fontSize: 'var(--kds-allergen-font)', padding: 'var(--kds-allergen-py) var(--kds-allergen-px)', opacity: 1 }
     : variant === 'expo-item'
-      ? { fontSize: '7px', padding: '1px 5px', opacity: 0.7 }
-      : { fontSize: '7px', padding: '1px 5px', opacity: 0.7 };
+      ? { fontSize: '7px', padding: '0px 5px', opacity: 0.7 }
+      : { fontSize: '7px', padding: '0px 5px', opacity: 0.7 };
 
   return (
     <span
       className={`inline-flex items-center rounded border font-bold uppercase ${color.bg} ${color.border} ${color.text}`}
-      style={{ ...sizeStyle, lineHeight: 1.3 }}
+      style={{ ...sizeStyle, lineHeight: 1.1 }}
     >
       {ta(allergen.label)}
     </span>
