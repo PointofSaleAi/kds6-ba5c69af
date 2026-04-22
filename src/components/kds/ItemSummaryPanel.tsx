@@ -1,9 +1,43 @@
 import { useState, useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
-import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
+import { useStatusRules } from '@/hooks/use-status-rules';
+import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle, Clock } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
+
+interface OvertimeItem {
+  name: string;
+  remaining: number;
+  oldestSeconds: number;
+}
+
+function buildOvertimeItems(orders: Order[], thresholdSeconds: number, stationCourseFilter?: string): OvertimeItem[] {
+  const map = new Map<string, { remaining: number; oldestSeconds: number }>();
+  for (const order of orders) {
+    if (order.status === 'served') continue;
+    if (order.elapsedSeconds < thresholdSeconds) continue;
+    for (const cg of order.courses) {
+      if (cg.isFired) continue;
+      for (const item of cg.items) {
+        if (item.isCompleted || item.isCancelled) continue;
+        const cat = item.category || ('Uncategorized' as ProductCategory);
+        if (stationCourseFilter && cat !== stationCourseFilter) continue;
+        const existing = map.get(item.name) || { remaining: 0, oldestSeconds: 0 };
+        existing.remaining += item.quantity;
+        if (order.elapsedSeconds > existing.oldestSeconds) existing.oldestSeconds = order.elapsedSeconds;
+        map.set(item.name, existing);
+      }
+    }
+  }
+  return Array.from(map.entries())
+    .map(([name, d]) => ({ name, remaining: d.remaining, oldestSeconds: d.oldestSeconds }))
+    .sort((a, b) => b.oldestSeconds - a.oldestSeconds);
+}
+
+function formatMins(seconds: number): string {
+  return `${Math.floor(seconds / 60)}m`;
+}
 
 interface ItemSummaryPanelProps {
   orders: Order[];
