@@ -388,6 +388,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 onAdvanceItem={onAdvanceItem}
                 onUndoItem={onUndoItem}
                 onDismissItem={onDismissItem}
+                compactRows={compactRows}
+                seenIdx={seenOrderIndex?.get(item.id)}
               />
             );
           });
