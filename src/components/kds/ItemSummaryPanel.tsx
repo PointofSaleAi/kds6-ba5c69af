@@ -211,7 +211,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   />
                 </button>
                 <div className="flex-1 flex items-center gap-1.5 py-2 pr-1">
-                  <Clock size={12} className="text-destructive shrink-0" />
+                  
                   <span className="text-[12px] uppercase tracking-widest font-bold text-destructive">
                     Overtime
                   </span>
