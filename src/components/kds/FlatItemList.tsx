@@ -140,7 +140,7 @@ function ItemTapRow({
     >
       <div
         className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
-        style={{ padding: `var(--kds-item-gap) 0 0 4px`, gap: 0 }}
+        style={{ padding: `1px 0 0 4px`, gap: 0 }}
         onClick={handleTap}
         title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
       >
@@ -225,7 +225,7 @@ function ItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
+            <div className="flex items-start" style={{ gap: '6px', marginTop: '1px' }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}&times;
               </span>
@@ -256,7 +256,7 @@ function ItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', marginTop: '2px', paddingLeft: '4px' }}>
+        <div className="flex items-start" style={{ gap: '6px', marginTop: '1px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
           </span>

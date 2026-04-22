@@ -483,9 +483,9 @@ function CourseItemTapRow({
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const stateOpacity = itemOpacity;
 
-  // FIX 1: Tighter top-row padding and tighter gaps between name / Seen-at / modifier-allergen blocks in grid view.
-  const headerPad = compactRows ? '1px 0 0 4px' : '2px 0 0 4px';
-  const allergenMt = compactRows ? '1px' : '2px';
+  // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
+  const headerPad = compactRows ? '1px 0 0 4px' : '1px 0 0 4px';
+  const allergenMt = compactRows ? '1px' : '1px';
 
   return (
     <div
@@ -628,7 +628,7 @@ function CourseItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }}>
+        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px', marginTop: '1px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
           </span>
