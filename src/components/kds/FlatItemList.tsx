@@ -226,9 +226,11 @@ function ItemTapRow({
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
             <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                {item.quantity}&times;
-              </span>
+              {!ticketLayoutCompact && (
+                <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+                  {item.quantity}&times;
+                </span>
+              )}
               <div className="flex flex-wrap items-center" style={{ gap: '4px' }}>
                 {item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
@@ -250,6 +252,7 @@ function ItemTapRow({
               onAdvanceModifier={onAdvanceModifier}
               onUndoModifier={onUndoModifier}
               parentQuantity={item.quantity}
+              hideQtySpacer={ticketLayoutCompact}
             />
           ))}
         </div>
@@ -257,9 +260,11 @@ function ItemTapRow({
 
       {showDetails && item.notes && !item.isCancelled && (
         <div className="flex items-start" style={{ gap: '6px', marginTop: '2px', paddingLeft: '4px' }}>
-          <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-            {item.quantity}&times;
-          </span>
+          {!ticketLayoutCompact && (
+            <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+              {item.quantity}&times;
+            </span>
+          )}
           <div
             className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
             style={{ fontSize: 'var(--kds-modifier)' }}
