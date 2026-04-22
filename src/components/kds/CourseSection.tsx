@@ -193,11 +193,10 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       ? { transition: 'all 200ms ease-in-out', opacity: 0.75 }
       : { transition: 'all 200ms ease-in-out' };
 
+  // FIX 2: QUEUED and SERVED course headers share the same muted gray background
   const headerBg = coursingStatus === 'active'
     ? ''
-    : coursingStatus === 'fired'
-      ? 'bg-muted/50'
-      : 'bg-muted';
+    : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
     ? { backgroundColor: agingColor ? `${agingColor}18` : '#EFF6FF' }
