@@ -104,7 +104,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     return (
       <div className="w-10 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-3 shrink-0">
         <button onClick={() => setCollapsed(false)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Expand panel">
-          <ChevronLeft size={16} />
+          <ChevronLeft size={18} strokeWidth={3} />
         </button>
         <span className="text-[10px] font-bold text-sidebar-foreground/70 mt-2 [writing-mode:vertical-lr]">{totalRemaining} to cook</span>
       </div>
@@ -121,7 +121,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground shrink-0" aria-label="Collapse panel">
-          <ChevronRight size={16} />
+          <ChevronRight size={18} strokeWidth={3} />
         </button>
       </div>
 
