@@ -526,7 +526,7 @@ function CourseItemTapRow({
               </span>
             )}
             {tappable && isSeen && timestamps?.seenAt && (
-              <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600 }} className="ml-1">
+              <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600 }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}
