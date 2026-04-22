@@ -151,18 +151,6 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow icon={Monitor} label={t.displayMode} right={<SegmentedToggle options={[t.grid, t.horizontal, t.stagger]} value={displayMode} onChange={setDisplayMode} />} />
             <SettingsRow icon={Monitor} label={t.cardsPerRow} right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
             <SettingsRow icon={Monitor} label={t.textSize} right={<SegmentedToggle options={[t.compact, t.standard, t.large]} value={textSize} onChange={setTextSize} />} />
-            <SettingsRow
-              icon={Monitor}
-              label="Ticket Density"
-              description={ticketDensity === 'compact' ? 'Compact, smaller fonts and tighter rows' : 'Large, default spacious layout'}
-              right={
-                <SegmentedToggle
-                  options={['Large', 'Compact']}
-                  value={ticketDensity === 'compact' ? 'Compact' : 'Large'}
-                  onChange={(v) => setTicketDensity(v === 'Compact' ? 'compact' : 'large')}
-                />
-              }
-            />
             <SettingsRow icon={Palette} label={t.statusColours} description={t.customiseStatusColours} onClick={() => onOpenSub('status-settings')} />
             <SettingsRow
               icon={theme === 'dark' ? Moon : Sun}
