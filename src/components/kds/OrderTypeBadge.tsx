@@ -27,6 +27,12 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
   const { orderTypeColors } = useKDSSettings();
   const bgColor = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
 
+  // For dine-in and banquet, the table/banquet name takes the place of the
+  // type label and is NOT repeated next to the time.
+  const useTableAsTitle = (type === 'dine-in' || type === 'banquet') && !!tableInfo;
+  const titleText = useTableAsTitle ? tableInfo! : to(typeLabels[type]);
+  const showTrailingTable = !useTableAsTitle && !!tableInfo;
+
   return (
     <div
       className="px-3 py-2 rounded-t-lg flex items-center justify-between gap-2"
@@ -34,7 +40,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
     >
       <div className="flex items-center gap-2 min-w-0">
         <span className="text-badge-type text-primary-foreground uppercase tracking-wider whitespace-nowrap">
-          {to(typeLabels[type])}
+          {titleText}
         </span>
         {stationBadge && (
           <span
@@ -47,7 +53,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
       </div>
       <div className="flex items-center gap-2 text-primary-foreground/80 text-modifier shrink-0">
         {time && <span>{time}</span>}
-        {tableInfo && <span>{tableInfo}</span>}
+        {showTrailingTable && <span>{tableInfo}</span>}
         {hasRecalled && (
           <span
             className="uppercase tracking-wide whitespace-nowrap"
