@@ -508,9 +508,6 @@ function CourseItemTapRow({
                 RECALLED
               </span>
             )}
-            {showAllergens && item.allergens.length > 0 && item.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} variant="item" />
-            ))}
             {tappable && isSeen && timestamps?.seenAt && (
               <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600 }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
@@ -544,6 +541,19 @@ function CourseItemTapRow({
                 </span>
               </span>
               <span>{tpSecondary(item.name)}</span>
+            </div>
+          )}
+
+          {showAllergens && item.allergens.length > 0 && (
+            <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+                {item.quantity}x
+              </span>
+              <div className="flex flex-wrap items-center" style={{ gap: '4px' }}>
+                {item.allergens.map((a) => (
+                  <AllergenBadge key={a.type} allergen={a} variant="item" />
+                ))}
+              </div>
             </div>
           )}
         </div>
