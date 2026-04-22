@@ -254,7 +254,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         <div
           className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
           style={{ padding: '4px 8px' }}
-          data-kds-course-header
           onClick={() => setServedExpanded(prev => !prev)}
         >
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -311,7 +310,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       <div
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
         style={{ ...headerStyle, padding: '4px 8px' }}
-        data-kds-course-header
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -487,7 +485,6 @@ function CourseItemTapRow({
       <div
         className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{ padding: headerPad, gap: 0 }}
-        data-kds-item-row
         onClick={tappable ? handleTap : undefined}
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
@@ -532,7 +529,6 @@ function CourseItemTapRow({
               <span
                 style={{ fontSize: '11px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600 }}
                 className="ml-1 shrink-0 whitespace-nowrap"
-                data-kds-seen-at
               >
                 {t.seenAt} {timestamps.seenAt}
               </span>
@@ -541,7 +537,6 @@ function CourseItemTapRow({
               <span
                 style={{ fontSize: '11px', color: '#374151', fontWeight: 600 }}
                 className="ml-1 shrink-0 whitespace-nowrap"
-                data-kds-seen-at
               >
                 {t.doneAt} {timestamps.doneAt}
               </span>
@@ -573,7 +568,7 @@ function CourseItemTapRow({
           )}
 
           {showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }} data-kds-allergens>
+            <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}x
               </span>
@@ -604,7 +599,7 @@ function CourseItemTapRow({
       )}
 
       {item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }} data-kds-item-notes>
+        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
           </span>

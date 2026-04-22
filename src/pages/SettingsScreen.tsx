@@ -4,7 +4,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send, Rows3 } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send } from 'lucide-react';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -100,7 +100,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const { theme, setTheme } = useTheme();
   const { t, languageName } = useLanguage();
   const { kot, label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
-  const { expoSendButtonMode, setExpoSendButtonMode, ticketDensity, setTicketDensity } = useKDSSettings();
+  const { expoSendButtonMode, setExpoSendButtonMode } = useKDSSettings();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
@@ -164,27 +164,6 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
               }
             />
             <SettingsRow icon={Globe} label={'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
-
-            {/* TICKET LAYOUT */}
-            <div className="px-4 pt-4 pb-1">
-              <div className="flex items-center gap-2 mb-1">
-                <Rows3 size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">Ticket Layout</span>
-              </div>
-            </div>
-            <SettingsRow
-              icon={Rows3}
-              label="Ticket Density"
-              description={ticketDensity === 'compact' ? 'Compact, denser tickets with smaller fonts' : 'Large, default spacious layout'}
-              right={
-                <SegmentedToggle
-                  options={['Large', 'Compact']}
-                  value={ticketDensity === 'compact' ? 'Compact' : 'Large'}
-                  onChange={(v) => setTicketDensity(v === 'Compact' ? 'compact' : 'large')}
-                />
-              }
-            />
-
 
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">

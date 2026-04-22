@@ -319,35 +319,6 @@
   --kds-cta: 14px;
 }
 
-/* Ticket Density: Compact mode overrides applied per-card via .kds-density-compact */
-.kds-density-compact {
-  --kds-item-name: 11px;
-  --kds-item-qty: 11px;
-  --kds-modifier: 10px;
-  --kds-course-header: 10px;
-  --kds-allergen-font: 9px;
-  --kds-allergen-py: 1px;
-  --kds-allergen-px: 4px;
-}
-.kds-density-compact [data-kds-course-header] {
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-}
-.kds-density-compact [data-kds-item-row] {
-  padding-top: 1px !important;
-  padding-bottom: 1px !important;
-}
-.kds-density-compact [data-kds-allergens] {
-  margin-top: 2px !important;
-}
-.kds-density-compact [data-kds-seen-at],
-.kds-density-compact [data-kds-item-notes] {
-  display: none !important;
-}
-.kds-density-compact [data-kds-order-notes] {
-  font-size: 11px !important;
-}
-
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

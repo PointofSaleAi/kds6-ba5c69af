@@ -43,7 +43,7 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           style={{ padding: '4px 0 4px 4px', gap: 0 }}
         >
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] text-text-primary leading-snug" data-kds-order-notes>
+            <div className="text-[13px] text-text-primary leading-snug">
               {notes}
             </div>
           </div>
