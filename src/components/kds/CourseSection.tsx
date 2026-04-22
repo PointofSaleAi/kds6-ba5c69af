@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Languages, Eye, Check, ConciergeBell } from 'lucide-react';
+import { Languages, Eye, Check, ConciergeBell, ChevronRight } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -7,6 +7,7 @@ import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -90,6 +91,8 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang } = useLanguage();
+  const { ticketLayout } = useKDSSettings();
+  const ticketLayoutCompact = ticketLayout === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
