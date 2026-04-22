@@ -58,9 +58,9 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
           {seenOrders.length}
         </span>
       </div>
-      <div className="flex-1 overflow-auto p-3">
+      <div className="flex-1 overflow-auto p-2">
         {isPortrait ? (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
