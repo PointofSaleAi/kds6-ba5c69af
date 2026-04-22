@@ -58,9 +58,9 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
           {seenOrders.length}
         </span>
       </div>
-      <div className="flex-1 overflow-auto p-3">
+      <div className="flex-1 overflow-auto p-2">
         {isPortrait ? (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
@@ -70,17 +70,17 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             </AnimatePresence>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="flex flex-row flex-wrap gap-3 items-start">
+          <div className="grid gap-2 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
+                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
                   <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
         ) : viewMode === 'horizontal' ? (
-          <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+          <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
