@@ -141,7 +141,7 @@ function ItemTapRow({
               {item.quantity}&times;
             </span>
             <span
-              className={`font-semibold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
+              className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
               style={{ fontSize: 'var(--kds-item-name)' }}
             >
               {tp(item.name)}
@@ -184,7 +184,7 @@ function ItemTapRow({
           {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
-              className="flex items-center font-semibold uppercase text-text-muted"
+              className="flex items-center font-bold uppercase text-text-muted"
               style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
               <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>

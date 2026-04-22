@@ -36,7 +36,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
           {parentQuantity}&times;
         </span>
         <span
-          className={`flex-1 min-w-0 font-semibold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
+          className={`flex-1 min-w-0 font-bold uppercase text-text-primary ${isDone ? 'line-through opacity-50' : ''}`}
           style={{ fontSize: 'var(--kds-item-name)', lineHeight: '1.2' }}
         >
           {tm(modifier.text)}
@@ -67,7 +67,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         {parentQuantity}&times;
       </span>
       <span
-        className={`min-w-0 font-medium ${styles[modifier.type]}`}
+        className={`min-w-0 font-semibold ${styles[modifier.type]}`}
         style={{ fontSize: 'var(--kds-modifier)', lineHeight: '1.3' }}
       >
         {tm(modifier.text)}

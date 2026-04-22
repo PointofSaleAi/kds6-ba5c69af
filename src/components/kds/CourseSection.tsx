@@ -481,7 +481,7 @@ function CourseItemTapRow({
               {item.quantity}x
             </span>
             <span
-              className={`font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
+              className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
               style={{
                 fontSize: 'var(--kds-item-name)',
                 ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
@@ -527,7 +527,7 @@ function CourseItemTapRow({
           {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
-              className="relative flex items-center font-semibold uppercase text-text-muted"
+              className="relative flex items-center font-bold uppercase text-text-muted"
               style={{
                 gap: 'var(--kds-item-gap)',
                 marginTop: '0px',

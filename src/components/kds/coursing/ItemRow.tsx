@@ -23,7 +23,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           <span className="text-[13px] font-normal text-text-secondary">
             {item.quantity}×
           </span>
-          <span className="text-[13px] font-medium text-text-primary uppercase">
+          <span className="text-[13px] font-bold text-text-primary uppercase">
             {tp(item.name)}
           </span>
           {item.allergens.map((a) => (
@@ -34,7 +34,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         {displayMode === 'dual' && showSecondaryMenu && (
           <div
             dir={secondaryDir}
-            className="flex items-center text-[11px] font-semibold uppercase"
+            className="flex items-center text-[11px] font-bold uppercase"
             style={{ gap: '6px', marginTop: '1px', color: '#AAAAAA' }}
           >
             <span className="relative text-[13px] font-normal shrink-0">
@@ -54,7 +54,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             {item.modifiers.map((mod, idx) => (
               <div
                 key={idx}
-                className={`flex items-center ${
+                className={`flex items-center font-semibold ${
                   mod.type === 'extra'
                     ? 'text-modifier-extra'
                     : mod.type === 'remove'
