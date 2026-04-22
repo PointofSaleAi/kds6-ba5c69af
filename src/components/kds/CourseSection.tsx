@@ -334,7 +334,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           )}
           {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted" style={{ color: '#AAAAAA' }}>
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-text-primary">
               {t.preparingAt} {firingAtLabel}
             </span>
           )}
