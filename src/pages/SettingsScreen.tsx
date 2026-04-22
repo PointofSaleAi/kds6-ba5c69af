@@ -100,7 +100,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const { theme, setTheme } = useTheme();
   const { t, languageName } = useLanguage();
   const { kot, label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
-  const { expoSendButtonMode, setExpoSendButtonMode } = useKDSSettings();
+  const { expoSendButtonMode, setExpoSendButtonMode, ticketLayout, setTicketLayout } = useKDSSettings();
   const [displayMode, setDisplayMode] = useState('Grid');
   const [textSize, setTextSize] = useState('Standard');
   const [cardsPerRow, setCardsPerRow] = useState(4);
@@ -151,6 +151,18 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow icon={Monitor} label={t.displayMode} right={<SegmentedToggle options={[t.grid, t.horizontal, t.stagger]} value={displayMode} onChange={setDisplayMode} />} />
             <SettingsRow icon={Monitor} label={t.cardsPerRow} right={<StepperControl value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />} />
             <SettingsRow icon={Monitor} label={t.textSize} right={<SegmentedToggle options={[t.compact, t.standard, t.large]} value={textSize} onChange={setTextSize} />} />
+            <SettingsRow
+              icon={Monitor}
+              label="Ticket layout"
+              description={ticketLayout === 'compact' ? 'Compact, item names only, tap to expand' : 'Standard, full details visible'}
+              right={
+                <SegmentedToggle
+                  options={['Standard', 'Compact']}
+                  value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
+                  onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
+                />
+              }
+            />
             <SettingsRow icon={Palette} label={t.statusColours} description={t.customiseStatusColours} onClick={() => onOpenSub('status-settings')} />
             <SettingsRow
               icon={theme === 'dark' ? Moon : Sun}

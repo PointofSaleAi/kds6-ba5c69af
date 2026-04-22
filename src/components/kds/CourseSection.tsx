@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Languages, Eye, Check, ConciergeBell } from 'lucide-react';
+import { Languages, Eye, Check, ConciergeBell, ChevronRight } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -7,6 +7,7 @@ import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -90,6 +91,8 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang } = useLanguage();
+  const { ticketLayout } = useKDSSettings();
+  const ticketLayoutCompact = ticketLayout === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;
@@ -390,6 +393,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 onDismissItem={onDismissItem}
                 compactRows={compactRows}
                 seenIdx={seenOrderIndex?.get(item.id)}
+                ticketLayoutCompact={ticketLayoutCompact}
               />
             );
           });
@@ -427,6 +431,7 @@ interface CourseItemTapRowProps {
   onDismissItem?: (itemId: string) => void;
   compactRows?: boolean;
   seenIdx?: number;
+  ticketLayoutCompact?: boolean;
 }
 
 function CourseItemTapRow({
@@ -436,9 +441,17 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
-  compactRows, seenIdx,
+  compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const hasDetails =
+    (showAllergens && item.allergens.length > 0) ||
+    item.modifiers.length > 0 ||
+    !!item.notes ||
+    (displayMode === 'dual' && showSecondaryMenu && !item.isCancelled);
+  const showDetails = !ticketLayoutCompact || detailsOpen;
 
   const handleSingle = () => {
     if (!tappable) return;
@@ -488,6 +501,22 @@ function CourseItemTapRow({
         onClick={tappable ? handleTap : undefined}
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
+        {ticketLayoutCompact && hasDetails && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
+            aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
+            aria-expanded={detailsOpen}
+            className="shrink-0 mr-1 flex items-center justify-center rounded hover:bg-muted/60"
+            style={{ width: 18, height: 18 }}
+          >
+            <ChevronRight
+              size={14}
+              className="text-text-muted transition-transform duration-200"
+              style={{ transform: detailsOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+            />
+          </button>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-nowrap min-w-0" style={{ gap: 'var(--kds-item-gap)' }}>
             <span
@@ -543,7 +572,7 @@ function CourseItemTapRow({
             )}
           </div>
 
-          {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
+          {showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
               className={`relative flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
@@ -567,7 +596,7 @@ function CourseItemTapRow({
             </div>
           )}
 
-          {showAllergens && item.allergens.length > 0 && (
+          {showDetails && showAllergens && item.allergens.length > 0 && (
             <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}x
@@ -582,7 +611,7 @@ function CourseItemTapRow({
         </div>
       </div>
 
-      {item.modifiers.length > 0 && (
+      {showDetails && item.modifiers.length > 0 && (
         <div className={isDone ? 'line-through' : ''}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
@@ -598,7 +627,7 @@ function CourseItemTapRow({
         </div>
       )}
 
-      {item.notes && !item.isCancelled && (
+      {showDetails && item.notes && !item.isCancelled && (
         <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
