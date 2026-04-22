@@ -174,7 +174,7 @@ function ItemTapRow({
               </span>
             )}
             {isDone && timestamps?.doneAt && (
-              <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600 }} className="ml-1">
+              <span style={{ fontSize: '10px', color: '#374151', fontWeight: 600 }} className="ml-1">
                 {t.doneAt} {timestamps.doneAt}
               </span>
             )}
