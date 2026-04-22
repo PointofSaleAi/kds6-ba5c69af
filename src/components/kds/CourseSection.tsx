@@ -425,6 +425,8 @@ interface CourseItemTapRowProps {
   onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
   onDismissItem?: (itemId: string) => void;
+  compactRows?: boolean;
+  seenIdx?: number;
 }
 
 function CourseItemTapRow({
