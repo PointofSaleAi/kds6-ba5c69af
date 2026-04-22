@@ -222,7 +222,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         : 'uppercase text-text-secondary tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
-    ? { color: agingColor || '#0F4C81', fontWeight: 600, fontSize: '14px' }
+    ? { color: agingColor || '#0F4C81', fontWeight: 600, fontSize: 'var(--kds-course-header)' }
     : { fontWeight: 500 };
 
   // Course-level icon for active courses - purple/violet to distinguish from item-level
@@ -312,14 +312,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     <div className={containerClass} style={containerStyle}>
       <div
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
-        style={{ ...headerStyle, padding: '4px 8px' }}
+        style={{ ...headerStyle, padding: coursingStatus === 'active' ? '2px 8px' : '4px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
           <span className={`text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} style={{ fontSize: 'var(--kds-course-header)' }}>
             ▶
           </span>
-          <span className={labelClass} style={{ ...labelStyle, ...(coursingStatus !== 'active' ? { fontSize: 'var(--kds-course-header)' } : {}) }}>
+          <span className={labelClass} style={{ ...labelStyle, fontSize: 'var(--kds-course-header)' }}>
             {courseLabel}
           </span>
         </div>
