@@ -1,181 +1,67 @@
 
-## Goal
-Make Settings > Language work visibly and reliably so:
-- changing Primary/Secondary languages updates the preview ticket and live KDS cards,
-- Language Scope clearly affects app chrome vs menu content,
-- saving is no longer misleading.
+Goal: fix the Summary panel by making its Overtime logic use the same source of truth as the ticket cards, so products like Tiramisu appear correctly and category-row styling no longer gives false overtime signals.
 
-## Root issue summary
+1. Unify the aging logic
+- Extract the ticket aging decision into a shared helper used by both `OrderCard.tsx` and `ItemSummaryPanel.tsx`.
+- Base the helper on the real ticket rules:
+  - Dine-in + course-level aging on: only the current active course can become overtime
+  - All other cases: use order-level elapsed time
+- Stop relying on `ItemSummaryPanel`'s separate approximation of overtime from raw `_startedAt` and quantity totals.
 
-### 1. The state layer is mostly present; the visible UI layer is what is broken
-`src/hooks/use-language.tsx` already persists:
-- `primaryLang`
-- `secondaryLang`
-- `displayMode`
-- `scope`
+2. Move course activation timing out of local card-only state
+- The current card uses local `courseActivatedAt` state inside `OrderCard.tsx`, which the Summary panel cannot see.
+- Persist course activation timing in shared order data so both the cards and Summary read the same timestamps.
+- Likely implementation:
+  - update the order/course data in `MainOrderView.tsx` or `use-order-store.tsx`
+  - set the active course start when a course becomes active
+  - let `OrderCard.tsx` read from that shared timestamp instead of its private state
 
-So the main failure is not “save doesn’t store it”. The bigger problem is that many rendered surfaces still do not show those state changes clearly or consistently.
+3. Rebuild Summary aggregation from item-level overtime facts
+- Refactor `ItemSummaryPanel.tsx` so it first builds a normalized list of visible active items with:
+  - product name
+  - category
+  - quantity
+  - overtime boolean
+  - overtime occurrence count
+  - oldest elapsed seconds
+- Then derive:
+  - Overtime section = only overtime items, grouped by product name
+  - Category sections = all products, still grouped by category, with overtime products also marked inside their category
 
-### 2. The preview and seeded live cards contain many untranslated strings
-Several strings used in preview/live data are not covered by the current dictionaries, so the card appears unchanged even when language state changes.
+4. Fix the Overtime count definition
+- Show overtime counts as overtime item occurrences, not summed product quantity.
+- Example:
+  - one overtime ticket with `Tiramisu x8` should contribute `1` to the Overtime section
+  - two overtime tickets containing Tiramisu should show `2`
 
-Examples found in seeded data:
-- `Bruschetta`
-- `Cheesecake`
-- `Mango Sticky Rice`
-- `Pan-Seared Salmon`
-- `Greek Salad`
-- `Chicken Wrap`
-- `Chocolate Brownie`
-- modifiers like `No Dill`, `No Onions`, `Vanilla Ice Cream`, `Extra Croutons` without the canonical `+ ` prefix
+5. Remove misleading quantity-based urgency styling in Summary rows
+- The current red/orange category-row styling is driven by total quantity (`remaining >= 10`, `>= 5`), not real overtime.
+- Replace that with overtime-aware styling so a row is highlighted because it is actually overtime, not because many are ordered.
+- Keep rows static, with no pulse or blink effect for Panna Cotta or any other Summary item.
 
-This affects:
-- `src/data/mock-preview-ticket.ts`
-- `src/data/mock-orders.ts`
-- `src/data/mock-coursing-order.ts`
-- `src/data/mock-expo-orders.ts`
+6. Keep the existing interaction model
+- Preserve the current tap behavior:
+  - tapping an overtime product filters tickets and moves matching tickets to the top
+  - tapping a category still filters by category
+- Keep the existing category-header layout, spacing, and typography as the visual reference.
 
-### 3. Some visible order-card labels are still hardcoded English
-Even with scope gating in the hook, parts of the ticket UI stay English because they do not use translated keys:
-- `CourseSection.tsx` hardcodes `Served`, `Active`, `Queued`, `Done at`
-- Language screen labels are also partly hardcoded: `Display mode`, `Single language`, `Dual language`, `Language pair`, `Select language`, `Request a language`, `Save`, `Preview - KDS ticket`
+7. Files to update
+- `src/components/kds/ItemSummaryPanel.tsx`
+- `src/components/kds/OrderCard.tsx`
+- `src/pages/MainOrderView.tsx` and/or `src/hooks/use-order-store.tsx`
+- possibly a new shared helper file such as `src/components/kds/aging-utils.ts` or `src/lib/kds-aging.ts`
 
-That makes “Interface / Menu / Both” look broken, because important chrome text ignores the translator.
+8. Regression tests
+- Add focused tests for the shared aging helper and Summary aggregation:
+  - active dine-in dessert becomes overtime and appears in Overtime section
+  - Tiramisu count reflects overtime occurrences, not quantity
+  - overtime products also remain visible inside their normal category
+  - Panna Cotta Summary row has no animation class
+  - category-row styling reflects overtime state, not quantity thresholds
 
-### 4. Dual mode still shows a second line even when scope excludes menu translation
-When `scope === 'interface'`, menu translators intentionally return source text. In dual mode that can produce two identical lines, which makes it look like Primary/Secondary selection is not doing anything.
-
-This affects live card renderers such as:
-- `src/components/kds/coursing/ItemRow.tsx`
-- `src/components/kds/CourseSection.tsx`
-- `src/components/kds/FlatItemList.tsx`
-- `src/components/kds/ItemRoutingModal.tsx`
-
-### 5. Existing tests validate hook output, not what the user actually sees
-Current coverage proves the hook can return translated strings, but not that:
-- the preview ticket changes,
-- the live order card changes,
-- the app chrome changes,
-- scope visually behaves correctly.
-
-## Implementation plan
-
-### 1. Make the language system expose what the UI needs
-Update `src/hooks/use-language.tsx` to provide a small, explicit render contract for components:
-- keep current persistence for `language`, `primaryLang`, `secondaryLang`, `displayMode`, `scope`
-- add a helper/flag for whether secondary menu text should render in the UI when scope excludes menu translation
-- expand `Translations` with missing interface strings used in the Language screen and order-card chrome
-
-Add translation keys for items like:
-- display mode labels
-- single/dual language labels
-- language pair labels
-- select language labels
-- preview title
-- request language CTA
-- save button text
-- course status words such as active/queued/served
-- timestamp labels like done/seen where they are part of UI chrome
-
-### 2. Replace hardcoded Language-screen text with translated UI strings
-Update:
-- `src/components/kds/InlineLanguageSettings.tsx`
-- `src/pages/LanguageSettings.tsx`
-- any related Settings header text if needed
-
-So the Language settings screen itself responds to scope correctly:
-- Interface scope: Language screen chrome translates
-- Menu scope: Language screen chrome stays English
-- Both: both change as expected
-
-### 3. Fix order-card chrome so scope is visibly correct
-Update `src/components/kds/CourseSection.tsx` to stop mixing translated course names with hardcoded English status labels.
-
-Use:
-- `tc(...)` for course names
-- `t...` keys for card chrome/status words like `Active`, `Queued`, `Served`, `Done at`, `Seen`
-
-This makes scope behavior intuitive:
-- Interface only: status/chrome can translate while menu names stay source
-- Menu only: item/course/order-type/allergen content translates while chrome stays English
-
-### 4. Hide or suppress duplicate secondary lines when scope is Interface
-In dual mode, if menu translation is excluded, do not render a misleading second line that is identical to the primary line.
-
-Apply consistently in:
-- `src/components/kds/coursing/ItemRow.tsx`
-- `src/components/kds/CourseSection.tsx`
-- `src/components/kds/FlatItemList.tsx`
-- `src/components/kds/ItemRoutingModal.tsx`
-
-Result:
-- Primary/Secondary changes are obvious when scope includes menu
-- Interface scope no longer looks “stuck” because duplicate English lines disappear
-
-### 5. Normalize preview and seeded demo data to strings that are actually translatable
-Revise preview and seeded mock data so visible demo items/modifiers/allergens use canonical dictionary-backed values.
-
-Priority files:
-- `src/data/mock-preview-ticket.ts`
-- `src/data/mock-orders.ts`
-- `src/data/mock-coursing-order.ts`
-- `src/data/mock-expo-orders.ts`
-
-Two acceptable approaches:
-- add missing dictionary entries for all currently used strings, or
-- replace mock strings with already-supported canonical strings
-
-Preferred approach:
-- keep the preview strictly canonical and translation-safe
-- optionally expand dictionaries for live seeded data where needed
-
-### 6. Do a translation sweep on visible live KDS surfaces
-Audit the main user-visible KDS surfaces and move any remaining hardcoded UI chrome to `t`:
-- Language screen
-- Settings sub-screen titles where relevant
-- order-card chrome
-- any nearby ticket labels surfaced in preview/live KDS
-
-This is a focused sweep, not a full app rewrite.
-
-### 7. Add rendered component tests for real user behavior
-Add component-level tests that render actual UI, not only the hook.
-
-#### New tests
-1. `InlineLanguageSettings`
-- dual mode + changing Primary updates preview main line
-- dual mode + changing Secondary updates preview secondary line
-- Interface scope changes UI chrome but not menu item text
-- Menu scope changes menu item text but not UI chrome
-- Both changes both
-
-2. Live KDS card rendering
-- render a real `OrderCard` with `previewTicket` or a controlled mock
-- verify primary line, secondary line, course label, allergen, and order type react correctly to scope/language changes
-
-3. Course chrome test
-- `CourseSection` shows translated course name and correct scope-gated status words
-
-## Files to update
-- `src/hooks/use-language.tsx`
-- `src/components/kds/InlineLanguageSettings.tsx`
-- `src/pages/LanguageSettings.tsx`
-- `src/components/kds/CourseSection.tsx`
-- `src/components/kds/coursing/ItemRow.tsx`
-- `src/components/kds/FlatItemList.tsx`
-- `src/components/kds/ItemRoutingModal.tsx`
-- `src/data/mock-preview-ticket.ts`
-- `src/data/mock-orders.ts`
-- `src/data/mock-coursing-order.ts`
-- `src/data/mock-expo-orders.ts`
-- new/updated tests under `src/components/kds/__tests__` and `src/hooks/__tests__`
-
-## Acceptance criteria
-- Changing Primary language visibly changes the main item line in the preview ticket and live KDS cards.
-- Changing Secondary language visibly changes the secondary line when dual mode is active and scope includes menu translation.
-- Interface scope changes Language-screen/UI chrome and ticket chrome, while menu item names/modifiers/course names stay source language.
-- Menu scope changes menu-facing content on preview/live cards, while UI chrome remains English.
-- Both changes both.
-- In Interface scope, dual mode does not show a confusing duplicate secondary line.
-- Preview/demo data always demonstrates language changes clearly.
-- Rendered tests cover preview and live order-card behavior, not just hook return values.
+9. Expected result after implementation
+- Tiramisu appears in the Overtime section whenever the same ticket logic marks it overtime
+- The Overtime number is correct
+- The same product also remains visible in Desserts
+- Panna Cotta is static
+- Summary and ticket cards stay synchronized because both read the same aging state
