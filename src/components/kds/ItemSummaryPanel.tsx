@@ -103,14 +103,21 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const [collapsed, setCollapsed] = useState(false);
   const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
+  // Tick every 10s to refresh live elapsed times
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNowMs(Date.now()), 10000);
+    return () => clearInterval(id);
+  }, []);
+
   // Overtime threshold = minMinutes of the last (open-ended) rule
   const overtimeThresholdSec = useMemo(() => {
     const last = rules[rules.length - 1];
     return (last?.minMinutes ?? 21) * 60;
   }, [rules]);
   const overtimeItems = useMemo(
-    () => buildOvertimeItems(orders, overtimeThresholdSec, stationCourse),
-    [orders, overtimeThresholdSec, stationCourse]
+    () => buildOvertimeItems(orders, overtimeThresholdSec, nowMs, stationCourse),
+    [orders, overtimeThresholdSec, nowMs, stationCourse]
   );
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.remaining, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
