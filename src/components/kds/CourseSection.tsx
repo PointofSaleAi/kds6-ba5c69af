@@ -484,8 +484,8 @@ function CourseItemTapRow({
   const stateOpacity = itemOpacity;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
-  const headerPad = compactRows ? '1px 0 0 4px' : '1px 0 0 4px';
-  const allergenMt = compactRows ? '1px' : '1px';
+  const headerPad = compactRows ? '0px 0 0 4px' : '0px 0 0 4px';
+  const allergenMt = compactRows ? '0px' : '0px';
 
   return (
     <div
@@ -628,7 +628,7 @@ function CourseItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px', marginTop: '1px' }}>
+        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px', marginTop: '0px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
           </span>
