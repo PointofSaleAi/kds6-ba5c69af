@@ -459,12 +459,12 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = teal.
+  // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = amber for clear contrast.
   const useTeal = isSeen && typeof seenIdx === 'number' && seenIdx % 2 === 1;
-  const seenBgGreen = 'rgba(29, 158, 117, 0.10)';
-  const seenBgTeal = 'rgba(13, 148, 168, 0.12)';
+  const seenBgGreen = 'rgba(29, 158, 117, 0.14)';
+  const seenBgTeal = 'rgba(245, 158, 11, 0.18)';
   const seenTextGreen = '#0F5132';
-  const seenTextTeal = '#0E7490';
+  const seenTextTeal = '#92400E';
 
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
