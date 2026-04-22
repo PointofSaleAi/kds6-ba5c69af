@@ -694,7 +694,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         )}
 
-        <div className="border-t border-border">
+        <div className="border-t border-border pb-2">
           {isDineIn ? (
             sortedDisplayCourses.map((courseGroup) => {
                 const lifecycleStatus = courseLifecycleMap.get(courseGroup.course) || 'pending';
