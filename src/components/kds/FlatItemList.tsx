@@ -161,16 +161,16 @@ function ItemTapRow({
           </button>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
+          <div className="flex items-center flex-wrap" style={{ gap: '6px', lineHeight: 1.1 }}>
             <span
               className={`font-normal ${isDone ? 'line-through' : ''}`}
-              style={{ fontSize: 'var(--kds-item-qty)' }}
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1 }}
             >
               {item.quantity}&times;
             </span>
             <span
               className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
-              style={{ fontSize: 'var(--kds-item-name)' }}
+              style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1 }}
             >
               {tp(item.name)}
             </span>
@@ -225,7 +225,7 @@ function ItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-center" style={{ gap: '6px', marginTop: '0px', lineHeight: 1 }}>
+            <div className="flex items-center" style={{ gap: '6px', marginTop: '-2px', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}&times;
               </span>
