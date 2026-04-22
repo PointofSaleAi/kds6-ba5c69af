@@ -347,6 +347,8 @@
 .kds-density-compact [data-kds-order-notes] {
   font-size: 11px !important;
 }
+
+.scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
