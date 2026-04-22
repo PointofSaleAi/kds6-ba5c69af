@@ -464,14 +464,19 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     const targetStatus: ItemStatus = ticketState === 'seen' ? 'preparing' : 'done';
     setItemStatuses(prev => {
       const next = new Map(prev);
+      const newlySeen: string[] = [];
       targetIds.forEach(id => {
         const current = next.get(id);
         // Skip items already at or past the target status
         if (current === 'done') return;
         if (current === 'preparing' && targetStatus === 'preparing') return;
+        if (!current && (targetStatus === 'preparing' || targetStatus === 'done')) {
+          newlySeen.push(id);
+        }
         next.set(id, targetStatus);
         onItemStatusChange?.(id, targetStatus);
       });
+      if (newlySeen.length > 0) assignSeenIndex(newlySeen);
       return next;
     });
     setItemTimestamps(prev => {
