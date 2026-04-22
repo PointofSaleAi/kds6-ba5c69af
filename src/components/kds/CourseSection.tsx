@@ -393,6 +393,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 onDismissItem={onDismissItem}
                 compactRows={compactRows}
                 seenIdx={seenOrderIndex?.get(item.id)}
+                ticketLayoutCompact={ticketLayoutCompact}
               />
             );
           });
@@ -430,6 +431,7 @@ interface CourseItemTapRowProps {
   onDismissItem?: (itemId: string) => void;
   compactRows?: boolean;
   seenIdx?: number;
+  ticketLayoutCompact?: boolean;
 }
 
 function CourseItemTapRow({
@@ -439,9 +441,17 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
-  compactRows, seenIdx,
+  compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const hasDetails =
+    (showAllergens && item.allergens.length > 0) ||
+    item.modifiers.length > 0 ||
+    !!item.notes ||
+    (displayMode === 'dual' && showSecondaryMenu && !item.isCancelled);
+  const showDetails = !ticketLayoutCompact || detailsOpen;
 
   const handleSingle = () => {
     if (!tappable) return;
