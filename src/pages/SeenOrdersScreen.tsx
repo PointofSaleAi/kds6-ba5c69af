@@ -70,7 +70,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
             </AnimatePresence>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="flex flex-row flex-wrap gap-3 items-start">
+          <div className="grid gap-2 items-start grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <AnimatePresence mode="popLayout">
               {seenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
