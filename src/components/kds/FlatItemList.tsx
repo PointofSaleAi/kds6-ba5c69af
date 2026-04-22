@@ -135,13 +135,13 @@ function ItemTapRow({
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
             <span
-              className="font-normal"
+              className={`font-normal ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)' }}
             >
               {item.quantity}&times;
             </span>
             <span
-              className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'}`}
+              className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
               style={{ fontSize: 'var(--kds-item-name)' }}
             >
               {tp(item.name)}
@@ -184,7 +184,7 @@ function ItemTapRow({
           {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
-              className="flex items-center font-bold uppercase text-text-muted"
+              className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
               style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
               <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
@@ -202,7 +202,7 @@ function ItemTapRow({
       </div>
 
       {item.modifiers.length > 0 && (
-        <div>
+        <div className={isDone ? 'line-through' : ''}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
@@ -223,7 +223,7 @@ function ItemTapRow({
             {item.quantity}&times;
           </span>
           <div
-            className="italic leading-snug min-w-0 text-text-muted"
+            className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
             style={{ fontSize: 'var(--kds-modifier)' }}
           >
             "{item.notes}"
