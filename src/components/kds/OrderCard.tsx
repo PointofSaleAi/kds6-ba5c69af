@@ -536,8 +536,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         nonDoneIds.forEach(id => next.delete(id));
         return next;
       });
+      nonDoneIds.forEach(id => clearSeenIndex(id));
     }
-  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen]);
+  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen, itemStatuses, clearSeenIndex]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
