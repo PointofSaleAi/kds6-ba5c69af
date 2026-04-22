@@ -453,9 +453,8 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // Tapped rows (seen / done) use ONLY a very light green tint.
-  // No dark overlay, no opacity dim, no text color or strikethrough changes.
-  const stateBg = tappable && (isSeen || isDone) ? 'rgba(29, 158, 117, 0.10)' : undefined;
+  // Seen rows use a very light green tint; Done rows use a light grey tint.
+  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? 'rgba(29, 158, 117, 0.10)' : undefined);
   const stateOpacity = itemOpacity;
 
   return (
