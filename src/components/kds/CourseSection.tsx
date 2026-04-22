@@ -343,7 +343,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             opacity: isExpanded ? 1 : 0,
           }}
         >
-        <div className="px-2 py-0.5">
+        <div className="px-2">
           {(() => {
           const visibleItems = courseGroup.items.filter((item) => {
             if (dismissedItemIds?.has(item.id)) return false;
@@ -566,7 +566,7 @@ function CourseItemTapRow({
       )}
 
       {item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', paddingBottom: '2px', paddingLeft: '4px' }}>
+        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
           </span>
