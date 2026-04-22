@@ -170,17 +170,24 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return map;
   }, [isDineIn, displayCourses, itemStatuses, confirmedCourses]);
 
-  // Track when each course became "active" for course-level aging
+  // Track when each course became "active" for course-level aging.
+  // Prefers the shared `_startedAt` field on the course (so the Summary panel
+  // reads the same value); falls back to local tracking if not provided.
   const [courseActivatedAt, setCourseActivatedAt] = useState<Map<string, Date>>(() => {
-    // First course starts when order was received
     const map = new Map<string, Date>();
-    if (isDineIn && displayCourses.length > 0) {
-      map.set(displayCourses[0].course, order.timeReceived);
+    if (isDineIn) {
+      for (const c of displayCourses) {
+        if (c._startedAt) map.set(c.course, c._startedAt);
+      }
+      // Ensure first course has a starting time
+      if (displayCourses.length > 0 && !map.has(displayCourses[0].course)) {
+        map.set(displayCourses[0].course, order.timeReceived);
+      }
     }
     return map;
   });
 
-  // When a course transitions to active, record the activation time
+  // When a course transitions to active, record activation time (fallback path).
   useEffect(() => {
     if (!isDineIn || !courseLevelAging) return;
     setCourseActivatedAt(prev => {
@@ -188,13 +195,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       const next = new Map(prev);
       for (const [course, status] of courseLifecycleMap) {
         if (status === 'active' && !next.has(course)) {
-          next.set(course, new Date());
+          // Prefer course._startedAt from shared data, else stamp now
+          const cg = displayCourses.find(c => c.course === course);
+          next.set(course, cg?._startedAt ?? new Date());
           changed = true;
         }
       }
       return changed ? next : prev;
     });
-  }, [courseLifecycleMap, isDineIn, courseLevelAging]);
+  }, [courseLifecycleMap, isDineIn, courseLevelAging, displayCourses]);
 
   // Compute per-course status colors when course-level aging is enabled
   // Depends on liveElapsed to force recalculation every second
@@ -203,7 +212,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     const now = Date.now();
     const map = new Map<string, { color: string; textColor: string }>();
     for (const c of displayCourses) {
-      const activatedAt = courseActivatedAt.get(c.course);
+      const activatedAt = courseActivatedAt.get(c.course) ?? c._startedAt;
       if (activatedAt) {
         const elapsed = Math.max(0, Math.floor((now - activatedAt.getTime()) / 1000));
         const status = getStatusForElapsed(elapsed);
