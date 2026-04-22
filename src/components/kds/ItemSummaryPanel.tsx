@@ -350,7 +350,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const isCritical = item.remaining >= 10;
                       const isHigh = !isCritical && item.remaining >= 5;
                       const tierClass = isCritical
-                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
+                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive'
                         : isHigh
                           ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
                           : '';
