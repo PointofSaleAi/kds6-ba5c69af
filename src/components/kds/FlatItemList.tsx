@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
-import { Languages } from 'lucide-react';
+import { Languages, ChevronRight } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
@@ -24,6 +26,8 @@ interface FlatItemListProps {
 
 export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary, t, showSecondaryMenu, secondaryLang } = useLanguage();
+  const { ticketLayout } = useKDSSettings();
+  const ticketLayoutCompact = ticketLayout === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
 
   const allItems = courses.flatMap(c => c.items);
@@ -61,6 +65,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             onAdvanceItem={onAdvanceItem}
             onUndoItem={onUndoItem}
             onDismissItem={onDismissItem}
+            ticketLayoutCompact={ticketLayoutCompact}
           />
         );
       });
@@ -88,14 +93,22 @@ interface ItemTapRowProps {
   onAdvanceItem: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem: (itemId: string) => void;
   onDismissItem?: (itemId: string) => void;
+  ticketLayoutCompact?: boolean;
 }
 
 function ItemTapRow({
   item, status, timestamps, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
-  onAdvanceItem, onUndoItem, onDismissItem,
+  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const hasDetails =
+    (showAllergens && item.allergens.length > 0) ||
+    item.modifiers.length > 0 ||
+    !!item.notes ||
+    (displayMode === 'dual' && showSecondaryMenu && !item.isCancelled);
+  const showDetails = !ticketLayoutCompact || detailsOpen;
   const handleSingle = () => {
     if (item.isCancelled) return;
     if (status === 'done') {
@@ -131,6 +144,22 @@ function ItemTapRow({
         onClick={handleTap}
         title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
       >
+        {ticketLayoutCompact && hasDetails && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
+            aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
+            aria-expanded={detailsOpen}
+            className="shrink-0 mr-1 flex items-center justify-center rounded hover:bg-muted/60"
+            style={{ width: 18, height: 18 }}
+          >
+            <ChevronRight
+              size={14}
+              className="text-text-muted transition-transform duration-200"
+              style={{ transform: detailsOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+            />
+          </button>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
             <span
@@ -177,7 +206,7 @@ function ItemTapRow({
             )}
           </div>
 
-          {displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
+          {showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
               dir={secondaryDir}
               className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
@@ -195,7 +224,7 @@ function ItemTapRow({
             </div>
           )}
 
-          {showAllergens && item.allergens.length > 0 && (
+          {showDetails && showAllergens && item.allergens.length > 0 && (
             <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}&times;
@@ -210,7 +239,7 @@ function ItemTapRow({
         </div>
       </div>
 
-      {item.modifiers.length > 0 && (
+      {showDetails && item.modifiers.length > 0 && (
         <div className={isDone ? 'line-through' : ''}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
@@ -226,7 +255,7 @@ function ItemTapRow({
         </div>
       )}
 
-      {item.notes && !item.isCancelled && (
+      {showDetails && item.notes && !item.isCancelled && (
         <div className="flex items-start" style={{ gap: '6px', marginTop: '2px', paddingLeft: '4px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
             {item.quantity}&times;
