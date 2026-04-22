@@ -37,6 +37,8 @@ interface OrderCardProps {
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
+  /** When true (grid view), apply tighter row spacing inside courses. */
+  compactRows?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -55,7 +57,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames, compactRows }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
@@ -68,6 +70,34 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
   const [dismissedItemIds, setDismissedItemIds] = useState<Set<string>>(new Set());
+  // FIX 3: Track the order in which items were first marked seen within this ticket.
+  // Even index (0, 2, ...) = green tint, odd index (1, 3, ...) = teal tint.
+  const [seenOrderIndex, setSeenOrderIndex] = useState<Map<string, number>>(new Map());
+  const seenOrderCounterRef = (useMemo(() => ({ current: 0 }), []) as { current: number });
+
+  const assignSeenIndex = useCallback((ids: string[]) => {
+    setSeenOrderIndex(prev => {
+      const next = new Map(prev);
+      let changed = false;
+      for (const id of ids) {
+        if (!next.has(id)) {
+          next.set(id, seenOrderCounterRef.current);
+          seenOrderCounterRef.current += 1;
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [seenOrderCounterRef]);
+
+  const clearSeenIndex = useCallback((id: string) => {
+    setSeenOrderIndex(prev => {
+      if (!prev.has(id)) return prev;
+      const next = new Map(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
 
   const handleDismissItem = useCallback((itemId: string) => {
     setDismissedItemIds(prev => {
@@ -254,6 +284,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       onItemStatusChange?.(itemId, newStatus);
       return next;
     });
+    // Assign seen index on first transition (unseen → preparing/done)
+    const prevStatus = itemStatuses.get(itemId);
+    if (!prevStatus) {
+      assignSeenIndex([itemId]);
+    }
     // Record timestamp
     setItemTimestamps(prev => {
       const next = new Map(prev);
@@ -268,7 +303,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
       return next;
     });
-  }, [onItemStatusChange, itemStatuses]);
+  }, [onItemStatusChange, itemStatuses, assignSeenIndex]);
 
   // Bulk advance course items
   const handleBulkAdvanceCourse = useCallback((courseItemIds: string[]) => {
@@ -307,12 +342,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         });
       } else {
         // Advance all unseen to preparing
+        const newlySeen: string[] = [];
         courseItemIds.forEach(id => {
           if (!next.get(id)) {
             next.set(id, 'preparing');
             onItemStatusChange?.(id, 'preparing');
+            newlySeen.push(id);
           }
         });
+        if (newlySeen.length > 0) assignSeenIndex(newlySeen);
       }
       return next;
     });
@@ -341,7 +379,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
       return next;
     });
-  }, [onItemStatusChange, itemStatuses]);
+  }, [onItemStatusChange, itemStatuses, displayCourses, assignSeenIndex]);
 
   // For coursed orders: get active course item IDs
   const activeCourseItemIds = useMemo(() => {
@@ -426,14 +464,19 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     const targetStatus: ItemStatus = ticketState === 'seen' ? 'preparing' : 'done';
     setItemStatuses(prev => {
       const next = new Map(prev);
+      const newlySeen: string[] = [];
       targetIds.forEach(id => {
         const current = next.get(id);
         // Skip items already at or past the target status
         if (current === 'done') return;
         if (current === 'preparing' && targetStatus === 'preparing') return;
+        if (!current && (targetStatus === 'preparing' || targetStatus === 'done')) {
+          newlySeen.push(id);
+        }
         next.set(id, targetStatus);
         onItemStatusChange?.(id, targetStatus);
       });
+      if (newlySeen.length > 0) assignSeenIndex(newlySeen);
       return next;
     });
     setItemTimestamps(prev => {
@@ -451,7 +494,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
@@ -493,8 +536,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         nonDoneIds.forEach(id => next.delete(id));
         return next;
       });
+      nonDoneIds.forEach(id => clearSeenIndex(id));
     }
-  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen]);
+  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen, itemStatuses, clearSeenIndex]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
@@ -521,10 +565,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           tsNext.delete(itemId);
           return tsNext;
         });
+        // Clear seen index when item drops back to unseen
+        clearSeenIndex(itemId);
       }
       return next;
     });
-  }, [onItemStatusChange]);
+  }, [onItemStatusChange, clearSeenIndex]);
 
   const handleItemReRoute = useCallback((itemId: string, newStation: StationName) => {
     setStationOverrides(prev => {
@@ -738,6 +784,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     courseAgingColor={courseStatusColors.get(courseGroup.course)}
                     dismissedItemIds={dismissedItemIds}
                     onDismissItem={handleDismissItem}
+                    compactRows={compactRows}
+                    seenOrderIndex={seenOrderIndex}
                   />
                 );
               })

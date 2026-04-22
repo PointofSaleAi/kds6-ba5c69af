@@ -33,6 +33,8 @@ interface CourseSectionProps {
   courseAgingColor?: { color: string; textColor: string };
   dismissedItemIds?: Set<string>;
   onDismissItem?: (itemId: string) => void;
+  compactRows?: boolean;
+  seenOrderIndex?: Map<string, number>;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -86,7 +88,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang } = useLanguage();
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const isFired = courseGroup.isFired;
@@ -191,11 +193,10 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       ? { transition: 'all 200ms ease-in-out', opacity: 0.75 }
       : { transition: 'all 200ms ease-in-out' };
 
+  // FIX 2: QUEUED and SERVED course headers share the same muted gray background
   const headerBg = coursingStatus === 'active'
     ? ''
-    : coursingStatus === 'fired'
-      ? 'bg-muted/50'
-      : 'bg-muted';
+    : 'bg-muted';
 
   const headerStyle = coursingStatus === 'active'
     ? { backgroundColor: agingColor ? `${agingColor}18` : '#EFF6FF' }
@@ -387,6 +388,8 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 onAdvanceItem={onAdvanceItem}
                 onUndoItem={onUndoItem}
                 onDismissItem={onDismissItem}
+                compactRows={compactRows}
+                seenIdx={seenOrderIndex?.get(item.id)}
               />
             );
           });
@@ -422,6 +425,8 @@ interface CourseItemTapRowProps {
   onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
   onUndoItem?: (itemId: string) => void;
   onDismissItem?: (itemId: string) => void;
+  compactRows?: boolean;
+  seenIdx?: number;
 }
 
 function CourseItemTapRow({
@@ -431,6 +436,7 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
+  compactRows, seenIdx,
 }: CourseItemTapRowProps) {
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
 
@@ -453,9 +459,20 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // Seen rows use a very light green tint; Done rows use a light grey tint.
-  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? 'rgba(29, 158, 117, 0.10)' : undefined);
+  // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = teal.
+  const useTeal = isSeen && typeof seenIdx === 'number' && seenIdx % 2 === 1;
+  const seenBgGreen = 'rgba(29, 158, 117, 0.10)';
+  const seenBgTeal = 'rgba(13, 148, 168, 0.12)';
+  const seenTextGreen = '#0F5132';
+  const seenTextTeal = '#0E7490';
+
+  // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
+  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const stateOpacity = itemOpacity;
+
+  // FIX 1: Tighter top-row padding and tighter gaps between name / Seen-at / modifier-allergen blocks in grid view.
+  const headerPad = compactRows ? '1px 0 0 4px' : '2px 0 0 4px';
+  const allergenMt = compactRows ? '1px' : '2px';
 
   return (
     <div
@@ -467,7 +484,7 @@ function CourseItemTapRow({
     >
       <div
         className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
-        style={{ padding: '2px 0 0 4px', gap: 0 }}
+        style={{ padding: headerPad, gap: 0 }}
         onClick={tappable ? handleTap : undefined}
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
@@ -509,7 +526,7 @@ function CourseItemTapRow({
               </span>
             )}
             {tappable && isSeen && timestamps?.seenAt && (
-              <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600 }} className="ml-1">
+              <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600 }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}
@@ -545,7 +562,7 @@ function CourseItemTapRow({
           )}
 
           {showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
+            <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}x
               </span>
