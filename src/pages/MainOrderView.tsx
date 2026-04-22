@@ -188,7 +188,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     if (boardContentWidth <= 0) return 4;
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
-    if (boardContentWidth < 1240) return 4;
+    if (boardContentWidth < 1100) return 4;
     return 5;
   }, [boardContentWidth]);
 
