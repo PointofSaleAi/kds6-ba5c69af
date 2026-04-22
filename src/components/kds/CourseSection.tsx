@@ -489,15 +489,15 @@ function CourseItemTapRow({
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap" style={{ gap: 'var(--kds-item-gap)' }}>
+          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: 'var(--kds-item-gap)' }}>
             <span
-              className={`font-normal ${isDone ? 'line-through' : ''}`}
+              className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))' }}
             >
               {item.quantity}x
             </span>
             <span
-              className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+              className={`font-bold uppercase truncate min-w-0 ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
               style={{
                 fontSize: 'var(--kds-item-name)',
                 ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
@@ -506,13 +506,13 @@ function CourseItemTapRow({
               {tp(item.name)}
             </span>
             {item.isCancelled && (
-              <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded">
+              <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded shrink-0">
                 CANCELLED
               </span>
             )}
             {item.isRecalled && !item.isCancelled && (
               <span
-                className="uppercase tracking-wide"
+                className="uppercase tracking-wide shrink-0"
                 style={{
                   backgroundColor: '#E24B4A',
                   color: '#FFFFFF',
@@ -526,12 +526,18 @@ function CourseItemTapRow({
               </span>
             )}
             {tappable && isSeen && timestamps?.seenAt && (
-              <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600 }} className="ml-1">
+              <span
+                style={{ fontSize: '11px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600 }}
+                className="ml-1 shrink-0 whitespace-nowrap"
+              >
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}
             {tappable && isDone && timestamps?.doneAt && (
-              <span style={{ fontSize: '10px', color: '#374151', fontWeight: 600 }} className="ml-1">
+              <span
+                style={{ fontSize: '11px', color: '#374151', fontWeight: 600 }}
+                className="ml-1 shrink-0 whitespace-nowrap"
+              >
                 {t.doneAt} {timestamps.doneAt}
               </span>
             )}
