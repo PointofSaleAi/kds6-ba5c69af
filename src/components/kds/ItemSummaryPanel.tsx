@@ -2,9 +2,10 @@ import { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useStatusRules } from '@/hooks/use-status-rules';
-import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle, Clock } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
+import { courseAgingElapsed, isCourseActive } from '@/lib/kds-aging';
 
 interface OvertimeItem {
   name: string;
@@ -12,38 +13,61 @@ interface OvertimeItem {
   oldestSeconds: number;
 }
 
-function liveElapsed(order: Order, now: number): number {
-  const fromTime = order.timeReceived ? Math.floor((now - order.timeReceived.getTime()) / 1000) : 0;
-  return Math.max(order.elapsedSeconds || 0, fromTime);
-}
-
-function buildOvertimeItems(
+/**
+ * Walk every active (unfired, has remaining items) course in every active order.
+ * For each course, compute the unified aging-elapsed seconds (matches OrderCard).
+ * Yields one record per remaining item with its overtime flag and elapsed time.
+ */
+function collectActiveItems(
   orders: Order[],
   thresholdSeconds: number,
   now: number,
   courseLevelAging: boolean,
   stationCourseFilter?: string,
-): OvertimeItem[] {
-  const map = new Map<string, { count: number; oldestSeconds: number }>();
+) {
+  const records: Array<{
+    name: string;
+    category: ProductCategory;
+    quantity: number;
+    isNew: boolean;
+    isOvertime: boolean;
+    elapsedSeconds: number;
+  }> = [];
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
-      if (cg.isFired) continue;
-      const courseElapsed = cg._startedAt
-        ? Math.max(0, Math.floor((now - cg._startedAt.getTime()) / 1000))
-        : liveElapsed(order, now);
-      const elapsed = courseLevelAging ? courseElapsed : liveElapsed(order, now);
-      if (elapsed < thresholdSeconds) continue;
+      if (!isCourseActive(cg)) continue;
+      const elapsed = courseAgingElapsed(order, cg, courseLevelAging, now);
+      const isOvertime = elapsed >= thresholdSeconds;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
-        const cat = item.category || ('Uncategorized' as ProductCategory);
+        const cat = (item.category || ('Uncategorized' as ProductCategory)) as ProductCategory;
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
-        const existing = map.get(item.name) || { count: 0, oldestSeconds: 0 };
-        existing.count += 1;
-        if (elapsed > existing.oldestSeconds) existing.oldestSeconds = elapsed;
-        map.set(item.name, existing);
+        records.push({
+          name: item.name,
+          category: cat,
+          quantity: item.quantity,
+          isNew: !!item.isNew,
+          isOvertime,
+          elapsedSeconds: elapsed,
+        });
       }
     }
+  }
+  return records;
+}
+
+function buildOvertimeItems(
+  records: ReturnType<typeof collectActiveItems>,
+): OvertimeItem[] {
+  const map = new Map<string, { count: number; oldestSeconds: number }>();
+  for (const r of records) {
+    if (!r.isOvertime) continue;
+    const existing = map.get(r.name) || { count: 0, oldestSeconds: 0 };
+    // Count overtime occurrences (line-item instances), NOT total quantity
+    existing.count += 1;
+    if (r.elapsedSeconds > existing.oldestSeconds) existing.oldestSeconds = r.elapsedSeconds;
+    map.set(r.name, existing);
   }
   return Array.from(map.entries())
     .map(([name, d]) => ({ name, count: d.count, oldestSeconds: d.oldestSeconds }))
@@ -67,41 +91,48 @@ interface ItemSummaryPanelProps {
 
 interface CategorySummary {
   category: ProductCategory;
-  items: { name: string; remaining: number; hasNew: boolean }[];
+  hasOvertime: boolean;
+  items: { name: string; remaining: number; hasNew: boolean; isOvertime: boolean }[];
 }
 
 const AVAILABLE_STATIONS: StationName[] = ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'];
 
-function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySummary[] {
-  const map = new Map<ProductCategory, Map<string, { remaining: number; hasNew: boolean }>>();
+function buildSummary(records: ReturnType<typeof collectActiveItems>): CategorySummary[] {
+  const map = new Map<
+    ProductCategory,
+    Map<string, { remaining: number; hasNew: boolean; isOvertime: boolean }>
+  >();
 
-  for (const order of orders) {
-    if (order.status === 'served') continue;
-    for (const cg of order.courses) {
-      if (cg.isFired) continue;
-      for (const item of cg.items) {
-        if (item.isCompleted || item.isCancelled) continue;
-        const cat = item.category || ('Uncategorized' as ProductCategory);
-        // In station view, only include items matching the active station's category
-        if (stationCourseFilter && cat !== stationCourseFilter) continue;
-        if (!map.has(cat)) map.set(cat, new Map());
-        const items = map.get(cat)!;
-        const existing = items.get(item.name) || { remaining: 0, hasNew: false };
-        existing.remaining += item.quantity;
-        if (item.isNew) existing.hasNew = true;
-        items.set(item.name, existing);
-      }
-    }
+  for (const r of records) {
+    if (!map.has(r.category)) map.set(r.category, new Map());
+    const items = map.get(r.category)!;
+    const existing = items.get(r.name) || { remaining: 0, hasNew: false, isOvertime: false };
+    existing.remaining += r.quantity;
+    if (r.isNew) existing.hasNew = true;
+    if (r.isOvertime) existing.isOvertime = true;
+    items.set(r.name, existing);
   }
 
   return Array.from(map.entries())
-    .map(([category, items]) => ({
-      category,
-      items: Array.from(items.entries())
-        .map(([name, data]) => ({ name, remaining: data.remaining, hasNew: data.hasNew }))
+    .map(([category, items]) => {
+      const itemList = Array.from(items.entries())
+        .map(([name, data]) => ({
+          name,
+          remaining: data.remaining,
+          hasNew: data.hasNew,
+          isOvertime: data.isOvertime,
+        }))
         .filter(i => i.remaining > 0)
-        .sort((a, b) => b.remaining - a.remaining),
-    }))
+        .sort((a, b) => {
+          if (a.isOvertime !== b.isOvertime) return a.isOvertime ? -1 : 1;
+          return b.remaining - a.remaining;
+        });
+      return {
+        category,
+        hasOvertime: itemList.some(i => i.isOvertime),
+        items: itemList,
+      };
+    })
     .filter(c => c.items.length > 0);
 }
 
@@ -110,7 +141,6 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
-  const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
   // Tick every 10s to refresh live elapsed times
   const [nowMs, setNowMs] = useState(() => Date.now());
@@ -124,10 +154,15 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     const last = rules[rules.length - 1];
     return (last?.minMinutes ?? 21) * 60;
   }, [rules]);
-  const overtimeItems = useMemo(
-    () => buildOvertimeItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
+
+  // Single pass over orders → records used by both Overtime + category sections.
+  // Uses unified aging (matches OrderCard) so overtime stays in sync with cards.
+  const activeRecords = useMemo(
+    () => collectActiveItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
     [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse]
   );
+  const summary = useMemo(() => buildSummary(activeRecords), [activeRecords]);
+  const overtimeItems = useMemo(() => buildOvertimeItems(activeRecords), [activeRecords]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
@@ -342,11 +377,9 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
                     isCategorySelected
                       ? 'bg-[#3B82F6] text-white'
-                      : sectionTotal >= 20
+                      : cat.hasOvertime
                         ? 'bg-destructive text-destructive-foreground'
-                        : sectionTotal >= 10
-                          ? 'bg-warning text-warning-foreground'
-                          : 'bg-text-muted text-white'
+                        : 'bg-text-muted text-white'
                   }`}>
                     {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
                   </span>
@@ -356,14 +389,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 {isExpanded && (
                   <div className="px-3 py-1">
                     {displayItems.map((item) => {
-                      const isCritical = item.remaining >= 10;
-                      const isHigh = !isCritical && item.remaining >= 5;
-                      const tierClass = isCritical
+                      // Highlight only when actually overtime, never by quantity.
+                      const tierClass = item.isOvertime
                         ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive'
-                        : isHigh
-                          ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
-                          : '';
-                      const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
+                        : '';
+                      const countColor = item.isOvertime ? 'text-destructive' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
