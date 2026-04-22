@@ -93,9 +93,21 @@ function buildSummary(orders: Order[], stationCourseFilter?: string): CategorySu
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
   const { tp } = useLanguage();
   const { isPortrait } = usePortrait();
+  const { rules } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
   const summary = useMemo(() => buildSummary(orders, stationCourse), [orders, stationCourse]);
 
+  // Overtime threshold = minMinutes of the last (open-ended) rule
+  const overtimeThresholdSec = useMemo(() => {
+    const last = rules[rules.length - 1];
+    return (last?.minMinutes ?? 21) * 60;
+  }, [rules]);
+  const overtimeItems = useMemo(
+    () => buildOvertimeItems(orders, overtimeThresholdSec, stationCourse),
+    [orders, overtimeThresholdSec, stationCourse]
+  );
+  const overtimeTotal = overtimeItems.reduce((a, i) => a + i.remaining, 0);
+  const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
   const categoryCount = selectedCategories?.size ?? 0;
   const itemCount = selectedItems?.size ?? 0;
