@@ -193,7 +193,77 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
       {/* Categories section */}
       <div className="flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
         <div className="flex-1 overflow-y-auto">
-          {summary.length === 0 && (
+          {/* Overtime section - styled like a category section */}
+          {overtimeItems.length > 0 && (
+            <div>
+              <div
+                className="flex items-center border-b border-border min-h-[36px]"
+                style={{ borderLeft: '2px solid hsl(var(--destructive))' }}
+              >
+                <button
+                  onClick={() => setOvertimeCollapsed(v => !v)}
+                  className="flex items-center justify-center px-1.5 py-2 shrink-0 min-w-[28px] min-h-[36px]"
+                  aria-label={overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime'}
+                >
+                  <ChevronDown
+                    size={12}
+                    className={`text-text-muted transition-transform duration-150 ${overtimeCollapsed ? '-rotate-90' : ''}`}
+                  />
+                </button>
+                <div className="flex-1 flex items-center gap-1.5 py-2 pr-1">
+                  <Clock size={12} className="text-destructive shrink-0" />
+                  <span className="text-[12px] uppercase tracking-widest font-bold text-destructive">
+                    Overtime
+                  </span>
+                </div>
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 bg-destructive text-destructive-foreground">
+                  {overtimeTotal}
+                </span>
+              </div>
+
+              {!overtimeCollapsed && (
+                <div className="px-3 py-1">
+                  {overtimeItems.map((item) => {
+                    const isSelected = selectedItems?.has(item.name) ?? false;
+                    return (
+                      <div
+                        key={`overtime-${item.name}`}
+                        className="relative border-b border-border/30 last:border-b-0 bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive"
+                      >
+                        <div
+                          className={`flex items-center justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onItemToggle?.(item.name);
+                          }}
+                        >
+                          <span
+                            className={`min-w-0 uppercase leading-tight ${isPortrait ? 'break-words' : 'truncate'} ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                            style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : {}) }}
+                          >
+                            {tp(item.name)}
+                          </span>
+                          <div className={`flex items-center ${isPortrait ? 'gap-1' : 'gap-1.5'} ml-1 shrink-0`}>
+                            <span className="text-[10px] font-mono text-destructive tabular-nums">
+                              {formatMins(item.oldestSeconds)}
+                            </span>
+                            <span
+                              className={`text-right text-[14px] font-bold tabular-nums ${isSelected ? '' : 'text-destructive'}`}
+                              style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
+                            >
+                              {item.remaining}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {summary.length === 0 && overtimeItems.length === 0 && (
             <div className="px-3 py-4 text-center">
               <p className="text-[12px] text-text-muted">All items completed</p>
             </div>
