@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { StickyNote } from 'lucide-react';
 
 interface OrderNotesSectionProps {
   notes: string;
@@ -20,33 +21,33 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
   const rowBg = acknowledged ? 'rgba(29, 158, 117, 0.10)' : undefined;
 
   return (
-    <div className="border-t border-border">
-      <div className="flex items-center justify-between bg-muted" style={{ padding: '4px 8px' }}>
-        <span className="text-[11px] uppercase tracking-wider font-semibold text-text-primary">
-          Order Notes
-        </span>
-      </div>
-      <div className="px-2 py-0.5" style={{ backgroundColor: rowBg }}>
+    <div className="border-t border-border" style={{ backgroundColor: rowBg }}>
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={acknowledged ? 'Mark notes as unseen' : 'Acknowledge notes'}
+        title={acknowledged ? 'Tap to mark notes as unseen' : 'Tap to acknowledge notes'}
+        onClick={toggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
+        }}
+        className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
+        style={{ padding: '4px 8px', gap: '6px' }}
+      >
+        <StickyNote
+          size={13}
+          className="shrink-0 text-text-secondary"
+          style={{ marginTop: '1px' }}
+          aria-hidden="true"
+        />
         <div
-          role="button"
-          tabIndex={0}
-          aria-label={acknowledged ? 'Mark notes as unseen' : 'Acknowledge notes'}
-          title={acknowledged ? 'Tap to mark notes as unseen' : 'Tap to acknowledge notes'}
-          onClick={toggle}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              toggle();
-            }
-          }}
-          className="flex items-center border-b border-border/50 cursor-pointer active:bg-muted/50 transition-colors select-none"
-          style={{ padding: '4px 0 4px 4px', gap: 0 }}
+          className="flex-1 min-w-0 text-[13px] text-text-primary"
+          style={{ lineHeight: 1.25 }}
         >
-          <div className="flex-1 min-w-0">
-            <div className="text-[13px] text-text-primary leading-snug">
-              {notes}
-            </div>
-          </div>
+          {notes}
         </div>
       </div>
     </div>
