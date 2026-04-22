@@ -436,6 +436,7 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
+  compactRows, seenIdx,
 }: CourseItemTapRowProps) {
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
 
@@ -458,9 +459,20 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // Seen rows use a very light green tint; Done rows use a light grey tint.
-  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? 'rgba(29, 158, 117, 0.10)' : undefined);
+  // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = teal.
+  const useTeal = isSeen && typeof seenIdx === 'number' && seenIdx % 2 === 1;
+  const seenBgGreen = 'rgba(29, 158, 117, 0.10)';
+  const seenBgTeal = 'rgba(13, 148, 168, 0.12)';
+  const seenTextGreen = '#0F5132';
+  const seenTextTeal = '#0E7490';
+
+  // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
+  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const stateOpacity = itemOpacity;
+
+  // FIX 1: Tighter top-row padding and tighter gaps between name / Seen-at / modifier-allergen blocks in grid view.
+  const headerPad = compactRows ? '1px 0 0 4px' : '2px 0 0 4px';
+  const allergenMt = compactRows ? '1px' : '2px';
 
   return (
     <div
