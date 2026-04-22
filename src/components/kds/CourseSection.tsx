@@ -562,7 +562,7 @@ function CourseItemTapRow({
           )}
 
           {showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '6px', marginTop: '2px' }}>
+            <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}x
               </span>
