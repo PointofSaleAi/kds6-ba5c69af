@@ -377,11 +377,9 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
                     isCategorySelected
                       ? 'bg-[#3B82F6] text-white'
-                      : sectionTotal >= 20
+                      : cat.hasOvertime
                         ? 'bg-destructive text-destructive-foreground'
-                        : sectionTotal >= 10
-                          ? 'bg-warning text-warning-foreground'
-                          : 'bg-text-muted text-white'
+                        : 'bg-text-muted text-white'
                   }`}>
                     {isUncategorized ? displayItems.reduce((a, i) => a + i.remaining, 0) : sectionTotal}
                   </span>
@@ -391,14 +389,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 {isExpanded && (
                   <div className="px-3 py-1">
                     {displayItems.map((item) => {
-                      const isCritical = item.remaining >= 10;
-                      const isHigh = !isCritical && item.remaining >= 5;
-                      const tierClass = isCritical
+                      // Highlight only when actually overtime, never by quantity.
+                      const tierClass = item.isOvertime
                         ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive'
-                        : isHigh
-                          ? 'bg-warning/10 -mx-3 px-3 border-l-2 border-warning'
-                          : '';
-                      const countColor = isCritical ? 'text-destructive' : isHigh ? 'text-warning' : 'text-text-primary';
+                        : '';
+                      const countColor = item.isOvertime ? 'text-destructive' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
