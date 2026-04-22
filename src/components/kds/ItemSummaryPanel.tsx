@@ -273,7 +273,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                               className={`text-right text-[14px] font-bold tabular-nums ${isSelected ? '' : 'text-destructive'}`}
                               style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
                             >
-                              {item.remaining}
+                              {item.count}
                             </span>
                           </div>
                         </div>
@@ -368,7 +368,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const isSelected = selectedItems?.has(item.name) ?? false;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? 'animate-new-item -mx-3 px-3' : ''}`}>
+                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? '-mx-3 px-3' : ''}`}>
                           <div
                             className={`flex items-center justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
                             onClick={(e) => {
