@@ -518,10 +518,10 @@ function CourseItemTapRow({
           </button>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: 'var(--kds-item-gap)' }}>
+          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: 'var(--kds-item-gap)', lineHeight: 1.1 }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
-              style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))' }}
+              style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))', lineHeight: 1.1 }}
             >
               {item.quantity}x
             </span>
@@ -529,6 +529,7 @@ function CourseItemTapRow({
               className={`font-bold uppercase truncate min-w-0 ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
               style={{
                 fontSize: 'var(--kds-item-name)',
+                lineHeight: 1.1,
                 ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
               }}
             >
@@ -597,7 +598,7 @@ function CourseItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-center" style={{ gap: '6px', marginTop: allergenMt, lineHeight: 1 }}>
+            <div className="flex items-center" style={{ gap: '6px', marginTop: '-2px', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1 }}>
                 {item.quantity}x
               </span>
