@@ -784,6 +784,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     courseAgingColor={courseStatusColors.get(courseGroup.course)}
                     dismissedItemIds={dismissedItemIds}
                     onDismissItem={handleDismissItem}
+                    compactRows={compactRows}
+                    seenOrderIndex={seenOrderIndex}
                   />
                 );
               })
