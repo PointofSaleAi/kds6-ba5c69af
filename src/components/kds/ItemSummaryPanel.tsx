@@ -2,9 +2,10 @@ import { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useStatusRules } from '@/hooks/use-status-rules';
-import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle, Clock } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
+import { courseAgingElapsed, isCourseActive } from '@/lib/kds-aging';
 
 interface OvertimeItem {
   name: string;
@@ -12,38 +13,61 @@ interface OvertimeItem {
   oldestSeconds: number;
 }
 
-function liveElapsed(order: Order, now: number): number {
-  const fromTime = order.timeReceived ? Math.floor((now - order.timeReceived.getTime()) / 1000) : 0;
-  return Math.max(order.elapsedSeconds || 0, fromTime);
-}
-
-function buildOvertimeItems(
+/**
+ * Walk every active (unfired, has remaining items) course in every active order.
+ * For each course, compute the unified aging-elapsed seconds (matches OrderCard).
+ * Yields one record per remaining item with its overtime flag and elapsed time.
+ */
+function collectActiveItems(
   orders: Order[],
   thresholdSeconds: number,
   now: number,
   courseLevelAging: boolean,
   stationCourseFilter?: string,
-): OvertimeItem[] {
-  const map = new Map<string, { count: number; oldestSeconds: number }>();
+) {
+  const records: Array<{
+    name: string;
+    category: ProductCategory;
+    quantity: number;
+    isNew: boolean;
+    isOvertime: boolean;
+    elapsedSeconds: number;
+  }> = [];
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
-      if (cg.isFired) continue;
-      const courseElapsed = cg._startedAt
-        ? Math.max(0, Math.floor((now - cg._startedAt.getTime()) / 1000))
-        : liveElapsed(order, now);
-      const elapsed = courseLevelAging ? courseElapsed : liveElapsed(order, now);
-      if (elapsed < thresholdSeconds) continue;
+      if (!isCourseActive(cg)) continue;
+      const elapsed = courseAgingElapsed(order, cg, courseLevelAging, now);
+      const isOvertime = elapsed >= thresholdSeconds;
       for (const item of cg.items) {
         if (item.isCompleted || item.isCancelled) continue;
-        const cat = item.category || ('Uncategorized' as ProductCategory);
+        const cat = (item.category || ('Uncategorized' as ProductCategory)) as ProductCategory;
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
-        const existing = map.get(item.name) || { count: 0, oldestSeconds: 0 };
-        existing.count += 1;
-        if (elapsed > existing.oldestSeconds) existing.oldestSeconds = elapsed;
-        map.set(item.name, existing);
+        records.push({
+          name: item.name,
+          category: cat,
+          quantity: item.quantity,
+          isNew: !!item.isNew,
+          isOvertime,
+          elapsedSeconds: elapsed,
+        });
       }
     }
+  }
+  return records;
+}
+
+function buildOvertimeItems(
+  records: ReturnType<typeof collectActiveItems>,
+): OvertimeItem[] {
+  const map = new Map<string, { count: number; oldestSeconds: number }>();
+  for (const r of records) {
+    if (!r.isOvertime) continue;
+    const existing = map.get(r.name) || { count: 0, oldestSeconds: 0 };
+    // Count overtime occurrences (line-item instances), NOT total quantity
+    existing.count += 1;
+    if (r.elapsedSeconds > existing.oldestSeconds) existing.oldestSeconds = r.elapsedSeconds;
+    map.set(r.name, existing);
   }
   return Array.from(map.entries())
     .map(([name, d]) => ({ name, count: d.count, oldestSeconds: d.oldestSeconds }))
