@@ -70,6 +70,34 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
   const [dismissedItemIds, setDismissedItemIds] = useState<Set<string>>(new Set());
+  // FIX 3: Track the order in which items were first marked seen within this ticket.
+  // Even index (0, 2, ...) = green tint, odd index (1, 3, ...) = teal tint.
+  const [seenOrderIndex, setSeenOrderIndex] = useState<Map<string, number>>(new Map());
+  const seenOrderCounterRef = (useMemo(() => ({ current: 0 }), []) as { current: number });
+
+  const assignSeenIndex = useCallback((ids: string[]) => {
+    setSeenOrderIndex(prev => {
+      const next = new Map(prev);
+      let changed = false;
+      for (const id of ids) {
+        if (!next.has(id)) {
+          next.set(id, seenOrderCounterRef.current);
+          seenOrderCounterRef.current += 1;
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [seenOrderCounterRef]);
+
+  const clearSeenIndex = useCallback((id: string) => {
+    setSeenOrderIndex(prev => {
+      if (!prev.has(id)) return prev;
+      const next = new Map(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
 
   const handleDismissItem = useCallback((itemId: string) => {
     setDismissedItemIds(prev => {
