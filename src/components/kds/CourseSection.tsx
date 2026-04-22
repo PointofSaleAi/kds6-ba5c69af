@@ -214,11 +214,11 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       : `${courseName} \u00B7 ${statusWord}`;
 
   const labelClass = isServedByLifecycle
-    ? 'uppercase tracking-wider text-text-secondary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+    ? 'uppercase tracking-wider text-text-primary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
     : coursingStatus === 'active'
       ? 'uppercase tracking-wider font-semibold flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
       : coursingStatus === 'fired'
-        ? 'uppercase tracking-wider text-text-secondary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
+        ? 'uppercase tracking-wider text-text-primary flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'
         : 'uppercase text-text-primary tracking-wider flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis';
 
   const labelStyle = coursingStatus === 'active'
