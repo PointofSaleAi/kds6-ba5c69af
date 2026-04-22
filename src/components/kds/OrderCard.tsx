@@ -677,12 +677,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 </div>
                 <div className="flex flex-col items-end justify-center" style={{ gap: '6px' }}>
                   <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50" />
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90" />
                     {order.serverName}
                   </span>
                   {order.guestName ? (
                     <span className="flex items-center gap-1 text-[15px] leading-none font-medium text-white">
-                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-50" />
+                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90" />
                       {order.guestName}
                     </span>
                   ) : (
@@ -703,7 +703,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
                   <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-50 shrink-0" />
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
                     {order.serverName}
                   </span>
                   <span className="text-[16px] font-semibold text-white">
