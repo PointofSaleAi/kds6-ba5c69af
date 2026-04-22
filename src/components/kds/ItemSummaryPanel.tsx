@@ -391,7 +391,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     {displayItems.map((item) => {
                       // Highlight only when actually overtime, never by quantity.
                       const tierClass = item.isOvertime
-                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive'
+                        ? 'bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse'
                         : '';
                       const countColor = item.isOvertime ? 'text-destructive' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
