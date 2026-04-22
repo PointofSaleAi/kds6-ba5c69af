@@ -342,12 +342,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         });
       } else {
         // Advance all unseen to preparing
+        const newlySeen: string[] = [];
         courseItemIds.forEach(id => {
           if (!next.get(id)) {
             next.set(id, 'preparing');
             onItemStatusChange?.(id, 'preparing');
+            newlySeen.push(id);
           }
         });
+        if (newlySeen.length > 0) assignSeenIndex(newlySeen);
       }
       return next;
     });
