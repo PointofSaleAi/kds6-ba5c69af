@@ -103,7 +103,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   if (collapsed) {
     return (
       <div className="w-10 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-3 shrink-0">
-        <button onClick={() => setCollapsed(false)} className="p-1 hover:bg-sidebar-accent rounded min-w-[44px] min-h-[44px] flex items-center justify-center text-sidebar-foreground" aria-label="Expand panel">
+        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand panel">
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
         <span className="text-[10px] font-bold text-sidebar-foreground/70 mt-2 [writing-mode:vertical-lr]">{totalRemaining} to cook</span>
