@@ -37,6 +37,8 @@ interface OrderCardProps {
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
+  /** When true (grid view), apply tighter row spacing inside courses. */
+  compactRows?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
