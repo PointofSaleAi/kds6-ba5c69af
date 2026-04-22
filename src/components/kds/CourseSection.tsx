@@ -268,7 +268,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             </span>
           </div>
           {courseDoneAt && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-muted-foreground">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-text-primary">
               {t.doneAt} {courseDoneAt}
             </span>
           )}
@@ -328,7 +328,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
           {/* Fired course: "Done X ago" */}
           {coursingStatus === 'fired' && firedTimerLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums bg-order-take-out/15 text-order-take-out">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums text-text-primary">
               {firedTimerLabel}
             </span>
           )}
