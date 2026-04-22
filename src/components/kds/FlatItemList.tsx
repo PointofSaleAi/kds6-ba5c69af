@@ -170,12 +170,12 @@ function ItemTapRow({
               <AllergenBadge key={a.type} allergen={a} variant="item" />
             ))}
             {isSeen && timestamps?.seenAt && (
-              <span style={{ fontSize: '9px', color: '#AAAAAA' }} className="font-normal ml-1">
+              <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600 }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}
             {isDone && timestamps?.doneAt && (
-              <span style={{ fontSize: '9px', color: '#AAAAAA' }} className="font-normal ml-1">
+              <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600 }} className="ml-1">
                 {t.doneAt} {timestamps.doneAt}
               </span>
             )}
