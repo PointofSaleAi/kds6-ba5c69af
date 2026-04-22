@@ -20,7 +20,6 @@ export type OrderTypeDetailedColors = Record<string, OrderTypeColorSet>;
 
 export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
   'dine-in': '#1A1A2E',
-  'table': '#2C3E50',
   'take-out': '#1B4F8A',
   'delivery': '#5B21B6',
   'banquet': '#1F4E79',
@@ -33,7 +32,6 @@ export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
 
 export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
   'dine-in': { headerBg: '#1A1A2E', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'table': { headerBg: '#2C3E50', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
   'take-out': { headerBg: '#1B4F8A', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
   'delivery': { headerBg: '#5B21B6', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
   'banquet': { headerBg: '#1F4E79', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },

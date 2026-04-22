@@ -1341,7 +1341,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
             </div>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             <AnimatePresence mode="popLayout">
               {sortedTickets.map(ticket => (
                 <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ layout: { duration: 0.2, ease: 'easeInOut' } }}>
@@ -1354,7 +1354,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
               {sortedTickets.map(ticket => (
-                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[240px]">
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[280px]">
                   {renderTicketCard(ticket)}
                 </motion.div>
               ))}
