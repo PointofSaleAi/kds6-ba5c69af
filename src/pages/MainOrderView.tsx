@@ -185,11 +185,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [settingsOpen]);
 
   const staggerColumnCount = useMemo(() => {
-    if (boardContentWidth <= 0) return 3;
-    if (boardContentWidth < 520) return 1;
-    if (boardContentWidth < 760) return 2;
-    if (boardContentWidth < 1160) return 3;
-    if (boardContentWidth < 1480) return 4;
+    if (boardContentWidth <= 0) return 4;
+    if (boardContentWidth < 480) return 2;
+    if (boardContentWidth < 760) return 3;
+    if (boardContentWidth < 1240) return 4;
     return 5;
   }, [boardContentWidth]);
 
