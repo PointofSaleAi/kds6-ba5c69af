@@ -597,11 +597,11 @@ function CourseItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '6px', marginTop: allergenMt }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
+            <div className="flex items-center" style={{ gap: '6px', marginTop: allergenMt, lineHeight: 1 }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1 }}>
                 {item.quantity}x
               </span>
-              <div className="flex flex-wrap items-center" style={{ gap: '4px' }}>
+              <div className="flex flex-wrap items-center" style={{ gap: '4px', rowGap: '2px' }}>
                 {item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
@@ -612,7 +612,7 @@ function CourseItemTapRow({
       </div>
 
       {showDetails && item.modifiers.length > 0 && (
-        <div className={isDone ? 'line-through' : ''}>
+        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '-1px' }}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}

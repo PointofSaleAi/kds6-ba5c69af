@@ -30,15 +30,15 @@ export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps
   const color = getColor(allergen.type);
 
   const sizeStyle = variant === 'order'
-    ? { fontSize: 'var(--kds-allergen-font)', padding: 'var(--kds-allergen-py) var(--kds-allergen-px)', opacity: 1 }
+    ? { fontSize: 'var(--kds-allergen-font)', padding: 'var(--kds-allergen-py) var(--kds-allergen-px)', opacity: 1, lineHeight: 1.1 }
     : variant === 'expo-item'
-      ? { fontSize: '7px', padding: '0px 5px', opacity: 0.7 }
-      : { fontSize: '7px', padding: '0px 5px', opacity: 0.7 };
+      ? { fontSize: '7px', padding: '0px 4px', opacity: 0.7, lineHeight: 1 }
+      : { fontSize: '7px', padding: '0px 4px', opacity: 0.7, lineHeight: 1 };
 
   return (
     <span
       className={`inline-flex items-center rounded border font-bold uppercase ${color.bg} ${color.border} ${color.text}`}
-      style={{ ...sizeStyle, lineHeight: 1.1 }}
+      style={sizeStyle}
     >
       {ta(allergen.label)}
     </span>

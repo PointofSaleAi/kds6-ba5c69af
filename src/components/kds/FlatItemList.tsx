@@ -225,7 +225,7 @@ function ItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '6px', marginTop: '0px' }}>
+            <div className="flex items-center" style={{ gap: '6px', marginTop: '0px', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
                 {item.quantity}&times;
               </span>
@@ -240,7 +240,7 @@ function ItemTapRow({
       </div>
 
       {showDetails && item.modifiers.length > 0 && (
-        <div className={isDone ? 'line-through' : ''}>
+        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '-1px' }}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
