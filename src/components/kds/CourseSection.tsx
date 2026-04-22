@@ -459,7 +459,7 @@ function CourseItemTapRow({
 
   return (
     <div
-      className={`${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
+      className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
         ...(isHighlighted ? { backgroundColor: 'rgba(29, 158, 117, 0.10)' } : stateBg ? { backgroundColor: stateBg } : {}),
