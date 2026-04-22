@@ -285,7 +285,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     return (
                       <div
                         key={`overtime-${item.name}`}
-                        className="relative border-b border-border/30 last:border-b-0 bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive"
+                        className="relative border-b border-border/30 last:border-b-0 bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse"
                       >
                         <div
                           className={`flex items-center justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
