@@ -379,7 +379,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
       return next;
     });
-  }, [onItemStatusChange, itemStatuses]);
+  }, [onItemStatusChange, itemStatuses, displayCourses, assignSeenIndex]);
 
   // For coursed orders: get active course item IDs
   const activeCourseItemIds = useMemo(() => {
