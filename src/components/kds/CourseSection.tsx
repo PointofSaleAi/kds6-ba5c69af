@@ -33,6 +33,8 @@ interface CourseSectionProps {
   courseAgingColor?: { color: string; textColor: string };
   dismissedItemIds?: Set<string>;
   onDismissItem?: (itemId: string) => void;
+  compactRows?: boolean;
+  seenOrderIndex?: Map<string, number>;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
