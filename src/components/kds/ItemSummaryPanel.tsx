@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useStatusRules } from '@/hooks/use-status-rules';
@@ -12,11 +12,17 @@ interface OvertimeItem {
   oldestSeconds: number;
 }
 
-function buildOvertimeItems(orders: Order[], thresholdSeconds: number, stationCourseFilter?: string): OvertimeItem[] {
+function liveElapsed(order: Order, now: number): number {
+  const fromTime = order.timeReceived ? Math.floor((now - order.timeReceived.getTime()) / 1000) : 0;
+  return Math.max(order.elapsedSeconds || 0, fromTime);
+}
+
+function buildOvertimeItems(orders: Order[], thresholdSeconds: number, now: number, stationCourseFilter?: string): OvertimeItem[] {
   const map = new Map<string, { remaining: number; oldestSeconds: number }>();
   for (const order of orders) {
     if (order.status === 'served') continue;
-    if (order.elapsedSeconds < thresholdSeconds) continue;
+    const elapsed = liveElapsed(order, now);
+    if (elapsed < thresholdSeconds) continue;
     for (const cg of order.courses) {
       if (cg.isFired) continue;
       for (const item of cg.items) {
@@ -25,7 +31,7 @@ function buildOvertimeItems(orders: Order[], thresholdSeconds: number, stationCo
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
         const existing = map.get(item.name) || { remaining: 0, oldestSeconds: 0 };
         existing.remaining += item.quantity;
-        if (order.elapsedSeconds > existing.oldestSeconds) existing.oldestSeconds = order.elapsedSeconds;
+        if (elapsed > existing.oldestSeconds) existing.oldestSeconds = elapsed;
         map.set(item.name, existing);
       }
     }
