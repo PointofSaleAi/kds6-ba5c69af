@@ -12,8 +12,6 @@ interface ItemRowProps {
 export function ItemRow({ item, dimmed }: ItemRowProps) {
   const { tp, tm, displayMode, tpSecondary, showSecondaryMenu, secondaryLang } = useLanguage();
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
-  const quantityPrefix = `${item.quantity}×`;
-  const quantityPrefixWidth = `calc(${quantityPrefix.length}ch + 2px)`;
 
   return (
     <div
@@ -22,11 +20,8 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '6px', lineHeight: 1.1 }}>
-          <span
-            className="shrink-0 text-[13px] font-normal tabular-nums text-text-secondary"
-            style={{ width: quantityPrefixWidth }}
-          >
-            {quantityPrefix}
+          <span className="text-[13px] font-normal text-text-secondary">
+            {item.quantity}×
           </span>
           <span className="text-[13px] font-bold text-text-primary uppercase min-w-0 flex-1 break-words" style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
             {tp(item.name)}
@@ -35,8 +30,8 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
 
         {item.allergens.length > 0 && (
           <div className="flex items-start" style={{ gap: '6px', marginTop: '1px', lineHeight: 1 }}>
-            <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true" style={{ lineHeight: 1, width: quantityPrefixWidth }}>
-              {quantityPrefix}
+            <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true" style={{ lineHeight: 1 }}>
+              {item.quantity}×
             </span>
             <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
               {item.allergens.map((a) => (
@@ -52,13 +47,12 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             className="flex items-center text-[11px] font-bold uppercase"
             style={{ gap: '6px', marginTop: '1px', color: '#AAAAAA' }}
           >
-            <span
-              className="flex shrink-0 items-center justify-start"
-              style={{ width: quantityPrefixWidth, minWidth: quantityPrefixWidth }}
-              aria-hidden="true"
-            >
-              <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
-                <Languages size={10} className="text-text-secondary" />
+            <span className="relative text-[13px] font-normal shrink-0">
+              <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
+              <span className="absolute inset-0 flex items-center justify-center">
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
+                  <Languages size={10} className="text-text-secondary" />
+                </span>
               </span>
             </span>
             <span>{tpSecondary(item.name)}</span>
