@@ -579,7 +579,7 @@ function CourseItemTapRow({
 
           {showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
-              dir={secondaryDir}
+              dir="ltr"
               className={`relative flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
               style={{
                 gap: '4px',
@@ -597,7 +597,7 @@ function CourseItemTapRow({
                   </span>
                 </span>
               </span>
-              <span style={{ lineHeight: 1 }}>{tpSecondary(item.name)}</span>
+              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext' }}>{tpSecondary(item.name)}</span>
             </div>
           )}
 
