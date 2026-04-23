@@ -163,10 +163,10 @@ function ItemTapRow({
             aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
             aria-expanded={detailsOpen}
             className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
-            style={{ width: 14, height: 14, marginRight: 2 }}
+            style={{ width: 12, height: 12, marginRight: 0 }}
           >
             <ChevronRight
-              size={14}
+              size={12}
               className="text-text-muted transition-transform duration-200"
               style={{ transform: detailsOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
             />
@@ -176,7 +176,7 @@ function ItemTapRow({
           <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
-              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: ticketLayoutCompact ? '1.85ch' : '2.25ch', textAlign: 'right', display: 'inline-block' }}
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', textAlign: 'right', display: 'inline-block' }}
             >
               {item.quantity}x
             </span>
