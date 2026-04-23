@@ -258,7 +258,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       <div className={containerClass} style={containerStyle}>
         <div
           className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
-          style={{ padding: '4px 8px' }}
+          style={{ padding: '2px 8px' }}
           onClick={() => setServedExpanded(prev => !prev)}
         >
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -314,7 +314,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     <div className={containerClass} style={containerStyle}>
       <div
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
-        style={{ ...headerStyle, padding: '4px 8px' }}
+        style={{ ...headerStyle, padding: '2px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
