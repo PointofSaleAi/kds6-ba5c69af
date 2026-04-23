@@ -62,13 +62,13 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
 
   // Non-servable modifier: keep existing small muted style
   return (
-    <div className="flex items-baseline" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
-      <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.95', width: '2.25ch', display: 'inline-block' }}>
+    <div className="flex items-start" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
+      <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: '2.25ch', display: 'inline-block' }}>
         0x
       </span>
       <span
         className={`min-w-0 font-semibold ${styles[modifier.type]}`}
-        style={{ fontSize: 'var(--kds-modifier)', lineHeight: '0.95' }}
+        style={{ fontSize: 'var(--kds-modifier)', lineHeight: '0.9', display: 'inline-block' }}
       >
         {tm(modifier.text)}
       </span>
