@@ -896,7 +896,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { setSettingsSection('language'); onNavigate('settings'); }} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => { window.location.assign('/kds/full/settings/display#language'); }} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} />
     </div>
   );
 }
