@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Megaphone, Check, MessageSquare } from 'lucide-react';
+import { MessageCircle, Check, Reply } from 'lucide-react';
 import type { KitchenMessage, KitchenReply } from '@/types/kitchen-message';
 import { KitchenReplyDialog } from './KitchenReplyDialog';
 
