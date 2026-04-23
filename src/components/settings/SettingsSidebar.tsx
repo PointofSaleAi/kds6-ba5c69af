@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Monitor, ShoppingBag, Send, Cpu, User, ChevronRight } from 'lucide-react';
+import { Search, Monitor, ShoppingBag, Send, Cpu, User } from 'lucide-react';
 import {
   SETTINGS_GROUPS,
   searchSettings,
@@ -40,46 +40,14 @@ export function SettingsSidebar() {
   const groupIds: SettingsGroupId[] = ['display', 'orders', 'expo', 'hardware', 'account'];
 
   return (
-    <aside
-      className="flex flex-col shrink-0 h-full"
-      style={{
-        width: 280,
-        background: 'hsl(var(--surface-bg))',
-        borderRight: '1px solid hsl(var(--border))',
-      }}
-    >
-      <div className="px-4 py-4 shrink-0">
-        <h2
-          className="text-lg font-semibold"
-          style={{ color: 'hsl(var(--text-primary))' }}
-        >
+    <aside className="flex flex-col shrink-0 h-full w-full">
+      <div className="px-4 pt-4 pb-3 shrink-0">
+        <h2 className="text-xl font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
       </div>
 
-      {/* Search */}
-      <div className="px-4 pb-3 shrink-0">
-        <div
-          className="flex items-center gap-2 rounded-full px-3.5 py-2.5"
-          style={{
-            background: 'hsl(var(--surface-card))',
-            border: '1px solid hsl(var(--border))',
-          }}
-        >
-          <Search size={16} style={{ color: 'hsl(var(--text-muted))' }} />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search settings"
-            className="bg-transparent flex-1 outline-none text-sm"
-            style={{ color: 'hsl(var(--text-primary))' }}
-          />
-        </div>
-      </div>
-
-      {/* Results or group nav */}
-      <div className="flex-1 overflow-y-auto px-2 pb-4">
+      <div className="flex-1 overflow-y-auto px-2 pb-2">
         {showResults ? (
           <div className="px-2">
             <div
@@ -104,20 +72,25 @@ export function SettingsSidebar() {
                 >
                   <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[r.group]} />
                   <div className="flex-1 min-w-0 text-left">
-                    <div className="text-sm font-medium truncate" style={{ color: 'hsl(var(--text-primary))' }}>
+                    <div
+                      className="text-sm font-medium truncate"
+                      style={{ color: 'hsl(var(--text-primary))' }}
+                    >
                       {r.label}
                     </div>
-                    <div className="text-xs truncate" style={{ color: 'hsl(var(--text-muted))' }}>
+                    <div
+                      className="text-xs truncate"
+                      style={{ color: 'hsl(var(--text-muted))' }}
+                    >
                       {r.groupLabel} · {r.description}
                     </div>
                   </div>
-                  <ChevronRight size={16} style={{ color: 'hsl(var(--text-muted))' }} />
                 </button>
               );
             })}
           </div>
         ) : (
-          <nav className="flex flex-col gap-1 px-2 pt-2">
+          <nav className="flex flex-col gap-1 px-2 pt-1">
             {groupIds.map((id) => {
               const group = SETTINGS_GROUPS[id];
               const Icon = GROUP_ICON[id];
@@ -129,8 +102,7 @@ export function SettingsSidebar() {
                   onClick={() => navigate(group.path)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl active:opacity-70 transition-all"
                   style={{
-                    background: isActive ? 'hsl(var(--surface-card))' : 'transparent',
-                    border: `1px solid ${isActive ? 'hsl(var(--border))' : 'transparent'}`,
+                    background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -149,14 +121,27 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div
-        className="px-4 py-3 text-xs shrink-0"
-        style={{
-          color: 'hsl(var(--text-muted))',
-          borderTop: '1px solid hsl(var(--border))',
-        }}
-      >
-        POSAI KDS v2.4.1
+      <div className="px-4 pt-3 pb-3 shrink-0">
+        <div
+          className="flex items-center gap-2 rounded-full px-3.5 py-2.5"
+          style={{ background: 'hsl(var(--surface-bg))' }}
+        >
+          <Search size={16} style={{ color: 'hsl(var(--text-muted))' }} />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search settings"
+            className="bg-transparent flex-1 outline-none text-sm"
+            style={{ color: 'hsl(var(--text-primary))' }}
+          />
+        </div>
+        <div
+          className="pt-2 text-[11px] text-center"
+          style={{ color: 'hsl(var(--text-muted))' }}
+        >
+          POSAI KDS v2.4.1
+        </div>
       </div>
     </aside>
   );
