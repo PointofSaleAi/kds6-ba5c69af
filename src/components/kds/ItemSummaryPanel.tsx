@@ -294,7 +294,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                           }}
                         >
                           <span
-                            className={`min-w-0 uppercase leading-tight ${isPortrait ? 'break-words' : 'truncate'} ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                            className={`min-w-0 uppercase leading-tight break-words ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
                             style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : {}) }}
                           >
                             {tp(item.name)}
@@ -406,7 +406,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                             }}
                           >
                             <span
-                              className={`min-w-0 uppercase leading-tight ${isPortrait ? 'break-words' : 'truncate'} ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                              className={`min-w-0 uppercase leading-tight break-words ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
                               style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '4px', marginLeft: '-7px' } : {}) }}
                             >
                               {tp(item.name)}
