@@ -215,16 +215,15 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   }
 
   return (
-    <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
+    <div className="w-[180px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 bg-sidebar border-l border-sidebar-border">
-        <div className="flex items-center gap-2 min-w-0">
-          <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
+      <div className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
+        <div className="flex items-center gap-1.5 min-w-0">
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
-          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-2 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
+          <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
-          <ChevronRight size={18} strokeWidth={3} />
+        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
+          <ChevronRight size={16} strokeWidth={3} />
         </button>
       </div>
 
@@ -273,7 +272,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     Overtime
                   </span>
                 </div>
-                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 bg-destructive text-destructive-foreground">
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-destructive text-destructive-foreground">
                   {overtimeTotal}
                 </span>
               </div>
@@ -300,7 +299,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                           >
                             {tp(item.name)}
                           </span>
-                          <div className={`flex items-center ${isPortrait ? 'gap-1' : 'gap-1.5'} ml-1 shrink-0`}>
+                          <div className={`flex items-center ${isPortrait ? 'gap-0.5' : 'gap-1'} ml-0.5 shrink-0`}>
                             <span className="text-[10px] font-mono text-destructive tabular-nums">
                               {formatMins(item.oldestSeconds)}
                             </span>
@@ -374,7 +373,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       {cat.category}
                     </span>
                   </button>
-                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
+                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 transition-colors duration-150 ${
                     isCategorySelected
                       ? 'bg-[#3B82F6] text-white'
                       : cat.hasOvertime
@@ -412,7 +411,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                             >
                               {tp(item.name)}
                             </span>
-                            <div className={`flex items-center ${isPortrait ? 'gap-1' : 'gap-1.5'} ml-1 shrink-0`}>
+                            <div className={`flex items-center ${isPortrait ? 'gap-0.5' : 'gap-1'} ml-0.5 shrink-0`}>
                               {isUncategorized && (
                                 <button
                                   onClick={(e) => {
