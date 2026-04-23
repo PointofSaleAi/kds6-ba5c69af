@@ -49,7 +49,7 @@ export function SwitchToggle({
       type="button"
       onClick={() => onChange(!checked)}
       className="relative w-11 h-6 rounded-full transition-colors"
-      style={{ background: checked ? 'hsl(var(--btn-seen))' : 'hsl(var(--border))' }}
+      style={{ background: checked ? 'hsl(var(--primary))' : 'hsl(var(--border))' }}
       role="switch"
       aria-checked={checked}
     >
