@@ -1,54 +1,26 @@
 
-1. Root cause
-- The earlier spacing-tightening removed the card-level bottom padding that used to create breathing room after the final product.
-- In coursed tickets, `CourseItemTapRow` in `src/components/kds/CourseSection.tsx` now renders with effectively zero outer bottom padding, so the last modifier/add-on of the last visible item can sit too close to the card edge.
-- In non-coursed tickets, `src/components/kds/FlatItemList.tsx` still has light row padding, but it should be normalized so the final visible product gets the same deliberate end spacing as coursed tickets.
-- Re-adding a generic bottom padding on the whole course/card wrapper would bring back the previous bug: empty space under a Done course header even when there is no actual product content below it.
 
-2. Targeted implementation
-- Update `src/components/kds/CourseSection.tsx`
-  - Keep the tight spacing between product name, allergen chips, modifiers, and notes exactly as-is.
-  - Add a very small trailing bottom padding only when rendering the actual last visible product row in an expanded course.
-  - Apply it at the row wrapper/content-block level so the gap appears after the last product content, not between internal metadata lines.
-  - Preserve the current compact density for all non-last rows.
+## Add slight top padding to "Seen at" / "Done at" / "Preparing at" labels
 
-- Update `src/components/kds/FlatItemList.tsx`
-  - Mirror the same “last visible product only” trailing spacing rule used in `CourseSection.tsx`.
-  - Keep internal row spacing unchanged so allergens/modifiers remain tight.
-  - Ensure the final item in non-coursed tickets does not end flush against the card bottom.
+### Goal
+Push the timestamp labels (e.g. "Seen at 16:17", "Done at 16:17") down a tiny bit so they don't sit flush at the top of the product row, while leaving the product name (e.g. "OSSO BUCO", "GRILLED BARRAMUNDI") unchanged.
 
-- Do not reintroduce global bottom padding in `src/components/kds/OrderCard.tsx`
-  - Leave the card/course container flush so empty-course whitespace does not return.
-  - Keep the fix localized to the final rendered product block.
+### Scope
+Apply only to the timestamp `<span>` elements. Do not change product name typography, row padding, or allergen/modifier spacing.
 
-3. What will change visually
-- A small, clean breathing space will appear after the last product in a ticket.
-- The spacing between:
-  - product name and allergen chips
-  - product name and modifiers/add-ons
-  - stacked modifiers/add-ons
-  will stay tight and unchanged.
-- The previous unwanted empty area under Done course headers will remain removed.
+### Files & changes
 
-4. Technical details
-- Focus only on:
-  - conditional bottom padding or margin for `isLastVisible` rows in `CourseSection.tsx`
-  - matching last-row spacing logic in `FlatItemList.tsx`
-- Avoid changing:
-  - card-level padding
-  - course header height
-  - product typography
-  - allergen/modifier styling
-  - row ordering, lifecycle logic, expand/collapse behavior
+1. `src/components/kds/CourseSection.tsx`
+   - On the two timestamp spans inside `CourseItemTapRow` (lines ~562-577 for `seenAt` and `doneAt`), add a small inline top padding (`paddingTop: '3px'`) and `alignSelf: 'flex-start'` so the label aligns with the top of the product name but is nudged down slightly.
 
-5. Validation
-- Verify in Dine-In coursed tickets:
-  - Active course
-  - Preparing course
-  - Done/served course when expanded
-  - last product with allergens/modifiers/add-ons at the bottom of the card
-- Verify in non-coursed tickets:
-  - last visible product has the same final bottom breathing room
-- Confirm both:
-  - there is no extra empty block under a Done course header
-  - there is now a small, intentional space after the last product content only
+2. `src/components/kds/FlatItemList.tsx`
+   - On the matching `seenAt` and `doneAt` timestamp spans (lines ~199-207), apply the same `paddingTop: '3px'` and `alignSelf: 'flex-start'` for consistency.
+
+3. `src/components/kds/CourseSection.tsx` (course header timestamps)
+   - The course-level "Done at" (line ~270-273) and "Preparing at" (line ~336-339) header chips are inside the header row, not next to a product, so leave them untouched. Only the per-product labels get the padding.
+
+### Visual outcome
+- Product name stays vertically centered/anchored as today.
+- "Seen at HH:MM" and "Done at HH:MM" labels next to each product appear slightly lower, giving them visual separation from the product name baseline.
+- No change to allergen chips, modifiers, row height, or card spacing.
+
