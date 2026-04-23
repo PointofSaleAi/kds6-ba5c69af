@@ -615,7 +615,7 @@ function CourseItemTapRow({
       </div>
 
       {showDetails && item.modifiers.length > 0 && (
-        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '-1px' }}>
+        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '3px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
@@ -631,7 +631,7 @@ function CourseItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: '0px' }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: '3px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
             0x
           </span>
