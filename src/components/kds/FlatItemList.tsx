@@ -33,7 +33,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
   const allItems = courses.flatMap(c => c.items);
 
   return (
-    <div className="px-2">
+    <div className="px-1">
       {(() => {
         const visibleItems = allItems.filter((item) => {
           if (dismissedItemIds?.has(item.id)) return false;
