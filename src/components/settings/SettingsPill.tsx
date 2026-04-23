@@ -42,12 +42,22 @@ export function SettingsPill({
             : 'none',
         }}
       >
-        <button
-          type="button"
-          onClick={onClick}
-          disabled={!interactive}
+        <div
+          role={interactive ? 'button' : undefined}
+          tabIndex={interactive ? 0 : undefined}
+          onClick={interactive ? onClick : undefined}
+          onKeyDown={
+            interactive
+              ? (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onClick?.();
+                  }
+                }
+              : undefined
+          }
           className={`w-full flex items-center justify-between gap-3 py-3 px-4 ${
-            interactive ? 'active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
+            interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -59,13 +69,16 @@ export function SettingsPill({
               {label}
             </span>
           </div>
-          <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="flex items-center gap-2 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
             {right}
             {interactive && !right && (
               <ChevronRight size={18} style={{ color: 'hsl(var(--text-muted))' }} />
             )}
           </div>
-        </button>
+        </div>
       </div>
       {helper && (
         <p
