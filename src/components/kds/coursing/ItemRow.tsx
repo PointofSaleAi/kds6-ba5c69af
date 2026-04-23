@@ -49,7 +49,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           >
             <span className="relative text-[13px] font-normal shrink-0">
               <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
-              <span className="absolute inset-0 flex items-center justify-center">
+              <span className="absolute inset-0 flex items-center justify-start">
                 <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
                   <Languages size={10} className="text-text-secondary" />
                 </span>
