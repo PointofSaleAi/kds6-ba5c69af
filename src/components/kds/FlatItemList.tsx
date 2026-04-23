@@ -101,7 +101,7 @@ interface ItemTapRowProps {
 }
 
 function ItemTapRow({
-  item, status, timestamps, isLastVisible, showAllergens,
+  item, status, timestamps, seenIdx, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
