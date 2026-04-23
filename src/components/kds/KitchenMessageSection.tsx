@@ -78,9 +78,9 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
             {msgReplies.length > 0 && (
               <div className="mx-3 mb-2 border-l-2 border-[#7C3AED]/30 pl-3 space-y-1">
                 {msgReplies.map(r => (
-                  <div key={r.reply_id}>
-                    <p className="text-[11px] text-text-primary font-medium">{r.reply_text}</p>
-                    <p className="text-[9px] text-text-muted">Kitchen - {formatTime(r.timestamp)}</p>
+                  <div key={r.reply_id} className="flex items-center gap-2">
+                    <p className="text-[11px] text-text-primary font-medium flex-1 min-w-0 truncate">{r.reply_text}</p>
+                    <p className="text-[9px] text-text-muted shrink-0">{r.employee_name || 'Kitchen'} - {formatTime(r.timestamp)}</p>
                   </div>
                 ))}
               </div>

@@ -18,6 +18,7 @@ export interface KitchenReply {
   reply_id: string;
   message_id: string;
   reply_text: string;
+  employee_name?: string;
   timestamp: Date;
   source: 'kds';
 }
