@@ -140,21 +140,6 @@ export default function DisplaySettings() {
       />
 
       <SettingsPill
-        icon={theme === 'dark' ? Moon : Sun}
-        iconColor="#1F2937"
-        label="Theme"
-        helper="Switch between Light and Dark for the rest of the KDS."
-        right={
-          <SegmentedToggle
-            options={['Light', 'Dark']}
-            value={theme === 'dark' ? 'Dark' : 'Light'}
-            onChange={(v) => setTheme(v === 'Dark' ? 'dark' : 'light')}
-          />
-        }
-        highlighted={hash === 'theme'}
-      />
-
-      <SettingsPill
         icon={Globe}
         iconColor="#16A085"
         label="Language"
