@@ -82,11 +82,6 @@ export const previewTicket: Order = {
           ],
           allergens: [],
         },
-      ],
-    },
-    {
-      course: 'DESSERT',
-      items: [
         {
           id: 'prev-i-005',
           name: 'Truffle Pasta',
