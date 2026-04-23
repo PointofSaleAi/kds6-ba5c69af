@@ -39,9 +39,6 @@ export default function OrdersSettings() {
         right={<SwitchToggle checked={showAllergens} onChange={setShowAllergens} />}
         highlighted={hash === 'allergen-badges'}
       />
-      <CategoryFilterPanel open={categoryOpen} onClose={() => setCategoryOpen(false)} onApply={() => {}} />
-      <RevenueCenterFilter open={revenueOpen} onClose={() => setRevenueOpen(false)} onApply={() => {}} />
-      <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
     </>
   );
 }
