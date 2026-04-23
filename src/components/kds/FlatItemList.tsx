@@ -132,8 +132,14 @@ function ItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // Seen rows use a very light green tint; Done rows use a light grey tint.
-  const rowBg = isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? 'rgba(29, 158, 117, 0.10)' : undefined;
+  const useTeal = isSeen && seenIdx % 2 === 1;
+  const seenBgGreen = 'rgba(29, 158, 117, 0.14)';
+  const seenBgTeal = 'rgba(245, 158, 11, 0.18)';
+  const seenTextGreen = '#0F5132';
+  const seenTextTeal = '#92400E';
+
+  // Seen rows alternate green/amber tint; Done rows use a light grey tint.
+  const rowBg = isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined;
 
   return (
     <div
