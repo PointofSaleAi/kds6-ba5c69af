@@ -279,16 +279,16 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
               </div>
 
               {!overtimeCollapsed && (
-                <div className="px-3 py-1">
+                <div className="pl-1.5 pr-2 py-0.5">
                   {overtimeItems.map((item) => {
                     const isSelected = selectedItems?.has(item.name) ?? false;
                     return (
                       <div
                         key={`overtime-${item.name}`}
-                        className="relative border-b border-border/30 last:border-b-0 bg-destructive/10 -mx-3 px-3 border-l-2 border-destructive animate-pulse"
+                        className="relative border-b border-border/30 last:border-b-0 bg-destructive/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-destructive animate-pulse"
                       >
                         <div
-                          className={`flex items-center justify-between ${isPortrait ? 'py-[2px] gap-1' : 'py-[4px]'} cursor-pointer`}
+                          className={`flex items-center justify-between ${isPortrait ? 'py-[1px] gap-1' : 'py-[2px]'} cursor-pointer`}
                           onClick={(e) => {
                             e.stopPropagation();
                             onItemToggle?.(item.name);
