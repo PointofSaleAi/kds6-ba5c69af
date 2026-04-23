@@ -83,6 +83,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   } = useKDSSettings();
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
+  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>(ticketLayout);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   
   const [currOpen, setCurrOpen] = useState(false);
@@ -532,17 +533,34 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
             <div className="w-[360px] shrink-0 flex flex-col h-full">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-2 gap-2">
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
                   {t.previewKDS}
                 </div>
-                <div className="text-[10px] text-text-muted">
-                  {ticketLayout === 'compact' ? 'Compact layout' : 'Standard layout'}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] font-semibold text-text-muted uppercase tracking-wider">View as</span>
+                  <div className="flex bg-muted rounded-md p-0.5 border border-border">
+                    {(['standard', 'compact'] as const).map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => setPreviewLayout(opt)}
+                        className={`px-2 py-0.5 text-[10px] font-semibold rounded transition-colors capitalize ${
+                          previewLayout === opt ? 'bg-brand-primary text-primary-foreground' : 'text-text-secondary hover:text-text-primary'
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+              </div>
+              <div className="text-[9px] text-text-muted mb-2 italic">
+                Preview-only. Change the saved layout in Display, Ticket Layout.
               </div>
               <div className="flex-1 min-h-0 overflow-hidden pointer-events-none select-none w-full flex flex-col" aria-hidden="true">
                 <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
-                  <OrderCard order={previewTicket} compact={ticketLayout === 'compact'} />
+                  <OrderCard order={previewTicket} compact={previewLayout === 'compact'} />
                 </div>
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
