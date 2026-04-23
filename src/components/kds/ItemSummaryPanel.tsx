@@ -373,7 +373,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       {cat.category}
                     </span>
                   </button>
-                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 transition-colors duration-150 ${
+                  <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 transition-colors duration-150 ${
                     isCategorySelected
                       ? 'bg-[#3B82F6] text-white'
                       : cat.hasOvertime
