@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Monitor, Type, Rows3, Palette, Globe,
-  Paintbrush, Bell, IdCard, SlidersHorizontal,
+  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -15,6 +15,7 @@ import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
+import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 
 export default function DisplaySettings() {
@@ -40,7 +41,23 @@ export default function DisplaySettings() {
   }
 
   if (languageOpen) {
-    return <LanguageSettings open={true} onClose={() => setLanguageOpen(false)} />;
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex items-center gap-3 mb-4">
+          <button
+            onClick={() => setLanguageOpen(false)}
+            className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-2xl font-bold">Language</h1>
+        </div>
+        <div className="flex-1 min-h-0">
+          <InlineLanguageSettings activeTab="language" />
+        </div>
+      </div>
+    );
   }
 
   return (
