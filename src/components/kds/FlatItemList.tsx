@@ -242,7 +242,7 @@ function ItemTapRow({
       </div>
 
       {showDetails && item.modifiers.length > 0 && (
-        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '3px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '2px', display: 'flex', flexDirection: 'column', gap: '0px' }}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
