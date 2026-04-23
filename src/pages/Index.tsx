@@ -162,8 +162,8 @@ const Index = () => {
       {screen === 'main' && (
         <MainOrderView
           onNavigate={handleNavigate}
-          settingsOpen={settingsOpen}
-          onCloseSettings={() => {}}
+          settingsOpen={inSettings}
+          onCloseSettings={() => navigate('/kds/full')}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
