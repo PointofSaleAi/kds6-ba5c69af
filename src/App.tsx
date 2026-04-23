@@ -19,6 +19,12 @@ import { NotificationStationSync } from "@/components/kds/NotificationStationSyn
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import SettingsLayout from "./pages/SettingsLayout.tsx";
+import DisplaySettings from "./pages/settings/DisplaySettings.tsx";
+import OrdersSettings from "./pages/settings/OrdersSettings.tsx";
+import ExpoSettings from "./pages/settings/ExpoSettings.tsx";
+import HardwareSettings from "./pages/settings/HardwareSettings.tsx";
+import AccountSettings from "./pages/settings/AccountSettings.tsx";
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
@@ -48,7 +54,17 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/kds/full" replace />} />
             <Route path="/kds/full" element={<Index />} />
-            
+
+            {/* Settings two-pane layout */}
+            <Route path="/kds/full/settings" element={<SettingsLayout />}>
+              <Route index element={<Navigate to="display" replace />} />
+              <Route path="display" element={<DisplaySettings />} />
+              <Route path="orders" element={<OrdersSettings />} />
+              <Route path="expo" element={<ExpoSettings />} />
+              <Route path="hardware" element={<HardwareSettings />} />
+              <Route path="account" element={<AccountSettings />} />
+            </Route>
+
             <Route path="/kds-reply" element={<KdsReplyPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
