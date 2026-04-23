@@ -101,23 +101,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const previewSecondaryInfo = getLangInfo(previewSecondaryLang);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-brand-dark/60 z-50 flex items-center justify-center"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-surface-card w-full flex flex-col shadow-2xl mx-3"
-          style={{ maxWidth: '820px', borderRadius: '20px', height: 'min(580px, calc(100vh - 40px))' }}
-        >
+    <div className="bg-surface-card w-full h-full flex flex-col rounded-2xl overflow-hidden">
+
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-border shrink-0">
             <Globe size={20} className="text-text-muted" />
