@@ -2,118 +2,59 @@
 
 ## Goal
 
-Replace the current single-modal Settings sheet with a full-page, two-pane Settings layout modeled after the referenced POSAI 6.0 project, applied in light theme using existing POSAI KDS design tokens. All existing settings preserved, no functionality lost.
+Restructure the Settings screen to match the reference layout: two visually separated rounded compartments (left nav card and right content card) floating on the page background, with a "Settings" title above the left card and a search pill at the bottom of the left card. Light theme only, no other behavior changes.
 
-## Layout Structure
+## Current vs Target
+
+**Current**: Left nav and right content are flush panes filling the viewport edge-to-edge.
+
+**Target**: Both panes become rounded card compartments with padding around them, separated by a gap, sitting on the surface background. The KDS rail on the far left and bottom status bar stay unchanged.
 
 ```text
-+------------------------------------------------------------+
-| /kds/full/settings                                          |
-+--------------------+----------------------------------------+
-|  LEFT NAV (260px)  |  RIGHT CONTENT PANEL                   |
-|                    |                                         |
-|  [Search bar]      |  +-- Header card ---------------+      |
-|                    |  | [icon tile] Display          |      |
-|  Display      *    |  | Customize layout, theme,...  |      |
-|  Orders            |  +------------------------------+      |
-|  Expo View         |                                         |
-|  Hardware          |  +-- Option pill ---------------+      |
-|  Account           |  | [tile] Display Mode    [seg] |      |
-|                    |  +------------------------------+      |
-|                    |  Helper text under each pill           |
-|                    |                                         |
-|                    |  +-- Option pill ---------------+      |
-|                    |  | [tile] Cards per row  [+/-] |      |
-|                    |  +------------------------------+      |
-+--------------------+----------------------------------------+
++--------+---------------------------------------------+
+| KDS    |  (page padding)                              |
+| rail   |  Settings                                    |
+|        |  +------------+   +-----------------------+ |
+|        |  |            |   |  [header card]        | |
+|        |  | Account    |   |                       | |
+|        |  | Display *  |   |  [pill row]           | |
+|        |  | Orders     |   |  [pill row]           | |
+|        |  | Expo View  |   |                       | |
+|        |  | Hardware   |   |                       | |
+|        |  |            |   |                       | |
+|        |  | [Search]   |   |                       | |
+|        |  +------------+   +-----------------------+ |
++--------+---------------------------------------------+
+|                Bottom status bar                      |
++-------------------------------------------------------+
 ```
 
-- Light-theme tokens (`bg-surface`, `bg-surface-card`, `text-text-primary`, `border-border`).
-- Colored rounded icon tiles (36px) matching the reference's per-row color coding.
-- Pill rows: `rounded-full` containers, `py-3.5 px-4`, with helper subtitle below each row in `text-xs text-text-muted`.
-- Header card per section: rounded-2xl, large 64px icon tile, title + description with "Learn more" toggle.
+## Changes
 
-## Routes
+### `src/pages/MainOrderView.tsx` (settings branch only)
 
-New routes added under existing `/kds/full` shell:
+Wrap the existing settings region in a padded container that places two rounded cards side by side instead of edge-to-edge panes.
 
-- `/kds/full/settings` → redirects to `/kds/full/settings/display`
-- `/kds/full/settings/display`
-- `/kds/full/settings/orders`
-- `/kds/full/settings/expo`
-- `/kds/full/settings/hardware`
-- `/kds/full/settings/account`
+- Outer wrapper: `flex-1 overflow-hidden p-4 gap-4` on a light background (`hsl(var(--surface-bg))`).
+- Left card: fixed width `w-[280px]`, `rounded-3xl bg-surface-card shadow-sm`, contains the new `<SettingsSidebar />` plus a "Settings" heading at the top inside the card padding.
+- Right card: `flex-1 rounded-3xl bg-surface-card shadow-sm overflow-y-auto`, contains the `<Outlet />` rendered with the existing `max-w-2xl mx-auto px-6 py-6`.
 
-Existing sub-screens become child routes (preserves all current behavior):
+### `src/components/settings/SettingsSidebar.tsx`
 
-- `/kds/full/settings/display/status-colors`
-- `/kds/full/settings/display/order-type-colors`
-- `/kds/full/settings/display/language`
-- `/kds/full/settings/orders/category-filter`
-- `/kds/full/settings/orders/revenue-center`
-- `/kds/full/settings/orders/stagger-mode`
-- `/kds/full/settings/hardware/printer-kot`
-- `/kds/full/settings/hardware/printer-label`
-- `/kds/full/settings/hardware/sound`
-- `/kds/full/settings/hardware/connection`
+- Remove the outer panel chrome (border, full-height background) since the parent card now provides it.
+- Move the search input from the top to the bottom of the card (sticky at bottom of the left card), styled as a rounded pill matching the reference.
+- Add a "Settings" title at the top of the card content (large, bold, left-aligned).
+- Keep all existing nav items, active state, search behavior, and route handling exactly as-is.
+- No chevrons (already removed). No back button (already removed).
 
-The Settings cog in the sidebar opens this page instead of the modal.
+### `src/pages/SettingsLayout.tsx`
 
-## Section Mapping (preserves every existing row)
-
-**Display**: Display mode, Cards per row, Text size, Ticket layout (Standard/Compact), Status colours, Theme (Light/Dark), Region/Language.
-
-**Orders**: Category filter, Revenue center filter, Stagger mode, Servable modifiers, Allergen badges, Sort default.
-
-**Expo View**: Show Send button (Always / When ready).
-
-**Hardware**: KOT printer, Label printer, Sound settings, Connection.
-
-**Account**: Device name, Dev mode toggle, Log out (with existing confirm dialog), version footer.
-
-## Search
-
-- Build `src/lib/settings-search-index.ts`: array of `{ id, label, description, group, path, keywords }` entries covering every row across all sections.
-- Search input in left nav header. While typing, the right panel shows result rows (icon tile + label + parent path + chevron). Click navigates to the corresponding route and scrolls/highlights the row.
-- No backend, purely client-side filter on the static index.
-
-## Files to create
-
-- `src/pages/SettingsLayout.tsx` — two-pane shell with `<Outlet />`.
-- `src/components/settings/SettingsSidebar.tsx` — left nav with search and group items.
-- `src/components/settings/SectionHeaderCard.tsx` — large icon + title + Learn more.
-- `src/components/settings/SettingsPill.tsx` — single rounded pill row (icon tile + label + right control + chevron).
-- `src/components/settings/SettingsIconTile.tsx` — colored rounded square with image/icon.
-- `src/pages/settings/DisplaySettings.tsx`
-- `src/pages/settings/OrdersSettings.tsx`
-- `src/pages/settings/ExpoSettings.tsx`
-- `src/pages/settings/HardwareSettings.tsx`
-- `src/pages/settings/AccountSettings.tsx`
-- `src/lib/settings-search-index.ts`
-
-## Files to modify
-
-- `src/App.tsx` — add nested routes under existing layout for the new settings pages.
-- `src/components/kds/KDSSidebar.tsx` (or wherever the gear icon lives) — change settings button to `navigate('/kds/full/settings')` instead of opening the modal.
-- `src/pages/MainOrderView.tsx` — remove modal-open state for Settings (or keep `SettingsScreen` only for legacy fallback during migration; final pass removes it).
-- `src/pages/SettingsScreen.tsx` — remove after migration.
-
-## Theme
-
-- Force light theme tokens in the new pages regardless of global theme; section/page background `bg-surface`, cards `bg-surface-card`, dividers `bg-border`, text via `text-text-primary` / `text-text-muted`.
-- Colored icon tile palette reused from reference (Display = `#525252`, Orders = `#F9900E`, Expo = `#7C3AED`, Hardware = `#5E4DD8`, Account = `#0A84FF`, etc.) on white tiles for contrast in light mode.
-- All other surfaces in the app (KDS tickets, sidebar) untouched. Theme toggle in Account section continues to work for the rest of the app.
-
-## Preserved Behavior
-
-- All existing hooks (`useKDSSettings`, `usePrinterAssignments`, `useTheme`, `useLanguage`) wired into the new pages identically.
-- Logout confirm dialog reused.
-- Existing standalone sub-screens (`StatusSettings`, `LanguageSettings`, `PrinterSettings`, `SoundSettings`, `WebSocketSettings`, `CategoryFilterPanel`, `RevenueCenterFilter`, `StaggerModeSettings`, `OrderTypeColorsSettings`) reused as the destination of sub-page routes; only the surrounding container changes.
-- Memory rule respected: no X close buttons on primary settings tabs, no em dashes.
+Mirror the same two-card structure for the standalone `/kds/full/settings` route so behavior is identical whether reached through `MainOrderView` or directly.
 
 ## Out of Scope
 
-- No new settings added or removed.
-- No changes to ticket cards, summary panel, or kitchen surfaces.
-- No copy of icon PNG assets from the reference project (lucide icons in colored tiles deliver the same visual hierarchy and avoid bloat).
+- No changes to section content, controls, search index, routes, or hooks.
+- No changes to KDSSidebar, BottomStatusBar, or any KDS surfaces.
+- No new icons, no asset copying from the reference project.
+- Theme stays light for settings only; rest of app unaffected.
 
