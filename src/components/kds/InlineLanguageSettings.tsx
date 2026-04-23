@@ -529,11 +529,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             <div className="hidden md:block w-px bg-border shrink-0" />
 
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
-            <div className="w-[360px] shrink-0 flex flex-col">
+            <div className="w-[360px] shrink-0 flex flex-col h-full">
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
                 {t.previewKDS}
               </div>
-              <div className="flex-1 pointer-events-none select-none max-w-[340px] w-full mx-auto" aria-hidden="true">
+              <div className="flex-1 min-h-0 pointer-events-none select-none w-full [&>*]:h-full [&>*]:flex [&>*]:flex-col" aria-hidden="true">
                 <OrderCard order={previewTicket} />
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
