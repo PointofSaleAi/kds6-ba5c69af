@@ -14,6 +14,8 @@ import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { SettingsPanel } from '@/components/kds/SettingsPanel';
+import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
+import { Outlet } from 'react-router-dom';
 import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order, OrderItem } from '@/types/kds';
@@ -684,15 +686,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         />
 
         {settingsOpen ? (
-          <SettingsPanel
-            onClose={() => { onCloseSettings?.(); setSettingsSection('display'); }}
-            onOpenSub={(sub) => onOpenSub?.(sub)}
-            onLogOut={onLogOut}
-            onDevModeChange={onDevModeChange}
-            initialSection={settingsSection as any}
-            onNavigateHome={() => { setActiveNav('home'); }}
-            orders={orders}
-          />
+          <div className="light flex flex-1 overflow-hidden" style={{ background: 'hsl(var(--surface-bg))' }}>
+            <SettingsSidebar />
+            <main className="flex-1 overflow-y-auto">
+              <div className="max-w-2xl mx-auto px-6 py-6">
+                <Outlet />
+              </div>
+            </main>
+          </div>
         ) : (
         <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}>
           {isHistory ? (
