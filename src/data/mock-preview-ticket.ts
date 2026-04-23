@@ -89,6 +89,34 @@ export const previewTicket: Order = {
       items: [
         {
           id: 'prev-i-005',
+          name: 'Truffle Pasta',
+          category: 'Pasta',
+          quantity: 1,
+          modifiers: [
+            { id: 'prev-m-008', text: '+ Extra Parmesan', type: 'extra' },
+          ],
+          allergens: [
+            { type: 'gluten', label: 'GLUTEN', icon: '🌾' },
+            { type: 'dairy', label: 'DAIRY', icon: '🥛' },
+          ],
+        },
+        {
+          id: 'prev-i-006',
+          name: 'Roasted Vegetables',
+          category: 'Sides',
+          quantity: 2,
+          modifiers: [
+            { id: 'prev-m-009', text: 'No Salt', type: 'remove' },
+          ],
+          allergens: [],
+        },
+      ],
+    },
+    {
+      course: 'DESSERT',
+      items: [
+        {
+          id: 'prev-i-007',
           name: 'Tiramisu',
           category: 'Desserts',
           quantity: 1,
@@ -98,6 +126,28 @@ export const previewTicket: Order = {
             { type: 'dairy', label: 'DAIRY', icon: '🥛' },
             { type: 'egg', label: 'EGG', icon: '🥚' },
           ],
+        },
+        {
+          id: 'prev-i-008',
+          name: 'Chocolate Lava Cake',
+          category: 'Desserts',
+          quantity: 2,
+          modifiers: [
+            { id: 'prev-m-010', text: '+ Vanilla Ice Cream', type: 'extra' },
+          ],
+          allergens: [
+            { type: 'gluten', label: 'GLUTEN', icon: '🌾' },
+            { type: 'dairy', label: 'DAIRY', icon: '🥛' },
+            { type: 'egg', label: 'EGG', icon: '🥚' },
+          ],
+        },
+        {
+          id: 'prev-i-009',
+          name: 'Espresso',
+          category: 'Beverages',
+          quantity: 3,
+          modifiers: [],
+          allergens: [],
         },
       ],
       autoFireLabel: 'Queued',
