@@ -151,7 +151,7 @@ function ItemTapRow({
       }}
     >
       <div
-        className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
+        className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
         style={{ padding: `0px 0 0 0px`, gap: 0 }}
         onClick={handleTap}
         title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
@@ -163,7 +163,7 @@ function ItemTapRow({
             aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
             aria-expanded={detailsOpen}
             className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
-            style={{ width: 12, height: 12, marginRight: 0 }}
+            style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
           >
             <ChevronRight
               size={12}

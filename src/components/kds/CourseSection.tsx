@@ -499,7 +499,7 @@ function CourseItemTapRow({
       }}
     >
       <div
-        className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
+        className={`flex items-start transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{ padding: headerPad, gap: 0 }}
         onClick={tappable ? handleTap : undefined}
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
@@ -511,7 +511,7 @@ function CourseItemTapRow({
             aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
             aria-expanded={detailsOpen}
             className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
-            style={{ width: 12, height: 12, marginRight: 0 }}
+            style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
           >
             <ChevronRight
               size={12}
