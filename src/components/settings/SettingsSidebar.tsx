@@ -127,7 +127,7 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl active:opacity-70 transition-all"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl active:opacity-70 transition-all"
                   style={{
                     background: isActive ? 'hsl(var(--surface-card))' : 'transparent',
                     border: `1px solid ${isActive ? 'hsl(var(--border))' : 'transparent'}`,
@@ -142,7 +142,6 @@ export function SettingsSidebar() {
                       {group.label}
                     </span>
                   </div>
-                  <ChevronRight size={16} style={{ color: 'hsl(var(--text-muted))' }} />
                 </button>
               );
             })}
