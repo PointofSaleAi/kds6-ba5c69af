@@ -15,7 +15,7 @@ export const previewTicket: Order = {
   timeReceived: new Date(Date.now() - 480000),
   elapsedSeconds: 480,
   targetSeconds: 900,
-  itemCount: 5,
+  itemCount: 9,
   orderNotes: 'Birthday dinner, please bring candle with dessert',
   courses: [
     {
