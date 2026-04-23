@@ -1,24 +1,15 @@
-import { useState } from 'react';
-import { ShoppingBag, Filter, Building2, Clock, Sparkles, AlertTriangle, ArrowDownAZ } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
-import { SegmentedToggle, SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
-import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
-import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 
 export default function OrdersSettings() {
   const {
     showAllergens, setShowAllergens,
-    staggerMode, setStaggerMode,
     servableModifiers, setServableModifiers,
-    sortDefault, setSortDefault,
   } = useKDSSettings();
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const [revenueOpen, setRevenueOpen] = useState(false);
-  const [staggerOpen, setStaggerOpen] = useState(false);
   const hash = useHashHighlight();
 
   return (
