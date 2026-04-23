@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Cpu, Printer, Tag, Volume2, Server } from 'lucide-react';
+import { Cpu, Printer, Tag, Volume2, Server, RefreshCw } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, ValueText, useHashHighlight } from '@/components/settings/SettingsControls';
@@ -61,6 +61,18 @@ export default function HardwareSettings() {
         helper="Volume, custom alert sounds, and per-event toggles."
         onClick={() => setSoundOpen(true)}
         highlighted={hash === 'sound-settings'}
+      />
+
+      <SettingsPill
+        icon={RefreshCw}
+        iconColor="#16A085"
+        label="Sync"
+        helper="Force sync of orders and settings with the cloud."
+        onClick={() => {
+          // Simulated sync action
+          window.dispatchEvent(new CustomEvent('posai:sync-now'));
+        }}
+        highlighted={hash === 'sync'}
       />
 
       <SettingsPill
