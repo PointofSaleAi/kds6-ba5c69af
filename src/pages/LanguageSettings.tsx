@@ -100,7 +100,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const previewSecondaryInfo = getLangInfo(previewSecondaryLang);
 
   return (
-    <div className="bg-surface-card w-full h-full flex flex-col rounded-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-surface-bg flex flex-col">
+
 
           {/* Header */}
           <div className="flex items-center gap-3 px-5 py-3 border-b border-border shrink-0">
