@@ -39,6 +39,10 @@ export default function DisplaySettings() {
     return <OrderTypeColorsSettings onBack={() => setOrderTypeColorsOpen(false)} />;
   }
 
+  if (languageOpen) {
+    return <LanguageSettings open={true} onClose={() => setLanguageOpen(false)} />;
+  }
+
   return (
     <>
       <SectionHeaderCard
@@ -149,7 +153,7 @@ export default function DisplaySettings() {
         highlighted={hash === 'language'}
       />
 
-      <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
+      
     </>
   );
 }
