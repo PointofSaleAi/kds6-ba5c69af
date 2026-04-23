@@ -81,6 +81,7 @@ interface ItemTapRowProps {
   item: OrderItem;
   status?: ItemStatus;
   timestamps?: { seenAt?: string; doneAt?: string };
+  seenIdx: number;
   isLastVisible: boolean;
   showAllergens: boolean;
   displayMode: string;
