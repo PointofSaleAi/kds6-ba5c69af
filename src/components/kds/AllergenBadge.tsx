@@ -30,10 +30,10 @@ export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps
   const color = getColor(allergen.type);
 
   const sizeStyle = variant === 'order'
-    ? { fontSize: 'var(--kds-allergen-font)', padding: 'var(--kds-allergen-py) var(--kds-allergen-px)', opacity: 1, lineHeight: 1.1 }
+    ? { fontSize: 'calc(var(--kds-allergen-font) - 1px)', padding: 'calc(var(--kds-allergen-py) - 1px) calc(var(--kds-allergen-px) - 1px)', opacity: 1, lineHeight: 1.1 }
     : variant === 'expo-item'
       ? { fontSize: '7px', padding: '0px 4px', opacity: 0.7, lineHeight: 1 }
-      : { fontSize: '7px', padding: '0px 4px', opacity: 0.7, lineHeight: 1 };
+      : { fontSize: '9px', padding: '1px 5px', opacity: 0.85, lineHeight: 1.1 };
 
   return (
     <span
