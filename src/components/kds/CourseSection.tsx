@@ -268,7 +268,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             </span>
           </div>
           {courseDoneAt && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-text-primary">
+            <span className="inline-flex items-center px-1.5 rounded text-[10px] font-semibold text-text-primary leading-none">
               {t.doneAt} {courseDoneAt}
             </span>
           )}
@@ -314,7 +314,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     <div className={containerClass} style={containerStyle}>
       <div
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
-        style={{ ...headerStyle, padding: '4px 8px', minHeight: '28px' }}
+        style={{ ...headerStyle, padding: '4px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -328,13 +328,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
           {/* Fired course: "Done X ago" */}
           {coursingStatus === 'fired' && firedTimerLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums text-text-primary">
+            <span className="inline-flex items-center px-1.5 rounded text-[10px] font-bold font-mono tabular-nums text-text-primary leading-none">
               {firedTimerLabel}
             </span>
           )}
           {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-text-primary">
+            <span className="inline-flex items-center px-1.5 rounded text-[10px] font-semibold text-text-primary leading-none">
               {t.preparingAt} {firingAtLabel}
             </span>
           )}
