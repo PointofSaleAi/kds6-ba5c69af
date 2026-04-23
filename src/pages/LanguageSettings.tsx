@@ -335,9 +335,8 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
             >
               {t.save}
             </button>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+    </div>
   );
 }
+
