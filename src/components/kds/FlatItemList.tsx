@@ -163,7 +163,7 @@ function ItemTapRow({
           </button>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap" style={{ gap: '6px', lineHeight: 1.1 }}>
+          <div className="flex items-center flex-wrap" style={{ gap: '3px', lineHeight: 1.1 }}>
             <span
               className={`font-normal ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1 }}
