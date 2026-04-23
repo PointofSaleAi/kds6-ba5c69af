@@ -673,8 +673,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           >
             {isCompactLayout ? (
               <>
-                <div className="text-white font-black shrink-0 leading-none" style={{ fontSize: '28px' }}>
-                  {order.orderNumber}
+                <div className="text-white font-black shrink-0 leading-none min-w-0 truncate" style={{ fontSize: '28px' }}>
+                  {ticketHeaderLayout === 'guest' && order.guestName ? order.guestName : order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
                   <div className="flex items-center gap-1.5 leading-none">
