@@ -18,36 +18,8 @@ export default function OrdersSettings() {
         icon={ShoppingBag}
         iconColor={GROUP_COLOR.orders}
         title="Orders"
-        shortDescription="Control which orders reach the kitchen, how they are paced, and how items are flagged."
-        longDescription="Control which orders reach the kitchen, how they are paced, and how items are flagged. Filter by category or revenue center to focus on what your station prepares, and toggle allergen badges or servable modifiers based on your workflow."
-      />
-
-      <SettingsPill
-        icon={Filter}
-        iconColor="#F9900E"
-        label="Category filter"
-        helper="Show only the categories your station prepares."
-        onClick={() => setCategoryOpen(true)}
-        highlighted={hash === 'category-filter'}
-      />
-
-      <SettingsPill
-        icon={Building2}
-        iconColor="#0A84FF"
-        label="Revenue center filter"
-        helper="Limit orders to specific stations or revenue centers."
-        onClick={() => setRevenueOpen(true)}
-        highlighted={hash === 'revenue-center'}
-      />
-
-      <SettingsPill
-        icon={Clock}
-        iconColor="#5E4DD8"
-        label="Stagger mode"
-        helper={staggerMode ? 'Configure batch size and release interval.' : 'Release orders in batches to pace the kitchen.'}
-        right={<SwitchToggle checked={staggerMode} onChange={setStaggerMode} />}
-        onClick={staggerMode ? () => setStaggerOpen(true) : undefined}
-        highlighted={hash === 'stagger-mode'}
+        shortDescription="Control how items are flagged on tickets."
+        longDescription="Toggle allergen badges or servable modifiers based on your workflow."
       />
 
       <SettingsPill
@@ -67,22 +39,6 @@ export default function OrdersSettings() {
         right={<SwitchToggle checked={showAllergens} onChange={setShowAllergens} />}
         highlighted={hash === 'allergen-badges'}
       />
-
-      <SettingsPill
-        icon={ArrowDownAZ}
-        iconColor="#525252"
-        label="Default sort"
-        helper="How tickets are ordered when no manual sort is applied."
-        right={
-          <SegmentedToggle
-            options={['By Time', 'By Table', 'By Type']}
-            value={sortDefault}
-            onChange={(v) => setSortDefault(v as 'By Time' | 'By Table' | 'By Type')}
-          />
-        }
-        highlighted={hash === 'sort-default'}
-      />
-
       <CategoryFilterPanel open={categoryOpen} onClose={() => setCategoryOpen(false)} onApply={() => {}} />
       <RevenueCenterFilter open={revenueOpen} onClose={() => setRevenueOpen(false)} onApply={() => {}} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
