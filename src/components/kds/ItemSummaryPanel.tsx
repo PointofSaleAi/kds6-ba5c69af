@@ -272,7 +272,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     Overtime
                   </span>
                 </div>
-                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-3 shrink-0 bg-destructive text-destructive-foreground">
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-destructive text-destructive-foreground">
                   {overtimeTotal}
                 </span>
               </div>
