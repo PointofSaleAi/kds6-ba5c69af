@@ -686,9 +686,26 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         />
 
         {settingsOpen ? (
-          <div className="light flex flex-1 overflow-hidden" style={{ background: 'hsl(var(--surface-bg))' }}>
-            <SettingsSidebar />
-            <main className="flex-1 overflow-y-auto">
+          <div
+            className="light flex flex-1 overflow-hidden p-4 gap-4"
+            style={{ background: 'hsl(var(--surface-bg))' }}
+          >
+            <div
+              className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
+              style={{
+                background: 'hsl(var(--surface-card))',
+                boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+              }}
+            >
+              <SettingsSidebar />
+            </div>
+            <main
+              className="flex-1 rounded-3xl overflow-y-auto"
+              style={{
+                background: 'hsl(var(--surface-card))',
+                boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+              }}
+            >
               <div className="max-w-2xl mx-auto px-6 py-6">
                 <Outlet />
               </div>
