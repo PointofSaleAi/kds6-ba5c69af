@@ -520,7 +520,7 @@ function CourseItemTapRow({
           </button>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: 'var(--kds-item-gap)', lineHeight: 1.1 }}>
+          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '3px', lineHeight: 1.1 }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))', lineHeight: 1.1 }}
