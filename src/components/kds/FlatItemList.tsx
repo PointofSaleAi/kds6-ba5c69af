@@ -39,10 +39,12 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           if (dismissedItemIds?.has(item.id)) return false;
           return true;
         });
+        let seenIdx = 0;
         return visibleItems.map((item, visibleIdx) => {
         const isLastVisible = visibleIdx === visibleItems.length - 1;
         const status = itemStatuses?.get(item.id);
         const timestamps = itemTimestamps?.get(item.id);
+        const currentSeenIdx = status === 'preparing' ? seenIdx++ : 0;
 
         return (
           <ItemTapRow
@@ -50,6 +52,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             item={item}
             status={status}
             timestamps={timestamps}
+            seenIdx={currentSeenIdx}
             isLastVisible={isLastVisible}
             showAllergens={showAllergens}
             displayMode={displayMode}
@@ -78,6 +81,7 @@ interface ItemTapRowProps {
   item: OrderItem;
   status?: ItemStatus;
   timestamps?: { seenAt?: string; doneAt?: string };
+  seenIdx: number;
   isLastVisible: boolean;
   showAllergens: boolean;
   displayMode: string;
@@ -97,7 +101,7 @@ interface ItemTapRowProps {
 }
 
 function ItemTapRow({
-  item, status, timestamps, isLastVisible, showAllergens,
+  item, status, timestamps, seenIdx, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
@@ -128,8 +132,14 @@ function ItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
 
-  // Seen rows use a very light green tint; Done rows use a light grey tint.
-  const rowBg = isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? 'rgba(29, 158, 117, 0.10)' : undefined;
+  const useTeal = isSeen && seenIdx % 2 === 1;
+  const seenBgGreen = 'rgba(29, 158, 117, 0.14)';
+  const seenBgTeal = 'rgba(245, 158, 11, 0.18)';
+  const seenTextGreen = '#0F5132';
+  const seenTextTeal = '#92400E';
+
+  // Seen rows alternate green/amber tint; Done rows use a light grey tint.
+  const rowBg = isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined;
 
   return (
     <div
@@ -197,7 +207,7 @@ function ItemTapRow({
               </span>
             )}
             {isSeen && timestamps?.seenAt && (
-              <span style={{ fontSize: '10px', color: '#0F5132', fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }} className="ml-1">
+              <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}

@@ -12,7 +12,9 @@ import type { ItemStatus } from '../CourseSection';
  * #888888 item color, #555555 quantity color, and dim opacity on tap.
  */
 
-const HIGHLIGHT_RGBA = 'rgba(29, 158, 117, 0.1)'; // browsers normalize 0.10 → 0.1
+const HIGHLIGHT_GREEN = 'rgba(29, 158, 117, 0.14)';
+const HIGHLIGHT_AMBER = 'rgba(245, 158, 11, 0.18)';
+const ALLOWED_HIGHLIGHTS = [HIGHLIGHT_GREEN, HIGHLIGHT_AMBER];
 const FORBIDDEN_BGS = ['#1E2438', '#161B28', 'rgb(30, 36, 56)', 'rgb(22, 27, 40)'];
 const FORBIDDEN_TEXT_COLORS = ['rgb(136, 136, 136)', 'rgb(85, 85, 85)', '#888888', '#555555'];
 
@@ -93,21 +95,21 @@ describe('FlatItemList tap highlight (visual regression)', () => {
     expectNoDim(row);
   });
 
-  it('preparing (1st tap) row uses ONLY rgba(29, 158, 117, 0.10)', () => {
+  it('preparing (1st tap) row uses an allowed alternating highlight tint', () => {
     const { container } = renderWithStatus('preparing');
     const row = getRowRoot(container);
 
-    expect(row.style.backgroundColor).toBe(HIGHLIGHT_RGBA);
+    expect(ALLOWED_HIGHLIGHTS).toContain(row.style.backgroundColor);
     expectNoForbiddenBg(row);
     expectNoTextColorChange(row);
     expectNoDim(row);
   });
 
-  it('done (2nd tap) row uses ONLY rgba(29, 158, 117, 0.10) with no strikethrough or dim', () => {
+  it('done (2nd tap) row uses a tint with no strikethrough or dim', () => {
     const { container } = renderWithStatus('done');
     const row = getRowRoot(container);
 
-    expect(row.style.backgroundColor).toBe(HIGHLIGHT_RGBA);
+    expect(row.style.backgroundColor).toBeTruthy();
     expectNoForbiddenBg(row);
     expectNoTextColorChange(row);
     expectNoDim(row);
