@@ -631,9 +631,9 @@ function CourseItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', paddingLeft: '4px', marginTop: '0px' }}>
-          <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-            {item.quantity}&times;
+        <div className="flex items-start" style={{ gap: '4px', marginTop: '0px' }}>
+          <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
+            0x
           </span>
           <div
             className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
