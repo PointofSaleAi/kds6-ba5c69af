@@ -4,7 +4,7 @@ import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { OrderCard } from '@/components/kds/OrderCard';
-import { ExpoOrderCard } from '@/components/kds/ExpoOrderCard';
+
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
 import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
@@ -807,7 +807,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   <EmptyState />
                 )
               ) : kdsMode === 'Prep' && !resolvedStationCourse ? (
-                <PrepBoard orders={filteredOrders} onBump={handleBump} />
+                <PrepBoard orders={filteredOrders} />
               ) : kdsMode === 'Expo' ? (
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
               ) : (

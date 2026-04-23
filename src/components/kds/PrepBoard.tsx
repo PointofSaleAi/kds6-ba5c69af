@@ -4,7 +4,6 @@ import type { Order, CourseType } from '@/types/kds';
 
 interface PrepBoardProps {
   orders: Order[];
-  onBump?: (orderId: string) => void;
 }
 
 interface PrepItem {
