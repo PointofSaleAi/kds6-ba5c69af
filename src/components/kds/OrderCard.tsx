@@ -673,9 +673,30 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           >
             {isCompactLayout ? (
               <>
-                <div className="text-white font-black shrink-0 leading-none min-w-0 truncate" style={{ fontSize: '28px' }}>
-                  {ticketHeaderLayout === 'guest' && order.guestName ? order.guestName : order.orderNumber}
-                </div>
+                {(() => {
+                  const useGuest = ticketHeaderLayout === 'guest' && !!order.guestName;
+                  if (useGuest) {
+                    const parts = order.guestName!.trim().split(/\s+/);
+                    const firstName = parts[0];
+                    const restName = parts.slice(1).join(' ');
+                    const longest = Math.max(firstName.length, restName.length);
+                    const fontSize = longest > 12 ? 18 : longest > 9 ? 22 : 26;
+                    return (
+                      <div
+                        className="text-white font-black min-w-0 leading-tight break-words"
+                        style={{ fontSize: `${fontSize}px` }}
+                      >
+                        <div>{firstName}</div>
+                        {restName && <div>{restName}</div>}
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="text-white font-black shrink-0 leading-none min-w-0 truncate" style={{ fontSize: '28px' }}>
+                      {order.orderNumber}
+                    </div>
+                  );
+                })()}
                 <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
                   <div className="flex items-center gap-1.5 leading-none">
                     {order.isRushed && (
