@@ -42,7 +42,7 @@ export default function DisplaySettings() {
 
   if (languageOpen) {
     return (
-      <div className="fixed inset-0 z-50 bg-surface-bg flex flex-col">
+      <div className="fixed top-0 right-0 bottom-0 left-20 z-40 bg-surface-bg flex flex-col">
         <div className="flex items-center gap-3 px-6 py-4 shrink-0">
           <button
             onClick={() => setLanguageOpen(false)}
