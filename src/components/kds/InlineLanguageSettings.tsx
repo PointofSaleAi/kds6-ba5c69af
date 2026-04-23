@@ -79,10 +79,12 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     currency, setCurrency,
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
+    ticketLayout,
   } = useKDSSettings();
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
+  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>(ticketLayout);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
   // Which side of the dual pair the language list is editing
@@ -530,11 +532,28 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
             <div className="w-[360px] shrink-0 flex flex-col h-full">
-              <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
-                {t.previewKDS}
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
+                  {t.previewKDS}
+                </div>
+                <div className="flex bg-muted rounded-md p-0.5">
+                  {(['standard', 'compact'] as const).map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => setPreviewLayout(opt)}
+                      className={`px-2.5 py-1 text-[10px] font-semibold rounded transition-colors capitalize ${
+                        previewLayout === opt ? 'bg-brand-primary text-primary-foreground' : 'text-text-secondary'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex-1 min-h-0 pointer-events-none select-none w-full [&>*]:h-full [&>*]:flex [&>*]:flex-col" aria-hidden="true">
-                <OrderCard order={previewTicket} />
+              <div className="flex-1 min-h-0 overflow-hidden pointer-events-none select-none w-full flex flex-col" aria-hidden="true">
+                <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
+                  <OrderCard order={previewTicket} compact={previewLayout === 'compact'} />
+                </div>
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
                 {displayMode === 'dual'
@@ -554,7 +573,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   {dateFormats.map((fmt, i) => (
                     <button
                       key={fmt}
-                      onClick={() => setDateFormat(i as DateFormatIndex)}
+                      onClick={() => { setDateFormat(i as DateFormatIndex); saveDateFormat(i as DateFormatIndex); }}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
                       style={{ border: dateFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
@@ -577,7 +596,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   {timeFormats.map((fmt, i) => (
                     <button
                       key={fmt}
-                      onClick={() => setTimeFormat(i as TimeFormatIndex)}
+                      onClick={() => { setTimeFormat(i as TimeFormatIndex); saveTimeFormat(i as TimeFormatIndex); }}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
                       style={{ border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
