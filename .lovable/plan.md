@@ -1,63 +1,36 @@
 
+
 ## Scope
 
-Fix the compact-layout row spacing so the expand/collapse chevron sits tightly against the quantity prefix on every product row, across all ticket cards and all category sections. Standard layout remains untouched.
+Fix the dual-language secondary row alignment in compact view so the secondary language name aligns vertically with the primary product name, matching the user's marked vertical line.
 
 ## Root Cause
 
-The previous spacing change was only applied in `src/components/kds/FlatItemList.tsx`, which covers the flat item list path.
+In compact layout, the primary quantity column is `1.5ch` wide, but the secondary-language icon spacer is hardcoded to `2.25ch`. That extra `0.75ch` pushes the language icon (and the secondary name after it) right of the primary name's left edge.
 
-But many compact rows are rendered through `src/components/kds/CourseSection.tsx` (`CourseItemTapRow`), and that component still uses the older, looser chevron spacing:
-- `mr-1`
-- `width: 18, height: 18`
+This bug exists in two places:
+- `src/components/kds/FlatItemList.tsx` (line 227)
+- `src/components/kds/CourseSection.tsx` (line 592)
 
-That is why the gap still appears across compact tickets.
+## Changes
 
-## Implementation Plan
+For both files, update the secondary-language qty-spacer `<span>` width to match the primary qty column:
 
-1. Update the compact expandable row control in `src/components/kds/CourseSection.tsx`
-   - Tighten the chevron button footprint.
-   - Remove the extra Tailwind right margin (`mr-1`) and replace it with the same tighter spacing used for compact rows.
-   - Keep this change scoped only to the compact expandable-row case (`ticketLayoutCompact && hasDetails`).
-
-2. Normalize the compact chevron spacing in both row renderers
-   - Ensure `CourseSection.tsx` and `FlatItemList.tsx` use the same compact chevron dimensions and the same minimal trailing space before the quantity prefix.
-   - This keeps spacing visually identical for:
-     - Dine-In / course-based rows
-     - Flat list rows
-     - All compact ticket cards
-
-3. Do not change anything else
-   - No changes to quantity text styling
-   - No changes to row typography, colors, spacing tokens, allergens, modifiers, notes, footer, or standard layout
-   - No changes to header behavior
-
-## Files to Update
-
-- `src/components/kds/CourseSection.tsx`
-- `src/components/kds/FlatItemList.tsx` (only if needed to fully align both compact row paths)
-
-## Technical Notes
-
-Current mismatch:
 ```tsx
-// FlatItemList.tsx
-style={{ width: 14, height: 14, marginRight: 2 }}
+// before
+style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', ... }}
 
-// CourseSection.tsx
-className="shrink-0 mr-1 ..."
-style={{ width: 18, height: 18 }}
+// after
+style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', ... }}
 ```
 
-Target outcome:
-```text
-Compact expandable rows use one shared tight chevron footprint
-with minimal trailing gap before the quantity prefix.
-```
+This places the Languages icon directly under the `1x / 2x` quantity prefix, so `tpSecondary(item.name)` lines up exactly with `tp(item.name)` above it.
 
 ## Verification
 
-After implementation, compact layout should show:
-- chevron and `1x / 2x / 3x` sitting noticeably closer together
-- identical spacing in all category sections and all ticket cards
-- no visual change in standard layout
+In compact view with dual language ON:
+- Languages icon sits centered under the quantity number column
+- Secondary language name's left edge aligns with the primary name's left edge
+- Standard layout unchanged
+- Behavior consistent across all category sections, all ticket cards, and both component code paths
+
