@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import {
-  Monitor, LayoutGrid, Type, Rows3, Palette, Sun, Moon, Globe,
+  Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import {
-  SegmentedToggle, Stepper, SwitchToggle, ValueText, useHashHighlight,
+  SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
 } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { useTheme } from '@/hooks/use-theme';
 import { useLanguage } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSMode } from '@/hooks/use-kds-mode';
@@ -20,16 +19,13 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 
 export default function DisplaySettings() {
   const {
-    cardsPerRow, setCardsPerRow,
     textSize, setTextSize,
     ticketLayout, setTicketLayout,
     ticketHeaderLayout, setTicketHeaderLayout,
   } = useKDSSettings();
-  const { theme, setTheme } = useTheme();
   const { languageName } = useLanguage();
   const { showBadge, setShowBadge } = useBadgeVisibility();
   const { mode, setMode } = useKDSMode();
-  const [displayMode, setDisplayMode] = useState('Grid');
   const [statusOpen, setStatusOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
@@ -49,26 +45,17 @@ export default function DisplaySettings() {
         icon={Monitor}
         iconColor={GROUP_COLOR.display}
         title="Display"
-        shortDescription="Customize layout, ticket density, theme, and language for the kitchen display."
-        longDescription="Customize layout, ticket density, theme, and language for the kitchen display. Choose how many cards fit per row, scale typography for legibility from across the line, and tune status aging colors to match your kitchen tempo."
+        shortDescription="Customize ticket density, layout, and language for the kitchen display."
+        longDescription="Scale typography for legibility from across the line, choose ticket layout, and tune status aging colors to match your kitchen tempo."
       />
 
       <SettingsPill
-        icon={LayoutGrid}
-        iconColor="#525252"
-        label="Display Mode"
-        helper="Grid wraps cards, Horizontal scrolls, Stagger releases in waves."
-        right={<SegmentedToggle options={['Grid', 'Horizontal', 'Stagger']} value={displayMode} onChange={setDisplayMode} />}
-        highlighted={hash === 'display-mode'}
-      />
-
-      <SettingsPill
-        icon={LayoutGrid}
-        iconColor="#34A885"
-        label="Cards per row"
-        helper="How many tickets fit across in Grid mode."
-        right={<Stepper value={cardsPerRow} onChange={setCardsPerRow} min={2} max={8} />}
-        highlighted={hash === 'cards-per-row'}
+        icon={Type}
+        iconColor="#0A84FF"
+        label="Text size"
+        helper="Compact fits more tickets, Large is easier from a distance."
+        right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')} />}
+        highlighted={hash === 'text-size'}
       />
 
       <SettingsPill
