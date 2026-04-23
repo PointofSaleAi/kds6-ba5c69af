@@ -51,7 +51,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
           </span>
         )}
       </div>
-      <div className="flex items-center gap-2 text-primary-foreground/80 text-modifier shrink-0">
+      <div className="flex items-center gap-2 text-primary-foreground/80 text-badge-type shrink-0">
         {time && <span>{time}</span>}
         {showTrailingTable && <span>{tableInfo}</span>}
         {hasRecalled && (
