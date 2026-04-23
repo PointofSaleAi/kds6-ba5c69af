@@ -137,7 +137,7 @@ function ItemTapRow({
       style={{ 
         backgroundColor: rowBg,
         paddingTop: '2px',
-        paddingBottom: '2px',
+        paddingBottom: isLastVisible ? '6px' : '2px',
       }}
     >
       <div
