@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Monitor, ShoppingBag, Send, Cpu, User, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Monitor, ShoppingBag, Send, Cpu, User, ChevronRight } from 'lucide-react';
 import {
   SETTINGS_GROUPS,
   searchSettings,
@@ -24,11 +24,7 @@ export const GROUP_COLOR: Record<SettingsGroupId, string> = {
   account: '#0A84FF',
 };
 
-interface SettingsSidebarProps {
-  onBackToKDS: () => void;
-}
-
-export function SettingsSidebar({ onBackToKDS }: SettingsSidebarProps) {
+export function SettingsSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = useState('');
@@ -52,17 +48,7 @@ export function SettingsSidebar({ onBackToKDS }: SettingsSidebarProps) {
         borderRight: '1px solid hsl(var(--border))',
       }}
     >
-      {/* Header with back to KDS */}
-      <div className="px-4 py-4 flex items-center gap-2 shrink-0">
-        <button
-          type="button"
-          onClick={onBackToKDS}
-          className="w-9 h-9 rounded-full flex items-center justify-center"
-          style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}
-          aria-label="Back to KDS"
-        >
-          <ChevronLeft size={18} style={{ color: 'hsl(var(--text-primary))' }} />
-        </button>
+      <div className="px-4 py-4 shrink-0">
         <h2
           className="text-lg font-semibold"
           style={{ color: 'hsl(var(--text-primary))' }}
