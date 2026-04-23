@@ -227,11 +227,11 @@ function ItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-center" style={{ gap: '4px', marginTop: '-2px', lineHeight: 1 }}>
+            <div className="flex items-center" style={{ gap: '4px', marginTop: '3px', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
                 0x
               </span>
-              <div className="flex flex-wrap items-center" style={{ gap: '4px' }}>
+              <div className="flex flex-wrap items-center" style={{ gap: '4px', rowGap: '3px' }}>
                 {item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
@@ -242,7 +242,7 @@ function ItemTapRow({
       </div>
 
       {showDetails && item.modifiers.length > 0 && (
-        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '-1px' }}>
+        <div className={isDone ? 'line-through' : ''} style={{ marginTop: '3px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
               key={mod.id || idx}
@@ -258,7 +258,7 @@ function ItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: '0px' }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: '3px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
             0x
           </span>

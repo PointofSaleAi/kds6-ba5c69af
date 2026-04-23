@@ -62,7 +62,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
 
   // Non-servable modifier: keep existing small muted style
   return (
-    <div className="flex items-baseline" style={{ lineHeight: '0.95', marginTop: '-2px', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
+    <div className="flex items-baseline" style={{ lineHeight: '1.05', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
       <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.95', width: '2.25ch', display: 'inline-block' }}>
         0x
       </span>
