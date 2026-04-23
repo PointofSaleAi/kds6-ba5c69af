@@ -680,7 +680,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     const firstName = parts[0];
                     const restName = parts.slice(1).join(' ');
                     const longest = Math.max(firstName.length, restName.length);
-                    const fontSize = longest > 12 ? 14 : longest > 9 ? 16 : longest > 6 ? 18 : 20;
+                    const fontSize = longest > 12 ? 11 : longest > 9 ? 13 : longest > 6 ? 14 : 16;
                     return (
                       <div
                         className="text-white font-black min-w-0 leading-tight break-words"
