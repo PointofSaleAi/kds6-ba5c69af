@@ -42,18 +42,18 @@ export default function DisplaySettings() {
 
   if (languageOpen) {
     return (
-      <div className="flex flex-col h-full">
-        <div className="flex items-center gap-3 mb-4">
+      <div className="fixed inset-0 z-50 bg-surface-bg flex flex-col">
+        <div className="flex items-center gap-3 px-6 py-4 shrink-0">
           <button
             onClick={() => setLanguageOpen(false)}
-            className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors"
+            className="w-11 h-11 rounded-full bg-surface-card shadow-sm hover:bg-muted transition-colors flex items-center justify-center"
             aria-label="Back"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-2xl font-bold">Language</h1>
         </div>
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
           <InlineLanguageSettings activeTab="language" />
         </div>
       </div>
