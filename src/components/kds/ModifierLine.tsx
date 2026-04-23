@@ -12,9 +12,10 @@ interface ModifierLineProps {
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
   parentQuantity?: number;
+  compactQtyCol?: boolean;
 }
 
-export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdvanceModifier, onUndoModifier, parentQuantity = 1 }: ModifierLineProps) {
+export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdvanceModifier, onUndoModifier, parentQuantity = 1, compactQtyCol }: ModifierLineProps) {
   const { tm } = useLanguage();
   const styles = {
     extra: 'text-modifier-extra',
@@ -22,6 +23,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
     neutral: 'text-modifier-neutral',
   };
 
+  const qtyColWidth = compactQtyCol ? '1.5ch' : '2.25ch';
   const isServable = servableEnabled && modifier.isServable && modifier.type !== 'remove' && modifier.id;
   const isDone = isServable && modifierStatus === 'done';
 
@@ -32,7 +34,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         className="flex items-center"
         style={{ paddingTop: '4px', paddingBottom: '4px', gap: '4px' }}
       >
-        <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
+        <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: qtyColWidth, display: 'inline-block' }}>
           0x
         </span>
         <span
@@ -63,7 +65,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   // Non-servable modifier: keep existing small muted style
   return (
     <div className="flex items-start" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
-      <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: '2.25ch', display: 'inline-block' }}>
+      <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: qtyColWidth, display: 'inline-block' }}>
         0x
       </span>
       <span
