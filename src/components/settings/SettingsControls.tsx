@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Minus, Plus } from 'lucide-react';
 
 export function SegmentedToggle({
@@ -113,21 +113,26 @@ export function ValueText({ children }: { children: ReactNode }) {
   );
 }
 
-/** Hook-free helper to read the URL hash and check whether a row should be highlighted. */
+/**
+ * Reads the URL hash on mount and route changes, then auto-clears it
+ * after a brief highlight window so a row pulses when arrived at via search.
+ */
 export function useHashHighlight(): string | null {
-  const [hash, setHash] = useState(() =>
+  const [hash, setHash] = useState<string | null>(() =>
     typeof window === 'undefined' ? null : window.location.hash.slice(1) || null,
   );
 
-  // Re-read on hash changes within the same route.
-  if (typeof window !== 'undefined') {
-    window.onhashchange = () => setHash(window.location.hash.slice(1) || null);
-  }
+  useEffect(() => {
+    const onChange = () => setHash(window.location.hash.slice(1) || null);
+    window.addEventListener('hashchange', onChange);
+    return () => window.removeEventListener('hashchange', onChange);
+  }, []);
 
-  // Auto-clear after 2.5s so the highlight is a transient pulse.
-  if (hash) {
-    setTimeout(() => setHash(null), 2500);
-  }
+  useEffect(() => {
+    if (!hash) return;
+    const t = setTimeout(() => setHash(null), 2500);
+    return () => clearTimeout(t);
+  }, [hash]);
 
   return hash;
 }
