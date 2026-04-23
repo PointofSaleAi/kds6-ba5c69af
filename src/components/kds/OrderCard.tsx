@@ -681,9 +681,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     <span className="text-right break-words min-w-0">{order.serverName}</span>
                   </span>
                   {order.guestName ? (
-                    <span className="flex items-start gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
-                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0 mt-0.5" />
-                      <span className="text-right break-words min-w-0">{order.guestName}</span>
+                    <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
+                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                      <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{order.guestName}</span>
                     </span>
                   ) : (
                     <span className="h-[14px]" />
