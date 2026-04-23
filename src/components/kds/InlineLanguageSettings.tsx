@@ -558,10 +558,16 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               <div className="text-[9px] text-text-muted mb-2 italic">
                 Preview-only. Change the saved layout in Display, Ticket Layout.
               </div>
-              <div className="flex-1 min-h-0 overflow-hidden pointer-events-none select-none w-full flex flex-col" aria-hidden="true">
-                <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
-                  <OrderCard order={previewTicket} compact={previewLayout === 'compact'} />
-                </div>
+              <div className="flex-1 min-h-0 overflow-y-auto pointer-events-none select-none w-full flex flex-col" aria-hidden="true">
+                {previewLayout === 'compact' ? (
+                  <div className="w-full max-w-[220px] mx-auto">
+                    <OrderCard order={previewTicket} compact />
+                  </div>
+                ) : (
+                  <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
+                    <OrderCard order={previewTicket} />
+                  </div>
+                )}
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
                 {displayMode === 'dual'
