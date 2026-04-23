@@ -55,8 +55,9 @@ const App = () => (
             <Route path="/" element={<Navigate to="/kds/full" replace />} />
             <Route path="/kds/full" element={<Index />} />
 
-            {/* Settings two-pane layout */}
-            <Route path="/kds/full/settings" element={<SettingsLayout />}>
+            {/* Settings render inside the main KDS shell so the left rail
+                and bottom status bar stay visible. */}
+            <Route path="/kds/full/settings" element={<Index />}>
               <Route index element={<Navigate to="display" replace />} />
               <Route path="display" element={<DisplaySettings />} />
               <Route path="orders" element={<OrdersSettings />} />
