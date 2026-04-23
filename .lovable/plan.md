@@ -1,55 +1,63 @@
 
 ## Scope
 
-In the compact ticket header only, restrict the adaptive font-sizing logic so it applies **only to guest names**. Order numbers (and the guest-number fallback) keep their fixed `28px` size regardless of length.
+Fix the compact-layout row spacing so the expand/collapse chevron sits tightly against the quantity prefix on every product row, across all ticket cards and all category sections. Standard layout remains untouched.
 
-## Current Behavior
+## Root Cause
 
-In `src/components/kds/OrderCard.tsx` (compact layout block), the identifier currently runs through name-splitting + adaptive sizing whenever `ticketHeaderLayout === 'guest'` and a `guestName` exists. The fallback `order.orderNumber` path renders at fixed `28px`.
+The previous spacing change was only applied in `src/components/kds/FlatItemList.tsx`, which covers the flat item list path.
 
-The issue: the adaptive sizing (18px / 22px / 26px) is also affecting visual parity expectations because it now governs the guest case entirely. The user wants the shrinking + line-splitting behavior preserved **only for guest names**, while order number and any guest-number rendering stay locked at `28px`.
+But many compact rows are rendered through `src/components/kds/CourseSection.tsx` (`CourseItemTapRow`), and that component still uses the older, looser chevron spacing:
+- `mr-1`
+- `width: 18, height: 18`
 
-## Change
+That is why the gap still appears across compact tickets.
 
-In the compact header identifier block:
+## Implementation Plan
 
-1. **Guest name branch** (`ticketHeaderLayout === 'guest' && order.guestName`):
-   - Keep existing logic: split into first name + rest, compute adaptive `fontSize` (26 / 22 / 18) based on the longest part, render two stacked lines when a second part exists.
+1. Update the compact expandable row control in `src/components/kds/CourseSection.tsx`
+   - Tighten the chevron button footprint.
+   - Remove the extra Tailwind right margin (`mr-1`) and replace it with the same tighter spacing used for compact rows.
+   - Keep this change scoped only to the compact expandable-row case (`ticketLayoutCompact && hasDetails`).
 
-2. **Order number branch** (everything else, including missing guest name fallback):
-   - Render `order.orderNumber` at fixed `28px`, single line, `font-black`, no adaptive sizing, no splitting. This matches the original compact header style exactly.
+2. Normalize the compact chevron spacing in both row renderers
+   - Ensure `CourseSection.tsx` and `FlatItemList.tsx` use the same compact chevron dimensions and the same minimal trailing space before the quantity prefix.
+   - This keeps spacing visually identical for:
+     - Dine-In / course-based rows
+     - Flat list rows
+     - All compact ticket cards
 
-3. Do not touch any other field, the standard layout, the right-side stack (timer + server name), allergens, body, footer, or any tokens.
+3. Do not change anything else
+   - No changes to quantity text styling
+   - No changes to row typography, colors, spacing tokens, allergens, modifiers, notes, footer, or standard layout
+   - No changes to header behavior
 
-## Technical Detail
+## Files to Update
 
+- `src/components/kds/CourseSection.tsx`
+- `src/components/kds/FlatItemList.tsx` (only if needed to fully align both compact row paths)
+
+## Technical Notes
+
+Current mismatch:
 ```tsx
-// src/components/kds/OrderCard.tsx — compact header identifier
-{ticketHeaderLayout === 'guest' && order.guestName ? (
-  (() => {
-    const parts = order.guestName.trim().split(/\s+/);
-    const firstName = parts[0];
-    const restName = parts.slice(1).join(' ');
-    const longest = Math.max(firstName.length, restName.length);
-    const fontSize = longest > 12 ? 18 : longest > 9 ? 22 : 26;
-    return (
-      <div
-        className="text-white font-black min-w-0 leading-tight break-words"
-        style={{ fontSize: `${fontSize}px` }}
-      >
-        <div>{firstName}</div>
-        {restName && <div>{restName}</div>}
-      </div>
-    );
-  })()
-) : (
-  <div
-    className="text-white font-black shrink-0 leading-none"
-    style={{ fontSize: '28px' }}
-  >
-    {order.orderNumber}
-  </div>
-)}
+// FlatItemList.tsx
+style={{ width: 14, height: 14, marginRight: 2 }}
+
+// CourseSection.tsx
+className="shrink-0 mr-1 ..."
+style={{ width: 18, height: 18 }}
 ```
 
-**Files to edit:** `src/components/kds/OrderCard.tsx` (compact header identifier block only).
+Target outcome:
+```text
+Compact expandable rows use one shared tight chevron footprint
+with minimal trailing gap before the quantity prefix.
+```
+
+## Verification
+
+After implementation, compact layout should show:
+- chevron and `1x / 2x / 3x` sitting noticeably closer together
+- identical spacing in all category sections and all ticket cards
+- no visual change in standard layout
