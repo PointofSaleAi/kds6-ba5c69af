@@ -37,10 +37,13 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
         className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
         style={{ padding: '2px 8px', gap: '5px' }}
       >
-        <StickyNote
-          size={11}
-          className="shrink-0 text-text-secondary"
-          style={{ marginTop: '1px' }}
+        <img
+          src={noteIcon}
+          width={11}
+          height={11}
+          className="shrink-0"
+          style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
+          alt=""
           aria-hidden="true"
         />
         <div
