@@ -15,7 +15,7 @@ import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
 import StatusSettings from '@/pages/StatusSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
-import { InlineLanguageSettings } from '@/components/kds/InlineLanguageSettings';
+import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 
 export default function DisplaySettings() {
