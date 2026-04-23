@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { X, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 
 interface LanguageSettingsProps {
