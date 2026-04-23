@@ -78,7 +78,6 @@ const Index = () => {
   const handlePinFallback = useCallback(() => setScreen('byod-new'), []);
 
   const handleLogOut = useCallback(() => {
-    setSettingsOpen(false);
     setScreen(isDevMode() ? 'dev-selector' : 'splash');
   }, []);
 
@@ -155,7 +154,7 @@ const Index = () => {
         <MainOrderView
           onNavigate={handleNavigate}
           settingsOpen={settingsOpen}
-          onCloseSettings={() => setSettingsOpen(false)}
+          onCloseSettings={() => {}}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
