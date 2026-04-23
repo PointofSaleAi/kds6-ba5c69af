@@ -153,7 +153,7 @@ export default function DisplaySettings() {
         highlighted={hash === 'language'}
       />
 
-      <LanguageSettings open={languageOpen} onClose={() => setLanguageOpen(false)} />
+      
     </>
   );
 }
