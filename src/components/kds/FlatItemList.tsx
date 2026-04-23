@@ -163,12 +163,12 @@ function ItemTapRow({
           </button>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap" style={{ gap: '3px', lineHeight: 1.1 }}>
+          <div className="flex items-center flex-wrap" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
               className={`font-normal ${isDone ? 'line-through' : ''}`}
-              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1 }}
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
             >
-              {item.quantity}&times;
+              {item.quantity}x
             </span>
             <span
               className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
@@ -212,11 +212,11 @@ function ItemTapRow({
             <div
               dir={secondaryDir}
               className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
-              style={{ gap: '6px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
+              style={{ gap: '4px', marginTop: '0px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
-              <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
-                <span className="absolute inset-0 flex items-center justify-center">
+              <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
+                <span className="invisible" aria-hidden="true">0x</span>
+                <span className="absolute inset-0 flex items-center justify-end">
                   <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
                     <Languages size={8} className="text-text-secondary" />
                   </span>
@@ -227,9 +227,9 @@ function ItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-center" style={{ gap: '6px', marginTop: '-2px', lineHeight: 1 }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-                {item.quantity}&times;
+            <div className="flex items-center" style={{ gap: '4px', marginTop: '-2px', lineHeight: 1 }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
+                0x
               </span>
               <div className="flex flex-wrap items-center" style={{ gap: '4px' }}>
                 {item.allergens.map((a) => (
@@ -258,9 +258,9 @@ function ItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '6px', marginTop: '0px', paddingLeft: '4px' }}>
-          <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)' }}>
-            {item.quantity}&times;
+        <div className="flex items-start" style={{ gap: '4px', marginTop: '0px' }}>
+          <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block' }}>
+            0x
           </span>
           <div
             className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
