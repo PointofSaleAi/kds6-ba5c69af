@@ -79,10 +79,12 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     currency, setCurrency,
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
+    ticketLayout,
   } = useKDSSettings();
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
+  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>(ticketLayout);
   const [currOpen, setCurrOpen] = useState(false);
   const [localSingleLang, setLocalSingleLang] = useState<LanguageCode>(language);
   // Which side of the dual pair the language list is editing
