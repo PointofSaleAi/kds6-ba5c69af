@@ -43,12 +43,6 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
               <span className="text-[11px] font-bold text-[#7C3AED] flex-1 truncate">
                 {msg.terminal_name || msg.employee_name}
               </span>
-              {!isPending && (
-                <span className="flex items-center gap-1 text-[10px] font-bold text-success shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                  Acked
-                </span>
-              )}
               <span className="text-[10px] text-text-muted shrink-0">{timeAgo(msg.timestamp)}</span>
             </div>
 
