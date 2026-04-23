@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
 import PinPadScreen from '@/pages/PinPadScreen';
@@ -40,9 +40,13 @@ type AppScreen =
 
 const Index = () => {
   const navigate = useNavigate();
-  const [screen, setScreen] = useState<AppScreen>(isDevMode() ? 'dev-selector' : 'splash');
+  const location = useLocation();
+  const inSettings = location.pathname.startsWith('/kds/full/settings');
+  // When opened directly on a settings route, skip dev selector and go to main.
+  const [screen, setScreen] = useState<AppScreen>(
+    inSettings ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
+  );
   const [alertsOpen, setAlertsOpen] = useState(false);
-  const [settingsOpen] = useState(false);
 
   // Sub-screen states
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -83,12 +87,17 @@ const Index = () => {
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
-      case 'home': setScreen('main'); break;
+      case 'home': navigate('/kds/full'); setScreen('main'); break;
       case 'alerts': setAlertsOpen(true); break;
       case 'settings': navigate('/kds/full/settings'); break;
       case 'performance': setScreen('performance'); break;
     }
-  }, []);
+  }, [navigate]);
+
+  // Keep main screen mounted whenever we land on a settings route.
+  useEffect(() => {
+    if (inSettings && screen !== 'main') setScreen('main');
+  }, [inSettings, screen]);
 
   const handleOpenSub = useCallback((sub: string) => {
     switch (sub) {
