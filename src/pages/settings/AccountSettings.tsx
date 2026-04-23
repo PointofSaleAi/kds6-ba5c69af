@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Smartphone, Bug, LogOut } from 'lucide-react';
+import { User, Smartphone, Bug, LogOut, Hash, AlertCircle, Upload, MessageSquare } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -9,11 +9,15 @@ import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, ValueText, useHashHighlight } from '@/components/settings/SettingsControls';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { toast } from '@/hooks/use-toast';
 
 export default function AccountSettings() {
   const navigate = useNavigate();
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
+  const [bugReporting, setBugReporting] = useState(() => localStorage.getItem('posai-bug-reporting') === 'true');
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('');
   const hash = useHashHighlight();
 
   const handleDevModeChange = (v: boolean) => {
@@ -21,9 +25,29 @@ export default function AccountSettings() {
     localStorage.setItem('posai-dev-mode', String(v));
   };
 
+  const handleBugReportingChange = (v: boolean) => {
+    setBugReporting(v);
+    localStorage.setItem('posai-bug-reporting', String(v));
+  };
+
+  const handleUploadLogs = () => {
+    toast({
+      title: 'Logs uploaded',
+      description: 'Diagnostic logs sent to support.',
+    });
+  };
+
+  const handleFeedbackSubmit = () => {
+    setFeedbackOpen(false);
+    setFeedbackText('');
+    toast({
+      title: 'Feedback received',
+      description: 'Thanks, your request was sent to the product team.',
+    });
+  };
+
   const handleLogOut = () => {
     setLogoutOpen(false);
-    // Reset session and return to entry route. The Index page handles dev/splash.
     navigate('/kds/full', { replace: true });
     setTimeout(() => window.location.reload(), 0);
   };
@@ -48,12 +72,48 @@ export default function AccountSettings() {
       />
 
       <SettingsPill
+        icon={Hash}
+        iconColor="#525252"
+        label="Station ID"
+        helper="Unique station identifier assigned at activation."
+        right={<ValueText>STN-001</ValueText>}
+        highlighted={hash === 'station-id'}
+      />
+
+      <SettingsPill
+        icon={AlertCircle}
+        iconColor="#E84C3D"
+        label="Bug Reporting"
+        helper="Enable the in-app reporting tool for crash and issue capture."
+        right={<SwitchToggle checked={bugReporting} onChange={handleBugReportingChange} />}
+        highlighted={hash === 'bug-reporting'}
+      />
+
+      <SettingsPill
         icon={Bug}
         iconColor="#F9900E"
-        label="Dev mode"
-        helper="Show the developer scenario selector on next launch."
+        label="Debug mode"
+        helper="Enable verbose logging and the developer scenario selector."
         right={<SwitchToggle checked={devMode} onChange={handleDevModeChange} />}
-        highlighted={hash === 'dev-mode'}
+        highlighted={hash === 'debug-mode'}
+      />
+
+      <SettingsPill
+        icon={Upload}
+        iconColor="#16A085"
+        label="Upload Logs"
+        helper="Send recent diagnostic logs to eatOS support."
+        onClick={handleUploadLogs}
+        highlighted={hash === 'upload-logs'}
+      />
+
+      <SettingsPill
+        icon={MessageSquare}
+        iconColor="#7C3AED"
+        label="Feedback & Support"
+        helper="Request a feature or contact support."
+        onClick={() => setFeedbackOpen(true)}
+        highlighted={hash === 'feedback-support'}
       />
 
       <SettingsPill
@@ -84,6 +144,33 @@ export default function AccountSettings() {
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
               Log Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
+        <AlertDialogContent className="bg-surface-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-text-primary">Request a feature</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
+              Tell us what would make the KDS work better for your kitchen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <textarea
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            placeholder="Describe your request..."
+            className="w-full min-h-[120px] rounded-lg border border-border bg-surface-bg p-3 text-sm text-text-primary outline-none focus:ring-2 focus:ring-primary"
+          />
+          <AlertDialogFooter>
+            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleFeedbackSubmit}
+              disabled={feedbackText.trim().length === 0}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
+            >
+              Send
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
