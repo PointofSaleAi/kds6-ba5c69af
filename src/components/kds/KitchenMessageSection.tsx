@@ -35,22 +35,48 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
         return (
           <div
             key={msg.message_id}
-            className={`border-b border-border ${isPending ? 'animate-pulse-once' : ''}`}
+            className={`border-b border-border ${isPending ? 'animate-pulse-once' : ''} ${!isPending ? 'opacity-60' : ''}`}
           >
             {/* Header bar */}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-[#7C3AED]/10">
-              <Megaphone size={14} className="text-[#7C3AED] shrink-0" />
+              <MessageCircle size={14} className="text-[#7C3AED] shrink-0" />
               <span className="text-[11px] font-bold text-[#7C3AED] flex-1 truncate">
-                Message from {msg.terminal_name || msg.employee_name}
+                {msg.terminal_name || msg.employee_name}
               </span>
+              {!isPending && (
+                <span className="flex items-center gap-1 text-[10px] font-bold text-success shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                  Acked
+                </span>
+              )}
               <span className="text-[10px] text-text-muted shrink-0">{timeAgo(msg.timestamp)}</span>
             </div>
 
             {/* Message body */}
-            <div className="px-3 py-2">
-              <p className="text-[13px] text-text-primary leading-snug">{msg.message_text}</p>
-              {msg.employee_role && (
-                <p className="text-[10px] text-text-muted mt-1">{msg.employee_name} - {msg.employee_role}</p>
+            <div className="px-3 py-2 flex items-start gap-2">
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] text-text-primary leading-snug">{msg.message_text}</p>
+                {msg.employee_role && (
+                  <p className="text-[10px] text-text-muted mt-1">{msg.employee_name} - {msg.employee_role}</p>
+                )}
+              </div>
+              {isPending && (
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => setReplyTarget(msg)}
+                    aria-label="Reply"
+                    className="w-7 h-7 rounded-md bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center hover:bg-[#7C3AED]/20 transition-colors"
+                  >
+                    <Reply size={14} />
+                  </button>
+                  <button
+                    onClick={() => onAcknowledge(msg.message_id)}
+                    aria-label="Acknowledge"
+                    className="w-7 h-7 rounded-md bg-success/10 text-success flex items-center justify-center hover:bg-success/20 transition-colors"
+                  >
+                    <Check size={14} />
+                  </button>
+                </div>
               )}
             </div>
 
@@ -65,31 +91,6 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                 ))}
               </div>
             )}
-
-            {/* Action buttons */}
-            <div className="px-3 pb-2 flex gap-2">
-              {isPending ? (
-                <button
-                  onClick={() => onAcknowledge(msg.message_id)}
-                  className="flex-1 py-2 rounded-lg bg-brand-primary text-white text-[12px] font-bold flex items-center justify-center gap-1.5 hover:bg-brand-primary/90 transition-colors min-h-[44px]"
-                >
-                  <Check size={14} />
-                  Acknowledge
-                </button>
-              ) : (
-                <div className="flex-1 py-2 rounded-lg bg-success/10 text-success text-[12px] font-bold flex items-center justify-center gap-1.5 min-h-[44px]">
-                  <Check size={14} />
-                  Acknowledged {msg.acknowledged_at ? formatTime(msg.acknowledged_at) : ''}
-                </div>
-              )}
-              <button
-                onClick={() => setReplyTarget(msg)}
-                className="py-2 px-4 rounded-lg border border-border text-text-primary text-[12px] font-bold flex items-center justify-center gap-1.5 hover:bg-muted transition-colors min-h-[44px]"
-              >
-                <MessageSquare size={14} />
-                Reply
-              </button>
-            </div>
           </div>
         );
       })}
