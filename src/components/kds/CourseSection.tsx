@@ -328,13 +328,13 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         <div className="flex items-center shrink-0" style={{ gap: '4px' }}>
           {/* Fired course: "Done X ago" */}
           {coursingStatus === 'fired' && firedTimerLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[12px] font-bold font-mono tabular-nums text-text-primary">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold font-mono tabular-nums text-text-primary">
               {firedTimerLabel}
             </span>
           )}
           {/* Pending: static "Preparing at X:XX PM" label */}
           {coursingStatus === 'pending' && firingAtLabel && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[12px] font-semibold text-text-primary">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold text-text-primary">
               {t.preparingAt} {firingAtLabel}
             </span>
           )}
