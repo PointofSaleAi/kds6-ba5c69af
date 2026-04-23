@@ -220,7 +220,7 @@ function ItemTapRow({
 
           {showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
             <div
-              dir={secondaryDir}
+              dir="ltr"
               className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
               style={{ gap: '4px', marginTop: '1px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
@@ -232,7 +232,7 @@ function ItemTapRow({
                   </span>
                 </span>
               </span>
-              <span style={{ lineHeight: 1 }}>{tpSecondary(item.name)}</span>
+              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext' }}>{tpSecondary(item.name)}</span>
             </div>
           )}
 
