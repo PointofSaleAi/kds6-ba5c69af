@@ -224,7 +224,7 @@ function ItemTapRow({
               className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
               style={{ gap: '4px', marginTop: '1px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
-              <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)', width: '2.25ch', display: 'inline-block', lineHeight: 1 }}>
+              <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block', lineHeight: 1 }}>
                 <span className="invisible" aria-hidden="true">0x</span>
                 <span className="absolute inset-0 flex items-center justify-end">
                   <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
