@@ -163,16 +163,16 @@ function ItemTapRow({
           </button>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap" style={{ gap: '4px', lineHeight: 1.1 }}>
+          <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
-              className={`font-normal ${isDone ? 'line-through' : ''}`}
+              className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
             >
               {item.quantity}x
             </span>
             <span
-              className={`font-bold uppercase ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
-              style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1 }}
+              className={`font-bold uppercase min-w-0 flex-1 break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+              style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
             >
               {tp(item.name)}
             </span>
