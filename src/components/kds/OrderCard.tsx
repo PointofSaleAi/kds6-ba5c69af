@@ -65,7 +65,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
-  const { ticketHeaderLayout } = useKDSSettings();
+  const { ticketHeaderLayout, ticketLayout } = useKDSSettings();
+  const isCompactLayout = ticketLayout === 'compact';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
@@ -670,7 +671,24 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               padding: '12px',
             }}
           >
-            {ticketHeaderLayout === 'kitchen' ? (
+            {isCompactLayout ? (
+              <>
+                <div className="text-white font-black shrink-0 leading-none" style={{ fontSize: '28px' }}>
+                  {order.orderNumber}
+                </div>
+                <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
+                  <div className="flex items-center gap-1.5 leading-none">
+                    {order.isRushed && (
+                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
+                    )}
+                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
+                  </div>
+                  <span className="text-[12px] leading-none font-medium text-white/70">
+                    {formatTimeForKDS(order.timeReceived, timeFormat)}
+                  </span>
+                </div>
+              </>
+            ) : ticketHeaderLayout === 'kitchen' ? (
               <>
                 <div className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
                   {order.orderNumber}
