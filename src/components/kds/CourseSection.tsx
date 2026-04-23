@@ -600,11 +600,6 @@ function CourseItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-center" style={{ gap: '4px', marginTop: '-2px', lineHeight: 1 }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}>
-                0x
-              </span>
-          {showDetails && showAllergens && item.allergens.length > 0 && (
             <div className="flex items-center" style={{ gap: '4px', marginTop: '3px', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}>
                 0x
