@@ -39,7 +39,7 @@ export default function SettingsLayout() {
         settingsOpen={true}
       />
       <div
-        className="light flex flex-1 overflow-hidden p-4 gap-4"
+        className="flex flex-1 overflow-hidden p-4 gap-4"
         style={{ background: 'hsl(var(--surface-bg))' }}
       >
         <div
