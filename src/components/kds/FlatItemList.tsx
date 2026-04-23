@@ -136,11 +136,13 @@ function ItemTapRow({
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{ 
         backgroundColor: rowBg,
+        paddingTop: '2px',
+        paddingBottom: '2px',
       }}
     >
       <div
         className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
-        style={{ padding: `0px 0 0 4px`, gap: 0 }}
+        style={{ padding: `0px 0 0 0px`, gap: 0 }}
         onClick={handleTap}
         title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
       >
