@@ -672,18 +672,18 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           >
             {ticketHeaderLayout === 'kitchen' ? (
               <>
-                <div className="text-white font-black" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
+                <div className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
                   {order.orderNumber}
                 </div>
-                <div className="flex flex-col items-end justify-center" style={{ gap: '6px' }}>
-                  <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90" />
-                    {order.serverName}
+                <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
+                  <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white max-w-full">
+                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                    <span className="text-right break-words min-w-0">{order.serverName}</span>
                   </span>
                   {order.guestName ? (
-                    <span className="flex items-center gap-1 text-[15px] leading-none font-medium text-white">
-                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90" />
-                      {order.guestName}
+                    <span className="flex items-start gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
+                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0 mt-0.5" />
+                      <span className="text-right break-words min-w-0">{order.guestName}</span>
                     </span>
                   ) : (
                     <span className="h-[14px]" />
