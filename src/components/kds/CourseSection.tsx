@@ -349,7 +349,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             opacity: isExpanded ? 1 : 0,
           }}
         >
-        <div className="px-2">
+        <div className="px-1">
           {(() => {
           const visibleItems = courseGroup.items.filter((item) => {
             if (dismissedItemIds?.has(item.id)) return false;
@@ -486,7 +486,7 @@ function CourseItemTapRow({
   const stateOpacity = itemOpacity;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
-  const headerPad = compactRows ? '0px 0 0 4px' : '0px 0 0 4px';
+  const headerPad = compactRows ? '0px 0 0 0px' : '0px 0 0 0px';
   const allergenMt = compactRows ? '0px' : '0px';
 
   return (
