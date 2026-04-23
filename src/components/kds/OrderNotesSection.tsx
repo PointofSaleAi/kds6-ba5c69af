@@ -35,7 +35,7 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           }
         }}
         className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
-        style={{ padding: '2px 8px', gap: '5px' }}
+        style={{ padding: '2px 8px', gap: '3px' }}
       >
         <img
           src={noteIcon}
