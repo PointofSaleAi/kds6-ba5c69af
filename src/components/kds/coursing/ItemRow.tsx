@@ -19,17 +19,27 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
       style={{ padding: '4px 0 4px 4px', gap: 0 }}
     >
       <div className="flex-1 min-w-0">
-        <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
+        <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '6px', lineHeight: 1.1 }}>
           <span className="text-[13px] font-normal text-text-secondary">
             {item.quantity}×
           </span>
-          <span className="text-[13px] font-bold text-text-primary uppercase">
+          <span className="text-[13px] font-bold text-text-primary uppercase min-w-0 flex-1 break-words" style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
             {tp(item.name)}
           </span>
-          {item.allergens.map((a) => (
-            <AllergenBadge key={a.type} allergen={a} variant="item" />
-          ))}
         </div>
+
+        {item.allergens.length > 0 && (
+          <div className="flex items-start" style={{ gap: '6px', marginTop: '1px', lineHeight: 1 }}>
+            <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true" style={{ lineHeight: 1 }}>
+              {item.quantity}×
+            </span>
+            <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+              {item.allergens.map((a) => (
+                <AllergenBadge key={a.type} allergen={a} variant="item" />
+              ))}
+            </div>
+          </div>
+        )}
 
         {displayMode === 'dual' && showSecondaryMenu && (
           <div
@@ -50,7 +60,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         )}
 
         {item.modifiers.length > 0 && (
-          <div style={{ marginTop: '2px' }}>
+          <div style={{ marginTop: '1px' }}>
             {item.modifiers.map((mod, idx) => (
               <div
                 key={idx}
@@ -73,7 +83,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         )}
 
         {item.notes && (
-          <div className="flex items-start" style={{ marginTop: '2px', gap: '6px' }}>
+          <div className="flex items-start" style={{ marginTop: '1px', gap: '6px' }}>
             <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true">
               {item.quantity}x
             </span>

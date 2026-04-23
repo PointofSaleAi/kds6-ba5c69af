@@ -142,11 +142,11 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                           {/* Child 1 — item-main */}
                           <div className="flex-1 min-w-0">
                             {/* .item-name-row */}
-                            <div className="flex items-center flex-wrap" style={{ gap: '6px' }}>
+                            <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '6px', lineHeight: 1.1 }}>
                               <span className="text-[13px] font-normal text-text-secondary">
                                 {item.quantity}×
                               </span>
-                              <span className={`text-[13px] font-medium uppercase ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`}>
+                              <span className={`text-[13px] font-medium uppercase min-w-0 flex-1 break-words ${item.isCancelled ? 'line-through text-text-muted' : 'text-text-primary'} ${item.isCompleted ? 'text-success' : ''}`} style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
                                 {tp(item.name)}
                               </span>
                               {item.isCancelled && (
@@ -162,14 +162,24 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                                   RECALLED
                                 </span>
                               )}
-                              {item.allergens.length > 0 && item.allergens.map((a) => (
-                                <AllergenBadge key={a.type} allergen={a} variant="item" />
-                              ))}
                             </div>
+
+                            {item.allergens.length > 0 && (
+                              <div className="flex items-start" style={{ gap: '6px', marginTop: '1px', lineHeight: 1 }}>
+                                <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true" style={{ lineHeight: 1 }}>
+                                  {item.quantity}×
+                                </span>
+                                <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+                                  {item.allergens.map((a) => (
+                                    <AllergenBadge key={a.type} allergen={a} variant="item" />
+                                  ))}
+                                </div>
+                              </div>
+                            )}
 
                             {/* .item-mods */}
                             {item.modifiers.length > 0 && (
-                              <div style={{ marginTop: '2px' }}>
+                              <div style={{ marginTop: '1px' }}>
                                 {item.modifiers.map((mod, idx) => (
                                   <div
                                     key={idx}
