@@ -91,7 +91,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
   return (
     <TooltipProvider delayDuration={300}>
       <div
-        className={`${expanded ? 'w-48' : 'w-20'} py-2 px-2 ${settingsOpen ? 'light' : ''} flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}
+        className={`${expanded ? 'w-48' : 'w-20'} py-2 px-2 ${settingsOpen ? 'light' : 'bg-sidebar-bg'} flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}
         style={settingsOpen ? { background: 'hsl(var(--surface-bg))' } : undefined}
       >
         <div
