@@ -532,11 +532,28 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
             <div className="w-[360px] shrink-0 flex flex-col h-full">
-              <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
-                {t.previewKDS}
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
+                  {t.previewKDS}
+                </div>
+                <div className="flex bg-muted rounded-md p-0.5">
+                  {(['standard', 'compact'] as const).map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => setPreviewLayout(opt)}
+                      className={`px-2.5 py-1 text-[10px] font-semibold rounded transition-colors capitalize ${
+                        previewLayout === opt ? 'bg-brand-primary text-primary-foreground' : 'text-text-secondary'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex-1 min-h-0 pointer-events-none select-none w-full [&>*]:h-full [&>*]:flex [&>*]:flex-col" aria-hidden="true">
-                <OrderCard order={previewTicket} />
+              <div className="flex-1 min-h-0 overflow-hidden pointer-events-none select-none w-full flex flex-col" aria-hidden="true">
+                <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
+                  <OrderCard order={previewTicket} compact={previewLayout === 'compact'} />
+                </div>
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
                 {displayMode === 'dual'
