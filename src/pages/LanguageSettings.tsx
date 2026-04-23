@@ -103,12 +103,12 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
     <div className="bg-surface-card w-full h-full flex flex-col rounded-2xl overflow-hidden">
 
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-border shrink-0">
-            <Globe size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">{t.languageRegion}</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
-              <X size={20} className="text-text-secondary" />
+          <div className="flex items-center gap-3 px-5 py-3 border-b border-border shrink-0">
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Back">
+              <ArrowLeft size={20} className="text-text-secondary" />
             </button>
+            <Globe size={20} className="text-text-muted" />
+            <h2 className="text-lg font-bold text-text-primary flex-1">{t.languageRegion}</h2>
           </div>
 
           {/* Tab content */}
