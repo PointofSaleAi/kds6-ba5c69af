@@ -42,19 +42,30 @@ export default function DisplaySettings() {
 
   if (languageOpen) {
     return (
-      <div className="fixed top-0 right-0 bottom-0 left-20 z-40 bg-surface-bg flex flex-col">
-        <div className="flex items-center gap-3 px-6 py-4 shrink-0">
-          <button
-            onClick={() => setLanguageOpen(false)}
-            className="w-11 h-11 rounded-full bg-surface-card shadow-sm hover:bg-muted transition-colors flex items-center justify-center"
-            aria-label="Back"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-2xl font-bold">Language</h1>
-        </div>
-        <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
-          <InlineLanguageSettings activeTab="language" />
+      <div
+        className="fixed top-0 right-0 bottom-0 left-20 z-40 flex flex-col p-4"
+        style={{ background: 'hsl(var(--surface-bg))' }}
+      >
+        <div
+          className="flex-1 min-h-0 rounded-3xl overflow-hidden flex flex-col"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
+          <div className="flex items-center gap-3 px-6 py-4 shrink-0">
+            <button
+              onClick={() => setLanguageOpen(false)}
+              className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              aria-label="Back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-2xl font-bold">Language</h1>
+          </div>
+          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
+            <InlineLanguageSettings activeTab="language" />
+          </div>
         </div>
       </div>
     );
