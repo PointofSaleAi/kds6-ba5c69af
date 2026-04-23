@@ -43,8 +43,8 @@ export default function DisplaySettings() {
   if (languageOpen) {
     return (
       <div
-        className="fixed top-0 right-0 bottom-0 left-20 z-40 flex flex-col p-4"
-        style={{ background: 'hsl(var(--surface-bg))' }}
+        className="fixed top-0 right-0 left-20 z-40 flex flex-col p-4"
+        style={{ background: 'hsl(var(--surface-bg))', bottom: '52px' }}
       >
         <div
           className="flex-1 min-h-0 rounded-3xl overflow-hidden flex flex-col"
