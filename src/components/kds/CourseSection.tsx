@@ -561,7 +561,7 @@ function CourseItemTapRow({
             )}
             {tappable && isSeen && timestamps?.seenAt && (
               <span
-                style={{ fontSize: '11px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600 }}
+                style={{ fontSize: '11px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }}
                 className="ml-1 shrink-0 whitespace-nowrap"
               >
                 {t.seenAt} {timestamps.seenAt}
@@ -569,7 +569,7 @@ function CourseItemTapRow({
             )}
             {tappable && isDone && timestamps?.doneAt && (
               <span
-                style={{ fontSize: '11px', color: '#374151', fontWeight: 600 }}
+                style={{ fontSize: '11px', color: '#374151', fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }}
                 className="ml-1 shrink-0 whitespace-nowrap"
               >
                 {t.doneAt} {timestamps.doneAt}
