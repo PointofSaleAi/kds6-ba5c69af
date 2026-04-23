@@ -1,56 +1,54 @@
 
-Fix the remaining vertical gap by tightening the actual row box heights, not just the outer margins.
-
 1. Root cause
-- The gap is still visible because the surrounding wrappers already use `marginTop: 0px`, but the rendered height is coming from inside the rows:
-  - `AllergenBadge.tsx` still gives each badge a non-trivial badge box via border, padding, and `lineHeight: 1.1`
-  - `ModifierLine.tsx` still renders a full flex row with its own line box and quantity spacer, so even with `marginTop: -1px` there is still extra vertical height
-  - In both `CourseSection.tsx` and `FlatItemList.tsx`, allergens and modifiers are rendered as separate stacked blocks, so their own internal line-height and alignment rules are what keep the visible gap
+- The earlier spacing-tightening removed the card-level bottom padding that used to create breathing room after the final product.
+- In coursed tickets, `CourseItemTapRow` in `src/components/kds/CourseSection.tsx` now renders with effectively zero outer bottom padding, so the last modifier/add-on of the last visible item can sit too close to the card edge.
+- In non-coursed tickets, `src/components/kds/FlatItemList.tsx` still has light row padding, but it should be normalized so the final visible product gets the same deliberate end spacing as coursed tickets.
+- Re-adding a generic bottom padding on the whole course/card wrapper would bring back the previous bug: empty space under a Done course header even when there is no actual product content below it.
 
 2. Targeted implementation
-- Update `src/components/kds/AllergenBadge.tsx`
-  - Reduce item badge vertical footprint slightly more for `variant="item"`
-  - Keep the same colors, border style, typography weight, and chip appearance
-  - Tighten only the chip height by lowering line-height and vertical padding for item badges
-
-- Update `src/components/kds/ModifierLine.tsx`
-  - Reduce the effective row height for non-servable modifiers by tightening the wrapper and text line-height
-  - Remove the remaining extra vertical space introduced by the flex row alignment
-  - Keep modifier colors, text style, and servable modifier behavior unchanged
-
 - Update `src/components/kds/CourseSection.tsx`
-  - Pull the modifier block closer to the allergen row by tightening the wrapper that renders modifiers, not just the modifier row itself
-  - Keep Standard and Compact logic unchanged
-  - Do not alter item actions, timestamps, or expansion behavior
+  - Keep the tight spacing between product name, allergen chips, modifiers, and notes exactly as-is.
+  - Add a very small trailing bottom padding only when rendering the actual last visible product row in an expanded course.
+  - Apply it at the row wrapper/content-block level so the gap appears after the last product content, not between internal metadata lines.
+  - Preserve the current compact density for all non-last rows.
 
 - Update `src/components/kds/FlatItemList.tsx`
-  - Apply the same wrapper-level tightening used in `CourseSection.tsx` so non-coursed tickets match coursed tickets
-  - Keep ticket layout modes and item interactions unchanged
+  - Mirror the same “last visible product only” trailing spacing rule used in `CourseSection.tsx`.
+  - Keep internal row spacing unchanged so allergens/modifiers remain tight.
+  - Ensure the final item in non-coursed tickets does not end flush against the card bottom.
+
+- Do not reintroduce global bottom padding in `src/components/kds/OrderCard.tsx`
+  - Leave the card/course container flush so empty-course whitespace does not return.
+  - Keep the fix localized to the final rendered product block.
 
 3. What will change visually
-- Smaller vertical gap between:
+- A small, clean breathing space will appear after the last product in a ticket.
+- The spacing between:
   - product name and allergen chips
-  - allergen chips and first modifier/add-on
-  - stacked modifier/add-on rows
-- No change to:
-  - item name font size
-  - allergen colors/styles
-  - modifier colors
-  - ticket logic, layout mode behavior, or tap actions
+  - product name and modifiers/add-ons
+  - stacked modifiers/add-ons
+  will stay tight and unchanged.
+- The previous unwanted empty area under Done course headers will remain removed.
 
 4. Technical details
-- Focus on these properties only:
-  - badge line-height and vertical padding in `AllergenBadge.tsx`
-  - modifier wrapper line-height, alignment, and top offset in `ModifierLine.tsx`
-  - parent wrapper spacing around modifier groups in `CourseSection.tsx` and `FlatItemList.tsx`
-- Avoid changing any card-level layout, section borders, row ordering, or item lifecycle logic
+- Focus only on:
+  - conditional bottom padding or margin for `isLastVisible` rows in `CourseSection.tsx`
+  - matching last-row spacing logic in `FlatItemList.tsx`
+- Avoid changing:
+  - card-level padding
+  - course header height
+  - product typography
+  - allergen/modifier styling
+  - row ordering, lifecycle logic, expand/collapse behavior
 
 5. Validation
-- Verify in Standard ticket layout on both:
-  - coursed tickets rendered by `CourseSection`
-  - non-coursed tickets rendered by `FlatItemList`
-- Confirm the spacing is visibly tighter in cases like the screenshot:
-  - item name
-  - allergen chip row
-  - first modifier/add-on directly beneath
-- Confirm there are no regressions to Compact mode expand/collapse behavior or servable modifiers
+- Verify in Dine-In coursed tickets:
+  - Active course
+  - Preparing course
+  - Done/served course when expanded
+  - last product with allergens/modifiers/add-ons at the bottom of the card
+- Verify in non-coursed tickets:
+  - last visible product has the same final bottom breathing room
+- Confirm both:
+  - there is no extra empty block under a Done course header
+  - there is now a small, intentional space after the last product content only
