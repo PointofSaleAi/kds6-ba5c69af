@@ -39,10 +39,12 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           if (dismissedItemIds?.has(item.id)) return false;
           return true;
         });
+        let seenIdx = 0;
         return visibleItems.map((item, visibleIdx) => {
         const isLastVisible = visibleIdx === visibleItems.length - 1;
         const status = itemStatuses?.get(item.id);
         const timestamps = itemTimestamps?.get(item.id);
+        const currentSeenIdx = status === 'preparing' ? seenIdx++ : 0;
 
         return (
           <ItemTapRow
@@ -50,6 +52,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             item={item}
             status={status}
             timestamps={timestamps}
+            seenIdx={currentSeenIdx}
             isLastVisible={isLastVisible}
             showAllergens={showAllergens}
             displayMode={displayMode}
