@@ -176,7 +176,7 @@ function ItemTapRow({
           <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
-              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: ticketLayoutCompact ? '1.85ch' : '2.25ch', textAlign: 'right', display: 'inline-block' }}
             >
               {item.quantity}x
             </span>
