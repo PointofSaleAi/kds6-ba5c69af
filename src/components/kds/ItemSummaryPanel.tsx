@@ -299,7 +299,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                           >
                             {tp(item.name)}
                           </span>
-                          <div className={`flex items-center ${isPortrait ? 'gap-1' : 'gap-1.5'} ml-1 shrink-0`}>
+                          <div className={`flex items-center ${isPortrait ? 'gap-0.5' : 'gap-1'} ml-0.5 shrink-0`}>
                             <span className="text-[10px] font-mono text-destructive tabular-nums">
                               {formatMins(item.oldestSeconds)}
                             </span>
