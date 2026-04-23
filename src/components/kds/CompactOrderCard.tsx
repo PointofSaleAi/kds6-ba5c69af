@@ -43,8 +43,6 @@ function formatElapsed(totalSeconds: number): string {
 interface CompactOrderCardProps {
   order: Order;
   liveElapsed: number;
-  urgency: 'ok' | 'warning' | 'critical' | 'overtime';
-  onBump?: (orderId: string) => void;
 }
 
 export function CompactOrderCard({ order, liveElapsed }: CompactOrderCardProps) {
