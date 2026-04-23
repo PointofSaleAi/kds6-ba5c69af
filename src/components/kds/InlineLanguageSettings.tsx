@@ -596,7 +596,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   {timeFormats.map((fmt, i) => (
                     <button
                       key={fmt}
-                      onClick={() => setTimeFormat(i as TimeFormatIndex)}
+                      onClick={() => { setTimeFormat(i as TimeFormatIndex); saveTimeFormat(i as TimeFormatIndex); }}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
                       style={{ border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
