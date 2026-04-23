@@ -162,8 +162,8 @@ function ItemTapRow({
             onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
             aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
             aria-expanded={detailsOpen}
-            className="shrink-0 mr-1 flex items-center justify-center rounded hover:bg-muted/60"
-            style={{ width: 18, height: 18 }}
+            className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
+            style={{ width: 14, height: 14, marginRight: 2 }}
           >
             <ChevronRight
               size={14}
