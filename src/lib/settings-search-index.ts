@@ -1,0 +1,65 @@
+export type SettingsGroupId = 'display' | 'orders' | 'expo' | 'hardware' | 'account';
+
+export interface SettingsSearchEntry {
+  id: string;
+  label: string;
+  description: string;
+  group: SettingsGroupId;
+  groupLabel: string;
+  path: string;
+  keywords: string;
+}
+
+export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: string }> = {
+  display: { label: 'Display', path: '/kds/full/settings/display' },
+  orders: { label: 'Orders', path: '/kds/full/settings/orders' },
+  expo: { label: 'Expo View', path: '/kds/full/settings/expo' },
+  hardware: { label: 'Hardware', path: '/kds/full/settings/hardware' },
+  account: { label: 'Account', path: '/kds/full/settings/account' },
+};
+
+/**
+ * Static, client-side searchable index of every settings row.
+ * `id` is also used as a hash anchor for highlight-on-navigate.
+ */
+export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
+  // Display
+  { id: 'display-mode', label: 'Display Mode', description: 'Grid, Horizontal, or Stagger layout', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#display-mode', keywords: 'grid horizontal stagger layout view' },
+  { id: 'cards-per-row', label: 'Cards per row', description: 'How many tickets fit across', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#cards-per-row', keywords: 'columns count density' },
+  { id: 'text-size', label: 'Text size', description: 'Compact, Standard, or Large', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#text-size', keywords: 'font scale size legibility' },
+  { id: 'ticket-layout', label: 'Ticket layout', description: 'Standard or Compact ticket density', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#ticket-layout', keywords: 'compact standard ticket card layout density' },
+  { id: 'status-colors', label: 'Status colors', description: 'Ticket aging color thresholds', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#status-colors', keywords: 'aging colors thresholds time' },
+  { id: 'theme', label: 'Theme', description: 'Light or Dark mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#theme', keywords: 'light dark theme appearance' },
+  { id: 'language', label: 'Language', description: 'Display language selection', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#language', keywords: 'region locale i18n language translation' },
+
+  // Orders
+  { id: 'category-filter', label: 'Category filter', description: 'Show only selected categories', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#category-filter', keywords: 'category filter products items' },
+  { id: 'revenue-center', label: 'Revenue center filter', description: 'Filter by station or revenue center', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#revenue-center', keywords: 'station revenue center filter' },
+  { id: 'stagger-mode', label: 'Stagger mode', description: 'Release orders in batches', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#stagger-mode', keywords: 'stagger pacing batch release queue' },
+  { id: 'servable-modifiers', label: 'Servable modifiers', description: 'Track modifier preparation status', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#servable-modifiers', keywords: 'modifiers servable status tracking' },
+  { id: 'allergen-badges', label: 'Allergen badges', description: 'Show allergen chips on tickets', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#allergen-badges', keywords: 'allergen badges chips warnings' },
+  { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#sort-default', keywords: 'sort order time table type default' },
+
+  // Expo
+  { id: 'expo-send-button', label: 'Show Send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo View', path: '/kds/full/settings/expo#expo-send-button', keywords: 'expo send button ready always' },
+
+  // Hardware
+  { id: 'kot-printer', label: 'KOT Printer', description: 'Kitchen ticket printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#kot-printer', keywords: 'printer kot kitchen ticket' },
+  { id: 'label-printer', label: 'Label Printer', description: 'Per-item label printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#label-printer', keywords: 'printer label sticker' },
+  { id: 'sound-settings', label: 'Sound settings', description: 'Volume and notification alerts', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sound-settings', keywords: 'sound volume audio alert beep' },
+  { id: 'connection', label: 'Connection', description: 'Network and EdgeOS sync', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#connection', keywords: 'connection network websocket sync edgeos' },
+
+  // Account
+  { id: 'device-name', label: 'Device name', description: 'Identifier for this Kitchen Display', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#device-name', keywords: 'device name identifier kds station' },
+  { id: 'dev-mode', label: 'Dev mode', description: 'Show developer flow selector', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#dev-mode', keywords: 'developer dev mode debug' },
+  { id: 'log-out', label: 'Log out', description: 'Sign out of this device', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#log-out', keywords: 'logout sign out exit' },
+];
+
+export function searchSettings(query: string): SettingsSearchEntry[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return SETTINGS_SEARCH_INDEX.filter((e) => {
+    const hay = `${e.label} ${e.description} ${e.keywords} ${e.groupLabel}`.toLowerCase();
+    return hay.includes(q);
+  });
+}

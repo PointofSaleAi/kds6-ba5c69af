@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DevScenarioSelector from '@/pages/DevScenarioSelector';
 import SplashScreen from '@/pages/SplashScreen';
 import PinPadScreen from '@/pages/PinPadScreen';
@@ -38,9 +39,10 @@ type AppScreen =
   | 'performance';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [screen, setScreen] = useState<AppScreen>(isDevMode() ? 'dev-selector' : 'splash');
   const [alertsOpen, setAlertsOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOpen] = useState(false);
 
   // Sub-screen states
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -76,7 +78,6 @@ const Index = () => {
   const handlePinFallback = useCallback(() => setScreen('byod-new'), []);
 
   const handleLogOut = useCallback(() => {
-    setSettingsOpen(false);
     setScreen(isDevMode() ? 'dev-selector' : 'splash');
   }, []);
 
@@ -84,7 +85,7 @@ const Index = () => {
     switch (target) {
       case 'home': setScreen('main'); break;
       case 'alerts': setAlertsOpen(true); break;
-      case 'settings': setSettingsOpen(true); break;
+      case 'settings': navigate('/kds/full/settings'); break;
       case 'performance': setScreen('performance'); break;
     }
   }, []);
@@ -153,7 +154,7 @@ const Index = () => {
         <MainOrderView
           onNavigate={handleNavigate}
           settingsOpen={settingsOpen}
-          onCloseSettings={() => setSettingsOpen(false)}
+          onCloseSettings={() => {}}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
