@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StickyNote } from 'lucide-react';
+import noteIcon from '@/assets/note-bold.svg';
 
 interface OrderNotesSectionProps {
   notes: string;
