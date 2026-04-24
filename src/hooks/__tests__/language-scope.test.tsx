@@ -79,6 +79,7 @@ describe('Language Scope gating', () => {
   it('Interface scope translates UI chrome keys including new ones', () => {
     const { result } = renderHook(() => useLanguage(), { wrapper });
     act(() => {
+      result.current.setDisplayMode('single');
       result.current.setLanguage('es');
       result.current.setScope('interface');
     });
