@@ -127,7 +127,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 notifications.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center px-8">
                     <CheckCircle size={48} className="text-success mb-4" />
-                    <p className="text-text-primary font-semibold">All clear, no notifications</p>
+                    <p className="text-text-primary font-semibold">{t.allClearNoNotifications}</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
@@ -149,16 +149,16 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                           <Icon size={18} className={`${config.color} shrink-0 mt-0.5`} />
                           <div className="flex-1 min-w-0">
                             <p className={`text-sm leading-snug ${!notif.acknowledged ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
-                              {notif.message}
+                              {tn(notif.message)}
                             </p>
                             <div className="flex items-center gap-1.5 mt-1 text-[10px] text-text-muted">
-                              <span className="px-1.5 py-0.5 rounded bg-muted text-text-secondary font-medium">{notif.station}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-muted text-text-secondary font-medium">{tl(notif.station)}</span>
                               <span>·</span>
                               <span>{timeAgo(notif.timestamp)}</span>
                               {notif.acknowledged && (
                                 <>
                                   <span>·</span>
-                                  <span className="text-success">Read</span>
+                                  <span className="text-success">{t.readLabel}</span>
                                 </>
                               )}
                             </div>
@@ -173,7 +173,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 sortedMessages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center px-8">
                     <Megaphone size={48} className="text-[#7C3AED]/40 mb-4" />
-                    <p className="text-text-primary font-semibold">No kitchen messages</p>
+                    <p className="text-text-primary font-semibold">{t.noKitchenMessages}</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
@@ -186,21 +186,21 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                           <div className="flex items-center gap-2 px-4 py-2 bg-[#7C3AED]/10">
                             <Megaphone size={14} className="text-[#7C3AED] shrink-0" />
                             <span className="text-[11px] font-bold text-[#7C3AED] flex-1 truncate">
-                              {msg.terminal_name || 'POS'}
+                              {tl(msg.terminal_name || 'POS')}
                             </span>
                             <span className="text-[10px] text-text-muted">{timeAgo(msg.timestamp)}</span>
                           </div>
 
                           {/* Meta row */}
                           <div className="px-4 pt-2 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-text-muted">
-                            <span>{msg.employee_name}{msg.employee_role ? ` - ${msg.employee_role}` : ''}</span>
-                            {msg.linked_order_number && <span>Order #{msg.linked_order_number}</span>}
-                            {msg.table_number && <span>{msg.table_number}</span>}
+                            <span>{tperson(msg.employee_name)}{msg.employee_role ? ` - ${tl(msg.employee_role)}` : ''}</span>
+                            {msg.linked_order_number && <span>{t.orderHash}{msg.linked_order_number}</span>}
+                            {msg.table_number && <span>{tl(msg.table_number)}</span>}
                           </div>
 
                           {/* Body */}
                           <div className="px-4 py-2">
-                            <p className="text-[13px] text-text-primary leading-snug">{msg.message_text}</p>
+                            <p className="text-[13px] text-text-primary leading-snug">{tn(msg.message_text)}</p>
                           </div>
 
                           {/* Replies */}
@@ -208,8 +208,8 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                             <div className="mx-4 mb-2 border-l-2 border-[#7C3AED]/30 pl-3 space-y-1">
                               {msgReplies.map(r => (
                                 <div key={r.reply_id}>
-                                  <p className="text-[11px] text-text-primary font-medium">{r.reply_text}</p>
-                                  <p className="text-[9px] text-text-muted">Kitchen - {formatTime(r.timestamp)}</p>
+                                  <p className="text-[11px] text-text-primary font-medium">{tn(r.reply_text)}</p>
+                                  <p className="text-[9px] text-text-muted">{t.kitchenLabel} - {formatTime(r.timestamp)}</p>
                                 </div>
                               ))}
                             </div>
@@ -223,12 +223,12 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                                 className="flex-1 py-2 rounded-lg bg-brand-primary text-white text-[12px] font-bold flex items-center justify-center gap-1.5 hover:bg-brand-primary/90 transition-colors min-h-[44px]"
                               >
                                 <Check size={14} />
-                                Acknowledge
+                                {t.acknowledge}
                               </button>
                             ) : (
                               <div className="flex-1 py-2 rounded-lg bg-success/10 text-success text-[12px] font-bold flex items-center justify-center gap-1.5 min-h-[44px]">
                                 <Check size={14} />
-                                Acknowledged
+                                {t.acknowledged}
                               </div>
                             )}
                             <button
@@ -236,7 +236,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                               className="py-2 px-4 rounded-lg border border-border text-text-primary text-[12px] font-bold flex items-center justify-center gap-1.5 hover:bg-muted transition-colors min-h-[44px]"
                             >
                               <MessageSquare size={14} />
-                              Reply
+                              {t.reply}
                             </button>
                           </div>
                         </div>
