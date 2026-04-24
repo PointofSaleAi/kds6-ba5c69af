@@ -50,7 +50,13 @@ export function PrinterAssignmentsProvider({ children }: { children: ReactNode }
       value={{
         ...state,
         setKotPrinter: (a) => setState((p) => ({ ...p, kot: a })),
-        setLabelPrinter: (a) => setState((p) => ({ ...p, label: a })),
+        setLabelPrinter: (a) =>
+          setState((p) => ({
+            ...p,
+            label: a,
+            // Auto-enable label printing when a printer is assigned; disable when cleared.
+            labelEnabled: !!a.printerId,
+          })),
         setLabelEnabled: (v) => setState((p) => ({ ...p, labelEnabled: v })),
       }}
     >
