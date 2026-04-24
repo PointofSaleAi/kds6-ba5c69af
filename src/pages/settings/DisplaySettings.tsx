@@ -91,15 +91,6 @@ export default function DisplaySettings() {
       />
 
       <SettingsPill
-        icon={Type}
-        iconColor="#0A84FF"
-        label="Text size"
-        helper="Compact fits more tickets, Large is easier from a distance."
-        right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')} />}
-        highlighted={hash === 'text-size'}
-      />
-
-      <SettingsPill
         icon={Rows3}
         iconColor="#7C3AED"
         label="Ticket layout"
