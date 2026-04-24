@@ -754,6 +754,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'سمك أبو سيف مشوي',
     'Eggplant Parmesan': 'باذنجان بارميزان',
     'Panna Cotta': 'بانا كوتا',
+    'Truffle Pasta': 'باستا الكمأة',
+    'Roasted Vegetables': 'خضار مشوية',
+    'Espresso': 'إسبريسو',
   },
   es: {
     'Cheese Selection': 'Selección de Quesos',
@@ -794,6 +797,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'Pez Espada a la Parrilla',
     'Eggplant Parmesan': 'Berenjena a la Parmesana',
     'Panna Cotta': 'Panna Cotta',
+    'Truffle Pasta': 'Pasta de Trufa',
+    'Roasted Vegetables': 'Verduras Asadas',
+    'Espresso': 'Espresso',
     'Bruschetta': 'Bruschetta',
     'Cheesecake': 'Tarta de Queso',
     'Mango Sticky Rice': 'Arroz Glutinoso con Mango',
@@ -846,6 +852,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': '烤旗鱼',
     'Eggplant Parmesan': '帕尔马茄子',
     'Panna Cotta': '奶冻',
+    'Truffle Pasta': '松露意面',
+    'Roasted Vegetables': '烤蔬菜',
+    'Espresso': '浓缩咖啡',
   },
   vi: {
     'Cheese Selection': 'Phô Mai Tổng Hợp',
@@ -886,6 +895,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'Cá Kiếm Nướng',
     'Eggplant Parmesan': 'Cà Tím Parmesan',
     'Panna Cotta': 'Panna Cotta',
+    'Truffle Pasta': 'Mì Nấm Truffle',
+    'Roasted Vegetables': 'Rau Nướng',
+    'Espresso': 'Cà Phê Espresso',
   },
 };
 
