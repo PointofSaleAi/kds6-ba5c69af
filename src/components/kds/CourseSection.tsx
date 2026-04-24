@@ -447,6 +447,7 @@ function CourseItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem,
   compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
+  const { tn } = useLanguage();
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -657,7 +658,7 @@ function CourseItemTapRow({
             className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
             style={{ fontSize: 'var(--kds-modifier)' }}
           >
-            "{item.notes}"
+            "{tn(item.notes)}"
           </div>
         </div>
       )}
