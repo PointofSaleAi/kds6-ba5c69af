@@ -180,9 +180,7 @@ function ExpoItemRow({
         .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
         .map((m, idx) => {
           const colorClass =
-            m.kind === 'remove' ? 'text-modifier-remove'
-            : m.kind === 'extra' ? 'text-modifier-extra'
-            : 'text-modifier-neutral';
+            m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra';
           return (
             <div key={idx} className="flex items-start" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: '2.25ch', display: 'inline-block' }}>
