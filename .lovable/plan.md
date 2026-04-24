@@ -1,65 +1,132 @@
 
-
 ## Goal
 
-Make the Settings → Language preview ticket responsive to live edits, fill its container properly, and let users toggle between Standard and Compact preview layouts.
+Make the Language screen preview truly independent from the saved Display > Ticket Layout setting, and fully resolve the left-nav tooltip overlap while keeping the existing Language screen structure unchanged.
+
+## Root Cause
+
+The preview toggle is only partially decoupled today.
+
+- `InlineLanguageSettings.tsx` does keep a local `previewLayout` state
+- `OrderCard.tsx` does accept `layoutOverride`
+- But nested ticket renderers still read the global `ticketLayout` directly from `useKDSSettings()`
+
+This means the preview card can switch at the top level, while inner item/course rendering still follows the saved Display setting. That is why the Language screen preview feels overridden or inconsistent.
+
+The tooltip issue is also only partially fixed. Raising tooltip `z-index` alone is not enough if the tooltip content remains inside a lower stacking context than the Language overlay.
 
 ## Changes
 
-### `src/components/kds/InlineLanguageSettings.tsx`
+### 1. Make preview layout fully local and authoritative
 
-1. **Add local preview-layout state**
-   - Add `const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>(ticketLayout)` (read initial from `useKDSSettings`).
-   - This is preview-only and does NOT mutate global `ticketLayout`.
+#### `src/components/kds/InlineLanguageSettings.tsx`
+- Keep `previewLayout` as local state
+- Keep its default as `'standard'` when the Language screen opens
+- Continue using the local `View as` toggle only for preview rendering
+- Remove any remaining dependence on the global saved `ticketLayout` for preview UI text or branching
 
-2. **Live-apply unsaved Region edits to the preview**
-   - The preview currently uses global `useLanguage()` context, but `dateFormat` / `timeFormat` are held in local state until Save. Pass the local `timeFormat` through to the preview by overriding `previewTicket.timeReceived` formatting. Since `OrderCard` reads `timeFormat` from context, wrap the preview render in a small inline component that re-formats using the local state where needed, OR simply persist `timeFormat` immediately on change (call `saveTimeFormat(i)` inside the radio handler, same for date) so the preview reflects edits in real time. Choose the latter (simpler): persist on change, remove the need for a Save click to see preview updates.
+### 2. Propagate layout override through the whole ticket tree
 
-3. **Force preview ticket to match selected layout**
-   - Replace the current `<OrderCard order={previewTicket} />` with:
-     ```tsx
-     <OrderCard order={previewTicket} compact={previewLayout === 'compact'} />
-     ```
-   - For Standard preview, ensure the ticket fills the container: replace the brittle `[&>*]:h-full [&>*]:flex [&>*]:flex-col` hack with a proper flex wrapper (`flex-1 min-h-0 overflow-hidden flex` and let OrderCard's own root grow). Since OrderCard's root is a `div` with its own height behavior, wrap it in a `h-full w-full` container and rely on the existing card styling (no forced child stretching).
-   - To make the items list visually reach the bottom, pad the items area: pass a `compactRows={false}` and add `min-h-full` so the body section uses available height. If OrderCard does not already stretch, wrap with a flex container that stretches the inner courses list.
+#### `src/components/kds/OrderCard.tsx`
+- Replace the current partial override approach with a single resolved layout value:
+  - `resolvedTicketLayout = layoutOverride ?? ticketLayout`
+- Use that resolved value everywhere inside `OrderCard`
+- Stop mixing `compact` and `layoutOverride` in a way that creates two separate rendering paths with different logic
+- Pass the resolved layout down to child components instead of letting them read global settings
 
-4. **Add Standard / Compact toggle above the preview**
-   - Above the preview ticket, add a small segmented control:
-     ```
-     [ Standard ] [ Compact ]
-     ```
-     with the same pill style used for the Language Scope segmented control.
-   - Bind to `previewLayout` / `setPreviewLayout`.
+#### `src/components/kds/FlatItemList.tsx`
+- Add a prop like `ticketLayoutMode?: 'standard' | 'compact'`
+- Use that prop to compute compact item-row behavior
+- Fall back to global settings only when no override is provided
 
-### `src/components/kds/OrderCard.tsx` (minimal touch)
+#### `src/components/kds/CourseSection.tsx`
+- Add the same `ticketLayoutMode?: 'standard' | 'compact'` prop
+- Use it instead of reading the saved global layout directly
+- Pass the value through to any nested compact/detail logic so course rows match the preview mode exactly
 
-- Confirm `compact` prop renders `CompactOrderCard` when true (already supported via existing `compact` flow). No logic changes needed if already handled; otherwise add an early branch:
-  ```tsx
-  if (compact) return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} />;
-  ```
-  (Only add if not already present.)
+## Implementation detail for compact preview
 
-### Preview container layout
+The current preview uses:
+- local branch in `InlineLanguageSettings`
+- `compact` prop on `OrderCard`
+- `layoutOverride="compact"`
 
-In `InlineLanguageSettings.tsx`, restructure the right column:
+That creates overlapping control paths.
+
+I will simplify this so there is one source of truth:
+
+- Standard preview renders the standard ticket using `previewLayout = 'standard'`
+- Compact preview renders the compact ticket using `previewLayout = 'compact'`
+- Both modes are driven by the same resolved layout pipeline, not by a mix of preview-only wrappers plus global child settings
+
+This will guarantee:
+
+- Ticket Layout = Compact, View as = Standard → preview shows Standard
+- Ticket Layout = Compact, View as = Compact → preview shows Compact
+- Ticket Layout = Standard, View as = Standard → preview shows Standard
+- Ticket Layout = Standard, View as = Compact → preview shows Compact
+
+## 3. Fix sidebar tooltip overlap properly
+
+#### `src/components/ui/tooltip.tsx`
+- Render tooltip content inside a Radix `Portal`
+- Keep a high z-index on the tooltip content
+- This removes the tooltip from the sidebar’s local stacking context so it can appear above the Language overlay
+
+#### `src/pages/settings/DisplaySettings.tsx`
+- Keep the Language screen overlay below tooltip level
+- Preserve the current left offset and bottom offset so the left rail and footer remain visible
+
+## 4. Verify alignment with project knowledge
+
+No layout changes will be made to:
+- Language scope tabs
+- Display mode cards
+- Language pair section
+- Language list
+- Save button
+- Global Display > Ticket Layout behavior
+
+The fix is scoped to preview rendering and tooltip layering only.
+
+## Files to update
+
+- `src/components/kds/InlineLanguageSettings.tsx`
+- `src/components/kds/OrderCard.tsx`
+- `src/components/kds/FlatItemList.tsx`
+- `src/components/kds/CourseSection.tsx`
+- `src/components/ui/tooltip.tsx`
+
+## Technical notes
 
 ```text
-┌─ PREVIEW KDS ─────────────────┐
-│  [ Standard ] [ Compact ]     │  ← new toggle
-├───────────────────────────────┤
-│                               │
-│   <OrderCard fills space>     │  ← flex-1, min-h-0
-│                               │
-├───────────────────────────────┤
-│  Showing <lang> ...           │
-└───────────────────────────────┘
+Language preview toggle
+        ↓
+InlineLanguageSettings.previewLayout
+        ↓
+OrderCard.resolvedTicketLayout
+        ↓
+CourseSection / FlatItemList / nested rows
+        ↓
+Render standard or compact consistently
 ```
 
-Apply `flex flex-col h-full` to the preview column, `flex-1 min-h-0` to the ticket wrapper, and remove the child-selector hack.
+```text
+Tooltip trigger in sidebar
+        ↓
+Tooltip content rendered in Portal
+        ↓
+High z-index outside sidebar stacking context
+        ↓
+Visible above Language overlay
+```
 
-## Out of Scope
+## Validation checklist
 
-- No changes to `previewTicket` mock data.
-- No changes to global `ticketLayout` setting from the preview toggle (preview-only override).
-- No changes to Region tab fields beyond making date/time format persist on change so the preview updates live.
-
+- Open Settings > Display > Language
+- Toggle View as between Standard and Compact
+- Confirm the preview switches every time, regardless of saved Display ticket layout
+- Change global Display > Ticket Layout and confirm the Language preview does not change until View as is changed locally
+- Hover collapsed left-nav icons while Language screen is open
+- Confirm tooltip appears above the overlay
+- Confirm left rail and footer remain visible
