@@ -239,7 +239,7 @@ function ExpoItemRow({
   return (
     <div
       className={outerClass}
-      style={{ paddingTop: '2px', paddingBottom: isLast ? '0px' : '2px' }}
+      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
       role={isTapToSend ? 'button' : undefined}
       aria-label={isTapToSend ? `Send ${tp(item.name)}` : undefined}
       onClick={() => {
