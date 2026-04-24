@@ -199,17 +199,24 @@ function WheelPopover({ value, min, max, onChange }: { value: number; min: numbe
 }
 
 const ORDER_TYPE_OPTIONS = [
-  { key: 'dine-in', label: 'Dine In', color: '#1A1A2E', headerLeft: 'TABLE 7' },
-  { key: 'take-out', label: 'Take Out', color: '#2980B9', headerLeft: 'TAKE OUT' },
-  { key: 'delivery', label: 'Delivery', color: '#16A085', headerLeft: 'DELIVERY' },
-  { key: 'banquet', label: 'Banquet', color: '#F39C12', headerLeft: 'BANQUET' },
+  { key: 'dine-in', label: 'Dine In', headerLeft: 'TABLE 7' },
+  { key: 'take-out', label: 'Take Out', headerLeft: 'TAKE OUT' },
+  { key: 'delivery', label: 'Delivery', headerLeft: 'DELIVERY' },
+  { key: 'banquet', label: 'Banquet', headerLeft: 'BANQUET' },
+  { key: 'drive-thru', label: 'Drive Thru', headerLeft: 'DRIVE THRU' },
+  { key: 'curb-side', label: 'Curb Side', headerLeft: 'CURB SIDE' },
+  { key: 'scheduled', label: 'Scheduled', headerLeft: 'SCHEDULED' },
+  { key: 'phone-in', label: 'Phone In', headerLeft: 'PHONE-IN' },
+  { key: 'custom', label: 'Custom', headerLeft: 'CUSTOM' },
 ] as const;
 type PreviewTypeKey = typeof ORDER_TYPE_OPTIONS[number]['key'];
 
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
+  const { orderTypeDetailedColors } = useKDSSettings();
   const [customHex, setCustomHex] = useState('');
   const [previewType, setPreviewType] = useState<PreviewTypeKey>('dine-in');
   const previewMeta = ORDER_TYPE_OPTIONS.find(o => o.key === previewType) ?? ORDER_TYPE_OPTIONS[0];
+  const previewColors = orderTypeDetailedColors?.[previewType] ?? DEFAULT_ORDER_TYPE_DETAILED_COLORS[previewType];
   const contrast = getContrastRatio(rule.color, rule.textColor);
   const textColor = resolveTextColor(rule.textColor);
 
