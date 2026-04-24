@@ -675,11 +675,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 /* -- Expo-specific station color palette (avoids clashing with status & order-type colors) -- */
 
 const expoStationPalette: Record<string, { bg: string; text: string; border: string }> = {
-  Grill:   { bg: '#FAECE7', text: '#993C1D', border: '#F0997B' },
-  Fry:     { bg: '#EEEDFE', text: '#534AB7', border: '#AFA9EC' },
-  Salad:   { bg: '#E1F5EE', text: '#0F6E56', border: '#5DCAA5' },
-  Dessert: { bg: '#FBEAF0', text: '#993556', border: '#ED93B1' },
-  Bar:     { bg: '#FAEEDA', text: '#854F0B', border: '#EF9F27' },
+  Grill:   { bg: '#5C2010', text: '#FAECE7', border: '#7A2C16' },
+  Fry:     { bg: '#2A2675', text: '#EEEDFE', border: '#3A3590' },
+  Salad:   { bg: '#0B4736', text: '#E1F5EE', border: '#0F5E48' },
+  Dessert: { bg: '#5C1F33', text: '#FBEAF0', border: '#7A2A44' },
+  Bar:     { bg: '#523108', text: '#FAEEDA', border: '#6E420B' },
 };
 
 function ExpoStationBadge({ station }: { station: string }) {
