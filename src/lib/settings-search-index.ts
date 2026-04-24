@@ -13,7 +13,6 @@ export interface SettingsSearchEntry {
 export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: string }> = {
   display: { label: 'Display', path: '/kds/full/settings/display' },
   orders: { label: 'Orders', path: '/kds/full/settings/orders' },
-  expo: { label: 'Expo View', path: '/kds/full/settings/expo' },
   hardware: { label: 'Hardware', path: '/kds/full/settings/hardware' },
   account: { label: 'Account', path: '/kds/full/settings/account' },
 };
