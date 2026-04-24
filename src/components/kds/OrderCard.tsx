@@ -60,7 +60,7 @@ function formatStaticTime(date: Date): string {
 }
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
-  const { timeFormat } = useLanguage();
+  const { timeFormat, tperson, tl } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
   const orderMessages = getMessagesForOrder(order.id);
