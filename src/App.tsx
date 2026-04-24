@@ -22,7 +22,7 @@ import NotFound from "./pages/NotFound.tsx";
 import SettingsLayout from "./pages/SettingsLayout.tsx";
 import DisplaySettings from "./pages/settings/DisplaySettings.tsx";
 import OrdersSettings from "./pages/settings/OrdersSettings.tsx";
-import ExpoSettings from "./pages/settings/ExpoSettings.tsx";
+
 import HardwareSettings from "./pages/settings/HardwareSettings.tsx";
 import AccountSettings from "./pages/settings/AccountSettings.tsx";
 
@@ -61,7 +61,7 @@ const App = () => (
               <Route index element={<Navigate to="display" replace />} />
               <Route path="display" element={<DisplaySettings />} />
               <Route path="orders" element={<OrdersSettings />} />
-              <Route path="expo" element={<ExpoSettings />} />
+              
               <Route path="hardware" element={<HardwareSettings />} />
               <Route path="account" element={<AccountSettings />} />
             </Route>
