@@ -35,7 +35,7 @@ export function SettingsSidebar() {
     navigate(path);
   };
 
-  const groupIds: SettingsGroupId[] = ['display', 'orders', 'expo', 'hardware', 'account'];
+  const groupIds: SettingsGroupId[] = ['display', 'orders', 'hardware', 'account'];
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
