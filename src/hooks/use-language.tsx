@@ -1275,6 +1275,8 @@ interface LanguageContextType {
   tc: (course: string) => string;
   ta: (label: string) => string;
   to: (label: string) => string;
+  tn: (text: string) => string;
+  tl: (label: string) => string;
   languageName: string;
   languageFlag: string;
   displayMode: DisplayMode;
@@ -1308,6 +1310,8 @@ const defaultLanguageContext: LanguageContextType = {
   tc: (course: string) => course,
   ta: (label: string) => label,
   to: (label: string) => label,
+  tn: (text: string) => text,
+  tl: (label: string) => label,
   languageName: languageNames['en-US'],
   languageFlag: languageFlags['en-US'],
   displayMode: 'dual',
