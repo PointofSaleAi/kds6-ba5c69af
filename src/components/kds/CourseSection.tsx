@@ -36,6 +36,8 @@ interface CourseSectionProps {
   onDismissItem?: (itemId: string) => void;
   compactRows?: boolean;
   seenOrderIndex?: Map<string, number>;
+  /** Override the global ticketLayout (used by previews). */
+  ticketLayoutMode?: 'standard' | 'compact';
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -89,10 +91,10 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang } = useLanguage();
   const { ticketLayout } = useKDSSettings();
-  const ticketLayoutCompact = ticketLayout === 'compact';
+  const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const isFired = courseGroup.isFired;
   const isStationMode = !!stationCourse;

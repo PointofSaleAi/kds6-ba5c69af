@@ -22,12 +22,14 @@ interface FlatItemListProps {
   onUndoModifier?: (modId: string) => void;
   dismissedItemIds?: Set<string>;
   onDismissItem?: (itemId: string) => void;
+  /** Override the global ticketLayout (used by previews). */
+  ticketLayoutMode?: 'standard' | 'compact';
 }
 
-export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary, t, showSecondaryMenu, secondaryLang } = useLanguage();
   const { ticketLayout } = useKDSSettings();
-  const ticketLayoutCompact = ticketLayout === 'compact';
+  const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
 
   const allItems = courses.flatMap(c => c.items);
