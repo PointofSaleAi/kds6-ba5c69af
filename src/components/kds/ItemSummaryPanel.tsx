@@ -137,7 +137,7 @@ function buildSummary(records: ReturnType<typeof collectActiveItems>): CategoryS
 }
 
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
-  const { tp } = useLanguage();
+  const { tp, tcat, t } = useLanguage();
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
@@ -209,7 +209,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
         <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand panel">
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
-        <span className="text-[10px] font-bold text-sidebar-foreground/70 mt-2 [writing-mode:vertical-lr]">{totalRemaining} to cook</span>
+        <span className="text-[10px] font-bold text-sidebar-foreground/70 mt-2 [writing-mode:vertical-lr]">{totalRemaining} {t.toCookLabel}</span>
       </div>
     );
   }
@@ -219,7 +219,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
       {/* Header */}
       <div className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
+          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">{t.summaryHeader}</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
@@ -234,14 +234,14 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             className="text-[11px] font-bold text-white rounded px-1.5 py-0.5"
             style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}
           >
-            {matchingTicketCount !== undefined ? `${matchingTicketCount} ticket${matchingTicketCount !== 1 ? 's' : ''}` : selectionLabel}
+            {matchingTicketCount !== undefined ? `${matchingTicketCount} ${t.ticketsLabel}` : selectionLabel}
           </span>
           <button
             onClick={onClearAll}
             className="text-[11px] font-medium transition-colors whitespace-nowrap"
             style={{ color: '#3B82F6' }}
           >
-            Clear all
+            {t.clearAll}
           </button>
         </div>
       )}
@@ -269,7 +269,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 <div className="flex-1 flex items-center gap-1.5 py-2 pr-1">
                   
                   <span className="text-[12px] uppercase tracking-widest font-bold text-destructive">
-                    Overtime
+                    {t.overtimeHeader}
                   </span>
                 </div>
                 <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-destructive text-destructive-foreground">
@@ -321,7 +321,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
           {summary.length === 0 && overtimeItems.length === 0 && (
             <div className="px-3 py-4 text-center">
-              <p className="text-[12px] text-text-muted">All items completed</p>
+              <p className="text-[12px] text-text-muted">{t.allItemsCompleted}</p>
             </div>
           )}
           {summary.map((cat) => {
@@ -370,7 +370,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     <span className={`text-[12px] uppercase tracking-widest font-bold transition-colors duration-150 ${
                       isCategorySelected ? 'text-[#1D4ED8]' : isStation ? 'text-text-primary' : 'text-text-secondary'
                     }`}>
-                      {cat.category}
+                      {tcat(cat.category)}
                     </span>
                   </button>
                   <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 transition-colors duration-150 ${
@@ -420,7 +420,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                                   }}
                                   className="text-[10px] text-text-muted hover:text-text-primary transition-colors font-medium"
                                 >
-                                  + Assign
+                                  {t.assignAction}
                                 </button>
                               )}
                               <span
