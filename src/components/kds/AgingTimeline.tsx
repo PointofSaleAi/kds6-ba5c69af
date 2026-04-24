@@ -73,15 +73,15 @@ export default function AgingTimeline({ rules, selectedId, onSelect, onBoundaryD
                 onClick={() => onSelect(rule.id)}
                 onMouseEnter={(e) => setHoverInfo({ ruleId: rule.id, x: e.clientX })}
                 onMouseLeave={() => setHoverInfo(null)}
-                className={`flex-1 flex flex-col items-center justify-center transition-all ${
+                className={`flex-1 flex items-center justify-center gap-1.5 transition-all px-1 ${
                   isSelected ? 'ring-2 ring-ring ring-offset-2 ring-offset-background z-10' : ''
-                } ${i === 0 ? 'rounded-l-xl' : ''} ${isLast ? 'rounded-r-xl' : ''}`}
+                } ${i === 0 ? 'rounded-l-lg' : ''} ${isLast ? 'rounded-r-lg' : ''}`}
                 style={{ backgroundColor: rule.color, color: textColor }}
               >
-                <span className="text-[11px] font-bold leading-none">
+                <span className="text-[10px] font-bold leading-none whitespace-nowrap">
                   {rule.maxMinutes !== null ? `${start}-${end}m` : `${start}m+`}
                 </span>
-                <span className="text-[9px] font-medium opacity-80 mt-0.5 truncate max-w-full px-1">
+                <span className="text-[9px] font-medium opacity-80 truncate">
                   {rule.label}
                 </span>
               </button>
