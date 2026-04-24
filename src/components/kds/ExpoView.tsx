@@ -162,17 +162,6 @@ function ExpoItemRow({
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
 
-  // Indented column matches FlatItemList: invisible "0x" placeholder of width 2.25ch + 4px gap
-  const indentPlaceholder = (
-    <span
-      className="invisible shrink-0 font-normal"
-      aria-hidden="true"
-      style={{ fontSize: '13px', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
-    >
-      0x
-    </span>
-  );
-
   // Indented column matches FlatItemList exactly: invisible "0x" placeholder of width 2.25ch + 4px gap
   const indentPlaceholder = (
     <span
@@ -183,6 +172,7 @@ function ExpoItemRow({
       0x
     </span>
   );
+
 
   const modifierRow = expoModifiers.length > 0 ? (
     <div style={{ marginTop: '1px', display: 'flex', flexDirection: 'column', gap: '0px' }}>
