@@ -304,22 +304,42 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
         {showCourses ? (
           order.courses.map((courseGroup) => (
             <div key={courseGroup.course}>
-              <div className="flex items-center justify-between bg-muted px-3 py-1.5 mt-1">
-                <span className="text-section-label uppercase text-text-muted tracking-widest">
+              <div
+                className="flex items-center justify-between bg-muted"
+                style={{ padding: '2px 8px' }}
+              >
+                <span
+                  className="uppercase text-text-primary tracking-wider"
+                  style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
+                >
                   {tl(courseGroup.course)}
                 </span>
               </div>
-              <div className="px-3 py-1">
-                {courseGroup.items.map((item) => (
-                  <HistoryItemRow key={item.id} item={item} orderId={order.id} onRecallItem={onRecallItem} tp={tp} />
+              <div className="px-1">
+                {courseGroup.items.map((item, idx, arr) => (
+                  <HistoryItemRow
+                    key={item.id}
+                    item={item}
+                    orderId={order.id}
+                    isLast={idx === arr.length - 1}
+                    onRecallItem={onRecallItem}
+                    tp={tp}
+                  />
                 ))}
               </div>
             </div>
           ))
         ) : (
-          <div className="px-3 py-1">
-            {allItems.map((item) => (
-              <HistoryItemRow key={item.id} item={item} orderId={order.id} onRecallItem={onRecallItem} tp={tp} />
+          <div className="px-1">
+            {allItems.map((item, idx, arr) => (
+              <HistoryItemRow
+                key={item.id}
+                item={item}
+                orderId={order.id}
+                isLast={idx === arr.length - 1}
+                onRecallItem={onRecallItem}
+                tp={tp}
+              />
             ))}
           </div>
         )}
