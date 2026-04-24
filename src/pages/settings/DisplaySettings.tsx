@@ -80,10 +80,10 @@ export default function DisplaySettings() {
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
           }}
         >
-          <div className="flex items-center gap-3 px-6 py-4 shrink-0">
+          <div className="relative flex items-center justify-center px-6 py-4 shrink-0">
             <button
               onClick={() => setLanguageOpen(false)}
-              className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              className="absolute left-6 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
               aria-label="Back"
             >
               <ArrowLeft className="w-5 h-5" />
