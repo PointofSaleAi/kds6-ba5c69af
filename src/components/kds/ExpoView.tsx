@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, Minus, Plus } from 'lucide-react';
+import noteIcon from '@/assets/note-bold.svg';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
 import { StationBadge, stationColors } from './StationBadge';
@@ -119,6 +120,7 @@ interface ExpoItemRowProps {
   onAcknowledgeNewItem?: (itemId: string) => void;
   runnerIconSrc: string;
   showSendAlways: boolean;
+  isLast?: boolean;
 }
 
 function ExpoItemRow({
@@ -134,6 +136,7 @@ function ExpoItemRow({
   acknowledgedNewItemIds,
   runnerIconSrc,
   showSendAlways,
+  isLast,
 }: ExpoItemRowProps) {
   const sentQty = sentQuantities.get(item.id) ?? 0;
   const remainingQty = Math.max(0, item.quantity - sentQty);
@@ -158,25 +161,44 @@ function ExpoItemRow({
   ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
+
+  // Indented column matches FlatItemList: invisible "0x" placeholder of width 2.25ch + 4px gap
+  const indentPlaceholder = (
+    <span
+      className="invisible shrink-0 font-normal"
+      aria-hidden="true"
+      style={{ fontSize: '13px', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
+    >
+      0x
+    </span>
+  );
+
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4" style={{ marginTop: '2px' }}>
-      {expoModifiers
-        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
-        .map((m, idx) => (
-          <span
-            key={idx}
-            className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
-          >
-            {m.text}
-          </span>
-        ))}
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
+      {indentPlaceholder}
+      <div className="flex flex-wrap items-center" style={{ gap: '4px', rowGap: '2px' }}>
+        {expoModifiers
+          .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+          .map((m, idx) => (
+            <span
+              key={idx}
+              className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
+            >
+              {m.text}
+            </span>
+          ))}
+      </div>
     </div>
   ) : null;
+
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
-    <div className="flex flex-wrap gap-1 pl-4" style={{ marginTop: '2px' }}>
-      {item.allergens.map(a => (
-        <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-      ))}
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
+      {indentPlaceholder}
+      <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+        {item.allergens.map(a => (
+          <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" />
+        ))}
+      </div>
     </div>
   ) : null;
 
@@ -239,54 +261,42 @@ function ExpoItemRow({
     </div>
   );
 
-  if (isPrepared) {
-    return (
-      <div
-        className={`border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-        style={{ paddingTop: '5px', paddingBottom: '4px' }}
-        onClick={() => {
-          if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-          if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
-        }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
-            <span className="text-[13px] font-medium text-text-primary">
-              {remainingQty}&times; {tp(item.name)}
-            </span>
-            {toGoBadge}
-            {stationChip}
-            <span className="text-text-muted text-[10px]">&middot;</span>
-            {statusIcon}
-          </div>
-          {showQtySelector ? partialSendControl : simpleSendButton}
-        </div>
-        {modifierRow}
-        {allergenRow}
-      </div>
-    );
-  }
+  // Outer row with Home-style dense spacing + bottom divider (except last)
+  const outerClass = `-mx-2 px-2 ${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${isDemo ? 'cursor-pointer' : ''}`;
 
   return (
     <div
-      className={`${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-      style={{ paddingTop: '5px', paddingBottom: '4px' }}
+      className={outerClass}
+      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
       onClick={() => {
         if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
         if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
       }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
-          <span className="text-[13px] font-medium text-text-primary">
-            {remainingQty}&times; {tp(item.name)}
-          </span>
-          {toGoBadge}
-          {stationChip}
-          <span className="text-text-muted text-[10px]">&middot;</span>
-          {statusIcon}
+      <div className="flex items-start justify-between" style={{ gap: '4px' }}>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start flex-wrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+            <span
+              className="font-normal shrink-0"
+              style={{ fontSize: '13px', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
+            >
+              {remainingQty}x
+            </span>
+            <span
+              className="font-bold uppercase text-text-primary min-w-0 break-words"
+              style={{ fontSize: '13px', lineHeight: 1.1, wordBreak: 'break-word' }}
+            >
+              {tp(item.name)}
+            </span>
+            {toGoBadge}
+            {stationChip}
+            <span className="text-text-muted text-[10px] self-center">&middot;</span>
+            <span className="self-center">{statusIcon}</span>
+          </div>
         </div>
-        {showSendAlways && simpleSendButton}
+        {isPrepared
+          ? (showQtySelector ? partialSendControl : simpleSendButton)
+          : (showSendAlways && simpleSendButton)}
       </div>
       {modifierRow}
       {allergenRow}
@@ -473,22 +483,28 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
-      {/* Order notes (expo packaging + special instructions) */}
+      {/* Order notes (expo packaging + special instructions) — Home screen style */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
-        <div className="border-b border-border/40 border-l-2 border-l-amber-500" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '4px' }}>
-          <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
-            Order Notes
-          </div>
+        <div className="border-t border-border">
           <div
-            className="text-[12px] italic text-text-primary leading-snug"
-            style={{
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-            }}
+            className="flex items-start select-none"
+            style={{ padding: '2px 8px', gap: '3px' }}
           >
-            {ticket.orderNotes}
+            <img
+              src={noteIcon}
+              width={11}
+              height={11}
+              className="shrink-0"
+              style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
+              alt=""
+              aria-hidden="true"
+            />
+            <div
+              className="flex-1 min-w-0 text-[11px] text-text-primary"
+              style={{ lineHeight: 1.2 }}
+            >
+              {ticket.orderNotes}
+            </div>
           </div>
         </div>
       )}
@@ -563,7 +579,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 {/* Course items (collapsible) */}
                 {isExpanded && (
                   <div className={`${isQueued ? 'opacity-40' : ''}`} style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', paddingBottom: '2px' }}>
-                    {courseItems.map(item => (
+                    {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
                         item={item}
@@ -579,6 +595,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                         onAcknowledgeNewItem={onAcknowledgeNewItem}
                         runnerIconSrc={runnerIcon}
                         showSendAlways={showSendAlways}
+                        isLast={idx === courseItems.length - 1}
                       />
                     ))}
                   </div>
@@ -588,8 +605,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
-          {ticket.items.map(item => (
+        <div style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '2px' }}>
+          {ticket.items.map((item, idx) => (
             <ExpoItemRow
               key={item.id}
               item={item}
@@ -605,6 +622,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               onAcknowledgeNewItem={onAcknowledgeNewItem}
               runnerIconSrc={runnerIcon}
               showSendAlways={showSendAlways}
+              isLast={idx === ticket.items.length - 1}
             />
           ))}
         </div>
