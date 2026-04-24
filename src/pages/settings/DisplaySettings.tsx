@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Monitor, Type, Rows3, Palette, Globe,
-  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
+  Paintbrush, Bell, IdCard, SlidersHorizontal, ChevronLeft,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
