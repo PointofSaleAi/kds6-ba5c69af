@@ -622,47 +622,32 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </>
       )}
 
-      {/* Footer */}
-      <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '8px', paddingBottom: '8px' }}>
-        {/* Course counters now render inline on each course header row */}
-        {/* Fire next course button for coursed tickets */}
-        {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
-          <div className="flex items-center px-1 mb-1">
-            <button
-              onClick={() => onFireNextCourse?.(ticket.id)}
-              className="px-2.5 py-1.5 border border-text-secondary text-text-secondary text-[11px] font-bold rounded hover:bg-muted/50 transition-colors min-h-[36px]"
-            >
-              Fire next course
-            </button>
-          </div>
-        )}
-      {isSentOut ? (
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => onRecallOrder?.(ticket.id)}
-              className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
-            >
-              <RotateCcw size={14} />
-              RECALL
-            </button>
-          </div>
-        ) : (
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => isReady && onSendOut(ticket.id)}
-              disabled={!isReady}
-              className={`flex-1 py-2.5 text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 transition-colors min-h-[44px] ${
-                isReady
-                  ? 'bg-success text-primary-foreground hover:opacity-90 cursor-pointer'
-                  : 'bg-muted text-text-muted cursor-not-allowed'
-              }`}
-            >
-              <img src={runnerIcon} alt="" className="w-5 h-5 brightness-0 invert" />
-              Send out
-            </button>
-          </div>
-        )}
-      </div>
+      {/* Footer: Recall (when sent out) and Fire next course only. Send out is via header tap. */}
+      {(isSentOut || (hasCoursingData && activeCourseAllDone && hasPendingCourse)) && (
+        <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '8px', paddingBottom: '8px' }}>
+          {hasCoursingData && activeCourseAllDone && hasPendingCourse && !isSentOut && (
+            <div className="flex items-center px-1">
+              <button
+                onClick={() => onFireNextCourse?.(ticket.id)}
+                className="px-2.5 py-1.5 border border-text-secondary text-text-secondary text-[11px] font-bold rounded hover:bg-muted/50 transition-colors min-h-[36px]"
+              >
+                Fire next course
+              </button>
+            </div>
+          )}
+          {isSentOut && (
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => onRecallOrder?.(ticket.id)}
+                className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
+              >
+                <RotateCcw size={14} />
+                RECALL
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </motion.div>
   );
 }
