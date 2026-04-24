@@ -199,7 +199,7 @@ function WheelPopover({ value, min, max, onChange }: { value: number; min: numbe
 }
 
 const ORDER_TYPE_OPTIONS = [
-  { key: 'dine-in', label: 'Dine In', headerLeft: 'TABLE 7' },
+  { key: 'dine-in', label: 'Dine In', headerLeft: 'DINE IN' },
   { key: 'take-out', label: 'Take Out', headerLeft: 'TAKE OUT' },
   { key: 'delivery', label: 'Delivery', headerLeft: 'DELIVERY' },
   { key: 'banquet', label: 'Banquet', headerLeft: 'BANQUET' },
