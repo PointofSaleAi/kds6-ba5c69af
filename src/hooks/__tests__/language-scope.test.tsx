@@ -79,6 +79,7 @@ describe('Language Scope gating', () => {
   it('Interface scope translates UI chrome keys including new ones', () => {
     const { result } = renderHook(() => useLanguage(), { wrapper });
     act(() => {
+      result.current.setDisplayMode('single');
       result.current.setLanguage('es');
       result.current.setScope('interface');
     });
@@ -112,11 +113,26 @@ describe('Language Scope gating', () => {
       result.current.setPrimaryLang('es');
     });
     expect(result.current.tp('Caesar Salad')).toBe('Ensalada César');
+    expect(result.current.t.settings).toBe('Ajustes');
 
     act(() => {
       result.current.setPrimaryLang('zh');
     });
     expect(result.current.tp('Caesar Salad')).toBe('凯撒沙拉');
+    expect(result.current.t.settings).toBe('设置');
+  });
+
+  it('Dual mode: UI chrome follows primaryLang, not the legacy single language', () => {
+    const { result } = renderHook(() => useLanguage(), { wrapper });
+    act(() => {
+      result.current.setScope('both');
+      result.current.setLanguage('ar'); // legacy single-mode language
+      result.current.setDisplayMode('dual');
+      result.current.setPrimaryLang('en-US');
+      result.current.setSecondaryLang('ar');
+    });
+    // Even though `language` is Arabic, dual mode + English primary must render English chrome.
+    expect(result.current.t.settings).toBe('Settings');
   });
 
   it('Course/allergen lookup is case-insensitive (uppercase fallback)', () => {
