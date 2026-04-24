@@ -45,7 +45,7 @@ export default function AgingTimeline({ rules, selectedId, onSelect, onBoundaryD
     tc === 'white' ? '#FFFFFF' : tc === 'black' ? '#000000' : '#6C7A89';
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 px-1">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">Timeline</h3>
         <span className="text-[10px] text-text-muted">Drag boundaries to adjust</span>
@@ -53,7 +53,7 @@ export default function AgingTimeline({ rules, selectedId, onSelect, onBoundaryD
 
       <div
         ref={trackRef}
-        className="relative h-14 rounded-xl overflow-visible flex cursor-pointer select-none"
+        className="relative h-14 rounded-xl overflow-visible flex cursor-pointer select-none mx-1"
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={() => { setHoverInfo(null); handlePointerUp(); }}
