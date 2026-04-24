@@ -40,15 +40,17 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex items-center justify-center gap-4 px-6 py-4 shrink-0">
+      <div className="relative flex items-center px-6 py-4 shrink-0">
         <button
           onClick={onBack}
-          className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+          className="p-1 -ml-1 hover:opacity-70 transition-opacity flex items-center justify-center"
           aria-label="Back"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5 text-text-primary" />
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Order Type Colors</h1>
+        <h1 className="absolute left-1/2 -translate-x-1/2 text-2xl font-bold text-text-primary">
+          Order Type Colors
+        </h1>
       </div>
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
         <div className="grid grid-cols-2 gap-3">
