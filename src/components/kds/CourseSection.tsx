@@ -506,21 +506,31 @@ function CourseItemTapRow({
         onClick={tappable ? handleTap : undefined}
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
-        {ticketLayoutCompact && hasDetails && (
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
-            aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
-            aria-expanded={detailsOpen}
-            className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
-            style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
-          >
-            <ChevronRight
-              size={12}
-              className="text-text-muted transition-transform duration-200"
-              style={{ transform: detailsOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
-            />
-          </button>
+        {ticketLayoutCompact && (
+          hasDetails ? (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
+              aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
+              aria-expanded={detailsOpen}
+              className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
+              style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
+            >
+              <ChevronRight
+                size={12}
+                className="text-text-muted transition-transform duration-200"
+                style={{ transform: detailsOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+              />
+            </button>
+          ) : (
+            <span
+              aria-hidden="true"
+              className="shrink-0 flex items-center justify-center"
+              style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
+            >
+              <ChevronRight size={12} className="text-text-muted/60" />
+            </span>
+          )
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
