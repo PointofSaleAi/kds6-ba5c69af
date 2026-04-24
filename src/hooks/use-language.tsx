@@ -1845,6 +1845,8 @@ const defaultLanguageContext: LanguageContextType = {
   to: (label: string) => label,
   tn: (text: string) => text,
   tl: (label: string) => label,
+  tperson: (name: string) => name,
+  tcat: (category: string) => category,
   languageName: languageNames['en-US'],
   languageFlag: languageFlags['en-US'],
   displayMode: 'dual',
@@ -1991,6 +1993,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return dict[label] || dict[label.toUpperCase()] || dict[label.toLowerCase()] || label;
   }, [language, displayMode, primaryLang, scope]);
 
+  const tperson = useCallback((name: string) => {
+    if (!name) return name;
+    // Person names always translate (transliteration), regardless of scope.
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    return personNames[lang]?.[name] || name;
+  }, [language, displayMode, primaryLang]);
+
+  const tcat = useCallback((category: string) => {
+    if (!category) return category;
+    if (scope === 'interface') return category;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = categoryNames[lang] || {};
+    return dict[category] || dict[category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()] || category;
+  }, [language, displayMode, primaryLang, scope]);
+
   const showSecondaryMenu = scope !== 'interface';
 
   const value: LanguageContextType = {
@@ -2004,6 +2021,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     to,
     tn,
     tl,
+    tperson,
+    tcat,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
     displayMode,
