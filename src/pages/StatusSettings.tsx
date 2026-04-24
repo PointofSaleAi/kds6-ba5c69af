@@ -309,7 +309,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       )}
 
       {/* Course Level Toggle + Presets (2-col) */}
-      <div className="px-6 pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
+      <div className={`${hideHeader ? '' : 'px-6'} pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch`}>
         <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-muted/60">
           <div className="flex-1 min-w-0">
             <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
@@ -352,7 +352,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       </div>
 
       {/* Timeline */}
-      <div className="px-6 pb-4">
+      <div className={`${hideHeader ? '' : 'px-6'} pb-4`}>
         <AgingTimeline
           rules={draft}
           selectedId={selectedId}
@@ -363,7 +363,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       </div>
 
       {/* Two-panel body */}
-      <div className="flex-1 overflow-hidden flex min-h-0 mx-6 border border-border rounded-xl bg-surface-card">
+      <div className={`flex-1 overflow-hidden flex min-h-0 ${hideHeader ? '' : 'mx-6'} border border-border rounded-xl bg-surface-card`}>
         {/* LEFT: Status List */}
         <DraggableStatusList
           rules={draft}
@@ -395,7 +395,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       </div>
 
       {/* Save button */}
-      <div className="px-6 pb-4 pt-3 shrink-0">
+      <div className={`${hideHeader ? '' : 'px-6'} pb-4 pt-3 shrink-0`}>
         <button
           onClick={handleSave}
           disabled={hasErrors}
