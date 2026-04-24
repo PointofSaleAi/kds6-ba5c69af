@@ -679,7 +679,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 {(() => {
                   const useGuest = ticketHeaderLayout === 'guest' && !!order.guestName;
                   if (useGuest) {
-                    const parts = order.guestName!.trim().split(/\s+/);
+                    const translatedGuest = tperson(order.guestName!);
+                    const parts = translatedGuest.trim().split(/\s+/);
                     const firstName = parts[0];
                     const restName = parts.slice(1).join(' ');
                     const longest = Math.max(firstName.length, restName.length);
@@ -703,12 +704,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
                   <div className="flex items-center gap-1.5 leading-none">
                     {order.isRushed && (
-                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
+                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
                     )}
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
                   </div>
                   <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
-                    {order.serverName}
+                    {tperson(order.serverName)}
                   </span>
                 </div>
               </>
@@ -720,19 +721,19 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
                   <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white max-w-full">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                    <span className="text-right break-words min-w-0">{order.serverName}</span>
+                    <span className="text-right break-words min-w-0">{tperson(order.serverName)}</span>
                   </span>
                   {order.guestName ? (
                     <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
                       <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                      <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{order.guestName}</span>
+                      <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{tperson(order.guestName)}</span>
                     </span>
                   ) : (
                     <span className="h-[14px]" />
                   )}
                   <div className="flex items-center gap-1.5 leading-none">
                     {order.isRushed && (
-                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
+                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
                     )}
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
                   </div>
@@ -741,19 +742,19 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             ) : (
               <>
                 <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1">
-                  {order.guestName || order.orderNumber}
+                  {order.guestName ? tperson(order.guestName) : order.orderNumber}
                 </div>
                 <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
                   <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                    {order.serverName}
+                    {tperson(order.serverName)}
                   </span>
                   <span className="text-[16px] font-semibold text-white">
                     {order.orderNumber}
                   </span>
                   <div className="flex items-center gap-1.5 mb-0.5">
                     {order.isRushed && (
-                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">RUSH</span>
+                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
                     )}
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
                   </div>
