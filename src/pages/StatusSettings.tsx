@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { RotateCcw, GripVertical, Plus, Trash2 } from 'lucide-react';
+import { RotateCcw, GripVertical, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
 import AgingTimeline from '@/components/kds/AgingTimeline';
 import AgingEditPanel from '@/components/kds/AgingEditPanel';
