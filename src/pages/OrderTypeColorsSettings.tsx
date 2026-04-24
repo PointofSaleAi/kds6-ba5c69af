@@ -1,5 +1,5 @@
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
-import { RotateCcw, ArrowLeft } from 'lucide-react';
+import { RotateCcw, ChevronLeft } from 'lucide-react';
 
 const ORDER_TYPES = [
   { key: 'dine-in', label: 'DINE IN', table: 'Table 4', time: '2:35' },
@@ -39,98 +39,100 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="relative flex items-center justify-center px-6 py-4 shrink-0">
+    <div className="flex flex-col">
+      <div className="flex items-center gap-2 py-2 mb-4">
         <button
           onClick={onBack}
-          className="absolute left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+          className="w-11 h-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors shrink-0"
           aria-label="Back"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ChevronLeft className="w-6 h-6" style={{ color: 'hsl(var(--text-primary))' }} />
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Order Type Colors</h1>
+        <h1
+          className="flex-1 text-2xl font-bold text-center pr-11"
+          style={{ color: 'hsl(var(--text-primary))' }}
+        >
+          Order Type Colors
+        </h1>
       </div>
-      <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        <div className="grid grid-cols-2 gap-3">
-          {ORDER_TYPES.map(({ key, label, table, time }) => {
-            const colors = getColors(key);
-            return (
-              <div key={key} className="rounded-xl border border-border overflow-hidden">
-                {/* Live header preview */}
-                <div
-                  className="px-3 py-2 flex items-center justify-between"
-                  style={{ backgroundColor: colors.headerBg }}
+
+      <div className="grid grid-cols-2 gap-3">
+        {ORDER_TYPES.map(({ key, label, table, time }) => {
+          const colors = getColors(key);
+          return (
+            <div key={key} className="rounded-xl border border-border overflow-hidden">
+              {/* Live header preview */}
+              <div
+                className="px-3 py-2 flex items-center justify-between"
+                style={{ backgroundColor: colors.headerBg }}
+              >
+                <span
+                  className="text-[13px] font-bold uppercase tracking-wider"
+                  style={{ color: colors.headerText }}
                 >
-                  <span
-                    className="text-[13px] font-bold uppercase tracking-wider"
-                    style={{ color: colors.headerText }}
-                  >
-                    {label}
-                  </span>
-                  <div
-                    className="flex items-center gap-2 text-[11px]"
-                    style={{ color: colors.headerText, opacity: 0.8 }}
-                  >
-                    <span>{time}</span>
-                    <span>{table}</span>
+                  {label}
+                </span>
+                <div
+                  className="flex items-center gap-2 text-[11px]"
+                  style={{ color: colors.headerText, opacity: 0.8 }}
+                >
+                  <span>{time}</span>
+                  <span>{table}</span>
+                </div>
+              </div>
+
+              {/* Color controls */}
+              <div className="bg-surface-card px-4 py-3 flex items-center gap-6">
+                <div className="flex items-center gap-2 flex-1">
+                  <label className="relative cursor-pointer shrink-0">
+                    <input
+                      type="color"
+                      value={colors.headerBg}
+                      onChange={(e) => handleColorChange(key, 'headerBg', e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    />
+                    <span
+                      className="block w-8 h-8 rounded-full border-2 border-border"
+                      style={{ backgroundColor: colors.headerBg }}
+                    />
+                  </label>
+                  <div className="min-w-0">
+                    <div className="text-[12px] font-semibold text-text-primary leading-tight">Background</div>
+                    <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerBg}</div>
                   </div>
                 </div>
 
-                {/* Color controls */}
-                <div className="bg-surface-card px-4 py-3 flex items-center gap-6">
-                  {/* Header Background */}
-                  <div className="flex items-center gap-2 flex-1">
-                    <label className="relative cursor-pointer shrink-0">
-                      <input
-                        type="color"
-                        value={colors.headerBg}
-                        onChange={(e) => handleColorChange(key, 'headerBg', e.target.value)}
-                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                      />
-                      <span
-                        className="block w-8 h-8 rounded-full border-2 border-border"
-                        style={{ backgroundColor: colors.headerBg }}
-                      />
-                    </label>
-                    <div className="min-w-0">
-                      <div className="text-[12px] font-semibold text-text-primary leading-tight">Background</div>
-                      <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerBg}</div>
-                    </div>
-                  </div>
-
-                  {/* Header Text */}
-                  <div className="flex items-center gap-2 flex-1">
-                    <label className="relative cursor-pointer shrink-0">
-                      <input
-                        type="color"
-                        value={colors.headerText}
-                        onChange={(e) => handleColorChange(key, 'headerText', e.target.value)}
-                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                      />
-                      <span
-                        className="block w-8 h-8 rounded-full border-2 border-border"
-                        style={{ backgroundColor: colors.headerText }}
-                      />
-                    </label>
-                    <div className="min-w-0">
-                      <div className="text-[12px] font-semibold text-text-primary leading-tight">Text</div>
-                      <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerText}</div>
-                    </div>
+                <div className="flex items-center gap-2 flex-1">
+                  <label className="relative cursor-pointer shrink-0">
+                    <input
+                      type="color"
+                      value={colors.headerText}
+                      onChange={(e) => handleColorChange(key, 'headerText', e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    />
+                    <span
+                      className="block w-8 h-8 rounded-full border-2 border-border"
+                      style={{ backgroundColor: colors.headerText }}
+                    />
+                  </label>
+                  <div className="min-w-0">
+                    <div className="text-[12px] font-semibold text-text-primary leading-tight">Text</div>
+                    <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerText}</div>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
-        >
-          <RotateCcw size={14} />
-          Reset to Defaults
-        </button>
+            </div>
+          );
+        })}
       </div>
+
+      <button
+        onClick={handleReset}
+        className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4 self-start"
+      >
+        <RotateCcw size={14} />
+        Reset to Defaults
+      </button>
     </div>
   );
 }

@@ -10,6 +10,10 @@ interface SectionHeaderCardProps {
   longDescription?: string;
 }
 
+/**
+ * Borderless section intro: large icon tile, title, and description rendered
+ * directly on the page background to match the reference POSAI layout.
+ */
 export function SectionHeaderCard({
   icon,
   iconColor,
@@ -21,10 +25,7 @@ export function SectionHeaderCard({
   const hasMore = Boolean(longDescription);
 
   return (
-    <div
-      className="rounded-2xl p-5 mb-5 flex flex-col items-start"
-      style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}
-    >
+    <div className="mb-6 flex flex-col items-start">
       <div className="mb-4">
         <SettingsIconTile icon={icon} bgColor={iconColor} size="lg" />
       </div>
