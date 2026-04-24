@@ -92,7 +92,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
 }
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode }: CourseSectionProps) {
-  const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang } = useLanguage();
+  const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang, tl } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
@@ -167,7 +167,11 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   // Fired course timer for served courses
   const firedTimerLabel = useMemo(() => {
     if (coursingStatus !== 'fired') return null;
-    if (courseGroup.firedAgoLabel) return `${t.doneAt} ${courseGroup.firedAgoLabel}`;
+    if (courseGroup.firedAgoLabel) {
+      // "8:00 ago" -> translate trailing word, keep timer
+      const translated = courseGroup.firedAgoLabel.replace(/\b(ago)\b/i, (m) => tl(m));
+      return `${t.doneAt} ${translated}`;
+    }
     return null;
   }, [coursingStatus, courseGroup.firedAgoLabel]);
 
