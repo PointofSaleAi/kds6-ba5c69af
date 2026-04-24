@@ -946,6 +946,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': 'بدون مايونيز',
     'No Parmesan': 'بدون بارميزان',
     'No Pickles': 'بدون مخلل',
+    'No Salt': 'بدون ملح',
+    '+ Extra Parmesan': '+ بارميزان إضافي',
   },
   es: {
     'Medium Rare': 'Medio crudo',
@@ -989,6 +991,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': 'Sin mayonesa',
     'No Parmesan': 'Sin parmesano',
     'No Pickles': 'Sin pepinillos',
+    'No Salt': 'Sin sal',
+    '+ Extra Parmesan': '+ Parmesano extra',
   },
   zh: {
     'Medium Rare': '三分熟',
@@ -1032,6 +1036,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': '不要蛋黄酱',
     'No Parmesan': '不要帕尔马干酪',
     'No Pickles': '不要泡菜',
+    'No Salt': '不要盐',
+    '+ Extra Parmesan': '+ 加帕尔马干酪',
   },
   vi: {
     'Medium Rare': 'Tái chín',
@@ -1075,6 +1081,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': 'Không mayonnaise',
     'No Parmesan': 'Không phô mai parmesan',
     'No Pickles': 'Không dưa chua',
+    'No Salt': 'Không muối',
+    '+ Extra Parmesan': '+ Thêm phô mai parmesan',
   },
 };
 

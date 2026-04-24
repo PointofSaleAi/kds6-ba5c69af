@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import noteIcon from '@/assets/note-bold.svg';
+import { useLanguage } from '@/hooks/use-language';
 
 interface OrderNotesSectionProps {
   notes: string;
@@ -9,6 +10,7 @@ interface OrderNotesSectionProps {
 
 export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderNotesSectionProps) {
   const [acknowledged, setAcknowledged] = useState(false);
+  const { tn } = useLanguage();
 
   const toggle = () => {
     const next = !acknowledged;
@@ -50,7 +52,7 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
           className="flex-1 min-w-0 text-[11px] text-text-primary"
           style={{ lineHeight: 1.2 }}
         >
-          {notes}
+          {tn(notes)}
         </div>
       </div>
     </div>

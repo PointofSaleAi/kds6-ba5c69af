@@ -23,15 +23,28 @@ interface OrderTypeBadgeProps {
 }
 
 export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalled }: OrderTypeBadgeProps) {
-  const { to } = useLanguage();
+  const { to, tl } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const bgColor = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
 
+  // Translate the leading word ("TABLE", "BAR") of tableInfo while keeping the number/identifier.
+  const translateTableInfo = (raw: string): string => {
+    const trimmed = raw.trim();
+    const spaceIdx = trimmed.indexOf(' ');
+    if (spaceIdx === -1) return tl(trimmed);
+    const head = trimmed.slice(0, spaceIdx);
+    const tail = trimmed.slice(spaceIdx + 1);
+    const translatedHead = tl(head);
+    return `${translatedHead} ${tail}`;
+  };
+
+  const translatedTableInfo = tableInfo ? translateTableInfo(tableInfo) : undefined;
+
   // For dine-in and banquet, the table/banquet name takes the place of the
   // type label and is NOT repeated next to the time.
-  const useTableAsTitle = (type === 'dine-in' || type === 'banquet') && !!tableInfo;
-  const titleText = useTableAsTitle ? tableInfo! : to(typeLabels[type]);
-  const showTrailingTable = !useTableAsTitle && !!tableInfo;
+  const useTableAsTitle = (type === 'dine-in' || type === 'banquet') && !!translatedTableInfo;
+  const titleText = useTableAsTitle ? translatedTableInfo! : to(typeLabels[type]);
+  const showTrailingTable = !useTableAsTitle && !!translatedTableInfo;
 
   return (
     <div
@@ -53,7 +66,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
       </div>
       <div className="flex items-center gap-2 text-primary-foreground/80 text-badge-type shrink-0">
         {time && <span>{time}</span>}
-        {showTrailingTable && <span>{tableInfo}</span>}
+        {showTrailingTable && <span>{translatedTableInfo}</span>}
         {hasRecalled && (
           <span
             className="uppercase tracking-wide whitespace-nowrap"
