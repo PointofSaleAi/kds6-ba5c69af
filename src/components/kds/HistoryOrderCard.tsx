@@ -18,6 +18,14 @@ interface HistoryOrderCardProps {
   onRecallItem?: (orderId: string, item: OrderItem) => void;
 }
 
+interface HistoryItemRowProps {
+  item: OrderItem;
+  orderId: string;
+  isLast: boolean;
+  onRecallItem?: (orderId: string, item: OrderItem) => void;
+  tp: (s: string) => string;
+}
+
 function formatDuration(seconds: number): string {
   const min = Math.round(seconds / 60);
   return `${min} min total`;
