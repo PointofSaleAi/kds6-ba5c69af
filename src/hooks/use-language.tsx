@@ -1443,6 +1443,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return dict[label] || dict[label.toUpperCase()] || label;
   }, [language, displayMode, primaryLang, scope]);
 
+  const tn = useCallback((text: string) => {
+    if (!text) return text;
+    if (scope === 'interface') return text;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    return noteTexts[lang]?.[text] || text;
+  }, [language, displayMode, primaryLang, scope]);
+
+  const tl = useCallback((label: string) => {
+    if (!label) return label;
+    if (scope === 'interface') return label;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = embeddedLabels[lang] || {};
+    return dict[label] || dict[label.toUpperCase()] || dict[label.toLowerCase()] || label;
+  }, [language, displayMode, primaryLang, scope]);
 
   const showSecondaryMenu = scope !== 'interface';
 
@@ -1455,6 +1469,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     tc,
     ta,
     to,
+    tn,
+    tl,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
     displayMode,
