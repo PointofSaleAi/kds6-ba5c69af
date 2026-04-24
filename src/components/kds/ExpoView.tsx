@@ -120,6 +120,7 @@ interface ExpoItemRowProps {
   onAcknowledgeNewItem?: (itemId: string) => void;
   runnerIconSrc: string;
   showSendAlways: boolean;
+  isLast?: boolean;
 }
 
 function ExpoItemRow({
