@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search, ArrowLeft, RotateCcw } from 'lucide-react';
 import { StatusChip } from '@/components/kds/StatusChip';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
+import { useLanguage } from '@/hooks/use-language';
 import type { OrderType, OrderStatus } from '@/types/kds';
 
 interface HistoryOrder {
@@ -36,8 +37,9 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   const [dateFilter, setDateFilter] = useState('today');
   const [search, setSearch] = useState('');
   const { orderTypeColors } = useKDSSettings();
+  const { t, tperson, tl, to } = useLanguage();
 
-  const tabs = ['Today', 'Yesterday', 'Last 7 Days', 'Custom Range'];
+  const tabs = [t.today, t.yesterday, t.last7Days, t.customRange];
 
   const filtered = mockHistory.filter((o) => {
     if (!search) return true;
@@ -56,7 +58,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
           <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Go back">
             <ArrowLeft size={20} className="text-text-primary" />
           </button>
-          <h1 className="text-xl font-bold text-text-primary">Order History</h1>
+          <h1 className="text-xl font-bold text-text-primary">{t.orderHistoryTitle}</h1>
         </div>
 
         <div className="flex items-center gap-3 mb-3">
@@ -81,7 +83,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by order number, table, server, or item..."
+            placeholder={t.searchHistoryPlaceholder}
             className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-input bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-ring min-h-[44px]"
           />
         </div>
@@ -99,20 +101,20 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
                 className="px-2 py-1 rounded text-badge-type uppercase tracking-wider text-primary-foreground"
                 style={{ backgroundColor: orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType] }}
               >
-                {order.orderType.replace('-', ' ')}
+                {to(order.orderType.replace('-', ' ').toUpperCase())}
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-text-primary">{order.tableName} - {order.serverName}</div>
+                <div className="text-sm font-semibold text-text-primary">{tl(order.tableName)} - {tperson(order.serverName)}</div>
                 <div className="text-xs text-text-muted">{order.timePlaced} &rarr; {order.timeServed}</div>
               </div>
 
-              <div className="text-sm text-text-secondary">{order.itemCount} items</div>
+              <div className="text-sm text-text-secondary">{order.itemCount} {t.itemsLabel}</div>
 
               <div className={`px-2.5 py-1 rounded text-sm font-bold ${
                 order.durationMin <= order.targetMin ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
               }`}>
-                {order.durationMin} min
+                {order.durationMin} {t.minLabel}
               </div>
 
               <button
@@ -120,7 +122,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
                 className="px-4 py-2 bg-order-take-out text-primary-foreground text-cta rounded-lg uppercase hover:bg-order-take-out/90 transition-colors min-h-[44px] flex items-center gap-2"
               >
                 <RotateCcw size={14} />
-                RECALL
+                {t.recall}
               </button>
             </div>
           ))}

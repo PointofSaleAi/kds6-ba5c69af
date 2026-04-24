@@ -28,6 +28,7 @@ const cardVariants = {
 export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: UnseenOrdersScreenProps) {
   const { orders, seenOrderIds } = useOrderStore();
   const { isPortrait } = usePortrait();
+  const { t } = useLanguage();
 
   const unseenOrders = useMemo(() =>
     orders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id)),
@@ -40,8 +41,8 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
         <div className="w-20 h-20 rounded-full bg-success/10 flex items-center justify-center mb-5">
           <CheckCircle size={40} className="text-success" />
         </div>
-        <h2 className="text-xl font-bold text-text-primary mb-1.5">All caught up</h2>
-        <p className="text-text-muted text-sm">No new unseen orders at the moment</p>
+        <h2 className="text-xl font-bold text-text-primary mb-1.5">{t.allCaughtUp}</h2>
+        <p className="text-text-muted text-sm">{t.noNewUnseen}</p>
       </div>
     );
   }
@@ -50,7 +51,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center gap-2.5 px-3 pt-3 pb-2 shrink-0">
         <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
-          Unseen Orders
+          {t.unseenOrdersHeader}
         </span>
         <span className="bg-[#E84C3D] text-primary-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
           {unseenOrders.length}

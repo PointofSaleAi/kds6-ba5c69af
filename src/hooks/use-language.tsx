@@ -1680,10 +1680,10 @@ const noteTexts: Record<LanguageCode, Record<string, string>> = {
 const embeddedLabels: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
   'en-GB': {},
-  ar: { 'TABLE': 'طاولة', 'BAR': 'بار', 'PICKUP': 'استلام', 'DELIVERY': 'توصيل', 'BANQUET': 'مأدبة', 'BANQUET A': 'مأدبة أ', 'BANQUET B': 'مأدبة ب', 'A': 'أ', 'B': 'ب', 'ago': 'مضت', 'Queued': 'في الانتظار', 'Auto-fires': 'تشغيل تلقائي', 'in': 'خلال', 'min': 'د', 'Pickup': 'استلام', 'Server': 'نادل', 'Host': 'مضيف', 'Manager': 'مدير', 'POS': 'نقطة البيع', 'POS Terminal': 'محطة نقطة البيع', 'POS Terminal 1': 'محطة نقطة البيع 1', 'POS Terminal 2': 'محطة نقطة البيع 2', 'POS Terminal 3': 'محطة نقطة البيع 3', 'Back Office': 'المكتب الخلفي', 'Order': 'طلب', 'Just now': 'الآن' },
-  es: { 'TABLE': 'MESA', 'BAR': 'BARRA', 'PICKUP': 'RECOGER', 'DELIVERY': 'ENTREGA', 'BANQUET': 'BANQUETE', 'BANQUET A': 'BANQUETE A', 'BANQUET B': 'BANQUETE B', 'A': 'A', 'B': 'B', 'ago': 'atrás', 'Queued': 'En cola', 'Auto-fires': 'Auto', 'in': 'en', 'min': 'min', 'Pickup': 'Recoger', 'Server': 'Mesero', 'Host': 'Anfitrión', 'Manager': 'Gerente', 'POS': 'POS', 'POS Terminal': 'Terminal POS', 'POS Terminal 1': 'Terminal POS 1', 'POS Terminal 2': 'Terminal POS 2', 'POS Terminal 3': 'Terminal POS 3', 'Back Office': 'Oficina', 'Order': 'Pedido', 'Just now': 'Ahora' },
-  zh: { 'TABLE': '桌号', 'BAR': '吧台', 'PICKUP': '自取', 'DELIVERY': '外卖', 'BANQUET': '宴会', 'BANQUET A': '宴会 A', 'BANQUET B': '宴会 B', 'A': 'A', 'B': 'B', 'ago': '前', 'Queued': '排队中', 'Auto-fires': '自动开始', 'in': '在', 'min': '分', 'Pickup': '自取', 'Server': '服务员', 'Host': '迎宾', 'Manager': '经理', 'POS': 'POS', 'POS Terminal': 'POS 终端', 'POS Terminal 1': 'POS 终端 1', 'POS Terminal 2': 'POS 终端 2', 'POS Terminal 3': 'POS 终端 3', 'Back Office': '后台', 'Order': '订单', 'Just now': '刚刚' },
-  vi: { 'TABLE': 'BÀN', 'BAR': 'QUẦY', 'PICKUP': 'TỰ LẤY', 'DELIVERY': 'GIAO HÀNG', 'BANQUET': 'TIỆC', 'BANQUET A': 'TIỆC A', 'BANQUET B': 'TIỆC B', 'A': 'A', 'B': 'B', 'ago': 'trước', 'Queued': 'Đang chờ', 'Auto-fires': 'Tự động', 'in': 'trong', 'min': 'phút', 'Pickup': 'Lấy', 'Server': 'Phục vụ', 'Host': 'Lễ tân', 'Manager': 'Quản lý', 'POS': 'POS', 'POS Terminal': 'Máy POS', 'POS Terminal 1': 'Máy POS 1', 'POS Terminal 2': 'Máy POS 2', 'POS Terminal 3': 'Máy POS 3', 'Back Office': 'Văn phòng', 'Order': 'Đơn', 'Just now': 'Vừa xong' },
+  ar: { 'TABLE': 'طاولة', 'BAR': 'بار', 'PICKUP': 'استلام', 'DELIVERY': 'توصيل', 'BANQUET': 'مأدبة', 'BANQUET A': 'مأدبة أ', 'BANQUET B': 'مأدبة ب', 'A': 'أ', 'B': 'ب', 'ago': 'مضت', 'Queued': 'في الانتظار', 'Auto-fires': 'تشغيل تلقائي', 'in': 'خلال', 'min': 'د', 'Pickup': 'استلام', 'Server': 'نادل', 'Host': 'مضيف', 'Manager': 'مدير', 'POS': 'نقطة البيع', 'POS Terminal': 'محطة نقطة البيع', 'POS Terminal 1': 'محطة نقطة البيع 1', 'POS Terminal 2': 'محطة نقطة البيع 2', 'POS Terminal 3': 'محطة نقطة البيع 3', 'Back Office': 'المكتب الخلفي', 'Order': 'طلب', 'Just now': 'الآن', 'RECALLED': 'مسترجع', 'RUSH': 'عاجل', 'items': 'أصناف', 'item': 'صنف', 'tickets': 'بطاقات', 'ticket': 'بطاقة', 'ORDER NOTES': 'ملاحظات الطلب', 'Read': 'مقروء', 'Acknowledged': 'تم التأكيد', 'Acknowledge': 'تأكيد', 'Reply': 'رد', 'Kitchen': 'المطبخ', 'Notifications': 'التنبيهات', 'Kitchen Messages': 'رسائل المطبخ', 'Clear read': 'مسح المقروءة', 'No kitchen messages': 'لا توجد رسائل من المطبخ', 'All clear, no notifications': 'لا توجد تنبيهات', 'Unseen Orders': 'طلبات غير مرئية' },
+  es: { 'TABLE': 'MESA', 'BAR': 'BARRA', 'PICKUP': 'RECOGER', 'DELIVERY': 'ENTREGA', 'BANQUET': 'BANQUETE', 'BANQUET A': 'BANQUETE A', 'BANQUET B': 'BANQUETE B', 'A': 'A', 'B': 'B', 'ago': 'atrás', 'Queued': 'En cola', 'Auto-fires': 'Auto', 'in': 'en', 'min': 'min', 'Pickup': 'Recoger', 'Server': 'Mesero', 'Host': 'Anfitrión', 'Manager': 'Gerente', 'POS': 'POS', 'POS Terminal': 'Terminal POS', 'POS Terminal 1': 'Terminal POS 1', 'POS Terminal 2': 'Terminal POS 2', 'POS Terminal 3': 'Terminal POS 3', 'Back Office': 'Oficina', 'Order': 'Pedido', 'Just now': 'Ahora', 'RECALLED': 'RECUPERADO', 'RUSH': 'URGENTE', 'items': 'artículos', 'item': 'artículo', 'tickets': 'tickets', 'ticket': 'ticket', 'ORDER NOTES': 'NOTAS DEL PEDIDO', 'Read': 'Leído', 'Acknowledged': 'Confirmado', 'Acknowledge': 'Confirmar', 'Reply': 'Responder', 'Kitchen': 'Cocina', 'Notifications': 'Notificaciones', 'Kitchen Messages': 'Mensajes de cocina', 'Clear read': 'Borrar leídas', 'No kitchen messages': 'Sin mensajes de cocina', 'All clear, no notifications': 'Todo en orden, sin notificaciones', 'Unseen Orders': 'Pedidos no vistos' },
+  zh: { 'TABLE': '桌号', 'BAR': '吧台', 'PICKUP': '自取', 'DELIVERY': '外卖', 'BANQUET': '宴会', 'BANQUET A': '宴会 A', 'BANQUET B': '宴会 B', 'A': 'A', 'B': 'B', 'ago': '前', 'Queued': '排队中', 'Auto-fires': '自动开始', 'in': '在', 'min': '分', 'Pickup': '自取', 'Server': '服务员', 'Host': '迎宾', 'Manager': '经理', 'POS': 'POS', 'POS Terminal': 'POS 终端', 'POS Terminal 1': 'POS 终端 1', 'POS Terminal 2': 'POS 终端 2', 'POS Terminal 3': 'POS 终端 3', 'Back Office': '后台', 'Order': '订单', 'Just now': '刚刚', 'RECALLED': '召回', 'RUSH': '加急', 'items': '项', 'item': '项', 'tickets': '单', 'ticket': '单', 'ORDER NOTES': '订单备注', 'Read': '已读', 'Acknowledged': '已确认', 'Acknowledge': '确认', 'Reply': '回复', 'Kitchen': '厨房', 'Notifications': '通知', 'Kitchen Messages': '厨房消息', 'Clear read': '清除已读', 'No kitchen messages': '无厨房消息', 'All clear, no notifications': '一切清晰,无通知', 'Unseen Orders': '未查看订单' },
+  vi: { 'TABLE': 'BÀN', 'BAR': 'QUẦY', 'PICKUP': 'TỰ LẤY', 'DELIVERY': 'GIAO HÀNG', 'BANQUET': 'TIỆC', 'BANQUET A': 'TIỆC A', 'BANQUET B': 'TIỆC B', 'A': 'A', 'B': 'B', 'ago': 'trước', 'Queued': 'Đang chờ', 'Auto-fires': 'Tự động', 'in': 'trong', 'min': 'phút', 'Pickup': 'Lấy', 'Server': 'Phục vụ', 'Host': 'Lễ tân', 'Manager': 'Quản lý', 'POS': 'POS', 'POS Terminal': 'Máy POS', 'POS Terminal 1': 'Máy POS 1', 'POS Terminal 2': 'Máy POS 2', 'POS Terminal 3': 'Máy POS 3', 'Back Office': 'Văn phòng', 'Order': 'Đơn', 'Just now': 'Vừa xong', 'RECALLED': 'GỌI LẠI', 'RUSH': 'GẤP', 'items': 'món', 'item': 'món', 'tickets': 'đơn', 'ticket': 'đơn', 'ORDER NOTES': 'GHI CHÚ ĐƠN', 'Read': 'Đã đọc', 'Acknowledged': 'Đã xác nhận', 'Acknowledge': 'Xác nhận', 'Reply': 'Trả lời', 'Kitchen': 'Bếp', 'Notifications': 'Thông báo', 'Kitchen Messages': 'Tin nhắn bếp', 'Clear read': 'Xóa đã đọc', 'No kitchen messages': 'Không có tin nhắn', 'All clear, no notifications': 'Không có thông báo', 'Unseen Orders': 'Đơn chưa xem' },
 };
 
 // Person names: guest names, server names, partner names. Pass through for English.
@@ -1808,6 +1808,8 @@ interface LanguageContextType {
   to: (label: string) => string;
   tn: (text: string) => string;
   tl: (label: string) => string;
+  tperson: (name: string) => string;
+  tcat: (category: string) => string;
   languageName: string;
   languageFlag: string;
   displayMode: DisplayMode;
@@ -1843,6 +1845,8 @@ const defaultLanguageContext: LanguageContextType = {
   to: (label: string) => label,
   tn: (text: string) => text,
   tl: (label: string) => label,
+  tperson: (name: string) => name,
+  tcat: (category: string) => category,
   languageName: languageNames['en-US'],
   languageFlag: languageFlags['en-US'],
   displayMode: 'dual',
@@ -1989,6 +1993,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return dict[label] || dict[label.toUpperCase()] || dict[label.toLowerCase()] || label;
   }, [language, displayMode, primaryLang, scope]);
 
+  const tperson = useCallback((name: string) => {
+    if (!name) return name;
+    // Person names always translate (transliteration), regardless of scope.
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    return personNames[lang]?.[name] || name;
+  }, [language, displayMode, primaryLang]);
+
+  const tcat = useCallback((category: string) => {
+    if (!category) return category;
+    if (scope === 'interface') return category;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = categoryNames[lang] || {};
+    return dict[category] || dict[category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()] || category;
+  }, [language, displayMode, primaryLang, scope]);
+
   const showSecondaryMenu = scope !== 'interface';
 
   const value: LanguageContextType = {
@@ -2002,6 +2021,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     to,
     tn,
     tl,
+    tperson,
+    tcat,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
     displayMode,

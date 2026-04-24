@@ -23,19 +23,24 @@ interface OrderTypeBadgeProps {
 }
 
 export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalled }: OrderTypeBadgeProps) {
-  const { to, tl } = useLanguage();
+  const { to, tl, t } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const bgColor = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
 
-  // Translate the leading word ("TABLE", "BAR") of tableInfo while keeping the number/identifier.
+  // Translate the leading word ("TABLE", "BAR", "BANQUET") of tableInfo while keeping the number/identifier.
+  // Single-token labels (e.g. "PICKUP", "DELIVERY") are translated whole.
   const translateTableInfo = (raw: string): string => {
     const trimmed = raw.trim();
+    // Try whole-string match first (covers PICKUP, DELIVERY, BANQUET A, etc.)
+    const whole = tl(trimmed);
+    if (whole !== trimmed) return whole;
     const spaceIdx = trimmed.indexOf(' ');
-    if (spaceIdx === -1) return tl(trimmed);
+    if (spaceIdx === -1) return trimmed;
     const head = trimmed.slice(0, spaceIdx);
     const tail = trimmed.slice(spaceIdx + 1);
     const translatedHead = tl(head);
-    return `${translatedHead} ${tail}`;
+    const translatedTail = tl(tail);
+    return `${translatedHead} ${translatedTail !== tail ? translatedTail : tail}`;
   };
 
   const translatedTableInfo = tableInfo ? translateTableInfo(tableInfo) : undefined;
@@ -79,7 +84,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
               borderRadius: '4px',
             }}
           >
-            RECALLED
+            {tl('RECALLED')}
           </span>
         )}
       </div>
