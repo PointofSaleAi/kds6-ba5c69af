@@ -197,8 +197,18 @@ function WheelPopover({ value, min, max, onChange }: { value: number; min: numbe
   );
 }
 
+const ORDER_TYPE_OPTIONS = [
+  { key: 'dine-in', label: 'Dine In', color: '#1A1A2E', headerLeft: 'TABLE 7' },
+  { key: 'take-out', label: 'Take Out', color: '#2980B9', headerLeft: 'TAKE OUT' },
+  { key: 'delivery', label: 'Delivery', color: '#16A085', headerLeft: 'DELIVERY' },
+  { key: 'banquet', label: 'Banquet', color: '#F39C12', headerLeft: 'BANQUET' },
+] as const;
+type PreviewTypeKey = typeof ORDER_TYPE_OPTIONS[number]['key'];
+
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
   const [customHex, setCustomHex] = useState('');
+  const [previewType, setPreviewType] = useState<PreviewTypeKey>('dine-in');
+  const previewMeta = ORDER_TYPE_OPTIONS.find(o => o.key === previewType) ?? ORDER_TYPE_OPTIONS[0];
   const contrast = getContrastRatio(rule.color, rule.textColor);
   const textColor = resolveTextColor(rule.textColor);
 
