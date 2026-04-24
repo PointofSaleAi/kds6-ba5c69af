@@ -43,8 +43,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'allergen-badges', label: 'Allergen badges', description: 'Show allergen chips on tickets', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#allergen-badges', keywords: 'allergen badges chips warnings' },
   { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#sort-default', keywords: 'sort order time table type default' },
 
-  // Expo
-  { id: 'expo-send-button', label: 'Show Send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo View', path: '/kds/full/settings/expo#expo-send-button', keywords: 'expo send button ready always' },
+
 
   // Hardware
   { id: 'kot-printer', label: 'KOT Printer', description: 'Kitchen ticket printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#kot-printer', keywords: 'printer kot kitchen ticket' },
