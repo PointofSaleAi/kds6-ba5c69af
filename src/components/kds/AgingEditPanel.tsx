@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import type { StatusRule } from '@/hooks/use-status-rules';
+import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
+import UsersBold from '@/assets/users-bold.svg';
 
 
 interface AgingEditPanelProps {
