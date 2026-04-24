@@ -302,7 +302,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           </div>
           {/* Order number section - status color (large left, server+timer right) */}
           <div className="px-4 py-3 flex items-start justify-between gap-3" style={{ backgroundColor: rule.color, color: textColor }}>
-            <div className="text-5xl font-black leading-none tracking-tight">42</div>
+            <div className="font-black leading-none tracking-tight" style={{ fontSize: '72px', lineHeight: '0.85' }}>42</div>
             <div className="flex flex-col items-end gap-1 text-right">
               <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
                 <img src={PersonSimpleRunBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
