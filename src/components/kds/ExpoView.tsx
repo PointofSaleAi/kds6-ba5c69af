@@ -162,32 +162,39 @@ function ExpoItemRow({
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
 
-  // Indented column matches FlatItemList: invisible "0x" placeholder of width 2.25ch + 4px gap
+  // Indented column matches FlatItemList exactly: invisible "0x" placeholder of width 2.25ch + 4px gap
   const indentPlaceholder = (
     <span
       className="invisible shrink-0 font-normal"
       aria-hidden="true"
-      style={{ fontSize: '13px', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
+      style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
     >
       0x
     </span>
   );
 
+
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
-      {indentPlaceholder}
-      <div className="flex flex-wrap items-center" style={{ gap: '4px', rowGap: '2px' }}>
-        {expoModifiers
-          .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
-          .map((m, idx) => (
-            <span
-              key={idx}
-              className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
-            >
-              {m.text}
-            </span>
-          ))}
-      </div>
+    <div style={{ marginTop: '1px', display: 'flex', flexDirection: 'column', gap: '0px' }}>
+      {expoModifiers
+        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+        .map((m, idx) => {
+          const colorClass =
+            m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra';
+          return (
+            <div key={idx} className="flex items-start" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: '2.25ch', display: 'inline-block' }}>
+                0x
+              </span>
+              <span
+                className={`min-w-0 font-semibold ${colorClass}`}
+                style={{ fontSize: 'var(--kds-modifier)', lineHeight: '0.9', display: 'inline-block' }}
+              >
+                {m.text}
+              </span>
+            </div>
+          );
+        })}
     </div>
   ) : null;
 
@@ -203,21 +210,13 @@ function ExpoItemRow({
   ) : null;
 
   const noteRow = item.notes && item.notes.trim().length > 0 ? (
-    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1.2 }}>
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px' }}>
       {indentPlaceholder}
-      <div className="flex items-start min-w-0" style={{ gap: '3px' }}>
-        <img
-          src={noteIcon}
-          width={11}
-          height={11}
-          className="shrink-0"
-          style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
-          alt=""
-          aria-hidden="true"
-        />
-        <span className="text-[11px] text-text-primary min-w-0 break-words" style={{ lineHeight: 1.2 }}>
-          {item.notes}
-        </span>
+      <div
+        className="italic leading-snug min-w-0 text-text-muted"
+        style={{ fontSize: 'var(--kds-modifier)' }}
+      >
+        "{item.notes}"
       </div>
     </div>
   ) : null;
@@ -240,7 +239,7 @@ function ExpoItemRow({
   return (
     <div
       className={outerClass}
-      style={{ paddingTop: '2px', paddingBottom: isLast ? '0px' : '2px' }}
+      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
       role={isTapToSend ? 'button' : undefined}
       aria-label={isTapToSend ? `Send ${tp(item.name)}` : undefined}
       onClick={() => {
@@ -254,13 +253,13 @@ function ExpoItemRow({
           <div className="flex items-start flex-wrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
               className="font-normal shrink-0"
-              style={{ fontSize: '13px', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
             >
               {remainingQty}x
             </span>
             <span
               className="font-bold uppercase text-text-primary min-w-0 break-words"
-              style={{ fontSize: '13px', lineHeight: 1.1, wordBreak: 'break-word' }}
+              style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
             >
               {tp(item.name)}
             </span>
@@ -569,7 +568,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`${isQueued ? 'opacity-40' : ''}`} style={{ paddingLeft: '0px', paddingRight: '8px', paddingTop: '2px', paddingBottom: '0px' }}>
+                  <div className={`px-1 ${isQueued ? 'opacity-40' : ''}`} style={{ paddingTop: '2px', paddingBottom: '0px' }}>
                     {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
@@ -596,7 +595,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div style={{ paddingLeft: '0px', paddingRight: '8px', paddingTop: '4px', paddingBottom: '0px' }}>
+        <div className="px-1" style={{ paddingTop: '4px', paddingBottom: '0px' }}>
           {ticket.items.map((item, idx) => (
             <ExpoItemRow
               key={item.id}
