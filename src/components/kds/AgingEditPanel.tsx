@@ -309,29 +309,27 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
 
       {/* Live KDS Ticket Preview */}
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
-            Live Ticket Preview
-          </label>
-          <div className="flex flex-wrap gap-1 justify-end max-w-[60%]">
-            {ORDER_TYPE_OPTIONS.map((opt) => {
-              const optColor = (orderTypeDetailedColors?.[opt.key] ?? DEFAULT_ORDER_TYPE_DETAILED_COLORS[opt.key]).headerBg;
-              return (
-                <button
-                  key={opt.key}
-                  onClick={() => setPreviewType(opt.key)}
-                  className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide transition-all border ${
-                    previewType === opt.key
-                      ? 'text-white border-transparent shadow-sm'
-                      : 'bg-muted text-text-secondary border-border hover:bg-muted/80'
-                  }`}
-                  style={previewType === opt.key ? { backgroundColor: optColor } : undefined}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
+        <label className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2 block">
+          Live Ticket Preview
+        </label>
+        <div className="flex flex-nowrap gap-1 mb-2 overflow-x-auto pb-1">
+          {ORDER_TYPE_OPTIONS.map((opt) => {
+            const optColor = (orderTypeDetailedColors?.[opt.key] ?? DEFAULT_ORDER_TYPE_DETAILED_COLORS[opt.key]).headerBg;
+            return (
+              <button
+                key={opt.key}
+                onClick={() => setPreviewType(opt.key)}
+                className={`shrink-0 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide transition-all border ${
+                  previewType === opt.key
+                    ? 'text-white border-transparent shadow-sm'
+                    : 'bg-muted text-text-secondary border-border hover:bg-muted/80'
+                }`}
+                style={previewType === opt.key ? { backgroundColor: optColor } : undefined}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
         </div>
         <div className="rounded-lg overflow-hidden border border-border shadow-sm">
           {/* Order type header: table name + clock time */}
