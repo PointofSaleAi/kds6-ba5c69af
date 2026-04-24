@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import type { StatusRule } from '@/hooks/use-status-rules';
+import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
+import UsersBold from '@/assets/users-bold.svg';
 
 
 interface AgingEditPanelProps {
@@ -299,10 +301,17 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             <span className="text-sm font-mono font-bold text-white">12:34 PM</span>
           </div>
           {/* Order number section - status color (large left, server+timer right) */}
-          <div className="px-4 py-3 flex items-start justify-between" style={{ backgroundColor: rule.color, color: textColor }}>
+          <div className="px-4 py-3 flex items-start justify-between gap-3" style={{ backgroundColor: rule.color, color: textColor }}>
             <div className="text-5xl font-black leading-none tracking-tight">42</div>
             <div className="flex flex-col items-end gap-1 text-right">
-              <span className="text-sm font-semibold opacity-95">Sarah K</span>
+              <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
+                <img src={PersonSimpleRunBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
+                Alex M.
+              </span>
+              <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
+                <img src={UsersBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
+                Sarah Chen
+              </span>
               <span className="font-mono text-base font-bold opacity-95">
                 {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
               </span>
