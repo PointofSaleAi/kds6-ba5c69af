@@ -210,21 +210,13 @@ function ExpoItemRow({
   ) : null;
 
   const noteRow = item.notes && item.notes.trim().length > 0 ? (
-    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1.2 }}>
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px' }}>
       {indentPlaceholder}
-      <div className="flex items-start min-w-0" style={{ gap: '3px' }}>
-        <img
-          src={noteIcon}
-          width={11}
-          height={11}
-          className="shrink-0"
-          style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
-          alt=""
-          aria-hidden="true"
-        />
-        <span className="text-[11px] text-text-primary min-w-0 break-words" style={{ lineHeight: 1.2 }}>
-          {item.notes}
-        </span>
+      <div
+        className="italic leading-snug min-w-0 text-text-muted"
+        style={{ fontSize: 'var(--kds-modifier)' }}
+      >
+        "{item.notes}"
       </div>
     </div>
   ) : null;
