@@ -53,7 +53,7 @@ export default function AgingTimeline({ rules, selectedId, onSelect, onBoundaryD
 
       <div
         ref={trackRef}
-        className="relative h-14 rounded-xl overflow-visible flex cursor-pointer select-none mx-1"
+        className="relative h-9 rounded-lg overflow-visible flex cursor-pointer select-none mx-1"
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={() => { setHoverInfo(null); handlePointerUp(); }}
