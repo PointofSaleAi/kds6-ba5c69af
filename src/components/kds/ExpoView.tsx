@@ -396,38 +396,52 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       style={isSentOut ? { opacity: 0.65 } : undefined}
     >
 
-      {/* Row 1: Order type strip */}
+      {/* Header (Rows 1 + 2). Tap-to-send when whole ticket is ready. */}
       <div
-        className="flex items-center px-2"
-        style={{ backgroundColor: headerStyle.bgColor, height: '28px' }}
+        role={isReady && !isSentOut ? 'button' : undefined}
+        aria-label={isReady && !isSentOut ? `Send out order ${ticket.orderNumber}` : undefined}
+        onClick={() => { if (isReady && !isSentOut) onSendOut(ticket.id); }}
+        className={isReady && !isSentOut ? 'cursor-pointer active:opacity-90 transition-opacity' : ''}
       >
-        <span className="text-[11px] font-medium uppercase tracking-wide text-white leading-none">
-          {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
-        </span>
-      </div>
-
-      {/* Row 2: Urgency row */}
-      <div
-        className="flex items-center justify-between px-2"
-        style={{ backgroundColor: urgencyBgColor, height: '36px' }}
-      >
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-[13px] font-medium text-white leading-none">
-            #{ticket.orderNumber}
+        {/* Row 1: Order type strip */}
+        <div
+          className="flex items-center px-2"
+          style={{ backgroundColor: headerStyle.bgColor, height: '28px' }}
+        >
+          <span className="text-[11px] font-medium uppercase tracking-wide text-white leading-none">
+            {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
           </span>
-          {isRushed && (
-            <span
-              className="inline-flex items-center bg-destructive text-white rounded-full leading-none uppercase"
-              style={{ fontSize: '10px', fontWeight: 500, padding: '2px 10px' }}
-              aria-label="Rush"
-            >
-              RUSH
+          {isReady && !isSentOut && (
+            <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-white/90">
+              <Check className="w-3 h-3" strokeWidth={3} />
+              Tap to send
             </span>
           )}
         </div>
-        <span className="text-[13px] font-medium font-mono text-white leading-none">
-          {formatTimer(ticket.timerSeconds)}
-        </span>
+
+        {/* Row 2: Urgency row */}
+        <div
+          className="flex items-center justify-between px-2"
+          style={{ backgroundColor: urgencyBgColor, height: '36px' }}
+        >
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-[13px] font-medium text-white leading-none">
+              #{ticket.orderNumber}
+            </span>
+            {isRushed && (
+              <span
+                className="inline-flex items-center bg-destructive text-white rounded-full leading-none uppercase"
+                style={{ fontSize: '10px', fontWeight: 500, padding: '2px 10px' }}
+                aria-label="Rush"
+              >
+                RUSH
+              </span>
+            )}
+          </div>
+          <span className="text-[13px] font-medium font-mono text-white leading-none">
+            {formatTimer(ticket.timerSeconds)}
+          </span>
+        </div>
       </div>
 
       {/* Allergen badges */}
