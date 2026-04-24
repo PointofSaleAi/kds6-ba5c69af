@@ -483,22 +483,28 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
-      {/* Order notes (expo packaging + special instructions) */}
+      {/* Order notes (expo packaging + special instructions) — Home screen style */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
-        <div className="border-b border-border/40 border-l-2 border-l-amber-500" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '4px' }}>
-          <div className="text-[10px] uppercase tracking-wider text-text-muted leading-tight">
-            Order Notes
-          </div>
+        <div className="border-t border-border">
           <div
-            className="text-[12px] italic text-text-primary leading-snug"
-            style={{
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-            }}
+            className="flex items-start select-none"
+            style={{ padding: '2px 8px', gap: '3px' }}
           >
-            {ticket.orderNotes}
+            <img
+              src={noteIcon}
+              width={11}
+              height={11}
+              className="shrink-0"
+              style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
+              alt=""
+              aria-hidden="true"
+            />
+            <div
+              className="flex-1 min-w-0 text-[11px] text-text-primary"
+              style={{ lineHeight: 1.2 }}
+            >
+              {ticket.orderNotes}
+            </div>
           </div>
         </div>
       )}
