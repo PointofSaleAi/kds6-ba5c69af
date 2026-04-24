@@ -828,6 +828,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     onDismissItem={handleDismissItem}
                     compactRows={compactRows}
                     seenOrderIndex={seenOrderIndex}
+                    ticketLayoutMode={resolvedTicketLayout}
                   />
                 );
               })
@@ -846,6 +847,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               onUndoModifier={handleUndoModifier}
               dismissedItemIds={dismissedItemIds}
               onDismissItem={handleDismissItem}
+              ticketLayoutMode={resolvedTicketLayout}
             />
           )}
         </div>

@@ -36,6 +36,8 @@ interface CourseSectionProps {
   onDismissItem?: (itemId: string) => void;
   compactRows?: boolean;
   seenOrderIndex?: Map<string, number>;
+  /** Override the global ticketLayout (used by previews). */
+  ticketLayoutMode?: 'standard' | 'compact';
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
