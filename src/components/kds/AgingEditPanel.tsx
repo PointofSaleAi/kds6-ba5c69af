@@ -304,35 +304,60 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         <label className="text-[11px] font-semibold text-text-muted mb-2 block uppercase tracking-wider">
           Live Ticket Preview
         </label>
-        <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-          {/* Order type header — matches OrderTypeBadge */}
-          <div
-            className="px-3 py-2 flex items-center justify-between gap-2"
-            style={{ backgroundColor: '#1A1A2E' }}
-          >
-            <span className="text-[11px] font-bold uppercase tracking-wider text-white whitespace-nowrap">
-              DINE IN
-            </span>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-white/80 whitespace-nowrap">
-              12:34 PM
-            </span>
-          </div>
-          {/* Order number section - status color */}
-          <div className="px-3 pt-2 pb-2" style={{ backgroundColor: rule.color, color: textColor }}>
-            <div className="text-3xl font-black leading-none tracking-tight">#1042</div>
-            <div className="flex items-center justify-between mt-1">
-              <span className="font-mono text-xs font-bold opacity-90">
-                {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
-              </span>
-              <span className="text-[11px] opacity-80">Sarah K</span>
-            </div>
-          </div>
-          {/* Ticket body */}
-          <div className="bg-surface-card px-3 py-2">
-            <div className="text-xs font-semibold text-text-primary">Chicken Burger x2</div>
-            <div className="text-[11px] text-text-muted mt-0.5">+ Extra cheese, No onion</div>
-          </div>
+
+        {/* Order-type selector */}
+        <div className="flex items-center gap-1.5 flex-wrap mb-2">
+          {PREVIEW_TYPES.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setPreviewType(t.key)}
+              className={`px-2.5 py-1 text-[11px] font-semibold rounded-md border transition-colors min-h-[28px] ${
+                previewType === t.key
+                  ? 'bg-foreground text-background border-foreground'
+                  : 'bg-surface-card text-text-primary border-border hover:bg-accent'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
+
+        {(() => {
+          const previewMeta = PREVIEW_TYPES.find((p) => p.key === previewType)!;
+          const headerBg = orderTypeColors[previewType] || DEFAULT_ORDER_TYPE_COLORS[previewType];
+          return (
+            <div className="rounded-lg overflow-hidden border border-border shadow-sm">
+              {/* Order type header — mirrors OrderTypeBadge */}
+              <div
+                className="px-3 py-2 flex items-center justify-between gap-2"
+                style={{ backgroundColor: headerBg }}
+              >
+                <span className="text-[11px] font-bold uppercase tracking-wider text-primary-foreground whitespace-nowrap">
+                  {previewMeta.title}
+                </span>
+                <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                  <span>12:34 PM</span>
+                  {previewMeta.trailing && <span>{previewMeta.trailing}</span>}
+                </div>
+              </div>
+              {/* Order number section - status color */}
+              <div className="px-3 pt-2 pb-2" style={{ backgroundColor: rule.color, color: textColor }}>
+                <div className="text-3xl font-black leading-none tracking-tight">#1042</div>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="font-mono text-xs font-bold opacity-90">
+                    {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
+                  </span>
+                  <span className="text-[11px] opacity-80">Sarah K</span>
+                </div>
+              </div>
+              {/* Ticket body */}
+              <div className="bg-surface-card px-3 py-2">
+                <div className="text-xs font-semibold text-text-primary">Chicken Burger x2</div>
+                <div className="text-[11px] text-text-muted mt-0.5">+ Extra cheese, No onion</div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
