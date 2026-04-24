@@ -9,7 +9,7 @@ import {
   SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
 } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, languageNames } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
