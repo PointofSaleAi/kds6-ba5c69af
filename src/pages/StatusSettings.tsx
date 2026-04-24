@@ -294,6 +294,18 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="relative flex items-center px-6 py-4 shrink-0">
+        <button
+          onClick={onBack}
+          className="p-1 -ml-1 hover:opacity-70 transition-opacity flex items-center justify-center"
+          aria-label="Back"
+        >
+          <ArrowLeft className="w-5 h-5 text-text-primary" />
+        </button>
+        <h1 className="absolute left-1/2 -translate-x-1/2 text-2xl font-bold text-text-primary">
+          Status Colors
+        </h1>
+      </div>
 
       {/* Course Level Toggle + Presets (2-col) */}
       <div className="px-6 pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
