@@ -622,32 +622,748 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </>
       )}
 
-      {/* Footer: Recall (when sent out) and Fire next course only. Send out is now via header tap. */}
-      {(isSentOut || (hasCoursingData && activeCourseAllDone && hasPendingCourse)) && (
-        <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '8px', paddingBottom: '8px' }}>
-          {hasCoursingData && activeCourseAllDone && hasPendingCourse && !isSentOut && (
-            <div className="flex items-center px-1">
-              <button
-                onClick={() => onFireNextCourse?.(ticket.id)}
-                className="px-2.5 py-1.5 border border-text-secondary text-text-secondary text-[11px] font-bold rounded hover:bg-muted/50 transition-colors min-h-[36px]"
-              >
-                Fire next course
-              </button>
-            </div>
-          )}
-          {isSentOut && (
-            <div className="flex gap-1.5">
-              <button
-                onClick={() => onRecallOrder?.(ticket.id)}
-                className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
-              >
-                <RotateCcw size={14} />
-                RECALL
-              </button>
-            </div>
-          )}
+      {/* Footer */}
+      <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '8px', paddingBottom: '8px' }}>
+        {/* Course counters now render inline on each course header row */}
+        {/* Fire next course button for coursed tickets */}
+        {hasCoursingData && activeCourseAllDone && hasPendingCourse && (
+          <div className="flex items-center px-1 mb-1">
+            <button
+              onClick={() => onFireNextCourse?.(ticket.id)}
+              className="px-2.5 py-1.5 border border-text-secondary text-text-secondary text-[11px] font-bold rounded hover:bg-muted/50 transition-colors min-h-[36px]"
+            >
+              Fire next course
+            </button>
+          </div>
+        )}
+      {isSentOut ? (
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => onRecallOrder?.(ticket.id)}
+              className="flex-1 py-2.5 bg-order-take-out text-primary-foreground text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 hover:bg-order-take-out/90 transition-colors min-h-[44px]"
+            >
+              <RotateCcw size={14} />
+              RECALL
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => isReady && onSendOut(ticket.id)}
+              disabled={!isReady}
+              className={`flex-1 py-2.5 text-[13px] font-bold uppercase rounded flex items-center justify-center gap-2 transition-colors min-h-[44px] ${
+                isReady
+                  ? 'bg-success text-primary-foreground hover:opacity-90 cursor-pointer'
+                  : 'bg-muted text-text-muted cursor-not-allowed'
+              }`}
+            >
+              <img src={runnerIcon} alt="" className="w-5 h-5 brightness-0 invert" />
+              Send out
+            </button>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+/* -- Expo-specific station color palette (avoids clashing with status & order-type colors) -- */
+
+const expoStationPalette: Record<string, { bg: string; text: string; border: string }> = {
+  Grill:   { bg: '#FAECE7', text: '#993C1D', border: '#F0997B' },
+  Fry:     { bg: '#EEEDFE', text: '#534AB7', border: '#AFA9EC' },
+  Salad:   { bg: '#E1F5EE', text: '#0F6E56', border: '#5DCAA5' },
+  Dessert: { bg: '#FBEAF0', text: '#993556', border: '#ED93B1' },
+  Bar:     { bg: '#FAEEDA', text: '#854F0B', border: '#EF9F27' },
+};
+
+function ExpoStationBadge({ station }: { station: string }) {
+  const palette = expoStationPalette[station] || { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' };
+  return (
+    <span
+      className="inline-flex items-center rounded shrink-0"
+      style={{
+        fontSize: '9px',
+        fontWeight: 600,
+        padding: '1px 5px',
+        borderRadius: '4px',
+        backgroundColor: palette.bg,
+        color: palette.text,
+        border: `1px solid ${palette.border}`,
+        lineHeight: '1.4',
+      }}
+    >
+      {station}
+    </span>
+  );
+}
+
+/* -- Station Status Bar (with legend) -- */
+
+function ExpoStationBar() {
+  const stationsBlock = (
+    <div className="flex items-center flex-wrap gap-2">
+      <span className="text-[10px] font-bold uppercase text-text-muted tracking-widest mr-1">Stations</span>
+      {kitchenStations.map(s => {
+        const palette = expoStationPalette[s.name] || { bg: 'hsl(var(--muted))', text: 'hsl(var(--text-secondary))', border: 'hsl(var(--border))' };
+        return (
+          <span
+            key={s.name}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold"
+            style={{
+              backgroundColor: palette.bg,
+              color: palette.text,
+              border: `1px solid ${palette.border}`,
+            }}
+          >
+            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: palette.border }} />
+            {s.name}
+          </span>
+        );
+      })}
+    </div>
+  );
+
+  const legendBlock = (
+    <div className="flex items-center flex-wrap gap-3">
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
+    </div>
+  );
+
+  return (
+    <div className="bg-surface-card border-b border-border shrink-0">
+      <div className="hidden md:flex items-center gap-3 px-3 py-2">
+        {stationsBlock}
+        <div className="h-5 mx-1" style={{ width: '0.5px', backgroundColor: 'hsl(var(--border))' }} />
+        <div className="ml-auto flex items-center gap-3">
+          {legendBlock}
         </div>
-      )}
+      </div>
+      <div className="flex md:hidden flex-col gap-2 px-3 py-2">
+        {stationsBlock}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          {legendBlock}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* -- Top Bar Filter Buttons -- */
+
+type ExpoFilter = 'all' | 'ready' | 'recalled';
+
+function ExpoTopControls({
+  filter,
+  onFilterChange,
+  fulfilledTickets,
+  onRecallLast,
+  hasRecallable,
+}: {
+  filter: ExpoFilter;
+  onFilterChange: (f: ExpoFilter) => void;
+  fulfilledTickets: number[];
+  onRecallLast?: () => void;
+  hasRecallable?: boolean;
+}) {
+  const handleRecalledClick = () => {
+    if (fulfilledTickets.length === 0) {
+      toast('No recently fulfilled tickets.');
+    } else {
+      toast(`Recently fulfilled: ${fulfilledTickets.map(n => `#${n}`).join(', ')}`);
+    }
+    onFilterChange('recalled');
+  };
+
+  const filters: { key: ExpoFilter; label: string }[] = [
+    { key: 'all', label: 'All tickets' },
+    { key: 'ready', label: 'Ready only' },
+    { key: 'recalled', label: 'Recalled' },
+  ];
+
+  return (
+    <div className="flex items-center gap-3 px-3 py-2 bg-surface-card border-b border-border shrink-0">
+      <span
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
+        style={{ backgroundColor: '#7c3aed', color: '#ede9fe' }}
+      >
+        Expediter
+      </span>
+
+      <div className="flex-1" />
+
+      <div className="flex items-center bg-muted rounded-full p-0.5">
+        {filters.map(f => (
+          <button
+            key={f.key}
+            onClick={() => f.key === 'recalled' ? handleRecalledClick() : onFilterChange(f.key)}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
+              filter === f.key
+                ? 'bg-brand-dark text-primary-foreground'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      <button
+        onClick={() => {
+          if (onRecallLast) onRecallLast();
+          else toast('No recently sent tickets.');
+        }}
+        className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-colors min-h-[36px] ${
+          hasRecallable
+            ? 'border-warning text-warning bg-warning/10 animate-pulse'
+            : 'border-border text-text-secondary hover:bg-muted'
+        }`}
+      >
+        Recall last
+      </button>
+    </div>
+  );
+}
+
+/* -- Main ExpoView -- */
+
+interface ExpoViewProps {
+  viewMode: ViewMode;
+  pinnedTicketIds?: string[];
+  onFilterChange?: () => void;
+  onTicketSentOut?: (id: string) => void;
+  onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
+  selectedProducts?: string[];
+}
+
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
+  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
+  const [filter, setFilter] = useState<ExpoFilter>('ready');
+  const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
+  const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
+  const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
+
+  // Track recently sent-out orders for recall
+  const [sentOutOrders, setSentOutOrders] = useState<ExpoTicket[]>([]);
+
+  const handleAcknowledgeNewItem = useCallback((itemId: string) => {
+    setAcknowledgedNewItemIds(prev => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+  }, []);
+
+  const handleItemSend = useCallback((ticketId: string, itemId: string, qty: number) => {
+    // Look up total quantity from current rawTickets to know when fully sent
+    const item = rawTickets.flatMap(t => t.items).find(i => i.id === itemId);
+    const totalQty = item?.quantity ?? qty;
+
+    let willBeFullySent = false;
+    setSentQuantities(prev => {
+      const next = new Map(prev);
+      const current = next.get(itemId) ?? 0;
+      const updated = Math.min(totalQty, current + qty);
+      next.set(itemId, updated);
+      willBeFullySent = updated >= totalQty;
+      return next;
+    });
+
+    if (willBeFullySent) {
+      setSentItemIds(prev => {
+        const next = new Set(prev);
+        next.add(itemId);
+        return next;
+      });
+      toast.success('Item sent');
+    } else {
+      toast.success(`Sent ${qty} of ${totalQty}`);
+    }
+  }, [rawTickets]);
+
+  const handleItemRecall = useCallback((ticketId: string, itemId: string) => {
+    setSentItemIds(prev => {
+      const next = new Set(prev);
+      next.delete(itemId);
+      return next;
+    });
+    setSentQuantities(prev => {
+      const next = new Map(prev);
+      next.delete(itemId);
+      return next;
+    });
+    toast.success('Item recalled');
+  }, []);
+
+  const handleFilterChange = useCallback((f: ExpoFilter) => {
+    setFilter(f);
+    onFilterChange?.();
+  }, [onFilterChange]);
+
+  // ResizeObserver for stagger column count
+  const boardRef = useRef<HTMLDivElement | null>(null);
+  const [boardWidth, setBoardWidth] = useState(0);
+  useEffect(() => {
+    const node = boardRef.current;
+    if (!node) return;
+    const observer = new ResizeObserver(entries => {
+      const [entry] = entries;
+      if (entry) setBoardWidth(entry.contentRect.width);
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const staggerColumnCount = useMemo(() => {
+    if (boardWidth <= 0) return 3;
+    if (boardWidth < 520) return 1;
+    if (boardWidth < 760) return 2;
+    if (boardWidth < 1160) return 3;
+    if (boardWidth < 1480) return 4;
+    return 5;
+  }, [boardWidth]);
+
+  // Demo tickets - always present alongside real tickets
+  const [demoTickets, setDemoTickets] = useState<DemoExpoTicket[]>(() => createDemoTickets());
+  const [sentDemoIds, setSentDemoIds] = useState<Set<string>>(new Set());
+  const lastSentDemo = useRef<DemoExpoTicket | null>(null);
+
+  // Demo item tap: cycle pending -> firing -> done
+  const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
+    setDemoTickets(prev => prev.map(t => {
+      if (t.id !== ticketId) return t;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const updatedItems = t.items.map(item => {
+        if (item.id !== itemId) return item;
+        if (item.status === 'pending') return { ...item, status: 'firing' as const, statusLabel: `Since ${timeStr}` };
+        if (item.status === 'firing') return { ...item, status: 'done' as const, statusLabel: `Done ${timeStr}` };
+        return item;
+      });
+
+      // Auto-update station chips based on item statuses
+      const updatedStations = t.stations.map(s => {
+        // Simple heuristic: if any item is firing, first pending station becomes firing
+        // If all items done, all stations done
+        return s;
+      });
+
+      // Smarter station update: derive from items
+      const anyFiring = updatedItems.some(i => i.status === 'firing');
+      const allDoneItems = updatedItems.every(i => i.status === 'done');
+      const smartStations = t.stations.map((s, idx) => {
+        if (allDoneItems) return { ...s, status: 'done' as const };
+        if (anyFiring && s.status === 'pending' && idx === t.stations.findIndex(st => st.status === 'pending')) {
+          return { ...s, status: 'firing' as const };
+        }
+        // If item that was firing is now done, check if station should be done
+        const firingItems = updatedItems.filter(i => i.status === 'firing');
+        const doneItems = updatedItems.filter(i => i.status === 'done');
+        if (doneItems.length > 0 && idx < doneItems.length && s.status !== 'done') {
+          // Mark stations done proportionally
+          if (idx < Math.floor((doneItems.length / updatedItems.length) * t.stations.length)) {
+            return { ...s, status: 'done' as const };
+          }
+        }
+        return s;
+      });
+
+      return { ...t, items: updatedItems, stations: smartStations };
+    }));
+  }, []);
+
+  // Demo send out
+  const handleDemoSendOut = useCallback((id: string) => {
+    const ticket = demoTickets.find(t => t.id === id);
+    if (!ticket) return;
+    lastSentDemo.current = ticket;
+    setSentDemoIds(prev => new Set(prev).add(id));
+    toast.success('Demo ticket sent out');
+  }, [demoTickets]);
+
+  // Demo recall last
+  const handleDemoRecallLast = useCallback(() => {
+    if (!lastSentDemo.current) return;
+    const ticket = lastSentDemo.current;
+    setSentDemoIds(prev => {
+      const next = new Set(prev);
+      next.delete(ticket.id);
+      return next;
+    });
+    lastSentDemo.current = null;
+    toast.success(`Demo ticket #${ticket.orderNumber} recalled`);
+  }, []);
+
+  // Demo fire next course: promote pending course to active
+  const handleDemoFireNextCourse = useCallback((ticketId: string) => {
+    setDemoTickets(prev => prev.map(t => {
+      if (t.id !== ticketId || !t.coursing?.pending) return t;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newServed = t.coursing.active
+        ? { course: t.coursing.active.course, doneAt: timeStr, items: t.items.map(i => ({ name: i.name, quantity: i.quantity })) }
+        : t.coursing.served;
+      const pendingItems = t.coursing.pending.items.map(pi => ({
+        id: pi.id,
+        name: pi.name,
+        quantity: pi.quantity,
+        status: 'firing' as const,
+        statusLabel: `Since ${timeStr}`,
+      }));
+      return {
+        ...t,
+        items: pendingItems,
+        stations: t.stations.map(s => ({ ...s, status: 'firing' as const })),
+        coursing: {
+          served: newServed,
+          active: { course: t.coursing.pending.course, label: 'ACTIVE' },
+          pending: undefined,
+        },
+      };
+    }));
+    toast.success('Next course fired');
+  }, []);
+
+  // Live tick every second to drive elapsed timers
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Recompute timerSeconds live from order.timeReceived or active course firedAt
+  const tickets = useMemo(() => {
+    const now = Date.now();
+    return rawTickets.map(t => {
+      const order = orders.find(o => o.id === t.id);
+      if (!order) return t;
+
+      // Timer logic by order type:
+      // FSR coursed (dine-in with coursing): timer from active course firedAt
+      // FSR non-coursed (dine-in without coursing): timer from order placement
+      // QSR (take-out, delivery): timer from order placement
+      let timerSeconds: number;
+      if (t.hasCoursing && t.activeCourseFiredAt) {
+        timerSeconds = Math.round((now - t.activeCourseFiredAt.getTime()) / 1000);
+      } else {
+        timerSeconds = Math.round((now - order.timeReceived.getTime()) / 1000);
+      }
+
+      return { ...t, timerSeconds };
+    });
+  }, [rawTickets, orders, tick]);
+  const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
+  const [holdStations, setHoldStations] = useState<Set<string>>(new Set());
+
+  const handleToggleHold = useCallback((ticketId: string, stationName: string) => {
+    const key = `${ticketId}-${stationName}`;
+    setHoldStations(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+        toast(`Released ${stationName}`);
+      } else {
+        next.add(key);
+        toast(`Holding ${stationName}`);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleSendOut = useCallback((id: string) => {
+    const ticket = tickets.find(t => t.id === id);
+    if (!ticket) return;
+    // Save ticket snapshot for recall
+    setSentOutOrders(prev => [ticket, ...prev]);
+    setFulfilledTickets(prev => [ticket.orderNumber, ...prev]);
+    sendOutOrder(id);
+    setHoldStations(prev => {
+      const next = new Set(prev);
+      for (const key of prev) {
+        if (key.startsWith(id + '-')) next.delete(key);
+      }
+      return next;
+    });
+    toast.success(`Ticket #${ticket.orderNumber} sent out`);
+  }, [tickets, sendOutOrder]);
+
+  const handleRecallOrder = useCallback((id: string) => {
+    const ticket = sentOutOrders.find(t => t.id === id);
+    if (!ticket) return;
+    // Restore order status to in-progress
+    updateOrderStatus(id, 'in-progress');
+    setSentOutOrders(prev => prev.filter(t => t.id !== id));
+    setFulfilledTickets(prev => prev.filter(n => n !== ticket.orderNumber));
+    toast.success(`Ticket #${ticket.orderNumber} recalled`);
+  }, [sentOutOrders, updateOrderStatus]);
+
+  const handleRush = useCallback((id: string) => {
+    const ticket = [...tickets, ...demoTickets].find(t => t.id === id);
+    if (!ticket) return;
+    // Set rush state in shared store (real orders only)
+    if (!id.startsWith('demo-')) {
+      rushOrder(id);
+    }
+    toast(`Rush alert sent for Ticket #${ticket.orderNumber}`);
+  }, [tickets, demoTickets, rushOrder]);
+
+  // Auto-send-out tickets when all items are individually sent
+  useEffect(() => {
+    const allCombined = [...rawTickets, ...demoTickets.filter(t => !sentDemoIds.has(t.id))];
+    for (const ticket of allCombined) {
+      if (ticket.items.length > 0 && ticket.items.every(i => sentItemIds.has(i.id))) {
+        if (ticket.id.startsWith('demo-')) {
+          handleDemoSendOut(ticket.id);
+        } else {
+          handleSendOut(ticket.id);
+        }
+      }
+    }
+  }, [sentItemIds, rawTickets, demoTickets, sentDemoIds, handleDemoSendOut, handleSendOut]);
+
+  // Combine real + demo tickets
+  const visibleDemoTickets = useMemo(() => {
+    return demoTickets.filter(t => !sentDemoIds.has(t.id));
+  }, [demoTickets, sentDemoIds]);
+
+  const allTickets = useMemo(() => {
+    return [...tickets, ...visibleDemoTickets];
+  }, [tickets, visibleDemoTickets]);
+
+  // Report allTickets to parent for summary panel
+  useEffect(() => {
+    onAllTicketsChange?.(allTickets);
+  }, [allTickets, onAllTicketsChange]);
+
+  // Reorder by pinned IDs, product selection, then elapsed time
+  const selectedProductSet = useMemo(() => new Set(selectedProducts), [selectedProducts]);
+
+  const sentOutOrderIds = useMemo(() => new Set(sentOutOrders.map(t => t.id)), [sentOutOrders]);
+
+  const sortedTickets = useMemo(() => {
+    const base = filter === 'ready'
+      ? allTickets.filter(t => allItemsDone(t))
+      : filter === 'recalled'
+      ? allTickets.filter(t => {
+          const order = orders.find(o => o.id === t.id);
+          return order?.status === 'recalled';
+        })
+      : allTickets;
+
+    // Product filtering: tickets matching ALL selected products go to top
+    let result = base;
+    if (selectedProductSet.size > 0) {
+      const matching: typeof base = [];
+      const nonMatching: typeof base = [];
+      for (const t of base) {
+        const itemNames = new Set(t.items.map(i => i.name));
+        const hasAny = [...selectedProductSet].some(p => itemNames.has(p));
+        if (hasAny) matching.push(t);
+        else nonMatching.push(t);
+      }
+      result = [...matching, ...nonMatching];
+    }
+
+    if (pinnedTicketIds.length > 0) {
+      const pinnedSet = new Set(pinnedTicketIds);
+      const pinned: typeof result = [];
+      const unpinned: typeof result = [];
+
+      for (const t of result) {
+        if (pinnedSet.has(t.id)) pinned.push(t);
+        else unpinned.push(t);
+      }
+
+      pinned.sort((a, b) => pinnedTicketIds.indexOf(a.id) - pinnedTicketIds.indexOf(b.id));
+      result = [...pinned, ...unpinned];
+    }
+
+    return result;
+  }, [allTickets, filter, pinnedTicketIds, selectedProductSet, orders]);
+
+  const stats = useMemo(() => {
+    const open = tickets.length;
+    const ready = tickets.filter(t => allItemsDone(t)).length;
+    const overtime = tickets.filter(isOvertime).length;
+    const avgTime = tickets.length > 0
+      ? Math.round(tickets.reduce((sum, t) => sum + t.timerSeconds, 0) / tickets.length)
+      : 0;
+    return { open, ready, overtime, avgTime };
+  }, [tickets]);
+
+  const staggerColumns = useMemo(() => {
+    const cols = Math.max(1, staggerColumnCount);
+    const columns: typeof sortedTickets[] = Array.from({ length: cols }, () => []);
+    sortedTickets.forEach((t, i) => columns[i % cols].push(t));
+    return columns;
+  }, [sortedTickets, staggerColumnCount]);
+
+  const handleSendOutAny = useCallback((id: string) => {
+    if (id.startsWith('demo-')) {
+      handleDemoSendOut(id);
+    } else {
+      handleSendOut(id);
+    }
+    onTicketSentOut?.(id);
+  }, [handleDemoSendOut, handleSendOut, onTicketSentOut]);
+
+  // Fire next course handler (demo or real)
+  const handleFireNextCourseAny = useCallback((ticketId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      handleDemoFireNextCourse(ticketId);
+    } else {
+      // For real tickets: find the next unfired course and fire it
+      const order = orders.find(o => o.id === ticketId);
+      if (!order) return;
+      const nextCourse = order.courses.find(c => !c.isFired);
+      if (nextCourse) {
+        setOrders(prev => prev.map(o => {
+          if (o.id !== ticketId) return o;
+          return {
+            ...o,
+            courses: o.courses.map(c =>
+              c.course === nextCourse.course ? { ...c, isFired: true, firedAt: new Date(), _startedAt: new Date() } : c
+            ),
+          };
+        }));
+        toast.success(`${nextCourse.course} fired`);
+      }
+    }
+  }, [handleDemoFireNextCourse, orders, setOrders]);
+
+  // Highlight pulse state for recently pinned tickets
+  const [pulsingIds, setPulsingIds] = useState<Set<string>>(new Set());
+  const prevPinnedRef = useRef<string[]>([]);
+  useEffect(() => {
+    const prevSet = new Set(prevPinnedRef.current);
+    const newlyPinned = pinnedTicketIds.filter(id => !prevSet.has(id));
+    prevPinnedRef.current = pinnedTicketIds;
+    if (newlyPinned.length === 0) return;
+
+    setPulsingIds(prev => {
+      const next = new Set(prev);
+      newlyPinned.forEach(id => next.add(id));
+      return next;
+    });
+    const timer = setTimeout(() => {
+      setPulsingIds(prev => {
+        const next = new Set(prev);
+        newlyPinned.forEach(id => next.delete(id));
+        return next;
+      });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [pinnedTicketIds]);
+
+  const renderTicketCard = (ticket: ExpoTicket) => {
+    const isPulsing = pulsingIds.has(ticket.id);
+    const ticketIsSentOut = sentOutOrderIds.has(ticket.id);
+    const order = orders.find(o => o.id === ticket.id);
+    const ticketIsRushed = order?.isRushed ?? false;
+    // Dim tickets not matching selected products
+    let isDimmed = false;
+    if (selectedProductSet.size > 0 && !ticketIsSentOut) {
+      const itemNames = new Set(ticket.items.map(i => i.name));
+      isDimmed = ![...selectedProductSet].some(p => itemNames.has(p));
+    }
+    return (
+      <div className={`${isPulsing ? 'animate-expo-pin-pulse' : ''} ${isDimmed ? 'opacity-40' : ''} transition-opacity duration-300`}>
+        <ExpoTicketCard
+          key={ticket.id}
+          ticket={ticket}
+          onSendOut={handleSendOutAny}
+          onRush={handleRush}
+          holdStations={holdStations}
+          onToggleHold={handleToggleHold}
+          isDemo={ticket.id.startsWith('demo-')}
+          onDemoItemTap={ticket.id.startsWith('demo-') ? handleDemoItemTap : undefined}
+          sentItemIds={sentItemIds}
+          sentQuantities={sentQuantities}
+          onItemSend={handleItemSend}
+          onItemRecall={handleItemRecall}
+          acknowledgedNewItemIds={acknowledgedNewItemIds}
+          onAcknowledgeNewItem={handleAcknowledgeNewItem}
+          onFireNextCourse={handleFireNextCourseAny}
+          isSentOut={ticketIsSentOut}
+          onRecallOrder={handleRecallOrder}
+          isRushed={ticketIsRushed}
+        />
+      </div>
+    );
+  };
+
+  const hasRecallable = (!!lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) || sentOutOrders.length > 0;
+  const handleRecallLast = () => {
+    if (lastSentDemo.current && sentDemoIds.has(lastSentDemo.current.id)) {
+      handleDemoRecallLast();
+      return;
+    }
+    if (sentOutOrders.length > 0) {
+      handleRecallOrder(sentOutOrders[0].id);
+    } else {
+      toast('No recently sent tickets.');
+    }
+  };
+
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <ExpoTopControls
+        filter={filter}
+        onFilterChange={handleFilterChange}
+        fulfilledTickets={fulfilledTickets}
+        onRecallLast={handleRecallLast}
+        hasRecallable={hasRecallable}
+      />
+      <ExpoStationBar />
+
+      <div ref={boardRef} className="flex-1 overflow-auto p-3">
+        {sortedTickets.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
+            <CheckCircle size={48} className="text-success/60" />
+            <div className="text-center">
+              <p className="text-success/80 text-lg font-bold">Kitchen clear</p>
+              <p className="text-success/50 text-sm mt-1">All tickets fulfilled, waiting for new orders</p>
+            </div>
+          </div>
+        ) : viewMode === 'grid' ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            <AnimatePresence mode="popLayout">
+              {sortedTickets.map(ticket => (
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ layout: { duration: 0.2, ease: 'easeInOut' } }}>
+                  {renderTicketCard(ticket)}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : viewMode === 'horizontal' ? (
+          <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+            <AnimatePresence mode="popLayout">
+              {sortedTickets.map(ticket => (
+                <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[280px]">
+                  {renderTicketCard(ticket)}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
+            {staggerColumns.map((col, colIdx) => (
+              <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                <AnimatePresence mode="popLayout">
+                  {col.map(ticket => (
+                    <motion.div key={ticket.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
+                      {renderTicketCard(ticket)}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
     </div>
   );
