@@ -235,7 +235,7 @@ function ExpoItemRow({
   // Outer row with Home-style dense spacing + bottom divider (except last).
   // Tap-to-send pattern: when prepared, tapping the row sends the item out.
   const isTapToSend = isPrepared && remainingQty > 0;
-  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
 
   return (
     <div
