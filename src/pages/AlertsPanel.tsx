@@ -3,15 +3,19 @@ import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSqu
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useLanguage } from '@/hooks/use-language';
 import { KitchenReplyDialog } from '@/components/kds/KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import type { NotificationType } from '@/types/notification';
 
-function timeAgo(date: Date): string {
-  const mins = Math.floor((Date.now() - date.getTime()) / 60000);
-  if (mins < 1) return 'Just now';
-  if (mins < 60) return `${mins}m ago`;
-  return `${Math.floor(mins / 60)}h ago`;
+function useTimeAgo() {
+  const { t } = useLanguage();
+  return (date: Date): string => {
+    const mins = Math.floor((Date.now() - date.getTime()) / 60000);
+    if (mins < 1) return t.justNow;
+    if (mins < 60) return t.minAgoSuffix.replace('{n}', String(mins));
+    return t.hourAgoSuffix.replace('{n}', String(Math.floor(mins / 60)));
+  };
 }
 
 function formatTime(date: Date): string {
@@ -42,6 +46,8 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
+  const { t, tl, tperson, tn } = useLanguage();
+  const timeAgo = useTimeAgo();
 
   // Sort messages: pending first, then by timestamp desc
   const sortedMessages = [...messages].sort((a, b) => {
@@ -69,7 +75,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <h2 className="text-lg font-bold text-text-primary">Notifications</h2>
+              <h2 className="text-lg font-bold text-text-primary">{t.notificationsTitle}</h2>
               <div className="flex items-center gap-3">
                 {tab === 'notifications' && (
                   <button
@@ -77,7 +83,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                     className="text-sm text-text-muted hover:text-destructive flex items-center gap-1 transition-colors"
                   >
                     <Trash2 size={14} />
-                    Clear read
+                    {t.clearRead}
                   </button>
                 )}
                 <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close alerts">
@@ -93,7 +99,8 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative
                   ${tab === 'notifications' ? 'bg-brand-primary text-white' : 'bg-muted text-text-secondary hover:bg-muted/80'}`}
               >
-                Notifications
+                Notifications removed; we use t.notificationsTitle */}
+                {t.notificationsTitle}
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
                     {unreadCount}
@@ -105,7 +112,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative
                   ${tab === 'messages' ? 'bg-[#7C3AED] text-white' : 'bg-muted text-text-secondary hover:bg-muted/80'}`}
               >
-                Kitchen Messages
+                {t.kitchenMessagesTab}
                 {pendingCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
                     {pendingCount}
