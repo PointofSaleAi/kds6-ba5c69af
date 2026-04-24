@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
 import { RotateCcw, GripVertical, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
-import AgingTimeline from '@/components/kds/AgingTimeline';
+
 import AgingEditPanel from '@/components/kds/AgingEditPanel';
 
 interface StatusSettingsProps {
@@ -351,16 +351,6 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
         </div>
       </div>
 
-      {/* Timeline */}
-      <div className={`${hideHeader ? '' : 'px-6'} pb-4`}>
-        <AgingTimeline
-          rules={draft}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          onBoundaryDrag={handleBoundaryDrag}
-          maxMinutes={maxMins}
-        />
-      </div>
 
       {/* Two-panel body */}
       <div className={`flex-1 overflow-hidden flex min-h-0 ${hideHeader ? '' : 'mx-6'} border border-border rounded-xl bg-surface-card`}>
