@@ -181,12 +181,12 @@ export default function DisplaySettings() {
         icon={SlidersHorizontal}
         iconColor="#5E4DD8"
         label="Mode Switcher"
-        helper="KDS operational mode: Standard or Station."
+        helper="KDS operational mode: Standard, Expo, or Station."
         right={
           <SegmentedToggle
-            options={['Standard', 'Station']}
-            value={mode === 'Prep' ? 'Station' : 'Standard'}
-            onChange={(v) => setMode(v === 'Station' ? 'Prep' : 'Standard')}
+            options={['Standard', 'Expo', 'Station']}
+            value={mode === 'Prep' ? 'Station' : mode}
+            onChange={(v) => setMode(v === 'Station' ? 'Prep' : (v as 'Standard' | 'Expo'))}
           />
         }
         highlighted={hash === 'mode-switcher'}

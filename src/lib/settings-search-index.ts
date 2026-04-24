@@ -1,4 +1,4 @@
-export type SettingsGroupId = 'display' | 'orders' | 'hardware' | 'account';
+export type SettingsGroupId = 'display' | 'orders' | 'expo' | 'hardware' | 'account';
 
 export interface SettingsSearchEntry {
   id: string;
@@ -13,6 +13,7 @@ export interface SettingsSearchEntry {
 export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: string }> = {
   display: { label: 'Display', path: '/kds/full/settings/display' },
   orders: { label: 'Orders', path: '/kds/full/settings/orders' },
+  expo: { label: 'Expo View', path: '/kds/full/settings/expo' },
   hardware: { label: 'Hardware', path: '/kds/full/settings/hardware' },
   account: { label: 'Account', path: '/kds/full/settings/account' },
 };
@@ -31,7 +32,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'order-type-colors', label: 'Order Type Colors', description: 'Header colors per order type', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#order-type-colors', keywords: 'order type colors header dine in take out delivery banquet' },
   { id: 'enable-badge', label: 'Enable Badge', description: 'Sidebar icon count badge', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#enable-badge', keywords: 'badge sidebar icon count notification' },
   { id: 'ticket-identifier', label: 'Ticket Identifier', description: 'Order Number or Guest Name', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#ticket-identifier', keywords: 'ticket identifier order number guest name primary card label' },
-  { id: 'mode-switcher', label: 'Mode Switcher', description: 'Standard or Station mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#mode-switcher', keywords: 'mode switcher kds standard station prep operational' },
+  { id: 'mode-switcher', label: 'Mode Switcher', description: 'Standard, Expo, or Station mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#mode-switcher', keywords: 'mode switcher kds standard expo station prep operational' },
   { id: 'theme', label: 'Theme', description: 'Light or Dark mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#theme', keywords: 'light dark theme appearance' },
   { id: 'language', label: 'Language', description: 'Display language selection', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#language', keywords: 'region locale i18n language translation' },
 
@@ -43,7 +44,8 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'allergen-badges', label: 'Allergen badges', description: 'Show allergen chips on tickets', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#allergen-badges', keywords: 'allergen badges chips warnings' },
   { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#sort-default', keywords: 'sort order time table type default' },
 
-
+  // Expo
+  { id: 'expo-send-button', label: 'Show Send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo View', path: '/kds/full/settings/expo#expo-send-button', keywords: 'expo send button ready always' },
 
   // Hardware
   { id: 'kot-printer', label: 'KOT Printer', description: 'Kitchen ticket printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#kot-printer', keywords: 'printer kot kitchen ticket' },
