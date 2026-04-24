@@ -79,11 +79,10 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     currency, setCurrency,
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
-    ticketLayout,
   } = useKDSSettings();
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
-  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>(ticketLayout);
+  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>('standard');
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   
   const [currOpen, setCurrOpen] = useState(false);
@@ -561,11 +560,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               <div className="flex-1 min-h-0 overflow-y-auto pointer-events-none select-none w-full flex flex-col" aria-hidden="true">
                 {previewLayout === 'compact' ? (
                   <div className="w-full max-w-[220px] mx-auto">
-                    <OrderCard order={previewTicket} compact />
+                    <OrderCard order={previewTicket} compact layoutOverride="compact" />
                   </div>
                 ) : (
                   <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
-                    <OrderCard order={previewTicket} />
+                    <OrderCard order={previewTicket} layoutOverride="standard" />
                   </div>
                 )}
               </div>

@@ -39,6 +39,8 @@ interface OrderCardProps {
   highlightItemNames?: Set<string>;
   /** When true (grid view), apply tighter row spacing inside courses. */
   compactRows?: boolean;
+  /** Override the global ticketLayout setting (used by previews). */
+  layoutOverride?: 'standard' | 'compact';
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -57,7 +59,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames, compactRows }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
   const { timeFormat } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
@@ -66,7 +68,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
   const { ticketHeaderLayout, ticketLayout } = useKDSSettings();
-  const isCompactLayout = ticketLayout === 'compact';
+  const isCompactLayout = layoutOverride ? layoutOverride === 'compact' : ticketLayout === 'compact';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
