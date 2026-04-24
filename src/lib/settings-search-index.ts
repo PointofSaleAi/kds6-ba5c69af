@@ -31,7 +31,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'order-type-colors', label: 'Order Type Colors', description: 'Header colors per order type', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#order-type-colors', keywords: 'order type colors header dine in take out delivery banquet' },
   { id: 'enable-badge', label: 'Enable Badge', description: 'Sidebar icon count badge', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#enable-badge', keywords: 'badge sidebar icon count notification' },
   { id: 'ticket-identifier', label: 'Ticket Identifier', description: 'Order Number or Guest Name', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#ticket-identifier', keywords: 'ticket identifier order number guest name primary card label' },
-  { id: 'mode-switcher', label: 'Mode Switcher', description: 'Standard, Expo, or Station mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#mode-switcher', keywords: 'mode switcher kds standard expo station prep operational' },
+  { id: 'mode-switcher', label: 'Mode Switcher', description: 'Standard or Station mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#mode-switcher', keywords: 'mode switcher kds standard station prep operational' },
   { id: 'theme', label: 'Theme', description: 'Light or Dark mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#theme', keywords: 'light dark theme appearance' },
   { id: 'language', label: 'Language', description: 'Display language selection', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#language', keywords: 'region locale i18n language translation' },
 
