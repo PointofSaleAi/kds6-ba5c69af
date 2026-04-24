@@ -309,7 +309,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       )}
 
       {/* Course Level Toggle + Presets (2-col) */}
-      <div className="px-6 pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
+      <div className={`${hideHeader ? '' : 'px-6'} pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch`}>
         <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-muted/60">
           <div className="flex-1 min-w-0">
             <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
