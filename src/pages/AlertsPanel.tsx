@@ -99,7 +99,6 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative
                   ${tab === 'notifications' ? 'bg-brand-primary text-white' : 'bg-muted text-text-secondary hover:bg-muted/80'}`}
               >
-                Notifications removed; we use t.notificationsTitle */}
                 {t.notificationsTitle}
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
