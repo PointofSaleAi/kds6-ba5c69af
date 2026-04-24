@@ -2010,10 +2010,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const showSecondaryMenu = scope !== 'interface';
 
+  // UI chrome should follow primaryLang in dual mode (matches menu translators).
+  const interfaceLang = displayMode === 'dual' ? primaryLang : language;
+
   const value: LanguageContextType = {
     language,
     setLanguage,
-    t: scope === 'menu' ? translations['en-US'] : translations[language],
+    t: scope === 'menu' ? translations['en-US'] : translations[interfaceLang],
     tp,
     tm,
     tc,
