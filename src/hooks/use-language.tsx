@@ -1172,29 +1172,57 @@ const orderTypeLabels: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
   'en-GB': {},
   ar: {
-    'DINE IN': 'تناول هنا',
-    'TAKE OUT': 'سفري',
-    'DELIVERY': 'توصيل',
-    'BANQUET': 'مأدبة',
+    'DINE IN': 'تناول هنا', 'TAKE OUT': 'سفري', 'DELIVERY': 'توصيل', 'BANQUET': 'مأدبة',
+    'DRIVE THRU': 'سيارة', 'CURB SIDE': 'الرصيف', 'SCHEDULED': 'مجدول', 'PHONE-IN': 'هاتف', 'CUSTOM': 'مخصص',
   },
   es: {
-    'DINE IN': 'COMER AQUÍ',
-    'TAKE OUT': 'PARA LLEVAR',
-    'DELIVERY': 'ENTREGA',
-    'BANQUET': 'BANQUETE',
+    'DINE IN': 'COMER AQUÍ', 'TAKE OUT': 'PARA LLEVAR', 'DELIVERY': 'ENTREGA', 'BANQUET': 'BANQUETE',
+    'DRIVE THRU': 'AUTO', 'CURB SIDE': 'EN LA ACERA', 'SCHEDULED': 'PROGRAMADO', 'PHONE-IN': 'TELÉFONO', 'CUSTOM': 'PERSONALIZADO',
   },
   zh: {
-    'DINE IN': '堂食',
-    'TAKE OUT': '外带',
-    'DELIVERY': '外卖',
-    'BANQUET': '宴会',
+    'DINE IN': '堂食', 'TAKE OUT': '外带', 'DELIVERY': '外卖', 'BANQUET': '宴会',
+    'DRIVE THRU': '车道', 'CURB SIDE': '路边', 'SCHEDULED': '预约', 'PHONE-IN': '电话', 'CUSTOM': '自定义',
   },
   vi: {
-    'DINE IN': 'TẠI CHỖ',
-    'TAKE OUT': 'MANG ĐI',
-    'DELIVERY': 'GIAO HÀNG',
-    'BANQUET': 'TIỆC',
+    'DINE IN': 'TẠI CHỖ', 'TAKE OUT': 'MANG ĐI', 'DELIVERY': 'GIAO HÀNG', 'BANQUET': 'TIỆC',
+    'DRIVE THRU': 'LÁI XE', 'CURB SIDE': 'LỀ ĐƯỜNG', 'SCHEDULED': 'ĐÃ ĐẶT', 'PHONE-IN': 'ĐIỆN THOẠI', 'CUSTOM': 'TÙY CHỈNH',
   },
+};
+
+// Free-form note translations (order notes, item notes). Falls back to input if missing.
+const noteTexts: Record<LanguageCode, Record<string, string>> = {
+  'en-US': {},
+  'en-GB': {},
+  ar: {
+    'Birthday dinner, please bring candle with dessert': 'عشاء عيد ميلاد، الرجاء إحضار شمعة مع الحلوى',
+    'Allergy to nuts. Please prepare food separately and notify server': 'حساسية من المكسرات. الرجاء تحضير الطعام بشكل منفصل وإبلاغ النادل',
+    'Make it extra spicy please': 'الرجاء جعله حارا إضافيا',
+  },
+  es: {
+    'Birthday dinner, please bring candle with dessert': 'Cena de cumpleaños, traer una vela con el postre',
+    'Allergy to nuts. Please prepare food separately and notify server': 'Alergia a los frutos secos. Preparar la comida por separado y avisar al mesero',
+    'Make it extra spicy please': 'Por favor que sea extra picante',
+  },
+  zh: {
+    'Birthday dinner, please bring candle with dessert': '生日晚餐,请在甜点上插蜡烛',
+    'Allergy to nuts. Please prepare food separately and notify server': '坚果过敏。请单独准备食物并通知服务员',
+    'Make it extra spicy please': '请做得特别辣',
+  },
+  vi: {
+    'Birthday dinner, please bring candle with dessert': 'Tiệc sinh nhật, vui lòng mang nến cùng tráng miệng',
+    'Allergy to nuts. Please prepare food separately and notify server': 'Dị ứng với hạt. Chuẩn bị riêng và báo cho phục vụ',
+    'Make it extra spicy please': 'Vui lòng làm cay hơn',
+  },
+};
+
+// Token-level labels embedded in mock data (TABLE 7, "ago", "Queued", etc.)
+const embeddedLabels: Record<LanguageCode, Record<string, string>> = {
+  'en-US': {},
+  'en-GB': {},
+  ar: { 'TABLE': 'طاولة', 'BAR': 'بار', 'ago': 'مضت', 'Queued': 'في الانتظار', 'Auto-fires': 'تشغيل تلقائي', 'in': 'خلال', 'min': 'د', 'Pickup': 'استلام' },
+  es: { 'TABLE': 'MESA', 'BAR': 'BARRA', 'ago': 'atrás', 'Queued': 'En cola', 'Auto-fires': 'Auto', 'in': 'en', 'min': 'min', 'Pickup': 'Recoger' },
+  zh: { 'TABLE': '桌号', 'BAR': '吧台', 'ago': '前', 'Queued': '排队中', 'Auto-fires': '自动开始', 'in': '在', 'min': '分', 'Pickup': '自取' },
+  vi: { 'TABLE': 'BÀN', 'BAR': 'QUẦY', 'ago': 'trước', 'Queued': 'Đang chờ', 'Auto-fires': 'Tự động', 'in': 'trong', 'min': 'phút', 'Pickup': 'Lấy' },
 };
 
 const languageNames: Record<LanguageCode, string> = {
