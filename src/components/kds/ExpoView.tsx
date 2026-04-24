@@ -253,13 +253,13 @@ function ExpoItemRow({
           <div className="flex items-start flex-wrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
               className="font-normal shrink-0"
-              style={{ fontSize: '13px', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
             >
               {remainingQty}x
             </span>
             <span
               className="font-bold uppercase text-text-primary min-w-0 break-words"
-              style={{ fontSize: '13px', lineHeight: 1.1, wordBreak: 'break-word' }}
+              style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
             >
               {tp(item.name)}
             </span>
