@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { RotateCcw, GripVertical, Plus, Trash2 } from 'lucide-react';
+import { RotateCcw, GripVertical, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
 import AgingTimeline from '@/components/kds/AgingTimeline';
 import AgingEditPanel from '@/components/kds/AgingEditPanel';
@@ -294,6 +294,16 @@ export default function StatusSettings({ onBack }: StatusSettingsProps) {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex items-center justify-center gap-4 px-6 py-4 shrink-0">
+        <button
+          onClick={onBack}
+          className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+          aria-label="Back"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h1 className="text-2xl font-bold text-text-primary">Ticket Aging Rules</h1>
+      </div>
 
       {/* Course Level Toggle + Presets (2-col) */}
       <div className="px-6 pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
