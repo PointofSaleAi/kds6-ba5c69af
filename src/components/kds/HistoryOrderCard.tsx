@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { RotateCcw } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { OrderTypeBadge } from './OrderTypeBadge';
+import { OrderAllergenStrip } from './OrderAllergenStrip';
+import { OrderNotesSection } from './OrderNotesSection';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine } from './ModifierLine';
 import { getLocationLabel } from './station-utils';
@@ -31,28 +32,52 @@ function getDurationBadgeStyle(seconds: number) {
 
 const DINE_IN_TYPES = new Set(['dine-in']);
 
+/**
+ * History item row: tap anywhere on the row to recall the item.
+ * Matches the Home screen item row spacing (`py-0.5`, `text-item-name`)
+ * and supports the same allergen/modifier stack.
+ */
 function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
   item: OrderItem;
   orderId: string;
   onRecallItem?: (orderId: string, item: OrderItem) => void;
   tp: (s: string) => string;
 }) {
-  const [animating, setAnimating] = useState(false);
   const [recalled, setRecalled] = useState(false);
+  const interactive = !!onRecallItem && !item.isCancelled && !recalled;
 
   const handleRecall = () => {
-    if (recalled) return;
-    setAnimating(true);
-    setTimeout(() => setAnimating(false), 150);
+    if (!interactive) return;
     setRecalled(true);
     onRecallItem?.(orderId, item);
   };
 
   return (
-    <div className={`flex items-center gap-0 py-1.5 ${item.isCancelled ? 'opacity-50' : ''}`}>
+    <div
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-label={interactive ? `Recall ${item.name}` : undefined}
+      onClick={handleRecall}
+      onKeyDown={(e) => {
+        if (!interactive) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleRecall();
+        }
+      }}
+      className={`flex items-start gap-2 py-0.5 select-none transition-colors ${
+        item.isCancelled ? 'opacity-50' : ''
+      } ${interactive ? 'cursor-pointer active:bg-muted/40 hover:bg-muted/30 rounded' : ''}`}
+    >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className={`text-item-name ${recalled ? 'text-text-primary' : 'line-through text-text-muted'} ${item.isCancelled ? 'text-text-muted' : ''}`}>
+          <span
+            className={`text-item-name ${
+              recalled
+                ? 'text-text-primary'
+                : 'line-through text-text-muted'
+            } ${item.isCancelled ? 'text-text-muted' : ''}`}
+          >
             {item.quantity}&times; {tp(item.name)}
           </span>
           {item.isCancelled && (
@@ -72,48 +97,36 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
           <ModifierLine key={idx} modifier={mod} />
         ))}
       </div>
-      {onRecallItem && !item.isCancelled && (
-        <button
-          onClick={handleRecall}
-          disabled={recalled}
-          className="flex items-center justify-center min-w-[34px] min-h-[33px] shrink-0"
-          aria-label={`Recall ${item.name}`}
-          title={recalled ? 'Already recalled' : 'Recall item'}
-        >
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{
-              width: 'var(--kds-eye-icon)',
-              height: 'var(--kds-eye-icon)',
-              backgroundColor: recalled ? '#F1F5F9' : '#FFFFFF',
-              border: `2px solid ${recalled ? '#CBD5E1' : '#2980B9'}`,
-              transition: 'all 150ms ease',
-              transform: animating ? 'scale(1.15)' : 'scale(1)',
-              cursor: recalled ? 'default' : 'pointer',
-              opacity: recalled ? 0.5 : 1,
-            }}
-          >
-            <RotateCcw style={{ width: 'var(--kds-eye-inner)', height: 'var(--kds-eye-inner)' }} color={recalled ? '#CBD5E1' : '#2980B9'} strokeWidth={2.5} />
-          </div>
-        </button>
-      )}
     </div>
   );
 }
 
 export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: HistoryOrderCardProps) {
-  const { tp, timeFormat } = useLanguage();
-  const { orderTypeColors, ticketHeaderLayout } = useKDSSettings();
+  const { tp, tperson, tl, timeFormat } = useLanguage();
+  const { orderTypeColors, ticketHeaderLayout, ticketLayout } = useKDSSettings();
   const headerBgColor = orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType];
   const durationText = formatDuration(order.elapsedSeconds);
   const durationStyle = getDurationBadgeStyle(order.elapsedSeconds);
   const showCourses = DINE_IN_TYPES.has(order.orderType);
   const allItems = order.courses.flatMap(c => c.items);
+  const isCompactLayout = ticketLayout === 'compact';
 
   if (compact) {
     const hasAllergens = order.courses.some(c => c.items.some(i => i.allergens.length > 0));
     return (
-      <div className="rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border opacity-70">
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={`Recall order ${order.orderNumber}`}
+        onClick={() => onRecall?.(order.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onRecall?.(order.id);
+          }
+        }}
+        className="rounded-lg overflow-hidden bg-surface-card shadow-sm border border-border opacity-70 cursor-pointer active:brightness-95 transition-all select-none"
+      >
         <OrderTypeBadge
           type={order.orderType}
           time={formatTimeForKDS(order.timeReceived, timeFormat)}
@@ -145,15 +158,6 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
             </span>
           </div>
         </div>
-        <div className="px-2 pb-2">
-          <button
-            onClick={() => onRecall?.(order.id)}
-            className="w-full py-2 bg-order-take-out text-primary-foreground text-cta rounded uppercase flex items-center justify-center gap-2"
-          >
-            <RotateCcw size={14} />
-            RECALL
-          </button>
-        </div>
       </div>
     );
   }
@@ -171,52 +175,101 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
         />
       </div>
 
+      {/* Header: tap to recall the entire ticket. Mirrors Home card header. */}
       <div className="relative">
         <div
           className="absolute inset-0"
           style={{ backgroundColor: headerBgColor, opacity: 0.65 }}
         />
-        <div className="relative px-3 py-3 flex items-stretch justify-between">
-          {ticketHeaderLayout === 'kitchen' ? (
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={`Recall ticket ${order.orderNumber}`}
+          title="Tap to recall ticket"
+          onClick={() => onRecall?.(order.id)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onRecall?.(order.id);
+            }
+          }}
+          className="relative flex items-center justify-between cursor-pointer select-none active:brightness-95 transition-all"
+          style={{ padding: '12px' }}
+        >
+          {isCompactLayout ? (
             <>
-              <div className="text-order-num text-white leading-none line-through">
+              {(() => {
+                const useGuest = ticketHeaderLayout === 'guest' && !!order.guestName;
+                if (useGuest) {
+                  const translatedGuest = tperson(order.guestName!);
+                  const parts = translatedGuest.trim().split(/\s+/);
+                  const firstName = parts[0];
+                  const restName = parts.slice(1).join(' ');
+                  const longest = Math.max(firstName.length, restName.length);
+                  const fontSize = longest > 12 ? 11 : longest > 9 ? 13 : longest > 6 ? 14 : 16;
+                  return (
+                    <div
+                      className="text-white font-black min-w-0 leading-tight break-words line-through"
+                      style={{ fontSize: `${fontSize}px` }}
+                    >
+                      <div>{firstName}</div>
+                      {restName && <div>{restName}</div>}
+                    </div>
+                  );
+                }
+                return (
+                  <div className="text-white font-black shrink-0 leading-none min-w-0 truncate line-through" style={{ fontSize: '28px' }}>
+                    {order.orderNumber}
+                  </div>
+                );
+              })()}
+              <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
+                <span
+                  className="text-[11px] font-medium rounded-full inline-block"
+                  style={{ backgroundColor: durationStyle.bg, color: durationStyle.color, padding: '2px 8px', borderRadius: 20 }}
+                >
+                  {durationText}
+                </span>
+                <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
+                  {tperson(order.serverName)}
+                </span>
+              </div>
+            </>
+          ) : ticketHeaderLayout === 'kitchen' ? (
+            <>
+              <div className="text-white font-black shrink-0 line-through" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
                 {order.orderNumber}
               </div>
-              <div className="flex flex-col items-end justify-end gap-0.5" style={{ paddingBottom: 6 }}>
-                <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                  <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert" />
-                  {order.serverName}
+              <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
+                <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white max-w-full">
+                  <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                  <span className="text-right break-words min-w-0">{tperson(order.serverName)}</span>
                 </span>
                 {order.guestName ? (
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white">
-                    <img src={UsersBold} alt="" width={14} height={14} className="invert" />
-                    {order.guestName}
+                  <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
+                    <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                    <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{tperson(order.guestName)}</span>
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 text-[13px] font-medium text-white/60">
-                    <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-60" />
-                    {'\u2014'}
-                  </span>
+                  <span className="h-[14px]" />
                 )}
-                <div>
-                  <span
-                    className="text-[11px] font-medium rounded-full inline-block"
-                    style={{ backgroundColor: durationStyle.bg, color: durationStyle.color, padding: '3px 10px', borderRadius: 20 }}
-                  >
-                    {durationText}
-                  </span>
-                </div>
+                <span
+                  className="text-[11px] font-medium rounded-full inline-block"
+                  style={{ backgroundColor: durationStyle.bg, color: durationStyle.color, padding: '3px 10px', borderRadius: 20 }}
+                >
+                  {durationText}
+                </span>
               </div>
             </>
           ) : (
             <>
               <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1 line-through">
-                {order.guestName || order.orderNumber}
+                {order.guestName ? tperson(order.guestName) : order.orderNumber}
               </div>
-              <div className="flex flex-col items-end justify-between self-stretch gap-0.5 shrink-0">
-                <span className="flex items-center gap-1 text-[13px] font-medium text-white whitespace-nowrap">
-                  <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert" />
-                  {order.serverName}
+              <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
+                <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
+                  <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                  {tperson(order.serverName)}
                 </span>
                 <span className="text-[16px] font-semibold text-white line-through">
                   {order.orderNumber}
@@ -233,17 +286,10 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
         </div>
       </div>
 
+      <OrderAllergenStrip order={order} compact={isCompactLayout} />
+
       {order.orderNotes && (
-        <div className="border-t border-border">
-          <div className="flex items-center bg-muted px-3 py-1.5">
-            <span className="text-section-label uppercase text-text-muted tracking-widest">
-              ORDER NOTES
-            </span>
-          </div>
-          <div className="px-3 py-1.5">
-            <p className="text-[13px] text-text-secondary leading-snug">{order.orderNotes}</p>
-          </div>
-        </div>
+        <OrderNotesSection notes={order.orderNotes} orderId={order.id} />
       )}
 
       <div className="border-t border-border">
@@ -252,7 +298,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
             <div key={courseGroup.course}>
               <div className="flex items-center justify-between bg-muted px-3 py-1.5 mt-1">
                 <span className="text-section-label uppercase text-text-muted tracking-widest">
-                  {courseGroup.course}
+                  {tl(courseGroup.course)}
                 </span>
               </div>
               <div className="px-3 py-1">
@@ -269,16 +315,6 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
             ))}
           </div>
         )}
-      </div>
-
-      <div className="p-2 border-t border-border">
-        <button
-          onClick={() => onRecall?.(order.id)}
-          className="flex-1 w-full py-2.5 bg-order-take-out text-primary-foreground text-cta rounded flex items-center justify-center gap-2 uppercase hover:bg-order-take-out/90 transition-colors min-h-[44px]"
-        >
-          <RotateCcw size={14} />
-          RECALL
-        </button>
       </div>
     </div>
   );
