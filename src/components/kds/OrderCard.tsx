@@ -39,6 +39,8 @@ interface OrderCardProps {
   highlightItemNames?: Set<string>;
   /** When true (grid view), apply tighter row spacing inside courses. */
   compactRows?: boolean;
+  /** Override the global ticketLayout setting (used by previews). */
+  layoutOverride?: 'standard' | 'compact';
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
