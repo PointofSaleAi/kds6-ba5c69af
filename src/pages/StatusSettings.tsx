@@ -352,7 +352,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       </div>
 
       {/* Timeline */}
-      <div className="px-6 pb-4">
+      <div className={`${hideHeader ? '' : 'px-6'} pb-4`}>
         <AgingTimeline
           rules={draft}
           selectedId={selectedId}
@@ -363,7 +363,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       </div>
 
       {/* Two-panel body */}
-      <div className="flex-1 overflow-hidden flex min-h-0 mx-6 border border-border rounded-xl bg-surface-card">
+      <div className={`flex-1 overflow-hidden flex min-h-0 ${hideHeader ? '' : 'mx-6'} border border-border rounded-xl bg-surface-card`}>
         {/* LEFT: Status List */}
         <DraggableStatusList
           rules={draft}
@@ -395,7 +395,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       </div>
 
       {/* Save button */}
-      <div className="px-6 pb-4 pt-3 shrink-0">
+      <div className={`${hideHeader ? '' : 'px-6'} pb-4 pt-3 shrink-0`}>
         <button
           onClick={handleSave}
           disabled={hasErrors}
