@@ -1756,7 +1756,7 @@ const categoryNames: Record<LanguageCode, Record<string, string>> = {
 };
 
 
-const languageNames: Record<LanguageCode, string> = {
+export const languageNames: Record<LanguageCode, string> = {
   'en-US': 'English (US)',
   'en-GB': 'English (UK)',
   ar: 'العربية',

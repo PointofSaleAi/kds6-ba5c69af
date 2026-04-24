@@ -9,7 +9,7 @@ import {
   SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
 } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage, languageNames } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
@@ -24,7 +24,10 @@ export default function DisplaySettings() {
     ticketLayout, setTicketLayout,
     ticketHeaderLayout, setTicketHeaderLayout,
   } = useKDSSettings();
-  const { languageName } = useLanguage();
+  const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
+  const languageDisplay = displayMode === 'dual'
+    ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
+    : languageName;
   const { showBadge, setShowBadge } = useBadgeVisibility();
   const { mode, setMode } = useKDSMode();
   const [statusOpen, setStatusOpen] = useState(false);
@@ -194,7 +197,7 @@ export default function DisplaySettings() {
         iconColor="#16A085"
         label="Language"
         helper="Display language for menu items, buttons, and notifications."
-        right={<ValueText>{languageName}</ValueText>}
+        right={<ValueText>{languageDisplay}</ValueText>}
         onClick={() => setLanguageOpen(true)}
         highlighted={hash === 'language'}
       />
