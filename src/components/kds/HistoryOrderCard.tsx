@@ -164,7 +164,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
 
   return (
     <div
-      className="rounded-lg overflow-hidden bg-surface-card shadow-sm border-l-4 border-l-text-muted transition-all duration-300"
+      className="rounded-lg overflow-hidden bg-surface-card shadow-sm transition-all duration-300"
       style={{ minWidth: 'min(220px, 100%)' }}
     >
       <div style={{ opacity: 0.65 }}>
