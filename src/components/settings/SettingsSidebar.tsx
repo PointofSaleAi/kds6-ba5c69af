@@ -124,7 +124,7 @@ export function SettingsSidebar() {
       <div className="px-4 pt-3 pb-3 shrink-0">
         <div
           className="flex items-center gap-2 rounded-full px-3.5 py-2.5"
-          style={{ background: 'hsl(var(--surface-bg))' }}
+          style={{ background: 'hsl(var(--surface-card))' }}
         >
           <Search size={16} style={{ color: 'hsl(var(--text-muted))' }} />
           <input
