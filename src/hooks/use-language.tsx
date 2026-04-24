@@ -113,6 +113,73 @@ interface Translations {
   doneAt: string;
   seenAt: string;
   preparingAt: string;
+
+  // Language preview chrome
+  oneLanguageOnKDS: string;
+  twoLanguagesPerItem: string;
+  viewAs: string;
+  previewOnlyHint: string;
+  showingSingleLang: string; // "Showing {lang} only on the KDS."
+  showingDualLang: string;   // "Showing {primary} (primary) + {secondary} (secondary) on each item."
+  primaryLabel: string;
+  secondaryLabel: string;
+  editingLabel: string;
+  swapHint: string;
+  requestALanguage: string;
+  languageNameLabel: string;
+  dialectLabel: string;
+  whyDoYouNeedIt: string;
+  submitRequest: string;
+  selectLanguagePlaceholder: string;
+  popularSection: string;
+  moreLanguagesSection: string;
+  noLanguagesFound: string;
+
+  // History
+  orderHistoryTitle: string;
+  customRange: string;
+  searchHistoryPlaceholder: string;
+  recall: string;
+  itemsLabel: string;
+  minLabel: string;
+  minTotalSuffix: string;
+  orderNotesLabel: string;
+
+  // Notifications panel
+  notificationsTitle: string;
+  kitchenMessagesTab: string;
+  clearRead: string;
+  allClearNoNotifications: string;
+  noKitchenMessages: string;
+  acknowledge: string;
+  acknowledged: string;
+  reply: string;
+  readLabel: string;
+  justNow: string;
+  minAgoSuffix: string; // "{n}m ago"
+  hourAgoSuffix: string; // "{n}h ago"
+  orderHash: string; // "Order #"
+  kitchenLabel: string;
+
+  // Unseen / Seen
+  unseenOrdersHeader: string;
+  allCaughtUp: string;
+  noNewUnseen: string;
+
+  // Roles
+  roleServer: string;
+  roleHost: string;
+  roleManager: string;
+  roleGeneralManager: string;
+
+  // Summary panel
+  summaryHeader: string;
+  overtimeHeader: string;
+  toCookLabel: string;
+  allItemsCompleted: string;
+  clearAll: string;
+  ticketsLabel: string;
+  assignAction: string;
 }
 
 const translations: Record<LanguageCode, Translations> = {
