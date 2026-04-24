@@ -23,7 +23,7 @@ interface OrderTypeBadgeProps {
 }
 
 export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalled }: OrderTypeBadgeProps) {
-  const { to, tl } = useLanguage();
+  const { to, tl, t } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const bgColor = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
 
@@ -84,7 +84,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
               borderRadius: '4px',
             }}
           >
-            RECALLED
+            {t.recalled.toString().toUpperCase().split(' ')[0] === 'RECALLED' ? 'RECALLED' : t.recalled.toUpperCase()}
           </span>
         )}
       </div>
