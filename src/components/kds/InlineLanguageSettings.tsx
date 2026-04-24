@@ -555,7 +555,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 </div>
               </div>
               <div className="text-[9px] text-text-muted mb-2 italic">
-                Preview-only. Change the saved layout in Display, Ticket Layout.
+                Preview-only. Change the saved layout in Display, Ticket Layout. Proper nouns (server name, guest name) are not translated.
               </div>
               <div className="flex-1 min-h-0 overflow-y-auto w-full flex flex-col">
                 <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
