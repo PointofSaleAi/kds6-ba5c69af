@@ -102,7 +102,7 @@ export function SettingsSidebar() {
                   onClick={() => navigate(group.path)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl active:opacity-70 transition-all"
                   style={{
-                    background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
+                    background: isActive ? 'hsl(var(--surface-card))' : 'transparent',
                   }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
