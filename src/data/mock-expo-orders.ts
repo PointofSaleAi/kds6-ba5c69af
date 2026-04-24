@@ -23,6 +23,8 @@ export interface ExpoItem {
   isToGo?: boolean;
   /** Modifiers attached to this item (filtered for expo relevance at render time) */
   modifiers?: { text: string; type: 'extra' | 'remove' | 'neutral' }[];
+  /** Item-level note from POS / server */
+  notes?: string;
 }
 
 export type ExpoCourseStatus = 'served' | 'active' | 'queued';

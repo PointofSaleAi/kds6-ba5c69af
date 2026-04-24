@@ -202,6 +202,26 @@ function ExpoItemRow({
     </div>
   ) : null;
 
+  const noteRow = item.notes && item.notes.trim().length > 0 ? (
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1.2 }}>
+      {indentPlaceholder}
+      <div className="flex items-start min-w-0" style={{ gap: '3px' }}>
+        <img
+          src={noteIcon}
+          width={11}
+          height={11}
+          className="shrink-0"
+          style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
+          alt=""
+          aria-hidden="true"
+        />
+        <span className="text-[11px] text-text-primary min-w-0 break-words" style={{ lineHeight: 1.2 }}>
+          {item.notes}
+        </span>
+      </div>
+    </div>
+  ) : null;
+
   const toGoBadge = showToGoBadge ? (
     <span
       className="inline-flex items-center bg-text-primary text-white rounded-full uppercase leading-none"
@@ -215,12 +235,12 @@ function ExpoItemRow({
   // Outer row with Home-style dense spacing + bottom divider (except last).
   // Tap-to-send pattern: when prepared, tapping the row sends the item out.
   const isTapToSend = isPrepared && remainingQty > 0;
-  const outerClass = `-mx-2 px-2 ${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
 
   return (
     <div
       className={outerClass}
-      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
+      style={{ paddingTop: '2px', paddingBottom: isLast ? '0px' : '2px' }}
       role={isTapToSend ? 'button' : undefined}
       aria-label={isTapToSend ? `Send ${tp(item.name)}` : undefined}
       onClick={() => {
@@ -254,8 +274,9 @@ function ExpoItemRow({
           </div>
         </div>
       </div>
-      {modifierRow}
       {allergenRow}
+      {modifierRow}
+      {noteRow}
     </div>
   );
 }
@@ -548,7 +569,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`${isQueued ? 'opacity-40' : ''}`} style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', paddingBottom: '2px' }}>
+                  <div className={`${isQueued ? 'opacity-40' : ''}`} style={{ paddingLeft: '0px', paddingRight: '8px', paddingTop: '2px', paddingBottom: '0px' }}>
                     {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
@@ -575,7 +596,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '2px' }}>
+        <div style={{ paddingLeft: '0px', paddingRight: '8px', paddingTop: '4px', paddingBottom: '0px' }}>
           {ticket.items.map((item, idx) => (
             <ExpoItemRow
               key={item.id}
