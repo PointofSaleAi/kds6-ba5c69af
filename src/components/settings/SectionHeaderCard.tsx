@@ -22,8 +22,8 @@ export function SectionHeaderCard({
 
   return (
     <div
-      className="rounded-2xl p-5 mb-5 flex flex-col items-start"
-      style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}
+      className="rounded-xl p-5 mb-5 flex flex-col items-start border"
+      style={{ background: 'hsl(var(--surface-card))', borderColor: 'hsl(var(--border))' }}
     >
       <div className="mb-4">
         <SettingsIconTile icon={icon} bgColor={iconColor} size="lg" />
