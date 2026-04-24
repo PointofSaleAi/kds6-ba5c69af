@@ -51,8 +51,14 @@ export default function SettingsLayout() {
         >
           <SettingsSidebar />
         </div>
-        <main className="flex-1 overflow-y-auto scrollbar-hide">
-          <div className="w-full px-4 py-6">
+        <main
+          className="flex-1 rounded-3xl overflow-y-auto scrollbar-hide"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
+          <div className="max-w-2xl mx-auto px-2 py-6">
             <Outlet key={location.pathname} />
           </div>
         </main>

@@ -46,8 +46,14 @@ export default function DisplaySettings() {
         className="fixed top-0 right-0 left-20 z-30 flex flex-col p-4"
         style={{ background: 'hsl(var(--surface-bg))', bottom: '52px' }}
       >
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          <div className="flex items-center gap-3 px-2 py-4 shrink-0">
+        <div
+          className="flex-1 min-h-0 rounded-3xl overflow-hidden flex flex-col"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
+          <div className="flex items-center gap-3 px-6 py-4 shrink-0">
             <button
               onClick={() => setLanguageOpen(false)}
               className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
@@ -57,7 +63,7 @@ export default function DisplaySettings() {
             </button>
             <h1 className="text-2xl font-bold">Language</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-2 pb-6">
+          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
             <InlineLanguageSettings activeTab="language" />
           </div>
         </div>
