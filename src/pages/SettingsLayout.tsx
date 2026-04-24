@@ -45,7 +45,7 @@ export default function SettingsLayout() {
         <div
           className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
           style={{
-            background: 'hsl(var(--surface-bg))',
+            background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
           }}
         >
@@ -54,7 +54,7 @@ export default function SettingsLayout() {
         <main
           className="flex-1 rounded-3xl overflow-y-auto scrollbar-hide"
           style={{
-            background: '#FFFFFF',
+            background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
           }}
         >
