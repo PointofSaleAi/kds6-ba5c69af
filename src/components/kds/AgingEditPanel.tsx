@@ -305,11 +305,11 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             <div className="text-5xl font-black leading-none tracking-tight">42</div>
             <div className="flex flex-col items-end gap-1 text-right">
               <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
-                <img src={PersonSimpleRunBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === 'white' ? 'invert' : ''} opacity-90`} />
+                <img src={PersonSimpleRunBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
                 Alex M.
               </span>
               <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
-                <img src={UsersBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === 'white' ? 'invert' : ''} opacity-90`} />
+                <img src={UsersBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
                 Sarah Chen
               </span>
               <span className="font-mono text-base font-bold opacity-95">
