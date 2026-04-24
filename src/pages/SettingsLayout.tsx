@@ -52,7 +52,7 @@ export default function SettingsLayout() {
           <SettingsSidebar />
         </div>
         <main
-          className="flex-1 rounded-3xl overflow-y-auto"
+          className="flex-1 rounded-3xl overflow-y-auto scrollbar-hide"
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
