@@ -136,6 +136,7 @@ function ExpoItemRow({
   acknowledgedNewItemIds,
   runnerIconSrc,
   showSendAlways,
+  isLast,
 }: ExpoItemRowProps) {
   const sentQty = sentQuantities.get(item.id) ?? 0;
   const remainingQty = Math.max(0, item.quantity - sentQty);
@@ -160,25 +161,44 @@ function ExpoItemRow({
   ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
+
+  // Indented column matches FlatItemList: invisible "0x" placeholder of width 2.25ch + 4px gap
+  const indentPlaceholder = (
+    <span
+      className="invisible shrink-0 font-normal"
+      aria-hidden="true"
+      style={{ fontSize: '13px', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
+    >
+      0x
+    </span>
+  );
+
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex flex-wrap gap-x-2 gap-y-0 pl-4" style={{ marginTop: '2px' }}>
-      {expoModifiers
-        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
-        .map((m, idx) => (
-          <span
-            key={idx}
-            className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
-          >
-            {m.text}
-          </span>
-        ))}
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
+      {indentPlaceholder}
+      <div className="flex flex-wrap items-center" style={{ gap: '4px', rowGap: '2px' }}>
+        {expoModifiers
+          .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+          .map((m, idx) => (
+            <span
+              key={idx}
+              className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
+            >
+              {m.text}
+            </span>
+          ))}
+      </div>
     </div>
   ) : null;
+
   const allergenRow = item.allergens && item.allergens.length > 0 ? (
-    <div className="flex flex-wrap gap-1 pl-4" style={{ marginTop: '2px' }}>
-      {item.allergens.map(a => (
-        <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="expo-item" />
-      ))}
+    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
+      {indentPlaceholder}
+      <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+        {item.allergens.map(a => (
+          <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" />
+        ))}
+      </div>
     </div>
   ) : null;
 
@@ -241,54 +261,42 @@ function ExpoItemRow({
     </div>
   );
 
-  if (isPrepared) {
-    return (
-      <div
-        className={`border-l-[3px] border-l-success pl-1.5 -ml-2 ${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-        style={{ paddingTop: '5px', paddingBottom: '4px' }}
-        onClick={() => {
-          if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-          if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
-        }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
-            <span className="text-[13px] font-medium text-text-primary">
-              {remainingQty}&times; {tp(item.name)}
-            </span>
-            {toGoBadge}
-            {stationChip}
-            <span className="text-text-muted text-[10px]">&middot;</span>
-            {statusIcon}
-          </div>
-          {showQtySelector ? partialSendControl : simpleSendButton}
-        </div>
-        {modifierRow}
-        {allergenRow}
-      </div>
-    );
-  }
+  // Outer row with Home-style dense spacing + bottom divider (except last)
+  const outerClass = `-mx-2 px-2 ${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${isDemo ? 'cursor-pointer' : ''}`;
 
   return (
     <div
-      className={`${isDemo ? 'cursor-pointer' : ''} ${isNewUnacked ? 'animate-new-item' : ''}`}
-      style={{ paddingTop: '5px', paddingBottom: '4px' }}
+      className={outerClass}
+      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
       onClick={() => {
         if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
         if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
       }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center flex-wrap gap-1.5 min-w-0 flex-1">
-          <span className="text-[13px] font-medium text-text-primary">
-            {remainingQty}&times; {tp(item.name)}
-          </span>
-          {toGoBadge}
-          {stationChip}
-          <span className="text-text-muted text-[10px]">&middot;</span>
-          {statusIcon}
+      <div className="flex items-start justify-between" style={{ gap: '4px' }}>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start flex-wrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+            <span
+              className="font-normal shrink-0"
+              style={{ fontSize: '13px', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
+            >
+              {remainingQty}x
+            </span>
+            <span
+              className="font-bold uppercase text-text-primary min-w-0 break-words"
+              style={{ fontSize: '13px', lineHeight: 1.1, wordBreak: 'break-word' }}
+            >
+              {tp(item.name)}
+            </span>
+            {toGoBadge}
+            {stationChip}
+            <span className="text-text-muted text-[10px] self-center">&middot;</span>
+            <span className="self-center">{statusIcon}</span>
+          </div>
         </div>
-        {showSendAlways && simpleSendButton}
+        {isPrepared
+          ? (showQtySelector ? partialSendControl : simpleSendButton)
+          : (showSendAlways && simpleSendButton)}
       </div>
       {modifierRow}
       {allergenRow}
