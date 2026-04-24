@@ -293,19 +293,26 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           Live Ticket Preview
         </label>
         <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-          {/* Order type header */}
-          <div className="px-3 py-1.5 flex items-center justify-between" style={{ backgroundColor: '#1A1A2E' }}>
-            <span className="text-[10px] font-bold uppercase text-white">DINE IN</span>
-            <span className="text-[10px] font-mono text-white/70">12:34 PM</span>
+          {/* Order type header — matches OrderTypeBadge */}
+          <div
+            className="px-3 py-2 flex items-center justify-between gap-2"
+            style={{ backgroundColor: '#1A1A2E' }}
+          >
+            <span className="text-[11px] font-bold uppercase tracking-wider text-white whitespace-nowrap">
+              DINE IN
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-white/80 whitespace-nowrap">
+              12:34 PM
+            </span>
           </div>
           {/* Order number section - status color */}
-          <div className="px-3 pt-1.5 pb-1" style={{ backgroundColor: rule.color, color: textColor }}>
-            <div className="text-2xl font-black leading-none">#1042</div>
-            <div className="flex items-center justify-between mt-0.5">
+          <div className="px-3 pt-2 pb-2" style={{ backgroundColor: rule.color, color: textColor }}>
+            <div className="text-3xl font-black leading-none tracking-tight">#1042</div>
+            <div className="flex items-center justify-between mt-1">
               <span className="font-mono text-xs font-bold opacity-90">
                 {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
               </span>
-              <span className="text-[10px] opacity-80">Sarah K</span>
+              <span className="text-[11px] opacity-80">Sarah K</span>
             </div>
           </div>
           {/* Ticket body */}
