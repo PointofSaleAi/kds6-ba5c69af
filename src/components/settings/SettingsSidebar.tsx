@@ -102,7 +102,7 @@ export function SettingsSidebar() {
                   onClick={() => navigate(group.path)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl active:opacity-70 transition-all"
                   style={{
-                    background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
+                    background: isActive ? 'hsl(var(--surface-card))' : 'transparent',
                   }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -124,7 +124,7 @@ export function SettingsSidebar() {
       <div className="px-4 pt-3 pb-3 shrink-0">
         <div
           className="flex items-center gap-2 rounded-full px-3.5 py-2.5"
-          style={{ background: 'hsl(var(--surface-bg))' }}
+          style={{ background: 'hsl(var(--surface-card))' }}
         >
           <Search size={16} style={{ color: 'hsl(var(--text-muted))' }} />
           <input
