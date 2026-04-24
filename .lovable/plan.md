@@ -1,51 +1,56 @@
-## Goal
-Align the KDS Settings right pane with the reference `pointofsaleai-6.0` layout: no outer card wrapper around the right pane, no per-pill backgrounds/borders, and properly aligned sub-screen headers (back chevron flush left, title centered, no inner card padding).
+## Issue
 
-## Findings (current state)
-1. `SettingsLayout.tsx` wraps the right pane (`<main>`) in a `rounded-3xl` card with `bg-surface-card` and shadow, plus `max-w-2xl mx-auto px-2 py-6` content constraint. Reference shows the right pane as a flat extension of the page background, no card, full width with only horizontal page padding.
-2. `SettingsPill.tsx` renders each row as a `rounded-full` pill with `surface-card` background + 1px border + helper text below. Reference rows have NO surrounding card/border, just the icon tile + label + control inline, with helper text underneath as plain muted text.
-3. `SectionHeaderCard.tsx` wraps the section header in a bordered `rounded-2xl` card. Reference uses a plain header (icon tile + title + description) with NO card chrome.
-4. Sub-screens (`OrderTypeColorsSettings`, the inline Language wrapper in `DisplaySettings.tsx`) use a circular muted back button + title in a flex row. Reference uses a borderless chevron-left button flush to the left edge with the title perfectly centered above content, no inset card around it.
+When **Display Mode = Dual**, **Primary = English**, **Secondary = Arabic**, **Scope = Both**, the UI chrome (sidebar, settings labels, buttons, etc.) renders in **Arabic** instead of English.
 
-## Proposed Changes
+## Root Cause
 
-### 1. `src/pages/SettingsLayout.tsx`
-- Remove the `rounded-3xl`, `bg-surface-card`, and `boxShadow` styling from `<main>`. Keep it as a transparent scroll container.
-- Drop `max-w-2xl mx-auto`. Reference uses full available width with consistent horizontal padding (`px-8 py-6`).
-- Outlet wrapper becomes: `<main className="flex-1 overflow-y-auto scrollbar-hide"><div className="px-8 py-6"><Outlet/></div></main>`.
+In `src/hooks/use-language.tsx` (line 2016), the UI translations object `t` is selected like this:
 
-### 2. `src/components/settings/SectionHeaderCard.tsx`
-- Remove the card wrapper styles: drop `rounded-2xl p-5 mb-5`, `background`, and `border`.
-- Replace with a plain block: `<div className="mb-6">` with the icon tile, title, and description rendered directly on the page background, matching the reference's borderless intro block.
+```ts
+t: scope === 'menu' ? translations['en-US'] : translations[language],
+```
 
-### 3. `src/components/settings/SettingsPill.tsx`
-- Remove the outer `rounded-full overflow-hidden` wrapper with `surface-card` background and border.
-- Render the row directly: `<div className="flex items-center justify-between gap-3 py-3">` with icon tile + label on left and control + chevron on right.
-- Keep the `highlighted` state as a subtle ring (e.g., a translucent rounded background) only when actively highlighted via hash, since reference has no default border but still needs deep-link feedback.
-- Helper text: change wrapper margins to `mt-1 mb-4 px-1` and keep muted color so groupings read clearly.
-- Add a thin bottom divider (`border-b border-border/40`) between rows OR rely purely on spacing, matching the reference (reference uses spacing only, no dividers — go with spacing).
+It uses the standalone `language` state (which only drives **single** mode). It ignores `displayMode` and `primaryLang` entirely.
 
-### 4. Sub-screen headers
-**`src/pages/OrderTypeColorsSettings.tsx`**
-- Remove the `relative` + `absolute` positioning hack.
-- Use a single flex row: back button flush left (small chevron-left, borderless or very subtle), title centered using `flex-1 text-center`, and a same-width spacer on the right to keep the title visually centered.
-- Drop the bulky 44x44 muted circle in favor of a borderless `ChevronLeft` icon button (still 44x44 hit area for touch, but no background fill) to match reference.
-- Container should not add extra horizontal inset beyond the page padding already provided by `SettingsLayout`.
+Meanwhile, every menu translator (`tp`, `tc`, `ta`, `to`, `tl`, `tn`, `tcat`, `tperson`, `tpSecondary`) correctly does:
 
-**`src/pages/settings/DisplaySettings.tsx` (inline Language sub-screen)**
-- Remove the inner `rounded-3xl` card wrapper around the inline Language view; use the same flat header pattern as `OrderTypeColorsSettings`.
-- Keep the `fixed top-0 right-0 left-20 bottom-[52px]` overlay shell (per persistent-nav memory) but drop the inset card so the surface matches the rest of Settings.
+```ts
+const lang = displayMode === 'dual' ? primaryLang : language;
+```
 
-## Files to Edit
-- `src/pages/SettingsLayout.tsx`
-- `src/components/settings/SectionHeaderCard.tsx`
-- `src/components/settings/SettingsPill.tsx`
-- `src/pages/OrderTypeColorsSettings.tsx`
-- `src/pages/settings/DisplaySettings.tsx`
+So in dual mode:
+- Menu items follow `primaryLang` (English) — correct
+- UI chrome (`t`) follows `language` — which was last set to Arabic when the user previously picked Arabic in single mode, or got bumped via `setLanguage` somewhere
+
+That mismatch is exactly the reported bug: items are English, but the chrome stays Arabic.
+
+## Fix
+
+Make UI chrome selection mirror the same rule the menu translators already use.
+
+**File: `src/hooks/use-language.tsx`** (line 2016)
+
+Change:
+```ts
+t: scope === 'menu' ? translations['en-US'] : translations[language],
+```
+
+To:
+```ts
+const interfaceLang = displayMode === 'dual' ? primaryLang : language;
+// ...
+t: scope === 'menu' ? translations['en-US'] : translations[interfaceLang],
+```
+
+Also expose `interfaceLang` (or compute inline) consistently so future contributors don't repeat the bug.
 
 ## Verification
-- Visit `/kds/full/settings/display`: right pane should sit flat on the page background with no card outline, rows borderless, helper text below each row, full-width layout.
-- Tap "Order Type Colors": back chevron sits flush left, title perfectly centered, no inner card chrome.
-- Tap "Language": same flat header treatment as Order Type Colors.
-- KDS left rail and bottom footer remain visible (per persistent-nav memory).
-- No regressions in dark mode (the surface variables already handle both themes).
+
+1. Settings → Language: set Display Mode = Dual, Primary = English, Secondary = Arabic, Scope = Both → sidebar, footer, settings labels render in **English**, ticket items show English + Arabic.
+2. Switch Primary to Arabic → chrome flips to Arabic immediately.
+3. Switch Display Mode back to Single (Arabic) → chrome stays Arabic (uses `language`).
+4. Existing test `Dual mode: switching primary updates the main translator` still passes; add an assertion that `result.current.t.settings` follows `primaryLang` in dual mode.
+
+## Scope
+
+Single 3-line change in `src/hooks/use-language.tsx` plus one new test assertion. No component changes required — every consumer already reads `t` from context.

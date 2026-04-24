@@ -6,8 +6,7 @@ import { KDSSidebar } from '@/components/kds/KDSSidebar';
  * Settings shell rendered inside the main KDS frame: the KDS left rail stays
  * visible so the user can jump back to Home, History, etc. without losing
  * context. The middle pane is the settings group nav, the right pane is the
- * routed settings outlet rendered flat on the page background (no card
- * chrome) to match the reference POSAI Settings layout.
+ * routed settings outlet. Forced light theme for the settings surface only.
  */
 export default function SettingsLayout() {
   const navigate = useNavigate();
@@ -52,8 +51,14 @@ export default function SettingsLayout() {
         >
           <SettingsSidebar />
         </div>
-        <main className="flex-1 overflow-y-auto scrollbar-hide">
-          <div className="px-2 py-6">
+        <main
+          className="flex-1 rounded-3xl overflow-y-auto scrollbar-hide"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
+          <div className="max-w-2xl mx-auto px-2 py-6">
             <Outlet key={location.pathname} />
           </div>
         </main>
