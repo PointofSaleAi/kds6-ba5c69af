@@ -108,6 +108,7 @@ function ItemTapRow({
   servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
+  const { tn } = useLanguage();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -292,7 +293,7 @@ function ItemTapRow({
             className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
             style={{ fontSize: 'var(--kds-modifier)' }}
           >
-            "{item.notes}"
+            "{tn(item.notes)}"
           </div>
         </div>
       )}

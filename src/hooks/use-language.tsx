@@ -754,6 +754,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'سمك أبو سيف مشوي',
     'Eggplant Parmesan': 'باذنجان بارميزان',
     'Panna Cotta': 'بانا كوتا',
+    'Truffle Pasta': 'باستا الكمأة',
+    'Roasted Vegetables': 'خضار مشوية',
+    'Espresso': 'إسبريسو',
   },
   es: {
     'Cheese Selection': 'Selección de Quesos',
@@ -794,6 +797,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'Pez Espada a la Parrilla',
     'Eggplant Parmesan': 'Berenjena a la Parmesana',
     'Panna Cotta': 'Panna Cotta',
+    'Truffle Pasta': 'Pasta de Trufa',
+    'Roasted Vegetables': 'Verduras Asadas',
+    'Espresso': 'Espresso',
     'Bruschetta': 'Bruschetta',
     'Cheesecake': 'Tarta de Queso',
     'Mango Sticky Rice': 'Arroz Glutinoso con Mango',
@@ -846,6 +852,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': '烤旗鱼',
     'Eggplant Parmesan': '帕尔马茄子',
     'Panna Cotta': '奶冻',
+    'Truffle Pasta': '松露意面',
+    'Roasted Vegetables': '烤蔬菜',
+    'Espresso': '浓缩咖啡',
   },
   vi: {
     'Cheese Selection': 'Phô Mai Tổng Hợp',
@@ -886,6 +895,9 @@ const productNames: Record<LanguageCode, Record<string, string>> = {
     'Grilled Swordfish': 'Cá Kiếm Nướng',
     'Eggplant Parmesan': 'Cà Tím Parmesan',
     'Panna Cotta': 'Panna Cotta',
+    'Truffle Pasta': 'Mì Nấm Truffle',
+    'Roasted Vegetables': 'Rau Nướng',
+    'Espresso': 'Cà Phê Espresso',
   },
 };
 
@@ -934,6 +946,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': 'بدون مايونيز',
     'No Parmesan': 'بدون بارميزان',
     'No Pickles': 'بدون مخلل',
+    'No Salt': 'بدون ملح',
+    '+ Extra Parmesan': '+ بارميزان إضافي',
   },
   es: {
     'Medium Rare': 'Medio crudo',
@@ -977,6 +991,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': 'Sin mayonesa',
     'No Parmesan': 'Sin parmesano',
     'No Pickles': 'Sin pepinillos',
+    'No Salt': 'Sin sal',
+    '+ Extra Parmesan': '+ Parmesano extra',
   },
   zh: {
     'Medium Rare': '三分熟',
@@ -1020,6 +1036,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': '不要蛋黄酱',
     'No Parmesan': '不要帕尔马干酪',
     'No Pickles': '不要泡菜',
+    'No Salt': '不要盐',
+    '+ Extra Parmesan': '+ 加帕尔马干酪',
   },
   vi: {
     'Medium Rare': 'Tái chín',
@@ -1063,6 +1081,8 @@ const modifierTexts: Record<LanguageCode, Record<string, string>> = {
     'No Mayo': 'Không mayonnaise',
     'No Parmesan': 'Không phô mai parmesan',
     'No Pickles': 'Không dưa chua',
+    'No Salt': 'Không muối',
+    '+ Extra Parmesan': '+ Thêm phô mai parmesan',
   },
 };
 
@@ -1172,29 +1192,57 @@ const orderTypeLabels: Record<LanguageCode, Record<string, string>> = {
   'en-US': {},
   'en-GB': {},
   ar: {
-    'DINE IN': 'تناول هنا',
-    'TAKE OUT': 'سفري',
-    'DELIVERY': 'توصيل',
-    'BANQUET': 'مأدبة',
+    'DINE IN': 'تناول هنا', 'TAKE OUT': 'سفري', 'DELIVERY': 'توصيل', 'BANQUET': 'مأدبة',
+    'DRIVE THRU': 'سيارة', 'CURB SIDE': 'الرصيف', 'SCHEDULED': 'مجدول', 'PHONE-IN': 'هاتف', 'CUSTOM': 'مخصص',
   },
   es: {
-    'DINE IN': 'COMER AQUÍ',
-    'TAKE OUT': 'PARA LLEVAR',
-    'DELIVERY': 'ENTREGA',
-    'BANQUET': 'BANQUETE',
+    'DINE IN': 'COMER AQUÍ', 'TAKE OUT': 'PARA LLEVAR', 'DELIVERY': 'ENTREGA', 'BANQUET': 'BANQUETE',
+    'DRIVE THRU': 'AUTO', 'CURB SIDE': 'EN LA ACERA', 'SCHEDULED': 'PROGRAMADO', 'PHONE-IN': 'TELÉFONO', 'CUSTOM': 'PERSONALIZADO',
   },
   zh: {
-    'DINE IN': '堂食',
-    'TAKE OUT': '外带',
-    'DELIVERY': '外卖',
-    'BANQUET': '宴会',
+    'DINE IN': '堂食', 'TAKE OUT': '外带', 'DELIVERY': '外卖', 'BANQUET': '宴会',
+    'DRIVE THRU': '车道', 'CURB SIDE': '路边', 'SCHEDULED': '预约', 'PHONE-IN': '电话', 'CUSTOM': '自定义',
   },
   vi: {
-    'DINE IN': 'TẠI CHỖ',
-    'TAKE OUT': 'MANG ĐI',
-    'DELIVERY': 'GIAO HÀNG',
-    'BANQUET': 'TIỆC',
+    'DINE IN': 'TẠI CHỖ', 'TAKE OUT': 'MANG ĐI', 'DELIVERY': 'GIAO HÀNG', 'BANQUET': 'TIỆC',
+    'DRIVE THRU': 'LÁI XE', 'CURB SIDE': 'LỀ ĐƯỜNG', 'SCHEDULED': 'ĐÃ ĐẶT', 'PHONE-IN': 'ĐIỆN THOẠI', 'CUSTOM': 'TÙY CHỈNH',
   },
+};
+
+// Free-form note translations (order notes, item notes). Falls back to input if missing.
+const noteTexts: Record<LanguageCode, Record<string, string>> = {
+  'en-US': {},
+  'en-GB': {},
+  ar: {
+    'Birthday dinner, please bring candle with dessert': 'عشاء عيد ميلاد، الرجاء إحضار شمعة مع الحلوى',
+    'Allergy to nuts. Please prepare food separately and notify server': 'حساسية من المكسرات. الرجاء تحضير الطعام بشكل منفصل وإبلاغ النادل',
+    'Make it extra spicy please': 'الرجاء جعله حارا إضافيا',
+  },
+  es: {
+    'Birthday dinner, please bring candle with dessert': 'Cena de cumpleaños, traer una vela con el postre',
+    'Allergy to nuts. Please prepare food separately and notify server': 'Alergia a los frutos secos. Preparar la comida por separado y avisar al mesero',
+    'Make it extra spicy please': 'Por favor que sea extra picante',
+  },
+  zh: {
+    'Birthday dinner, please bring candle with dessert': '生日晚餐,请在甜点上插蜡烛',
+    'Allergy to nuts. Please prepare food separately and notify server': '坚果过敏。请单独准备食物并通知服务员',
+    'Make it extra spicy please': '请做得特别辣',
+  },
+  vi: {
+    'Birthday dinner, please bring candle with dessert': 'Tiệc sinh nhật, vui lòng mang nến cùng tráng miệng',
+    'Allergy to nuts. Please prepare food separately and notify server': 'Dị ứng với hạt. Chuẩn bị riêng và báo cho phục vụ',
+    'Make it extra spicy please': 'Vui lòng làm cay hơn',
+  },
+};
+
+// Token-level labels embedded in mock data (TABLE 7, "ago", "Queued", etc.)
+const embeddedLabels: Record<LanguageCode, Record<string, string>> = {
+  'en-US': {},
+  'en-GB': {},
+  ar: { 'TABLE': 'طاولة', 'BAR': 'بار', 'ago': 'مضت', 'Queued': 'في الانتظار', 'Auto-fires': 'تشغيل تلقائي', 'in': 'خلال', 'min': 'د', 'Pickup': 'استلام' },
+  es: { 'TABLE': 'MESA', 'BAR': 'BARRA', 'ago': 'atrás', 'Queued': 'En cola', 'Auto-fires': 'Auto', 'in': 'en', 'min': 'min', 'Pickup': 'Recoger' },
+  zh: { 'TABLE': '桌号', 'BAR': '吧台', 'ago': '前', 'Queued': '排队中', 'Auto-fires': '自动开始', 'in': '在', 'min': '分', 'Pickup': '自取' },
+  vi: { 'TABLE': 'BÀN', 'BAR': 'QUẦY', 'ago': 'trước', 'Queued': 'Đang chờ', 'Auto-fires': 'Tự động', 'in': 'trong', 'min': 'phút', 'Pickup': 'Lấy' },
 };
 
 const languageNames: Record<LanguageCode, string> = {
@@ -1247,6 +1295,8 @@ interface LanguageContextType {
   tc: (course: string) => string;
   ta: (label: string) => string;
   to: (label: string) => string;
+  tn: (text: string) => string;
+  tl: (label: string) => string;
   languageName: string;
   languageFlag: string;
   displayMode: DisplayMode;
@@ -1280,6 +1330,8 @@ const defaultLanguageContext: LanguageContextType = {
   tc: (course: string) => course,
   ta: (label: string) => label,
   to: (label: string) => label,
+  tn: (text: string) => text,
+  tl: (label: string) => label,
   languageName: languageNames['en-US'],
   languageFlag: languageFlags['en-US'],
   displayMode: 'dual',
@@ -1411,6 +1463,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return dict[label] || dict[label.toUpperCase()] || label;
   }, [language, displayMode, primaryLang, scope]);
 
+  const tn = useCallback((text: string) => {
+    if (!text) return text;
+    if (scope === 'interface') return text;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    return noteTexts[lang]?.[text] || text;
+  }, [language, displayMode, primaryLang, scope]);
+
+  const tl = useCallback((label: string) => {
+    if (!label) return label;
+    if (scope === 'interface') return label;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const dict = embeddedLabels[lang] || {};
+    return dict[label] || dict[label.toUpperCase()] || dict[label.toLowerCase()] || label;
+  }, [language, displayMode, primaryLang, scope]);
 
   const showSecondaryMenu = scope !== 'interface';
 
@@ -1423,6 +1489,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     tc,
     ta,
     to,
+    tn,
+    tl,
     languageName: languageNames[language],
     languageFlag: languageFlags[language],
     displayMode,
