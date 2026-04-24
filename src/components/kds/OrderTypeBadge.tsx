@@ -84,7 +84,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
               borderRadius: '4px',
             }}
           >
-            {t.recalled.toString().toUpperCase().split(' ')[0] === 'RECALLED' ? 'RECALLED' : t.recalled.toUpperCase()}
+            {tl('RECALLED')}
           </span>
         )}
       </div>
