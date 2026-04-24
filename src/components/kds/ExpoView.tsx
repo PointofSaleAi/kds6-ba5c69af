@@ -173,21 +173,40 @@ function ExpoItemRow({
     </span>
   );
 
+  // Indented column matches FlatItemList exactly: invisible "0x" placeholder of width 2.25ch + 4px gap
+  const indentPlaceholder = (
+    <span
+      className="invisible shrink-0 font-normal"
+      aria-hidden="true"
+      style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
+    >
+      0x
+    </span>
+  );
+
   const modifierRow = expoModifiers.length > 0 ? (
-    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
-      {indentPlaceholder}
-      <div className="flex flex-wrap items-center" style={{ gap: '4px', rowGap: '2px' }}>
-        {expoModifiers
-          .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
-          .map((m, idx) => (
-            <span
-              key={idx}
-              className={`text-[12px] font-medium leading-tight ${m.kind === 'remove' ? 'text-destructive' : 'text-success'}`}
-            >
-              {m.text}
-            </span>
-          ))}
-      </div>
+    <div style={{ marginTop: '1px', display: 'flex', flexDirection: 'column', gap: '0px' }}>
+      {expoModifiers
+        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+        .map((m, idx) => {
+          const colorClass =
+            m.kind === 'remove' ? 'text-modifier-remove'
+            : m.kind === 'extra' ? 'text-modifier-extra'
+            : 'text-modifier-neutral';
+          return (
+            <div key={idx} className="flex items-start" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: '2.25ch', display: 'inline-block' }}>
+                0x
+              </span>
+              <span
+                className={`min-w-0 font-semibold ${colorClass}`}
+                style={{ fontSize: 'var(--kds-modifier)', lineHeight: '0.9', display: 'inline-block' }}
+              >
+                {m.text}
+              </span>
+            </div>
+          );
+        })}
     </div>
   ) : null;
 
