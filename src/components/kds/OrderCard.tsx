@@ -68,7 +68,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
   const { ticketHeaderLayout, ticketLayout } = useKDSSettings();
-  const isCompactLayout = layoutOverride ? layoutOverride === 'compact' : ticketLayout === 'compact';
+  const resolvedTicketLayout: 'standard' | 'compact' = layoutOverride ?? ticketLayout;
+  const isCompactLayout = resolvedTicketLayout === 'compact';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
@@ -621,7 +622,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [isDineIn, displayCourses, courseLifecycleMap]);
 
-  if (compact) {
+  if (compact || resolvedTicketLayout === 'compact') {
     return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
   }
 
