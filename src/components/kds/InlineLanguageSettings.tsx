@@ -79,7 +79,6 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
     currency, setCurrency,
     tempUnit, setTempUnit,
     weekStart, setWeekStart,
-    ticketLayout,
   } = useKDSSettings();
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
