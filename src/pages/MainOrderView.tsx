@@ -767,7 +767,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   {viewMode === 'horizontal' && (
                     <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
-                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[280px]">
+                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
                           <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
                         </motion.div>
                       ))}
