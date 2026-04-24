@@ -24,7 +24,10 @@ export default function DisplaySettings() {
     ticketLayout, setTicketLayout,
     ticketHeaderLayout, setTicketHeaderLayout,
   } = useKDSSettings();
-  const { languageName } = useLanguage();
+  const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
+  const languageDisplay = displayMode === 'dual'
+    ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
+    : languageName;
   const { showBadge, setShowBadge } = useBadgeVisibility();
   const { mode, setMode } = useKDSMode();
   const [statusOpen, setStatusOpen] = useState(false);
