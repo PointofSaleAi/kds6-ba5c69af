@@ -293,25 +293,28 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           Live Ticket Preview
         </label>
         <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-          {/* Order type header */}
-          <div className="px-3 py-1.5 flex items-center justify-between" style={{ backgroundColor: '#1A1A2E' }}>
-            <span className="text-[10px] font-bold uppercase text-white">DINE IN</span>
-            <span className="text-[10px] font-mono text-white/70">12:34 PM</span>
+          {/* Order type header: table name + clock time */}
+          <div className="px-4 py-2.5 flex items-center justify-between" style={{ backgroundColor: '#1A1A2E' }}>
+            <span className="text-base font-extrabold uppercase text-white tracking-wide">TABLE 7</span>
+            <span className="text-sm font-mono font-bold text-white">12:34 PM</span>
           </div>
-          {/* Order number section - status color */}
-          <div className="px-3 pt-1.5 pb-1" style={{ backgroundColor: rule.color, color: textColor }}>
-            <div className="text-2xl font-black leading-none">#1042</div>
-            <div className="flex items-center justify-between mt-0.5">
-              <span className="font-mono text-xs font-bold opacity-90">
+          {/* Order number section - status color (large left, server+timer right) */}
+          <div className="px-4 py-3 flex items-start justify-between" style={{ backgroundColor: rule.color, color: textColor }}>
+            <div className="text-5xl font-black leading-none tracking-tight">42</div>
+            <div className="flex flex-col items-end gap-1 text-right">
+              <span className="text-sm font-semibold opacity-95">Sarah K</span>
+              <span className="font-mono text-base font-bold opacity-95">
                 {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
               </span>
-              <span className="text-[10px] opacity-80">Sarah K</span>
             </div>
           </div>
           {/* Ticket body */}
-          <div className="bg-surface-card px-3 py-2">
-            <div className="text-xs font-semibold text-text-primary">Chicken Burger x2</div>
-            <div className="text-[11px] text-text-muted mt-0.5">+ Extra cheese, No onion</div>
+          <div className="bg-surface-card px-4 py-2.5">
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm font-bold text-text-muted">2x</span>
+              <span className="text-sm font-bold uppercase text-text-primary tracking-wide">Chicken Burger</span>
+            </div>
+            <div className="text-xs text-text-muted mt-1 ml-7">+ Extra cheese, No onion</div>
           </div>
         </div>
       </div>
