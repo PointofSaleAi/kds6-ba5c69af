@@ -46,11 +46,9 @@ export default function HardwareSettings() {
         icon={Tag}
         iconColor="#0A84FF"
         label="Label Printer"
-        helper={labelEnabled
-          ? (label.printerId ? `Connected to ${label.printerName}` : 'Enabled but no printer assigned.')
-          : 'Disabled. Enable to print per-item labels.'}
-        right={<SwitchToggle checked={labelEnabled} onChange={setLabelEnabled} />}
-        onClick={labelEnabled ? () => openPrinter('label') : undefined}
+        helper={label.printerId ? `Connected to ${label.printerName}` : 'No printer assigned. Tap to pair one.'}
+        right={<ValueText>{label.printerId ? label.printerName : 'Not set'}</ValueText>}
+        onClick={() => openPrinter('label')}
         highlighted={hash === 'label-printer'}
       />
 
