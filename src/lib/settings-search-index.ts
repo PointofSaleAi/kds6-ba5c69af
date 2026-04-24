@@ -1,4 +1,4 @@
-export type SettingsGroupId = 'display' | 'orders' | 'expo' | 'hardware' | 'account';
+export type SettingsGroupId = 'display' | 'orders' | 'hardware' | 'account';
 
 export interface SettingsSearchEntry {
   id: string;
