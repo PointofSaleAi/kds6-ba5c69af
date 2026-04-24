@@ -1,6 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import type { StatusRule } from '@/hooks/use-status-rules';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
+
+type PreviewOrderType = 'dine-in' | 'take-out' | 'delivery' | 'banquet';
+
+const PREVIEW_TYPES: { key: PreviewOrderType; label: string; title: string; trailing?: string }[] = [
+  { key: 'dine-in', label: 'Dine In', title: 'TABLE 4', trailing: undefined },
+  { key: 'take-out', label: 'Take Out', title: 'TAKE OUT', trailing: '#1042' },
+  { key: 'delivery', label: 'Delivery', title: 'DELIVERY', trailing: '#D-207' },
+  { key: 'banquet', label: 'Banquet', title: 'HALL B', trailing: undefined },
+];
 
 
 interface AgingEditPanelProps {
@@ -197,6 +207,8 @@ function WheelPopover({ value, min, max, onChange }: { value: number; min: numbe
 
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
   const [customHex, setCustomHex] = useState('');
+  const [previewType, setPreviewType] = useState<PreviewOrderType>('dine-in');
+  const { orderTypeColors } = useKDSSettings();
   const contrast = getContrastRatio(rule.color, rule.textColor);
   const textColor = resolveTextColor(rule.textColor);
 
