@@ -177,9 +177,11 @@ function ItemTapRow({
           ) : (
             <span
               aria-hidden="true"
-              className="shrink-0"
+              className="shrink-0 flex items-center justify-center"
               style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
-            />
+            >
+              <ChevronRight size={12} className="text-text-muted/60" />
+            </span>
           )
         )}
         <div className="flex-1 min-w-0">
