@@ -82,7 +82,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
           <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
             <AnimatePresence mode="popLayout">
               {unseenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[280px]">
+                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
                   <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
                 </motion.div>
               ))}
