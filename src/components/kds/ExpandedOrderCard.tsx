@@ -157,8 +157,6 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                               {item.isCompleted && !item.isCancelled && (
                                 <span className="text-success text-sm">&#10003;</span>
                               )}
-                                </span>
-                              )}
                             </div>
 
                             {item.allergens.length > 0 && (
