@@ -83,7 +83,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
   } = useKDSSettings();
   const [search, setSearch] = useState('');
   const [dateFormat, setDateFormat] = useState<DateFormatIndex>(savedDateFormat);
-  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>(ticketLayout);
+  const [previewLayout, setPreviewLayout] = useState<'standard' | 'compact'>('standard');
   const [timeFormat, setTimeFormat] = useState<TimeFormatIndex>(savedTimeFormat);
   
   const [currOpen, setCurrOpen] = useState(false);
