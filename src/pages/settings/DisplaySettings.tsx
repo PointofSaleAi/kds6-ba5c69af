@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Monitor, Type, Rows3, Palette, Globe,
-  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
+  Paintbrush, Bell, IdCard, SlidersHorizontal, ChevronLeft,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -43,29 +43,26 @@ export default function DisplaySettings() {
   if (languageOpen) {
     return (
       <div
-        className="fixed top-0 right-0 left-20 z-30 flex flex-col p-4"
+        className="fixed top-0 right-0 left-20 z-30 flex flex-col px-2 py-6"
         style={{ background: 'hsl(var(--surface-bg))', bottom: '52px' }}
       >
-        <div
-          className="flex-1 min-h-0 rounded-3xl overflow-hidden flex flex-col"
-          style={{
-            background: 'hsl(var(--surface-card))',
-            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
-          }}
-        >
-          <div className="flex items-center gap-3 px-6 py-4 shrink-0">
-            <button
-              onClick={() => setLanguageOpen(false)}
-              className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
-              aria-label="Back"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <h1 className="text-2xl font-bold">Language</h1>
-          </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
-            <InlineLanguageSettings activeTab="language" />
-          </div>
+        <div className="flex items-center gap-2 py-2 mb-4 shrink-0">
+          <button
+            onClick={() => setLanguageOpen(false)}
+            className="w-11 h-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors shrink-0"
+            aria-label="Back"
+          >
+            <ChevronLeft className="w-6 h-6" style={{ color: 'hsl(var(--text-primary))' }} />
+          </button>
+          <h1
+            className="flex-1 text-2xl font-bold text-center pr-11"
+            style={{ color: 'hsl(var(--text-primary))' }}
+          >
+            Language
+          </h1>
+        </div>
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <InlineLanguageSettings activeTab="language" />
         </div>
       </div>
     );

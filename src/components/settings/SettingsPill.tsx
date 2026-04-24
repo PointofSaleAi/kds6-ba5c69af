@@ -13,9 +13,10 @@ interface SettingsPillProps {
 }
 
 /**
- * Rounded pill row with a colored icon tile, label, optional right-side
+ * Borderless settings row: colored icon tile, label, optional right-side
  * control (segmented toggle, switch, value), and chevron when clickable.
- * Helper text is rendered below the pill via the parent.
+ * Helper text renders below the row. Highlighted state (deep-link target)
+ * shows a soft rounded background + ring instead of a permanent border.
  */
 export function SettingsPill({
   icon,
@@ -29,17 +30,12 @@ export function SettingsPill({
   const interactive = Boolean(onClick);
 
   return (
-    <div className="mb-1.5">
+    <div className="mb-3">
       <div
-        className="rounded-full overflow-hidden transition-all"
+        className="rounded-2xl transition-all"
         style={{
-          background: 'hsl(var(--surface-card))',
-          border: highlighted
-            ? '1.5px solid hsl(var(--btn-seen))'
-            : '1px solid hsl(var(--border))',
-          boxShadow: highlighted
-            ? '0 0 0 4px hsl(var(--btn-seen) / 0.12)'
-            : 'none',
+          background: highlighted ? 'hsl(var(--btn-seen) / 0.08)' : 'transparent',
+          boxShadow: highlighted ? '0 0 0 2px hsl(var(--btn-seen) / 0.35)' : 'none',
         }}
       >
         <div
@@ -56,7 +52,7 @@ export function SettingsPill({
                 }
               : undefined
           }
-          className={`w-full flex items-center justify-between gap-3 py-3 px-4 ${
+          className={`w-full flex items-center justify-between gap-3 py-2.5 ${
             interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
         >
@@ -82,7 +78,7 @@ export function SettingsPill({
       </div>
       {helper && (
         <p
-          className="text-xs px-2 mb-3 mt-0.5"
+          className="text-xs mt-1 mb-1"
           style={{ color: 'hsl(var(--text-muted))' }}
         >
           {helper}
