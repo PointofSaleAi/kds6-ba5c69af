@@ -1808,6 +1808,8 @@ interface LanguageContextType {
   to: (label: string) => string;
   tn: (text: string) => string;
   tl: (label: string) => string;
+  tperson: (name: string) => string;
+  tcat: (category: string) => string;
   languageName: string;
   languageFlag: string;
   displayMode: DisplayMode;
