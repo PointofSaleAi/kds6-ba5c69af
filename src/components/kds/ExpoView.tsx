@@ -212,68 +212,24 @@ function ExpoItemRow({
     </span>
   ) : null;
 
-  const simpleSendButton = (
-    <button
-      onClick={(e) => { e.stopPropagation(); onItemSend?.(ticket.id, item.id, remainingQty); }}
-      className="shrink-0 ml-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
-      style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
-      aria-label="Send item"
-    >
-      <img src={runnerIconSrc} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
-    </button>
-  );
-
-  const partialSendControl = (
-    <div
-      className="shrink-0 ml-1.5 flex items-center gap-1"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <button
-        onClick={() => setSendQty(q => Math.max(1, q - 1))}
-        disabled={sendQty <= 1}
-        className="w-6 h-6 min-w-[28px] min-h-[28px] rounded bg-muted flex items-center justify-center disabled:opacity-30"
-        aria-label="Decrease quantity to send"
-      >
-        <Minus size={12} />
-      </button>
-      <span
-        className="min-w-[18px] text-center text-[12px] font-mono font-semibold text-text-primary tabular-nums"
-        aria-label="Quantity to send"
-      >
-        {sendQty}
-      </span>
-      <button
-        onClick={() => setSendQty(q => Math.min(remainingQty, q + 1))}
-        disabled={sendQty >= remainingQty}
-        className="w-6 h-6 min-w-[28px] min-h-[28px] rounded bg-muted flex items-center justify-center disabled:opacity-30"
-        aria-label="Increase quantity to send"
-      >
-        <Plus size={12} />
-      </button>
-      <button
-        onClick={() => onItemSend?.(ticket.id, item.id, sendQty)}
-        className="ml-1 flex items-center justify-center rounded-full active:scale-90 transition-transform duration-150"
-        style={{ width: 26, height: 26, minWidth: 34, minHeight: 33, backgroundColor: '#16A34A' }}
-        aria-label={`Send ${sendQty} of ${remainingQty}`}
-      >
-        <img src={runnerIconSrc} alt="" className="w-3.5 h-3.5 brightness-0 invert" />
-      </button>
-    </div>
-  );
-
-  // Outer row with Home-style dense spacing + bottom divider (except last)
-  const outerClass = `-mx-2 px-2 ${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${isDemo ? 'cursor-pointer' : ''}`;
+  // Outer row with Home-style dense spacing + bottom divider (except last).
+  // Tap-to-send pattern: when prepared, tapping the row sends the item out.
+  const isTapToSend = isPrepared && remainingQty > 0;
+  const outerClass = `-mx-2 px-2 ${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
 
   return (
     <div
       className={outerClass}
       style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
+      role={isTapToSend ? 'button' : undefined}
+      aria-label={isTapToSend ? `Send ${tp(item.name)}` : undefined}
       onClick={() => {
         if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
         if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
+        if (isTapToSend) onItemSend?.(ticket.id, item.id, remainingQty);
       }}
     >
-      <div className="flex items-start justify-between" style={{ gap: '4px' }}>
+      <div className="flex items-start" style={{ gap: '4px' }}>
         <div className="flex-1 min-w-0">
           <div className="flex items-start flex-wrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
@@ -290,13 +246,13 @@ function ExpoItemRow({
             </span>
             {toGoBadge}
             {stationChip}
-            <span className="text-text-muted text-[10px] self-center">&middot;</span>
-            <span className="self-center">{statusIcon}</span>
+            {isPrepared && (
+              <span className="self-center inline-flex items-center" aria-label="Ready">
+                <Check className="w-3.5 h-3.5 text-success" strokeWidth={3} />
+              </span>
+            )}
           </div>
         </div>
-        {isPrepared
-          ? (showQtySelector ? partialSendControl : simpleSendButton)
-          : (showSendAlways && simpleSendButton)}
       </div>
       {modifierRow}
       {allergenRow}
