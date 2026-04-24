@@ -265,11 +265,9 @@ function ExpoItemRow({
             </span>
             {toGoBadge}
             {stationChip}
-            {isPrepared && (
-              <span className="self-center inline-flex items-center" aria-label="Ready">
-                <Check className="w-3.5 h-3.5 text-success" strokeWidth={3} />
-              </span>
-            )}
+            <span className="self-center inline-flex items-center" aria-label={`Status: ${item.status}`}>
+              {statusIcon}
+            </span>
           </div>
         </div>
       </div>
