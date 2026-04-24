@@ -1,56 +1,72 @@
-## Issue
+## Goal
+Make `HistoryOrderCard` rows visually match the Home screen's `OrderCard` (via `CourseSection` / `FlatItemList`): tighter course header padding, dividers between products, and no gap between the allergen strip and the first course header on dine-in tickets.
 
-When **Display Mode = Dual**, **Primary = English**, **Secondary = Arabic**, **Scope = Both**, the UI chrome (sidebar, settings labels, buttons, etc.) renders in **Arabic** instead of English.
+## Files to edit
+- `src/components/kds/HistoryOrderCard.tsx` (only)
 
-## Root Cause
+## Reference (Home card patterns to mirror)
+- Course header: `padding: '2px 8px'` with `bg-muted` (no `mt-1`) — see `CourseSection.tsx` L322–323.
+- Item rows wrapper: `px-1` (see `CourseSection.tsx` L358).
+- Each item row: bottom border `border-b border-border/50` except the last visible row; `paddingTop: 2px`, `paddingBottom: 2px` (`6px` on last) — see `FlatItemList.tsx` L147–155.
 
-In `src/hooks/use-language.tsx` (line 2016), the UI translations object `t` is selected like this:
+## Changes in `HistoryOrderCard.tsx`
 
-```ts
-t: scope === 'menu' ? translations['en-US'] : translations[language],
+### 1. Course header — remove top margin, use Home spacing
+Replace the dine-in course header:
+```
+<div className="flex items-center justify-between bg-muted px-3 py-1.5 mt-1">
+  <span className="text-section-label uppercase text-text-muted tracking-widest">
+    {tl(courseGroup.course)}
+  </span>
+</div>
+```
+with the tighter Home style (no `mt-1`, `padding: 2px 8px`):
+```
+<div
+  className="flex items-center justify-between bg-muted"
+  style={{ padding: '2px 8px' }}
+>
+  <span
+    className="uppercase text-text-primary tracking-wider"
+    style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
+  >
+    {tl(courseGroup.course)}
+  </span>
+</div>
+```
+This (a) removes the gap between the bottom horizontal line / allergen strip and the APPETIZER header (request #3) and (b) tightens the top space above the course label (request #1).
+
+### 2. Items wrapper — reduce vertical padding
+Change the items container from `px-3 py-1` to `px-1` (matching `CourseSection`) for both the dine-in (coursed) and non-coursed branches, so item rows hug the course header.
+
+### 3. `HistoryItemRow` — add per-row divider + Home spacing (requests #1 & #2)
+Update the row to:
+- Accept `isLast: boolean` prop from the parent map (compute `idx === items.length - 1`).
+- Apply `-mx-1 px-1` so the divider spans the inner padding edge (matches Home's `-mx-2 px-2`).
+- Add `border-b border-border/50` when `!isLast`.
+- Use inline `paddingTop: 2px` and `paddingBottom: isLast ? 6px : 2px` (matches `FlatItemList.tsx` L150–154).
+- Keep existing tap-to-recall handlers and strikethrough styling.
+
+Resulting wrapper (replacing the current `className="flex items-start gap-2 py-0.5 ..."`):
+```
+<div
+  role={...} tabIndex={...} onClick={...} onKeyDown={...}
+  className={`-mx-1 px-1 ${isLast ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${interactive ? 'cursor-pointer active:bg-muted/40 hover:bg-muted/30' : ''}`}
+  style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
+>
+  <div className="flex items-start gap-2">
+    {/* existing inner content: quantity + name + allergens + modifiers */}
+  </div>
+</div>
 ```
 
-It uses the standalone `language` state (which only drives **single** mode). It ignores `displayMode` and `primaryLang` entirely.
+Pass `isLast` from both call sites:
+- Dine-in: `courseGroup.items.map((item, idx, arr) => <HistoryItemRow ... isLast={idx === arr.length - 1} />)`
+- Non-coursed: `allItems.map((item, idx, arr) => <HistoryItemRow ... isLast={idx === arr.length - 1} />)`
 
-Meanwhile, every menu translator (`tp`, `tc`, `ta`, `to`, `tl`, `tn`, `tcat`, `tperson`, `tpSecondary`) correctly does:
+## What this delivers
+1. ✅ Tighter top/bottom space between the course label (e.g. APPETIZER) and the first product name — course header is now `2px 8px` with `px-1` items wrapper instead of `py-1.5` + `py-1`.
+2. ✅ Horizontal divider between each product row, matching Home's `border-b border-border/50` with the same row padding.
+3. ✅ Dine-in tickets: the `mt-1` gap between the allergen strip's bottom border and the APPETIZER section is removed, so the section starts flush against the divider — same as Home.
 
-```ts
-const lang = displayMode === 'dual' ? primaryLang : language;
-```
-
-So in dual mode:
-- Menu items follow `primaryLang` (English) — correct
-- UI chrome (`t`) follows `language` — which was last set to Arabic when the user previously picked Arabic in single mode, or got bumped via `setLanguage` somewhere
-
-That mismatch is exactly the reported bug: items are English, but the chrome stays Arabic.
-
-## Fix
-
-Make UI chrome selection mirror the same rule the menu translators already use.
-
-**File: `src/hooks/use-language.tsx`** (line 2016)
-
-Change:
-```ts
-t: scope === 'menu' ? translations['en-US'] : translations[language],
-```
-
-To:
-```ts
-const interfaceLang = displayMode === 'dual' ? primaryLang : language;
-// ...
-t: scope === 'menu' ? translations['en-US'] : translations[interfaceLang],
-```
-
-Also expose `interfaceLang` (or compute inline) consistently so future contributors don't repeat the bug.
-
-## Verification
-
-1. Settings → Language: set Display Mode = Dual, Primary = English, Secondary = Arabic, Scope = Both → sidebar, footer, settings labels render in **English**, ticket items show English + Arabic.
-2. Switch Primary to Arabic → chrome flips to Arabic immediately.
-3. Switch Display Mode back to Single (Arabic) → chrome stays Arabic (uses `language`).
-4. Existing test `Dual mode: switching primary updates the main translator` still passes; add an assertion that `result.current.t.settings` follows `primaryLang` in dual mode.
-
-## Scope
-
-Single 3-line change in `src/hooks/use-language.tsx` plus one new test assertion. No component changes required — every consumer already reads `t` from context.
+No changes to interaction (tap-to-recall on row & header), translation handling, layout-mode logic, or any other component.

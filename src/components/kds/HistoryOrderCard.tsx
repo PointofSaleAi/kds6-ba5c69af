@@ -18,6 +18,14 @@ interface HistoryOrderCardProps {
   onRecallItem?: (orderId: string, item: OrderItem) => void;
 }
 
+interface HistoryItemRowProps {
+  item: OrderItem;
+  orderId: string;
+  isLast: boolean;
+  onRecallItem?: (orderId: string, item: OrderItem) => void;
+  tp: (s: string) => string;
+}
+
 function formatDuration(seconds: number): string {
   const min = Math.round(seconds / 60);
   return `${min} min total`;
@@ -37,12 +45,7 @@ const DINE_IN_TYPES = new Set(['dine-in']);
  * Matches the Home screen item row spacing (`py-0.5`, `text-item-name`)
  * and supports the same allergen/modifier stack.
  */
-function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
-  item: OrderItem;
-  orderId: string;
-  onRecallItem?: (orderId: string, item: OrderItem) => void;
-  tp: (s: string) => string;
-}) {
+function HistoryItemRow({ item, orderId, isLast, onRecallItem, tp }: HistoryItemRowProps) {
   const [recalled, setRecalled] = useState(false);
   const interactive = !!onRecallItem && !item.isCancelled && !recalled;
 
@@ -65,37 +68,42 @@ function HistoryItemRow({ item, orderId, onRecallItem, tp }: {
           handleRecall();
         }
       }}
-      className={`flex items-start gap-2 py-0.5 select-none transition-colors ${
-        item.isCancelled ? 'opacity-50' : ''
-      } ${interactive ? 'cursor-pointer active:bg-muted/40 hover:bg-muted/30 rounded' : ''}`}
+      className={`-mx-1 px-1 select-none transition-colors ${
+        isLast ? '' : 'border-b border-border/50'
+      } ${item.isCancelled ? 'opacity-50' : ''} ${
+        interactive ? 'cursor-pointer active:bg-muted/40 hover:bg-muted/30' : ''
+      }`}
+      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
     >
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span
-            className={`text-item-name ${
-              recalled
-                ? 'text-text-primary'
-                : 'line-through text-text-muted'
-            } ${item.isCancelled ? 'text-text-muted' : ''}`}
-          >
-            {item.quantity}&times; {tp(item.name)}
-          </span>
-          {item.isCancelled && (
-            <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
-              CANCELLED
+      <div className="flex items-start gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-item-name ${
+                recalled
+                  ? 'text-text-primary'
+                  : 'line-through text-text-muted'
+              } ${item.isCancelled ? 'text-text-muted' : ''}`}
+            >
+              {item.quantity}&times; {tp(item.name)}
             </span>
-          )}
-        </div>
-        {item.allergens.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1 pl-5">
-            {item.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} />
-            ))}
+            {item.isCancelled && (
+              <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
+                CANCELLED
+              </span>
+            )}
           </div>
-        )}
-        {item.modifiers.map((mod, idx) => (
-          <ModifierLine key={idx} modifier={mod} />
-        ))}
+          {item.allergens.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1 pl-5">
+              {item.allergens.map((a) => (
+                <AllergenBadge key={a.type} allergen={a} />
+              ))}
+            </div>
+          )}
+          {item.modifiers.map((mod, idx) => (
+            <ModifierLine key={idx} modifier={mod} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -296,22 +304,42 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
         {showCourses ? (
           order.courses.map((courseGroup) => (
             <div key={courseGroup.course}>
-              <div className="flex items-center justify-between bg-muted px-3 py-1.5 mt-1">
-                <span className="text-section-label uppercase text-text-muted tracking-widest">
+              <div
+                className="flex items-center justify-between bg-muted"
+                style={{ padding: '2px 8px' }}
+              >
+                <span
+                  className="uppercase text-text-primary tracking-wider"
+                  style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
+                >
                   {tl(courseGroup.course)}
                 </span>
               </div>
-              <div className="px-3 py-1">
-                {courseGroup.items.map((item) => (
-                  <HistoryItemRow key={item.id} item={item} orderId={order.id} onRecallItem={onRecallItem} tp={tp} />
+              <div className="px-1">
+                {courseGroup.items.map((item, idx, arr) => (
+                  <HistoryItemRow
+                    key={item.id}
+                    item={item}
+                    orderId={order.id}
+                    isLast={idx === arr.length - 1}
+                    onRecallItem={onRecallItem}
+                    tp={tp}
+                  />
                 ))}
               </div>
             </div>
           ))
         ) : (
-          <div className="px-3 py-1">
-            {allItems.map((item) => (
-              <HistoryItemRow key={item.id} item={item} orderId={order.id} onRecallItem={onRecallItem} tp={tp} />
+          <div className="px-1">
+            {allItems.map((item, idx, arr) => (
+              <HistoryItemRow
+                key={item.id}
+                item={item}
+                orderId={order.id}
+                isLast={idx === arr.length - 1}
+                onRecallItem={onRecallItem}
+                tp={tp}
+              />
             ))}
           </div>
         )}
