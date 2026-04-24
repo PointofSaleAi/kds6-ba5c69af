@@ -33,7 +33,34 @@ export default function DisplaySettings() {
   const hash = useHashHighlight();
 
   if (statusOpen) {
-    return <StatusSettings onBack={() => setStatusOpen(false)} />;
+    return (
+      <div
+        className="fixed top-0 right-0 left-20 z-30 flex flex-col p-4"
+        style={{ background: 'hsl(var(--surface-bg))', bottom: '52px' }}
+      >
+        <div
+          className="flex-1 min-h-0 rounded-3xl overflow-hidden flex flex-col"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
+          <div className="flex items-center gap-3 px-6 py-4 shrink-0">
+            <button
+              onClick={() => setStatusOpen(false)}
+              className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              aria-label="Back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-2xl font-bold">Ticket Aging Rules</h1>
+          </div>
+          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
+            <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (orderTypeColorsOpen) {

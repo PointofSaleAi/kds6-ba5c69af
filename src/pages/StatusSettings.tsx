@@ -6,6 +6,7 @@ import AgingEditPanel from '@/components/kds/AgingEditPanel';
 
 interface StatusSettingsProps {
   onBack: () => void;
+  hideHeader?: boolean;
 }
 
 function validateRules(rules: StatusRule[]): Map<string, string[]> {
