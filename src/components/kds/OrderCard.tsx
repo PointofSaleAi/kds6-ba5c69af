@@ -622,7 +622,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [isDineIn, displayCourses, courseLifecycleMap]);
 
-  if (compact || resolvedTicketLayout === 'compact') {
+  if (compact) {
     return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
   }
 
