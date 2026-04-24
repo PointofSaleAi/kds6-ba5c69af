@@ -204,21 +204,6 @@ function ItemTapRow({
                 CANCELLED
               </span>
             )}
-            {item.isRecalled && !item.isCancelled && (
-              <span
-                className="uppercase tracking-wide"
-                style={{
-                  backgroundColor: '#E24B4A',
-                  color: '#FFFFFF',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  padding: '2px 8px',
-                  borderRadius: '4px',
-                }}
-              >
-                RECALLED
-              </span>
-            )}
             {isSeen && timestamps?.seenAt && (
               <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
