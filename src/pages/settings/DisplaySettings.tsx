@@ -125,56 +125,66 @@ export default function DisplaySettings() {
           </button>
           <h1 className="text-2xl font-bold text-text-primary">Ticket Spacing</h1>
         </div>
-        <div className="flex-1 px-6 pb-6 overflow-y-auto space-y-4">
-          <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
-            Controls padding and row gap inside each ticket card.
-          </p>
+        <div className="flex-1 px-6 pb-6 overflow-hidden">
+          <div className="h-full flex gap-6 min-h-0">
+            {/* LEFT: options */}
+            <div className="w-[320px] shrink-0 flex flex-col gap-4 overflow-y-auto">
+              <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
+                Controls padding and row gap inside each ticket card.
+              </p>
+              <div className="grid gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
+                    Ticket Spacing
+                  </span>
+                  <SegmentedToggle
+                    options={['Compact', 'Standard', 'Spacious']}
+                    value={ticketSpacing}
+                    onChange={(v) => setTicketSpacing(v as 'Compact' | 'Standard' | 'Spacious')}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
+                    Text size
+                  </span>
+                  <SegmentedToggle
+                    options={['Compact', 'Standard', 'Large']}
+                    value={textSize}
+                    onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
+                    Ticket layout
+                  </span>
+                  <SegmentedToggle
+                    options={['Standard', 'Compact']}
+                    value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
+                    onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
+                  />
+                </div>
+              </div>
+            </div>
 
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
-                Ticket Spacing
-              </span>
-              <SegmentedToggle
-                options={['Compact', 'Standard', 'Spacious']}
-                value={ticketSpacing}
-                onChange={(v) => setTicketSpacing(v as 'Compact' | 'Standard' | 'Spacious')}
-              />
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
-                Text size
-              </span>
-              <SegmentedToggle
-                options={['Compact', 'Standard', 'Large']}
-                value={textSize}
-                onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')}
-              />
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
-                Ticket layout
-              </span>
-              <SegmentedToggle
-                options={['Standard', 'Compact']}
-                value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
-                onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
-              />
-            </div>
-          </div>
+            {/* DIVIDER */}
+            <div className="w-px bg-border shrink-0" />
 
-          <div>
-            <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
-              Preview
-            </p>
-            <div
-              className={`mx-auto w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}
-              style={{
-                ['--kds-card-padding' as never]: spacingTokens.cardPadding,
-                ['--kds-item-gap' as never]: spacingTokens.itemGap,
-              }}
-            >
-              <OrderCard order={previewTicket} layoutOverride={ticketLayout} />
+            {/* RIGHT: preview */}
+            <div className="flex-1 min-w-0 flex flex-col">
+              <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
+                Preview
+              </p>
+              <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
+                <div
+                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}
+                  style={{
+                    ['--kds-card-padding' as never]: spacingTokens.cardPadding,
+                    ['--kds-item-gap' as never]: spacingTokens.itemGap,
+                  }}
+                >
+                  <OrderCard order={previewTicket} layoutOverride={ticketLayout} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
