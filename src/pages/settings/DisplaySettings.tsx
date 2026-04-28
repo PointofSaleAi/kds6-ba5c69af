@@ -110,6 +110,95 @@ export default function DisplaySettings() {
     );
   }
 
+  if (ticketSpacingOpen) {
+    return (
+      <div
+        className="fixed top-0 right-0 left-20 z-30 flex flex-col p-4"
+        style={{ background: 'hsl(var(--surface-bg))', bottom: '52px' }}
+      >
+        <div
+          className="flex-1 min-h-0 rounded-3xl overflow-hidden flex flex-col"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
+          <div className="relative flex items-center justify-center px-6 py-4 shrink-0">
+            <button
+              onClick={() => setTicketSpacingOpen(false)}
+              className="absolute left-6 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              aria-label="Back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-2xl font-bold">Ticket Spacing</h1>
+          </div>
+          <div className="flex-1 min-h-0 overflow-auto px-6 pb-6 space-y-4">
+            <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
+              Controls padding and row gap inside each ticket card.
+            </p>
+            <div className="flex justify-center">
+              <SegmentedToggle
+                options={['Compact', 'Standard', 'Spacious']}
+                value={ticketSpacing}
+                onChange={(v) => setTicketSpacing(v as 'Compact' | 'Standard' | 'Spacious')}
+              />
+            </div>
+            <div>
+              <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
+                Preview
+              </p>
+              <div
+                className="rounded-2xl overflow-hidden max-w-md mx-auto"
+                style={{
+                  background: 'hsl(var(--surface-card))',
+                  border: '1px solid hsl(var(--border))',
+                }}
+              >
+                <div
+                  className="px-3 py-1.5 flex items-center justify-between text-[11px] font-bold tracking-wide"
+                  style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--text-secondary))' }}
+                >
+                  <span>ENTREE</span>
+                  <span>ACTIVE</span>
+                </div>
+                <div className="px-3 py-2" style={{ display: 'flex', flexDirection: 'column', gap: spacingTokens.rowGap }}>
+                  {[
+                    { qty: 2, name: 'RIBEYE STEAK', mod: '+ Peppercorn Sauce' },
+                    { qty: 1, name: 'SEA BASS' },
+                    { qty: 1, name: 'CHICKEN CAESAR WRAP' },
+                  ].map((it, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        padding: spacingTokens.itemPadding,
+                        borderTop: i === 0 ? 'none' : '1px solid hsl(var(--border))',
+                      }}
+                    >
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-[13px] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
+                          {it.qty}x
+                        </span>
+                        <span className="text-[14px] font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
+                          {it.name}
+                        </span>
+                      </div>
+                      {it.mod && (
+                        <div className="text-[12px] font-medium pl-6 mt-0.5" style={{ color: '#2471A3' }}>
+                          {it.mod}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <SectionHeaderCard
