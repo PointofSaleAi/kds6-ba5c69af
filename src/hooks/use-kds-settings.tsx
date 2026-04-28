@@ -7,6 +7,7 @@ export type WeekStart = 'Sunday' | 'Monday';
 export type TicketHeaderLayout = 'kitchen' | 'guest';
 export type ExpoSendButtonMode = 'always' | 'when-ready';
 export type TicketLayout = 'standard' | 'compact';
+export type TicketSpacing = 'Compact' | 'Standard' | 'Spacious';
 
 export type OrderTypeColors = Record<string, string>;
 
