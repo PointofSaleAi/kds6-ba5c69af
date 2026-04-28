@@ -198,6 +198,9 @@ export default function DisplaySettings() {
           </div>
         </div>
       </div>
+
+      <SettingsPill
+        icon={Rows3}
         iconColor="#7C3AED"
         label="Ticket layout"
         helper={ticketLayout === 'compact' ? 'Compact, item names only, tap to expand details.' : 'Standard, full details and modifiers always visible.'}
