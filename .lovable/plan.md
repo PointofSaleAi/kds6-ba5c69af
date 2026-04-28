@@ -1,37 +1,63 @@
-## Problem
+## Goal
 
-In portrait orientation, the footer shows three view-mode toggles (Grid, Horizontal, Stagger), but tapping Horizontal or Stagger has no visible effect. The portrait branch in `MainOrderView.tsx` (lines 833-845) hardcodes a 2-column CSS grid and ignores `viewMode` entirely. The screenshot shows the user selecting Stagger with no layout change.
+Today the home-screen ticket cards use spacing tokens that come from the text-size scale. Treat that current density as the new "Compact" baseline and add two new spacing levels (Standard, Spacious) that the Display > Ticket Spacing screen drives live.
 
-## Fix
+## How spacing works today
 
-In `src/pages/MainOrderView.tsx`, replace the portrait-only branch so it routes to the same Stagger and Horizontal renderers used in landscape, with portrait-tuned column counts. Default (Grid) keeps the current 2-column layout.
+`src/index.css` defines `--kds-card-padding` and `--kds-item-gap` inside the text-scale rules:
 
-### Behavior per mode in portrait
+```text
+:root (Standard text)         card-padding 12px  item-gap 6px
+.text-scale-compact            card-padding  8px  item-gap 4px
+.text-scale-large              card-padding 18px  item-gap 10px
+```
 
-- **Grid** (default): 2-column grid (unchanged).
-- **Stagger**: 2 stacked columns using `staggerOrderColumns`, distributed via the existing `distributeIntoColumns` helper. Portrait forces column count to 2 regardless of `cardsPerRow` setting so cards stay legible.
-- **Horizontal**: horizontal-scrolling row of cards with a fixed card width tuned for narrow viewports (about 240px wide), reusing the landscape horizontal renderer's structure.
+These two tokens are consumed by `OrderCard` and friends. The text-size class is applied by `MainOrderView.tsx` line 717 on the board wrapper.
 
-Same change applied to the History panel (lines 758-792) so Stagger/Horizontal also work for History in portrait.
+User intent: the spacing that ships on the home screen right now equals "Compact" in the new Ticket Spacing setting. Standard adds breathing room, Spacious adds more.
 
-### Implementation notes
+## Changes
 
-1. Compute `portraitStaggerColumns = useMemo(() => distributeIntoColumns(filteredOrders, 2), [filteredOrders])` and the same for history.
-2. Restructure the portrait branch (line 833) into a `switch (viewMode)` with three cases, mirroring the landscape JSX (lines 846-895) but with:
-   - Grid case: existing `grid-cols-2` block.
-   - Stagger case: same flex/column JSX as landscape, using `portraitStaggerColumns`.
-   - Horizontal case: same overflow-x-auto flex row as landscape, with `min-w-[240px]` per card wrapper.
-3. Keep AnimatePresence + motion wrappers and `getStationDisplayOrder` exactly as in the landscape branches so animations and station filtering stay consistent.
-4. No changes to `BottomStatusBar` (toggles already render correctly in portrait) or `use-portrait` hook.
-5. Update memory `mem://ui/portrait-orientation-layout` to note that all three view modes are now supported in portrait, with Stagger locked to 2 columns.
+### 1. Persist Ticket Spacing (`src/hooks/use-kds-settings.tsx`)
 
-### Files touched
+- Add type `TicketSpacing = 'Compact' | 'Standard' | 'Spacious'`
+- Add `ticketSpacing` to `KDSSettings` and `setTicketSpacing` setter
+- Default value: `'Compact'` (matches current home-screen density)
+- Persists via existing `localStorage` writer
 
-- `src/pages/MainOrderView.tsx` (portrait branch for orders + history)
-- `mem://ui/portrait-orientation-layout` (memory update)
+### 2. Decouple spacing from text scale (`src/index.css`)
 
-### Out of scope
+Remove `--kds-card-padding` and `--kds-item-gap` from the three text-scale rule blocks (`:root`, `.text-scale-compact`, `.text-scale-large`) so text size only controls type. Add three dedicated spacing classes:
 
-- No changes to landscape behavior.
-- No changes to Expo or Prep board renderers (they already handle their own layouts).
-- `cardsPerRow` setting is intentionally ignored in portrait Stagger to prevent overcrowding on narrow screens.
+```text
+.ticket-spacing-compact   card-padding  8px   item-gap  4px
+.ticket-spacing-standard  card-padding 12px   item-gap  8px
+.ticket-spacing-spacious  card-padding 18px   item-gap 12px
+```
+
+Compact reuses today's tight values so the home screen looks unchanged on first load.
+
+### 3. Apply spacing class in the board wrapper (`src/pages/MainOrderView.tsx`)
+
+- Read `ticketSpacing` from `useKDSSettings`
+- On the wrapper at line 717, append the matching `ticket-spacing-*` class alongside the existing `text-scale-*` class
+- Apply the same class on the History panel wrapper (mirrored branch a few lines above) so spacing is consistent there too
+
+### 4. Wire the Display > Ticket Spacing sub-screen (`src/pages/settings/DisplaySettings.tsx`)
+
+- Replace the local `useState` for `ticketSpacing` with the value+setter from `useKDSSettings`
+- Remove the local `spacingTokens` map and the inline `--kds-card-padding` / `--kds-item-gap` style overrides on the preview wrapper
+- Apply the matching `ticket-spacing-*` class on the preview wrapper instead, so the preview uses the same tokens the home screen uses
+
+### 5. Memory
+
+Update `mem://style/legibility` (or add `mem://style/ticket-spacing`) to record:
+- Spacing is now an independent setting from Text Size
+- Tokens: Compact 8/4, Standard 12/8, Spacious 18/12
+- Default is Compact to preserve existing density
+
+## Out of scope
+
+- No new UI on the main Display list (the row already exists and opens the sub-screen)
+- No changes to the Compact/Standard ticket-layout setting (different control)
+- No changes to OrderCard internals; it already consumes the two CSS variables
