@@ -41,9 +41,9 @@ export default function DisplaySettings() {
   const hash = useHashHighlight();
 
   const spacingTokens = {
-    Compact: { itemPadding: '6px 0', rowGap: '4px' },
-    Standard: { itemPadding: '10px 0', rowGap: '8px' },
-    Spacious: { itemPadding: '16px 0', rowGap: '14px' },
+    Compact: { cardPadding: '6px', itemGap: '2px' },
+    Standard: { cardPadding: '12px', itemGap: '6px' },
+    Spacious: { cardPadding: '18px', itemGap: '12px' },
   }[ticketSpacing];
 
   if (statusOpen) {
