@@ -149,8 +149,8 @@ function ItemTapRow({
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{ 
         backgroundColor: rowBg,
-        paddingTop: 'var(--kds-row-py, 2px)',
-        paddingBottom: isLastVisible ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)',
+        paddingTop: 'var(--kds-row-py, 4px)',
+        paddingBottom: 'var(--kds-row-py, 4px)',
       }}
     >
       <div
@@ -220,7 +220,7 @@ function ItemTapRow({
             <div
               dir="ltr"
               className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
-              style={{ gap: '4px', marginTop: '1px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
+              style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
             >
               <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block', lineHeight: 1 }}>
                 <span className="invisible" aria-hidden="true">0x</span>
@@ -235,7 +235,7 @@ function ItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
+            <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
                 0x
               </span>
@@ -252,7 +252,7 @@ function ItemTapRow({
       {showDetails && item.modifiers.length > 0 && (
         <div
           className={isDone ? 'line-through' : ''}
-          style={{ marginTop: '1px', display: 'flex', flexDirection: 'column', gap: '0px', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}
+          style={{ marginTop: 'var(--kds-child-gap, 1px)', display: 'flex', flexDirection: 'column', gap: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}
         >
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
@@ -270,7 +270,7 @@ function ItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
             0x
           </span>
