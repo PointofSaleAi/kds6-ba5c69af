@@ -586,7 +586,7 @@ function CourseItemTapRow({
               className={`relative flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
               style={{
                 gap: '4px',
-                marginTop: '1px',
+                marginTop: 'var(--kds-child-gap, 1px)',
                 marginBottom: '0px',
                 fontSize: 'var(--kds-modifier)',
                 lineHeight: '1',
@@ -605,7 +605,7 @@ function CourseItemTapRow({
           )}
 
           {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
+            <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', lineHeight: 1 }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
                 0x
               </span>
@@ -622,7 +622,7 @@ function CourseItemTapRow({
       {showDetails && item.modifiers.length > 0 && (
         <div
           className={isDone ? 'line-through' : ''}
-          style={{ marginTop: '1px', display: 'flex', flexDirection: 'column', gap: '0px', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}
+          style={{ marginTop: 'var(--kds-child-gap, 1px)', display: 'flex', flexDirection: 'column', gap: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}
         >
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
@@ -640,7 +640,7 @@ function CourseItemTapRow({
       )}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
             0x
           </span>
