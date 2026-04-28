@@ -26,6 +26,7 @@ export default function DisplaySettings() {
     textSize, setTextSize,
     ticketLayout, setTicketLayout,
     ticketHeaderLayout, setTicketHeaderLayout,
+    ticketSpacing, setTicketSpacing,
   } = useKDSSettings();
   const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
   const languageDisplay = displayMode === 'dual'
@@ -37,14 +38,14 @@ export default function DisplaySettings() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
-  const [ticketSpacing, setTicketSpacing] = useState<'Compact' | 'Standard' | 'Spacious'>('Standard');
   const hash = useHashHighlight();
 
-  const spacingTokens = {
-    Compact: { cardPadding: '6px', itemGap: '2px' },
-    Standard: { cardPadding: '12px', itemGap: '6px' },
-    Spacious: { cardPadding: '18px', itemGap: '12px' },
-  }[ticketSpacing];
+  const spacingClass =
+    ticketSpacing === 'Standard'
+      ? 'ticket-spacing-standard'
+      : ticketSpacing === 'Spacious'
+        ? 'ticket-spacing-spacious'
+        : 'ticket-spacing-compact';
 
   if (statusOpen) {
     return (
