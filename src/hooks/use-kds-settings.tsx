@@ -79,6 +79,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketHeaderLayout: (v: TicketHeaderLayout) => void;
   setExpoSendButtonMode: (v: ExpoSendButtonMode) => void;
   setTicketLayout: (v: TicketLayout) => void;
+  setTicketSpacing: (v: TicketSpacing) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings-v2';
