@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import restaurantLogo from '@/assets/icons/restaurant-logo.png';
-import versionIcon from '@/assets/version-icon.png';
+import versionIcon from '@/assets/version-icon.svg';
 
 const APP_VERSION = '4.10.2';
 
