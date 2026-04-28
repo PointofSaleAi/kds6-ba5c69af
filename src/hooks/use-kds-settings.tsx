@@ -60,6 +60,7 @@ export interface KDSSettings {
   ticketHeaderLayout: TicketHeaderLayout;
   expoSendButtonMode: ExpoSendButtonMode;
   ticketLayout: TicketLayout;
+  ticketSpacing: TicketSpacing;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
