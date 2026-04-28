@@ -144,6 +144,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTicketHeaderLayout: update('ticketHeaderLayout'),
         setExpoSendButtonMode: update('expoSendButtonMode'),
         setTicketLayout: update('ticketLayout'),
+        setTicketSpacing: update('ticketSpacing'),
       }}
     >
       {children}
