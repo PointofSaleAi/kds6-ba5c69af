@@ -12,7 +12,7 @@ export function SegmentedToggle({
 }) {
   return (
     <div
-      className="flex rounded-full p-0.5"
+      className="flex w-full rounded-full p-0.5"
       style={{ background: 'hsl(var(--muted))' }}
     >
       {options.map((opt) => {
@@ -22,7 +22,7 @@ export function SegmentedToggle({
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className="px-3 py-1.5 text-xs font-semibold rounded-full transition-colors"
+            className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center"
             style={{
               background: active ? 'hsl(var(--brand-primary))' : 'transparent',
               color: active ? 'hsl(var(--brand-primary-foreground))' : 'hsl(var(--text-secondary))',
