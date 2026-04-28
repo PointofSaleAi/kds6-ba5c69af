@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
+import { OrderCard } from '@/components/kds/OrderCard';
+import { previewTicket } from '@/data/mock-preview-ticket';
 import {
   SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
 } from '@/components/settings/SettingsControls';
