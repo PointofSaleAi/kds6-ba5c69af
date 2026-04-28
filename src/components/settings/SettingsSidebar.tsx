@@ -136,12 +136,6 @@ export function SettingsSidebar() {
             style={{ color: 'hsl(var(--text-primary))' }}
           />
         </div>
-        <div
-          className="pt-2 text-[11px] text-center"
-          style={{ color: 'hsl(var(--text-muted))' }}
-        >
-          POSAI KDS v2.4.1
-        </div>
       </div>
     </aside>
   );
