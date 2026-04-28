@@ -1,63 +1,70 @@
-## Goal
+## Problem
 
-Today the home-screen ticket cards use spacing tokens that come from the text-size scale. Treat that current density as the new "Compact" baseline and add two new spacing levels (Standard, Spacious) that the Display > Ticket Spacing screen drives live.
+Ticket Spacing toggles (Compact / Standard / Spacious) update the CSS variables `--kds-card-padding` and `--kds-item-gap`, but **no component actually reads those variables**. Item rows in `CourseSection.tsx` and `FlatItemList.tsx` use hardcoded `paddingTop: '2px'` / `paddingBottom: '2px'` and hardcoded gap values, so changing the setting has zero visible effect on either the preview or the home-screen tickets.
 
-## How spacing works today
+## Fix
 
-`src/index.css` defines `--kds-card-padding` and `--kds-item-gap` inside the text-scale rules:
+Make item rows consume the spacing variables, then map the three modes to meaningful values that visibly change row density (the most noticeable spacing in a ticket).
 
-```text
-:root (Standard text)         card-padding 12px  item-gap 6px
-.text-scale-compact            card-padding  8px  item-gap 4px
-.text-scale-large              card-padding 18px  item-gap 10px
+### 1. `src/index.css` — redefine spacing tokens to row-padding semantics
+
+Replace the existing `.ticket-spacing-*` blocks so each mode sets a row vertical padding token used by item rows. Keep card padding the same so card chrome doesn't shift dramatically.
+
+```css
+:root {
+  --kds-row-py: 2px;        /* row vertical padding (Compact default) */
+  --kds-item-gap: 4px;      /* gap between course/item blocks */
+  --kds-card-padding: 8px;  /* outer card body padding */
+}
+
+.ticket-spacing-compact  { --kds-row-py: 2px; --kds-item-gap: 4px;  --kds-card-padding: 8px;  }
+.ticket-spacing-standard { --kds-row-py: 6px; --kds-item-gap: 8px;  --kds-card-padding: 10px; }
+.ticket-spacing-spacious { --kds-row-py: 12px; --kds-item-gap: 14px; --kds-card-padding: 12px; }
 ```
 
-These two tokens are consumed by `OrderCard` and friends. The text-size class is applied by `MainOrderView.tsx` line 717 on the board wrapper.
+### 2. `src/components/kds/CourseSection.tsx` — consume `--kds-row-py`
 
-User intent: the spacing that ships on the home screen right now equals "Compact" in the new Ticket Spacing setting. Standard adds breathing room, Spacious adds more.
+In the item-row wrapper around line 502–505 replace the hardcoded `paddingTop: '2px'` / `paddingBottom: isLastVisible ? '6px' : '2px'` with:
 
-## Changes
-
-### 1. Persist Ticket Spacing (`src/hooks/use-kds-settings.tsx`)
-
-- Add type `TicketSpacing = 'Compact' | 'Standard' | 'Spacious'`
-- Add `ticketSpacing` to `KDSSettings` and `setTicketSpacing` setter
-- Default value: `'Compact'` (matches current home-screen density)
-- Persists via existing `localStorage` writer
-
-### 2. Decouple spacing from text scale (`src/index.css`)
-
-Remove `--kds-card-padding` and `--kds-item-gap` from the three text-scale rule blocks (`:root`, `.text-scale-compact`, `.text-scale-large`) so text size only controls type. Add three dedicated spacing classes:
-
-```text
-.ticket-spacing-compact   card-padding  8px   item-gap  4px
-.ticket-spacing-standard  card-padding 12px   item-gap  8px
-.ticket-spacing-spacious  card-padding 18px   item-gap 12px
+```ts
+paddingTop: 'var(--kds-row-py)',
+paddingBottom: isLastVisible ? 'calc(var(--kds-row-py) + 4px)' : 'var(--kds-row-py)',
 ```
 
-Compact reuses today's tight values so the home screen looks unchanged on first load.
+### 3. `src/components/kds/FlatItemList.tsx` — same change at lines 152–153
 
-### 3. Apply spacing class in the board wrapper (`src/pages/MainOrderView.tsx`)
+```ts
+paddingTop: 'var(--kds-row-py)',
+paddingBottom: isLastVisible ? 'calc(var(--kds-row-py) + 4px)' : 'var(--kds-row-py)',
+```
 
-- Read `ticketSpacing` from `useKDSSettings`
-- On the wrapper at line 717, append the matching `ticket-spacing-*` class alongside the existing `text-scale-*` class
-- Apply the same class on the History panel wrapper (mirrored branch a few lines above) so spacing is consistent there too
+### 4. `src/components/kds/OrderCard.tsx` — apply card body padding from the var
 
-### 4. Wire the Display > Ticket Spacing sub-screen (`src/pages/settings/DisplaySettings.tsx`)
+Line 674 currently hardcodes `padding: '12px'` on a card region. Change to:
 
-- Replace the local `useState` for `ticketSpacing` with the value+setter from `useKDSSettings`
-- Remove the local `spacingTokens` map and the inline `--kds-card-padding` / `--kds-item-gap` style overrides on the preview wrapper
-- Apply the matching `ticket-spacing-*` class on the preview wrapper instead, so the preview uses the same tokens the home screen uses
+```ts
+padding: 'var(--kds-card-padding)',
+```
 
-### 5. Memory
+(Only that header/body block — leave the small icon row paddings alone so they don't bloat.)
 
-Update `mem://style/legibility` (or add `mem://style/ticket-spacing`) to record:
-- Spacing is now an independent setting from Text Size
-- Tokens: Compact 8/4, Standard 12/8, Spacious 18/12
-- Default is Compact to preserve existing density
+### 5. Verify the wrapper is in place
 
-## Out of scope
+`MainOrderView.tsx` already wraps the board in `ticket-spacing-{compact|standard|spacious}` and `DisplaySettings.tsx` already wraps the preview the same way. No change needed there.
 
-- No new UI on the main Display list (the row already exists and opens the sub-screen)
-- No changes to the Compact/Standard ticket-layout setting (different control)
-- No changes to OrderCard internals; it already consumes the two CSS variables
+### 6. Update memory
+
+Update `mem://style/ticket-spacing` to clarify the three modes change **row vertical padding** (primary visual effect), with a small bump to card body padding. Keep "Default Compact" rule.
+
+## Files to edit
+- `src/index.css`
+- `src/components/kds/CourseSection.tsx`
+- `src/components/kds/FlatItemList.tsx`
+- `src/components/kds/OrderCard.tsx`
+- `mem://style/ticket-spacing`
+
+## Result
+- Compact: today's dense look (unchanged).
+- Standard: noticeably airier rows (~6px top/bottom per row).
+- Spacious: clearly roomy rows (~12px top/bottom), good for line cooks reading from distance.
+- Both the settings preview and the live KDS home screen reflect the change instantly.
