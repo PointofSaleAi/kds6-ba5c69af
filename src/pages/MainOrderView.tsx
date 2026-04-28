@@ -706,7 +706,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
               }}
             >
-              <div className="max-w-2xl mx-auto px-6 py-6">
+              <div className="w-full px-6 py-6">
                 <Outlet />
               </div>
             </main>
