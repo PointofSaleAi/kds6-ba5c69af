@@ -57,7 +57,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
