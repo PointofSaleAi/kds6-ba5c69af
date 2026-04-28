@@ -284,6 +284,7 @@
   /* Spacing tokens default to Compact (matches historical density) */
   --kds-card-padding: 8px;
   --kds-item-gap: 4px;
+  --kds-row-py: 2px;
 }
 
 .text-scale-compact {
@@ -320,14 +321,17 @@
 .ticket-spacing-compact {
   --kds-card-padding: 8px;
   --kds-item-gap: 4px;
+  --kds-row-py: 2px;
 }
 .ticket-spacing-standard {
-  --kds-card-padding: 12px;
+  --kds-card-padding: 10px;
   --kds-item-gap: 8px;
+  --kds-row-py: 6px;
 }
 .ticket-spacing-spacious {
-  --kds-card-padding: 18px;
-  --kds-item-gap: 12px;
+  --kds-card-padding: 12px;
+  --kds-item-gap: 14px;
+  --kds-row-py: 12px;
 }
 
 .scrollbar-hide {
