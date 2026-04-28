@@ -177,11 +177,7 @@ export default function DisplaySettings() {
               </p>
               <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
                 <div
-                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''}`}
-                  style={{
-                    ['--kds-card-padding' as never]: spacingTokens.cardPadding,
-                    ['--kds-item-gap' as never]: spacingTokens.itemGap,
-                  }}
+                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass}`}
                 >
                   <OrderCard order={previewTicket} layoutOverride={ticketLayout} />
                 </div>
