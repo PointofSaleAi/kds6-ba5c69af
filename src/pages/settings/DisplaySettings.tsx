@@ -34,7 +34,14 @@ export default function DisplaySettings() {
   const [statusOpen, setStatusOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
+  const [ticketSpacing, setTicketSpacing] = useState<'Compact' | 'Standard' | 'Spacious'>('Standard');
   const hash = useHashHighlight();
+
+  const spacingTokens = {
+    Compact: { itemPadding: '6px 0', rowGap: '4px' },
+    Standard: { itemPadding: '10px 0', rowGap: '8px' },
+    Spacious: { itemPadding: '16px 0', rowGap: '14px' },
+  }[ticketSpacing];
 
   if (statusOpen) {
     return (
