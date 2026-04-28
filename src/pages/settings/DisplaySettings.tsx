@@ -116,7 +116,7 @@ export default function DisplaySettings() {
   if (ticketSpacingOpen) {
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="relative flex items-center justify-center px-6 pt-0 pb-4 shrink-0">
+        <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
           <button
             onClick={() => setTicketSpacingOpen(false)}
             className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
