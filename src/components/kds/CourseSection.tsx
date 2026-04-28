@@ -502,8 +502,8 @@ function CourseItemTapRow({
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
         ...(isHighlighted ? { backgroundColor: 'rgba(29, 158, 117, 0.10)' } : stateBg ? { backgroundColor: stateBg } : {}),
-        paddingTop: 'var(--kds-row-py, 2px)',
-        paddingBottom: isLastVisible ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)',
+        paddingTop: 'var(--kds-row-py, 4px)',
+        paddingBottom: 'var(--kds-row-py, 4px)',
       }}
     >
       <div

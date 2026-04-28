@@ -149,8 +149,8 @@ function ItemTapRow({
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{ 
         backgroundColor: rowBg,
-        paddingTop: 'var(--kds-row-py, 2px)',
-        paddingBottom: isLastVisible ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)',
+        paddingTop: 'var(--kds-row-py, 4px)',
+        paddingBottom: 'var(--kds-row-py, 4px)',
       }}
     >
       <div
