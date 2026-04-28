@@ -279,10 +279,11 @@
   --kds-allergen-px: 6px;
   --kds-eye-icon: 32px;
   --kds-eye-inner: 16px;
-  --kds-card-padding: 12px;
-  --kds-item-gap: 6px;
   --kds-summary-text: 13px;
   --kds-cta: 13px;
+  /* Spacing tokens default to Compact (matches historical density) */
+  --kds-card-padding: 8px;
+  --kds-item-gap: 4px;
 }
 
 .text-scale-compact {
@@ -296,8 +297,6 @@
   --kds-allergen-px: 5px;
   --kds-eye-icon: 26px;
   --kds-eye-inner: 13px;
-  --kds-card-padding: 8px;
-  --kds-item-gap: 4px;
   --kds-summary-text: 11px;
   --kds-cta: 12px;
 }
@@ -313,10 +312,22 @@
   --kds-allergen-px: 8px;
   --kds-eye-icon: 40px;
   --kds-eye-inner: 20px;
-  --kds-card-padding: 18px;
-  --kds-item-gap: 10px;
   --kds-summary-text: 15px;
   --kds-cta: 14px;
+}
+
+/* KDS ticket spacing scale (independent from text size) */
+.ticket-spacing-compact {
+  --kds-card-padding: 8px;
+  --kds-item-gap: 4px;
+}
+.ticket-spacing-standard {
+  --kds-card-padding: 12px;
+  --kds-item-gap: 8px;
+}
+.ticket-spacing-spacious {
+  --kds-card-padding: 18px;
+  --kds-item-gap: 12px;
 }
 
 .scrollbar-hide {
