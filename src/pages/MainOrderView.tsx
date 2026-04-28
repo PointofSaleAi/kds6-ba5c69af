@@ -187,12 +187,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [settingsOpen]);
 
   const staggerColumnCount = useMemo(() => {
+    // Portrait orientation locks Stagger to 2 columns so cards stay legible on narrow tablets.
+    if (isPortrait) return 2;
     if (boardContentWidth <= 0) return 4;
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
     return 5;
-  }, [boardContentWidth]);
+  }, [boardContentWidth, isPortrait]);
 
   // Move served orders to history immediately
   useEffect(() => {
