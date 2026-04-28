@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
+  StretchVertical,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -33,7 +34,14 @@ export default function DisplaySettings() {
   const [statusOpen, setStatusOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
+  const [ticketSpacing, setTicketSpacing] = useState<'Compact' | 'Standard' | 'Spacious'>('Standard');
   const hash = useHashHighlight();
+
+  const spacingTokens = {
+    Compact: { itemPadding: '6px 0', rowGap: '4px' },
+    Standard: { itemPadding: '10px 0', rowGap: '8px' },
+    Spacious: { itemPadding: '16px 0', rowGap: '14px' },
+  }[ticketSpacing];
 
   if (statusOpen) {
     return (
@@ -119,6 +127,77 @@ export default function DisplaySettings() {
         right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')} />}
         highlighted={hash === 'text-size'}
       />
+
+      <SettingsPill
+        icon={StretchVertical}
+        iconColor="#0E7460"
+        label="Ticket Spacing"
+        helper="Controls padding and row gap inside each ticket card."
+        right={
+          <SegmentedToggle
+            options={['Compact', 'Standard', 'Spacious']}
+            value={ticketSpacing}
+            onChange={(v) => setTicketSpacing(v as 'Compact' | 'Standard' | 'Spacious')}
+          />
+        }
+        highlighted={hash === 'ticket-spacing'}
+      />
+
+      <div className="mb-3 -mt-1">
+        <p
+          className="text-xs px-2 mb-1.5"
+          style={{ color: 'hsl(var(--text-muted))' }}
+        >
+          Preview
+        </p>
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            border: '1px solid hsl(var(--border))',
+          }}
+        >
+          <div
+            className="px-3 py-1.5 flex items-center justify-between text-[11px] font-bold tracking-wide"
+            style={{
+              background: 'hsl(var(--muted))',
+              color: 'hsl(var(--text-secondary))',
+            }}
+          >
+            <span>ENTREE</span>
+            <span>ACTIVE</span>
+          </div>
+          <div className="px-3 py-2" style={{ display: 'flex', flexDirection: 'column', gap: spacingTokens.rowGap }}>
+            {[
+              { qty: 2, name: 'RIBEYE STEAK', mod: '+ Peppercorn Sauce' },
+              { qty: 1, name: 'SEA BASS' },
+              { qty: 1, name: 'CHICKEN CAESAR WRAP' },
+            ].map((it, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: spacingTokens.itemPadding,
+                  borderTop: i === 0 ? 'none' : '1px solid hsl(var(--border))',
+                }}
+              >
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[13px] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
+                    {it.qty}x
+                  </span>
+                  <span className="text-[14px] font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
+                    {it.name}
+                  </span>
+                </div>
+                {it.mod && (
+                  <div className="text-[12px] font-medium pl-6 mt-0.5" style={{ color: '#2471A3' }}>
+                    {it.mod}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <SettingsPill
         icon={Rows3}
