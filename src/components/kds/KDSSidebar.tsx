@@ -14,9 +14,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import restaurantLogo from '@/assets/icons/restaurant-logo.png';
-import versionIcon from '@/assets/version-icon.svg';
 
-const APP_VERSION = '4.10.2';
+
 
 interface SidebarItem {
   icon: React.ElementType;
@@ -135,28 +134,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             )}
           </Tooltip>
 
-          {/* Version logo + version number */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
-                className={`flex ${expanded ? 'flex-row items-center justify-start px-3 gap-2' : 'flex-col items-center justify-center gap-0.5'} shrink-0 pt-1 pb-1 rounded-xl`}
-              >
-                <img
-                  src={versionIcon}
-                  alt="POSAI"
-                  className={`${expanded ? 'w-8 h-8' : 'w-9 h-9'} object-contain shrink-0`}
-                />
-                <span className="text-sidebar-foreground/70 text-[9px] font-semibold tracking-wide whitespace-nowrap">
-                  v{APP_VERSION}
-                </span>
-              </div>
-            </TooltipTrigger>
-            {!expanded && (
-              <TooltipContent side="right" className="text-xs">
-                POSAI v{APP_VERSION}
-              </TooltipContent>
-            )}
-          </Tooltip>
         </div>
       </div>
     </TooltipProvider>
