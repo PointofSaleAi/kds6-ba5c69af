@@ -3,6 +3,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { ChevronRight, ChevronLeft, ChevronDown, AlertTriangle } from 'lucide-react';
+import { DockDragHandle } from './DockDragHandle';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { Order, ProductCategory, StationName } from '@/types/kds';
 import { courseAgingElapsed, isCourseActive } from '@/lib/kds-aging';
@@ -219,6 +220,12 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
       {/* Header */}
       <div className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5 min-w-0">
+          <DockDragHandle
+            panel="summaryPanel"
+            orientation="vertical"
+            ariaLabel="Drag to dock summary panel"
+            className="text-sidebar-foreground shrink-0"
+          />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">{t.summaryHeader}</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>

@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
+import { DockDragHandle } from './DockDragHandle';
 
 
 export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
@@ -88,7 +89,13 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   ];
 
   return (
-    <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10">
+    <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10 gap-2">
+      <DockDragHandle
+        panel="bottomBar"
+        orientation="horizontal"
+        ariaLabel="Drag to dock status bar"
+        className="text-primary-foreground"
+      />
       {/* Order count */}
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-primary-foreground font-bold">

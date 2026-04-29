@@ -15,6 +15,8 @@ import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
 import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
 import { NotificationsProvider } from "@/hooks/use-notifications";
+import { DockLayoutProvider } from "@/hooks/use-dock-layout";
+import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import Index from "./pages/Index.tsx";
@@ -45,33 +47,37 @@ const App = () => (
       <PortraitProvider>
       <KitchenMessagesProvider>
       <NotificationsProvider>
+      <DockLayoutProvider>
       <TooltipProvider>
-        <NotificationToastStack />
-        <NotificationStationSync />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navigate to="/kds/full" replace />} />
-            <Route path="/kds/full" element={<Index />} />
+        <DockDragLayer>
+          <NotificationToastStack />
+          <NotificationStationSync />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Navigate to="/kds/full" replace />} />
+              <Route path="/kds/full" element={<Index />} />
 
-            {/* Settings render inside the main KDS shell so the left rail
-                and bottom status bar stay visible. */}
-            <Route path="/kds/full/settings" element={<Index />}>
-              <Route index element={<Navigate to="display" replace />} />
-              <Route path="display" element={<DisplaySettings />} />
-              <Route path="orders" element={<OrdersSettings />} />
-              <Route path="expo" element={<ExpoSettings />} />
-              <Route path="hardware" element={<HardwareSettings />} />
-              <Route path="account" element={<AccountSettings />} />
-            </Route>
+              {/* Settings render inside the main KDS shell so the left rail
+                  and bottom status bar stay visible. */}
+              <Route path="/kds/full/settings" element={<Index />}>
+                <Route index element={<Navigate to="display" replace />} />
+                <Route path="display" element={<DisplaySettings />} />
+                <Route path="orders" element={<OrdersSettings />} />
+                <Route path="expo" element={<ExpoSettings />} />
+                <Route path="hardware" element={<HardwareSettings />} />
+                <Route path="account" element={<AccountSettings />} />
+              </Route>
 
-            <Route path="/kds-reply" element={<KdsReplyPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              <Route path="/kds-reply" element={<KdsReplyPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </DockDragLayer>
       </TooltipProvider>
+      </DockLayoutProvider>
       </NotificationsProvider>
       </KitchenMessagesProvider>
       </PortraitProvider>

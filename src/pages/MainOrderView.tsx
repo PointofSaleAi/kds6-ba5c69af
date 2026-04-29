@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { Megaphone } from 'lucide-react';
+import { useDockLayout } from '@/hooks/use-dock-layout';
 import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 
@@ -60,6 +61,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
+  const { layout: dockLayout } = useDockLayout();
   const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -655,7 +657,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-surface-bg">
+    <div className={`fixed inset-0 flex bg-surface-bg ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}>
       {/* Kitchen message flash notification */}
       <AnimatePresence>
         {messageFlash && (
@@ -677,20 +679,22 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         )}
       </AnimatePresence>
       <div className="flex flex-1 overflow-hidden">
-        <KDSSidebar
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-          onNavigate={handleNavigate}
-          activeNav={activeNav}
-          settingsOpen={settingsOpen}
-          seenCount={seenCount}
-          unseenCount={unseenCount}
-        />
+        <div className="flex shrink-0" style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4 }}>
+          <KDSSidebar
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            onNavigate={handleNavigate}
+            activeNav={activeNav}
+            settingsOpen={settingsOpen}
+            seenCount={seenCount}
+            unseenCount={unseenCount}
+          />
+        </div>
 
         {settingsOpen ? (
           <div
             className="flex flex-1 overflow-hidden p-4 gap-4"
-            style={{ background: 'hsl(var(--surface-bg))' }}
+            style={{ background: 'hsl(var(--surface-bg))', order: 2 }}
           >
             <div
               className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
@@ -711,7 +715,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${ticketSpacing === 'Standard' ? 'ticket-spacing-standard' : ticketSpacing === 'Spacious' ? 'ticket-spacing-spacious' : 'ticket-spacing-compact'}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${ticketSpacing === 'Standard' ? 'ticket-spacing-standard' : ticketSpacing === 'Spacious' ? 'ticket-spacing-spacious' : 'ticket-spacing-compact'}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -880,9 +884,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && !isSubScreen && (kdsMode === 'Expo'
-          ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
-          : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />
+        {!settingsOpen && !isSubScreen && (
+          <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
+            {kdsMode === 'Expo'
+              ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
+              : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />}
+          </div>
         )}
       </div>
 

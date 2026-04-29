@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
-  StretchVertical,
+  StretchVertical, LayoutPanelLeft,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -14,6 +14,8 @@ import {
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useLanguage, languageNames } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
 import StatusSettings from '@/pages/StatusSettings';
@@ -39,6 +41,9 @@ export default function DisplaySettings() {
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
   const hash = useHashHighlight();
+  const { layout: dockLayout, resetLayout } = useDockLayout();
+  const insets = getOverlayInsets(dockLayout);
+  const overlayStyle = { top: insets.top, bottom: insets.bottom, left: insets.left, right: insets.right } as React.CSSProperties;
 
   const spacingClass =
     ticketSpacing === 'Standard'
@@ -50,8 +55,8 @@ export default function DisplaySettings() {
   if (statusOpen) {
     return (
       <div
-        className="fixed top-0 right-0 left-20 z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={{ bottom: '52px' }}
+        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
+        style={overlayStyle}
       >
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
           <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
@@ -79,8 +84,8 @@ export default function DisplaySettings() {
   if (languageOpen) {
     return (
       <div
-        className="fixed top-0 right-0 left-20 z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={{ bottom: '52px' }}
+        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
+        style={overlayStyle}
       >
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
           <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
@@ -286,6 +291,15 @@ export default function DisplaySettings() {
         right={<ValueText>{languageDisplay}</ValueText>}
         onClick={() => setLanguageOpen(true)}
         highlighted={hash === 'language'}
+      />
+
+      <SettingsPill
+        icon={LayoutPanelLeft}
+        iconColor="#6B7280"
+        label="Reset chrome layout"
+        helper="Move sidebar back to left, summary panel to right, and status bar to bottom."
+        right={<ValueText>{`${dockLayout.mainSidebar} / ${dockLayout.summaryPanel} / ${dockLayout.bottomBar}`}</ValueText>}
+        onClick={resetLayout}
       />
 
       
