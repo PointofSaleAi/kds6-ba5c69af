@@ -325,6 +325,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                     isLast={idx === arr.length - 1}
                     onRecallItem={onRecallItem}
                     tp={tp}
+                    compactLayout={isCompactLayout}
                   />
                 ))}
               </div>
@@ -340,6 +341,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                 isLast={idx === arr.length - 1}
                 onRecallItem={onRecallItem}
                 tp={tp}
+                compactLayout={isCompactLayout}
               />
             ))}
           </div>
