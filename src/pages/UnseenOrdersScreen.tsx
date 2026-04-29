@@ -5,6 +5,8 @@ import { OrderCard } from '@/components/kds/OrderCard';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import type { ViewMode } from '@/types/kds';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 
