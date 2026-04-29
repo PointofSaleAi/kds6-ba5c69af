@@ -24,6 +24,7 @@ interface HistoryItemRowProps {
   isLast: boolean;
   onRecallItem?: (orderId: string, item: OrderItem) => void;
   tp: (s: string) => string;
+  compactLayout?: boolean;
 }
 
 function formatDuration(seconds: number): string {
