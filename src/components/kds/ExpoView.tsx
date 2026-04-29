@@ -9,6 +9,7 @@ import { StationBadge, stationColors } from './StationBadge';
 import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { useOrderStore } from '@/hooks/use-order-store';
 import {
   kitchenStations,
