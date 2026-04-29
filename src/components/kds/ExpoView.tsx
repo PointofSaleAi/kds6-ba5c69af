@@ -548,24 +548,25 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   : courseOvertime
                     ? 'OVERTIME'
                     : 'IN PROGRESS';
-            // Color rules driven by the course's own status, never by the
-            // ticket-level overtime flag when the course is queued/served/done.
+            // Color rules driven by the course's own status:
+            // Queued = muted grey, In Progress = warning amber,
+            // Ready/Prepared = success green, Overtime = destructive red.
             const courseColorClass = isQueued
-              ? 'text-warning'
+              ? 'text-text-muted'
               : isServed || courseDone
                 ? 'text-success'
                 : courseOvertime
                   ? 'text-destructive'
-                  : 'text-text-primary';
+                  : 'text-warning';
             const courseBgClass = isQueued
-              ? 'bg-warning/10'
+              ? 'bg-muted/50'
               : isServed
                 ? 'bg-muted/50'
                 : courseDone
                   ? 'bg-success/10'
                   : courseOvertime
                     ? 'bg-destructive/10'
-                    : '';
+                    : 'bg-warning/10';
             const isExpanded = !collapsedServedCourses.has(course.name);
 
             return (
