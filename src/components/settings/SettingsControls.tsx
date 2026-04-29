@@ -22,12 +22,12 @@ export function SegmentedToggle({
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center"
-            style={{
-              background: active ? 'hsl(var(--brand-primary))' : 'transparent',
-              color: active ? 'hsl(var(--brand-primary-foreground))' : 'hsl(var(--text-secondary))',
-              minHeight: 28,
-            }}
+            className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center ${
+              active
+                ? 'bg-[hsl(var(--brand-primary))] text-[hsl(var(--brand-primary-foreground))] dark:bg-white dark:text-black'
+                : 'bg-transparent text-[hsl(var(--text-secondary))]'
+            }`}
+            style={{ minHeight: 28 }}
           >
             {opt}
           </button>
