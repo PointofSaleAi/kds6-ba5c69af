@@ -539,11 +539,11 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             const isExpanded = !collapsedServedCourses.has(course.name);
 
             return (
-              <div key={course.name} style={{ marginBottom: '2px' }}>
+              <div key={course.name}>
                 {/* Course header — collapsible */}
                 <div
                   className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
-                  style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}
+                  style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', paddingBottom: '2px' }}
                   onClick={() => toggleServedCourse(course.name)}
                   role="button"
                   aria-expanded={isExpanded}
@@ -567,7 +567,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`px-1 ${isQueued ? 'opacity-40' : ''}`} style={{ paddingTop: '2px', paddingBottom: '0px' }}>
+                  <div className={`px-1 ${isQueued ? 'opacity-40' : ''}`} style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                     {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
