@@ -1313,7 +1313,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className={`flex-1 flex flex-col overflow-hidden ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
       <ExpoTopControls
         filter={filter}
         onFilterChange={handleFilterChange}
