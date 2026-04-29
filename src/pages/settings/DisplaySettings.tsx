@@ -50,7 +50,7 @@ export default function DisplaySettings() {
   if (statusOpen) {
     return (
       <div
-        className="fixed top-0 right-0 left-20 z-40 flex flex-col px-4 pt-4 pb-0 bg-surface-bg"
+        className="fixed top-0 right-0 left-20 z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
         style={{ bottom: '52px' }}
       >
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
