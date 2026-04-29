@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { DockDragHandle } from './DockDragHandle';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { ExpoTicket } from '@/data/mock-expo-orders';
 
@@ -103,6 +104,12 @@ export function ExpoSummaryPanel({
       {/* Header */}
       <div className="flex items-center justify-between px-3 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-2 min-w-0">
+          <DockDragHandle
+            panel="summaryPanel"
+            orientation="vertical"
+            ariaLabel="Drag to dock summary panel"
+            className="text-sidebar-foreground shrink-0"
+          />
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
         </div>
