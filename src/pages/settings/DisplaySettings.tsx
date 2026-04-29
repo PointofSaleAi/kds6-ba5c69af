@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
-  StretchVertical,
+  StretchVertical, LayoutPanelLeft,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -291,6 +291,15 @@ export default function DisplaySettings() {
         right={<ValueText>{languageDisplay}</ValueText>}
         onClick={() => setLanguageOpen(true)}
         highlighted={hash === 'language'}
+      />
+
+      <SettingsPill
+        icon={LayoutPanelLeft}
+        iconColor="#6B7280"
+        label="Reset chrome layout"
+        helper="Move sidebar back to left, summary panel to right, and status bar to bottom."
+        right={<ValueText>{`${dockLayout.mainSidebar} / ${dockLayout.summaryPanel} / ${dockLayout.bottomBar}`}</ValueText>}
+        onClick={resetLayout}
       />
 
       
