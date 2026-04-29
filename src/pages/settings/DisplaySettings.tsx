@@ -41,6 +41,9 @@ export default function DisplaySettings() {
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
   const hash = useHashHighlight();
+  const { layout: dockLayout, resetLayout } = useDockLayout();
+  const insets = getOverlayInsets(dockLayout);
+  const overlayStyle = { top: insets.top, bottom: insets.bottom, left: insets.left, right: insets.right } as React.CSSProperties;
 
   const spacingClass =
     ticketSpacing === 'Standard'
@@ -52,8 +55,8 @@ export default function DisplaySettings() {
   if (statusOpen) {
     return (
       <div
-        className="fixed top-0 right-0 left-20 z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={{ bottom: '52px' }}
+        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
+        style={overlayStyle}
       >
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
           <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
@@ -81,8 +84,8 @@ export default function DisplaySettings() {
   if (languageOpen) {
     return (
       <div
-        className="fixed top-0 right-0 left-20 z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={{ bottom: '52px' }}
+        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
+        style={overlayStyle}
       >
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
           <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
