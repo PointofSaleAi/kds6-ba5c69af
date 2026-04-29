@@ -445,7 +445,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         >
           <div className="flex items-center gap-1.5 min-w-0">
             <span
-              className="text-[15px] font-extrabold text-white leading-none tabular-nums"
+              className="text-[18px] font-extrabold text-white leading-none tabular-nums"
               style={{ letterSpacing: '0.01em', fontVariantNumeric: 'tabular-nums' }}
             >
               #{ticket.orderNumber}
