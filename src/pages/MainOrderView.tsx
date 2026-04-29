@@ -694,7 +694,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         {settingsOpen ? (
           <div
             className="flex flex-1 overflow-hidden p-4 gap-4"
-            style={{ background: 'hsl(var(--surface-bg))' }}
+            style={{ background: 'hsl(var(--surface-bg))', order: 2 }}
           >
             <div
               className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
@@ -715,7 +715,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${ticketSpacing === 'Standard' ? 'ticket-spacing-standard' : ticketSpacing === 'Spacious' ? 'ticket-spacing-spacious' : 'ticket-spacing-compact'}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${ticketSpacing === 'Standard' ? 'ticket-spacing-standard' : ticketSpacing === 'Spacious' ? 'ticket-spacing-spacious' : 'ticket-spacing-compact'}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
