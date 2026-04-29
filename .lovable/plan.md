@@ -1,70 +1,38 @@
-## Problem
+I found why it still breaks in portrait. The previous change used `max-@[280px]/pill:*` container-query classes, but the installed Tailwind container-query plugin only supports min-width variants like `@[280px]/pill:*`. Because of that, the narrow-width rules that should move the controls to the next line are not being generated.
 
-Ticket Spacing toggles (Compact / Standard / Spacious) update the CSS variables `--kds-card-padding` and `--kds-item-gap`, but **no component actually reads those variables**. Item rows in `CourseSection.tsx` and `FlatItemList.tsx` use hardcoded `paddingTop: '2px'` / `paddingBottom: '2px'` and hardcoded gap values, so changing the setting has zero visible effect on either the preview or the home-screen tickets.
+Plan:
 
-## Fix
+1. Update only the Display settings row component behavior
+   - Edit `src/components/settings/SettingsPill.tsx`.
+   - Make the narrow layout the default layout.
+   - At narrow panel widths, each pill will render as:
 
-Make item rows consume the spacing variables, then map the three modes to meaningful values that visibly change row density (the most noticeable spacing in a ticket).
-
-### 1. `src/index.css` — redefine spacing tokens to row-padding semantics
-
-Replace the existing `.ticket-spacing-*` blocks so each mode sets a row vertical padding token used by item rows. Keep card padding the same so card chrome doesn't shift dramatically.
-
-```css
-:root {
-  --kds-row-py: 2px;        /* row vertical padding (Compact default) */
-  --kds-item-gap: 4px;      /* gap between course/item blocks */
-  --kds-card-padding: 8px;  /* outer card body padding */
-}
-
-.ticket-spacing-compact  { --kds-row-py: 2px; --kds-item-gap: 4px;  --kds-card-padding: 8px;  }
-.ticket-spacing-standard { --kds-row-py: 6px; --kds-item-gap: 8px;  --kds-card-padding: 10px; }
-.ticket-spacing-spacious { --kds-row-py: 12px; --kds-item-gap: 14px; --kds-card-padding: 12px; }
+```text
+[ icon ]  Label text
+          control / value / segmented toggle
 ```
 
-### 2. `src/components/kds/CourseSection.tsx` — consume `--kds-row-py`
+2. Preserve desktop and landscape layout
+   - Use supported min-width container queries to restore the existing horizontal layout once the pill has enough room.
+   - This keeps desktop and landscape unchanged:
 
-In the item-row wrapper around line 502–505 replace the hardcoded `paddingTop: '2px'` / `paddingBottom: isLastVisible ? '6px' : '2px'` with:
-
-```ts
-paddingTop: 'var(--kds-row-py)',
-paddingBottom: isLastVisible ? 'calc(var(--kds-row-py) + 4px)' : 'var(--kds-row-py)',
+```text
+[ icon ]  Label text                         control / value / chevron
 ```
 
-### 3. `src/components/kds/FlatItemList.tsx` — same change at lines 152–153
+3. Prevent labels from disappearing
+   - Give the icon + label row a real width in narrow mode.
+   - Allow labels to wrap instead of shrinking to zero width.
+   - Keep the control on the next line, indented to align under the label.
 
-```ts
-paddingTop: 'var(--kds-row-py)',
-paddingBottom: isLastVisible ? 'calc(var(--kds-row-py) + 4px)' : 'var(--kds-row-py)',
-```
+4. Scope the fix tightly
+   - Do not change the left settings sidebar.
+   - Do not change KDS home, footer, bottom bar, colors, content, or desktop layout.
+   - Do not redesign controls.
+   - No data, API, or routing changes.
 
-### 4. `src/components/kds/OrderCard.tsx` — apply card body padding from the var
-
-Line 674 currently hardcodes `padding: '12px'` on a card region. Change to:
-
-```ts
-padding: 'var(--kds-card-padding)',
-```
-
-(Only that header/body block — leave the small icon row paddings alone so they don't bloat.)
-
-### 5. Verify the wrapper is in place
-
-`MainOrderView.tsx` already wraps the board in `ticket-spacing-{compact|standard|spacious}` and `DisplaySettings.tsx` already wraps the preview the same way. No change needed there.
-
-### 6. Update memory
-
-Update `mem://style/ticket-spacing` to clarify the three modes change **row vertical padding** (primary visual effect), with a small bump to card body padding. Keep "Default Compact" rule.
-
-## Files to edit
-- `src/index.css`
-- `src/components/kds/CourseSection.tsx`
-- `src/components/kds/FlatItemList.tsx`
-- `src/components/kds/OrderCard.tsx`
-- `mem://style/ticket-spacing`
-
-## Result
-- Compact: today's dense look (unchanged).
-- Standard: noticeably airier rows (~6px top/bottom per row).
-- Spacious: clearly roomy rows (~12px top/bottom), good for line cooks reading from distance.
-- Both the settings preview and the live KDS home screen reflect the change instantly.
+5. Verify after implementation
+   - Check the Display settings route in portrait at 768px wide.
+   - Check the narrow right-panel behavior against the 180px minimum target.
+   - Confirm labels like `Text size`, `Ticket layout`, `Ticket Identifier`, and `Mode Switcher` stay visible and controls drop below when needed.
+   - Confirm landscape and desktop still use the original one-line layout.
