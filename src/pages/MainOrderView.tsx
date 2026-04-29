@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { Megaphone } from 'lucide-react';
+import { useDockLayout } from '@/hooks/use-dock-layout';
 import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 
