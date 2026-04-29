@@ -11,17 +11,29 @@ export interface DockLayout {
   bottomBar: BarEdge;
 }
 
+export type DockLocks = Record<DockPanel, boolean>;
+
 const DEFAULT_LAYOUT: DockLayout = {
   mainSidebar: 'left',
   summaryPanel: 'right',
   bottomBar: 'bottom',
 };
 
+const DEFAULT_LOCKS: DockLocks = {
+  mainSidebar: true,
+  summaryPanel: true,
+  bottomBar: true,
+};
+
 const STORAGE_KEY = 'kds.dock-layout.v1';
+const LOCKS_STORAGE_KEY = 'kds.dock-locks.v1';
 
 interface DockLayoutContextValue {
   layout: DockLayout;
+  locks: DockLocks;
   setDock: (panel: DockPanel, edge: DockEdge) => void;
+  toggleLock: (panel: DockPanel) => void;
+  isLocked: (panel: DockPanel) => boolean;
   resetLayout: () => void;
 }
 
@@ -43,16 +55,37 @@ function loadInitial(): DockLayout {
   }
 }
 
+function loadInitialLocks(): DockLocks {
+  if (typeof window === 'undefined') return DEFAULT_LOCKS;
+  try {
+    const raw = window.localStorage.getItem(LOCKS_STORAGE_KEY);
+    if (!raw) return DEFAULT_LOCKS;
+    const parsed = JSON.parse(raw) as Partial<DockLocks>;
+    return {
+      mainSidebar: parsed.mainSidebar !== false,
+      summaryPanel: parsed.summaryPanel !== false,
+      bottomBar: parsed.bottomBar !== false,
+    };
+  } catch {
+    return DEFAULT_LOCKS;
+  }
+}
+
 export function DockLayoutProvider({ children }: { children: ReactNode }) {
   const [layout, setLayout] = useState<DockLayout>(loadInitial);
+  const [locks, setLocks] = useState<DockLocks>(loadInitialLocks);
 
   useEffect(() => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
   }, [layout]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(LOCKS_STORAGE_KEY, JSON.stringify(locks));
+    } catch { /* ignore */ }
+  }, [locks]);
 
   const setDock = useCallback((panel: DockPanel, edge: DockEdge) => {
     setLayout(prev => {
@@ -67,9 +100,18 @@ export function DockLayoutProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const resetLayout = useCallback(() => setLayout(DEFAULT_LAYOUT), []);
+  const toggleLock = useCallback((panel: DockPanel) => {
+    setLocks(prev => ({ ...prev, [panel]: !prev[panel] }));
+  }, []);
 
-  const value = useMemo(() => ({ layout, setDock, resetLayout }), [layout, setDock, resetLayout]);
+  const isLocked = useCallback((panel: DockPanel) => locks[panel], [locks]);
+
+  const resetLayout = useCallback(() => {
+    setLayout(DEFAULT_LAYOUT);
+    setLocks(DEFAULT_LOCKS);
+  }, []);
+
+  const value = useMemo(() => ({ layout, locks, setDock, toggleLock, isLocked, resetLayout }), [layout, locks, setDock, toggleLock, isLocked, resetLayout]);
 
   return <DockLayoutContext.Provider value={value}>{children}</DockLayoutContext.Provider>;
 }
