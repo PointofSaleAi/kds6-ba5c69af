@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/tooltip';
 import restaurantLogo from '@/assets/icons/restaurant-logo.png';
 import versionIcon from '@/assets/version-icon.svg';
+import { DockDragHandle } from './DockDragHandle';
 
 const APP_VERSION = '4.10.2';
 
@@ -95,12 +96,18 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
     <TooltipProvider delayDuration={300}>
       <div className={`${expanded ? 'w-48' : 'w-20'} py-2 px-2 bg-sidebar-bg flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}>
         <div
-          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5"
+          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5 relative"
           style={{
             background: '#7575754D',
             boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
           }}
         >
+          <DockDragHandle
+            panel="mainSidebar"
+            orientation="vertical"
+            ariaLabel="Drag to dock main sidebar"
+            className="absolute top-1 right-1 text-sidebar-foreground"
+          />
           {/* Restaurant Logo - tap to expand/collapse */}
           <button
             onClick={() => setExpanded(!expanded)}
