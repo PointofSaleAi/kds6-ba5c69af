@@ -844,6 +844,7 @@ interface ExpoViewProps {
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
+  const { textSize, ticketSpacing } = useKDSSettings();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
   const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
