@@ -29,9 +29,9 @@ export function SettingsPill({
   const interactive = Boolean(onClick);
 
   return (
-    <div className="mb-1.5">
+    <div className="mb-1.5 @container/pill">
       <div
-        className="rounded-full overflow-hidden transition-all"
+        className="rounded-[28px] overflow-hidden transition-all"
         style={{
           background: 'hsl(var(--surface-card))',
           border: highlighted
@@ -56,21 +56,21 @@ export function SettingsPill({
                 }
               : undefined
           }
-          className={`w-full flex items-center justify-between gap-3 py-3 px-4 ${
+          className={`w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 @[280px]/pill:flex-nowrap ${
             interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <SettingsIconTile icon={icon} bgColor={iconColor} />
             <span
-              className="text-[15px] font-medium truncate text-left"
+              className="text-[15px] font-medium text-left break-words @[280px]/pill:truncate"
               style={{ color: 'hsl(var(--text-primary))' }}
             >
               {label}
             </span>
           </div>
           <div
-            className="flex items-center gap-2 shrink-0"
+            className="flex items-center gap-2 shrink-0 max-@[280px]/pill:w-full max-@[280px]/pill:pl-[52px]"
             onClick={(e) => e.stopPropagation()}
           >
             {right}
