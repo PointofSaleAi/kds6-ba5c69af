@@ -1,6 +1,8 @@
 import { ChevronRight, type LucideIcon } from 'lucide-react';
+import { isValidElement, type ReactNode } from 'react';
 import { SettingsIconTile } from './SettingsIconTile';
-import type { ReactNode } from 'react';
+import { SegmentedToggle } from './SettingsControls';
+import { usePortrait } from '@/hooks/use-portrait';
 
 interface SettingsPillProps {
   icon: LucideIcon;
@@ -10,12 +12,22 @@ interface SettingsPillProps {
   right?: ReactNode;
   onClick?: () => void;
   highlighted?: boolean;
+  /**
+   * Force-stack the right control under the label in portrait. Auto-detected
+   * for SegmentedToggle (which expands full-width) but can be set explicitly
+   * for any other wide control.
+   */
+  stackInPortrait?: boolean;
 }
 
 /**
  * Rounded pill row with a colored icon tile, label, optional right-side
  * control (segmented toggle, switch, value), and chevron when clickable.
- * Helper text is rendered below the pill via the parent.
+ *
+ * In portrait orientation, wide controls (segmented toggles or anything
+ * passed with stackInPortrait) drop to a second row so their option labels
+ * are not truncated. Compact controls (chevron, switch, single value text)
+ * stay inline on the same row in both orientations.
  */
 export function SettingsPill({
   icon,
@@ -25,8 +37,33 @@ export function SettingsPill({
   right,
   onClick,
   highlighted,
+  stackInPortrait,
 }: SettingsPillProps) {
   const interactive = Boolean(onClick);
+  const { isPortrait } = usePortrait();
+
+  const rightIsSegmented =
+    isValidElement(right) && right.type === SegmentedToggle;
+  const shouldStack = isPortrait && (stackInPortrait || rightIsSegmented);
+
+  // Container query thresholds keep landscape behavior identical to before.
+  // When stacking in portrait we drop the @[340px] inline constraint so the
+  // right control always wraps to its own full-width row.
+  const rowClasses = shouldStack
+    ? 'w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4'
+    : 'w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 @[340px]/pill:flex-nowrap';
+
+  const labelWrapClasses = shouldStack
+    ? 'flex items-center gap-3 w-full min-w-0'
+    : 'flex items-center gap-3 w-full min-w-0 @[340px]/pill:w-auto @[340px]/pill:flex-1';
+
+  const labelTextClasses = shouldStack
+    ? 'text-[15px] font-medium text-left break-words min-w-0 flex-1'
+    : 'text-[15px] font-medium text-left break-words min-w-0 flex-1 @[340px]/pill:truncate';
+
+  const rightWrapClasses = shouldStack
+    ? 'flex items-center gap-2 w-full pl-[52px] justify-end'
+    : 'flex items-center gap-2 w-full pl-[52px] @[340px]/pill:w-auto @[340px]/pill:pl-0 @[340px]/pill:shrink-0 @[340px]/pill:justify-end';
 
   return (
     <div className="mb-1.5 @container/pill">
@@ -56,21 +93,21 @@ export function SettingsPill({
                 }
               : undefined
           }
-          className={`w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 @[340px]/pill:flex-nowrap ${
+          className={`${rowClasses} ${
             interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
         >
-          <div className="flex items-center gap-3 w-full min-w-0 @[340px]/pill:w-auto @[340px]/pill:flex-1">
+          <div className={labelWrapClasses}>
             <SettingsIconTile icon={icon} bgColor={iconColor} />
             <span
-              className="text-[15px] font-medium text-left break-words min-w-0 flex-1 @[340px]/pill:truncate"
+              className={labelTextClasses}
               style={{ color: 'hsl(var(--text-primary))' }}
             >
               {label}
             </span>
           </div>
           <div
-            className="flex items-center gap-2 w-full pl-[52px] @[340px]/pill:w-auto @[340px]/pill:pl-0 @[340px]/pill:shrink-0 @[340px]/pill:justify-end"
+            className={rightWrapClasses}
             onClick={(e) => e.stopPropagation()}
           >
             {right}
