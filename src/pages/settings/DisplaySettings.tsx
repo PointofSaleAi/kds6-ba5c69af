@@ -14,6 +14,8 @@ import {
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useLanguage, languageNames } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
 import StatusSettings from '@/pages/StatusSettings';
