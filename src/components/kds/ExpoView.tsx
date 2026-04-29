@@ -535,14 +535,41 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             if (courseItems.length === 0) return null;
             const isServed = course.status === 'served';
             const isQueued = course.status === 'queued';
-            const courseStatusLabel = isServed ? 'PREPARED' : isQueued ? 'QUEUED' : 'ACTIVE';
+            const courseDone = courseItems.every(i => i.status === 'done');
+            const courseStatusLabel = isServed
+              ? 'PREPARED'
+              : isQueued
+                ? 'QUEUED'
+                : courseDone
+                  ? 'READY'
+                  : overtime
+                    ? 'OVERTIME'
+                    : 'IN PROGRESS';
+            // Color rules: Ready/Prepared = success, Queued = warning,
+            // Overtime = destructive, In progress = text-primary.
+            const courseColorClass = isQueued
+              ? 'text-warning'
+              : isServed || courseDone
+                ? 'text-success'
+                : overtime
+                  ? 'text-destructive'
+                  : 'text-text-primary';
+            const courseBgClass = isQueued
+              ? 'bg-warning/10'
+              : isServed
+                ? 'bg-muted/50'
+                : courseDone
+                  ? 'bg-success/10'
+                  : overtime
+                    ? 'bg-destructive/10'
+                    : '';
             const isExpanded = !collapsedServedCourses.has(course.name);
 
             return (
               <div key={course.name}>
                 {/* Course header — collapsible */}
                 <div
-                  className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''} ${isQueued ? 'bg-warning/10' : ''}`}
+                  className={`border-b border-border cursor-pointer ${courseBgClass}`}
                   style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', paddingBottom: '2px' }}
                   onClick={() => toggleServedCourse(course.name)}
                   role="button"
@@ -550,16 +577,16 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 >
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`text-[10px] inline-block ${isQueued ? 'text-warning' : 'text-text-muted'}`}
+                      className={`text-[10px] inline-block ${courseColorClass}`}
                       style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms' }}
                       aria-hidden="true"
                     >
                       &#9654;
                     </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-widest ${isQueued ? 'text-warning' : 'text-text-muted'}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${courseColorClass}`}>
                       {course.name} &middot; {courseStatusLabel}
                     </span>
-                    <span className={`ml-auto text-[10px] ${isQueued ? 'text-warning font-semibold' : 'text-text-muted'}`}>
+                    <span className={`ml-auto text-[10px] font-semibold ${courseColorClass}`}>
                       {courseItems.filter(i => i.status === 'done').length} of {courseItems.length} ready
                     </span>
                   </div>
