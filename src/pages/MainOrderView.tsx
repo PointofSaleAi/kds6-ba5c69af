@@ -61,6 +61,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
+  const { layout: dockLayout } = useDockLayout();
   const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
