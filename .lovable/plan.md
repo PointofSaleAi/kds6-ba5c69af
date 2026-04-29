@@ -1,38 +1,43 @@
-I found why it still breaks in portrait. The previous change used `max-@[280px]/pill:*` container-query classes, but the installed Tailwind container-query plugin only supports min-width variants like `@[280px]/pill:*`. Because of that, the narrow-width rules that should move the controls to the next line are not being generated.
+# Hide scrollbars globally across the app
 
-Plan:
+Apply a single global CSS rule in `src/index.css` so every scrollable element — main content, sidebars, dialogs, popovers, dropdowns, command palettes, sheets, drawers, the Radix ScrollArea, and any custom scroll containers — has its scrollbar hidden while still being scrollable via touch/wheel.
 
-1. Update only the Display settings row component behavior
-   - Edit `src/components/settings/SettingsPill.tsx`.
-   - Make the narrow layout the default layout.
-   - At narrow panel widths, each pill will render as:
+## Implementation
 
-```text
-[ icon ]  Label text
-          control / value / segmented toggle
+Edit `src/index.css` and extend the existing `.scrollbar-hide` block to cover the universal selector.
+
+Add inside the file (near the existing `.scrollbar-hide` definition):
+
+```css
+/* Hide scrollbars everywhere — keep scroll functionality */
+* {
+  -ms-overflow-style: none;   /* IE/Edge */
+  scrollbar-width: none;       /* Firefox */
+}
+*::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+}
+
+/* Also target Radix ScrollArea internal scrollbar element so the thin track doesn't render */
+[data-radix-scroll-area-scrollbar] {
+  display: none !important;
+}
 ```
 
-2. Preserve desktop and landscape layout
-   - Use supported min-width container queries to restore the existing horizontal layout once the pill has enough room.
-   - This keeps desktop and landscape unchanged:
+## Why this approach
 
-```text
-[ icon ]  Label text                         control / value / chevron
-```
+- One change covers every component (Dialog, Popover, DropdownMenu, Sheet, Drawer, Command, Sidebar, ScrollArea, settings pages, order panels, modals like RevenueCenterFilter, AlertsPanel, etc.) without editing 30+ files.
+- Scroll behaviour is preserved — only the visible scrollbar UI is suppressed.
+- The Radix ScrollArea custom scrollbar (used in `src/components/ui/scroll-area.tsx`) is also suppressed so it doesn't draw its own track.
 
-3. Prevent labels from disappearing
-   - Give the icon + label row a real width in narrow mode.
-   - Allow labels to wrap instead of shrinking to zero width.
-   - Keep the control on the next line, indented to align under the label.
+## Files changed
 
-4. Scope the fix tightly
-   - Do not change the left settings sidebar.
-   - Do not change KDS home, footer, bottom bar, colors, content, or desktop layout.
-   - Do not redesign controls.
-   - No data, API, or routing changes.
+- `src/index.css` — append the global scrollbar-hide rules.
 
-5. Verify after implementation
-   - Check the Display settings route in portrait at 768px wide.
-   - Check the narrow right-panel behavior against the 180px minimum target.
-   - Confirm labels like `Text size`, `Ticket layout`, `Ticket Identifier`, and `Mode Switcher` stay visible and controls drop below when needed.
-   - Confirm landscape and desktop still use the original one-line layout.
+## Verification
+
+After approval I will:
+1. Apply the CSS change.
+2. Spot-check by reviewing the rendered settings page, an open dialog, and a dropdown to confirm no scrollbar is visible while scrolling still works.
