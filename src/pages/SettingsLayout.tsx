@@ -39,11 +39,11 @@ export default function SettingsLayout() {
         settingsOpen={true}
       />
       <div
-        className="flex flex-1 overflow-hidden p-4 gap-4"
+        className="flex flex-1 overflow-hidden"
         style={{ background: 'hsl(var(--surface-bg))' }}
       >
         <div
-          className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
+          className="w-[280px] shrink-0 overflow-hidden flex flex-col m-4 rounded-3xl"
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
