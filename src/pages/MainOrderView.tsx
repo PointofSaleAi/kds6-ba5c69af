@@ -3,6 +3,7 @@ import { Search } from 'lucide-react';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { OrderCard } from '@/components/kds/OrderCard';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
