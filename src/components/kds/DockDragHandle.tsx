@@ -1,4 +1,4 @@
-import { Grid3x3, Lock, Unlock } from 'lucide-react';
+import { GripVertical, Lock, Unlock } from 'lucide-react';
 import { useDockDrag } from './DockDragLayer';
 import { useDockLayout, type DockPanel } from '@/hooks/use-dock-layout';
 
@@ -7,6 +7,18 @@ interface DockDragHandleProps {
   orientation?: 'vertical' | 'horizontal';
   className?: string;
   ariaLabel?: string;
+  showLock?: boolean;
+}
+
+/** 6-dot grip icon (2 cols x 3 rows) */
+function SixDotGrip({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      {[3, 8, 13].flatMap(cy => [3, 9].map(cx => (
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="1.4" fill="currentColor" />
+      )))}
+    </svg>
+  );
 }
 
 /**
