@@ -9,6 +9,7 @@ import { StationBadge, stationColors } from './StationBadge';
 import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { useOrderStore } from '@/hooks/use-order-store';
 import {
   kitchenStations,
@@ -844,6 +845,7 @@ interface ExpoViewProps {
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
+  const { textSize, ticketSpacing } = useKDSSettings();
   const [filter, setFilter] = useState<ExpoFilter>('ready');
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
   const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
@@ -1312,7 +1314,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className={`flex-1 flex flex-col overflow-hidden ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
       <ExpoTopControls
         filter={filter}
         onFilterChange={handleFilterChange}

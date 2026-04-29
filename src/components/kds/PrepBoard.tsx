@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import type { Order, CourseType } from '@/types/kds';
 
 interface PrepBoardProps {
@@ -54,18 +56,20 @@ function buildPrepBoard(orders: Order[]): PrepCourse[] {
 
 export function PrepBoard({ orders }: PrepBoardProps) {
   const { tp, tc } = useLanguage();
+  const { textSize, ticketSpacing } = useKDSSettings();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
   const prepCourses = useMemo(() => buildPrepBoard(orders), [orders]);
 
   if (prepCourses.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className={`flex-1 flex items-center justify-center ${scaleClasses}`}>
         <p className="text-text-muted text-sm">No items to prepare</p>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 overflow-auto p-3">
+    <div className={`flex-1 overflow-auto p-3 ${scaleClasses}`}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {prepCourses.map((course) => (
           <div key={course.course} className="bg-surface-card rounded-lg border border-border overflow-hidden">

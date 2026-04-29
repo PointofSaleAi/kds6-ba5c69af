@@ -5,6 +5,8 @@ import { OrderCard } from '@/components/kds/OrderCard';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import type { ViewMode } from '@/types/kds';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 
@@ -29,6 +31,8 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
   const { orders, seenOrderIds } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { t } = useLanguage();
+  const { textSize, ticketSpacing } = useKDSSettings();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const unseenOrders = useMemo(() =>
     orders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id)),
@@ -37,7 +41,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
 
   if (unseenOrders.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-8">
+      <div className={`flex-1 flex flex-col items-center justify-center px-8 ${scaleClasses}`}>
         <div className="w-20 h-20 rounded-full bg-success/10 flex items-center justify-center mb-5">
           <CheckCircle size={40} className="text-success" />
         </div>
@@ -48,7 +52,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className={`flex-1 flex flex-col overflow-hidden ${scaleClasses}`}>
       <div className="flex items-center gap-2.5 px-3 pt-3 pb-2 shrink-0">
         <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
           {t.unseenOrdersHeader}

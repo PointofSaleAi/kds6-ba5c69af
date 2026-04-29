@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search, ArrowLeft, RotateCcw } from 'lucide-react';
 import { StatusChip } from '@/components/kds/StatusChip';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { useLanguage } from '@/hooks/use-language';
 import type { OrderType, OrderStatus } from '@/types/kds';
 
@@ -36,8 +37,9 @@ interface OrderHistoryScreenProps {
 export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScreenProps) {
   const [dateFilter, setDateFilter] = useState('today');
   const [search, setSearch] = useState('');
-  const { orderTypeColors } = useKDSSettings();
+  const { orderTypeColors, textSize, ticketSpacing } = useKDSSettings();
   const { t, tperson, tl, to } = useLanguage();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const tabs = [t.today, t.yesterday, t.last7Days, t.customRange];
 
@@ -52,7 +54,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   });
 
   return (
-    <div className="fixed inset-0 bg-surface-bg flex flex-col">
+    <div className={`fixed inset-0 bg-surface-bg flex flex-col ${scaleClasses}`}>
       <div className="bg-surface-card border-b border-border px-6 py-4">
         <div className="flex items-center gap-4 mb-4">
           <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Go back">
