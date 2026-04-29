@@ -657,7 +657,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-surface-bg">
+    <div className={`fixed inset-0 flex bg-surface-bg ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}>
       {/* Kitchen message flash notification */}
       <AnimatePresence>
         {messageFlash && (
@@ -679,15 +679,19 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         )}
       </AnimatePresence>
       <div className="flex flex-1 overflow-hidden">
-        <KDSSidebar
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-          onNavigate={handleNavigate}
-          activeNav={activeNav}
-          settingsOpen={settingsOpen}
-          seenCount={seenCount}
-          unseenCount={unseenCount}
-        />
+        <div className="contents" style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4 } as React.CSSProperties}>
+          <div style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4, display: 'contents' }}>
+            <KDSSidebar
+              activeFilter={activeFilter}
+              onFilterChange={setActiveFilter}
+              onNavigate={handleNavigate}
+              activeNav={activeNav}
+              settingsOpen={settingsOpen}
+              seenCount={seenCount}
+              unseenCount={unseenCount}
+            />
+          </div>
+        </div>
 
         {settingsOpen ? (
           <div
