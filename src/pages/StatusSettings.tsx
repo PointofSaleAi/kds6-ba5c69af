@@ -294,7 +294,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-transparent p-0">
       {!hideHeader && (
         <div className="flex items-center justify-center gap-4 px-6 py-4 shrink-0">
           <button

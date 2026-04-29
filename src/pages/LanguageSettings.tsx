@@ -100,7 +100,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
   const previewSecondaryInfo = getLangInfo(previewSecondaryLang);
 
   return (
-    <div className="fixed inset-0 z-50 bg-surface-bg flex flex-col">
+    <div className="fixed top-0 right-0 bottom-0 left-20 z-50 bg-transparent flex flex-col p-0">
 
 
           {/* Header */}
