@@ -460,7 +460,10 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               </span>
             )}
           </div>
-          <span className="text-[13px] font-medium font-mono text-white leading-none">
+          <span
+            className="text-[13px] font-medium font-mono text-white leading-none tabular-nums"
+            style={{ fontVariantNumeric: 'tabular-nums' }}
+          >
             {formatTimer(ticket.timerSeconds)}
           </span>
         </div>
