@@ -48,17 +48,19 @@ export function SwitchToggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="relative w-11 h-6 rounded-full transition-colors"
-      style={{ background: checked ? 'hsl(var(--primary))' : 'hsl(var(--border))' }}
+      className={`relative w-11 h-6 rounded-full transition-colors ${
+        checked
+          ? 'bg-[hsl(var(--primary))] dark:bg-white'
+          : 'bg-[hsl(var(--border))]'
+      }`}
       role="switch"
       aria-checked={checked}
     >
       <span
-        className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform shadow-sm"
-        style={{
-          background: 'hsl(var(--surface-card))',
-          transform: checked ? 'translateX(20px)' : 'translateX(0)',
-        }}
+        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform shadow-sm ${
+          checked ? 'bg-[hsl(var(--surface-card))] dark:bg-black' : 'bg-[hsl(var(--surface-card))]'
+        }`}
+        style={{ transform: checked ? 'translateX(20px)' : 'translateX(0)' }}
       />
     </button>
   );
