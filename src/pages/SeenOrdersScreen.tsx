@@ -31,6 +31,8 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
   const { orders, seenOrderIds } = useOrderStore();
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
+  const { textSize, ticketSpacing } = useKDSSettings();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const seenOrders = useMemo(() =>
     orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id)),
@@ -39,7 +41,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
 
   if (seenOrders.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center px-8">
+      <div className={`flex-1 flex flex-col items-center justify-center px-8 ${scaleClasses}`}>
         <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mb-5">
           <Eye size={40} className="text-text-muted" />
         </div>
@@ -50,7 +52,7 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className={`flex-1 flex flex-col overflow-hidden ${scaleClasses}`}>
       <div className="flex items-center gap-2.5 px-3 pt-3 pb-2 shrink-0">
         <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
           Seen Orders
