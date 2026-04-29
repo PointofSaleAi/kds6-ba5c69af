@@ -702,13 +702,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               <SettingsSidebar />
             </div>
             <main
-              className="flex-1 rounded-3xl overflow-y-auto"
-              style={{
-                background: 'hsl(var(--surface-card))',
-                boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
-              }}
+              className="flex-1 overflow-y-auto"
+              style={{ background: 'transparent' }}
             >
-              <div className="w-full px-6 py-6">
+              <div className="w-full p-0" style={{ background: 'transparent' }}>
                 <Outlet />
               </div>
             </main>
