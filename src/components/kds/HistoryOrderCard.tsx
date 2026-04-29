@@ -46,7 +46,7 @@ const DINE_IN_TYPES = new Set(['dine-in']);
  * Matches the Home screen item row spacing (`py-0.5`, `text-item-name`)
  * and supports the same allergen/modifier stack.
  */
-function HistoryItemRow({ item, orderId, isLast, onRecallItem, tp }: HistoryItemRowProps) {
+function HistoryItemRow({ item, orderId, isLast, onRecallItem, tp, compactLayout }: HistoryItemRowProps) {
   const [recalled, setRecalled] = useState(false);
   const interactive = !!onRecallItem && !item.isCancelled && !recalled;
 
@@ -74,7 +74,7 @@ function HistoryItemRow({ item, orderId, isLast, onRecallItem, tp }: HistoryItem
       } ${item.isCancelled ? 'opacity-50' : ''} ${
         interactive ? 'cursor-pointer active:bg-muted/40 hover:bg-muted/30' : ''
       }`}
-      style={{ paddingTop: '2px', paddingBottom: isLast ? '6px' : '2px' }}
+      style={{ paddingTop: 'var(--kds-row-py, 2px)', paddingBottom: isLast ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)' }}
     >
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
