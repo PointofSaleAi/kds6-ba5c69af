@@ -78,10 +78,10 @@ export default function DisplaySettings() {
   if (languageOpen) {
     return (
       <div
-        className="fixed top-0 right-0 bottom-0 left-20 z-40 flex flex-col py-0 px-4 bg-surface-bg"
+        className="fixed top-0 right-0 bottom-0 left-20 z-40 flex flex-col p-0 bg-surface-bg"
       >
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-transparent">
-          <div className="relative flex items-center justify-center pt-4 pb-4 px-0 shrink-0 bg-transparent">
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
+          <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
             <button
               onClick={() => setLanguageOpen(false)}
               className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
@@ -91,7 +91,7 @@ export default function DisplaySettings() {
             </button>
             <h1 className="text-2xl font-bold">Language</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-0 pb-6 bg-transparent">
+          <div className="flex-1 min-h-0 overflow-hidden p-0 bg-surface-bg">
             <InlineLanguageSettings activeTab="language" />
           </div>
         </div>
