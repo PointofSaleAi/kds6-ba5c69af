@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { getKdsScaleClasses } from '@/lib/kds-scale';
 import type { Order, CourseType } from '@/types/kds';
 
 interface PrepBoardProps {
