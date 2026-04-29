@@ -225,6 +225,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             orientation="vertical"
             ariaLabel="Drag to dock summary panel"
             className="text-sidebar-foreground shrink-0"
+            showLock={false}
           />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">{t.summaryHeader}</span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
