@@ -715,7 +715,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${ticketSpacing === 'Standard' ? 'ticket-spacing-standard' : ticketSpacing === 'Spacious' ? 'ticket-spacing-spacious' : 'ticket-spacing-compact'}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
