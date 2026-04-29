@@ -679,18 +679,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         )}
       </AnimatePresence>
       <div className="flex flex-1 overflow-hidden">
-        <div className="contents" style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4 } as React.CSSProperties}>
-          <div style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4, display: 'contents' }}>
-            <KDSSidebar
-              activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
-              onNavigate={handleNavigate}
-              activeNav={activeNav}
-              settingsOpen={settingsOpen}
-              seenCount={seenCount}
-              unseenCount={unseenCount}
-            />
-          </div>
+        <div className="flex shrink-0" style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4 }}>
+          <KDSSidebar
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            onNavigate={handleNavigate}
+            activeNav={activeNav}
+            settingsOpen={settingsOpen}
+            seenCount={seenCount}
+            unseenCount={unseenCount}
+          />
         </div>
 
         {settingsOpen ? (
