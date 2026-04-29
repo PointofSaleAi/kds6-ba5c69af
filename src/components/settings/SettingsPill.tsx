@@ -56,21 +56,21 @@ export function SettingsPill({
                 }
               : undefined
           }
-          className={`w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 @[280px]/pill:flex-nowrap ${
+          className={`w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 @[340px]/pill:flex-nowrap ${
             interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
         >
-          <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="flex items-center gap-3 w-full min-w-0 @[340px]/pill:w-auto @[340px]/pill:flex-1">
             <SettingsIconTile icon={icon} bgColor={iconColor} />
             <span
-              className="text-[15px] font-medium text-left break-words @[280px]/pill:truncate"
+              className="text-[15px] font-medium text-left break-words min-w-0 flex-1 @[340px]/pill:truncate"
               style={{ color: 'hsl(var(--text-primary))' }}
             >
               {label}
             </span>
           </div>
           <div
-            className="flex items-center gap-2 shrink-0 max-@[280px]/pill:w-full max-@[280px]/pill:pl-[52px]"
+            className="flex items-center gap-2 w-full pl-[52px] @[340px]/pill:w-auto @[340px]/pill:pl-0 @[340px]/pill:shrink-0 @[340px]/pill:justify-end"
             onClick={(e) => e.stopPropagation()}
           >
             {right}
