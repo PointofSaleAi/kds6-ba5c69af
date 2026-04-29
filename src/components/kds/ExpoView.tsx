@@ -542,7 +542,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               <div key={course.name}>
                 {/* Course header — collapsible */}
                 <div
-                  className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''}`}
+                  className={`border-b border-border cursor-pointer ${isServed ? 'bg-muted/50' : ''} ${isQueued ? 'bg-warning/10' : ''}`}
                   style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', paddingBottom: '2px' }}
                   onClick={() => toggleServedCourse(course.name)}
                   role="button"
@@ -550,16 +550,16 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                 >
                   <div className="flex items-center gap-1.5">
                     <span
-                      className="text-[10px] text-text-muted inline-block"
+                      className={`text-[10px] inline-block ${isQueued ? 'text-warning' : 'text-text-muted'}`}
                       style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms' }}
                       aria-hidden="true"
                     >
                       &#9654;
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${isQueued ? 'text-warning' : 'text-text-muted'}`}>
                       {course.name} &middot; {courseStatusLabel}
                     </span>
-                    <span className="ml-auto text-[10px] text-text-muted">
+                    <span className={`ml-auto text-[10px] ${isQueued ? 'text-warning font-semibold' : 'text-text-muted'}`}>
                       {courseItems.filter(i => i.status === 'done').length} of {courseItems.length} ready
                     </span>
                   </div>
@@ -567,7 +567,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`px-1 ${isQueued ? 'opacity-40' : ''}`} style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                  <div className={`px-1 ${isQueued ? 'opacity-80' : ''}`} style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                     {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
@@ -620,18 +620,18 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Pending course for demo ticket 6 */}
       {demoTicket?.coursing?.pending && (
         <>
-          <div className="border-t border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+          <div className="border-t border-border bg-warning/10" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-warning">
               {demoTicket.coursing.pending.course} &middot; {demoTicket.coursing.pending.label}
             </span>
           </div>
-          <div className="opacity-40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
+          <div className="opacity-80" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
             {demoTicket.coursing.pending.items.map(pi => (
               <div key={pi.id} className="flex items-center gap-1.5 py-0.5">
-                <span className="text-[13px] font-medium text-text-primary">
+                <span className="text-[13px] font-semibold text-text-primary">
                   {pi.quantity}&times; {pi.name}
                 </span>
-                <span className="inline-flex items-center justify-center px-3 rounded-full text-[11px] font-medium min-h-[24px] min-w-[64px] bg-muted text-text-muted">
+                <span className="inline-flex items-center justify-center px-3 rounded-full text-[11px] font-semibold min-h-[24px] min-w-[64px] bg-warning/15 text-warning border border-warning/40">
                   Queued
                 </span>
                 <span className="text-[10px] text-text-muted">{pi.timeLabel}</span>
