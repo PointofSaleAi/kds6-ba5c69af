@@ -109,6 +109,7 @@ export function ExpoSummaryPanel({
             orientation="vertical"
             ariaLabel="Drag to dock summary panel"
             className="text-sidebar-foreground shrink-0"
+            showLock={false}
           />
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>

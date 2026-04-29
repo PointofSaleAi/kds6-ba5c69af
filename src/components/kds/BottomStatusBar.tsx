@@ -95,6 +95,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         orientation="horizontal"
         ariaLabel="Drag to dock status bar"
         className="text-primary-foreground"
+        showLock={false}
       />
       {/* Order count */}
       <div className="flex items-center gap-2 shrink-0">

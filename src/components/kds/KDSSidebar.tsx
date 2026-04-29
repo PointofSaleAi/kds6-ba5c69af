@@ -102,12 +102,14 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
           }}
         >
-          <DockDragHandle
-            panel="mainSidebar"
-            orientation="vertical"
-            ariaLabel="Drag to dock main sidebar"
-            className="absolute top-1 right-1 text-sidebar-foreground"
-          />
+          <div className="flex flex-col items-center gap-1 pt-1 pb-1 shrink-0">
+            <DockDragHandle
+              panel="mainSidebar"
+              orientation="vertical"
+              ariaLabel="Drag to dock main sidebar"
+              className="text-sidebar-foreground"
+            />
+          </div>
           {/* Restaurant Logo - tap to expand/collapse */}
           <button
             onClick={() => setExpanded(!expanded)}
