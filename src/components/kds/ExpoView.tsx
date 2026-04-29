@@ -444,7 +444,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           style={{ backgroundColor: urgencyBgColor, height: '36px' }}
         >
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="text-[13px] font-medium text-white leading-none">
+            <span className="text-[13px] font-extrabold text-white leading-none">
               #{ticket.orderNumber}
             </span>
             {isRushed && (
