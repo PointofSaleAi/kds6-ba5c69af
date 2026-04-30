@@ -262,32 +262,61 @@ function ItemTapRow({
         </div>
       </div>
 
-      {showDetails && item.modifiers.length > 0 && (
-        <div
-          className={isDone && !servableModifiersEnabled ? 'line-through' : ''}
-          style={{
-            marginTop: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
-            paddingLeft: ticketLayoutCompact ? '16px' : '0px',
-          }}
-        >
-          {item.modifiers.map((mod, idx) => (
-            <ModifierLine
-              key={mod.id || idx}
-              modifier={mod}
-              servableEnabled={servableModifiersEnabled}
-              modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
-              modifierTimestamps={mod.id ? modifierTimestamps?.get(mod.id) : undefined}
-              onAdvanceModifier={onAdvanceModifier}
-              onUndoModifier={onUndoModifier}
-              parentQuantity={item.quantity}
-              compactQtyCol={ticketLayoutCompact}
-            />
-          ))}
-        </div>
-      )}
+      {showDetails && item.modifiers.length > 0 && (() => {
+        const nonServable = item.modifiers.filter((m) => !isServableMod(m));
+        const servable = item.modifiers.filter((m) => isServableMod(m));
+        return (
+          <>
+            {nonServable.length > 0 && (
+              <div
+                className={isDone ? 'line-through' : ''}
+                style={{
+                  marginTop: 'var(--kds-child-gap, 1px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--kds-child-gap, 1px)',
+                  paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                }}
+              >
+                {nonServable.map((mod, idx) => (
+                  <ModifierLine
+                    key={mod.id || `ns-${idx}`}
+                    modifier={mod}
+                    servableEnabled={false}
+                    parentQuantity={item.quantity}
+                    compactQtyCol={ticketLayoutCompact}
+                  />
+                ))}
+              </div>
+            )}
+            {servable.length > 0 && (
+              <div
+                style={{
+                  marginTop: '0px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0px',
+                  paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                }}
+              >
+                {servable.map((mod, idx) => (
+                  <ModifierLine
+                    key={mod.id || `s-${idx}`}
+                    modifier={mod}
+                    servableEnabled={servableModifiersEnabled}
+                    modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+                    modifierTimestamps={mod.id ? modifierTimestamps?.get(mod.id) : undefined}
+                    onAdvanceModifier={onAdvanceModifier}
+                    onUndoModifier={onUndoModifier}
+                    parentQuantity={item.quantity}
+                    compactQtyCol={ticketLayoutCompact}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {showDetails && item.notes && !item.isCancelled && (
         <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
