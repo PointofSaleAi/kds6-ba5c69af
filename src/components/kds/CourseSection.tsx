@@ -92,7 +92,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang, tl } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
@@ -395,6 +395,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 t={t}
                 servableModifiersEnabled={servableModifiersEnabled}
                 modifierStatuses={modifierStatuses}
+                modifierTimestamps={modifierTimestamps}
                 onAdvanceModifier={onAdvanceModifier}
                 onUndoModifier={onUndoModifier}
                 onAdvanceItem={onAdvanceItem}
@@ -433,6 +434,7 @@ interface CourseItemTapRowProps {
   t: { seenAt: string; doneAt: string };
   servableModifiersEnabled?: boolean;
   modifierStatuses?: Map<string, ModifierStatus>;
+  modifierTimestamps?: Map<string, { seenAt?: string; doneAt?: string }>;
   onAdvanceModifier?: (id: string) => void;
   onUndoModifier?: (id: string) => void;
   onAdvanceItem?: (itemId: string, skipToDone?: boolean) => void;
@@ -448,7 +450,7 @@ function CourseItemTapRow({
   isActive, isPending, isCourseCompleted,
   showAllergens, displayMode, showSecondaryMenu, secondaryDir,
   tp, tpSecondary, t,
-  servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
+  servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
   compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
