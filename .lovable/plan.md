@@ -1,24 +1,43 @@
-## Fix Expo course status colors
+## Why the icons are there today
 
-Swap the Queued and In Progress color treatments in `src/components/kds/ExpoView.tsx` so they match the intended status semantics.
+You're right — this is an inconsistency. Products (item rows) and tickets (cards) follow a **tap-to-advance** pattern: a single tap on the row/card moves the lifecycle forward (Unseen → Preparing → Done), and an undo control appears only after the first advance.
 
-### Current (incorrect)
-- Queued → amber/warning (yellow-orange)
-- In Progress → neutral text-primary (grey)
+Servable modifiers were built earlier as a separate path in `src/components/kds/ModifierLine.tsx`. When `isServable` is true, the row renders explicit `KdsActionIcon` buttons (eye / bell / done + undo) on the right side and **does not** participate in the row-tap system. That's why they look heavier and behave differently than every other lifecycle-bearing element in the app.
 
-### Target
-- Queued → muted grey (inactive, waiting)
-- In Progress → warning amber (active, attention)
-- Ready / Prepared → success green (unchanged)
-- Overtime → destructive red (unchanged)
+## Proposed fix: align servable modifiers with the tap pattern
 
-### Change
+Treat a servable modifier row exactly like an item row.
 
-In the per-course block (around lines 551-568), update both `courseColorClass` and `courseBgClass`:
+### Behaviour
+- **Single tap on the modifier row** → advance one step (Unseen → Preparing → Done).
+- **After the first advance**, show only a small **undo** affordance on the right (same as item rows do today). No eye icon, no bell icon, no static "done" tick.
+- **Done state** keeps the existing strikethrough + 50% opacity treatment so it still reads as completed at a glance.
+- Tap target stays ≥44px tall (already satisfied by row padding + name size).
+- `e.stopPropagation()` is preserved on the undo control so tapping undo doesn't also advance the parent ticket.
 
-- Queued: `text-warning` / `bg-warning/10` → `text-text-muted` / `bg-muted/50`
-- In Progress fallback: `text-text-primary` / `''` → `text-warning` / `bg-warning/10`
+### Visual result per state
 
-This applies to the course header label, the chevron, and the "X of Y ready" counter, which all already share `courseColorClass`. Item row styling (queued opacity, etc.) is unaffected.
+```text
+Unseen      [ EXTRA CHEESE ........................................ ]   (tap row to advance)
+Preparing   [ EXTRA CHEESE ........................................ ⟲ ] (tap row to advance, ⟲ to undo)
+Done        [ E̶X̶T̶R̶A̶ ̶C̶H̶E̶E̶S̶E̶ .................................... ⟲ ] (tap ⟲ to undo)
+```
 
-No other files need changes.
+### Files to change
+- `src/components/kds/ModifierLine.tsx` — in the `isServable` branch:
+  - Wire the row's `onClick` to advance via the existing `onAdvanceModifier` handler (use the same `useRowTap` hook products use, so a future double-tap-to-jump-to-done can be added consistently).
+  - Replace the three-icon cluster with: nothing in Unseen, a single `undo` icon in Preparing and Done.
+  - Keep the strikethrough/opacity for Done.
+  - Keep `stopPropagation` on the undo button.
+
+### Files intentionally NOT changed
+- `OrderCard.tsx`, `FlatItemList.tsx`, `CourseSection.tsx` — they already pass the right handlers; no API change needed.
+- `KdsActionIcon.tsx` — still used for the remaining undo affordance.
+- Settings copy for "Servable modifiers" — behaviour description ("Track Queued, Preparing, and Done state on each modifier individually") still accurate.
+
+### QA
+- Toggle Servable Modifiers ON in Settings → Orders.
+- On a ticket with a servable modifier (e.g. demo data), tap the modifier row: Unseen → Preparing → Done. Undo returns one step.
+- Confirm tapping the modifier does not also advance the parent item or ticket.
+- Verify in Light + Dark theme, and at Compact / Standard / Spacious ticket spacing.
+- Confirm non-servable modifiers (extras/removes) are unchanged.
