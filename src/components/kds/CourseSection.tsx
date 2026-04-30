@@ -29,6 +29,7 @@ interface CourseSectionProps {
   courseDoneAt?: string;
   servableModifiersEnabled?: boolean;
   modifierStatuses?: Map<string, ModifierStatus>;
+  modifierTimestamps?: Map<string, { seenAt?: string; doneAt?: string }>;
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
   courseAgingColor?: { color: string; textColor: string };
