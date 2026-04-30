@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
@@ -393,20 +393,20 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                   type="button"
                   onClick={() => toggleCourse(courseGroup.course)}
                   aria-expanded={!collapsed}
-                  className="w-full flex items-center justify-between bg-muted hover:bg-muted/80 transition-colors select-none"
-                  style={{ padding: '2px 8px' }}
+                  className="w-full flex items-center bg-muted hover:bg-muted/80 transition-colors select-none"
+                  style={{ padding: '2px 8px', gap: '4px' }}
                 >
+                  <ChevronRight
+                    size={12}
+                    className="text-text-muted shrink-0 transition-transform duration-200"
+                    style={{ transform: collapsed ? 'rotate(0deg)' : 'rotate(90deg)' }}
+                  />
                   <span
                     className="uppercase text-text-primary tracking-wider"
                     style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
                   >
                     {tl(courseGroup.course)}
                   </span>
-                  <ChevronDown
-                    size={14}
-                    className="text-text-secondary transition-transform"
-                    style={{ transform: collapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}
-                  />
                 </button>
                 {!collapsed && (
                   <div className="px-1">
