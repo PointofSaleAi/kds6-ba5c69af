@@ -168,7 +168,7 @@ function ItemTapRow({
       style={{ 
         ...(!isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         paddingTop: 'var(--kds-row-py, 4px)',
-        paddingBottom: 'var(--kds-row-py, 4px)',
+        paddingBottom: hasServableModifiers ? '0px' : 'var(--kds-row-py, 4px)',
       }}
     >
       <div
