@@ -870,6 +870,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               showAllergens={showAllergens}
               servableModifiersEnabled={servableModifiersEnabled}
               modifierStatuses={modifierStatuses}
+              modifierTimestamps={modifierTimestamps}
               onAdvanceModifier={handleAdvanceModifier}
               onUndoModifier={handleUndoModifier}
               dismissedItemIds={dismissedItemIds}
