@@ -394,13 +394,14 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                   onClick={() => toggleCourse(courseGroup.course)}
                   aria-expanded={!collapsed}
                   className="w-full flex items-center bg-muted hover:bg-muted/80 transition-colors select-none"
-                  style={{ padding: '2px 8px', gap: '4px' }}
+                  style={{ padding: '2px 8px', gap: '6px' }}
                 >
-                  <ChevronRight
-                    size={12}
-                    className="text-text-muted shrink-0 transition-transform duration-200"
-                    style={{ transform: collapsed ? 'rotate(0deg)' : 'rotate(90deg)' }}
-                  />
+                  <span
+                    className={`text-text-muted transition-transform duration-200 ${collapsed ? '' : 'rotate-90'}`}
+                    style={{ fontSize: 'var(--kds-course-header)', lineHeight: 1 }}
+                  >
+                    {'\u25B6'}
+                  </span>
                   <span
                     className="uppercase text-text-primary tracking-wider"
                     style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
