@@ -146,16 +146,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     return 'unseen';
   }, [isActive, activeItemIds, itemStatuses]);
 
-  // Auto-collapse when the course is served. Items now auto-dismiss once Done,
-  // so an "all items done" course is transient: it auto-confirms in OrderCard
-  // and flips to served, which collapses it here.
+  // Auto-collapse only when course is explicitly confirmed served (via ticket button).
+  // Marking the last product as done should NOT collapse the course; the user must
+  // tap the course confirmation to advance to the next course.
   useEffect(() => {
     if (isServedByLifecycle) {
       setIsExpanded(false);
-    } else if (isActive && collectiveState === 'done') {
-      setIsExpanded(false);
     }
-  }, [isActive, collectiveState, isServedByLifecycle]);
+  }, [isServedByLifecycle]);
 
   // "Seen at" timestamp for course header (first item's seenAt)
   const courseSeenAt = useMemo(() => {
