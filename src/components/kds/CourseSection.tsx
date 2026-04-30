@@ -517,8 +517,9 @@ function CourseItemTapRow({
       <div
         className={`flex items-start transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{
-          padding: headerPad,
+          padding: isolateModifierRows ? '0px 8px 0 8px' : headerPad,
           gap: 0,
+          ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
         onClick={tappable ? handleTap : undefined}
