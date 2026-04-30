@@ -847,6 +847,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
                     servableModifiersEnabled={servableModifiersEnabled}
                     modifierStatuses={modifierStatuses}
+                    modifierTimestamps={modifierTimestamps}
                     onAdvanceModifier={handleAdvanceModifier}
                     onUndoModifier={handleUndoModifier}
                     courseAgingColor={courseStatusColors.get(courseGroup.course)}
