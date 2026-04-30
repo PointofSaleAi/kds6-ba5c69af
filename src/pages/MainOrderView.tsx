@@ -392,18 +392,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const handleBump = useCallback((orderId: string) => {
     const order = orders.find(o => o.id === orderId);
     if (!order) return;
-    const nextStatus =
-      order.status === 'new' ? 'seen' as const :
-      order.status === 'seen' ? 'in-progress' as const : 'served' as const;
-    if (nextStatus === 'served') {
-      // Mark all items done so Expo view reflects completion before removal
-      markAllItemsDone(orderId);
-    } else {
-      setOrders((prev) =>
-        prev.map((o) => o.id === orderId ? { ...o, status: nextStatus } : o)
-      );
-    }
-  }, [orders, markAllItemsDone, setOrders]);
+    // OrderCard only calls onBump after the user has fully advanced the ticket
+    // through DONE locally. Always mark the order served so the served-orders
+    // effect moves it to History on the next render. Previously we stepped the
+    // global status one step at a time (new → seen → in-progress → served),
+    // which required up to 3 taps to actually remove a card whose local state
+    // was already "done" - the source of the "needs multiple taps" glitch.
+    markAllItemsDone(orderId);
+  }, [orders, markAllItemsDone]);
 
   const handleStepBack = useCallback((orderId: string) => {
     setOrders((prev) =>
