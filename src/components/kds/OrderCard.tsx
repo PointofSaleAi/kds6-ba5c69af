@@ -486,6 +486,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return;
       }
       if (isAcknowledgmentPending?.(orderId)) {
+        onBumpBlocked?.(orderId);
         toast.info('Acknowledge messages and notes before clearing the ticket.', { duration: 2200 });
         return;
       }
