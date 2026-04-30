@@ -120,10 +120,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     }
   }, [order, onItemDismiss]);
 
-  // Servable modifier statuses
+  // Servable modifier statuses + timestamps (mirror item-level seenAt/doneAt)
   const [modifierStatuses, setModifierStatuses] = useState<Map<string, ModifierStatus>>(new Map());
+  const [modifierTimestamps, setModifierTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
 
   const handleAdvanceModifier = useCallback((modId: string) => {
+    const now = formatStaticTime(new Date());
     setModifierStatuses(prev => {
       const next = new Map(prev);
       const current = next.get(modId);
@@ -132,7 +134,18 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       else next.set(modId, 'done');
       return next;
     });
-  }, []);
+    setModifierTimestamps(prev => {
+      const next = new Map(prev);
+      const existing = next.get(modId) || {};
+      const currentStatus = modifierStatuses.get(modId);
+      if (!currentStatus) {
+        next.set(modId, { ...existing, seenAt: existing.seenAt || now });
+      } else if (currentStatus === 'preparing') {
+        next.set(modId, { ...existing, seenAt: existing.seenAt || now, doneAt: now });
+      }
+      return next;
+    });
+  }, [modifierStatuses]);
 
   const handleUndoModifier = useCallback((modId: string) => {
     setModifierStatuses(prev => {
@@ -142,7 +155,19 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       else next.delete(modId);
       return next;
     });
-  }, []);
+    setModifierTimestamps(prev => {
+      const next = new Map(prev);
+      const existing = next.get(modId);
+      if (!existing) return next;
+      const current = modifierStatuses.get(modId);
+      if (current === 'done') {
+        next.set(modId, { ...existing, doneAt: undefined });
+      } else {
+        next.delete(modId);
+      }
+      return next;
+    });
+  }, [modifierStatuses]);
 
   const [stationOverrides, setStationOverrides] = useState<Map<string, StationName>>(new Map());
 
@@ -822,6 +847,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
                     servableModifiersEnabled={servableModifiersEnabled}
                     modifierStatuses={modifierStatuses}
+                    modifierTimestamps={modifierTimestamps}
                     onAdvanceModifier={handleAdvanceModifier}
                     onUndoModifier={handleUndoModifier}
                     courseAgingColor={courseStatusColors.get(courseGroup.course)}
@@ -844,6 +870,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               showAllergens={showAllergens}
               servableModifiersEnabled={servableModifiersEnabled}
               modifierStatuses={modifierStatuses}
+              modifierTimestamps={modifierTimestamps}
               onAdvanceModifier={handleAdvanceModifier}
               onUndoModifier={handleUndoModifier}
               dismissedItemIds={dismissedItemIds}

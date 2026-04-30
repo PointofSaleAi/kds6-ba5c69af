@@ -9,14 +9,15 @@ interface ModifierLineProps {
   modifier: Modifier;
   servableEnabled?: boolean;
   modifierStatus?: ModifierStatus;
+  modifierTimestamps?: { seenAt?: string; doneAt?: string };
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
   parentQuantity?: number;
   compactQtyCol?: boolean;
 }
 
-export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdvanceModifier, onUndoModifier, parentQuantity = 1, compactQtyCol }: ModifierLineProps) {
-  const { tm } = useLanguage();
+export function ModifierLine({ modifier, servableEnabled, modifierStatus, modifierTimestamps, onAdvanceModifier, onUndoModifier, parentQuantity = 1, compactQtyCol }: ModifierLineProps) {
+  const { tm, t } = useLanguage();
   const styles = {
     extra: 'text-modifier-extra',
     remove: 'text-modifier-remove',
@@ -28,8 +29,6 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const isDone = isServable && modifierStatus === 'done';
   const isSeen = isServable && modifierStatus === 'preparing';
 
-  // Servable modifier: tap to advance, double-tap to undo (matches product/ticket pattern).
-  // No icons rendered - interaction is the row itself.
   const handleSingle = () => {
     if (!modifier.id) return;
     if (modifierStatus !== 'done') onAdvanceModifier?.(modifier.id);
@@ -43,12 +42,13 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const handleTap = useRowTap(handleSingle, handleDouble);
 
   if (isServable && modifier.id) {
-    // Match ItemRow tinting: green when seen, light grey when done
     const stateBg = isDone
       ? 'rgba(149, 165, 166, 0.12)'
       : isSeen
         ? 'rgba(29, 158, 117, 0.14)'
         : undefined;
+    const seenTextGreen = '#0F5132';
+    const doneText = '#374151';
 
     return (
       <div
@@ -67,10 +67,10 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         }}
         className="flex items-center select-none cursor-pointer active:bg-muted/50 -mx-2 px-2"
         style={{
-          paddingTop: '4px',
-          paddingBottom: '4px',
+          paddingTop: '0px',
+          paddingBottom: '0px',
           gap: '4px',
-          minHeight: '33px',
+          minHeight: '0px',
           backgroundColor: stateBg,
         }}
         title={modifierStatus === 'done' ? 'Double-tap to undo' : modifierStatus === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN'}
@@ -84,6 +84,22 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         >
           {tm(modifier.text)}
         </span>
+        {isSeen && modifierTimestamps?.seenAt && (
+          <span
+            style={{ fontSize: '11px', color: seenTextGreen, fontWeight: 600 }}
+            className="ml-1 shrink-0 whitespace-nowrap"
+          >
+            {t.seenAt} {modifierTimestamps.seenAt}
+          </span>
+        )}
+        {isDone && modifierTimestamps?.doneAt && (
+          <span
+            style={{ fontSize: '11px', color: doneText, fontWeight: 600 }}
+            className="ml-1 shrink-0 whitespace-nowrap"
+          >
+            {t.doneAt} {modifierTimestamps.doneAt}
+          </span>
+        )}
       </div>
     );
   }
