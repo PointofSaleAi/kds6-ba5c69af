@@ -439,6 +439,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return true;
   }, [isDineIn, courseLifecycleMap]);
 
+  // When the last dine-in course has been confirmed served, the product rows are gone.
+  // If notes/messages were pending, keep the ticket visible until they clear, then bump it.
+  useEffect(() => {
+    if (!isDineIn || !allCoursesServed) return;
+    if (isAcknowledgmentPending?.(order.id)) {
+      onBumpBlocked?.(order.id);
+      return;
+    }
+    onBump?.(order.id);
+  }, [isDineIn, allCoursesServed, order.id, isAcknowledgmentPending, onBumpBlocked, onBump]);
+
   // Compute ticket-level collective state from item statuses
   const ticketState: TicketState = useMemo(() => {
     // For coursed orders: derive from active course only, or show final DONE if all served
