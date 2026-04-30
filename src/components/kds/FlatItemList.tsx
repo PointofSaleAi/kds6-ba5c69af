@@ -119,9 +119,19 @@ function ItemTapRow({
     !!item.notes ||
     (displayMode === 'dual' && showSecondaryMenu && !item.isCancelled);
   const showDetails = !ticketLayoutCompact || detailsOpen;
+  // Servable modifier guard: keep the product (and its servable modifier rows)
+  // visible until every servable modifier is itself marked Done.
+  const servableMods = (item.modifiers || []).filter(
+    (m) => !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id
+  );
+  const allServableModsDone =
+    servableMods.length === 0 ||
+    servableMods.every((m) => modifierStatuses?.get(m.id as string) === 'done');
+
   const handleSingle = () => {
     if (item.isCancelled) return;
     if (status === 'done') {
+      if (!allServableModsDone) return;
       onDismissItem?.(item.id);
     } else {
       onAdvanceItem(item.id);
