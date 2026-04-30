@@ -137,6 +137,8 @@ function ItemTapRow({
 
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
+  const hasModifiers = item.modifiers.length > 0;
+  const isolateModifierRows = !!servableModifiersEnabled && hasModifiers;
 
   const useTeal = isSeen && seenIdx % 2 === 1;
   const seenBgGreen = 'rgba(29, 158, 117, 0.14)';
@@ -151,14 +153,19 @@ function ItemTapRow({
     <div
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{ 
-        backgroundColor: rowBg,
+        ...(!isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         paddingTop: 'var(--kds-row-py, 4px)',
         paddingBottom: 'var(--kds-row-py, 4px)',
       }}
     >
       <div
         className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
-        style={{ padding: `0px 0 0 0px`, gap: 0 }}
+        style={{
+          padding: isolateModifierRows ? '0px 8px 0 8px' : `0px 0 0 0px`,
+          gap: 0,
+          ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
+          ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
+        }}
         onClick={handleTap}
         title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
       >

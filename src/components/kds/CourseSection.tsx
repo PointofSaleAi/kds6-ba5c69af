@@ -483,6 +483,8 @@ function CourseItemTapRow({
 
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
+  const hasModifiers = item.modifiers.length > 0;
+  const isolateModifierRows = !!servableModifiersEnabled && hasModifiers;
 
   // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = amber for clear contrast.
   const useTeal = isSeen && typeof seenIdx === 'number' && seenIdx % 2 === 1;
@@ -493,6 +495,9 @@ function CourseItemTapRow({
 
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
+  const productRowBg = isHighlighted && !item.isCancelled
+    ? 'rgba(29, 158, 117, 0.10)'
+    : stateBg || undefined;
   const stateOpacity = itemOpacity;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
@@ -504,14 +509,19 @@ function CourseItemTapRow({
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
-        ...(isHighlighted ? { backgroundColor: 'rgba(29, 158, 117, 0.10)' } : stateBg ? { backgroundColor: stateBg } : {}),
+        ...(!isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         paddingTop: 'var(--kds-row-py, 4px)',
         paddingBottom: 'var(--kds-row-py, 4px)',
       }}
     >
       <div
         className={`flex items-start transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
-        style={{ padding: headerPad, gap: 0 }}
+        style={{
+          padding: isolateModifierRows ? '0px 8px 0 8px' : headerPad,
+          gap: 0,
+          ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
+          ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
+        }}
         onClick={tappable ? handleTap : undefined}
         title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
       >
