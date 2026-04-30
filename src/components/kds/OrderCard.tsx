@@ -38,6 +38,8 @@ interface OrderCardProps {
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
   /** When provided, returning true blocks the ticket-level "remove" advance (3rd tap). */
   isAcknowledgmentPending?: (orderId: string) => boolean;
+  /** Notifies parent that a final-bump (ticket removal) was attempted while acknowledgments were pending. */
+  onBumpBlocked?: (orderId: string) => void;
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
