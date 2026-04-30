@@ -484,7 +484,15 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
   const hasModifiers = item.modifiers.length > 0;
-  const isolateModifierRows = !!servableModifiersEnabled && hasModifiers;
+  // A modifier is "servable" (independently actionable) only if the feature is on,
+  // the modifier is flagged servable, it is not a removal, and it has an id.
+  const isServableMod = (m: typeof item.modifiers[number]) =>
+    !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id;
+  const hasServableModifiers = item.modifiers.some(isServableMod);
+  // Only isolate the product background from modifier rows when there are
+  // truly independent (servable) modifier rows below. Non-servable modifiers
+  // should visually inherit the product's tint / done state.
+  const isolateModifierRows = hasServableModifiers;
 
   // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = amber for clear contrast.
   const useTeal = isSeen && typeof seenIdx === 'number' && seenIdx % 2 === 1;
@@ -632,33 +640,61 @@ function CourseItemTapRow({
         </div>
       </div>
 
-      {showDetails && item.modifiers.length > 0 && (
-        <div
-          className={isDone && !servableModifiersEnabled ? 'line-through' : ''}
-          style={{
-            marginTop: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
-            paddingLeft: ticketLayoutCompact ? '16px' : '0px',
-            ...(servableModifiersEnabled && isDone ? { opacity: 1 } : {}),
-          }}
-        >
-          {item.modifiers.map((mod, idx) => (
-            <ModifierLine
-              key={mod.id || idx}
-              modifier={mod}
-              servableEnabled={servableModifiersEnabled}
-              modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
-              modifierTimestamps={mod.id ? modifierTimestamps?.get(mod.id) : undefined}
-              onAdvanceModifier={onAdvanceModifier}
-              onUndoModifier={onUndoModifier}
-              parentQuantity={item.quantity}
-              compactQtyCol={ticketLayoutCompact}
-            />
-          ))}
-        </div>
-      )}
+      {showDetails && item.modifiers.length > 0 && (() => {
+        const nonServable = item.modifiers.filter((m) => !isServableMod(m));
+        const servable = item.modifiers.filter((m) => isServableMod(m));
+        return (
+          <>
+            {nonServable.length > 0 && (
+              <div
+                className={isDone ? 'line-through' : ''}
+                style={{
+                  marginTop: 'var(--kds-child-gap, 1px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--kds-child-gap, 1px)',
+                  paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                }}
+              >
+                {nonServable.map((mod, idx) => (
+                  <ModifierLine
+                    key={mod.id || `ns-${idx}`}
+                    modifier={mod}
+                    servableEnabled={false}
+                    parentQuantity={item.quantity}
+                    compactQtyCol={ticketLayoutCompact}
+                  />
+                ))}
+              </div>
+            )}
+            {servable.length > 0 && (
+              <div
+                style={{
+                  marginTop: '0px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0px',
+                  paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                }}
+              >
+                {servable.map((mod, idx) => (
+                  <ModifierLine
+                    key={mod.id || `s-${idx}`}
+                    modifier={mod}
+                    servableEnabled={servableModifiersEnabled}
+                    modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+                    modifierTimestamps={mod.id ? modifierTimestamps?.get(mod.id) : undefined}
+                    onAdvanceModifier={onAdvanceModifier}
+                    onUndoModifier={onUndoModifier}
+                    parentQuantity={item.quantity}
+                    compactQtyCol={ticketLayoutCompact}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {showDetails && item.notes && !item.isCancelled && (
         <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
