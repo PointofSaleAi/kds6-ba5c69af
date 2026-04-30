@@ -112,6 +112,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return pendingMessages || hasUnseenNotes;
   }, [orders, kitchenMessages, notesAcknowledgedIds]);
 
+  // Track tickets where the kitchen tried to clear (final 3rd-tap) but was blocked
+  // because messages/notes were still pending. We auto-finish them once acks clear.
+  const [pendingBumpIds, setPendingBumpIds] = useState<Set<string>>(new Set());
+  const handleBumpBlocked = useCallback((orderId: string) => {
+    setPendingBumpIds(prev => {
+      if (prev.has(orderId)) return prev;
+      const next = new Set(prev);
+      next.add(orderId);
+      return next;
+    });
+  }, []);
+
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
   const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
