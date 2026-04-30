@@ -649,11 +649,14 @@ function CourseItemTapRow({
               <div
                 className={isDone ? 'line-through' : ''}
                 style={{
-                  marginTop: 'var(--kds-child-gap, 1px)',
+                  marginTop: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 'var(--kds-child-gap, 1px)',
-                  paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                  gap: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
+                  paddingLeft: isolateModifierRows ? (ticketLayoutCompact ? '24px' : '8px') : (ticketLayoutCompact ? '16px' : '0px'),
+                  paddingRight: isolateModifierRows ? '8px' : '0px',
+                  ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
+                  ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
                 }}
               >
                 {nonServable.map((mod, idx) => (
