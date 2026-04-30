@@ -32,8 +32,11 @@ interface OrderCardProps {
   onFireCourse?: (orderId: string, course: string) => void;
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
   onAcknowledgeNotes?: (orderId: string) => void;
+  onUnacknowledgeNotes?: (orderId: string) => void;
   onMarkSeen?: (orderId: string) => void;
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
+  /** When provided, returning true blocks the ticket-level "remove" advance (3rd tap). */
+  isAcknowledgmentPending?: (orderId: string) => boolean;
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
