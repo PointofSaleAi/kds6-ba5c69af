@@ -161,8 +161,9 @@ function ItemTapRow({
       <div
         className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
         style={{
-          padding: `0px 0 0 0px`,
+          padding: isolateModifierRows ? '0px 8px 0 8px' : `0px 0 0 0px`,
           gap: 0,
+          ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         }}
         onClick={handleTap}
