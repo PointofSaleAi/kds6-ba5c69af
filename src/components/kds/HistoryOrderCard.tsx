@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
