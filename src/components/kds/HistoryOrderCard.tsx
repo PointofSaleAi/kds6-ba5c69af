@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
@@ -22,9 +22,11 @@ interface HistoryItemRowProps {
   item: OrderItem;
   orderId: string;
   isLast: boolean;
-  onRecallItem?: (orderId: string, item: OrderItem) => void;
+  selected: boolean;
+  selectionMode: boolean;
+  onTap: () => void;
+  onLongPress: () => void;
   tp: (s: string) => string;
-  compactLayout?: boolean;
 }
 
 function formatDuration(seconds: number): string {
@@ -40,50 +42,84 @@ function getDurationBadgeStyle(seconds: number) {
 }
 
 const DINE_IN_TYPES = new Set(['dine-in']);
+const LONG_PRESS_MS = 450;
 
-/**
- * History item row: tap anywhere on the row to recall the item.
- * Matches the Home screen item row spacing (`py-0.5`, `text-item-name`)
- * and supports the same allergen/modifier stack.
- */
-function HistoryItemRow({ item, orderId, isLast, onRecallItem, tp, compactLayout }: HistoryItemRowProps) {
-  const [recalled, setRecalled] = useState(false);
-  const interactive = !!onRecallItem && !item.isCancelled && !recalled;
+function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPress, tp }: HistoryItemRowProps) {
+  const interactive = !item.isCancelled;
+  const timerRef = useRef<number | null>(null);
+  const longPressedRef = useRef(false);
 
-  const handleRecall = () => {
-    if (!interactive) return;
-    setRecalled(true);
-    onRecallItem?.(orderId, item);
+  const clearTimer = () => {
+    if (timerRef.current !== null) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
   };
+
+  const startPress = () => {
+    if (!interactive) return;
+    longPressedRef.current = false;
+    clearTimer();
+    timerRef.current = window.setTimeout(() => {
+      longPressedRef.current = true;
+      onLongPress();
+    }, LONG_PRESS_MS);
+  };
+
+  const endPress = (fire: boolean) => {
+    clearTimer();
+    if (!interactive) return;
+    if (fire && !longPressedRef.current) {
+      onTap();
+    }
+    longPressedRef.current = false;
+  };
+
+  const baseClass = `-mx-1 px-1 select-none transition-colors ${
+    isLast ? '' : 'border-b border-border/50'
+  } ${item.isCancelled ? 'opacity-50' : ''} ${
+    interactive ? 'cursor-pointer' : ''
+  }`;
+
+  const selectedStyle = selected
+    ? { backgroundColor: 'hsl(var(--primary) / 0.18)', boxShadow: 'inset 3px 0 0 hsl(var(--primary))' }
+    : undefined;
 
   return (
     <div
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
-      aria-label={interactive ? `Recall ${item.name}` : undefined}
-      onClick={handleRecall}
+      aria-pressed={selected}
+      aria-label={interactive ? `${selected ? 'Deselect' : 'Select'} ${item.name}` : undefined}
+      onPointerDown={startPress}
+      onPointerUp={() => endPress(true)}
+      onPointerLeave={() => endPress(false)}
+      onPointerCancel={() => endPress(false)}
+      onContextMenu={(e) => e.preventDefault()}
       onKeyDown={(e) => {
         if (!interactive) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          handleRecall();
+          onTap();
         }
       }}
-      className={`-mx-1 px-1 select-none transition-colors ${
-        isLast ? '' : 'border-b border-border/50'
-      } ${item.isCancelled ? 'opacity-50' : ''} ${
-        interactive ? 'cursor-pointer active:bg-muted/40 hover:bg-muted/30' : ''
-      }`}
-      style={{ paddingTop: 'var(--kds-row-py, 2px)', paddingBottom: isLast ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)' }}
+      className={`${baseClass} ${!selected && interactive ? 'hover:bg-muted/30 active:bg-muted/40' : ''}`}
+      style={{
+        paddingTop: 'var(--kds-row-py, 2px)',
+        paddingBottom: isLast ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)',
+        ...selectedStyle,
+      }}
     >
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span
               className={`text-item-name ${
-                recalled
-                  ? 'text-text-primary'
-                  : 'line-through text-text-muted'
+                selected
+                  ? 'text-text-primary font-bold'
+                  : selectionMode
+                    ? 'text-text-secondary line-through'
+                    : 'line-through text-text-muted'
               } ${item.isCancelled ? 'text-text-muted' : ''}`}
             >
               {item.quantity}&times; {tp(item.name)}
@@ -119,6 +155,40 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
   const showCourses = DINE_IN_TYPES.has(order.orderType);
   const allItems = order.courses.flatMap(c => c.items);
   const isCompactLayout = ticketLayout === 'compact';
+
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const selectionMode = selectedIds.size > 0;
+
+  const toggleSelect = useCallback((itemId: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) next.delete(itemId);
+      else next.add(itemId);
+      return next;
+    });
+  }, []);
+
+  const handleItemTap = useCallback((item: OrderItem) => {
+    if (selectionMode) {
+      toggleSelect(item.id);
+      return;
+    }
+    // Single tap (no selection in progress): recall immediately
+    onRecallItem?.(order.id, item);
+  }, [selectionMode, toggleSelect, onRecallItem, order.id]);
+
+  const handleItemLongPress = useCallback((item: OrderItem) => {
+    toggleSelect(item.id);
+  }, [toggleSelect]);
+
+  const handleBulkRecall = () => {
+    const itemsById = new Map(allItems.map(i => [i.id, i]));
+    selectedIds.forEach(id => {
+      const it = itemsById.get(id);
+      if (it) onRecallItem?.(order.id, it);
+    });
+    setSelectedIds(new Set());
+  };
 
   if (compact) {
     const hasAllergens = order.courses.some(c => c.items.some(i => i.allergens.length > 0));
@@ -184,7 +254,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
         />
       </div>
 
-      {/* Header: tap to recall the entire ticket. Mirrors Home card header. */}
+      {/* Header: tap to recall the entire ticket. Disabled in selection mode. */}
       <div className="relative">
         <div
           className="absolute inset-0"
@@ -194,15 +264,16 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
           role="button"
           tabIndex={0}
           aria-label={`Recall ticket ${order.orderNumber}`}
-          title="Tap to recall ticket"
-          onClick={() => onRecall?.(order.id)}
+          title={selectionMode ? 'Selection active' : 'Tap to recall ticket'}
+          onClick={() => { if (!selectionMode) onRecall?.(order.id); }}
           onKeyDown={(e) => {
+            if (selectionMode) return;
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
               onRecall?.(order.id);
             }
           }}
-          className="relative flex items-center justify-between cursor-pointer select-none active:brightness-95 transition-all"
+          className={`relative flex items-center justify-between select-none transition-all ${selectionMode ? 'cursor-default' : 'cursor-pointer active:brightness-95'}`}
           style={{ padding: '12px' }}
         >
           {isCompactLayout ? (
@@ -323,9 +394,11 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                     item={item}
                     orderId={order.id}
                     isLast={idx === arr.length - 1}
-                    onRecallItem={onRecallItem}
+                    selected={selectedIds.has(item.id)}
+                    selectionMode={selectionMode}
+                    onTap={() => handleItemTap(item)}
+                    onLongPress={() => handleItemLongPress(item)}
                     tp={tp}
-                    compactLayout={isCompactLayout}
                   />
                 ))}
               </div>
@@ -339,14 +412,35 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                 item={item}
                 orderId={order.id}
                 isLast={idx === arr.length - 1}
-                onRecallItem={onRecallItem}
+                selected={selectedIds.has(item.id)}
+                selectionMode={selectionMode}
+                onTap={() => handleItemTap(item)}
+                onLongPress={() => handleItemLongPress(item)}
                 tp={tp}
-                compactLayout={isCompactLayout}
               />
             ))}
           </div>
         )}
       </div>
+
+      {selectionMode && (
+        <div className="border-t border-border bg-muted/40 p-2 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setSelectedIds(new Set())}
+            className="text-[12px] font-semibold uppercase px-3 py-2 rounded bg-surface-card border border-border text-text-secondary hover:bg-muted transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleBulkRecall}
+            className="flex-1 text-[13px] font-bold uppercase px-3 py-2 rounded bg-primary text-primary-foreground hover:brightness-110 active:brightness-95 transition-all"
+          >
+            Recall {selectedIds.size} {selectedIds.size === 1 ? 'item' : 'items'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
