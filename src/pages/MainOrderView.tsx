@@ -630,6 +630,24 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setOrders(prev => prev.filter(o => !removeIds.has(o.id)));
   }, [orders, kitchenMessages, notesAcknowledgedIds, isAcknowledgmentPending, setOrders]);
 
+  // Auto-finish coursed/normal tickets that the kitchen tried to clear while
+  // acknowledgments were pending. Once message and notes are acknowledged, run
+  // the deferred bump so the ticket leaves Home.
+  useEffect(() => {
+    if (pendingBumpIds.size === 0) return;
+    const ready: string[] = [];
+    pendingBumpIds.forEach(id => {
+      if (!isAcknowledgmentPending(id)) ready.push(id);
+    });
+    if (ready.length === 0) return;
+    ready.forEach(id => markAllItemsDone(id));
+    setPendingBumpIds(prev => {
+      const next = new Set(prev);
+      ready.forEach(id => next.delete(id));
+      return next;
+    });
+  }, [pendingBumpIds, kitchenMessages, notesAcknowledgedIds, isAcknowledgmentPending, markAllItemsDone]);
+
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
       setActiveNav(target);
