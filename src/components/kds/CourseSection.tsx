@@ -516,7 +516,7 @@ function CourseItemTapRow({
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const productRowBg = isHighlighted && !item.isCancelled
-    ? 'rgba(29, 158, 117, 0.10)'
+    ? 'hsl(var(--destructive) / 0.12)'
     : stateBg || undefined;
   const stateOpacity = itemOpacity;
 
