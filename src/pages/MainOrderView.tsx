@@ -79,6 +79,39 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
 
+  // Per-order acknowledgment of order notes (lifted out of OrderNotesSection so MainOrderView can gate ticket removal).
+  const [notesAcknowledgedIds, setNotesAcknowledgedIds] = useState<Set<string>>(new Set());
+  const acknowledgeOrderNotes = useCallback((orderId: string) => {
+    setNotesAcknowledgedIds(prev => {
+      if (prev.has(orderId)) return prev;
+      const next = new Set(prev);
+      next.add(orderId);
+      return next;
+    });
+  }, []);
+  const unacknowledgeOrderNotes = useCallback((orderId: string) => {
+    setNotesAcknowledgedIds(prev => {
+      if (!prev.has(orderId)) return prev;
+      const next = new Set(prev);
+      next.delete(orderId);
+      return next;
+    });
+  }, []);
+
+  /**
+   * Returns true if the order still has unacknowledged kitchen messages
+   * or unseen order notes, blocking removal from Home.
+   */
+  const isAcknowledgmentPending = useCallback((orderId: string) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return false;
+    const pendingMessages = kitchenMessages.some(
+      m => m.linked_order_id === orderId && m.status === 'pending'
+    );
+    const hasUnseenNotes = !!order.orderNotes && !notesAcknowledgedIds.has(orderId);
+    return pendingMessages || hasUnseenNotes;
+  }, [orders, kitchenMessages, notesAcknowledgedIds]);
+
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
   const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
@@ -558,18 +591,32 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     });
 
     // 2) Remove the item from the active order; if order becomes empty, drop it
+    // Capture pending state at dismissal time so we can keep the ticket as a stub
+    // when the kitchen still owes acknowledgment of messages or order notes.
+    const pendingAck = isAcknowledgmentPending(orderId);
     setOrders(prev => prev.flatMap(o => {
       if (o.id !== orderId) return [o];
       const updatedCourses = o.courses
         .map(c => ({ ...c, items: c.items.filter(i => i.id !== item.id) }))
         .filter(c => c.items.length > 0);
-      if (updatedCourses.length === 0) return [];
       const newItemCount = updatedCourses.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0), 0);
+      if (updatedCourses.length === 0 && !pendingAck) return [];
       return [{ ...o, courses: updatedCourses, itemCount: newItemCount }];
     }));
 
     toast.success(`${item.name} sent to history`, { duration: 1800 });
-  }, [orders, setOrders]);
+  }, [orders, setOrders, isAcknowledgmentPending]);
+
+  // Auto-clear stub tickets that were retained on Home only because of pending
+  // messages/notes once the kitchen acknowledges everything.
+  useEffect(() => {
+    const stubs = orders.filter(o => o.courses.length === 0);
+    if (stubs.length === 0) return;
+    const toRemove = stubs.filter(o => !isAcknowledgmentPending(o.id));
+    if (toRemove.length === 0) return;
+    const removeIds = new Set(toRemove.map(o => o.id));
+    setOrders(prev => prev.filter(o => !removeIds.has(o.id)));
+  }, [orders, kitchenMessages, notesAcknowledgedIds, isAcknowledgmentPending, setOrders]);
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
@@ -843,7 +890,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                               const displayOrder = getStationDisplayOrder(order);
                               return (
                                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                                  <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+                                  <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} />
                                 </motion.div>
                               );
                             })}
@@ -858,7 +905,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} compactRows />
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} compactRows />
                             </motion.div>
                           );
                         })}
@@ -871,7 +918,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
-                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} />
                             </motion.div>
                           );
                         })}

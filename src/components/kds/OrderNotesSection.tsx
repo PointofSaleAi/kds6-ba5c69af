@@ -6,9 +6,10 @@ interface OrderNotesSectionProps {
   notes: string;
   orderId: string;
   onAcknowledgeNotes?: (orderId: string) => void;
+  onUnacknowledgeNotes?: (orderId: string) => void;
 }
 
-export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderNotesSectionProps) {
+export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes, onUnacknowledgeNotes }: OrderNotesSectionProps) {
   const [acknowledged, setAcknowledged] = useState(false);
   const { tn } = useLanguage();
 
@@ -17,6 +18,8 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes }: OrderN
     setAcknowledged(next);
     if (next) {
       onAcknowledgeNotes?.(orderId);
+    } else {
+      onUnacknowledgeNotes?.(orderId);
     }
   };
 

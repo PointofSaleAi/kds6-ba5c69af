@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, StationName, OrderItem } from '@/types/kds';
 import type { ItemStatus, StationStatus } from './CourseSection';
@@ -32,8 +33,11 @@ interface OrderCardProps {
   onFireCourse?: (orderId: string, course: string) => void;
   onItemStatusChange?: (itemId: string, status: ItemStatus | undefined) => void;
   onAcknowledgeNotes?: (orderId: string) => void;
+  onUnacknowledgeNotes?: (orderId: string) => void;
   onMarkSeen?: (orderId: string) => void;
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
+  /** When provided, returning true blocks the ticket-level "remove" advance (3rd tap). */
+  isAcknowledgmentPending?: (orderId: string) => boolean;
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
@@ -59,7 +63,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onMarkSeen, onItemDismiss, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
@@ -479,6 +483,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         });
         return;
       }
+      if (isAcknowledgmentPending?.(orderId)) {
+        toast.info('Acknowledge messages and notes before clearing the ticket.', { duration: 2200 });
+        return;
+      }
       if (isDineIn && allCoursesServed) {
         // All courses served, final DONE - remove ticket
         onBump?.(orderId);
@@ -523,7 +531,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
@@ -796,6 +804,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             notes={order.orderNotes}
             orderId={order.id}
             onAcknowledgeNotes={onAcknowledgeNotes}
+            onUnacknowledgeNotes={onUnacknowledgeNotes}
           />
         )}
 
