@@ -621,8 +621,15 @@ function CourseItemTapRow({
 
       {showDetails && item.modifiers.length > 0 && (
         <div
-          className={isDone ? 'line-through' : ''}
-          style={{ marginTop: 'var(--kds-child-gap, 1px)', display: 'flex', flexDirection: 'column', gap: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}
+          className={isDone && !servableModifiersEnabled ? 'line-through' : ''}
+          style={{
+            marginTop: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
+            paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+            ...(servableModifiersEnabled && isDone ? { opacity: 1 } : {}),
+          }}
         >
           {item.modifiers.map((mod, idx) => (
             <ModifierLine

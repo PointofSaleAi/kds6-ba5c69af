@@ -1,6 +1,6 @@
 import type { Modifier } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
-import { KdsActionIcon } from './KdsActionIcon';
+import { useRowTap } from '@/hooks/use-row-tap';
 import type { ItemStatus } from './CourseSection';
 
 export type ModifierStatus = ItemStatus;
@@ -26,30 +26,54 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
   const qtyColWidth = compactQtyCol ? '1.5ch' : '2.25ch';
   const isServable = servableEnabled && modifier.isServable && modifier.type !== 'remove' && modifier.id;
   const isDone = isServable && modifierStatus === 'done';
+  const isSeen = isServable && modifierStatus === 'preparing';
 
-  // Servable modifier: tap row to advance (matches product/ticket pattern).
-  // Undo affordance only appears once advanced past Unseen.
+  // Servable modifier: tap to advance, double-tap to undo (matches product/ticket pattern).
+  // No icons rendered - interaction is the row itself.
+  const handleSingle = () => {
+    if (!modifier.id) return;
+    if (modifierStatus !== 'done') onAdvanceModifier?.(modifier.id);
+  };
+  const handleDouble = () => {
+    if (!modifier.id) return;
+    if (modifierStatus === 'preparing' || modifierStatus === 'done') {
+      onUndoModifier?.(modifier.id);
+    }
+  };
+  const handleTap = useRowTap(handleSingle, handleDouble);
+
   if (isServable && modifier.id) {
-    const handleAdvance = () => {
-      if (modifierStatus !== 'done') onAdvanceModifier?.(modifier.id!);
-    };
+    // Match ItemRow tinting: green when seen, light grey when done
+    const stateBg = isDone
+      ? 'rgba(149, 165, 166, 0.12)'
+      : isSeen
+        ? 'rgba(29, 158, 117, 0.14)'
+        : undefined;
+
     return (
       <div
         role="button"
         tabIndex={0}
         onClick={(e) => {
           e.stopPropagation();
-          handleAdvance();
+          handleTap();
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             e.stopPropagation();
-            handleAdvance();
+            handleSingle();
           }
         }}
-        className={`flex items-center select-none ${modifierStatus !== 'done' ? 'cursor-pointer' : ''}`}
-        style={{ paddingTop: '4px', paddingBottom: '4px', gap: '4px', minHeight: '33px' }}
+        className="flex items-center select-none cursor-pointer active:bg-muted/50 -mx-2 px-2"
+        style={{
+          paddingTop: '4px',
+          paddingBottom: '4px',
+          gap: '4px',
+          minHeight: '33px',
+          backgroundColor: stateBg,
+        }}
+        title={modifierStatus === 'done' ? 'Double-tap to undo' : modifierStatus === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN'}
       >
         <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: qtyColWidth, display: 'inline-block' }}>
           0x
@@ -60,15 +84,6 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         >
           {tm(modifier.text)}
         </span>
-        {modifierStatus && (
-          <div
-            className="flex items-center shrink-0 ml-auto"
-            style={{ gap: '0px' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <KdsActionIcon icon="undo" onClick={() => onUndoModifier?.(modifier.id!)} label="Undo modifier" />
-          </div>
-        )}
       </div>
     );
   }
