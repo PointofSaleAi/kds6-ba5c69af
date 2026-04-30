@@ -484,7 +484,15 @@ function CourseItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
   const hasModifiers = item.modifiers.length > 0;
-  const isolateModifierRows = !!servableModifiersEnabled && hasModifiers;
+  // A modifier is "servable" (independently actionable) only if the feature is on,
+  // the modifier is flagged servable, it is not a removal, and it has an id.
+  const isServableMod = (m: typeof item.modifiers[number]) =>
+    !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id;
+  const hasServableModifiers = item.modifiers.some(isServableMod);
+  // Only isolate the product background from modifier rows when there are
+  // truly independent (servable) modifier rows below. Non-servable modifiers
+  // should visually inherit the product's tint / done state.
+  const isolateModifierRows = hasServableModifiers;
 
   // FIX 3: Alternating seen colors. Even index (0, 2, ...) = green, odd (1, 3, ...) = amber for clear contrast.
   const useTeal = isSeen && typeof seenIdx === 'number' && seenIdx % 2 === 1;
