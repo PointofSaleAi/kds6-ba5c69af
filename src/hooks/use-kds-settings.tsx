@@ -107,7 +107,17 @@ function loadSettings(): KDSSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaults;
-    return { ...defaults, ...JSON.parse(raw) };
+    const parsed = { ...defaults, ...JSON.parse(raw) };
+    // Migrate legacy Title-case sortDefault values to the current lowercase variants.
+    const sortMigration: Record<string, SortDefault> = {
+      'By Time': 'By time',
+      'By Table': 'By table',
+      'By Type': 'By type',
+    };
+    if (parsed.sortDefault && sortMigration[parsed.sortDefault as string]) {
+      parsed.sortDefault = sortMigration[parsed.sortDefault as string];
+    }
+    return parsed;
   } catch {
     return defaults;
   }
