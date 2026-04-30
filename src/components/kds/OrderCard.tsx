@@ -804,6 +804,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             notes={order.orderNotes}
             orderId={order.id}
             onAcknowledgeNotes={onAcknowledgeNotes}
+            onUnacknowledgeNotes={onUnacknowledgeNotes}
           />
         )}
 
