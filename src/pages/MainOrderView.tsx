@@ -69,7 +69,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [activeNav, setActiveNav] = useState('home');
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const sortDefaultMap: Record<string, SortMode> = { 'By Time': 'newest', 'By Table': 'table', 'By Type': 'type' };
+  const sortDefaultMap: Record<string, SortMode> = { 'By time': 'newest', 'By table': 'table', 'By type': 'type' };
   const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
@@ -723,7 +723,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
   };
 
-  const dateTabs = ['Today', 'Yesterday', 'Last 7 Days'];
+  const dateTabs = ['Today', 'Yesterday', 'Last 7 days'];
 
   const isHistory = activeNav === 'history';
   const isSeenScreen = activeNav === 'seen-orders';
@@ -878,14 +878,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
                       {resolvedStationCourse}
                     </span>
-                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
+                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station view</span>
                   </div>
                   <button
                     onClick={() => setStationCourse(null)}
                     style={{ fontSize: 12, color: '#818CF8' }}
                     className="hover:underline"
                   >
-                    Exit Station View
+                    Exit Station view
                   </button>
                 </div>
               )}

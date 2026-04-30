@@ -361,7 +361,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   </button>
                 </div>
 
-                {/* Request a Language Modal */}
+                {/* Request a language Modal */}
                 {requestFormOpen && (
                   <div
                     className="fixed inset-0 z-[100] flex items-center justify-center"
@@ -378,7 +378,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     >
                       {/* Header */}
                       <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
-                        <h3 className="text-sm font-bold text-text-primary">Request a Language</h3>
+                        <h3 className="text-sm font-bold text-text-primary">Request a language</h3>
                         <button
                           onClick={() => setRequestFormOpen(false)}
                           className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-text-muted"
@@ -452,7 +452,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                 )}
                                 {filteredMore.length > 0 && (
                                   <>
-                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More languages</div>
                                     {filteredMore.map((lang) => (
                                       <button
                                         key={lang}
@@ -518,7 +518,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                           disabled={!reqSelectedLang}
                           className="w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-brand-primary text-primary-foreground hover:bg-brand-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[44px]"
                         >
-                          Submit Request
+                          Submit request
                         </button>
                       </div>
                     </div>
@@ -555,7 +555,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 </div>
               </div>
               <div className="text-[9px] text-text-muted mb-2 italic">
-                Preview-only. Change the saved layout in Display, Ticket Layout. Proper nouns (server name, guest name) are not translated.
+                Preview-only. Change the saved layout in Display, Ticket layout. Proper nouns (server name, guest name) are not translated.
               </div>
               <div className="flex-1 min-h-0 overflow-y-auto w-full flex flex-col">
                 <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
@@ -573,7 +573,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
           /* REGION TAB */
           <div className="overflow-y-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-              {/* Date Format - left */}
+              {/* Date format - left */}
               <div>
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
                 <div className="space-y-2">
@@ -596,7 +596,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 </div>
               </div>
 
-              {/* Time Format - right */}
+              {/* Time format - right */}
               <div>
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time format</div>
                 <div className="space-y-2">

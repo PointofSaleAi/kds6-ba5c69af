@@ -7,7 +7,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <LanguageProvider>{children}</LanguageProvider>
 );
 
-describe('Language Scope gating', () => {
+describe('Language scope gating', () => {
   beforeEach(() => {
     localStorage.clear();
   });

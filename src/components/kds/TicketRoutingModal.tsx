@@ -59,7 +59,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
                 <Route size={16} className="text-warning" />
               </div>
               <div>
-                <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route Entire Ticket</div>
+                <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route entire ticket</div>
                 <div className="text-[11px] text-text-secondary mt-0.5 font-medium">
                   Ticket <span className="font-bold text-text-primary">#{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
                 </div>

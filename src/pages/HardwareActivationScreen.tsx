@@ -144,7 +144,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           <PosaiLogo variant="light" className="h-14 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
-              {phase === 'activate' ? 'Kitchen Display System' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset Password'}
+              {phase === 'activate' ? 'Kitchen Display System' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset password'}
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               {phase === 'set-pin'
@@ -159,7 +159,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             <motion.div key="activate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
               {/* LEFT: QR (primary) */}
               <div className="flex flex-col items-center justify-center px-10">
-                <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>Scan to Activate</p>
+                <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>Scan to activate</p>
 
                 <AnimatePresence mode="wait">
                   {!qrApproved ? (
@@ -190,7 +190,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: 'hsl(145, 63%, 42%)' }}>
                         <Check className="w-8 h-8 text-white" strokeWidth={3} />
                       </div>
-                      <p className="text-white font-montserrat font-bold">Device Approved</p>
+                      <p className="text-white font-montserrat font-bold">Device approved</p>
                       <p className="text-xs font-montserrat mt-1" style={{ color: '#6C7A89' }}>Redirecting...</p>
                     </motion.div>
                   )}
@@ -235,7 +235,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                         </div>
                         <button type="submit" style={btnStyle}>ACTIVATE</button>
                         <button type="button" onClick={() => setPhase('forgot-password')} className="text-sm font-montserrat text-center" style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
-                          Forgot Password?
+                          Forgot password?
                         </button>
                       </motion.div>
                     )}

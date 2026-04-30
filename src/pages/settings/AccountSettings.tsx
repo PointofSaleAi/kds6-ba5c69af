@@ -59,7 +59,7 @@ export default function AccountSettings() {
         iconColor={GROUP_COLOR.account}
         title="Account"
         shortDescription="Manage this device's identity, developer tools, and session."
-        longDescription="Manage this device's identity, developer tools, and session. Use Dev Mode to surface the scenario selector during development. Logging out returns the device to the activation flow."
+        longDescription="Manage this device's identity, developer tools, and session. Use Dev mode to surface the scenario selector during development. Logging out returns the device to the activation flow."
       />
 
       <SettingsPill
@@ -83,7 +83,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={AlertCircle}
         iconColor="#E84C3D"
-        label="Bug Reporting"
+        label="Bug reporting"
         helper="Enable the in-app reporting tool for crash and issue capture."
         right={<SwitchToggle checked={bugReporting} onChange={handleBugReportingChange} />}
         highlighted={hash === 'bug-reporting'}
@@ -101,7 +101,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Upload}
         iconColor="#16A085"
-        label="Upload Logs"
+        label="Upload logs"
         helper="Send recent diagnostic logs to eatOS support."
         onClick={handleUploadLogs}
         highlighted={hash === 'upload-logs'}
@@ -110,7 +110,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={MessageSquare}
         iconColor="#7C3AED"
-        label="Feedback & Support"
+        label="Feedback & support"
         helper="Request a feature or contact support."
         onClick={() => setFeedbackOpen(true)}
         highlighted={hash === 'feedback-support'}
@@ -143,7 +143,7 @@ export default function AccountSettings() {
               onClick={handleLogOut}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Log Out
+              Log out
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

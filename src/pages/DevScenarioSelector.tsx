@@ -19,7 +19,7 @@ export default function DevScenarioSelector({
         transition={{ duration: 0.4 }}
         className="flex flex-col items-center w-full max-w-[860px] px-6"
       >
-        {/* Dev Mode Badge */}
+        {/* Dev mode Badge */}
         <div
           className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4"
           style={{ backgroundColor: '#3D2A00', border: '1px solid #BA7517', color: '#F5A623' }}
@@ -48,13 +48,13 @@ export default function DevScenarioSelector({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[600px]">
           <ScenarioCard
             icon={<UserPlus className="w-5 h-5" style={{ color: '#6C7A89' }} />}
-            title="New User"
+            title="New user"
             subtitle="First time activating this device"
             onClick={onNewUser}
           />
           <ScenarioCard
             icon={<LogIn className="w-5 h-5" style={{ color: '#6C7A89' }} />}
-            title="Existing User"
+            title="Existing user"
             subtitle="Device already activated - sign in with PIN"
             onClick={onExistingUser}
           />

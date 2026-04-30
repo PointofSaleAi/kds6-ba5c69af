@@ -35,7 +35,7 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Printer}
         iconColor="#5E4DD8"
-        label="KOT Printer"
+        label="KOT printer"
         helper={kot.printerId ? `Connected to ${kot.printerName}` : 'No printer assigned. Tap to pair one.'}
         right={<ValueText>{kot.printerId ? kot.printerName : 'Not set'}</ValueText>}
         onClick={() => openPrinter('kot')}
@@ -45,7 +45,7 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Tag}
         iconColor="#0A84FF"
-        label="Label Printer"
+        label="Label printer"
         helper={label.printerId ? `Connected to ${label.printerName}` : 'No printer assigned. Tap to pair one.'}
         right={<ValueText>{label.printerId ? label.printerName : 'Not set'}</ValueText>}
         onClick={() => openPrinter('label')}

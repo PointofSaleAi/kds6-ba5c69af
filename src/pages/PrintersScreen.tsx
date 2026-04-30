@@ -18,9 +18,9 @@ interface PrinterDevice {
 
 const mockPrinters: PrinterDevice[] = [
   { id: 'p1', name: 'Kitchen Epson TM-T88', ip: '192.168.1.101', status: 'online', paired: true },
-  { id: 'p2', name: 'Bar Printer', ip: '192.168.1.102', status: 'online', paired: true },
-  { id: 'p3', name: 'Expo Printer', ip: '192.168.1.103', status: 'low-paper', paired: true },
-  { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline', paired: false },
+  { id: 'p2', name: 'Bar printer', ip: '192.168.1.102', status: 'online', paired: true },
+  { id: 'p3', name: 'Expo printer', ip: '192.168.1.103', status: 'low-paper', paired: true },
+  { id: 'p4', name: 'Backup printer', ip: '192.168.1.104', status: 'offline', paired: false },
 ];
 
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
@@ -32,7 +32,7 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   const labels = {
     online: 'Online',
     offline: 'Offline',
-    'low-paper': 'Low Paper',
+    'low-paper': 'Low paper',
   };
   return (
     <div className="flex items-center gap-1.5">
@@ -102,7 +102,7 @@ export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
               className="flex-1 flex items-center justify-center gap-2 py-3 bg-muted text-text-primary font-bold text-sm uppercase rounded-lg transition-colors hover:bg-muted/80 min-h-[44px] disabled:opacity-50"
             >
               <Search size={16} className={detecting ? 'animate-pulse' : ''} />
-              {detecting ? 'Detecting...' : 'Detect Device'}
+              {detecting ? 'Detecting...' : 'Detect device'}
             </button>
           </div>
 

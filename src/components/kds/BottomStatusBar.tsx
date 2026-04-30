@@ -126,7 +126,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 <Filter size={15} className="text-primary-foreground/70" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top"><p>{t.categoryFilter || 'Category Filter'}</p></TooltipContent>
+            <TooltipContent side="top"><p>{t.categoryFilter || 'Category filter'}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -142,7 +142,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 <Building2 size={15} className="text-primary-foreground/70" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue Center Filter'}</p></TooltipContent>
+            <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue center filter'}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 

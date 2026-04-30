@@ -242,7 +242,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                               </div>
                               <div className="flex justify-end mt-1.5">
                                 <button type="button" onClick={() => setRightMode('forgot-password')} className="text-xs font-montserrat" style={linkStyle}>
-                                  Forgot Password?
+                                  Forgot password?
                                 </button>
                               </div>
                             </div>

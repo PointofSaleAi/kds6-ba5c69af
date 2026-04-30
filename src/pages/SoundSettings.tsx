@@ -56,14 +56,14 @@ const PRESET_PLAYERS: Record<string, (vol: number) => void> = {
 };
 
 const presetSounds = [
-  { id: 'default-beep', label: 'Default Beep' },
-  { id: 'double-chime', label: 'Double Chime' },
-  { id: 'urgent-alert', label: 'Urgent Alert' },
-  { id: 'soft-ding', label: 'Soft Ding' },
+  { id: 'default-beep', label: 'Default beep' },
+  { id: 'double-chime', label: 'Double chime' },
+  { id: 'urgent-alert', label: 'Urgent alert' },
+  { id: 'soft-ding', label: 'Soft ding' },
 ];
 
-const urgentOptions = ['Alarm', 'Double Bell', 'Pulse'];
-const serviceBellOptions = ['Classic Bell', 'Digital Chime', 'Soft Tone'];
+const urgentOptions = ['Alarm', 'Double bell', 'Pulse'];
+const serviceBellOptions = ['Classic Bell', 'Digital chime', 'Soft tone'];
 
 const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
   'Alarm': (vol) => {
@@ -75,7 +75,7 @@ const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
       }
     } catch {}
   },
-  'Double Bell': (vol) => {
+  'Double bell': (vol) => {
     try {
       const ctx = new AudioContext();
       const v = vol / 100 * 0.35;
@@ -99,7 +99,7 @@ const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
       beep(ctx, 1400, ctx.currentTime, 0.4, v);
     } catch {}
   },
-  'Digital Chime': (vol) => {
+  'Digital chime': (vol) => {
     try {
       const ctx = new AudioContext();
       const v = vol / 100 * 0.3;
@@ -108,7 +108,7 @@ const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
       beep(ctx, 784, ctx.currentTime + 0.3, 0.2, v);
     } catch {}
   },
-  'Soft Tone': (vol) => {
+  'Soft tone': (vol) => {
     try {
       const ctx = new AudioContext();
       const v = vol / 100 * 0.2;
@@ -183,7 +183,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Volume2 size={20} className="text-text-muted" />
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-text-primary">Sound Settings</h2>
+              <h2 className="text-lg font-bold text-text-primary">Sound settings</h2>
               {muteAll && (
                 <span className="px-2 py-0.5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full uppercase">
                   Muted
@@ -223,12 +223,12 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
               </div>
             </div>
 
-            {/* New Order Alert Sound */}
+            {/* New order alert sound */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">New Order Alert Sound</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">New order alert sound</div>
 
-              {/* Preset Sounds */}
-              <div className="text-[12px] font-semibold text-text-secondary mb-2">Preset Sounds</div>
+              {/* Preset sounds */}
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">Preset sounds</div>
               <div className="flex flex-col gap-1.5 mb-4">
                 {presetSounds.map((preset) => (
                   <div
@@ -273,7 +273,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
               </div>
 
               {/* Custom Sound Upload */}
-              <div className="text-[12px] font-semibold text-text-secondary mb-2">Upload Custom Sound</div>
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">Upload custom sound</div>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -308,8 +308,8 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
               )}
               <p className="text-[11px] text-text-muted mb-4">Accepted formats: MP3, WAV - Max size: 2MB</p>
 
-              {/* Alert Volume */}
-              <div className="text-[12px] font-semibold text-text-secondary mb-2">Alert Volume</div>
+              {/* Alert volume */}
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">Alert volume</div>
               <div className="flex items-center gap-3 mb-4">
                 <Volume2 size={16} className="text-text-secondary shrink-0" />
                 <input
@@ -329,8 +329,8 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
 
             {/* Other alert sounds */}
             <div className="px-4 pt-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Other Alert Sounds</div>
-              <SoundPicker label="Urgent / Overtime Alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Other alert sounds</div>
+              <SoundPicker label="Urgent / overtime alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
               <SoundPicker label="Service Bell (Manual)" options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
             </div>
 
@@ -343,7 +343,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
               >
                 <div className="flex items-center gap-3">
                   <VolumeX size={20} className="text-text-muted" />
-                  <span className="text-sm font-medium text-text-primary">Mute All Sounds</span>
+                  <span className="text-sm font-medium text-text-primary">Mute all sounds</span>
                 </div>
                 <div
                   className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] ${muteAll ? 'bg-brand-primary' : 'bg-border'}`}
@@ -361,7 +361,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                 onClick={onClose}
                 className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
               >
-                Save Changes
+                Save changes
               </button>
             </div>
           </div>

@@ -48,10 +48,10 @@ function RowCell({ name, subtitle, control }: { name: string; subtitle?: string;
   );
 }
 
-// Destructive variant of RowCell used for the Account "Log Out" entry.
+// Destructive variant of RowCell used for the Account "Log out" entry.
 // Keeps grid alignment with RowCell while applying the destructive palette.
 function LogOutRowCell({
-  name = 'Log Out',
+  name = 'Log out',
   subtitle = 'Sign out of this device',
   onClick,
 }: {
@@ -321,38 +321,38 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     }, 1500);
   };
 
-  // Sub-screen routing (Language / Order Type Colors / Status Settings)
+  // Sub-screen routing (Language / Order type colors / Status Settings)
   const inSubScreen = activeSection === 'language' || activeSection === 'order-type-colors' || activeSection === 'status-settings';
 
   // Display section rows
   const displayRows = [
-    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
-    { name: 'Text Size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
-    { name: 'Ticket Layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
-    { name: 'Status Colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
-    { name: 'Order Type Colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
-    { name: 'Allergen Badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
-    { name: 'Enable Badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
-    { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order Number', 'Guest Name']} value={ticketHeaderLayout === 'guest' ? 'Guest Name' : 'Order Number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest Name' ? 'guest' : 'kitchen')} /> },
-    { name: 'Servable Modifiers', subtitle: 'Track modifier status', control: <SmallToggle checked={servableModifiers} onChange={setServableModifiers} /> },
-    { name: 'Mode Switcher', subtitle: 'KDS operational mode', control: <ChipGroup options={['Standard', 'Expo', 'Station']} value={kdsMode === 'Prep' ? 'Station' : kdsMode} onChange={(v) => setKdsMode((v === 'Station' ? 'Prep' : v) as KDSMode)} /> },
+    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure language" /> },
+    { name: 'Text size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
+    { name: 'Ticket layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
+    { name: 'Status colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise status colors" /> },
+    { name: 'Order type colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise order type colors" /> },
+    { name: 'Allergen badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
+    { name: 'Enable badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
+    { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order number', 'Guest name']} value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')} /> },
+    { name: 'Servable modifiers', subtitle: 'Track modifier status', control: <SmallToggle checked={servableModifiers} onChange={setServableModifiers} /> },
+    { name: 'Mode switcher', subtitle: 'KDS operational mode', control: <ChipGroup options={['Standard', 'Expo', 'Station']} value={kdsMode === 'Prep' ? 'Station' : kdsMode} onChange={(v) => setKdsMode((v === 'Station' ? 'Prep' : v) as KDSMode)} /> },
   ];
 
   const hardwareRows = [
-    { name: 'KOT Printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
-    { name: 'Label Printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
-    { name: 'Sound Settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
-    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
-    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure Connection" /> },
+    { name: 'KOT printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT printer" /> },
+    { name: 'Label printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure label printer" /> },
+    { name: 'Sound settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure sound settings" /> },
+    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync now" icon={RefreshCw} spinning={syncing} /> },
+    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure connection" /> },
   ];
 
   const accountRows = [
-    { name: 'Device Name', subtitle: 'Kitchen Display 1', control: null },
+    { name: 'Device name', subtitle: 'Kitchen Display 1', control: null },
     { name: 'Station ID', subtitle: 'STN-001', control: null },
-    { name: 'Bug Reporting', subtitle: 'In-app reporting tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
-    { name: 'Debug Mode', subtitle: 'Verbose logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
-    { name: 'Upload Logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
-    { name: 'Feedback & Support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
+    { name: 'Bug reporting', subtitle: 'In-app reporting tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
+    { name: 'Debug mode', subtitle: 'Verbose logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
+    { name: 'Upload logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload logs" icon={Upload} spinning={uploadingLogs} /> },
+    { name: 'Feedback & support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a feature" /> },
   ];
 
   return (
@@ -371,7 +371,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 </button>
                 <div className="min-w-0">
                   <h2 className="text-lg font-bold text-text-primary leading-tight">
-                    {activeSection === 'language' ? 'Language' : activeSection === 'order-type-colors' ? 'Order Type Colors' : 'Ticket Aging Rules'}
+                    {activeSection === 'language' ? 'Language' : activeSection === 'order-type-colors' ? 'Order type colors' : 'Ticket aging rules'}
                   </h2>
                   {activeSection === 'status-settings' && (
                     <p className="text-[12px] text-text-muted mt-1">
@@ -453,7 +453,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           <div className="absolute inset-0 bg-black/50" onClick={() => setFeatureModalOpen(false)} />
           <div className="relative bg-surface-card rounded-xl shadow-xl w-[480px] max-w-[90vw] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
-              <h3 className="text-[15px] font-bold text-text-primary">Request a Feature</h3>
+              <h3 className="text-[15px] font-bold text-text-primary">Request a feature</h3>
               <button onClick={() => setFeatureModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors min-h-[44px] min-w-[44px]">
                 <X size={18} className="text-text-muted" />
               </button>
@@ -461,7 +461,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
             <div className="px-5 pt-4 pb-2">
               <p className="text-[12px] font-semibold text-text-secondary mb-2 uppercase tracking-wider">Category</p>
               <div className="flex flex-wrap gap-2">
-                {['Display & Layout', 'Order Management', 'Coursing', 'Other'].map((cat) => (
+                {['Display & layout', 'Order management', 'Coursing', 'Other'].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setFeatureCategory(cat)}
@@ -500,7 +500,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 disabled={!featureText.trim() || !featureCategory}
                 className="w-full py-3 rounded-lg text-[13px] font-bold uppercase tracking-wider bg-brand-dark text-primary-foreground hover:bg-brand-dark/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[48px]"
               >
-                Submit Request
+                Submit request
               </button>
             </div>
           </div>
@@ -510,7 +510,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
       <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Log Out?</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">Log out?</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
               You will be returned to the sign-in screen. Any unsaved settings will be lost.
             </AlertDialogDescription>
@@ -521,7 +521,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
               onClick={() => { onClose(); onLogOut?.(); }}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Log Out
+              Log out
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

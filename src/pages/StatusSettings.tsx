@@ -102,7 +102,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   return (
     <div ref={listRef} className="w-[45%] border-r border-border overflow-y-auto p-3 space-y-1">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
+        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status rules</span>
         <div className="flex items-center gap-1">
           <button
             onClick={onAdd}
@@ -177,7 +177,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
 
 const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
   {
-    label: 'Fast Kitchen',
+    label: 'Fast kitchen',
     description: 'Tight thresholds for high-volume kitchens',
     rules: [
       { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
@@ -197,7 +197,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     ],
   },
   {
-    label: 'Slow Kitchen',
+    label: 'Slow kitchen',
     description: 'Relaxed thresholds for fine dining or complex menus',
     rules: [
       { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 10 },
@@ -288,7 +288,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
   };
 
   // Allow the parent SettingsPanel header to trigger reset via a window event
-  // so the Reset button can sit visually next to the "Ticket Aging Rules" title.
+  // so the Reset button can sit visually next to the "Ticket aging rules" title.
   if (typeof window !== 'undefined') {
     (window as unknown as { __agingResetHandler?: () => void }).__agingResetHandler = handleReset;
   }
@@ -304,7 +304,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket Aging Rules</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Ticket aging rules</h1>
         </div>
       )}
 
@@ -312,7 +312,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       <div className="pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
         <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-muted/60">
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
+            <div className="text-[13px] font-semibold text-text-primary">Apply to course level</div>
             <div className="text-[11px] text-text-muted">When enabled, timing rules apply per course. Orders without courses use item-level timing.</div>
           </div>
           <button

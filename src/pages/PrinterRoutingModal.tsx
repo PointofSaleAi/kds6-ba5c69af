@@ -22,9 +22,9 @@ interface PrinterDevice {
 
 const mockPrinters: PrinterDevice[] = [
   { id: 'p1', name: 'Kitchen Epson TM-T88', ip: '192.168.1.101', status: 'online' },
-  { id: 'p2', name: 'Bar Printer', ip: '192.168.1.102', status: 'online' },
-  { id: 'p3', name: 'Expo Printer', ip: '192.168.1.103', status: 'low-paper' },
-  { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline' },
+  { id: 'p2', name: 'Bar printer', ip: '192.168.1.102', status: 'online' },
+  { id: 'p3', name: 'Expo printer', ip: '192.168.1.103', status: 'low-paper' },
+  { id: 'p4', name: 'Backup printer', ip: '192.168.1.104', status: 'offline' },
 ];
 
 const mockLabelPrinters: PrinterDevice[] = [
@@ -43,7 +43,7 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   const labels = {
     online: 'Online',
     offline: 'Offline',
-    'low-paper': 'Low Paper',
+    'low-paper': 'Low paper',
   };
   return (
     <div className="flex items-center gap-1.5">
@@ -54,8 +54,8 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
 }
 
 const titles: Record<PrinterModalType, string> = {
-  kot: 'KOT Printer',
-  label: 'Label Printer',
+  kot: 'KOT printer',
+  label: 'Label printer',
 };
 
 const ctas: Record<PrinterModalType, string> = {
@@ -131,14 +131,14 @@ export default function PrinterRoutingModal({
               className="w-full flex items-center justify-center gap-2 py-3 bg-muted text-text-primary font-bold text-sm uppercase rounded-lg transition-colors hover:bg-muted/80 min-h-[44px] disabled:opacity-50"
             >
               <Search size={16} className={detecting ? 'animate-pulse' : ''} />
-              {detecting ? 'Detecting...' : 'Detect Device'}
+              {detecting ? 'Detecting...' : 'Detect device'}
             </button>
           </div>
 
           {/* Printer list */}
           <div className="flex-1 overflow-y-auto px-4 pt-4">
             <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
-              Available Printers ({printers.length})
+              Available printers ({printers.length})
             </div>
             <div className="space-y-2">
               {printers.map((printer) => (

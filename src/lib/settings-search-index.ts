@@ -13,7 +13,7 @@ export interface SettingsSearchEntry {
 export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: string }> = {
   display: { label: 'Display', path: '/kds/full/settings/display' },
   orders: { label: 'Orders', path: '/kds/full/settings/orders' },
-  expo: { label: 'Expo View', path: '/kds/full/settings/expo' },
+  expo: { label: 'Expo view', path: '/kds/full/settings/expo' },
   hardware: { label: 'Hardware', path: '/kds/full/settings/hardware' },
   account: { label: 'Account', path: '/kds/full/settings/account' },
 };
@@ -24,16 +24,16 @@ export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: str
  */
 export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   // Display
-  { id: 'display-mode', label: 'Display Mode', description: 'Grid, Horizontal, or Stagger layout', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#display-mode', keywords: 'grid horizontal stagger layout view' },
+  { id: 'display-mode', label: 'Display mode', description: 'Grid, horizontal, or stagger layout', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#display-mode', keywords: 'grid horizontal stagger layout view' },
   { id: 'cards-per-row', label: 'Cards per row', description: 'How many tickets fit across', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#cards-per-row', keywords: 'columns count density' },
   { id: 'text-size', label: 'Text size', description: 'Compact, Standard, or Large', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#text-size', keywords: 'font scale size legibility' },
   { id: 'ticket-layout', label: 'Ticket layout', description: 'Standard or Compact ticket density', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#ticket-layout', keywords: 'compact standard ticket card layout density' },
   { id: 'status-colors', label: 'Status colors', description: 'Ticket aging color thresholds', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#status-colors', keywords: 'aging colors thresholds time' },
-  { id: 'order-type-colors', label: 'Order Type Colors', description: 'Header colors per order type', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#order-type-colors', keywords: 'order type colors header dine in take out delivery banquet' },
-  { id: 'enable-badge', label: 'Enable Badge', description: 'Sidebar icon count badge', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#enable-badge', keywords: 'badge sidebar icon count notification' },
-  { id: 'ticket-identifier', label: 'Ticket Identifier', description: 'Order Number or Guest Name', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#ticket-identifier', keywords: 'ticket identifier order number guest name primary card label' },
-  { id: 'mode-switcher', label: 'Mode Switcher', description: 'Standard, Expo, or Station mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#mode-switcher', keywords: 'mode switcher kds standard expo station prep operational' },
-  { id: 'theme', label: 'Theme', description: 'Light or Dark mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#theme', keywords: 'light dark theme appearance' },
+  { id: 'order-type-colors', label: 'Order type colors', description: 'Header colors per order type', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#order-type-colors', keywords: 'order type colors header dine in take out delivery banquet' },
+  { id: 'enable-badge', label: 'Enable badge', description: 'Sidebar icon count badge', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#enable-badge', keywords: 'badge sidebar icon count notification' },
+  { id: 'ticket-identifier', label: 'Ticket Identifier', description: 'Order number or guest name', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#ticket-identifier', keywords: 'ticket identifier order number guest name primary card label' },
+  { id: 'mode-switcher', label: 'Mode switcher', description: 'Standard, Expo, or Station mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#mode-switcher', keywords: 'mode switcher kds standard expo station prep operational' },
+  { id: 'theme', label: 'Theme', description: 'Light or dark mode', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#theme', keywords: 'light dark theme appearance' },
   { id: 'language', label: 'Language', description: 'Display language selection', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#language', keywords: 'region locale i18n language translation' },
 
   // Orders
@@ -45,11 +45,11 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#sort-default', keywords: 'sort order time table type default' },
 
   // Expo
-  { id: 'expo-send-button', label: 'Show Send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo View', path: '/kds/full/settings/expo#expo-send-button', keywords: 'expo send button ready always' },
+  { id: 'expo-send-button', label: 'Show send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo view', path: '/kds/full/settings/expo#expo-send-button', keywords: 'expo send button ready always' },
 
   // Hardware
-  { id: 'kot-printer', label: 'KOT Printer', description: 'Kitchen ticket printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#kot-printer', keywords: 'printer kot kitchen ticket' },
-  { id: 'label-printer', label: 'Label Printer', description: 'Per-item label printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#label-printer', keywords: 'printer label sticker' },
+  { id: 'kot-printer', label: 'KOT printer', description: 'Kitchen ticket printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#kot-printer', keywords: 'printer kot kitchen ticket' },
+  { id: 'label-printer', label: 'Label printer', description: 'Per-item label printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#label-printer', keywords: 'printer label sticker' },
   { id: 'sound-settings', label: 'Sound settings', description: 'Volume and notification alerts', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sound-settings', keywords: 'sound volume audio alert beep' },
   { id: 'sync', label: 'Sync', description: 'Force sync of orders and settings', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sync', keywords: 'sync refresh orders settings cloud' },
   { id: 'connection', label: 'Connection', description: 'Network and EdgeOS sync', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#connection', keywords: 'connection network websocket sync edgeos' },
@@ -57,10 +57,10 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   // Account
   { id: 'device-name', label: 'Device name', description: 'Identifier for this Kitchen Display', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#device-name', keywords: 'device name identifier kds station' },
   { id: 'station-id', label: 'Station ID', description: 'Unique station identifier', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#station-id', keywords: 'station id identifier' },
-  { id: 'bug-reporting', label: 'Bug Reporting', description: 'In-app issue capture', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#bug-reporting', keywords: 'bug report crash issue in-app' },
+  { id: 'bug-reporting', label: 'Bug reporting', description: 'In-app issue capture', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#bug-reporting', keywords: 'bug report crash issue in-app' },
   { id: 'debug-mode', label: 'Debug mode', description: 'Verbose logging and dev selector', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#debug-mode', keywords: 'debug developer dev mode verbose logging' },
-  { id: 'upload-logs', label: 'Upload Logs', description: 'Send logs to support', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#upload-logs', keywords: 'upload logs diagnostics support eatos' },
-  { id: 'feedback-support', label: 'Feedback & Support', description: 'Request a feature or contact support', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#feedback-support', keywords: 'feedback support feature request help' },
+  { id: 'upload-logs', label: 'Upload logs', description: 'Send logs to support', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#upload-logs', keywords: 'upload logs diagnostics support eatos' },
+  { id: 'feedback-support', label: 'Feedback & support', description: 'Request a feature or contact support', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#feedback-support', keywords: 'feedback support feature request help' },
   { id: 'log-out', label: 'Log out', description: 'Sign out of this device', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#log-out', keywords: 'logout sign out exit' },
 ];
 

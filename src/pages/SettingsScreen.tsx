@@ -107,7 +107,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
   const [showAllergens, setShowAllergens] = useState(true);
   const [staggerMode, setStaggerMode] = useState(false);
   const [servableModifiers, setServableModifiers] = useState(false);
-  const [sortDefault, setSortDefault] = useState('By Time');
+  const [sortDefault, setSortDefault] = useState('By time');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
 
@@ -195,12 +195,12 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <Send size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">Expo View</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">Expo view</span>
               </div>
             </div>
             <SettingsRow
               icon={Send}
-              label="Show Send button"
+              label="Show send button"
               description={expoSendButtonMode === 'always' ? 'Always — show on all items' : 'When ready — only when item is marked done on KDS'}
               right={
                 <SegmentedToggle
@@ -220,13 +220,13 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             </div>
             <SettingsRow
               icon={Printer}
-              label="KOT Printer"
+              label="KOT printer"
               description={kot.printerId ? kot.printerName : 'No printer assigned'}
               onClick={() => onOpenSub('printer-kot')}
             />
             <SettingsRow
               icon={Tag}
-              label="Label Printer"
+              label="Label printer"
               description={labelEnabled ? (label.printerId ? label.printerName : 'No printer assigned') : 'Disabled'}
               right={<Toggle checked={labelEnabled} onChange={setLabelEnabled} />}
               onClick={labelEnabled ? () => onOpenSub('printer-label') : undefined}
