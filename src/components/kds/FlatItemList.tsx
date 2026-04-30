@@ -138,7 +138,10 @@ function ItemTapRow({
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
   const hasModifiers = item.modifiers.length > 0;
-  const isolateModifierRows = !!servableModifiersEnabled && hasModifiers;
+  const isServableMod = (m: typeof item.modifiers[number]) =>
+    !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id;
+  const hasServableModifiers = item.modifiers.some(isServableMod);
+  const isolateModifierRows = hasServableModifiers;
 
   const useTeal = isSeen && seenIdx % 2 === 1;
   const seenBgGreen = 'rgba(29, 158, 117, 0.14)';
