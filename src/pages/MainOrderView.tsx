@@ -106,7 +106,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const order = orders.find(o => o.id === orderId);
     if (!order) return false;
     const pendingMessages = kitchenMessages.some(
-      m => m.order_id === orderId && m.status === 'pending'
+      m => m.linked_order_id === orderId && m.status === 'pending'
     );
     const hasUnseenNotes = !!order.orderNotes && !notesAcknowledgedIds.has(orderId);
     return pendingMessages || hasUnseenNotes;
