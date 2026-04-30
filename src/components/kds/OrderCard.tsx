@@ -38,6 +38,8 @@ interface OrderCardProps {
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
   /** When provided, returning true blocks the ticket-level "remove" advance (3rd tap). */
   isAcknowledgmentPending?: (orderId: string) => boolean;
+  /** Notifies parent that a final-bump (ticket removal) was attempted while acknowledgments were pending. */
+  onBumpBlocked?: (orderId: string) => void;
   stationCourse?: string;
   showAllergens?: boolean;
   highlightItemNames?: Set<string>;
@@ -63,7 +65,7 @@ function formatStaticTime(date: Date): string {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
@@ -484,6 +486,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return;
       }
       if (isAcknowledgmentPending?.(orderId)) {
+        onBumpBlocked?.(orderId);
         toast.info('Acknowledge messages and notes before clearing the ticket.', { duration: 2200 });
         return;
       }
@@ -531,7 +534,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending]);
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {

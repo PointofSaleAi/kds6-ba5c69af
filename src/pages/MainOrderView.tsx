@@ -112,6 +112,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return pendingMessages || hasUnseenNotes;
   }, [orders, kitchenMessages, notesAcknowledgedIds]);
 
+  // Track tickets where the kitchen tried to clear (final 3rd-tap) but was blocked
+  // because messages/notes were still pending. We auto-finish them once acks clear.
+  const [pendingBumpIds, setPendingBumpIds] = useState<Set<string>>(new Set());
+  const handleBumpBlocked = useCallback((orderId: string) => {
+    setPendingBumpIds(prev => {
+      if (prev.has(orderId)) return prev;
+      const next = new Set(prev);
+      next.add(orderId);
+      return next;
+    });
+  }, []);
+
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
   const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
@@ -618,6 +630,24 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setOrders(prev => prev.filter(o => !removeIds.has(o.id)));
   }, [orders, kitchenMessages, notesAcknowledgedIds, isAcknowledgmentPending, setOrders]);
 
+  // Auto-finish coursed/normal tickets that the kitchen tried to clear while
+  // acknowledgments were pending. Once message and notes are acknowledged, run
+  // the deferred bump so the ticket leaves Home.
+  useEffect(() => {
+    if (pendingBumpIds.size === 0) return;
+    const ready: string[] = [];
+    pendingBumpIds.forEach(id => {
+      if (!isAcknowledgmentPending(id)) ready.push(id);
+    });
+    if (ready.length === 0) return;
+    ready.forEach(id => markAllItemsDone(id));
+    setPendingBumpIds(prev => {
+      const next = new Set(prev);
+      ready.forEach(id => next.delete(id));
+      return next;
+    });
+  }, [pendingBumpIds, kitchenMessages, notesAcknowledgedIds, isAcknowledgmentPending, markAllItemsDone]);
+
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
       setActiveNav(target);
@@ -890,7 +920,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                               const displayOrder = getStationDisplayOrder(order);
                               return (
                                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                                  <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} />
+                                  <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} onBumpBlocked={handleBumpBlocked} />
                                 </motion.div>
                               );
                             })}
@@ -905,7 +935,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} compactRows />
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} onBumpBlocked={handleBumpBlocked} compactRows />
                             </motion.div>
                           );
                         })}
@@ -918,7 +948,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
-                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} />
+                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} onBumpBlocked={handleBumpBlocked} />
                             </motion.div>
                           );
                         })}
