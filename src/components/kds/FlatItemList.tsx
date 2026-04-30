@@ -18,6 +18,7 @@ interface FlatItemListProps {
   showAllergens?: boolean;
   servableModifiersEnabled?: boolean;
   modifierStatuses?: Map<string, ModifierStatus>;
+  modifierTimestamps?: Map<string, { seenAt?: string; doneAt?: string }>;
   onAdvanceModifier?: (modId: string) => void;
   onUndoModifier?: (modId: string) => void;
   dismissedItemIds?: Set<string>;
@@ -26,7 +27,7 @@ interface FlatItemListProps {
   ticketLayoutMode?: 'standard' | 'compact';
 }
 
-export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary, t, showSecondaryMenu, secondaryLang } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
@@ -65,6 +66,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             t={t}
             servableModifiersEnabled={servableModifiersEnabled}
             modifierStatuses={modifierStatuses}
+            modifierTimestamps={modifierTimestamps}
             onAdvanceModifier={onAdvanceModifier}
             onUndoModifier={onUndoModifier}
             onAdvanceItem={onAdvanceItem}
@@ -94,6 +96,7 @@ interface ItemTapRowProps {
   t: { seenAt: string; doneAt: string };
   servableModifiersEnabled?: boolean;
   modifierStatuses?: Map<string, ModifierStatus>;
+  modifierTimestamps?: Map<string, { seenAt?: string; doneAt?: string }>;
   onAdvanceModifier?: (id: string) => void;
   onUndoModifier?: (id: string) => void;
   onAdvanceItem: (itemId: string, skipToDone?: boolean) => void;
@@ -105,7 +108,7 @@ interface ItemTapRowProps {
 function ItemTapRow({
   item, status, timestamps, seenIdx, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
-  servableModifiersEnabled, modifierStatuses, onAdvanceModifier, onUndoModifier,
+  servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
@@ -251,8 +254,14 @@ function ItemTapRow({
 
       {showDetails && item.modifiers.length > 0 && (
         <div
-          className={isDone ? 'line-through' : ''}
-          style={{ marginTop: 'var(--kds-child-gap, 1px)', display: 'flex', flexDirection: 'column', gap: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}
+          className={isDone && !servableModifiersEnabled ? 'line-through' : ''}
+          style={{
+            marginTop: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: servableModifiersEnabled ? '0px' : 'var(--kds-child-gap, 1px)',
+            paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+          }}
         >
           {item.modifiers.map((mod, idx) => (
             <ModifierLine
@@ -260,6 +269,7 @@ function ItemTapRow({
               modifier={mod}
               servableEnabled={servableModifiersEnabled}
               modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+              modifierTimestamps={mod.id ? modifierTimestamps?.get(mod.id) : undefined}
               onAdvanceModifier={onAdvanceModifier}
               onUndoModifier={onUndoModifier}
               parentQuantity={item.quantity}
