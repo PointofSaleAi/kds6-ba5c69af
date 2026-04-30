@@ -819,7 +819,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
         <div className="border-t border-border">
           {isDineIn ? (
-            sortedDisplayCourses.map((courseGroup) => {
+            sortedDisplayCourses
+              .filter((courseGroup) => (courseLifecycleMap.get(courseGroup.course) || 'pending') !== 'served')
+              .map((courseGroup) => {
                 const lifecycleStatus = courseLifecycleMap.get(courseGroup.course) || 'pending';
                 let forcedStatus: StationStatus | undefined;
                 if (stationCourse && stationIdx >= 0) {
