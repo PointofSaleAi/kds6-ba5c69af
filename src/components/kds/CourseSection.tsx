@@ -465,9 +465,21 @@ function CourseItemTapRow({
     (displayMode === 'dual' && showSecondaryMenu && !item.isCancelled);
   const showDetails = !ticketLayoutCompact || detailsOpen;
 
+  // Servable modifier guard: when the product has servable modifiers, do not
+  // allow dismissing the product (which would also remove its servable modifiers)
+  // until every servable modifier is itself marked Done.
+  const servableMods = (item.modifiers || []).filter(
+    (m) => !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id
+  );
+  const allServableModsDone =
+    servableMods.length === 0 ||
+    servableMods.every((m) => modifierStatuses?.get(m.id as string) === 'done');
+
   const handleSingle = () => {
     if (!tappable) return;
     if (status === 'done') {
+      // Block removal while independent servable modifiers are still pending.
+      if (!allServableModsDone) return;
       onDismissItem?.(item.id);
     } else {
       onAdvanceItem?.(item.id);
