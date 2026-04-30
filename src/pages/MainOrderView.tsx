@@ -79,6 +79,39 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
 
+  // Per-order acknowledgment of order notes (lifted out of OrderNotesSection so MainOrderView can gate ticket removal).
+  const [notesAcknowledgedIds, setNotesAcknowledgedIds] = useState<Set<string>>(new Set());
+  const acknowledgeOrderNotes = useCallback((orderId: string) => {
+    setNotesAcknowledgedIds(prev => {
+      if (prev.has(orderId)) return prev;
+      const next = new Set(prev);
+      next.add(orderId);
+      return next;
+    });
+  }, []);
+  const unacknowledgeOrderNotes = useCallback((orderId: string) => {
+    setNotesAcknowledgedIds(prev => {
+      if (!prev.has(orderId)) return prev;
+      const next = new Set(prev);
+      next.delete(orderId);
+      return next;
+    });
+  }, []);
+
+  /**
+   * Returns true if the order still has unacknowledged kitchen messages
+   * or unseen order notes, blocking removal from Home.
+   */
+  const isAcknowledgmentPending = useCallback((orderId: string) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return false;
+    const pendingMessages = kitchenMessages.some(
+      m => m.order_id === orderId && m.status === 'pending'
+    );
+    const hasUnseenNotes = !!order.orderNotes && !notesAcknowledgedIds.has(orderId);
+    return pendingMessages || hasUnseenNotes;
+  }, [orders, kitchenMessages, notesAcknowledgedIds]);
+
   // Expo pinned ticket state
   const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
   const [expoAllTickets, setExpoAllTickets] = useState<import('@/data/mock-expo-orders').ExpoTicket[]>([]);
