@@ -90,7 +90,7 @@ export function SettingsSidebar() {
             })}
           </div>
         ) : (
-          <nav className="flex flex-col gap-1 px-2 pt-1">
+          <nav className="flex flex-col px-2 pt-1" style={{ gap: 4 }}>
             {groupIds.map((id) => {
               const group = SETTINGS_GROUPS[id];
               const Icon = GROUP_ICON[id];
@@ -100,13 +100,14 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl active:opacity-70 transition-all"
+                  className="flex items-center px-2 rounded-xl active:opacity-70 transition-all"
                   style={{
+                    height: 44,
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} />
+                  <div className="flex items-center min-w-0" style={{ gap: 12 }}>
+                    <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" />
                     <span
                       className="text-[15px] font-medium"
                       style={{ color: 'hsl(var(--text-primary))' }}
