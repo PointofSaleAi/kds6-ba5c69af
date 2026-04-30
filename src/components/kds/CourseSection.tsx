@@ -640,6 +640,7 @@ function CourseItemTapRow({
               modifier={mod}
               servableEnabled={servableModifiersEnabled}
               modifierStatus={mod.id ? modifierStatuses?.get(mod.id) : undefined}
+              modifierTimestamps={mod.id ? modifierTimestamps?.get(mod.id) : undefined}
               onAdvanceModifier={onAdvanceModifier}
               onUndoModifier={onUndoModifier}
               parentQuantity={item.quantity}
