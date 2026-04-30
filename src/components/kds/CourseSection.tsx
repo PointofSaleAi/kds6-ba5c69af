@@ -146,14 +146,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     return 'unseen';
   }, [isActive, activeItemIds, itemStatuses]);
 
-  // Auto-collapse when course becomes served or all items done
+  // Auto-collapse only when course is explicitly confirmed served (via ticket button).
+  // Marking the last product as done should NOT collapse the course; the user must
+  // tap the course confirmation to advance to the next course.
   useEffect(() => {
     if (isServedByLifecycle) {
       setIsExpanded(false);
-    } else if (isActive && collectiveState === 'done') {
-      setIsExpanded(false);
     }
-  }, [isActive, collectiveState, isServedByLifecycle]);
+  }, [isServedByLifecycle]);
 
   // "Seen at" timestamp for course header (first item's seenAt)
   const courseSeenAt = useMemo(() => {
