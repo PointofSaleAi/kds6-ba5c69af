@@ -591,18 +591,32 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     });
 
     // 2) Remove the item from the active order; if order becomes empty, drop it
+    // Capture pending state at dismissal time so we can keep the ticket as a stub
+    // when the kitchen still owes acknowledgment of messages or order notes.
+    const pendingAck = isAcknowledgmentPending(orderId);
     setOrders(prev => prev.flatMap(o => {
       if (o.id !== orderId) return [o];
       const updatedCourses = o.courses
         .map(c => ({ ...c, items: c.items.filter(i => i.id !== item.id) }))
         .filter(c => c.items.length > 0);
-      if (updatedCourses.length === 0) return [];
       const newItemCount = updatedCourses.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0), 0);
+      if (updatedCourses.length === 0 && !pendingAck) return [];
       return [{ ...o, courses: updatedCourses, itemCount: newItemCount }];
     }));
 
     toast.success(`${item.name} sent to history`, { duration: 1800 });
-  }, [orders, setOrders]);
+  }, [orders, setOrders, isAcknowledgmentPending]);
+
+  // Auto-clear stub tickets that were retained on Home only because of pending
+  // messages/notes once the kitchen acknowledges everything.
+  useEffect(() => {
+    const stubs = orders.filter(o => o.courses.length === 0);
+    if (stubs.length === 0) return;
+    const toRemove = stubs.filter(o => !isAcknowledgmentPending(o.id));
+    if (toRemove.length === 0) return;
+    const removeIds = new Set(toRemove.map(o => o.id));
+    setOrders(prev => prev.filter(o => !removeIds.has(o.id)));
+  }, [orders, kitchenMessages, notesAcknowledgedIds, isAcknowledgmentPending, setOrders]);
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
