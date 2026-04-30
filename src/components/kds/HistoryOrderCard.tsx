@@ -437,7 +437,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
             onClick={handleBulkRecall}
             className="flex-1 text-[13px] font-bold uppercase px-3 py-2 rounded bg-primary text-primary-foreground hover:brightness-110 active:brightness-95 transition-all"
           >
-            Recall {selectedIds.size} {selectedIds.size === 1 ? 'product' : 'products'}
+            Recall {selectedIds.size}
           </button>
         </div>
       )}
