@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
@@ -157,7 +158,17 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
   const isCompactLayout = ticketLayout === 'compact';
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [collapsedCourses, setCollapsedCourses] = useState<Set<string>>(new Set());
   const selectionMode = selectedIds.size > 0;
+
+  const toggleCourse = useCallback((course: string) => {
+    setCollapsedCourses(prev => {
+      const next = new Set(prev);
+      if (next.has(course)) next.delete(course);
+      else next.add(course);
+      return next;
+    });
+  }, []);
 
   const toggleSelect = useCallback((itemId: string) => {
     setSelectedIds(prev => {
@@ -374,36 +385,49 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
 
       <div className="border-t border-border">
         {showCourses ? (
-          order.courses.map((courseGroup) => (
-            <div key={courseGroup.course}>
-              <div
-                className="flex items-center justify-between bg-muted"
-                style={{ padding: '2px 8px' }}
-              >
-                <span
-                  className="uppercase text-text-primary tracking-wider"
-                  style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
+          order.courses.map((courseGroup) => {
+            const collapsed = collapsedCourses.has(courseGroup.course);
+            return (
+              <div key={courseGroup.course}>
+                <button
+                  type="button"
+                  onClick={() => toggleCourse(courseGroup.course)}
+                  aria-expanded={!collapsed}
+                  className="w-full flex items-center justify-between bg-muted hover:bg-muted/80 transition-colors select-none"
+                  style={{ padding: '2px 8px' }}
                 >
-                  {tl(courseGroup.course)}
-                </span>
-              </div>
-              <div className="px-1">
-                {courseGroup.items.map((item, idx, arr) => (
-                  <HistoryItemRow
-                    key={item.id}
-                    item={item}
-                    orderId={order.id}
-                    isLast={idx === arr.length - 1}
-                    selected={selectedIds.has(item.id)}
-                    selectionMode={selectionMode}
-                    onTap={() => handleItemTap(item)}
-                    onLongPress={() => handleItemLongPress(item)}
-                    tp={tp}
+                  <span
+                    className="uppercase text-text-primary tracking-wider"
+                    style={{ fontWeight: 600, fontSize: 'var(--kds-course-header)' }}
+                  >
+                    {tl(courseGroup.course)}
+                  </span>
+                  <ChevronDown
+                    size={14}
+                    className="text-text-secondary transition-transform"
+                    style={{ transform: collapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}
                   />
-                ))}
+                </button>
+                {!collapsed && (
+                  <div className="px-1">
+                    {courseGroup.items.map((item, idx, arr) => (
+                      <HistoryItemRow
+                        key={item.id}
+                        item={item}
+                        orderId={order.id}
+                        isLast={idx === arr.length - 1}
+                        selected={selectedIds.has(item.id)}
+                        selectionMode={selectionMode}
+                        onTap={() => handleItemTap(item)}
+                        onLongPress={() => handleItemLongPress(item)}
+                        tp={tp}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <div className="px-1">
             {allItems.map((item, idx, arr) => (
