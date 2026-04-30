@@ -483,6 +483,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         });
         return;
       }
+      if (isAcknowledgmentPending?.(orderId)) {
+        toast.info('Acknowledge messages and notes before clearing the ticket.', { duration: 2200 });
+        return;
+      }
       if (isDineIn && allCoursesServed) {
         // All courses served, final DONE - remove ticket
         onBump?.(orderId);
