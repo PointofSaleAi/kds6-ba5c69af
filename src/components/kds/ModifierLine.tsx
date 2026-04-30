@@ -60,7 +60,7 @@ export function ModifierLine({ modifier, servableEnabled, modifierStatus, onAdva
         >
           {tm(modifier.text)}
         </span>
-        {modifierStatus && modifierStatus !== 'unseen' && (
+        {modifierStatus && (
           <div
             className="flex items-center shrink-0 ml-auto"
             style={{ gap: '0px' }}
