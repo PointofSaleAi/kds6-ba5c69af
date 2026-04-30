@@ -515,7 +515,8 @@ function CourseItemTapRow({
 
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
-  const productRowBg = isHighlighted && !item.isCancelled
+  const isHighlightActive = isHighlighted && !item.isCancelled;
+  const productRowBg = isHighlightActive
     ? 'hsl(var(--destructive) / 0.12)'
     : stateBg || undefined;
   const stateOpacity = itemOpacity;
@@ -526,7 +527,7 @@ function CourseItemTapRow({
 
   return (
     <div
-      className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
+      className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
         ...(!isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
