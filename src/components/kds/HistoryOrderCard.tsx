@@ -158,7 +158,17 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
   const isCompactLayout = ticketLayout === 'compact';
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [collapsedCourses, setCollapsedCourses] = useState<Set<string>>(new Set());
   const selectionMode = selectedIds.size > 0;
+
+  const toggleCourse = useCallback((course: string) => {
+    setCollapsedCourses(prev => {
+      const next = new Set(prev);
+      if (next.has(course)) next.delete(course);
+      else next.add(course);
+      return next;
+    });
+  }, []);
 
   const toggleSelect = useCallback((itemId: string) => {
     setSelectedIds(prev => {
