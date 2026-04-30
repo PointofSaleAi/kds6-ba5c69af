@@ -636,6 +636,70 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     });
   }, [courseLifecycleMap, isDineIn]);
 
+  // ---------------------------------------------------------------------------
+  // Auto-dismiss flow: served work moves to History without extra taps.
+  //
+  // 1. Item: any non-cancelled item that is `done` AND has all servable mods
+  //    done is dismissed (notifies parent to log it in History).
+  // 2. Course: when every non-cancelled item in a course is dismissed, the
+  //    course is added to confirmedCourses, flipping it to `served`.
+  // 3. Ticket: when every item is dismissed (and, for dine-in, every course is
+  //    served), the ticket is bumped to History via onBump.
+  // ---------------------------------------------------------------------------
+
+  // 1) Item auto-dismiss
+  useEffect(() => {
+    for (const c of order.courses) {
+      for (const item of c.items) {
+        if (item.isCancelled) continue;
+        if (dismissedItemIds.has(item.id)) continue;
+        if (itemStatuses.get(item.id) !== 'done') continue;
+        const mods = (item.modifiers || []).filter(
+          (m) => !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id
+        );
+        const allModsDone =
+          mods.length === 0 ||
+          mods.every((m) => modifierStatuses.get(m.id as string) === 'done');
+        if (allModsDone) {
+          handleDismissItem(item.id);
+        }
+      }
+    }
+  }, [itemStatuses, modifierStatuses, dismissedItemIds, order.courses, servableModifiersEnabled, handleDismissItem]);
+
+  // 2) Course auto-confirm: all non-cancelled items dismissed → confirm course
+  useEffect(() => {
+    if (!isDineIn) return;
+    setConfirmedCourses(prev => {
+      let changed = false;
+      const next = new Set(prev);
+      for (const c of displayCourses) {
+        if (next.has(c.course)) continue;
+        const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
+        if (ids.length === 0) continue;
+        const allGone = ids.every(id => dismissedItemIds.has(id));
+        if (allGone) {
+          next.add(c.course);
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [isDineIn, displayCourses, dismissedItemIds]);
+
+  // 3) Ticket auto-bump: all items dismissed (and, for dine-in, all courses served)
+  useEffect(() => {
+    if (allItemIds.length === 0) return;
+    const allItemsGone = allItemIds.every(id => dismissedItemIds.has(id));
+    if (!allItemsGone) return;
+    if (isDineIn && courseLifecycleMap.size > 0) {
+      for (const status of courseLifecycleMap.values()) {
+        if (status !== 'served') return;
+      }
+    }
+    onBump?.(order.id);
+  }, [allItemIds, dismissedItemIds, isDineIn, courseLifecycleMap, onBump, order.id]);
+
   // Sort courses: active first, then pending, then served
   const sortedDisplayCourses = useMemo(() => {
     if (!isDineIn) return displayCourses;
