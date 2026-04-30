@@ -61,7 +61,7 @@ export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDia
       <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[680px] max-w-[95vw] bg-surface-card rounded-[20px] shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <h3 className="text-base font-bold text-text-primary">Reply to Message</h3>
+          <h3 className="text-base font-bold text-text-primary">Reply to message</h3>
           <button
             onClick={onClose}
             className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"

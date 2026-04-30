@@ -97,7 +97,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
             <div className="px-4 pb-4 pt-1 space-y-4 border-t border-border">
               {/* Label */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Status Name</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Status name</label>
                 <input
                   type="text"
                   value={rule.label}
@@ -175,7 +175,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
 
               {/* Text colour */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text Color</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text color</label>
                 <div className="flex gap-2">
                   {textColorOptions.map((tc) => (
                     <button

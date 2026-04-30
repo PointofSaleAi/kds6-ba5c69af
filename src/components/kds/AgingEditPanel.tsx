@@ -233,11 +233,11 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
       )}
 
-      {/* Status Name + Time Range + Colour */}
+      {/* Status name + Time Range + Colour */}
       <div className="flex flex-wrap items-start gap-3">
         <div className="w-40 shrink-0">
           <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-            Status Name
+            Status name
           </label>
           <input
             type="text"
@@ -287,7 +287,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
         <div className="shrink-0 basis-full sm:basis-auto">
           <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
-            Text Color
+            Text color
           </label>
           <div className="flex gap-1.5">
             {textColorOptions.map((tc) => (

@@ -44,7 +44,7 @@ export const mockCoursingOrder: KDSOrder = {
           name: 'Grilled Swordfish',
           category: 'Seafood',
           quantity: 2,
-          modifiers: [{ text: 'No Capers', type: 'remove' }],
+          modifiers: [{ text: 'No capers', type: 'remove' }],
           allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F41F}' }],
         },
         {
@@ -116,7 +116,7 @@ export const mockCoursingOrder22: KDSOrder = {
           category: 'Meat',
           quantity: 1,
           modifiers: [
-            { text: 'Medium Rare', type: 'neutral' },
+            { text: 'Medium rare', type: 'neutral' },
             { text: 'Truffle Butter', type: 'extra' },
           ],
           allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }],
@@ -126,7 +126,7 @@ export const mockCoursingOrder22: KDSOrder = {
           name: 'Pan-Seared Salmon',
           category: 'Seafood',
           quantity: 1,
-          modifiers: [{ text: 'No Dill', type: 'remove' }],
+          modifiers: [{ text: 'No dill', type: 'remove' }],
           allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F41F}' }],
         },
       ],
@@ -191,7 +191,7 @@ export const mockCoursingOrder24: KDSOrder = {
           quantity: 2,
           modifiers: [
             { text: 'Extra Cheese', type: 'extra' },
-            { text: 'No Onions', type: 'remove' },
+            { text: 'No onions', type: 'remove' },
           ],
           allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }],
         },

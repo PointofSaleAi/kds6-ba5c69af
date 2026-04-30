@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 export type TextSize = 'Compact' | 'Standard' | 'Large';
-export type SortDefault = 'By Time' | 'By Table' | 'By Type';
+export type SortDefault = 'By time' | 'By table' | 'By type';
 export type TempUnit = 'F' | 'C';
 export type WeekStart = 'Sunday' | 'Monday';
 export type TicketHeaderLayout = 'kitchen' | 'guest';
@@ -88,7 +88,7 @@ const defaults: KDSSettings = {
   cardsPerRow: 4,
   textSize: 'Standard',
   showAllergens: true,
-  sortDefault: 'By Time',
+  sortDefault: 'By time',
   staggerMode: false,
   servableModifiers: false,
   timezone: 'auto',

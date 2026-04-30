@@ -1,7 +1,7 @@
 import type { TextSize, TicketSpacing } from '@/hooks/use-kds-settings';
 
 /**
- * Returns the className string that wires the global Text Size and Ticket
+ * Returns the className string that wires the global Text size and Ticket
  * Spacing settings into the KDS CSS variable scale (defined in index.css).
  *
  * Apply this to the root of any order surface (Home, Expo, Station/Prep,

@@ -44,7 +44,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Server size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">Connection Settings</h2>
+            <h2 className="text-lg font-bold text-text-primary">Connection settings</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -59,7 +59,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                 className="w-full flex items-center justify-between py-3 min-h-[52px]"
               >
                 <div>
-                  <div className="text-sm font-medium text-text-primary text-left">Enable Local Backup</div>
+                  <div className="text-sm font-medium text-text-primary text-left">Enable local backup</div>
                   <div className="text-xs text-text-muted text-left">Keeps Kitchen Display System working even if internet goes down</div>
                 </div>
                 <div
@@ -72,7 +72,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               </button>
               {localBackup && (
                 <div className="mt-2 mb-3">
-                  <div className="text-xs text-text-muted mb-1">Backup Server Address</div>
+                  <div className="text-xs text-text-muted mb-1">Backup server address</div>
                   <input
                     type="text"
                     value={backupAddress}
@@ -101,7 +101,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
             <div className="px-4 pt-4">
               <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Device Info</div>
               <div className="mb-2">
-                <div className="text-xs text-text-muted mb-1">Device Name</div>
+                <div className="text-xs text-text-muted mb-1">Device name</div>
                 <input
                   type="text"
                   value={deviceName}
@@ -111,7 +111,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               </div>
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-xs text-text-muted">Last Order Number</div>
+                  <div className="text-xs text-text-muted">Last order number</div>
                   <div className="text-sm font-semibold text-text-primary">#1,247</div>
                 </div>
                 <button className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center">
@@ -128,7 +128,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                   onClick={handleSync}
                   className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
                 >
-                  Sync Now
+                  Sync now
                 </button>
                 <button
                   onClick={handleForceSync}
@@ -142,7 +142,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
 
             {/* Connection log */}
             <div className="px-4 pt-4 pb-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Recent Sync Events</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Recent sync events</div>
               <div className="space-y-1">
                 {syncLog.map((entry, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs py-1">

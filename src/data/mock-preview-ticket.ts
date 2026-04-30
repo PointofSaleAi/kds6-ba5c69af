@@ -31,7 +31,7 @@ export const previewTicket: Order = {
           quantity: 2,
           modifiers: [
             { id: 'prev-m-001', text: '+ Extra Croutons', type: 'extra' },
-            { id: 'prev-m-002', text: 'Dressing on Side', type: 'neutral' },
+            { id: 'prev-m-002', text: 'Dressing on side', type: 'neutral' },
           ],
           allergens: [
             { type: 'gluten', label: 'GLUTEN', icon: '🌾' },
@@ -64,7 +64,7 @@ export const previewTicket: Order = {
           category: 'Seafood',
           quantity: 1,
           modifiers: [
-            { id: 'prev-m-004', text: 'Medium Rare', type: 'neutral' },
+            { id: 'prev-m-004', text: 'Medium rare', type: 'neutral' },
             { id: 'prev-m-005', text: '+ Lemon Sauce', type: 'extra' },
           ],
           allergens: [
@@ -77,8 +77,8 @@ export const previewTicket: Order = {
           category: 'Meat',
           quantity: 1,
           modifiers: [
-            { id: 'prev-m-006', text: 'Well Done', type: 'neutral' },
-            { id: 'prev-m-007', text: 'No Butter', type: 'remove' },
+            { id: 'prev-m-006', text: 'Well done', type: 'neutral' },
+            { id: 'prev-m-007', text: 'No butter', type: 'remove' },
           ],
           allergens: [],
         },
@@ -101,7 +101,7 @@ export const previewTicket: Order = {
           category: 'Sides',
           quantity: 2,
           modifiers: [
-            { id: 'prev-m-009', text: 'No Salt', type: 'remove' },
+            { id: 'prev-m-009', text: 'No salt', type: 'remove' },
           ],
           allergens: [],
         },

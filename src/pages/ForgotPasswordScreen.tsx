@@ -79,7 +79,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <p className="text-text-muted text-sm mt-2">Kitchen Display System</p>
             </div>
 
-            <h2 className="text-xl font-bold text-text-primary mb-2">Forgot Password</h2>
+            <h2 className="text-xl font-bold text-text-primary mb-2">Forgot password</h2>
             <p className="text-text-secondary text-sm mb-6">Choose how to reset your password</p>
 
             <div className="space-y-3">
@@ -142,7 +142,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <span className="text-sm">Back</span>
             </button>
 
-            <h2 className="text-xl font-bold text-text-primary mb-2">Enter Verification Code</h2>
+            <h2 className="text-xl font-bold text-text-primary mb-2">Enter verification code</h2>
             <p className="text-text-secondary text-sm mb-8">
               A 6-digit code was sent to {email ? `${email.slice(0, 3)}***` : `***${phone.slice(-4)}`}
             </p>
@@ -191,7 +191,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <div className="w-20 h-20 rounded-full bg-success flex items-center justify-center mx-auto mb-6">
                 <Check size={40} className="text-primary-foreground" strokeWidth={3} />
               </div>
-              <h2 className="text-xl font-bold text-text-primary mb-2">Password Updated Successfully</h2>
+              <h2 className="text-xl font-bold text-text-primary mb-2">Password updated successfully</h2>
               <p className="text-text-secondary text-sm mb-6">You can now sign in with your new password</p>
               <button onClick={onComplete} className="w-full py-3 bg-brand-primary text-primary-foreground text-cta uppercase rounded-lg min-h-[48px]">
                 SIGN IN

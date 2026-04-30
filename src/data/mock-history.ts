@@ -27,8 +27,8 @@ export const mockHistoryOrders: Order[] = [
         course: 'ENTREE',
         isFired: true,
         items: [
-          { id: 'h-i-002', name: 'Ribeye Steak', quantity: 2, modifiers: [{ text: 'Medium Rare', type: 'neutral' }, { text: '+ Extra Sauce', type: 'extra' }], allergens: [], isCompleted: true },
-          { id: 'h-i-003', name: 'Grilled Chicken', quantity: 1, modifiers: [{ text: 'No Skin', type: 'remove' }], allergens: [], isCompleted: true },
+          { id: 'h-i-002', name: 'Ribeye Steak', quantity: 2, modifiers: [{ text: 'Medium rare', type: 'neutral' }, { text: '+ Extra Sauce', type: 'extra' }], allergens: [], isCompleted: true },
+          { id: 'h-i-003', name: 'Grilled Chicken', quantity: 1, modifiers: [{ text: 'No skin', type: 'remove' }], allergens: [], isCompleted: true },
         ],
       },
     ],
@@ -104,7 +104,7 @@ export const mockHistoryOrders: Order[] = [
         isFired: true,
         items: [
           { id: 'h-i-008', name: 'Lamb Chops', quantity: 1, modifiers: [{ text: 'Medium', type: 'neutral' }], allergens: [], isCompleted: true },
-          { id: 'h-i-009', name: 'Garden Salad', quantity: 1, modifiers: [{ text: 'No Onion', type: 'remove' }], allergens: [], isCompleted: true },
+          { id: 'h-i-009', name: 'Garden Salad', quantity: 1, modifiers: [{ text: 'No onion', type: 'remove' }], allergens: [], isCompleted: true },
         ],
       },
       {
@@ -123,7 +123,7 @@ export const mockHistoryOrders: Order[] = [
     status: 'served',
     tableName: 'BANQUET B',
     serverName: 'Sophie L.',
-    guestName: 'Corporate Event',
+    guestName: 'Corporate event',
     timeReceived: new Date(Date.now() - 14400000),
     elapsedSeconds: 1980,
     targetSeconds: 1800,

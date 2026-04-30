@@ -169,7 +169,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                   </div>
                 )
               ) : (
-                /* Kitchen Messages tab */
+                /* Kitchen messages tab */
                 sortedMessages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center px-8">
                     <Megaphone size={48} className="text-[#7C3AED]/40 mb-4" />

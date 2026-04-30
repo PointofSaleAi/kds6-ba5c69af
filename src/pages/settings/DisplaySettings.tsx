@@ -67,7 +67,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold">Ticket Aging Rules</h1>
+            <h1 className="text-2xl font-bold">Ticket aging rules</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden p-0 bg-surface-bg">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
@@ -117,7 +117,7 @@ export default function DisplaySettings() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket Spacing</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Ticket spacing</h1>
         </div>
         <div className="flex-1 px-6 pb-6 overflow-hidden">
           <div className="h-full flex gap-6 min-h-0">
@@ -129,7 +129,7 @@ export default function DisplaySettings() {
               <div className="grid gap-3">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Ticket Spacing
+                    Ticket spacing
                   </span>
                   <SegmentedToggle
                     options={['Compact', 'Standard', 'Spacious']}
@@ -204,7 +204,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={StretchVertical}
         iconColor="#0E7460"
-        label="Ticket Spacing"
+        label="Ticket spacing"
         helper="Controls padding and row gap inside each ticket card."
         right={<ValueText>{ticketSpacing}</ValueText>}
         onClick={() => setTicketSpacingOpen(true)}
@@ -238,7 +238,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Paintbrush}
         iconColor="#16A085"
-        label="Order Type Colors"
+        label="Order type colors"
         helper="Customize header colors for Dine In, Take Out, Delivery, and Banquet."
         onClick={() => setOrderTypeColorsOpen(true)}
         highlighted={hash === 'order-type-colors'}
@@ -247,7 +247,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Bell}
         iconColor="#E84C3D"
-        label="Enable Badge"
+        label="Enable badge"
         helper="Show unread count badge on the sidebar icon."
         right={<SwitchToggle checked={showBadge} onChange={setShowBadge} />}
         highlighted={hash === 'enable-badge'}
@@ -260,9 +260,9 @@ export default function DisplaySettings() {
         helper={ticketHeaderLayout === 'guest' ? 'Show guest name as primary card label.' : 'Show order number as primary card label.'}
         right={
           <SegmentedToggle
-            options={['Order Number', 'Guest Name']}
-            value={ticketHeaderLayout === 'guest' ? 'Guest Name' : 'Order Number'}
-            onChange={(v) => setTicketHeaderLayout(v === 'Guest Name' ? 'guest' : 'kitchen')}
+            options={['Order number', 'Guest name']}
+            value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'}
+            onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')}
           />
         }
         highlighted={hash === 'ticket-identifier'}
@@ -271,7 +271,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={SlidersHorizontal}
         iconColor="#5E4DD8"
-        label="Mode Switcher"
+        label="Mode switcher"
         helper="KDS operational mode: Standard, Expo, or Station."
         right={
           <SegmentedToggle

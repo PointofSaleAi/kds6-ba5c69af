@@ -186,7 +186,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
             ) : (
               <>
                 <div>
-                  <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>New Password</label>
+                  <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>New password</label>
                   <div style={{ position: 'relative' }}>
                     <input
                       type={showNew ? 'text' : 'password'} value={newPassword}
@@ -201,7 +201,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
                   </div>
                 </div>
                 <div>
-                  <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Confirm Password</label>
+                  <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Confirm password</label>
                   <div style={{ position: 'relative' }}>
                     <input
                       type={showConfirm ? 'text' : 'password'} value={confirmPassword}
