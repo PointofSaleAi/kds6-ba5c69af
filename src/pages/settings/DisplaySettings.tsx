@@ -318,7 +318,50 @@ export default function DisplaySettings() {
         onClick={resetLayout}
       />
 
-      
+      {mode === 'Prep' && (
+        <div
+          className="rounded-xl mb-1 px-4 py-3"
+          style={{ background: 'hsl(var(--surface-card))' }}
+        >
+          <div
+            className="text-[11px] font-bold uppercase tracking-wider mb-2"
+            style={{ color: 'hsl(var(--text-muted))' }}
+          >
+            Station
+          </div>
+          {availableCategories.length === 0 ? (
+            <p className="text-[12px]" style={{ color: 'hsl(var(--text-secondary))' }}>
+              No stations available. Categories will appear once orders are loaded.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {availableCategories.map((cat) => {
+                const active = stationCourse === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setStationCourse(active ? null : cat)}
+                    className="px-3 py-1.5 rounded-lg text-[12px] font-bold transition-colors min-h-[36px]"
+                    style={{
+                      background: active ? 'hsl(var(--brand-dark))' : 'hsl(var(--muted))',
+                      color: active ? 'hsl(var(--primary-foreground))' : 'hsl(var(--text-secondary))',
+                    }}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {stationCourse && (
+            <p className="text-[12px] mt-2" style={{ color: 'hsl(var(--text-secondary))' }}>
+              Showing station view for {stationCourse}.
+            </p>
+          )}
+        </div>
+      )}
+
+
     </>
   );
 }
