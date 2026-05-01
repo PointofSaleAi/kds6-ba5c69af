@@ -354,15 +354,37 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
-  const filteredHistory = historyOrders.filter((o) => {
-    if (!historySearch) return true;
-    const q = historySearch.toLowerCase();
-    return (
-      String(o.orderNumber).includes(q) ||
-      o.tableName.toLowerCase().includes(q) ||
-      o.serverName.toLowerCase().includes(q)
-    );
-  });
+  const filteredHistory = useMemo(() => {
+    let list = historyOrders.filter((o) => {
+      if (!historySearch) return true;
+      const q = historySearch.toLowerCase();
+      return (
+        String(o.orderNumber).includes(q) ||
+        o.tableName.toLowerCase().includes(q) ||
+        o.serverName.toLowerCase().includes(q)
+      );
+    });
+
+    if (isStationView && resolvedStationCourse) {
+      list = list
+        .map((o) => {
+          const courses = o.courses
+            .map((c) => ({
+              ...c,
+              items: c.items.filter((i) => i.category === resolvedStationCourse),
+            }))
+            .filter((c) => c.items.length > 0);
+          const itemCount = courses.reduce(
+            (sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0),
+            0,
+          );
+          return { ...o, courses, itemCount };
+        })
+        .filter((o) => o.courses.length > 0);
+    }
+
+    return list;
+  }, [historyOrders, historySearch, isStationView, resolvedStationCourse]);
 
   const staggerOrderColumns = useMemo(
     () => distributeIntoColumns(filteredOrders, staggerColumnCount),
@@ -797,6 +819,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
                   HISTORY
                 </span>
+                {isStationView && resolvedStationCourse && (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
+                    {resolvedStationCourse} station
+                  </span>
+                )}
                 <div className="flex items-center bg-muted rounded-full p-0.5">
                   {dateTabs.map((tab) => (
                     <button
@@ -828,7 +855,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               {/* History cards */}
               {filteredHistory.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center">
-                  <p className="text-text-muted text-sm">No orders served yet today</p>
+                  <p className="text-text-muted text-sm">
+                    {isStationView && resolvedStationCourse
+                      ? `No ${resolvedStationCourse} history yet today`
+                      : 'No orders served yet today'}
+                  </p>
                 </div>
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
