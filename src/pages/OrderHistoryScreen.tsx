@@ -4,6 +4,7 @@ import { StatusChip } from '@/components/kds/StatusChip';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import type { OrderType, OrderStatus } from '@/types/kds';
 
 interface HistoryOrder {
