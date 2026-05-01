@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useOrderStore } from '@/hooks/use-order-store';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
@@ -56,6 +57,7 @@ export default function DisplaySettings() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
+  const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
   const { layout: dockLayout, resetLayout } = useDockLayout();
   const insets = getOverlayInsets(dockLayout);
@@ -288,44 +290,61 @@ export default function DisplaySettings() {
         icon={SlidersHorizontal}
         iconColor="#5E4DD8"
         label="Mode switcher"
-        helper="KDS operational mode: Standard, Expo, or Station."
+        helper={
+          mode === 'Prep' && stationCourse
+            ? `Station mode · ${stationCourse}`
+            : 'KDS operational mode: Standard, Expo, or Station.'
+        }
         right={
           <SegmentedToggle
             options={['Standard', 'Expo', 'Station']}
             value={mode === 'Prep' ? 'Station' : mode}
-            onChange={(v) => setMode(v === 'Station' ? 'Prep' : (v as 'Standard' | 'Expo'))}
+            onChange={(v) => {
+              if (v === 'Station') {
+                setMode('Prep');
+                setStationPickerOpen(true);
+              } else {
+                setMode(v as 'Standard' | 'Expo');
+              }
+            }}
           />
         }
         highlighted={hash === 'mode-switcher'}
       />
 
-      {mode === 'Prep' && (
-        <div
-          className="rounded-xl mb-1 px-4 py-3"
+      <Dialog open={stationPickerOpen} onOpenChange={setStationPickerOpen}>
+        <DialogContent
+          className="sm:max-w-md"
           style={{ background: 'hsl(var(--surface-card))' }}
         >
-          <div
-            className="text-[11px] font-bold uppercase tracking-wider mb-2"
-            style={{ color: 'hsl(var(--text-muted))' }}
-          >
-            Station
-          </div>
+          <DialogHeader>
+            <DialogTitle style={{ color: 'hsl(var(--text-primary))' }}>
+              Choose station
+            </DialogTitle>
+            <DialogDescription style={{ color: 'hsl(var(--text-secondary))' }}>
+              Filter the KDS to show only items for one station. Tap a category to apply.
+            </DialogDescription>
+          </DialogHeader>
+
           {availableCategories.length === 0 ? (
-            <p className="text-[12px]" style={{ color: 'hsl(var(--text-secondary))' }}>
+            <p className="text-[13px]" style={{ color: 'hsl(var(--text-secondary))' }}>
               No stations available. Categories will appear once orders are loaded.
             </p>
           ) : (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2 pt-1">
               {availableCategories.map((cat) => {
                 const active = stationCourse === cat;
                 return (
                   <button
                     key={cat}
-                    onClick={() => setStationCourse(active ? null : cat)}
-                    className="px-3 py-1.5 rounded-lg text-[12px] font-bold transition-colors min-h-[36px]"
+                    onClick={() => {
+                      setStationCourse(active ? null : cat);
+                      if (!active) setStationPickerOpen(false);
+                    }}
+                    className="px-4 py-2 rounded-lg text-[13px] font-bold transition-colors min-h-[44px]"
                     style={{
                       background: active ? 'hsl(var(--brand-dark))' : 'hsl(var(--muted))',
-                      color: active ? 'hsl(var(--primary-foreground))' : 'hsl(var(--text-secondary))',
+                      color: active ? 'hsl(var(--primary-foreground))' : 'hsl(var(--text-primary))',
                     }}
                   >
                     {cat}
@@ -334,13 +353,18 @@ export default function DisplaySettings() {
               })}
             </div>
           )}
+
           {stationCourse && (
-            <p className="text-[12px] mt-2" style={{ color: 'hsl(var(--text-secondary))' }}>
-              Showing station view for {stationCourse}.
-            </p>
+            <button
+              onClick={() => setStationCourse(null)}
+              className="mt-2 text-[12px] font-semibold self-start hover:underline"
+              style={{ color: 'hsl(var(--text-secondary))' }}
+            >
+              Clear station filter
+            </button>
           )}
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       <SettingsPill
         icon={Globe}
