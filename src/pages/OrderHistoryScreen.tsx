@@ -97,6 +97,11 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
 
       <div className="flex-1 overflow-auto p-4">
         <div className="space-y-2 max-w-4xl mx-auto">
+          {isStationView && stationCourse && (
+            <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-[12px] text-text-secondary">
+              Showing all history. Station-scoped history requires per-item category data, which is not yet available in the History feed.
+            </div>
+          )}
           {filtered.map((order) => (
             <div key={order.id} className="bg-surface-card rounded-lg border border-border p-4 flex items-center gap-4">
               <div className="text-2xl font-black text-text-primary w-12 text-center">
