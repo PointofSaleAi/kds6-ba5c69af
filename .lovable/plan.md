@@ -1,60 +1,74 @@
 ## Problem
 
-The Settings → Display screen has a "Mode switcher" pill with three options (Standard / Expo / Station), but when the user picks **Station**, there is no UI to choose **which station** (Meat, Desserts, Salad, etc.) to view.
+When the user activates Station view (Settings → Display → Mode switcher → Station, then picks a category), the **History**, **Unseen**, and **Seen** screens still display **every order**, ignoring the station filter. Only the main board respects the station selection.
 
-In the pre-refactor `SettingsPanel.tsx` (commit `81a6afa`, April 21) the Mode switcher was a card that included:
-- Helper text per mode
-- A row of category "chips" populated from active orders (via `availableCategories`)
-- A confirmation line "Showing station view for X station"
+### Why
 
-When the layout was flattened into single-row pills and later migrated to the new iPad-style settings, only the three-way toggle survived. The data plumbing still works (`useKDSMode().stationCourse` drives `MainOrderView` filtering, and `BottomStatusBar` shows the active station), but there is no longer any in-Settings way to pick one. Users currently can only clear the station via the "Exit Station view" link on the main view header — they cannot pick one from Settings at all.
+`MainOrderView` applies the station filter locally (lines 297-321 of `src/pages/MainOrderView.tsx`):
+- Filters `orders` to those with at least one in-progress item whose `category === stationCourse`.
+- Re-shapes each order via `getStationDisplayOrder(...)` so only the matching items are visible inside the card.
+
+But the three other screens never read `useKDSMode()`:
+- `src/pages/UnseenOrdersScreen.tsx` (line 31): `orders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id))`
+- `src/pages/SeenOrdersScreen.tsx` (line 38): same shape, just inverted seen check
+- `src/pages/OrderHistoryScreen.tsx` (line 46): filters a separate `mockHistory` array that has no item-level data at all
 
 ## Fix
 
-Restore the station picker directly under the Mode switcher pill on `src/pages/settings/DisplaySettings.tsx`, shown only when `mode === 'Prep'` (Station). Keep it visually consistent with the new dense iPad Settings style — no card chrome, just a compact sub-row beneath the Mode switcher pill.
+Apply the same station-aware filter MainOrderView uses to **Unseen** and **Seen**, and apply a best-effort station scope to **History** based on the data it has.
 
-### Behaviour
+### 1. Unseen + Seen screens (`UnseenOrdersScreen.tsx`, `SeenOrdersScreen.tsx`)
 
-- Visible only when Station mode is active.
-- Lists every distinct, in-progress `item.category` from current orders (same logic that already exists in `SettingsPanel.tsx` lines 247-258 — lift it into DisplaySettings or a small shared hook).
-- Each category renders as a tappable chip. Tapping selects it (`setStationCourse(cat)`); tapping the active chip clears it (`setStationCourse(null)`), matching prior behaviour.
-- Active chip uses the existing primary brand fill; inactive chips use the muted surface, consistent with other chip groups in the new UI.
-- When no categories are available yet, show a 12px muted line: "No stations available. Categories will appear once orders are loaded."
-- When a station is selected, show a small helper line: "Showing station view for {category}".
+In each screen:
 
-### Where the data comes from
+1. Import `useKDSMode` from `@/hooks/use-kds-mode`.
+2. Read `mode` and `stationCourse`. Compute `isStationView = mode === 'Prep' && !!stationCourse`.
+3. After the existing seen / unseen filter, apply:
+   ```ts
+   if (isStationView && stationCourse) {
+     list = list.filter(o =>
+       o.courses.some(c =>
+         c.items.some(i =>
+           !i.isCompleted && !i.isCancelled && i.category === stationCourse
+         )
+       )
+     );
+   }
+   ```
+4. Re-shape each remaining order so the card only shows items for the active station, using the same logic as `MainOrderView.getStationDisplayOrder`:
+   ```ts
+   const display = isStationView && stationCourse
+     ? { ...o, courses: o.courses.map(c => ({ ...c, items: c.items.filter(i => i.category === stationCourse) })).filter(c => c.items.length > 0) }
+     : o;
+   ```
+   Pass `display` (not `o`) to `<OrderCard order={...} />`.
+5. Update the empty state to mention the station when active, e.g. `No new {stationCourse} orders`.
 
-```ts
-// already proven in src/components/kds/SettingsPanel.tsx (lines 247-258)
-const availableCategories = useMemo(() => {
-  const cats = new Set<string>();
-  for (const order of orders) {
-    if (order.status === 'served') continue;
-    for (const cg of order.courses) {
-      for (const item of cg.items) {
-        if (item.category && !item.isCompleted && !item.isCancelled) {
-          cats.add(item.category);
-        }
-      }
-    }
-  }
-  return Array.from(cats).sort();
-}, [orders]);
-```
+### 2. History screen (`OrderHistoryScreen.tsx`)
 
-`orders` is available via the existing `useOrderStore()` hook used elsewhere in the project. `stationCourse` / `setStationCourse` come from `useKDSMode()` (already imported in DisplaySettings).
+`mockHistory` rows currently only contain summary fields (`itemCount`, `durationMin`) with no per-item `category`. So strict filtering is not possible against the existing mock data without a schema change. To keep this change tight and reversible:
+
+1. Import and read `useKDSMode()` the same way.
+2. When `isStationView && stationCourse`, render a small banner above the list:
+   `Showing all history. Station-scoped history requires per-item category data, which is not yet available in the History feed.`
+3. Add a `TODO: filter by stationCourse once HistoryOrder includes per-item categories` comment on the existing `filtered` block.
+
+This makes the limitation visible and discoverable without silently lying about the filter being applied. A follow-up task can extend `HistoryOrder` to carry the items array (matching the live `Order` shape) and apply the same `.some(c => c.items.some(...))` check.
+
+### 3. No changes elsewhere
+
+- `useKDSMode` already exposes `mode` and `stationCourse`; no provider work required.
+- `MainOrderView` keeps its existing logic untouched.
+- No changes to data hooks, the picker dialog, or notification routing.
 
 ## Files to change
 
-- `src/pages/settings/DisplaySettings.tsx`
-  - Pull `stationCourse`, `setStationCourse` from `useKDSMode()` (already gets `mode`, `setMode`).
-  - Pull active orders from `useOrderStore()`; compute `availableCategories` with the snippet above.
-  - Render a new compact sub-row under the existing Mode switcher pill, conditional on `mode === 'Prep'`. Use `flex flex-wrap gap-1.5` chips matching the existing chip styling used in other Settings pills, plus the helper line(s) described above.
-
-No changes required to `useKDSMode`, `MainOrderView`, `BottomStatusBar`, or `NotificationStationSync` — the picker only writes into existing state that the rest of the app already reads.
+- `src/pages/UnseenOrdersScreen.tsx`
+- `src/pages/SeenOrdersScreen.tsx`
+- `src/pages/OrderHistoryScreen.tsx`
 
 ## Out of scope
 
-- No changes to the sidebar, hero card, bottom toolbar, or any other Settings section.
-- No changes to the Mode switcher pill itself (label, helper, three-way toggle stay as-is).
-- No changes to the active-state colours, icons, or row spacing rules established in the previous iPad-density passes.
+- Restructuring `mockHistory` to include items (deferred; flagged with TODO).
+- Any change to the Station picker dialog or Mode switcher pill.
+- Any change to filter chips, sort modes, or sidebar nav.
