@@ -819,6 +819,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
                   HISTORY
                 </span>
+                {isStationView && resolvedStationCourse && (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
+                    {resolvedStationCourse} station
+                  </span>
+                )}
                 <div className="flex items-center bg-muted rounded-full p-0.5">
                   {dateTabs.map((tab) => (
                     <button
@@ -850,7 +855,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               {/* History cards */}
               {filteredHistory.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center">
-                  <p className="text-text-muted text-sm">No orders served yet today</p>
+                  <p className="text-text-muted text-sm">
+                    {isStationView && resolvedStationCourse
+                      ? `No ${resolvedStationCourse} history yet today`
+                      : 'No orders served yet today'}
+                  </p>
                 </div>
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
