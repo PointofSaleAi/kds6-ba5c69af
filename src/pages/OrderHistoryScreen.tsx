@@ -41,9 +41,12 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   const { orderTypeColors, textSize, ticketSpacing } = useKDSSettings();
   const { t, tperson, tl, to } = useLanguage();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
+  const { mode: kdsMode, stationCourse } = useKDSMode();
+  const isStationView = kdsMode === 'Prep' && !!stationCourse;
 
   const tabs = [t.today, t.yesterday, t.last7Days, t.customRange];
 
+  // TODO: filter by stationCourse once HistoryOrder includes per-item categories
   const filtered = mockHistory.filter((o) => {
     if (!search) return true;
     const q = search.toLowerCase();
