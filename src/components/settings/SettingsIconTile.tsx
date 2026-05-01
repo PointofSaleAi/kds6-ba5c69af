@@ -3,13 +3,14 @@ import type { LucideIcon } from 'lucide-react';
 interface SettingsIconTileProps {
   icon: LucideIcon;
   bgColor: string;
-  size?: 'xs' | 'sm' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   iconColor?: string;
 }
 
 /**
  * Colored rounded square icon tile used across the settings UI.
- * `xs` (29px) for compact nav rows, `sm` (36px) for pill rows, `lg` (64px) for section header cards.
+ * `xs` (29px) for compact nav rows, `sm` (28px) for pill rows,
+ * `md` (36px) for hero header inline, `lg` (64px) for legacy section headers.
  */
 export function SettingsIconTile({
   icon: Icon,
@@ -17,9 +18,9 @@ export function SettingsIconTile({
   size = 'sm',
   iconColor = '#FFFFFF',
 }: SettingsIconTileProps) {
-  const dim = size === 'lg' ? 64 : size === 'xs' ? 29 : 36;
-  const radius = size === 'lg' ? 16 : size === 'xs' ? 8 : 10;
-  const iconSize = size === 'lg' ? 28 : size === 'xs' ? 16 : 18;
+  const dim = size === 'lg' ? 64 : size === 'md' ? 36 : size === 'xs' ? 29 : 28;
+  const radius = size === 'lg' ? 16 : size === 'md' ? 10 : size === 'xs' ? 8 : 8;
+  const iconSize = size === 'lg' ? 28 : size === 'md' ? 18 : size === 'xs' ? 16 : 16;
   return (
     <div
       className="flex items-center justify-center shrink-0"
