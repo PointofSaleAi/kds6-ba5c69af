@@ -79,6 +79,11 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
         <span className="bg-[#E84C3D] text-primary-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
           {unseenOrders.length}
         </span>
+        {isStationView && stationCourse && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
+            {stationCourse} station
+          </span>
+        )}
       </div>
       <div className="flex-1 overflow-auto p-1.5">
         {isPortrait ? (
