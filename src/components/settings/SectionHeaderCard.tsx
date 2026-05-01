@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { SettingsIconTile } from './SettingsIconTile';
 
 interface SectionHeaderCardProps {
   icon: LucideIcon;
@@ -11,7 +10,7 @@ interface SectionHeaderCardProps {
 }
 
 export function SectionHeaderCard({
-  icon,
+  icon: Icon,
   iconColor,
   title,
   shortDescription,
@@ -26,29 +25,42 @@ export function SectionHeaderCard({
       style={{
         background: 'hsl(var(--surface-card))',
         border: '1px solid hsl(var(--border))',
-        padding: 12,
+        padding: 20,
       }}
     >
-      <div className="flex items-center gap-3 mb-2">
-        <SettingsIconTile icon={icon} bgColor={iconColor} size="md" />
-        <h1
-          className="text-xl font-semibold"
-          style={{ color: 'hsl(var(--text-primary))' }}
-        >
-          {title}
-        </h1>
+      <div
+        className="flex items-center justify-center shrink-0 mb-3"
+        style={{
+          width: 52,
+          height: 52,
+          borderRadius: 12,
+          backgroundColor: iconColor,
+        }}
+      >
+        <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
       </div>
+      <h1
+        className="mb-2"
+        style={{
+          color: 'hsl(var(--text-primary))',
+          fontSize: 22,
+          fontWeight: 500,
+          lineHeight: 1.2,
+        }}
+      >
+        {title}
+      </h1>
       <p
-        className="text-[15px] leading-relaxed w-full"
-        style={{ color: 'hsl(var(--text-secondary))' }}
+        className="w-full leading-relaxed"
+        style={{ color: 'hsl(var(--text-secondary))', fontSize: 13 }}
       >
         {showMore && hasMore ? longDescription : shortDescription}
         {hasMore && (
           <button
             type="button"
             onClick={() => setShowMore(!showMore)}
-            className="ml-1 text-[15px] font-medium"
-            style={{ color: 'hsl(var(--btn-seen))' }}
+            className="ml-1 font-medium"
+            style={{ color: 'hsl(var(--btn-seen))', fontSize: 13 }}
           >
             {showMore ? 'Learn less' : 'Learn more...'}
           </button>
