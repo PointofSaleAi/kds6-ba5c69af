@@ -1,47 +1,60 @@
-## Goal
+## Problem
 
-For tickets that have unacknowledged POS/kitchen messages or unseen order notes, do not remove the ticket from Home even after the last product is 3rd-tapped. Keep the ticket pinned (showing only the message and/or note) until the kitchen acknowledges the message and sees the note. Once both are cleared, the ticket auto-removes from Home and moves to History.
+The Settings → Display screen has a "Mode switcher" pill with three options (Standard / Expo / Station), but when the user picks **Station**, there is no UI to choose **which station** (Meat, Desserts, Salad, etc.) to view.
 
-Tickets with no notes/messages keep current behavior: 3rd-tapping the last product removes the ticket immediately.
+In the pre-refactor `SettingsPanel.tsx` (commit `81a6afa`, April 21) the Mode switcher was a card that included:
+- Helper text per mode
+- A row of category "chips" populated from active orders (via `availableCategories`)
+- A confirmation line "Showing station view for X station"
 
-## Behavior Rules
+When the layout was flattened into single-row pills and later migrated to the new iPad-style settings, only the three-way toggle survived. The data plumbing still works (`useKDSMode().stationCourse` drives `MainOrderView` filtering, and `BottomStatusBar` shows the active station), but there is no longer any in-Settings way to pick one. Users currently can only clear the station via the "Exit Station view" link on the main view header — they cannot pick one from Settings at all.
 
-1. **3rd-tap on a product** still moves that product to History as it does today.
-2. **Order becomes "empty of products"**: if the ticket has unacknowledged messages OR unseen notes, keep the ticket on Home as a stub showing the remaining message banner and/or note. Hide the (now empty) courses area.
-3. **Acknowledge message** + **mark note seen**: when the last pending acknowledgment is cleared on an empty-of-products ticket, auto-remove the ticket from Home and append it to History.
-4. **3rd-tap on the ticket header** (bulk dismiss): if any message is unacknowledged or any note is unseen, block the dismissal and show a brief inline toast: "Acknowledge messages and notes before clearing the ticket." Otherwise behave as today.
-5. Applies uniformly to Orders 22, 23, and any future ticket with messages/notes.
+## Fix
 
-## Files to Change
+Restore the station picker directly under the Mode switcher pill on `src/pages/settings/DisplaySettings.tsx`, shown only when `mode === 'Prep'` (Station). Keep it visually consistent with the new dense iPad Settings style — no card chrome, just a compact sub-row beneath the Mode switcher pill.
 
-- `src/pages/MainOrderView.tsx`
-  - Update `handleItemDismiss` so that when removing the last product makes `updatedCourses.length === 0`, check whether the ticket has any unacknowledged kitchen messages (from `useKitchenMessages.getMessagesForOrder(orderId)`) or any unseen order notes. If so, keep the ticket in `orders` (with empty courses) instead of dropping it. Otherwise drop as today.
-  - Add an effect that watches `orders`, `kitchenMessages`, and the notes-acknowledged state. For any ticket with empty courses AND no pending messages AND all notes seen, move it to History and remove from Home.
-  - Pass an `isAcknowledgmentPending(orderId)` helper into `OrderCard` so it can block bulk-header dismissal and show the toast.
+### Behaviour
 
-- `src/components/kds/OrderCard.tsx`
-  - In `handleBump` (and the header tap that triggers dismissal at the 3rd-tap stage), call the helper. If pending, show toast and bail out. Otherwise proceed.
-  - Render the card body gracefully when `order.courses` is empty: hide the courses container, keep the header, message banner, allergen strip, and notes section visible.
+- Visible only when Station mode is active.
+- Lists every distinct, in-progress `item.category` from current orders (same logic that already exists in `SettingsPanel.tsx` lines 247-258 — lift it into DisplaySettings or a small shared hook).
+- Each category renders as a tappable chip. Tapping selects it (`setStationCourse(cat)`); tapping the active chip clears it (`setStationCourse(null)`), matching prior behaviour.
+- Active chip uses the existing primary brand fill; inactive chips use the muted surface, consistent with other chip groups in the new UI.
+- When no categories are available yet, show a 12px muted line: "No stations available. Categories will appear once orders are loaded."
+- When a station is selected, show a small helper line: "Showing station view for {category}".
 
-- `src/hooks/use-kitchen-messages.tsx` (read-only use)
-  - Use existing `getMessagesForOrder(orderId)` and `m.status === 'pending'` to determine unacknowledged messages. No changes needed here.
+### Where the data comes from
 
-- Order notes acknowledgement
-  - Use the existing notes-acknowledged state already wired through `OrderNotesSection` / `onAcknowledgeNotes`. Lift or expose it to `MainOrderView` so we can read per-order acknowledgement status. If currently local to `OrderCard`, promote it to a `Map<orderId, boolean>` in `MainOrderView`.
+```ts
+// already proven in src/components/kds/SettingsPanel.tsx (lines 247-258)
+const availableCategories = useMemo(() => {
+  const cats = new Set<string>();
+  for (const order of orders) {
+    if (order.status === 'served') continue;
+    for (const cg of order.courses) {
+      for (const item of cg.items) {
+        if (item.category && !item.isCompleted && !item.isCancelled) {
+          cats.add(item.category);
+        }
+      }
+    }
+  }
+  return Array.from(cats).sort();
+}, [orders]);
+```
 
-## Edge Cases
+`orders` is available via the existing `useOrderStore()` hook used elsewhere in the project. `stationCourse` / `setStationCourse` come from `useKDSMode()` (already imported in DisplaySettings).
 
-- Recalled tickets (status `recalled`): same rule applies.
-- Cancelled items: count as removed (do not block).
-- Tickets that start with no products but do have a message (rare): kept on Home until the message is acknowledged.
-- Step-back (undo) on a product after acknowledgment is fine, products reappear and the normal flow resumes.
+## Files to change
 
-## Out of Scope
+- `src/pages/settings/DisplaySettings.tsx`
+  - Pull `stationCourse`, `setStationCourse` from `useKDSMode()` (already gets `mode`, `setMode`).
+  - Pull active orders from `useOrderStore()`; compute `availableCategories` with the snippet above.
+  - Render a new compact sub-row under the existing Mode switcher pill, conditional on `mode === 'Prep'`. Use `flex flex-wrap gap-1.5` chips matching the existing chip styling used in other Settings pills, plus the helper line(s) described above.
 
-- No design changes to the message banner or note section visuals.
-- No change to History card display.
-- No change to Expo view (tickets there already follow `status === 'served'`).
+No changes required to `useKDSMode`, `MainOrderView`, `BottomStatusBar`, or `NotificationStationSync` — the picker only writes into existing state that the rest of the app already reads.
 
-## Technical Notes
+## Out of scope
 
-The auto-remove effect should be guarded by a stable check (compare the set of pending IDs before mutating state) to avoid render loops. The "empty + pending" stub ticket retains its `id`, `orderNumber`, `timeReceived` so messages stay linked correctly.
+- No changes to the sidebar, hero card, bottom toolbar, or any other Settings section.
+- No changes to the Mode switcher pill itself (label, helper, three-way toggle stay as-is).
+- No changes to the active-state colours, icons, or row spacing rules established in the previous iPad-density passes.

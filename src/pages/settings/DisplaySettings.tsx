@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useOrderStore } from '@/hooks/use-order-store';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
@@ -35,7 +36,22 @@ export default function DisplaySettings() {
     ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
     : languageName;
   const { showBadge, setShowBadge } = useBadgeVisibility();
-  const { mode, setMode } = useKDSMode();
+  const { mode, setMode, stationCourse, setStationCourse } = useKDSMode();
+  const { orders } = useOrderStore();
+  const availableCategories = useMemo(() => {
+    const cats = new Set<string>();
+    for (const order of orders) {
+      if (order.status === 'served') continue;
+      for (const cg of order.courses) {
+        for (const item of cg.items) {
+          if (item.category && !item.isCompleted && !item.isCancelled) {
+            cats.add(item.category);
+          }
+        }
+      }
+    }
+    return Array.from(cats).sort();
+  }, [orders]);
   const [statusOpen, setStatusOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
@@ -283,6 +299,49 @@ export default function DisplaySettings() {
         highlighted={hash === 'mode-switcher'}
       />
 
+      {mode === 'Prep' && (
+        <div
+          className="rounded-xl mb-1 px-4 py-3"
+          style={{ background: 'hsl(var(--surface-card))' }}
+        >
+          <div
+            className="text-[11px] font-bold uppercase tracking-wider mb-2"
+            style={{ color: 'hsl(var(--text-muted))' }}
+          >
+            Station
+          </div>
+          {availableCategories.length === 0 ? (
+            <p className="text-[12px]" style={{ color: 'hsl(var(--text-secondary))' }}>
+              No stations available. Categories will appear once orders are loaded.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {availableCategories.map((cat) => {
+                const active = stationCourse === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setStationCourse(active ? null : cat)}
+                    className="px-3 py-1.5 rounded-lg text-[12px] font-bold transition-colors min-h-[36px]"
+                    style={{
+                      background: active ? 'hsl(var(--brand-dark))' : 'hsl(var(--muted))',
+                      color: active ? 'hsl(var(--primary-foreground))' : 'hsl(var(--text-secondary))',
+                    }}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {stationCourse && (
+            <p className="text-[12px] mt-2" style={{ color: 'hsl(var(--text-secondary))' }}>
+              Showing station view for {stationCourse}.
+            </p>
+          )}
+        </div>
+      )}
+
       <SettingsPill
         icon={Globe}
         iconColor="#16A085"
@@ -302,7 +361,7 @@ export default function DisplaySettings() {
         onClick={resetLayout}
       />
 
-      
+
     </>
   );
 }
