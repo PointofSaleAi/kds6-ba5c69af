@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useOrderStore } from '@/hooks/use-order-store';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
