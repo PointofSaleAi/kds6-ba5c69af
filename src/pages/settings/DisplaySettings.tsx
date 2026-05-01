@@ -57,6 +57,7 @@ export default function DisplaySettings() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
+  const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
   const { layout: dockLayout, resetLayout } = useDockLayout();
   const insets = getOverlayInsets(dockLayout);
