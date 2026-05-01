@@ -63,7 +63,9 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
           <CheckCircle size={40} className="text-success" />
         </div>
         <h2 className="text-xl font-bold text-text-primary mb-1.5">{t.allCaughtUp}</h2>
-        <p className="text-text-muted text-sm">{t.noNewUnseen}</p>
+        <p className="text-text-muted text-sm">
+          {isStationView && stationCourse ? `No new ${stationCourse} orders` : t.noNewUnseen}
+        </p>
       </div>
     );
   }
