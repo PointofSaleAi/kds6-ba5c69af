@@ -354,15 +354,37 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
-  const filteredHistory = historyOrders.filter((o) => {
-    if (!historySearch) return true;
-    const q = historySearch.toLowerCase();
-    return (
-      String(o.orderNumber).includes(q) ||
-      o.tableName.toLowerCase().includes(q) ||
-      o.serverName.toLowerCase().includes(q)
-    );
-  });
+  const filteredHistory = useMemo(() => {
+    let list = historyOrders.filter((o) => {
+      if (!historySearch) return true;
+      const q = historySearch.toLowerCase();
+      return (
+        String(o.orderNumber).includes(q) ||
+        o.tableName.toLowerCase().includes(q) ||
+        o.serverName.toLowerCase().includes(q)
+      );
+    });
+
+    if (isStationView && resolvedStationCourse) {
+      list = list
+        .map((o) => {
+          const courses = o.courses
+            .map((c) => ({
+              ...c,
+              items: c.items.filter((i) => i.category === resolvedStationCourse),
+            }))
+            .filter((c) => c.items.length > 0);
+          const itemCount = courses.reduce(
+            (sum, c) => sum + c.items.reduce((s, i) => s + i.quantity, 0),
+            0,
+          );
+          return { ...o, courses, itemCount };
+        })
+        .filter((o) => o.courses.length > 0);
+    }
+
+    return list;
+  }, [historyOrders, historySearch, isStationView, resolvedStationCourse]);
 
   const staggerOrderColumns = useMemo(
     () => distributeIntoColumns(filteredOrders, staggerColumnCount),
