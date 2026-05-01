@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useOrderStore } from '@/hooks/use-order-store';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   Monitor, Type, Rows3, Palette, Globe,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
