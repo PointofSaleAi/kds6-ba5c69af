@@ -36,7 +36,22 @@ export default function DisplaySettings() {
     ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
     : languageName;
   const { showBadge, setShowBadge } = useBadgeVisibility();
-  const { mode, setMode } = useKDSMode();
+  const { mode, setMode, stationCourse, setStationCourse } = useKDSMode();
+  const { orders } = useOrderStore();
+  const availableCategories = useMemo(() => {
+    const cats = new Set<string>();
+    for (const order of orders) {
+      if (order.status === 'served') continue;
+      for (const cg of order.courses) {
+        for (const item of cg.items) {
+          if (item.category && !item.isCompleted && !item.isCancelled) {
+            cats.add(item.category);
+          }
+        }
+      }
+    }
+    return Array.from(cats).sort();
+  }, [orders]);
   const [statusOpen, setStatusOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
