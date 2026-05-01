@@ -30,15 +30,31 @@ const cardVariants = {
 
 export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
   const { orders, seenOrderIds } = useOrderStore();
+  const { mode: kdsMode, stationCourse } = useKDSMode();
+  const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
   const { textSize, ticketSpacing } = useKDSSettings();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
-  const seenOrders = useMemo(() =>
-    orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id)),
-    [orders, seenOrderIds]
-  );
+  const seenOrders = useMemo(() => {
+    let list = orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));
+    if (isStationView && stationCourse) {
+      list = list
+        .filter(o =>
+          o.courses.some(c =>
+            c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === stationCourse)
+          )
+        )
+        .map(o => ({
+          ...o,
+          courses: o.courses
+            .map(c => ({ ...c, items: c.items.filter(i => i.category === stationCourse) }))
+            .filter(c => c.items.length > 0),
+        }));
+    }
+    return list;
+  }, [orders, seenOrderIds, isStationView, stationCourse]);
 
   if (seenOrders.length === 0) {
     return (
