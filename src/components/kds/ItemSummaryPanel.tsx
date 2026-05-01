@@ -37,7 +37,12 @@ function collectActiveItems(
   for (const order of orders) {
     if (order.status === 'served') continue;
     for (const cg of order.courses) {
-      if (!isCourseActive(cg)) continue;
+      // In station view we want to surface every remaining item for this station,
+      // even if its course block has been "fired" (the station still has to make it).
+      // In normal/expo view we only count items in actively cooking courses.
+      const courseHasRemaining = cg.items.some(i => !i.isCompleted && !i.isCancelled);
+      if (!courseHasRemaining) continue;
+      if (!stationCourseFilter && !isCourseActive(cg)) continue;
       const elapsed = courseAgingElapsed(order, cg, courseLevelAging, now);
       const isOvertime = elapsed >= thresholdSeconds;
       for (const item of cg.items) {
