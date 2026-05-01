@@ -4,6 +4,7 @@ import { StatusChip } from '@/components/kds/StatusChip';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { useLanguage } from '@/hooks/use-language';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import type { OrderType, OrderStatus } from '@/types/kds';
 
 interface HistoryOrder {
@@ -40,9 +41,12 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   const { orderTypeColors, textSize, ticketSpacing } = useKDSSettings();
   const { t, tperson, tl, to } = useLanguage();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
+  const { mode: kdsMode, stationCourse } = useKDSMode();
+  const isStationView = kdsMode === 'Prep' && !!stationCourse;
 
   const tabs = [t.today, t.yesterday, t.last7Days, t.customRange];
 
+  // TODO: filter by stationCourse once HistoryOrder includes per-item categories
   const filtered = mockHistory.filter((o) => {
     if (!search) return true;
     const q = search.toLowerCase();
@@ -93,6 +97,11 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
 
       <div className="flex-1 overflow-auto p-4">
         <div className="space-y-2 max-w-4xl mx-auto">
+          {isStationView && stationCourse && (
+            <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-[12px] text-text-secondary">
+              Showing all history. Station-scoped history requires per-item category data, which is not yet available in the History feed.
+            </div>
+          )}
           {filtered.map((order) => (
             <div key={order.id} className="bg-surface-card rounded-lg border border-border p-4 flex items-center gap-4">
               <div className="text-2xl font-black text-text-primary w-12 text-center">

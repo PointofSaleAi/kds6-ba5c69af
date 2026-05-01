@@ -3,6 +3,7 @@ import { Eye, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { useOrderStore } from '@/hooks/use-order-store';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useLanguage } from '@/hooks/use-language';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
@@ -29,15 +30,31 @@ const cardVariants = {
 
 export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
   const { orders, seenOrderIds } = useOrderStore();
+  const { mode: kdsMode, stationCourse } = useKDSMode();
+  const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
   const { textSize, ticketSpacing } = useKDSSettings();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
-  const seenOrders = useMemo(() =>
-    orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id)),
-    [orders, seenOrderIds]
-  );
+  const seenOrders = useMemo(() => {
+    let list = orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));
+    if (isStationView && stationCourse) {
+      list = list
+        .filter(o =>
+          o.courses.some(c =>
+            c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === stationCourse)
+          )
+        )
+        .map(o => ({
+          ...o,
+          courses: o.courses
+            .map(c => ({ ...c, items: c.items.filter(i => i.category === stationCourse) }))
+            .filter(c => c.items.length > 0),
+        }));
+    }
+    return list;
+  }, [orders, seenOrderIds, isStationView, stationCourse]);
 
   if (seenOrders.length === 0) {
     return (
@@ -46,7 +63,11 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
           <Eye size={40} className="text-text-muted" />
         </div>
         <h2 className="text-xl font-bold text-text-primary mb-1.5">Nothing seen yet</h2>
-        <p className="text-text-muted text-sm">Orders you acknowledge will appear here</p>
+        <p className="text-text-muted text-sm">
+          {isStationView && stationCourse
+            ? `No seen ${stationCourse} orders right now`
+            : 'Orders you acknowledge will appear here'}
+        </p>
       </div>
     );
   }
@@ -60,6 +81,11 @@ export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onSt
         <span className="bg-[#2980B9] text-primary-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
           {seenOrders.length}
         </span>
+        {isStationView && stationCourse && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
+            {stationCourse} station
+          </span>
+        )}
       </div>
       <div className="flex-1 overflow-auto p-1.5">
         {isPortrait ? (
