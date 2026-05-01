@@ -50,8 +50,8 @@ export function SettingsPill({
   // When stacking in portrait we drop the @[340px] inline constraint so the
   // right control always wraps to its own full-width row.
   const rowClasses = shouldStack
-    ? 'w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4'
-    : 'w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-3 px-4 @[340px]/pill:flex-nowrap';
+    ? 'w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4'
+    : 'w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 @[340px]/pill:flex-nowrap';
 
   const labelWrapClasses = shouldStack
     ? 'flex items-center gap-3 w-full min-w-0'
@@ -66,7 +66,7 @@ export function SettingsPill({
     : 'flex items-center gap-2 w-full pl-[52px] @[340px]/pill:w-auto @[340px]/pill:pl-0 @[340px]/pill:shrink-0 @[340px]/pill:justify-end';
 
   return (
-    <div className="mb-1.5 @container/pill">
+    <div className="mb-1 @container/pill">
       <div
         className="rounded-[28px] overflow-hidden transition-all"
         style={{
@@ -96,6 +96,7 @@ export function SettingsPill({
           className={`${rowClasses} ${
             interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
+          style={{ paddingTop: 10, paddingBottom: 10 }}
         >
           <div className={labelWrapClasses}>
             <SettingsIconTile icon={icon} bgColor={iconColor} />

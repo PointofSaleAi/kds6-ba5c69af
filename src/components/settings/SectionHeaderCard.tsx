@@ -22,18 +22,22 @@ export function SectionHeaderCard({
 
   return (
     <div
-      className="rounded-2xl p-5 mb-5 flex flex-col items-start"
-      style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}
+      className="rounded-2xl mb-5 flex flex-col items-start"
+      style={{
+        background: 'hsl(var(--surface-card))',
+        border: '1px solid hsl(var(--border))',
+        padding: 12,
+      }}
     >
-      <div className="mb-4">
-        <SettingsIconTile icon={icon} bgColor={iconColor} size="lg" />
+      <div className="flex items-center gap-3 mb-2">
+        <SettingsIconTile icon={icon} bgColor={iconColor} size="md" />
+        <h1
+          className="text-xl font-semibold"
+          style={{ color: 'hsl(var(--text-primary))' }}
+        >
+          {title}
+        </h1>
       </div>
-      <h1
-        className="text-xl font-semibold mb-2"
-        style={{ color: 'hsl(var(--text-primary))' }}
-      >
-        {title}
-      </h1>
       <p
         className="text-[15px] leading-relaxed w-full"
         style={{ color: 'hsl(var(--text-secondary))' }}
