@@ -481,6 +481,23 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return undefined;
   }, [isDineIn, courseLifecycleMap]);
 
+  // Collect servable modifier IDs belonging to a set of item IDs
+  const collectServableModIds = useCallback((itemIds: string[]): string[] => {
+    if (!servableModifiersEnabled) return [];
+    const idSet = new Set(itemIds);
+    const modIds: string[] = [];
+    for (const c of displayCourses) {
+      for (const item of c.items) {
+        if (!idSet.has(item.id) || item.isCancelled) continue;
+        if (!item.modifiers) continue;
+        for (const m of item.modifiers) {
+          if (m.isServable && m.type !== 'remove' && m.id) modIds.push(m.id);
+        }
+      }
+    }
+    return modIds;
+  }, [displayCourses, servableModifiersEnabled]);
+
   const handleTicketAdvance = useCallback((orderId: string) => {
     // Mark as seen in global store on first advance (unseen → preparing)
     if (ticketState === 'seen') {
@@ -545,11 +562,38 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked]);
+    // Propagate ticket-level advance to servable modifiers within targeted items
+    const modIds = collectServableModIds(targetIds);
+    if (modIds.length > 0) {
+      setModifierStatuses(prev => {
+        const next = new Map(prev);
+        modIds.forEach(mid => {
+          const cur = next.get(mid);
+          if (cur === 'done') return;
+          if (cur === 'preparing' && targetStatus === 'preparing') return;
+          next.set(mid, targetStatus);
+        });
+        return next;
+      });
+      setModifierTimestamps(prev => {
+        const next = new Map(prev);
+        modIds.forEach(mid => {
+          const existing = next.get(mid) || {};
+          if (targetStatus === 'preparing') {
+            next.set(mid, { ...existing, seenAt: existing.seenAt || now });
+          } else {
+            next.set(mid, { ...existing, seenAt: existing.seenAt || now, doneAt: now });
+          }
+        });
+        return next;
+      });
+    }
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked, collectServableModIds]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
     const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
+    const modIds = collectServableModIds(targetIds);
     if (ticketState === 'done') {
       // Back to in-progress: active course items to preparing
       const now = formatStaticTime(new Date());
@@ -569,6 +613,21 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         });
         return next;
       });
+      if (modIds.length > 0) {
+        setModifierStatuses(prev => {
+          const next = new Map(prev);
+          modIds.forEach(mid => next.set(mid, 'preparing'));
+          return next;
+        });
+        setModifierTimestamps(prev => {
+          const next = new Map(prev);
+          modIds.forEach(mid => {
+            const existing = next.get(mid) || {};
+            next.set(mid, { seenAt: existing.seenAt || now, doneAt: undefined });
+          });
+          return next;
+        });
+      }
     } else {
       // Back to unseen: clear non-done items only, preserve done items
       const nonDoneIds = targetIds.filter(id => itemStatuses.get(id) !== 'done');
@@ -588,8 +647,22 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return next;
       });
       nonDoneIds.forEach(id => clearSeenIndex(id));
+      // Reset servable modifiers for the non-done items back to unseen
+      const nonDoneModIds = collectServableModIds(nonDoneIds);
+      if (nonDoneModIds.length > 0) {
+        setModifierStatuses(prev => {
+          const next = new Map(prev);
+          nonDoneModIds.forEach(mid => next.delete(mid));
+          return next;
+        });
+        setModifierTimestamps(prev => {
+          const next = new Map(prev);
+          nonDoneModIds.forEach(mid => next.delete(mid));
+          return next;
+        });
+      }
     }
-  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen, itemStatuses, clearSeenIndex]);
+  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen, itemStatuses, clearSeenIndex, collectServableModIds]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
