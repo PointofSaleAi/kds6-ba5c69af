@@ -536,7 +536,7 @@ function CourseItemTapRow({
       }}
     >
       <div
-        className={`flex items-start transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
+        className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{
           padding: isolateModifierRows ? '0px 8px 0 8px' : headerPad,
           gap: 0,
@@ -553,8 +553,9 @@ function CourseItemTapRow({
               onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
               aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
               aria-expanded={detailsOpen}
-              className="shrink-0 flex items-center justify-center rounded hover:bg-muted/60"
-              style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
+              data-chevron-slot="line"
+              className="shrink-0 inline-flex items-center justify-center rounded hover:bg-muted/60"
+              style={{ width: 12, height: 12 }}
             >
               <ChevronRight
                 size={12}
@@ -565,15 +566,16 @@ function CourseItemTapRow({
           ) : (
             <span
               aria-hidden="true"
-              className="shrink-0 flex items-center justify-center"
-              style={{ width: 12, height: 12, marginRight: 0, marginTop: '3px' }}
+              data-chevron-slot="line"
+              className="shrink-0 inline-flex items-center justify-center"
+              style={{ width: 12, height: 12 }}
             >
               <ChevronRight size={12} className="text-text-muted/60" />
             </span>
           )
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))', lineHeight: 1.1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', textAlign: 'right', display: 'inline-block' }}
