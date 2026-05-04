@@ -593,6 +593,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
     const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
+    const modIds = collectServableModIds(targetIds);
     if (ticketState === 'done') {
       // Back to in-progress: active course items to preparing
       const now = formatStaticTime(new Date());
@@ -612,6 +613,21 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         });
         return next;
       });
+      if (modIds.length > 0) {
+        setModifierStatuses(prev => {
+          const next = new Map(prev);
+          modIds.forEach(mid => next.set(mid, 'preparing'));
+          return next;
+        });
+        setModifierTimestamps(prev => {
+          const next = new Map(prev);
+          modIds.forEach(mid => {
+            const existing = next.get(mid) || {};
+            next.set(mid, { seenAt: existing.seenAt || now, doneAt: undefined });
+          });
+          return next;
+        });
+      }
     } else {
       // Back to unseen: clear non-done items only, preserve done items
       const nonDoneIds = targetIds.filter(id => itemStatuses.get(id) !== 'done');
@@ -631,8 +647,22 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return next;
       });
       nonDoneIds.forEach(id => clearSeenIndex(id));
+      // Reset servable modifiers for the non-done items back to unseen
+      const nonDoneModIds = collectServableModIds(nonDoneIds);
+      if (nonDoneModIds.length > 0) {
+        setModifierStatuses(prev => {
+          const next = new Map(prev);
+          nonDoneModIds.forEach(mid => next.delete(mid));
+          return next;
+        });
+        setModifierTimestamps(prev => {
+          const next = new Map(prev);
+          nonDoneModIds.forEach(mid => next.delete(mid));
+          return next;
+        });
+      }
     }
-  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen, itemStatuses, clearSeenIndex]);
+  }, [ticketState, isDineIn, activeCourseItemIds, allItemIds, onItemStatusChange, onMarkSeen, itemStatuses, clearSeenIndex, collectServableModIds]);
 
   const handleUndoItem = useCallback((itemId: string) => {
     setItemStatuses(prev => {
