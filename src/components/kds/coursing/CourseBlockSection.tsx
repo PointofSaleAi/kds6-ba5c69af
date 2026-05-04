@@ -66,7 +66,7 @@ export function CourseBlockSection({
       </div>
 
       {/* Items */}
-      <div className="px-3 pt-1 pb-2">
+      <div className="px-3 pt-1 pb-3">
         {course.items.map((item) => (
           <ItemRow key={item.id} item={item} dimmed={dimmed} />
         ))}
