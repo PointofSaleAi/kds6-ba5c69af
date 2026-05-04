@@ -40,15 +40,17 @@ function buildCourses(names: string[]): CourseGroup[] {
 
 function renderCompact(names: string[]) {
   return render(
-    <LanguageProvider>
-      <FlatItemList
-        courses={buildCourses(names)}
-        itemStatuses={new Map()}
-        onAdvanceItem={vi.fn()}
-        onUndoItem={vi.fn()}
-        ticketLayoutMode="compact"
-      />
-    </LanguageProvider>
+    <KDSSettingsProvider>
+      <LanguageProvider>
+        <FlatItemList
+          courses={buildCourses(names)}
+          itemStatuses={new Map()}
+          onAdvanceItem={vi.fn()}
+          onUndoItem={vi.fn()}
+          ticketLayoutMode="compact"
+        />
+      </LanguageProvider>
+    </KDSSettingsProvider>
   );
 }
 
