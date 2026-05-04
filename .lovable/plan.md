@@ -1,51 +1,21 @@
-I found the issue. The active History screen is the History view inside `MainOrderView`, not the older standalone `OrderHistoryScreen`. The previous change added a disclaimer to the unused standalone screen, while the live `/kds/full` History list still maps `historyOrders` directly and only applies search filtering.
+I found why it still looks unresolved. The previous fix updated `FlatItemList.tsx`, but the course-section ticket rows are rendered through `CourseSection.tsx` in the course layout path. That file still has the old chevron offsets: the row uses `items-start`, and the chevron slot has `marginTop: '3px'`. This affects Entree, Appetizer, Dessert, and long product names inside course sections.
 
 Plan:
 
-1. Apply station filtering to the live History feed
-   - In `src/pages/MainOrderView.tsx`, update `filteredHistory` so when KDS mode is `Station` and a station is selected, History only includes orders containing items with `item.category === selected station`.
-   - Reshape each matching history order before render so the History card only shows that station’s items, not the full original ticket.
-   - Recalculate `itemCount` from the filtered items so counts match what is visible.
+1. Update `src/components/kds/CourseSection.tsx`
+   - Change the Compact product row container from top-aligned to center-aligned for the item name line.
+   - Remove the hardcoded `marginTop: '3px'` from both chevron variants.
+   - Use the same 12x12 inline-flex centered chevron slot pattern already applied in `FlatItemList.tsx`.
+   - Add the same stable `data-chevron-slot="line"` marker so tests cover this path too.
 
-2. Keep existing History behavior outside Station view
-   - In Standard and Expo modes, History stays unchanged.
-   - Existing date tabs, search box, card layout, recall behavior, sidebar, and bottom toolbar stay unchanged.
+2. Keep the scope limited
+   - Do not touch course headers, ticket headers, allergen tags, modifier rows, timestamps, timer chips, colors, fonts, or spacing outside the product-row chevron alignment.
 
-3. Add station context to the History header and empty state
-   - Add a small station chip in the History header, matching the Seen and Unseen station indicators.
-   - If there are no history items for the selected station, show a station-specific empty message such as `No Meat history yet today`.
+3. Update visual regression coverage
+   - Add or extend a test for `CourseSection.tsx` Compact layout with Appetizer, Entree, Dessert, and long product names.
+   - Assert no hardcoded top offsets remain on chevron slots.
+   - Assert row alignment uses center alignment and chevron slots remain 12x12.
 
-4. Make recall actions station-safe
-   - Because the displayed history order will be station-scoped, recalling a full card from Station History will recall only the visible station-filtered items.
-   - Single-item recall remains unchanged and continues recalling the tapped item only.
-
-Technical details:
-
-```ts
-const filteredHistory = useMemo(() => {
-  let list = historyOrders.filter(matchesSearch);
-
-  if (isStationView && resolvedStationCourse) {
-    list = list
-      .map(order => {
-        const courses = order.courses
-          .map(course => ({
-            ...course,
-            items: course.items.filter(item => item.category === resolvedStationCourse),
-          }))
-          .filter(course => course.items.length > 0);
-
-        return {
-          ...order,
-          courses,
-          itemCount: courses.reduce(...),
-        };
-      })
-      .filter(order => order.courses.length > 0);
-  }
-
-  return list;
-}, [historyOrders, historySearch, isStationView, resolvedStationCourse]);
-```
-
-I will not change setting rows, History card styling, row icons, labels, descriptions, values, toggles, colors, sidebar navigation, or the bottom toolbar.
+4. Verify after implementation
+   - Re-check the KDS page visually at the current viewport size.
+   - Confirm the chevron aligns with product names in all course sections and with wrapped or longer product names.
