@@ -172,7 +172,7 @@ function ItemTapRow({
       }}
     >
       <div
-        className="flex items-start cursor-pointer active:bg-muted/50 transition-colors select-none"
+        className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
         style={{
           padding: isolateModifierRows ? '0px 8px 0 8px' : `0px 0 0 0px`,
           gap: 0,
@@ -191,7 +191,7 @@ function ItemTapRow({
               aria-expanded={detailsOpen}
               data-chevron-slot="line"
               className="shrink-0 inline-flex items-center justify-center rounded hover:bg-muted/60"
-              style={{ width: 12, height: 'calc(var(--kds-item-name) * 1.1)', marginRight: 0 }}
+              style={{ width: 12, height: 12 }}
             >
               <ChevronRight
                 size={12}
@@ -204,7 +204,7 @@ function ItemTapRow({
               aria-hidden="true"
               data-chevron-slot="line"
               className="shrink-0 inline-flex items-center justify-center"
-              style={{ width: 12, height: 'calc(var(--kds-item-name) * 1.1)', marginRight: 0 }}
+              style={{ width: 12, height: 12 }}
             >
               <ChevronRight size={12} className="text-text-muted/60" />
             </span>

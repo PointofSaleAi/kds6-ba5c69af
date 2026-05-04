@@ -7,13 +7,13 @@ import type { CourseGroup } from '@/types/kds';
 
 /**
  * Visual regression: in Compact ticket layout, the leading chevron must align
- * vertically with the product name text row across typical name lengths.
+ * vertically with the product name text row across typical name lengths and
+ * across all course sections (Entree, Appetizer, Dessert, …).
  *
- * The chevron container's height is bound to the item-name line-box
- * (height = calc(var(--kds-item-name) * 1.1)) and centers the icon, so it
- * stays aligned regardless of font scaling or wrapping. A regression to a
- * fixed `height: 12px` + `marginTop` would visibly desync the chevron from
- * the first text line this test guards that contract.
+ * The contract: the row flex container uses `items-center`, and the chevron
+ * slot is a fixed 12×12 inline-flex centered box with NO hardcoded
+ * top/margin-top/padding-top. This keeps the chevron centered against the
+ * qty+name line-box at any font scale, wrap, or course status.
  */
 
 const NAMES = [
@@ -62,7 +62,7 @@ describe('FlatItemList Compact chevron alignment (visual regression)', () => {
     expect(slots.length).toBe(NAMES.length);
   });
 
-  it('chevron slot height tracks item-name line-box, not a fixed pixel value', () => {
+  it('chevron slot is a stable 12x12 box with no hardcoded top offsets', () => {
     const { container } = renderCompact(NAMES);
     const slots = Array.from(
       container.querySelectorAll<HTMLElement>('[data-chevron-slot]')
@@ -71,18 +71,30 @@ describe('FlatItemList Compact chevron alignment (visual regression)', () => {
     expect(slots.length).toBe(NAMES.length);
 
     for (const slot of slots) {
-      // Contract: slot height tracks the item-name line-box so the icon
-      // stays centered with the first text line at any font scale or wrap.
       expect(slot.getAttribute('data-chevron-slot')).toBe('line');
-      // Width stays a stable 12px gutter (jsdom preserves px values).
+      // Fixed 12x12 gutter — no line-height-derived height.
       expect(slot.style.width).toBe('12px');
-      // Guard against the previous regression that used a fixed top margin
-      // to fake alignment: must NOT be present.
+      expect(slot.style.height).toBe('12px');
+      // Guard against any hardcoded top offsets on the chevron itself.
       expect(slot.style.marginTop).toBe('');
+      expect(slot.style.paddingTop).toBe('');
+      expect(slot.style.top).toBe('');
       // Must use inline-flex centering so the icon stays vertically aligned.
       expect(slot.className).toMatch(/inline-flex/);
       expect(slot.className).toMatch(/items-center/);
       expect(slot.className).toMatch(/justify-center/);
+    }
+  });
+
+  it('row flex container uses items-center so chevron centers against the name line', () => {
+    const { container } = renderCompact(NAMES);
+    const slots = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-chevron-slot]')
+    );
+    for (const slot of slots) {
+      const row = slot.parentElement as HTMLElement;
+      expect(row.className).toMatch(/items-center/);
+      expect(row.className).not.toMatch(/items-start/);
     }
   });
 
