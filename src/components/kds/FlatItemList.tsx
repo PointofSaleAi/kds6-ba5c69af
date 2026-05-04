@@ -189,6 +189,7 @@ function ItemTapRow({
               onClick={(e) => { e.stopPropagation(); setDetailsOpen(o => !o); }}
               aria-label={detailsOpen ? 'Collapse details' : 'Expand details'}
               aria-expanded={detailsOpen}
+              data-chevron-slot="line"
               className="shrink-0 inline-flex items-center justify-center rounded hover:bg-muted/60"
               style={{ width: 12, height: 'calc(var(--kds-item-name) * 1.1)', marginRight: 0 }}
             >
@@ -201,6 +202,7 @@ function ItemTapRow({
           ) : (
             <span
               aria-hidden="true"
+              data-chevron-slot="line"
               className="shrink-0 inline-flex items-center justify-center"
               style={{ width: 12, height: 'calc(var(--kds-item-name) * 1.1)', marginRight: 0 }}
             >
