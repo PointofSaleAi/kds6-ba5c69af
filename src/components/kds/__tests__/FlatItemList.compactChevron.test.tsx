@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { FlatItemList } from '../FlatItemList';
 import { LanguageProvider } from '@/hooks/use-language';
+import { KDSSettingsProvider } from '@/hooks/use-kds-settings';
 import type { CourseGroup } from '@/types/kds';
 
 /**
