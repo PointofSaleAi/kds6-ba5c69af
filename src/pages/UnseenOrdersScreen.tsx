@@ -28,6 +28,15 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
+function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
+  const safeColumnCount = Math.max(1, columnCount);
+  const columns = Array.from({ length: safeColumnCount }, () => [] as T[]);
+  items.forEach((item, i) => {
+    columns[i % safeColumnCount].push(item);
+  });
+  return columns;
+}
+
 export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: UnseenOrdersScreenProps) {
   const { orders, seenOrderIds } = useOrderStore();
   const { mode: kdsMode, stationCourse } = useKDSMode();
@@ -117,15 +126,25 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
             </AnimatePresence>
           </div>
         ) : (
-          <div className="flex flex-row flex-wrap gap-3 items-start">
-            <AnimatePresence mode="popLayout">
-              {unseenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+          (() => {
+            const columnCount = isPortrait ? 2 : 4;
+            const columns = distributeIntoColumns(unseenOrders, columnCount);
+            return (
+              <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
+                {columns.map((col, colIdx) => (
+                  <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                    <AnimatePresence mode="popLayout">
+                      {col.map(order => (
+                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
+                          <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </div>
+            );
+          })()
         )}
       </div>
     </div>
