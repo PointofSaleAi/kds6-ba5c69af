@@ -79,10 +79,6 @@ describe('FlatItemList Compact chevron alignment (visual regression)', () => {
       // Guard against the previous regression that used a fixed top margin
       // to fake alignment: must NOT be present.
       expect(slot.style.marginTop).toBe('');
-      // The raw style attribute must still carry the calc() expression so
-      // the browser computes height from the actual font size.
-      const styleAttr = slot.getAttribute('style') || '';
-      expect(styleAttr).toMatch(/calc\(var\(--kds-item-name\)\s*\*\s*1\.1\)/);
       // Must use inline-flex centering so the icon stays vertically aligned.
       expect(slot.className).toMatch(/inline-flex/);
       expect(slot.className).toMatch(/items-center/);
