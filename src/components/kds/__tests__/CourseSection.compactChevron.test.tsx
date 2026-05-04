@@ -37,7 +37,7 @@ function buildCourse(course: 'APPETIZER' | 'ENTREE' | 'DESSERT', names: string[]
   };
 }
 
-function renderCompact(course: string) {
+function renderCompact(course: 'APPETIZER' | 'ENTREE' | 'DESSERT') {
   return render(
     <KDSSettingsProvider>
       <LanguageProvider>
@@ -54,7 +54,7 @@ function renderCompact(course: string) {
   );
 }
 
-const COURSES = ['ENTREE', 'APPETIZER', 'DESSERT'];
+const COURSES = ['ENTREE', 'APPETIZER', 'DESSERT'] as const;
 
 describe('CourseSection Compact chevron alignment (visual regression)', () => {
   for (const course of COURSES) {
