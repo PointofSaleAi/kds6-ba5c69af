@@ -62,7 +62,7 @@ describe('FlatItemList Compact chevron alignment (visual regression)', () => {
     expect(slots.length).toBe(NAMES.length);
   });
 
-  it('chevron slot height tracks item-name line-box, not a fixed pixel value', () => {
+  it('chevron slot is a stable 12x12 box with no hardcoded top offsets', () => {
     const { container } = renderCompact(NAMES);
     const slots = Array.from(
       container.querySelectorAll<HTMLElement>('[data-chevron-slot]')
@@ -71,18 +71,30 @@ describe('FlatItemList Compact chevron alignment (visual regression)', () => {
     expect(slots.length).toBe(NAMES.length);
 
     for (const slot of slots) {
-      // Contract: slot height tracks the item-name line-box so the icon
-      // stays centered with the first text line at any font scale or wrap.
       expect(slot.getAttribute('data-chevron-slot')).toBe('line');
-      // Width stays a stable 12px gutter (jsdom preserves px values).
+      // Fixed 12x12 gutter — no line-height-derived height.
       expect(slot.style.width).toBe('12px');
-      // Guard against the previous regression that used a fixed top margin
-      // to fake alignment: must NOT be present.
+      expect(slot.style.height).toBe('12px');
+      // Guard against any hardcoded top offsets on the chevron itself.
       expect(slot.style.marginTop).toBe('');
+      expect(slot.style.paddingTop).toBe('');
+      expect(slot.style.top).toBe('');
       // Must use inline-flex centering so the icon stays vertically aligned.
       expect(slot.className).toMatch(/inline-flex/);
       expect(slot.className).toMatch(/items-center/);
       expect(slot.className).toMatch(/justify-center/);
+    }
+  });
+
+  it('row flex container uses items-center so chevron centers against the name line', () => {
+    const { container } = renderCompact(NAMES);
+    const slots = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-chevron-slot]')
+    );
+    for (const slot of slots) {
+      const row = slot.parentElement as HTMLElement;
+      expect(row.className).toMatch(/items-center/);
+      expect(row.className).not.toMatch(/items-start/);
     }
   });
 
