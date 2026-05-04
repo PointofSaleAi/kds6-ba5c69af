@@ -221,7 +221,7 @@ export function ExpoSummaryPanel({
                         key={p.name}
                         onClick={() => onProductToggle?.(p.name)}
                         aria-pressed={isSelected}
-                        className={`relative w-full flex items-center justify-between pr-3 py-2 border-b border-border/30 transition-colors text-left cursor-pointer pl-3 ${
+                        className={`relative w-full flex items-center justify-between pr-3 py-1 border-b border-border/30 transition-colors text-left cursor-pointer pl-3 ${
                           isSelected
                             ? 'bg-warning/25 ring-1 ring-inset ring-warning'
                             : 'hover:bg-muted/50'
