@@ -604,7 +604,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`px-1 ${isQueued ? 'opacity-80' : ''}`} style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                  <div className={`px-1 ${isQueued ? 'opacity-80' : ''}`} style={{ paddingTop: '2px', paddingBottom: '6px' }}>
                     {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
@@ -631,7 +631,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div className="px-1" style={{ paddingTop: '4px', paddingBottom: '0px' }}>
+        <div className="px-1" style={{ paddingTop: '4px', paddingBottom: '6px' }}>
           {ticket.items.map((item, idx) => (
             <ExpoItemRow
               key={item.id}
