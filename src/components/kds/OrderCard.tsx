@@ -481,6 +481,23 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return undefined;
   }, [isDineIn, courseLifecycleMap]);
 
+  // Collect servable modifier IDs belonging to a set of item IDs
+  const collectServableModIds = useCallback((itemIds: string[]): string[] => {
+    if (!servableModifiersEnabled) return [];
+    const idSet = new Set(itemIds);
+    const modIds: string[] = [];
+    for (const c of displayCourses) {
+      for (const item of c.items) {
+        if (!idSet.has(item.id) || item.isCancelled) continue;
+        if (!item.modifiers) continue;
+        for (const m of item.modifiers) {
+          if (m.isServable && m.type !== 'remove' && m.id) modIds.push(m.id);
+        }
+      }
+    }
+    return modIds;
+  }, [displayCourses, servableModifiersEnabled]);
+
   const handleTicketAdvance = useCallback((orderId: string) => {
     // Mark as seen in global store on first advance (unseen → preparing)
     if (ticketState === 'seen') {
