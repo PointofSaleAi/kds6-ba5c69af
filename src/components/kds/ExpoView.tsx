@@ -631,7 +631,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div className="px-1" style={{ paddingTop: '4px', paddingBottom: '0px' }}>
+        <div className="px-1" style={{ paddingTop: '4px', paddingBottom: '6px' }}>
           {ticket.items.map((item, idx) => (
             <ExpoItemRow
               key={item.id}
