@@ -562,7 +562,33 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       });
       return next;
     });
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked]);
+    // Propagate ticket-level advance to servable modifiers within targeted items
+    const modIds = collectServableModIds(targetIds);
+    if (modIds.length > 0) {
+      setModifierStatuses(prev => {
+        const next = new Map(prev);
+        modIds.forEach(mid => {
+          const cur = next.get(mid);
+          if (cur === 'done') return;
+          if (cur === 'preparing' && targetStatus === 'preparing') return;
+          next.set(mid, targetStatus);
+        });
+        return next;
+      });
+      setModifierTimestamps(prev => {
+        const next = new Map(prev);
+        modIds.forEach(mid => {
+          const existing = next.get(mid) || {};
+          if (targetStatus === 'preparing') {
+            next.set(mid, { ...existing, seenAt: existing.seenAt || now });
+          } else {
+            next.set(mid, { ...existing, seenAt: existing.seenAt || now, doneAt: now });
+          }
+        });
+        return next;
+      });
+    }
+  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked, collectServableModIds]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
