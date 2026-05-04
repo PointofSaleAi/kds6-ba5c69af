@@ -23,7 +23,7 @@ const NAMES = [
   'Slow-Braised Lamb Rack with Rosemary', // very long
 ];
 
-function buildCourse(course: string, names: string[]): CourseGroup {
+function buildCourse(course: 'APPETIZER' | 'ENTREE' | 'DESSERT', names: string[]): CourseGroup {
   return {
     course,
     items: names.map((name, i) => ({
@@ -32,7 +32,7 @@ function buildCourse(course: string, names: string[]): CourseGroup {
       quantity: 1,
       modifiers: [],
       // Force `hasDetails` true so both chevron variants render in the suite.
-      allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '' }],
+      allergens: [{ type: 'gluten' as const, label: 'GLUTEN', icon: '' }],
     })),
   };
 }
