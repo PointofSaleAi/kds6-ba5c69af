@@ -13,7 +13,7 @@ import type { CourseGroup } from '@/types/kds';
  * (height = calc(var(--kds-item-name) * 1.1)) and centers the icon, so it
  * stays aligned regardless of font scaling or wrapping. A regression to a
  * fixed `height: 12px` + `marginTop` would visibly desync the chevron from
- * the first text line — this test guards that contract.
+ * the first text line this test guards that contract.
  */
 
 const NAMES = [
@@ -83,7 +83,7 @@ describe('FlatItemList Compact chevron alignment (visual regression)', () => {
       // Width stays a stable 12px gutter.
       expect(styleAttr).toMatch(/width:\s*12px/);
       // Guard against the previous regression that used a fixed top margin
-      // to fake alignment — must NOT be present.
+      // to fake alignment must NOT be present.
       expect(styleAttr).not.toMatch(/margin-top/);
       // Must use inline-flex centering so the icon stays vertically aligned.
       expect(slot.className).toMatch(/inline-flex/);
