@@ -7,13 +7,13 @@ import type { CourseGroup } from '@/types/kds';
 
 /**
  * Visual regression: in Compact ticket layout, the leading chevron must align
- * vertically with the product name text row across typical name lengths.
+ * vertically with the product name text row across typical name lengths and
+ * across all course sections (Entree, Appetizer, Dessert, …).
  *
- * The chevron container's height is bound to the item-name line-box
- * (height = calc(var(--kds-item-name) * 1.1)) and centers the icon, so it
- * stays aligned regardless of font scaling or wrapping. A regression to a
- * fixed `height: 12px` + `marginTop` would visibly desync the chevron from
- * the first text line this test guards that contract.
+ * The contract: the row flex container uses `items-center`, and the chevron
+ * slot is a fixed 12×12 inline-flex centered box with NO hardcoded
+ * top/margin-top/padding-top. This keeps the chevron centered against the
+ * qty+name line-box at any font scale, wrap, or course status.
  */
 
 const NAMES = [
