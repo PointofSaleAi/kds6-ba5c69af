@@ -173,6 +173,8 @@ const Index = () => {
           historyCenters={historyCenters}
           onClearHistoryCategories={() => setHistoryCategories([])}
           onClearHistoryCenters={() => setHistoryCenters([])}
+          onSetHistoryCategories={setHistoryCategories}
+          onSetHistoryCenters={setHistoryCenters}
         />
       )}
 
