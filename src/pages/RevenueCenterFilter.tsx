@@ -24,24 +24,28 @@ export default function RevenueCenterFilter({ open, onClose, onApply, activeCent
 
   if (!open) return null;
 
+  const emit = (next: string[]) => {
+    onApply(next.includes('ALL STATIONS') ? [] : next);
+  };
+
   const toggleCenter = (center: string) => {
     if (center === 'ALL STATIONS') {
       setSelected(['ALL STATIONS']);
+      emit(['ALL STATIONS']);
       return;
     }
     setSelected((prev) => {
       const without = prev.filter((c) => c !== 'ALL STATIONS');
+      let next: string[];
       if (without.includes(center)) {
-        const next = without.filter((c) => c !== center);
-        return next.length === 0 ? ['ALL STATIONS'] : next;
+        const removed = without.filter((c) => c !== center);
+        next = removed.length === 0 ? ['ALL STATIONS'] : removed;
+      } else {
+        next = [...without, center];
       }
-      return [...without, center];
+      emit(next);
+      return next;
     });
-  };
-
-  const handleApply = () => {
-    onApply(selected.includes('ALL STATIONS') ? [] : selected);
-    onClose();
   };
 
   return (
@@ -90,18 +94,12 @@ export default function RevenueCenterFilter({ open, onClose, onApply, activeCent
             </div>
           </div>
 
-          <div className="px-4 pb-4 space-y-2 shrink-0">
+          <div className="px-4 pb-4 shrink-0">
             <button
-              onClick={() => setSelected(['ALL STATIONS'])}
+              onClick={() => { setSelected(['ALL STATIONS']); emit(['ALL STATIONS']); }}
               className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px]"
             >
               Clear All
-            </button>
-            <button
-              onClick={handleApply}
-              className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
-            >
-              Apply Filter
             </button>
           </div>
         </motion.div>

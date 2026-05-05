@@ -28,28 +28,33 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
 
   if (!open) return null;
 
+  const emit = (next: string[]) => {
+    onApply(next.includes('ALL CATEGORIES') ? [] : next);
+  };
+
   const toggleCategory = (cat: string) => {
     if (cat === 'ALL CATEGORIES') {
       setSelected(['ALL CATEGORIES']);
+      emit(['ALL CATEGORIES']);
       return;
     }
     setSelected((prev) => {
       const without = prev.filter((c) => c !== 'ALL CATEGORIES');
+      let next: string[];
       if (without.includes(cat)) {
-        const next = without.filter((c) => c !== cat);
-        return next.length === 0 ? ['ALL CATEGORIES'] : next;
+        const removed = without.filter((c) => c !== cat);
+        next = removed.length === 0 ? ['ALL CATEGORIES'] : removed;
+      } else {
+        next = [...without, cat];
       }
-      return [...without, cat];
+      emit(next);
+      return next;
     });
-  };
-
-  const handleApply = () => {
-    onApply(selected.includes('ALL CATEGORIES') ? [] : selected);
-    onClose();
   };
 
   const handleClear = () => {
     setSelected(['ALL CATEGORIES']);
+    emit(['ALL CATEGORIES']);
   };
 
   return (
@@ -99,18 +104,12 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
             </div>
           </div>
 
-          <div className="px-4 pb-4 space-y-2 shrink-0">
+          <div className="px-4 pb-4 shrink-0">
             <button
               onClick={handleClear}
               className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[36px]"
             >
               Clear All
-            </button>
-            <button
-              onClick={handleApply}
-              className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
-            >
-              Apply Filter
             </button>
           </div>
         </motion.div>
