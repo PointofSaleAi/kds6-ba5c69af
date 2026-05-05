@@ -113,59 +113,99 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
       }}
       className={`${baseClass} ${!selected && interactive ? 'hover:bg-muted/30 active:bg-muted/40' : ''}`}
       style={{
-        paddingTop: 'var(--kds-row-py, 2px)',
-        paddingBottom: isLast ? 'calc(var(--kds-row-py, 2px) + 4px)' : 'var(--kds-row-py, 2px)',
+        paddingTop: 'var(--kds-row-py, 4px)',
+        paddingBottom: isLast ? 'calc(var(--kds-row-py, 4px) + 4px)' : 'var(--kds-row-py, 4px)',
         ...selectedStyle,
       }}
     >
-      <div className="flex items-start gap-2">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-item-name ${
-                selected
-                  ? 'text-text-primary font-bold'
-                  : selectionMode
-                    ? 'text-text-secondary line-through'
-                    : 'line-through text-text-muted'
-              } ${item.isCancelled ? 'text-text-muted' : ''}`}
-            >
-              {item.quantity}&times; {tp(item.name)}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+          <span
+            className="font-normal shrink-0 line-through"
+            style={{
+              fontSize: 'var(--kds-item-qty)',
+              color: 'hsl(var(--text-secondary))',
+              lineHeight: 1.1,
+              width: qtyColWidth,
+              textAlign: 'right',
+              display: 'inline-block',
+            }}
+          >
+            {item.quantity}x
+          </span>
+          <span
+            className={`font-bold uppercase min-w-0 flex-1 break-words ${
+              selected
+                ? 'text-text-primary'
+                : selectionMode
+                  ? 'text-text-secondary line-through'
+                  : 'line-through text-text-muted'
+            } ${item.isCancelled ? 'line-through text-text-muted' : ''}`}
+            style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
+          >
+            {tp(item.name)}
+          </span>
+          {item.isCancelled && (
+            <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded shrink-0">
+              CANCELLED
             </span>
-            {item.isCancelled && (
-              <span className="text-[10px] font-bold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
-                CANCELLED
-              </span>
-            )}
-          </div>
-          {item.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1 pl-5">
-              {item.allergens.map((a) => (
-                <AllergenBadge key={a.type} allergen={a} />
-              ))}
-            </div>
-          )}
-          {item.modifiers.length > 0 && (
-            <div className="line-through" style={{ opacity: 0.5 }}>
-              {item.modifiers.map((mod, idx) => (
-                <ModifierLine key={idx} modifier={mod} />
-              ))}
-            </div>
-          )}
-          {item.notes && !item.isCancelled && (
-            <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: '16px' }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '1.5ch', display: 'inline-block' }}>
-                0x
-              </span>
-              <div
-                className="italic leading-snug min-w-0 text-text-muted line-through"
-                style={{ fontSize: 'var(--kds-modifier)' }}
-              >
-                "{tn(item.notes)}"
-              </div>
-            </div>
           )}
         </div>
+        {item.allergens.length > 0 && (
+          <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', lineHeight: 1 }}>
+            <span
+              className="invisible shrink-0 font-normal"
+              aria-hidden="true"
+              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: qtyColWidth, display: 'inline-block' }}
+            >
+              0x
+            </span>
+            <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+              {item.allergens.map((a) => (
+                <AllergenBadge key={a.type} allergen={a} variant="item" />
+              ))}
+            </div>
+          </div>
+        )}
+        {item.modifiers.length > 0 && (
+          <div
+            className="line-through"
+            style={{
+              opacity: 0.5,
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: 'var(--kds-child-gap, 1px)',
+              gap: 'var(--kds-child-gap, 1px)',
+              paddingLeft: detailIndent,
+            }}
+          >
+            {item.modifiers.map((mod, idx) => (
+              <ModifierLine
+                key={mod.id || idx}
+                modifier={mod}
+                parentQuantity={item.quantity}
+                compactQtyCol={isCompactLayout}
+              />
+            ))}
+          </div>
+        )}
+        {item.notes && !item.isCancelled && (
+          <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: detailIndent }}>
+            <span
+              className="invisible shrink-0 font-normal"
+              aria-hidden="true"
+              style={{ fontSize: 'var(--kds-item-qty)', width: qtyColWidth, display: 'inline-block' }}
+            >
+              0x
+            </span>
+            <div
+              className="italic leading-snug min-w-0 text-text-muted line-through"
+              style={{ fontSize: 'var(--kds-modifier)' }}
+            >
+              "{tn(item.notes)}"
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
