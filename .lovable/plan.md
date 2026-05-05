@@ -1,49 +1,20 @@
-## Goal
+## Problem
 
-Make the existing bottom-bar controls (Category filter, Revenue Center filter, Sort) actually filter and order tickets shown on the History tab. Currently they open panels and toggle a sort enum, but History ignores all three.
+On the History screen, selecting a Category or Revenue Center filter currently hides all tickets (or doesn't change anything) instead of filtering them. Two reasons:
 
-## Changes
+1. **Category mismatch.** Filter options use singular UPPERCASE labels (`SALAD`, `DESSERT`, `APPETIZER`), but mock history items use mixed-case plurals (`Salads`, `Desserts`, `Appetizers`, `Meat`, `Poultry`, `Seafood`, `Pasta`, `Vegetarian`). Exact `toUpperCase()` comparison never matches item categories.
+2. **Revenue Center mismatch.** Filter requires `item.station`, but history mock items don't have a `station` field, so any selected revenue center filters out every ticket.
 
-### 1. `src/pages/Index.tsx`
-- Add state: `historyCategories: string[]` and `historyCenters: string[]`.
-- Pass them plus setters to `MainOrderView` and to the two filter panels' `onApply` handlers.
-- Keep panel open/close behavior unchanged.
+## Fix (in `src/pages/MainOrderView.tsx`, `filteredHistory` memo)
 
-```ts
-const [historyCategories, setHistoryCategories] = useState<string[]>([]);
-const [historyCenters, setHistoryCenters] = useState<string[]>([]);
+1. **Normalize category comparisons** by uppercasing and stripping a trailing `S` on both sides, so `SALAD` matches `Salads`, `DESSERT` matches `Desserts`, etc. Also still match against the course label (`APPETIZER`, `ENTREE`, `DESSERT`).
+2. **Add a category to revenue-center fallback map** for when `item.station` is absent:
+   - `MEAT / POULTRY / SEAFOOD` to GRILL/KITCHEN
+   - `SALAD` to COLD KITCHEN/KITCHEN
+   - `APPETIZER / PASTA / VEGETARIAN / DESSERT` to KITCHEN
+   - `BEVERAGE / COCKTAIL / BAR COCKTAIL` to BAR
+3. A ticket passes the revenue center filter if any item either:
+   - has a `station` in the allowed station set, OR
+   - has a `category` that maps to one of the selected centers.
 
-<CategoryFilterPanel ... activeCategories={historyCategories}
-  onApply={(cats) => setHistoryCategories(cats)} />
-<RevenueCenterFilter ... activeCenters={historyCenters}
-  onApply={(cs) => setHistoryCenters(cs)} />
-
-<MainOrderView ... historyCategories={historyCategories}
-  historyCenters={historyCenters}
-  onClearHistoryCategories={() => setHistoryCategories([])}
-  onClearHistoryCenters={() => setHistoryCenters([])} />
-```
-
-### 2. `src/pages/MainOrderView.tsx`
-Accept the new props. Extend `filteredHistory` memo:
-
-- **Category filter** (matches the panel's course-style labels APPETIZER/SALAD/ENTREE/DESSERT/BEVERAGES/etc.): keep an order only if any of its `courses[].course` (uppercased) is in `historyCategories`. For matching SIDES/BAKERY/KIDS MENU/SPECIALS/BAR COCKTAIL that don't map to `CourseType`, also accept orders where any `item.category` (uppercased) matches.
-- **Revenue center filter** (BAR/KITCHEN/GRILL/COLD KITCHEN/PASS/EXPO): keep an order only if any item's `station` (uppercased) matches a selected center. Map: `KITCHEN` => any station, `COLD KITCHEN` => `Salad`, `PASS`/`EXPO` => any (treated as pass-through), `BAR` => `Bar`, `GRILL` => `Grill`. Concrete map kept in a small const at top of the file.
-- **Sort**: apply the same `sortMode` logic already used for active orders (`newest`, `oldest`, `table`, `type`) to the history list, using `timeReceived` as the timestamp.
-
-Add deps to the memo: `sortMode, historyCategories, historyCenters`.
-
-### 3. Active filter chips row (already exists for order-type)
-Extend the chips strip on the History header to also render chips for active categories and centers, each with an `X` to remove. "Clear all" clears order type, categories, and centers together.
-
-### 4. No changes to
-- Filter panel UIs (`CategoryFilterPanel.tsx`, `RevenueCenterFilter.tsx`) other than receiving `activeCategories`/`activeCenters` (already supported props).
-- `BottomStatusBar` sort dropdown (already wired to `sortMode`).
-- Ticket card layout, search, date tabs, station view behavior.
-
-## Acceptance
-
-- Selecting categories in the Category panel and applying filters History to orders containing matching courses/items; chip appears; "Clear all" removes it.
-- Selecting revenue centers filters History to orders with matching item stations.
-- Changing sort in the bottom bar reorders History tickets (newest/oldest by `timeReceived`, table by `tableName`, type by `orderType`).
-- All three controls compose with the existing order-type filter and search.
+No UI changes. Order Type filter, sort, search, and chips behavior remain unchanged.
