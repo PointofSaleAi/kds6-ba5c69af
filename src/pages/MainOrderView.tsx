@@ -218,7 +218,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
   const [historySearch, setHistorySearch] = useState('');
   const [historyFilterOpen, setHistoryFilterOpen] = useState(false);
-  const [historyDraftTypes, setHistoryDraftTypes] = useState<OrderType[]>([]);
+  
   const [historyActiveTypes, setHistoryActiveTypes] = useState<OrderType[]>([]);
   const boardContentRef = useRef<HTMLDivElement | null>(null);
   const [boardContentWidth, setBoardContentWidth] = useState(0);
