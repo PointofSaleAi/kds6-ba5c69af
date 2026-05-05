@@ -1,20 +1,16 @@
 ## Problem
 
-On the History screen, selecting a Category or Revenue Center filter currently hides all tickets (or doesn't change anything) instead of filtering them. Two reasons:
+The Category and Revenue Center filters in the bottom status bar only apply to the History tab. On the Home screen (active orders), changing them has no effect because `filteredOrders` in `src/pages/MainOrderView.tsx` ignores `historyCategories` and `historyCenters`.
 
-1. **Category mismatch.** Filter options use singular UPPERCASE labels (`SALAD`, `DESSERT`, `APPETIZER`), but mock history items use mixed-case plurals (`Salads`, `Desserts`, `Appetizers`, `Meat`, `Poultry`, `Seafood`, `Pasta`, `Vegetarian`). Exact `toUpperCase()` comparison never matches item categories.
-2. **Revenue Center mismatch.** Filter requires `item.station`, but history mock items don't have a `station` field, so any selected revenue center filters out every ticket.
+## Fix
 
-## Fix (in `src/pages/MainOrderView.tsx`, `filteredHistory` memo)
+In `src/pages/MainOrderView.tsx`, extend the `filteredOrders` memo with the same category and revenue-center matching used by `filteredHistory`:
 
-1. **Normalize category comparisons** by uppercasing and stripping a trailing `S` on both sides, so `SALAD` matches `Salads`, `DESSERT` matches `Desserts`, etc. Also still match against the course label (`APPETIZER`, `ENTREE`, `DESSERT`).
-2. **Add a category to revenue-center fallback map** for when `item.station` is absent:
-   - `MEAT / POULTRY / SEAFOOD` to GRILL/KITCHEN
-   - `SALAD` to COLD KITCHEN/KITCHEN
-   - `APPETIZER / PASTA / VEGETARIAN / DESSERT` to KITCHEN
-   - `BEVERAGE / COCKTAIL / BAR COCKTAIL` to BAR
-3. A ticket passes the revenue center filter if any item either:
-   - has a `station` in the allowed station set, OR
-   - has a `category` that maps to one of the selected centers.
+1. Reuse the same normalization (`toUpperCase` + strip trailing `S`) for category comparisons so `SALAD` matches `Salads`, etc.
+2. Reuse the `centerStationMap` (revenue center to `StationName`) and the `categoryToCenters` fallback (when items lack a `station`).
+3. Add two checks inside the existing `orders.filter(...)`:
+   - If categories selected: ticket must have a course or item category matching.
+   - If revenue centers selected: ticket must have an item whose station is in the allowed set, OR whose category maps to one of the selected centers.
+4. Add `historyCategories` and `historyCenters` to the memo's dependency array.
 
-No UI changes. Order Type filter, sort, search, and chips behavior remain unchanged.
+No UI changes. Status filter (New/In-Progress/Completed), Station view, sort, and summary item filtering remain unchanged. Same filter state powers both Home and History so chips and the filter icon badge stay consistent.

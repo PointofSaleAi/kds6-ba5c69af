@@ -318,10 +318,54 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [isStationView, resolvedStationCourse]);
 
   const filteredOrders = useMemo(() => {
+    const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
+    const catSet = new Set(historyCategories.map(norm));
+    const centerSet = new Set(historyCenters.map((c) => c.toUpperCase()));
+    const centerStationMap: Record<string, string[]> = {
+      'BAR': ['Bar'],
+      'GRILL': ['Grill'],
+      'COLD KITCHEN': ['Salad'],
+      'KITCHEN': ['Grill', 'Fry', 'Dessert'],
+      'PASS': ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'],
+      'EXPO': ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'],
+    };
+    const categoryToCenters: Record<string, string[]> = {
+      'SALAD': ['COLD KITCHEN', 'KITCHEN'],
+      'APPETIZER': ['KITCHEN'],
+      'MEAT': ['GRILL', 'KITCHEN'],
+      'POULTRY': ['GRILL', 'KITCHEN'],
+      'SEAFOOD': ['GRILL', 'KITCHEN'],
+      'PASTA': ['KITCHEN'],
+      'VEGETARIAN': ['KITCHEN'],
+      'DESSERT': ['KITCHEN'],
+      'BEVERAGE': ['BAR'],
+      'COCKTAIL': ['BAR'],
+      'BAR COCKTAIL': ['BAR'],
+    };
+    const allowedStations = new Set<string>();
+    centerSet.forEach((c) => (centerStationMap[c] || []).forEach((s) => allowedStations.add(s)));
+
     let filtered = orders.filter((o) => {
-      if (activeFilter === 'new') return o.status === 'new';
-      if (activeFilter === 'in-progress') return o.status === 'in-progress' || o.status === 'seen';
-      if (activeFilter === 'completed') return o.status !== 'served';
+      if (activeFilter === 'new') { if (o.status !== 'new') return false; }
+      else if (activeFilter === 'in-progress') { if (!(o.status === 'in-progress' || o.status === 'seen')) return false; }
+      else if (activeFilter === 'completed') { if (o.status === 'served') return false; }
+
+      if (catSet.size > 0) {
+        const courseMatch = o.courses.some((c) => catSet.has(norm(String(c.course))));
+        const itemCatMatch = o.courses.some((c) => c.items.some((i) => i.category && catSet.has(norm(i.category))));
+        if (!courseMatch && !itemCatMatch) return false;
+      }
+      if (centerSet.size > 0) {
+        const stationMatch = o.courses.some((c) =>
+          c.items.some((i) => {
+            if (i.station && allowedStations.has(i.station)) return true;
+            const cat = i.category ? norm(i.category) : '';
+            const mapped = categoryToCenters[cat] || [];
+            return mapped.some((m) => centerSet.has(m));
+          }),
+        );
+        if (!stationMatch) return false;
+      }
       return true;
     });
 
@@ -364,7 +408,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const rushed = sorted.filter(o => o.isRushed);
     const nonRushed = sorted.filter(o => !o.isRushed);
     return [...rushed, ...nonRushed];
-  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters]);
 
   const filteredHistory = useMemo(() => {
     const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
