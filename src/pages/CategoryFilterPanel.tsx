@@ -28,28 +28,33 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
 
   if (!open) return null;
 
+  const emit = (next: string[]) => {
+    onApply(next.includes('ALL CATEGORIES') ? [] : next);
+  };
+
   const toggleCategory = (cat: string) => {
     if (cat === 'ALL CATEGORIES') {
       setSelected(['ALL CATEGORIES']);
+      emit(['ALL CATEGORIES']);
       return;
     }
     setSelected((prev) => {
       const without = prev.filter((c) => c !== 'ALL CATEGORIES');
+      let next: string[];
       if (without.includes(cat)) {
-        const next = without.filter((c) => c !== cat);
-        return next.length === 0 ? ['ALL CATEGORIES'] : next;
+        const removed = without.filter((c) => c !== cat);
+        next = removed.length === 0 ? ['ALL CATEGORIES'] : removed;
+      } else {
+        next = [...without, cat];
       }
-      return [...without, cat];
+      emit(next);
+      return next;
     });
-  };
-
-  const handleApply = () => {
-    onApply(selected.includes('ALL CATEGORIES') ? [] : selected);
-    onClose();
   };
 
   const handleClear = () => {
     setSelected(['ALL CATEGORIES']);
+    emit(['ALL CATEGORIES']);
   };
 
   return (
