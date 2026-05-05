@@ -1,5 +1,8 @@
 import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
-import { Search } from 'lucide-react';
+import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
+import type { OrderType } from '@/types/kds';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
@@ -59,7 +62,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -208,6 +211,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // History state
   const [historyDateFilter, setHistoryDateFilter] = useState('today');
   const [historySearch, setHistorySearch] = useState('');
+  const [historyFilterOpen, setHistoryFilterOpen] = useState(false);
+  const [historyDraftTypes, setHistoryDraftTypes] = useState<OrderType[]>([]);
+  const [historyActiveTypes, setHistoryActiveTypes] = useState<OrderType[]>([]);
   const boardContentRef = useRef<HTMLDivElement | null>(null);
   const [boardContentWidth, setBoardContentWidth] = useState(0);
 
@@ -356,6 +362,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const filteredHistory = useMemo(() => {
     let list = historyOrders.filter((o) => {
+      if (historyActiveTypes.length > 0 && !historyActiveTypes.includes(o.orderType)) return false;
       if (!historySearch) return true;
       const q = historySearch.toLowerCase();
       return (
@@ -384,7 +391,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }
 
     return list;
-  }, [historyOrders, historySearch, isStationView, resolvedStationCourse]);
+  }, [historyOrders, historySearch, historyActiveTypes, isStationView, resolvedStationCourse]);
 
   const staggerOrderColumns = useMemo(
     () => distributeIntoColumns(filteredOrders, staggerColumnCount),
@@ -850,7 +857,118 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-input bg-surface-card text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-ring min-h-[36px]"
                   />
                 </div>
+
+                <Popover
+                  open={historyFilterOpen}
+                  onOpenChange={(open) => {
+                    setHistoryFilterOpen(open);
+                    if (open) setHistoryDraftTypes(historyActiveTypes);
+                  }}
+                >
+                  <PopoverTrigger asChild>
+                    <button
+                      className="relative p-2 rounded-lg border border-input bg-surface-card hover:bg-muted min-h-[36px] min-w-[36px] flex items-center justify-center"
+                      aria-label="Filter orders"
+                    >
+                      <SlidersHorizontal size={14} className="text-text-primary" />
+                      {historyActiveTypes.length > 0 && (
+                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-brand-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center">
+                          {historyActiveTypes.length}
+                        </span>
+                      )}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" sideOffset={8} className="w-72 p-4">
+                    <div className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary mb-3">
+                      Order type
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {([
+                        { value: 'dine-in', label: 'Dine In' },
+                        { value: 'take-out', label: 'Take Out' },
+                        { value: 'delivery', label: 'Delivery' },
+                        { value: 'banquet', label: 'Banquet' },
+                      ] as { value: OrderType; label: string }[]).map((opt) => {
+                        const selected = historyDraftTypes.includes(opt.value);
+                        const color = orderTypeColors[opt.value] || DEFAULT_ORDER_TYPE_COLORS[opt.value];
+                        return (
+                          <button
+                            key={opt.value}
+                            onClick={() =>
+                              setHistoryDraftTypes((prev) =>
+                                prev.includes(opt.value)
+                                  ? prev.filter((t) => t !== opt.value)
+                                  : [...prev, opt.value]
+                              )
+                            }
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors"
+                            style={{
+                              borderColor: color,
+                              backgroundColor: selected ? color : 'transparent',
+                              color: selected ? '#FFFFFF' : 'hsl(var(--text-primary))',
+                            }}
+                          >
+                            <span
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: selected ? '#FFFFFF' : color }}
+                            />
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center justify-between gap-2 pt-3 border-t border-border">
+                      <button
+                        onClick={() => setHistoryDraftTypes([])}
+                        className="px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary"
+                      >
+                        Reset
+                      </button>
+                      <button
+                        onClick={() => {
+                          setHistoryActiveTypes(historyDraftTypes);
+                          setHistoryFilterOpen(false);
+                        }}
+                        className="px-4 py-1.5 rounded-lg bg-brand-primary text-primary-foreground text-xs font-semibold"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
+
+              {historyActiveTypes.length > 0 && (
+                <div className="flex items-center flex-wrap gap-2 px-3 pb-2 shrink-0">
+                  {historyActiveTypes.map((type) => {
+                    const color = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
+                    const label = type === 'dine-in' ? 'Dine In' : type === 'take-out' ? 'Take Out' : type === 'delivery' ? 'Delivery' : 'Banquet';
+                    return (
+                      <span
+                        key={type}
+                        className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold text-primary-foreground"
+                        style={{ backgroundColor: color }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                        {label}
+                        <button
+                          onClick={() => setHistoryActiveTypes((prev) => prev.filter((t) => t !== type))}
+                          className="ml-0.5 w-4 h-4 rounded-full hover:bg-white/20 flex items-center justify-center"
+                          aria-label={`Remove ${label} filter`}
+                        >
+                          <X size={10} />
+                        </button>
+                      </span>
+                    );
+                  })}
+                  <button
+                    onClick={() => setHistoryActiveTypes([])}
+                    className="text-[11px] font-semibold text-text-secondary hover:text-text-primary underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
 
               {/* History cards */}
               {filteredHistory.length === 0 ? (
