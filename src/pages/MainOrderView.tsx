@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { useKDSSettings as useKDSSettingsForColors, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
+import { DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import type { OrderType } from '@/types/kds';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
