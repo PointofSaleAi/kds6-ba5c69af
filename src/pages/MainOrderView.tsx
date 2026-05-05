@@ -1007,7 +1007,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     >
                       {cat}
                       <button
-                        onClick={() => onClearHistoryCategories && historyCategories.length === 1 ? onClearHistoryCategories() : null}
+                        onClick={() => onSetHistoryCategories?.(historyCategories.filter((c) => c !== cat))}
                         className="ml-0.5 w-4 h-4 rounded-full hover:bg-black/10 flex items-center justify-center"
                         aria-label={`Remove ${cat} filter`}
                       >
