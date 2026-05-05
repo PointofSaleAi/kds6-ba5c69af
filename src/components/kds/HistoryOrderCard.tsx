@@ -399,7 +399,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
 
       <div className="border-t border-border">
         {showCourses ? (
-          order.courses.map((courseGroup) => {
+          order.courses.map((courseGroup, courseIdx) => {
             const collapsed = collapsedCourses.has(courseGroup.course);
             return (
               <div key={courseGroup.course}>
