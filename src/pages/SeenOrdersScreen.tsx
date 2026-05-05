@@ -12,6 +12,7 @@ import type { ViewMode } from '@/types/kds';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 
 interface SeenOrdersScreenProps {
+  orders?: import('@/types/kds').Order[];
   viewMode: ViewMode;
   showAllergens: boolean;
   onBump: (orderId: string) => void;
@@ -28,8 +29,9 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
-export default function SeenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
-  const { orders, seenOrderIds } = useOrderStore();
+export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
+  const { orders: storeOrders, seenOrderIds } = useOrderStore();
+  const orders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { t } = useLanguage();
