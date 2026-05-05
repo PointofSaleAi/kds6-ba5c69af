@@ -46,6 +46,12 @@ interface MainOrderViewProps {
   onDevModeChange?: (enabled: boolean) => void;
   /** When set, OrderCards dim non-matching courses */
   stationCourse?: string;
+  historyCategories?: string[];
+  historyCenters?: string[];
+  onClearHistoryCategories?: () => void;
+  onClearHistoryCenters?: () => void;
+  onSetHistoryCategories?: (cats: string[]) => void;
+  onSetHistoryCenters?: (cs: string[]) => void;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
@@ -57,7 +63,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters }: MainOrderViewProps) {
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
@@ -361,8 +367,31 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
   const filteredHistory = useMemo(() => {
+    const catSet = new Set(historyCategories.map((c) => c.toUpperCase()));
+    const centerSet = new Set(historyCenters.map((c) => c.toUpperCase()));
+    // Map revenue center labels -> StationName values
+    const centerStationMap: Record<string, string[]> = {
+      'BAR': ['Bar'],
+      'GRILL': ['Grill'],
+      'COLD KITCHEN': ['Salad'],
+      'KITCHEN': ['Grill', 'Fry', 'Dessert'],
+      'PASS': ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'],
+      'EXPO': ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'],
+    };
+    const allowedStations = new Set<string>();
+    centerSet.forEach((c) => (centerStationMap[c] || []).forEach((s) => allowedStations.add(s)));
+
     let list = historyOrders.filter((o) => {
       if (historyActiveTypes.length > 0 && !historyActiveTypes.includes(o.orderType)) return false;
+      if (catSet.size > 0) {
+        const courseMatch = o.courses.some((c) => catSet.has(String(c.course).toUpperCase()));
+        const itemCatMatch = o.courses.some((c) => c.items.some((i) => i.category && catSet.has(i.category.toUpperCase())));
+        if (!courseMatch && !itemCatMatch) return false;
+      }
+      if (allowedStations.size > 0) {
+        const stationMatch = o.courses.some((c) => c.items.some((i) => i.station && allowedStations.has(i.station)));
+        if (!stationMatch) return false;
+      }
       if (!historySearch) return true;
       const q = historySearch.toLowerCase();
       return (
@@ -390,8 +419,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         .filter((o) => o.courses.length > 0);
     }
 
-    return list;
-  }, [historyOrders, historySearch, historyActiveTypes, isStationView, resolvedStationCourse]);
+    const sorted = [...list];
+    if (sortMode === 'table') {
+      sorted.sort((a, b) => a.tableName.localeCompare(b.tableName));
+    } else if (sortMode === 'type') {
+      sorted.sort((a, b) => a.orderType.localeCompare(b.orderType));
+    } else if (sortMode === 'oldest') {
+      sorted.sort((a, b) => a.timeReceived.getTime() - b.timeReceived.getTime());
+    } else {
+      sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
+    }
+    return sorted;
+  }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse]);
 
   const staggerOrderColumns = useMemo(
     () => distributeIntoColumns(filteredOrders, staggerColumnCount),
@@ -938,14 +977,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </Popover>
               </div>
 
-              {historyActiveTypes.length > 0 && (
+              {(historyActiveTypes.length > 0 || historyCategories.length > 0 || historyCenters.length > 0) && (
                 <div className="flex items-center flex-wrap gap-2 px-3 pb-2 shrink-0">
                   {historyActiveTypes.map((type) => {
                     const color = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
                     const label = type === 'dine-in' ? 'Dine In' : type === 'take-out' ? 'Take Out' : type === 'delivery' ? 'Delivery' : 'Banquet';
                     return (
                       <span
-                        key={type}
+                        key={`t-${type}`}
                         className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold text-primary-foreground"
                         style={{ backgroundColor: color }}
                       >
@@ -961,8 +1000,42 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       </span>
                     );
                   })}
+                  {historyCategories.map((cat) => (
+                    <span
+                      key={`c-${cat}`}
+                      className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold bg-muted text-text-primary"
+                    >
+                      {cat}
+                      <button
+                        onClick={() => onSetHistoryCategories?.(historyCategories.filter((c) => c !== cat))}
+                        className="ml-0.5 w-4 h-4 rounded-full hover:bg-black/10 flex items-center justify-center"
+                        aria-label={`Remove ${cat} filter`}
+                      >
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ))}
+                  {historyCenters.map((center) => (
+                    <span
+                      key={`r-${center}`}
+                      className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold bg-muted text-text-primary"
+                    >
+                      {center}
+                      <button
+                        onClick={() => onSetHistoryCenters?.(historyCenters.filter((c) => c !== center))}
+                        className="ml-0.5 w-4 h-4 rounded-full hover:bg-black/10 flex items-center justify-center"
+                        aria-label={`Remove ${center} filter`}
+                      >
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ))}
                   <button
-                    onClick={() => setHistoryActiveTypes([])}
+                    onClick={() => {
+                      setHistoryActiveTypes([]);
+                      onClearHistoryCategories?.();
+                      onClearHistoryCenters?.();
+                    }}
                     className="text-[11px] font-semibold text-text-secondary hover:text-text-primary underline"
                   >
                     Clear all
