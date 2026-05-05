@@ -362,6 +362,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const filteredHistory = useMemo(() => {
     let list = historyOrders.filter((o) => {
+      if (historyActiveTypes.length > 0 && !historyActiveTypes.includes(o.orderType)) return false;
       if (!historySearch) return true;
       const q = historySearch.toLowerCase();
       return (
