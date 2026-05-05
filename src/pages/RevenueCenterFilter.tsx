@@ -94,18 +94,12 @@ export default function RevenueCenterFilter({ open, onClose, onApply, activeCent
             </div>
           </div>
 
-          <div className="px-4 pb-4 space-y-2 shrink-0">
+          <div className="px-4 pb-4 shrink-0">
             <button
-              onClick={() => setSelected(['ALL STATIONS'])}
+              onClick={() => { setSelected(['ALL STATIONS']); emit(['ALL STATIONS']); }}
               className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px]"
             >
               Clear All
-            </button>
-            <button
-              onClick={handleApply}
-              className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
-            >
-              Apply Filter
             </button>
           </div>
         </motion.div>
