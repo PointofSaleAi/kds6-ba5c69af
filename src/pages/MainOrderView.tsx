@@ -1173,9 +1173,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               )}
             </>
           ) : isSeenScreen ? (
-            <SeenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
           ) : isUnseenScreen ? (
-            <UnseenOrdersScreen orders={filteredOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
           ) : (
             <>
               {isStationView && resolvedStationCourse && (
