@@ -200,7 +200,7 @@ const Index = () => {
           }
         }}
       />
-      <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} activeCategories={historyCategories} onApply={(cats) => setHistoryCategories(cats)} />
+      <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} activeCategories={historyCategories} availableCategories={availableCategories} onApply={(cats) => setHistoryCategories(cats)} />
       <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} activeCenters={historyCenters} onApply={(cs) => setHistoryCenters(cs)} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       
