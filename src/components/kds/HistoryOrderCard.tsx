@@ -45,8 +45,14 @@ function getDurationBadgeStyle(seconds: number) {
 const DINE_IN_TYPES = new Set(['dine-in']);
 const LONG_PRESS_MS = 450;
 
-function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPress, tp }: HistoryItemRowProps) {
+interface HistoryItemRowExtraProps extends HistoryItemRowProps {
+  isCompactLayout: boolean;
+}
+
+function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPress, tp, isCompactLayout }: HistoryItemRowExtraProps) {
   const { tn } = useLanguage();
+  const qtyColWidth = isCompactLayout ? '1.5ch' : '2.25ch';
+  const detailIndent = isCompactLayout ? '16px' : '0px';
   const interactive = !item.isCancelled;
   const timerRef = useRef<number | null>(null);
   const longPressedRef = useRef(false);
