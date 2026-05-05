@@ -422,6 +422,17 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                   >
                     {tl(courseGroup.course)}
                   </span>
+                  {(() => {
+                    const doneAt = new Date(order.timeReceived.getTime() + order.elapsedSeconds * 1000);
+                    return (
+                      <span
+                        className="ml-auto text-text-muted"
+                        style={{ fontSize: 'var(--kds-course-header)', fontWeight: 400 }}
+                      >
+                        Done at {formatTimeForKDS(doneAt, timeFormat)}
+                      </span>
+                    );
+                  })()}
                 </button>
                 {!collapsed && (
                   <div className="px-1">
