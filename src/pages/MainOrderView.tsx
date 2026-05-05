@@ -790,6 +790,38 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const seenCount = useMemo(() => activeOrders.filter(o => seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
   const unseenCount = useMemo(() => activeOrders.filter(o => !seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
 
+  // Per-screen ticket sources used to feed both the screen body AND the right Summary panel
+  // so the panel always reflects exactly what the user is currently looking at.
+  const seenScreenOrders = useMemo(() => {
+    let list = ordersWithItemStatuses.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));
+    if (isStationView && resolvedStationCourse) {
+      list = list
+        .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
+        .map(o => ({
+          ...o,
+          courses: o.courses
+            .map(c => ({ ...c, items: c.items.filter(i => i.category === resolvedStationCourse) }))
+            .filter(c => c.items.length > 0),
+        }));
+    }
+    return list;
+  }, [ordersWithItemStatuses, seenOrderIds, isStationView, resolvedStationCourse]);
+
+  const unseenScreenOrders = useMemo(() => {
+    let list = filteredOrders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
+    if (isStationView && resolvedStationCourse) {
+      list = list
+        .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
+        .map(o => ({
+          ...o,
+          courses: o.courses
+            .map(c => ({ ...c, items: c.items.filter(i => i.category === resolvedStationCourse) }))
+            .filter(c => c.items.length > 0),
+        }));
+    }
+    return list;
+  }, [filteredOrders, seenOrderIds, isStationView, resolvedStationCourse]);
+
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
     if (kdsMode !== 'Expo') return [];
