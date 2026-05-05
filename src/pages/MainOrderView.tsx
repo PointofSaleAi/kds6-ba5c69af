@@ -493,8 +493,25 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     } else {
       sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
+
+    // Reorder/filter based on selected summary items + categories (tap-to-filter from Summary panel)
+    const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
+    if (hasFilters) {
+      const matching: Array<{ order: Order; matchCount: number }> = [];
+      const nonMatching: Order[] = [];
+      for (const o of sorted) {
+        const matchCount = o.courses.reduce((acc, c) => acc + c.items.filter(i => {
+          if (i.isCancelled) return false;
+          return selectedSummaryItems.has(i.name) || (i.category && selectedSummaryCategories.has(i.category));
+        }).length, 0);
+        if (matchCount > 0) matching.push({ order: o, matchCount });
+        else nonMatching.push(o);
+      }
+      matching.sort((a, b) => b.matchCount - a.matchCount);
+      return [...matching.map(m => m.order), ...nonMatching];
+    }
     return sorted;
-  }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse]);
+  }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse, selectedSummaryItems, selectedSummaryCategories]);
 
   const staggerOrderColumns = useMemo(
     () => distributeIntoColumns(filteredOrders, staggerColumnCount),
