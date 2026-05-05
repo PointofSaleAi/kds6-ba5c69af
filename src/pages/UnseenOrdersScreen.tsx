@@ -12,6 +12,7 @@ import type { ViewMode } from '@/types/kds';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 
 interface UnseenOrdersScreenProps {
+  orders?: import('@/types/kds').Order[];
   viewMode: ViewMode;
   showAllergens: boolean;
   onBump: (orderId: string) => void;
@@ -37,8 +38,9 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: UnseenOrdersScreenProps) {
-  const { orders, seenOrderIds } = useOrderStore();
+export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: UnseenOrdersScreenProps) {
+  const { orders: storeOrders, seenOrderIds } = useOrderStore();
+  const sourceOrders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { isPortrait } = usePortrait();
@@ -47,7 +49,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const unseenOrders = useMemo(() => {
-    let list = orders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
+    let list = sourceOrders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
     if (isStationView && stationCourse) {
       list = list
         .filter(o =>
@@ -63,7 +65,7 @@ export default function UnseenOrdersScreen({ viewMode, showAllergens, onBump, on
         }));
     }
     return list;
-  }, [orders, seenOrderIds, isStationView, stationCourse]);
+  }, [sourceOrders, seenOrderIds, isStationView, stationCourse]);
 
   if (unseenOrders.length === 0) {
     return (
