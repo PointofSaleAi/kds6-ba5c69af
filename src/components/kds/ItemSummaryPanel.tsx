@@ -146,7 +146,7 @@ function buildSummary(records: ReturnType<typeof collectActiveItems>): CategoryS
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount, mode = 'active' }: ItemSummaryPanelProps) {
   const { tp, tcat, t } = useLanguage();
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
@@ -168,11 +168,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   // Single pass over orders → records used by both Overtime + category sections.
   // Uses unified aging (matches OrderCard) so overtime stays in sync with cards.
   const activeRecords = useMemo(
-    () => collectActiveItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
-    [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse]
+    () => collectActiveItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse, mode),
+    [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse, mode]
   );
   const summary = useMemo(() => buildSummary(activeRecords), [activeRecords]);
-  const overtimeItems = useMemo(() => buildOvertimeItems(activeRecords), [activeRecords]);
+  const overtimeItems = useMemo(() => mode === 'active' ? buildOvertimeItems(activeRecords) : [], [activeRecords, mode]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
