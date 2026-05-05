@@ -72,24 +72,28 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
           </div>
 
           <div className="flex-1 overflow-y-auto px-4 py-4">
-            <div className="flex flex-wrap gap-2">
-              {allCategories.map((cat) => {
-                const isActive = selected.includes(cat);
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => toggleCategory(cat)}
-                    className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors min-h-[44px] ${
-                      isActive
-                        ? 'bg-brand-primary text-primary-foreground'
-                        : 'bg-muted text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
-            </div>
+            {availableCategories.length === 0 ? (
+              <div className="text-sm text-text-secondary text-center py-8">No active categories</div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {allCategories.map((cat) => {
+                  const isActive = selected.includes(cat);
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => toggleCategory(cat)}
+                      className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors min-h-[44px] ${
+                        isActive
+                          ? 'bg-brand-primary text-primary-foreground'
+                          : 'bg-muted text-text-secondary hover:text-text-primary'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div className="px-4 pb-4 shrink-0">
