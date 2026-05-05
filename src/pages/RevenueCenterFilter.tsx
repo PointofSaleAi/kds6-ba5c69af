@@ -24,24 +24,28 @@ export default function RevenueCenterFilter({ open, onClose, onApply, activeCent
 
   if (!open) return null;
 
+  const emit = (next: string[]) => {
+    onApply(next.includes('ALL STATIONS') ? [] : next);
+  };
+
   const toggleCenter = (center: string) => {
     if (center === 'ALL STATIONS') {
       setSelected(['ALL STATIONS']);
+      emit(['ALL STATIONS']);
       return;
     }
     setSelected((prev) => {
       const without = prev.filter((c) => c !== 'ALL STATIONS');
+      let next: string[];
       if (without.includes(center)) {
-        const next = without.filter((c) => c !== center);
-        return next.length === 0 ? ['ALL STATIONS'] : next;
+        const removed = without.filter((c) => c !== center);
+        next = removed.length === 0 ? ['ALL STATIONS'] : removed;
+      } else {
+        next = [...without, center];
       }
-      return [...without, center];
+      emit(next);
+      return next;
     });
-  };
-
-  const handleApply = () => {
-    onApply(selected.includes('ALL STATIONS') ? [] : selected);
-    onClose();
   };
 
   return (
