@@ -477,7 +477,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                     return (
                       <span
                         className="ml-auto text-text-muted"
-                        style={{ fontSize: 'var(--kds-course-header)', fontWeight: 400 }}
+                        style={{ fontSize: 'var(--kds-course-header)', fontWeight: 600 }}
                       >
                         Done at {formatTimeForKDS(doneAt, timeFormat)}
                       </span>
