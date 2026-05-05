@@ -25,6 +25,7 @@ function collectActiveItems(
   now: number,
   courseLevelAging: boolean,
   stationCourseFilter?: string,
+  mode: 'active' | 'completed' = 'active',
 ) {
   const records: Array<{
     name: string;
@@ -35,18 +36,19 @@ function collectActiveItems(
     elapsedSeconds: number;
   }> = [];
   for (const order of orders) {
-    if (order.status === 'served') continue;
+    if (mode === 'active' && order.status === 'served') continue;
     for (const cg of order.courses) {
-      // In station view we want to surface every remaining item for this station,
-      // even if its course block has been "fired" (the station still has to make it).
-      // In normal/expo view we only count items in actively cooking courses.
-      const courseHasRemaining = cg.items.some(i => !i.isCompleted && !i.isCancelled);
-      if (!courseHasRemaining) continue;
-      if (!stationCourseFilter && !isCourseActive(cg)) continue;
+      if (mode === 'active') {
+        const courseHasRemaining = cg.items.some(i => !i.isCompleted && !i.isCancelled);
+        if (!courseHasRemaining) continue;
+        if (!stationCourseFilter && !isCourseActive(cg)) continue;
+      }
       const elapsed = courseAgingElapsed(order, cg, courseLevelAging, now);
-      const isOvertime = elapsed >= thresholdSeconds;
+      const isOvertime = mode === 'active' && elapsed >= thresholdSeconds;
       for (const item of cg.items) {
-        if (item.isCompleted || item.isCancelled) continue;
+        if (item.isCancelled) continue;
+        if (mode === 'active' && item.isCompleted) continue;
+        if (mode === 'completed' && !item.isCompleted) continue;
         const cat = (item.category || ('Uncategorized' as ProductCategory)) as ProductCategory;
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
         records.push({
