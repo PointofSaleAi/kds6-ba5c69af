@@ -790,6 +790,38 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const seenCount = useMemo(() => activeOrders.filter(o => seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
   const unseenCount = useMemo(() => activeOrders.filter(o => !seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
 
+  // Per-screen ticket sources used to feed both the screen body AND the right Summary panel
+  // so the panel always reflects exactly what the user is currently looking at.
+  const seenScreenOrders = useMemo(() => {
+    let list = ordersWithItemStatuses.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));
+    if (isStationView && resolvedStationCourse) {
+      list = list
+        .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
+        .map(o => ({
+          ...o,
+          courses: o.courses
+            .map(c => ({ ...c, items: c.items.filter(i => i.category === resolvedStationCourse) }))
+            .filter(c => c.items.length > 0),
+        }));
+    }
+    return list;
+  }, [ordersWithItemStatuses, seenOrderIds, isStationView, resolvedStationCourse]);
+
+  const unseenScreenOrders = useMemo(() => {
+    let list = filteredOrders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
+    if (isStationView && resolvedStationCourse) {
+      list = list
+        .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
+        .map(o => ({
+          ...o,
+          courses: o.courses
+            .map(c => ({ ...c, items: c.items.filter(i => i.category === resolvedStationCourse) }))
+            .filter(c => c.items.length > 0),
+        }));
+    }
+    return list;
+  }, [filteredOrders, seenOrderIds, isStationView, resolvedStationCourse]);
+
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
     if (kdsMode !== 'Expo') return [];
@@ -1141,9 +1173,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               )}
             </>
           ) : isSeenScreen ? (
-            <SeenOrdersScreen viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
           ) : isUnseenScreen ? (
-            <UnseenOrdersScreen orders={filteredOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
           ) : (
             <>
               {isStationView && resolvedStationCourse && (
@@ -1232,11 +1264,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && !isSubScreen && (
+        {!settingsOpen && (
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
-            {kdsMode === 'Expo'
+            {kdsMode === 'Expo' && !isSubScreen
               ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
-              : <ItemSummaryPanel orders={ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={matchingTicketCount} />}
+              : <ItemSummaryPanel orders={isHistory ? filteredHistory : isSeenScreen ? seenScreenOrders : isUnseenScreen ? unseenScreenOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={isSubScreen ? undefined : matchingTicketCount} />}
           </div>
         )}
       </div>
