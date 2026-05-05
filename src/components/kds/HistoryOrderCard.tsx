@@ -497,6 +497,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                         onTap={() => handleItemTap(item)}
                         onLongPress={() => handleItemLongPress(item)}
                         tp={tp}
+                        isCompactLayout={isCompactLayout}
                       />
                     ))}
                   </div>
@@ -517,6 +518,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
                 onTap={() => handleItemTap(item)}
                 onLongPress={() => handleItemLongPress(item)}
                 tp={tp}
+                isCompactLayout={isCompactLayout}
               />
             ))}
           </div>
