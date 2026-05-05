@@ -975,14 +975,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </Popover>
               </div>
 
-              {historyActiveTypes.length > 0 && (
+              {(historyActiveTypes.length > 0 || historyCategories.length > 0 || historyCenters.length > 0) && (
                 <div className="flex items-center flex-wrap gap-2 px-3 pb-2 shrink-0">
                   {historyActiveTypes.map((type) => {
                     const color = orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
                     const label = type === 'dine-in' ? 'Dine In' : type === 'take-out' ? 'Take Out' : type === 'delivery' ? 'Delivery' : 'Banquet';
                     return (
                       <span
-                        key={type}
+                        key={`t-${type}`}
                         className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold text-primary-foreground"
                         style={{ backgroundColor: color }}
                       >
@@ -998,8 +998,42 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       </span>
                     );
                   })}
+                  {historyCategories.map((cat) => (
+                    <span
+                      key={`c-${cat}`}
+                      className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold bg-muted text-text-primary"
+                    >
+                      {cat}
+                      <button
+                        onClick={() => onClearHistoryCategories && historyCategories.length === 1 ? onClearHistoryCategories() : null}
+                        className="ml-0.5 w-4 h-4 rounded-full hover:bg-black/10 flex items-center justify-center"
+                        aria-label={`Remove ${cat} filter`}
+                      >
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ))}
+                  {historyCenters.map((center) => (
+                    <span
+                      key={`r-${center}`}
+                      className="inline-flex items-center gap-1.5 pl-2 pr-1 py-0.5 rounded-full text-[11px] font-semibold bg-muted text-text-primary"
+                    >
+                      {center}
+                      <button
+                        onClick={() => onClearHistoryCenters && historyCenters.length === 1 ? onClearHistoryCenters() : null}
+                        className="ml-0.5 w-4 h-4 rounded-full hover:bg-black/10 flex items-center justify-center"
+                        aria-label={`Remove ${center} filter`}
+                      >
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ))}
                   <button
-                    onClick={() => setHistoryActiveTypes([])}
+                    onClick={() => {
+                      setHistoryActiveTypes([]);
+                      onClearHistoryCategories?.();
+                      onClearHistoryCenters?.();
+                    }}
                     className="text-[11px] font-semibold text-text-secondary hover:text-text-primary underline"
                   >
                     Clear all
