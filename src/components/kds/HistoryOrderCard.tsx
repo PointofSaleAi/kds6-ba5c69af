@@ -139,9 +139,13 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
               ))}
             </div>
           )}
-          {item.modifiers.map((mod, idx) => (
-            <ModifierLine key={idx} modifier={mod} />
-          ))}
+          {item.modifiers.length > 0 && (
+            <div className="line-through" style={{ opacity: 0.5 }}>
+              {item.modifiers.map((mod, idx) => (
+                <ModifierLine key={idx} modifier={mod} />
+              ))}
+            </div>
+          )}
           {item.notes && !item.isCancelled && (
             <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: '16px' }}>
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '1.5ch', display: 'inline-block' }}>
