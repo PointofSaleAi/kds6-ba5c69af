@@ -46,6 +46,10 @@ interface MainOrderViewProps {
   onDevModeChange?: (enabled: boolean) => void;
   /** When set, OrderCards dim non-matching courses */
   stationCourse?: string;
+  historyCategories?: string[];
+  historyCenters?: string[];
+  onClearHistoryCategories?: () => void;
+  onClearHistoryCenters?: () => void;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
