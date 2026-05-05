@@ -56,6 +56,8 @@ const Index = () => {
   const printerAssignments = usePrinterAssignments();
   const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
   const [revenueFilterOpen, setRevenueFilterOpen] = useState(false);
+  const [historyCategories, setHistoryCategories] = useState<string[]>([]);
+  const [historyCenters, setHistoryCenters] = useState<string[]>([]);
   const [staggerOpen, setStaggerOpen] = useState(false);
   
   const [websocketOpen, setWebsocketOpen] = useState(false);
