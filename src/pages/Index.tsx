@@ -63,6 +63,8 @@ const Index = () => {
   const [staggerOpen, setStaggerOpen] = useState(false);
   
   const [websocketOpen, setWebsocketOpen] = useState(false);
+  const { orders } = useOrderStore();
+  const availableCategories = getActiveSummaryCategories(orders);
   
 
   // Track where to return for fallback flows
