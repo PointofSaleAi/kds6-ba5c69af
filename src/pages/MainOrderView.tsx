@@ -1022,7 +1022,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     >
                       {center}
                       <button
-                        onClick={() => onClearHistoryCenters && historyCenters.length === 1 ? onClearHistoryCenters() : null}
+                        onClick={() => onSetHistoryCenters?.(historyCenters.filter((c) => c !== center))}
                         className="ml-0.5 w-4 h-4 rounded-full hover:bg-black/10 flex items-center justify-center"
                         aria-label={`Remove ${center} filter`}
                       >
