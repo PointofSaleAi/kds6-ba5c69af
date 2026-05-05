@@ -46,6 +46,7 @@ const DINE_IN_TYPES = new Set(['dine-in']);
 const LONG_PRESS_MS = 450;
 
 function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPress, tp }: HistoryItemRowProps) {
+  const { tn } = useLanguage();
   const interactive = !item.isCancelled;
   const timerRef = useRef<number | null>(null);
   const longPressedRef = useRef(false);
@@ -141,6 +142,19 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
           {item.modifiers.map((mod, idx) => (
             <ModifierLine key={idx} modifier={mod} />
           ))}
+          {item.notes && !item.isCancelled && (
+            <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: '16px' }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: '1.5ch', display: 'inline-block' }}>
+                0x
+              </span>
+              <div
+                className="italic leading-snug min-w-0 text-text-muted line-through"
+                style={{ fontSize: 'var(--kds-modifier)' }}
+              >
+                "{tn(item.notes)}"
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
