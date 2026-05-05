@@ -367,9 +367,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse]);
 
   const filteredHistory = useMemo(() => {
-    const catSet = new Set(historyCategories.map((c) => c.toUpperCase()));
+    const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
+    const catSet = new Set(historyCategories.map(norm));
     const centerSet = new Set(historyCenters.map((c) => c.toUpperCase()));
-    // Map revenue center labels -> StationName values
     const centerStationMap: Record<string, string[]> = {
       'BAR': ['Bar'],
       'GRILL': ['Grill'],
@@ -378,18 +378,38 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       'PASS': ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'],
       'EXPO': ['Grill', 'Fry', 'Salad', 'Dessert', 'Bar'],
     };
+    const categoryToCenters: Record<string, string[]> = {
+      'SALAD': ['COLD KITCHEN', 'KITCHEN'],
+      'APPETIZER': ['KITCHEN'],
+      'MEAT': ['GRILL', 'KITCHEN'],
+      'POULTRY': ['GRILL', 'KITCHEN'],
+      'SEAFOOD': ['GRILL', 'KITCHEN'],
+      'PASTA': ['KITCHEN'],
+      'VEGETARIAN': ['KITCHEN'],
+      'DESSERT': ['KITCHEN'],
+      'BEVERAGE': ['BAR'],
+      'COCKTAIL': ['BAR'],
+      'BAR COCKTAIL': ['BAR'],
+    };
     const allowedStations = new Set<string>();
     centerSet.forEach((c) => (centerStationMap[c] || []).forEach((s) => allowedStations.add(s)));
 
     let list = historyOrders.filter((o) => {
       if (historyActiveTypes.length > 0 && !historyActiveTypes.includes(o.orderType)) return false;
       if (catSet.size > 0) {
-        const courseMatch = o.courses.some((c) => catSet.has(String(c.course).toUpperCase()));
-        const itemCatMatch = o.courses.some((c) => c.items.some((i) => i.category && catSet.has(i.category.toUpperCase())));
+        const courseMatch = o.courses.some((c) => catSet.has(norm(String(c.course))));
+        const itemCatMatch = o.courses.some((c) => c.items.some((i) => i.category && catSet.has(norm(i.category))));
         if (!courseMatch && !itemCatMatch) return false;
       }
-      if (allowedStations.size > 0) {
-        const stationMatch = o.courses.some((c) => c.items.some((i) => i.station && allowedStations.has(i.station)));
+      if (centerSet.size > 0) {
+        const stationMatch = o.courses.some((c) =>
+          c.items.some((i) => {
+            if (i.station && allowedStations.has(i.station)) return true;
+            const cat = i.category ? norm(i.category) : '';
+            const mapped = categoryToCenters[cat] || [];
+            return mapped.some((m) => centerSet.has(m));
+          }),
+        );
         if (!stationMatch) return false;
       }
       if (!historySearch) return true;
