@@ -169,6 +169,10 @@ const Index = () => {
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
+          historyCategories={historyCategories}
+          historyCenters={historyCenters}
+          onClearHistoryCategories={() => setHistoryCategories([])}
+          onClearHistoryCenters={() => setHistoryCenters([])}
         />
       )}
 
@@ -190,8 +194,8 @@ const Index = () => {
           }
         }}
       />
-      <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} onApply={() => {}} />
-      <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} onApply={() => {}} />
+      <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} activeCategories={historyCategories} onApply={(cats) => setHistoryCategories(cats)} />
+      <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} activeCenters={historyCenters} onApply={(cs) => setHistoryCenters(cs)} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
