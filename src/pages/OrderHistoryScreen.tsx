@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, ArrowLeft, RotateCcw, SlidersHorizontal, X } from 'lucide-react';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Search, ArrowLeft, RotateCcw } from 'lucide-react';
 import { StatusChip } from '@/components/kds/StatusChip';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
@@ -52,44 +51,9 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
 
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [draftTypes, setDraftTypes] = useState<OrderType[]>([]);
-  const [activeTypes, setActiveTypes] = useState<OrderType[]>([]);
-
   const tabs = [t.today, t.yesterday, t.last7Days, t.customRange];
 
-  const colorFor = (type: OrderType) =>
-    orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
-
-  const toggleDraft = (type: OrderType) => {
-    setDraftTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
-  const handleApply = () => {
-    setActiveTypes(draftTypes);
-    setFilterOpen(false);
-  };
-
-  const handleReset = () => {
-    setDraftTypes([]);
-  };
-
-  const removeChip = (type: OrderType) => {
-    const next = activeTypes.filter((t) => t !== type);
-    setActiveTypes(next);
-    setDraftTypes(next);
-  };
-
-  const clearAll = () => {
-    setActiveTypes([]);
-    setDraftTypes([]);
-  };
-
-  // TODO: filter by stationCourse once HistoryOrder includes per-item categories
   const filtered = mockHistory.filter((o) => {
-    if (activeTypes.length > 0 && !activeTypes.includes(o.orderType)) return false;
     if (!search) return true;
     const q = search.toLowerCase();
     return (
@@ -98,9 +62,6 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
       o.serverName.toLowerCase().includes(q)
     );
   });
-
-  const labelFor = (type: OrderType) =>
-    ORDER_TYPE_OPTIONS.find((o) => o.value === type)?.label ?? type;
 
   return (
     <div className={`fixed inset-0 bg-surface-bg flex flex-col ${scaleClasses}`}>
@@ -139,105 +100,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
               className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-input bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-ring min-h-[44px]"
             />
           </div>
-
-          <Popover
-            open={filterOpen}
-            onOpenChange={(open) => {
-              setFilterOpen(open);
-              if (open) setDraftTypes(activeTypes);
-            }}
-          >
-            <PopoverTrigger asChild>
-              <button
-                className="relative p-2 rounded-lg border border-input bg-surface-card hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="Filter orders"
-              >
-                <SlidersHorizontal size={18} className="text-text-primary" />
-                {activeTypes.length > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
-                    {activeTypes.length}
-                  </span>
-                )}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="end" sideOffset={8} className="w-72 p-4">
-              <div className="text-xs font-semibold uppercase tracking-wider text-text-secondary mb-3">
-                Order type
-              </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {ORDER_TYPE_OPTIONS.map((opt) => {
-                  const selected = draftTypes.includes(opt.value);
-                  const color = colorFor(opt.value);
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => toggleDraft(opt.value)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-medium transition-colors"
-                      style={{
-                        borderColor: color,
-                        backgroundColor: selected ? color : 'transparent',
-                        color: selected ? '#FFFFFF' : 'hsl(var(--text-primary))',
-                      }}
-                    >
-                      <span
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{
-                          backgroundColor: selected ? '#FFFFFF' : color,
-                        }}
-                      />
-                      {opt.label}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex items-center justify-between gap-2 pt-3 border-t border-border">
-                <button
-                  onClick={handleReset}
-                  className="px-3 py-2 text-sm font-medium text-text-secondary hover:text-text-primary"
-                >
-                  Reset
-                </button>
-                <button
-                  onClick={handleApply}
-                  className="px-4 py-2 rounded-lg bg-brand-primary text-primary-foreground text-sm font-semibold"
-                >
-                  Apply
-                </button>
-              </div>
-            </PopoverContent>
-          </Popover>
         </div>
-
-        {activeTypes.length > 0 && (
-          <div className="flex items-center flex-wrap gap-2 mt-3">
-            {activeTypes.map((type) => {
-              const color = colorFor(type);
-              return (
-                <span
-                  key={type}
-                  className="inline-flex items-center gap-2 pl-2 pr-1 py-1 rounded-full text-xs font-semibold text-primary-foreground"
-                  style={{ backgroundColor: color }}
-                >
-                  <span className="w-2 h-2 rounded-full bg-white/80" />
-                  {labelFor(type)}
-                  <button
-                    onClick={() => removeChip(type)}
-                    className="ml-1 w-5 h-5 rounded-full hover:bg-white/20 flex items-center justify-center"
-                    aria-label={`Remove ${labelFor(type)} filter`}
-                  >
-                    <X size={12} />
-                  </button>
-                </span>
-              );
-            })}
-            <button
-              onClick={clearAll}
-              className="text-xs font-semibold text-text-secondary hover:text-text-primary underline ml-1"
-            >
-              Clear all
-            </button>
-          </div>
-        )}
       </div>
 
       <div className="flex-1 overflow-auto p-4">
