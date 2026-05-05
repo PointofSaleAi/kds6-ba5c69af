@@ -493,8 +493,25 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     } else {
       sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
     }
+
+    // Reorder/filter based on selected summary items + categories (tap-to-filter from Summary panel)
+    const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
+    if (hasFilters) {
+      const matching: Array<{ order: Order; matchCount: number }> = [];
+      const nonMatching: Order[] = [];
+      for (const o of sorted) {
+        const matchCount = o.courses.reduce((acc, c) => acc + c.items.filter(i => {
+          if (i.isCancelled) return false;
+          return selectedSummaryItems.has(i.name) || (i.category && selectedSummaryCategories.has(i.category));
+        }).length, 0);
+        if (matchCount > 0) matching.push({ order: o, matchCount });
+        else nonMatching.push(o);
+      }
+      matching.sort((a, b) => b.matchCount - a.matchCount);
+      return [...matching.map(m => m.order), ...nonMatching];
+    }
     return sorted;
-  }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse]);
+  }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse, selectedSummaryItems, selectedSummaryCategories]);
 
   const staggerOrderColumns = useMemo(
     () => distributeIntoColumns(filteredOrders, staggerColumnCount),
@@ -1268,7 +1285,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
             {kdsMode === 'Expo' && !isSubScreen
               ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
-              : <ItemSummaryPanel orders={isHistory ? filteredHistory : isSeenScreen ? seenScreenOrders : isUnseenScreen ? unseenScreenOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={isSubScreen ? undefined : matchingTicketCount} />}
+              : <ItemSummaryPanel orders={isHistory ? filteredHistory : isSeenScreen ? seenScreenOrders : isUnseenScreen ? unseenScreenOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={isSubScreen ? undefined : matchingTicketCount} mode={isHistory ? 'completed' : 'active'} />}
           </div>
         )}
       </div>

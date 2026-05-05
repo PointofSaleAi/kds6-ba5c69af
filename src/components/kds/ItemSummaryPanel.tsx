@@ -25,6 +25,7 @@ function collectActiveItems(
   now: number,
   courseLevelAging: boolean,
   stationCourseFilter?: string,
+  mode: 'active' | 'completed' = 'active',
 ) {
   const records: Array<{
     name: string;
@@ -35,18 +36,19 @@ function collectActiveItems(
     elapsedSeconds: number;
   }> = [];
   for (const order of orders) {
-    if (order.status === 'served') continue;
+    if (mode === 'active' && order.status === 'served') continue;
     for (const cg of order.courses) {
-      // In station view we want to surface every remaining item for this station,
-      // even if its course block has been "fired" (the station still has to make it).
-      // In normal/expo view we only count items in actively cooking courses.
-      const courseHasRemaining = cg.items.some(i => !i.isCompleted && !i.isCancelled);
-      if (!courseHasRemaining) continue;
-      if (!stationCourseFilter && !isCourseActive(cg)) continue;
+      if (mode === 'active') {
+        const courseHasRemaining = cg.items.some(i => !i.isCompleted && !i.isCancelled);
+        if (!courseHasRemaining) continue;
+        if (!stationCourseFilter && !isCourseActive(cg)) continue;
+      }
       const elapsed = courseAgingElapsed(order, cg, courseLevelAging, now);
-      const isOvertime = elapsed >= thresholdSeconds;
+      const isOvertime = mode === 'active' && elapsed >= thresholdSeconds;
       for (const item of cg.items) {
-        if (item.isCompleted || item.isCancelled) continue;
+        if (item.isCancelled) continue;
+        if (mode === 'active' && item.isCompleted) continue;
+        if (mode === 'completed' && !item.isCompleted) continue;
         const cat = (item.category || ('Uncategorized' as ProductCategory)) as ProductCategory;
         if (stationCourseFilter && cat !== stationCourseFilter) continue;
         records.push({
@@ -93,6 +95,8 @@ interface ItemSummaryPanelProps {
   onCategoryToggle?: (category: string) => void;
   onClearAll?: () => void;
   matchingTicketCount?: number;
+  /** 'active' = show in-progress items (default). 'completed' = show served/done items (used in History). */
+  mode?: 'active' | 'completed';
 }
 
 interface CategorySummary {
@@ -142,7 +146,7 @@ function buildSummary(records: ReturnType<typeof collectActiveItems>): CategoryS
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount, mode = 'active' }: ItemSummaryPanelProps) {
   const { tp, tcat, t } = useLanguage();
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
@@ -164,11 +168,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   // Single pass over orders → records used by both Overtime + category sections.
   // Uses unified aging (matches OrderCard) so overtime stays in sync with cards.
   const activeRecords = useMemo(
-    () => collectActiveItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse),
-    [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse]
+    () => collectActiveItems(orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse, mode),
+    [orders, overtimeThresholdSec, nowMs, courseLevelAging, stationCourse, mode]
   );
   const summary = useMemo(() => buildSummary(activeRecords), [activeRecords]);
-  const overtimeItems = useMemo(() => buildOvertimeItems(activeRecords), [activeRecords]);
+  const overtimeItems = useMemo(() => mode === 'active' ? buildOvertimeItems(activeRecords) : [], [activeRecords, mode]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
