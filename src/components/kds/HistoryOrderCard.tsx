@@ -46,6 +46,7 @@ const DINE_IN_TYPES = new Set(['dine-in']);
 const LONG_PRESS_MS = 450;
 
 function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPress, tp }: HistoryItemRowProps) {
+  const { tn } = useLanguage();
   const interactive = !item.isCancelled;
   const timerRef = useRef<number | null>(null);
   const longPressedRef = useRef(false);
