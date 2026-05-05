@@ -50,6 +50,8 @@ interface MainOrderViewProps {
   historyCenters?: string[];
   onClearHistoryCategories?: () => void;
   onClearHistoryCenters?: () => void;
+  onSetHistoryCategories?: (cats: string[]) => void;
+  onSetHistoryCenters?: (cs: string[]) => void;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
