@@ -7,23 +7,11 @@ interface CategoryFilterPanelProps {
   onClose: () => void;
   onApply: (categories: string[]) => void;
   activeCategories?: string[];
+  availableCategories?: string[];
 }
 
-const allCategories = [
-  'ALL CATEGORIES',
-  'BAR COCKTAIL',
-  'APPETIZER',
-  'SALAD',
-  'ENTREE',
-  'DESSERT',
-  'BAKERY',
-  'SIDES',
-  'BEVERAGES',
-  'KIDS MENU',
-  'SPECIALS',
-];
-
-export default function CategoryFilterPanel({ open, onClose, onApply, activeCategories = [] }: CategoryFilterPanelProps) {
+export default function CategoryFilterPanel({ open, onClose, onApply, activeCategories = [], availableCategories = [] }: CategoryFilterPanelProps) {
+  const allCategories = ['ALL CATEGORIES', ...availableCategories];
   const [selected, setSelected] = useState<string[]>(activeCategories.length ? activeCategories : ['ALL CATEGORIES']);
 
   if (!open) return null;
