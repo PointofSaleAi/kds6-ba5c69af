@@ -899,10 +899,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
                 <Popover
                   open={historyFilterOpen}
-                  onOpenChange={(open) => {
-                    setHistoryFilterOpen(open);
-                    if (open) setHistoryDraftTypes(historyActiveTypes);
-                  }}
+                  onOpenChange={setHistoryFilterOpen}
                 >
                   <PopoverTrigger asChild>
                     <button
@@ -928,13 +925,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         { value: 'delivery', label: 'Delivery' },
                         { value: 'banquet', label: 'Banquet' },
                       ] as { value: OrderType; label: string }[]).map((opt) => {
-                        const selected = historyDraftTypes.includes(opt.value);
+                        const selected = historyActiveTypes.includes(opt.value);
                         const color = orderTypeColors[opt.value] || DEFAULT_ORDER_TYPE_COLORS[opt.value];
                         return (
                           <button
                             key={opt.value}
                             onClick={() =>
-                              setHistoryDraftTypes((prev) =>
+                              setHistoryActiveTypes((prev) =>
                                 prev.includes(opt.value)
                                   ? prev.filter((t) => t !== opt.value)
                                   : [...prev, opt.value]
@@ -956,21 +953,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         );
                       })}
                     </div>
-                    <div className="flex items-center justify-between gap-2 pt-3 border-t border-border">
+                    <div className="flex items-center justify-end pt-3 border-t border-border">
                       <button
-                        onClick={() => setHistoryDraftTypes([])}
+                        onClick={() => setHistoryActiveTypes([])}
                         className="px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary"
                       >
-                        Reset
-                      </button>
-                      <button
-                        onClick={() => {
-                          setHistoryActiveTypes(historyDraftTypes);
-                          setHistoryFilterOpen(false);
-                        }}
-                        className="px-4 py-1.5 rounded-lg bg-brand-primary text-primary-foreground text-xs font-semibold"
-                      >
-                        Apply
+                        Clear
                       </button>
                     </div>
                   </PopoverContent>
