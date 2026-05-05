@@ -20,6 +20,8 @@ import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
 import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
 import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
+import { useOrderStore } from '@/hooks/use-order-store';
+import { getActiveSummaryCategories } from '@/lib/summary-categories';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
@@ -61,6 +63,8 @@ const Index = () => {
   const [staggerOpen, setStaggerOpen] = useState(false);
   
   const [websocketOpen, setWebsocketOpen] = useState(false);
+  const { orders } = useOrderStore();
+  const availableCategories = getActiveSummaryCategories(orders);
   
 
   // Track where to return for fallback flows
@@ -196,7 +200,7 @@ const Index = () => {
           }
         }}
       />
-      <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} activeCategories={historyCategories} onApply={(cats) => setHistoryCategories(cats)} />
+      <CategoryFilterPanel open={categoryFilterOpen} onClose={() => setCategoryFilterOpen(false)} activeCategories={historyCategories} availableCategories={availableCategories} onApply={(cats) => setHistoryCategories(cats)} />
       <RevenueCenterFilter open={revenueFilterOpen} onClose={() => setRevenueFilterOpen(false)} activeCenters={historyCenters} onApply={(cs) => setHistoryCenters(cs)} />
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       

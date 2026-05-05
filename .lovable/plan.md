@@ -1,16 +1,29 @@
 ## Problem
 
-The Category and Revenue Center filters in the bottom status bar only apply to the History tab. On the Home screen (active orders), changing them has no effect because `filteredOrders` in `src/pages/MainOrderView.tsx` ignores `historyCategories` and `historyCenters`.
+The "Filter by category" popup in `src/pages/CategoryFilterPanel.tsx` shows a hardcoded list (BAR COCKTAIL, APPETIZER, SALAD, ENTREE, DESSERT, BAKERY, SIDES, BEVERAGES, KIDS MENU, SPECIALS) that does not match the categories rendered in the Cooking Summary panel (`src/components/kds/ItemSummaryPanel.tsx`), which are derived from each item's `ProductCategory` (Seafood, Meat, Poultry, Pasta, Salads, Sides, Desserts, Soups, Pizza, Sandwiches, Appetizers, Vegetarian, Beverages, plus "Uncategorized"). This is also the root cause of filter-match issues that previously needed `norm()` and `categoryToCenters` workarounds.
 
 ## Fix
 
-In `src/pages/MainOrderView.tsx`, extend the `filteredOrders` memo with the same category and revenue-center matching used by `filteredHistory`:
+Make the popup's category list dynamic, sourced from the same data the Summary panel uses, so what the user sees in the popup is exactly what's on screen in Summary.
 
-1. Reuse the same normalization (`toUpperCase` + strip trailing `S`) for category comparisons so `SALAD` matches `Salads`, etc.
-2. Reuse the `centerStationMap` (revenue center to `StationName`) and the `categoryToCenters` fallback (when items lack a `station`).
-3. Add two checks inside the existing `orders.filter(...)`:
-   - If categories selected: ticket must have a course or item category matching.
-   - If revenue centers selected: ticket must have an item whose station is in the allowed set, OR whose category maps to one of the selected centers.
-4. Add `historyCategories` and `historyCenters` to the memo's dependency array.
+1. **CategoryFilterPanel** (`src/pages/CategoryFilterPanel.tsx`)
+   - Remove the hardcoded `allCategories` array.
+   - Add a new prop `availableCategories: string[]` (already deduped, in the same order the Summary panel renders).
+   - Render `['ALL CATEGORIES', ...availableCategories]`. Skip `Uncategorized`.
+   - If `availableCategories` is empty, show a small empty state ("No active categories").
+   - Keep current selection/toggle, live-apply, and Clear All behavior intact.
 
-No UI changes. Status filter (New/In-Progress/Completed), Station view, sort, and summary item filtering remain unchanged. Same filter state powers both Home and History so chips and the filter icon badge stay consistent.
+2. **Index.tsx** (`src/pages/Index.tsx`)
+   - Compute `availableCategories` from the active `orders` using the same logic as `ItemSummaryPanel.collectActiveItems` + `buildSummary` ordering (skip cancelled/completed items, dedupe by category, preserve sort order).
+   - To avoid duplication, export a small helper from `ItemSummaryPanel.tsx` (or a new `src/lib/summary-categories.ts`) that returns the ordered category list given `orders` and `stationCourse`.
+   - Pass `availableCategories` into `<CategoryFilterPanel ... />`.
+
+3. **MainOrderView.tsx**
+   - Since popup values now come from the actual `item.category` strings, simplify the matching block: compare directly against `i.category`. Keep `norm()` as a safety net but drop the `categoryToCenters` fallback for category matching (revenue-center fallback stays).
+
+4. No UI/style changes to the popup chrome. Same chip styling, same Clear All, same live-apply (no Apply button), same close behavior.
+
+## Out of scope
+
+- Revenue Center popup (separate ticket).
+- Course-based filtering. Categories come from item.category (Summary), not `CourseType`.
