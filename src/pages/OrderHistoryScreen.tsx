@@ -51,44 +51,9 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
 
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [draftTypes, setDraftTypes] = useState<OrderType[]>([]);
-  const [activeTypes, setActiveTypes] = useState<OrderType[]>([]);
-
   const tabs = [t.today, t.yesterday, t.last7Days, t.customRange];
 
-  const colorFor = (type: OrderType) =>
-    orderTypeColors[type] || DEFAULT_ORDER_TYPE_COLORS[type];
-
-  const toggleDraft = (type: OrderType) => {
-    setDraftTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
-  const handleApply = () => {
-    setActiveTypes(draftTypes);
-    setFilterOpen(false);
-  };
-
-  const handleReset = () => {
-    setDraftTypes([]);
-  };
-
-  const removeChip = (type: OrderType) => {
-    const next = activeTypes.filter((t) => t !== type);
-    setActiveTypes(next);
-    setDraftTypes(next);
-  };
-
-  const clearAll = () => {
-    setActiveTypes([]);
-    setDraftTypes([]);
-  };
-
-  // TODO: filter by stationCourse once HistoryOrder includes per-item categories
   const filtered = mockHistory.filter((o) => {
-    if (activeTypes.length > 0 && !activeTypes.includes(o.orderType)) return false;
     if (!search) return true;
     const q = search.toLowerCase();
     return (
@@ -97,9 +62,6 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
       o.serverName.toLowerCase().includes(q)
     );
   });
-
-  const labelFor = (type: OrderType) =>
-    ORDER_TYPE_OPTIONS.find((o) => o.value === type)?.label ?? type;
 
   return (
     <div className={`fixed inset-0 bg-surface-bg flex flex-col ${scaleClasses}`}>
