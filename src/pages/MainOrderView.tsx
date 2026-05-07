@@ -720,7 +720,63 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setActiveNav('home');
   }, [historyOrders]);
 
-  /** Move a single done item from active order into history (preserving order metadata) */
+  /** Expo "Recall — mistake": items were already cooked, return as ready (isCompleted: true) */
+  const handleRecallMistake = useCallback((orderId: string) => {
+    const historyOrder = historyOrders.find(o => o.id === orderId);
+    if (!historyOrder) return;
+    const recalledItems = historyOrder.courses.flatMap(c =>
+      c.items.map(item => ({ ...item, isCompleted: true, isRecalled: true }))
+    );
+    setOrders((prev) => {
+      const recalledOrder: Order = {
+        ...historyOrder,
+        status: 'recalled',
+        timeReceived: new Date(),
+        elapsedSeconds: 0,
+        sourceHistoryOrderId: orderId,
+        courses: [{ course: 'ENTREE', isFired: true, items: recalledItems }],
+        itemCount: recalledItems.reduce((s, i) => s + i.quantity, 0),
+      };
+      return [recalledOrder, ...prev];
+    });
+    setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
+    toast.success(`Order #${historyOrder.orderNumber} recalled as ready`);
+    setActiveNav('home');
+  }, [historyOrders]);
+
+  const handleRecallItemMistake = useCallback((orderId: string, item: OrderItem) => {
+    const historyOrder = historyOrders.find(o => o.id === orderId);
+    if (!historyOrder) return;
+    const recalledItem = { ...item, isCompleted: true, isRecalled: true };
+    setOrders((prev) => {
+      const newOrder: Order = {
+        id: `recalled-item-mistake-${item.id}-${Date.now()}`,
+        orderNumber: historyOrder.orderNumber,
+        orderType: historyOrder.orderType,
+        status: 'recalled',
+        tableName: historyOrder.tableName,
+        serverName: historyOrder.serverName,
+        guestName: historyOrder.guestName,
+        timeReceived: new Date(),
+        elapsedSeconds: 0,
+        targetSeconds: historyOrder.targetSeconds,
+        itemCount: item.quantity,
+        sourceHistoryOrderId: orderId,
+        courses: [{ course: 'ENTREE', isFired: true, items: [recalledItem] }],
+      };
+      return [newOrder, ...prev];
+    });
+    setHistoryOrders((prev) => prev.map(o => {
+      if (o.id !== orderId) return o;
+      const updatedCourses = o.courses.map(c => ({
+        ...c,
+        items: c.items.filter(i => i.id !== item.id),
+      })).filter(c => c.items.length > 0);
+      return { ...o, courses: updatedCourses, itemCount: updatedCourses.reduce((sum, c) => sum + c.items.reduce((iSum, ci) => iSum + ci.quantity, 0), 0) };
+    }).filter(o => o.courses.length > 0));
+    toast.success('Item recalled as ready', { duration: 2000 });
+    setActiveNav('home');
+  }, [historyOrders]);
   const handleItemDismiss = useCallback((orderId: string, item: OrderItem) => {
     const sourceOrder = orders.find(o => o.id === orderId);
     if (!sourceOrder) return;
