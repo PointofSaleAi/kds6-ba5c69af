@@ -97,18 +97,8 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
         )}
       </div>
       <div className="flex-1 overflow-auto p-1.5">
-        {isPortrait ? (
-          <div className="grid grid-cols-2 min-[960px]:grid-cols-3 gap-1.5">
-            <AnimatePresence mode="popLayout">
-              {unseenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : viewMode === 'grid' ? (
-          <div className="grid gap-1.5 items-start grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        {viewMode === 'grid' ? (
+          <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
             <AnimatePresence mode="popLayout">
               {unseenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">

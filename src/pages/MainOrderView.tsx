@@ -247,8 +247,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [settingsOpen]);
 
   const staggerColumnCount = useMemo(() => {
-    // Portrait orientation locks Stagger to 2 columns so cards stay legible on narrow tablets.
-    if (isPortrait) return 2;
+    // Portrait: 2 cols on iPad Mini/Air, 3 cols on iPad Pro (≥960px) — matches Grid view.
+    if (isPortrait) return boardContentWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
