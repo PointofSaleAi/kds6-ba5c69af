@@ -225,7 +225,7 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
   );
 }
 
-export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: HistoryOrderCardProps) {
+export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoHeader }: HistoryOrderCardProps) {
   const { tp, tperson, tl, timeFormat } = useLanguage();
   const { orderTypeColors, ticketHeaderLayout, ticketLayout } = useKDSSettings();
   const headerBgColor = orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType];
