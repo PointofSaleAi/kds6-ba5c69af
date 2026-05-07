@@ -45,7 +45,7 @@ export default function SettingsLayout() {
         style={{ background: 'hsl(var(--surface-bg))' }}
       >
         <div
-          className="w-[280px] shrink-0 overflow-hidden flex flex-col m-4 rounded-3xl"
+          className={`${isPortrait ? 'w-[200px]' : 'w-[280px]'} shrink-0 overflow-hidden flex flex-col m-4 rounded-3xl`}
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
