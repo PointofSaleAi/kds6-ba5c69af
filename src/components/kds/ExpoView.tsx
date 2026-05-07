@@ -117,6 +117,8 @@ interface ExpoItemRowProps {
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
   onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
   onItemRecall?: (ticketId: string, itemId: string) => void;
+  onItemAdvance?: (ticketId: string, itemId: string) => void;
+  onItemRevert?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
   runnerIconSrc: string;
@@ -133,6 +135,8 @@ function ExpoItemRow({
   isDemo,
   onDemoItemTap,
   onItemSend,
+  onItemAdvance,
+  onItemRevert,
   onAcknowledgeNewItem,
   acknowledgedNewItemIds,
   runnerIconSrc,
