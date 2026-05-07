@@ -117,6 +117,8 @@ interface ExpoItemRowProps {
   onDemoItemTap?: (ticketId: string, itemId: string) => void;
   onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
   onItemRecall?: (ticketId: string, itemId: string) => void;
+  onItemAdvance?: (ticketId: string, itemId: string) => void;
+  onItemRevert?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
   runnerIconSrc: string;
@@ -133,6 +135,8 @@ function ExpoItemRow({
   isDemo,
   onDemoItemTap,
   onItemSend,
+  onItemAdvance,
+  onItemRevert,
   onAcknowledgeNewItem,
   acknowledgedNewItemIds,
   runnerIconSrc,
@@ -233,20 +237,44 @@ function ExpoItemRow({
   ) : null;
 
   // Outer row with Home-style dense spacing + bottom divider (except last).
-  // Tap-to-send pattern: when prepared, tapping the row sends the item out.
+  // Single tap = advance status (queued -> in progress -> ready -> sent).
+  // Double tap = revert one step.
   const isTapToSend = isPrepared && remainingQty > 0;
-  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+  const isInteractive = remainingQty > 0;
+  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isInteractive) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (clickTimerRef.current) clearTimeout(clickTimerRef.current); }, []);
+
+  const handleSingleTap = () => {
+    if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+    if (isPrepared) {
+      onItemSend?.(ticket.id, item.id, remainingQty);
+    } else {
+      onItemAdvance?.(ticket.id, item.id);
+    }
+  };
+  const handleDoubleTap = () => {
+    onItemRevert?.(ticket.id, item.id);
+  };
 
   return (
     <div
       className={outerClass}
       style={{ paddingTop: '2px', paddingBottom: '2px' }}
-      role={isTapToSend ? 'button' : undefined}
-      aria-label={isTapToSend ? `Send ${tp(item.name)}` : undefined}
+      role={isInteractive ? 'button' : undefined}
+      aria-label={isInteractive ? `Update status for ${tp(item.name)}` : undefined}
       onClick={() => {
-        if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-        if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
-        if (isTapToSend) onItemSend?.(ticket.id, item.id, remainingQty);
+        if (clickTimerRef.current) {
+          clearTimeout(clickTimerRef.current);
+          clickTimerRef.current = null;
+          handleDoubleTap();
+          return;
+        }
+        clickTimerRef.current = setTimeout(() => {
+          clickTimerRef.current = null;
+          handleSingleTap();
+        }, 240);
       }}
     >
       <div className="flex items-start" style={{ gap: '4px' }}>
@@ -355,6 +383,8 @@ interface ExpoTicketCardProps {
   sentQuantities: Map<string, number>;
   onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
   onItemRecall?: (ticketId: string, itemId: string) => void;
+  onItemAdvance?: (ticketId: string, itemId: string) => void;
+  onItemRevert?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
   onFireNextCourse?: (ticketId: string) => void;
@@ -365,7 +395,7 @@ interface ExpoTicketCardProps {
   isRushed?: boolean;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, sentQuantities, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, sentQuantities, onItemSend, onItemRecall, onItemAdvance, onItemRevert, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors, expoSendButtonMode } = useKDSSettings();
   const { rules } = useStatusRules();
@@ -617,6 +647,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                         onDemoItemTap={onDemoItemTap}
                         onItemSend={onItemSend}
                         onItemRecall={onItemRecall}
+                        onItemAdvance={onItemAdvance}
+                        onItemRevert={onItemRevert}
                         acknowledgedNewItemIds={acknowledgedNewItemIds}
                         onAcknowledgeNewItem={onAcknowledgeNewItem}
                         runnerIconSrc={runnerIcon}
@@ -644,6 +676,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               onDemoItemTap={onDemoItemTap}
               onItemSend={onItemSend}
               onItemRecall={onItemRecall}
+              onItemAdvance={onItemAdvance}
+              onItemRevert={onItemRevert}
               acknowledgedNewItemIds={acknowledgedNewItemIds}
               onAcknowledgeNewItem={onAcknowledgeNewItem}
               runnerIconSrc={runnerIcon}
@@ -976,27 +1010,29 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const [sentDemoIds, setSentDemoIds] = useState<Set<string>>(new Set());
   const lastSentDemo = useRef<DemoExpoTicket | null>(null);
 
-  // Demo item tap: cycle pending -> firing -> done
-  const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
+  // Per-item status overrides for real tickets (manual advance/revert).
+  const [itemStatusOverrides, setItemStatusOverrides] = useState<Map<string, ExpoItemStatus>>(new Map());
+
+  const advanceStatus = (s: ExpoItemStatus): ExpoItemStatus =>
+    s === 'pending' ? 'firing' : 'done';
+  const revertStatus = (s: ExpoItemStatus): ExpoItemStatus =>
+    s === 'done' ? 'firing' : 'pending';
+
+  // Demo item helper: cycle status in either direction
+  const cycleDemoItem = useCallback((ticketId: string, itemId: string, dir: 'advance' | 'revert') => {
     setDemoTickets(prev => prev.map(t => {
       if (t.id !== ticketId) return t;
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const updatedItems = t.items.map(item => {
         if (item.id !== itemId) return item;
-        if (item.status === 'pending') return { ...item, status: 'firing' as const, statusLabel: `Since ${timeStr}` };
-        if (item.status === 'firing') return { ...item, status: 'done' as const, statusLabel: `Done ${timeStr}` };
-        return item;
+        const next = dir === 'advance' ? advanceStatus(item.status) : revertStatus(item.status);
+        if (next === item.status) return item;
+        const label =
+          next === 'firing' ? `Since ${timeStr}` :
+          next === 'done' ? `Done ${timeStr}` : undefined;
+        return { ...item, status: next, statusLabel: label };
       });
-
-      // Auto-update station chips based on item statuses
-      const updatedStations = t.stations.map(s => {
-        // Simple heuristic: if any item is firing, first pending station becomes firing
-        // If all items done, all stations done
-        return s;
-      });
-
-      // Smarter station update: derive from items
       const anyFiring = updatedItems.some(i => i.status === 'firing');
       const allDoneItems = updatedItems.every(i => i.status === 'done');
       const smartStations = t.stations.map((s, idx) => {
@@ -1004,21 +1040,52 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         if (anyFiring && s.status === 'pending' && idx === t.stations.findIndex(st => st.status === 'pending')) {
           return { ...s, status: 'firing' as const };
         }
-        // If item that was firing is now done, check if station should be done
-        const firingItems = updatedItems.filter(i => i.status === 'firing');
-        const doneItems = updatedItems.filter(i => i.status === 'done');
-        if (doneItems.length > 0 && idx < doneItems.length && s.status !== 'done') {
-          // Mark stations done proportionally
-          if (idx < Math.floor((doneItems.length / updatedItems.length) * t.stations.length)) {
-            return { ...s, status: 'done' as const };
-          }
-        }
         return s;
       });
-
       return { ...t, items: updatedItems, stations: smartStations };
     }));
   }, []);
+
+  // Legacy demo handler (advance only) kept for compatibility
+  const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
+    cycleDemoItem(ticketId, itemId, 'advance');
+  }, [cycleDemoItem]);
+
+  const handleItemAdvance = useCallback((ticketId: string, itemId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      cycleDemoItem(ticketId, itemId, 'advance');
+      return;
+    }
+    const ticket = rawTickets.find(t => t.id === ticketId);
+    const item = ticket?.items.find(i => i.id === itemId);
+    if (!item) return;
+    setItemStatusOverrides(prev => {
+      const current = prev.get(itemId) ?? item.status;
+      const next = advanceStatus(current);
+      if (next === current) return prev;
+      const map = new Map(prev);
+      map.set(itemId, next);
+      return map;
+    });
+  }, [cycleDemoItem, rawTickets]);
+
+  const handleItemRevert = useCallback((ticketId: string, itemId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      cycleDemoItem(ticketId, itemId, 'revert');
+      return;
+    }
+    const ticket = rawTickets.find(t => t.id === ticketId);
+    const item = ticket?.items.find(i => i.id === itemId);
+    if (!item) return;
+    setItemStatusOverrides(prev => {
+      const current = prev.get(itemId) ?? item.status;
+      const next = revertStatus(current);
+      if (next === current) return prev;
+      const map = new Map(prev);
+      map.set(itemId, next);
+      return map;
+    });
+  }, [cycleDemoItem, rawTickets]);
 
   // Demo send out
   const handleDemoSendOut = useCallback((id: string) => {
@@ -1097,9 +1164,14 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         timerSeconds = Math.round((now - order.timeReceived.getTime()) / 1000);
       }
 
-      return { ...t, timerSeconds };
+      // Apply manual item status overrides
+      const items = itemStatusOverrides.size > 0
+        ? t.items.map(it => itemStatusOverrides.has(it.id) ? { ...it, status: itemStatusOverrides.get(it.id)! } : it)
+        : t.items;
+
+      return { ...t, timerSeconds, items };
     });
-  }, [rawTickets, orders, tick]);
+  }, [rawTickets, orders, tick, itemStatusOverrides]);
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
   const [holdStations, setHoldStations] = useState<Set<string>>(new Set());
 
@@ -1329,6 +1401,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           sentQuantities={sentQuantities}
           onItemSend={handleItemSend}
           onItemRecall={handleItemRecall}
+          onItemAdvance={handleItemAdvance}
+          onItemRevert={handleItemRevert}
           acknowledgedNewItemIds={acknowledgedNewItemIds}
           onAcknowledgeNewItem={handleAcknowledgeNewItem}
           onFireNextCourse={handleFireNextCourseAny}
