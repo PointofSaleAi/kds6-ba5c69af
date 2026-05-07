@@ -248,10 +248,6 @@ function ExpoItemRow({
 
   const handleSingleTap = () => {
     if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-    if (isDemo && onDemoItemTap) {
-      onDemoItemTap(ticket.id, item.id);
-      return;
-    }
     if (isPrepared) {
       onItemSend?.(ticket.id, item.id, remainingQty);
     } else {
