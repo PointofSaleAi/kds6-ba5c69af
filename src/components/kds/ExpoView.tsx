@@ -387,6 +387,8 @@ interface ExpoTicketCardProps {
   sentQuantities: Map<string, number>;
   onItemSend?: (ticketId: string, itemId: string, qty: number) => void;
   onItemRecall?: (ticketId: string, itemId: string) => void;
+  onItemAdvance?: (ticketId: string, itemId: string) => void;
+  onItemRevert?: (ticketId: string, itemId: string) => void;
   acknowledgedNewItemIds: Set<string>;
   onAcknowledgeNewItem?: (itemId: string) => void;
   onFireNextCourse?: (ticketId: string) => void;
@@ -397,7 +399,7 @@ interface ExpoTicketCardProps {
   isRushed?: boolean;
 }
 
-function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, sentQuantities, onItemSend, onItemRecall, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
+function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold, isDemo, onDemoItemTap, sentItemIds, sentQuantities, onItemSend, onItemRecall, onItemAdvance, onItemRevert, acknowledgedNewItemIds, onAcknowledgeNewItem, onFireNextCourse, isSentOut, onRecallOrder, isRushed }: ExpoTicketCardProps) {
   const { tp } = useLanguage();
   const { orderTypeColors, expoSendButtonMode } = useKDSSettings();
   const { rules } = useStatusRules();
