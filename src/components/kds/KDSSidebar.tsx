@@ -3,8 +3,9 @@ import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useLanguage } from '@/hooks/use-language';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import {
-  Home, Clock, Bell, Settings, Eye, EyeOff,
+  Home, Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
   ArrowLeftRight,
 } from 'lucide-react';
 import {
