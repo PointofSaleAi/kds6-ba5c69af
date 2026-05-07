@@ -237,20 +237,48 @@ function ExpoItemRow({
   ) : null;
 
   // Outer row with Home-style dense spacing + bottom divider (except last).
-  // Tap-to-send pattern: when prepared, tapping the row sends the item out.
+  // Single tap = advance status (queued -> in progress -> ready -> sent).
+  // Double tap = revert one step.
   const isTapToSend = isPrepared && remainingQty > 0;
-  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isTapToSend) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+  const isInteractive = remainingQty > 0;
+  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isInteractive) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (clickTimerRef.current) clearTimeout(clickTimerRef.current); }, []);
+
+  const handleSingleTap = () => {
+    if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
+    if (isDemo && onDemoItemTap) {
+      onDemoItemTap(ticket.id, item.id);
+      return;
+    }
+    if (isPrepared) {
+      onItemSend?.(ticket.id, item.id, remainingQty);
+    } else {
+      onItemAdvance?.(ticket.id, item.id);
+    }
+  };
+  const handleDoubleTap = () => {
+    onItemRevert?.(ticket.id, item.id);
+  };
 
   return (
     <div
       className={outerClass}
       style={{ paddingTop: '2px', paddingBottom: '2px' }}
-      role={isTapToSend ? 'button' : undefined}
-      aria-label={isTapToSend ? `Send ${tp(item.name)}` : undefined}
+      role={isInteractive ? 'button' : undefined}
+      aria-label={isInteractive ? `Update status for ${tp(item.name)}` : undefined}
       onClick={() => {
-        if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-        if (isDemo && onDemoItemTap) onDemoItemTap(ticket.id, item.id);
-        if (isTapToSend) onItemSend?.(ticket.id, item.id, remainingQty);
+        if (clickTimerRef.current) {
+          clearTimeout(clickTimerRef.current);
+          clickTimerRef.current = null;
+          handleDoubleTap();
+          return;
+        }
+        clickTimerRef.current = setTimeout(() => {
+          clickTimerRef.current = null;
+          handleSingleTap();
+        }, 240);
       }}
     >
       <div className="flex items-start" style={{ gap: '4px' }}>
