@@ -246,19 +246,23 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return () => observer.disconnect();
   }, [settingsOpen]);
 
+  const [viewportWidth, setViewportWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 0);
+  useEffect(() => {
+    const handler = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   const staggerColumnCount = useMemo(() => {
-    // Portrait: match Grid breakpoints based on viewport width (Grid uses min-[960px] = viewport).
+    // Portrait: match Grid breakpoints (Tailwind min-[960px] uses viewport width).
     // 2 cols on iPad Mini/Air, 3 cols on iPad Pro (viewport >= 960px).
-    if (isPortrait) {
-      const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
-      return vw >= 960 ? 3 : 2;
-    }
+    if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
     return 5;
-  }, [boardContentWidth, isPortrait]);
+  }, [boardContentWidth, isPortrait, viewportWidth]);
 
   // Move served orders to history immediately
   useEffect(() => {
