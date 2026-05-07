@@ -76,6 +76,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
+  const [expoFilter, setExpoFilter] = useState<'all' | 'ready' | 'recalled'>('all');
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const sortDefaultMap: Record<string, SortMode> = { 'By time': 'newest', 'By table': 'table', 'By type': 'type' };
