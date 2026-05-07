@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
+import { usePortrait } from '@/hooks/use-portrait';
 
 /**
  * Settings shell rendered inside the main KDS frame: the KDS left rail stays
@@ -11,6 +12,7 @@ import { KDSSidebar } from '@/components/kds/KDSSidebar';
 export default function SettingsLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isPortrait } = usePortrait();
 
   const handleKdsNavigate = (target: string) => {
     switch (target) {
@@ -43,7 +45,7 @@ export default function SettingsLayout() {
         style={{ background: 'hsl(var(--surface-bg))' }}
       >
         <div
-          className="w-[280px] shrink-0 overflow-hidden flex flex-col m-4 rounded-3xl"
+          className={`${isPortrait ? 'w-[200px]' : 'w-[280px]'} shrink-0 overflow-hidden flex flex-col m-4 rounded-3xl`}
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
