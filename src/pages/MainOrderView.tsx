@@ -1247,7 +1247,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Prep' && !resolvedStationCourse ? (
                 <PrepBoard orders={filteredOrders} />
               ) : kdsMode === 'Expo' ? (
-                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
+                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="all" hideTopControls />
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
                   {(staggerMode || viewMode === 'stagger') ? (
