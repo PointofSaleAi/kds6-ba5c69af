@@ -1164,9 +1164,14 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         timerSeconds = Math.round((now - order.timeReceived.getTime()) / 1000);
       }
 
-      return { ...t, timerSeconds };
+      // Apply manual item status overrides
+      const items = itemStatusOverrides.size > 0
+        ? t.items.map(it => itemStatusOverrides.has(it.id) ? { ...it, status: itemStatusOverrides.get(it.id)! } : it)
+        : t.items;
+
+      return { ...t, timerSeconds, items };
     });
-  }, [rawTickets, orders, tick]);
+  }, [rawTickets, orders, tick, itemStatusOverrides]);
   const [fulfilledTickets, setFulfilledTickets] = useState<number[]>([]);
   const [holdStations, setHoldStations] = useState<Set<string>>(new Set());
 
