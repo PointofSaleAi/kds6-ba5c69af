@@ -17,7 +17,21 @@ interface HistoryOrderCardProps {
   compact?: boolean;
   onRecall?: (orderId: string) => void;
   onRecallItem?: (orderId: string, item: OrderItem) => void;
+  /** When true, render the two-row Expo-style header (used in Expo View History). */
+  expoHeader?: boolean;
 }
+
+const EXPO_ORDER_TYPE_LABEL: Record<string, string> = {
+  'dine-in': 'DINE IN',
+  'take-out': 'TAKE OUT',
+  'delivery': 'DELIVERY',
+  'banquet': 'BANQUET',
+  'drive-thru': 'DRIVE THRU',
+  'curb-side': 'CURB SIDE',
+  'scheduled': 'SCHEDULED',
+  'phone-in': 'PHONE-IN',
+  'custom': 'CUSTOM',
+};
 
 interface HistoryItemRowProps {
   item: OrderItem;
