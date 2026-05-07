@@ -12,6 +12,7 @@ import { usePortrait } from '@/hooks/use-portrait';
 export default function SettingsLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isPortrait } = usePortrait();
 
   const handleKdsNavigate = (target: string) => {
     switch (target) {
