@@ -119,7 +119,8 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
           </div>
         ) : (
           (() => {
-            const columnCount = isPortrait ? 2 : 4;
+            const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
+            const columnCount = isPortrait ? (vw >= 960 ? 3 : 2) : 4;
             const columns = distributeIntoColumns(unseenOrders, columnCount);
             return (
               <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
