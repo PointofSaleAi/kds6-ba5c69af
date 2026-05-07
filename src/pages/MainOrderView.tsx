@@ -1224,37 +1224,55 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
-                  {viewMode === 'grid' && (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
-                      {filteredHistory.map((order) => (
-                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                          <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                  {viewMode === 'horizontal' && (
-                    <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-                      {filteredHistory.map((order) => (
-                        <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
-                          <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                  {viewMode === 'stagger' && (
-                    <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
-                      {staggerHistoryColumns.map((col, colIdx) => (
-                        <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
-                          {col.map((order) => (
-                            <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
-                              <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
-                            </motion.div>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {(() => {
+                    const renderCard = (order: Order) =>
+                      kdsMode === 'Expo' ? (
+                        <ExpoHistoryOrderCard
+                          order={order}
+                          onRecallRemake={handleRecall}
+                          onRecallMistake={handleRecallMistake}
+                          onRecallItemRemake={handleRecallItem}
+                          onRecallItemMistake={handleRecallItemMistake}
+                        />
+                      ) : (
+                        <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} />
+                      );
+                    return (
+                      <>
+                        {viewMode === 'grid' && (
+                          <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                            {filteredHistory.map((order) => (
+                              <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                {renderCard(order)}
+                              </motion.div>
+                            ))}
+                          </div>
+                        )}
+                        {viewMode === 'horizontal' && (
+                          <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                            {filteredHistory.map((order) => (
+                              <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
+                                {renderCard(order)}
+                              </motion.div>
+                            ))}
+                          </div>
+                        )}
+                        {viewMode === 'stagger' && (
+                          <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
+                            {staggerHistoryColumns.map((col, colIdx) => (
+                              <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                                {col.map((order) => (
+                                  <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
+                                    {renderCard(order)}
+                                  </motion.div>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               )}
             </>
