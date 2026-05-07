@@ -90,15 +90,14 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
 
   return (
     <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10 gap-2">
-      <DockDragHandle
-        panel="bottomBar"
-        orientation="horizontal"
-        ariaLabel="Drag to dock status bar"
-        className="text-primary-foreground"
-        showLock={false}
-      />
-      {/* Order count */}
       <div className="flex items-center gap-2 shrink-0">
+        <DockDragHandle
+          panel="bottomBar"
+          orientation="horizontal"
+          ariaLabel="Drag to dock status bar"
+          className="text-primary-foreground"
+          showLock={false}
+        />
         <span className="text-primary-foreground font-bold">
           <span className="text-lg">{orderCount}</span>{' '}
           <span className="text-sm">{t.ordersInQueue}</span>
