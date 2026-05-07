@@ -1202,9 +1202,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               )}
             </>
           ) : isSeenScreen ? (
-            <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            kdsMode === 'Expo' ? (
+              <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="ready" hideTopControls />
+            ) : (
+              <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            )
           ) : isUnseenScreen ? (
-            <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            kdsMode === 'Expo' ? (
+              <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="recalled" hideTopControls />
+            ) : (
+              <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            )
           ) : (
             <>
               {isStationView && resolvedStationCourse && (
