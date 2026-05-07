@@ -1355,13 +1355,15 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
   return (
     <div className={`flex-1 flex flex-col overflow-hidden ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
-      <ExpoTopControls
-        filter={filter}
-        onFilterChange={handleFilterChange}
-        fulfilledTickets={fulfilledTickets}
-        onRecallLast={handleRecallLast}
-        hasRecallable={hasRecallable}
-      />
+      {!hideTopControls && (
+        <ExpoTopControls
+          filter={filter}
+          onFilterChange={handleFilterChange}
+          fulfilledTickets={fulfilledTickets}
+          onRecallLast={handleRecallLast}
+          hasRecallable={hasRecallable}
+        />
+      )}
       <ExpoStationBar />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
