@@ -17,7 +17,21 @@ interface HistoryOrderCardProps {
   compact?: boolean;
   onRecall?: (orderId: string) => void;
   onRecallItem?: (orderId: string, item: OrderItem) => void;
+  /** When true, render the two-row Expo-style header (used in Expo View History). */
+  expoHeader?: boolean;
 }
+
+const EXPO_ORDER_TYPE_LABEL: Record<string, string> = {
+  'dine-in': 'DINE IN',
+  'take-out': 'TAKE OUT',
+  'delivery': 'DELIVERY',
+  'banquet': 'BANQUET',
+  'drive-thru': 'DRIVE THRU',
+  'curb-side': 'CURB SIDE',
+  'scheduled': 'SCHEDULED',
+  'phone-in': 'PHONE-IN',
+  'custom': 'CUSTOM',
+};
 
 interface HistoryItemRowProps {
   item: OrderItem;
@@ -211,7 +225,7 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
   );
 }
 
-export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: HistoryOrderCardProps) {
+export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoHeader }: HistoryOrderCardProps) {
   const { tp, tperson, tl, timeFormat } = useLanguage();
   const { orderTypeColors, ticketHeaderLayout, ticketLayout } = useKDSSettings();
   const headerBgColor = orderTypeColors[order.orderType] || DEFAULT_ORDER_TYPE_COLORS[order.orderType];
@@ -321,6 +335,52 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
       className="rounded-lg overflow-hidden bg-surface-card shadow-sm transition-all duration-300"
       style={{ minWidth: 'min(220px, 100%)' }}
     >
+      {expoHeader ? (
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={`Recall ticket ${order.orderNumber}`}
+          onClick={() => { if (!selectionMode) onRecall?.(order.id); }}
+          onKeyDown={(e) => {
+            if (selectionMode) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onRecall?.(order.id);
+            }
+          }}
+          className={`select-none ${selectionMode ? 'cursor-default' : 'cursor-pointer active:brightness-95'}`}
+        >
+          {/* Row 1: Order type strip */}
+          <div
+            className="flex items-center px-2"
+            style={{ backgroundColor: headerBgColor, height: '28px' }}
+          >
+            <span className="text-[11px] font-medium uppercase tracking-wide text-white leading-none">
+              {(EXPO_ORDER_TYPE_LABEL[order.orderType] || order.orderType.toUpperCase())}
+              {order.tableName ? <> &middot; {order.tableName}</> : null}
+            </span>
+          </div>
+          {/* Row 2: Ticket info row (neutral dark, no urgency) */}
+          <div
+            className="flex items-center justify-between px-2"
+            style={{ backgroundColor: '#3a3a4a', height: '36px' }}
+          >
+            <span
+              className="text-[18px] font-extrabold text-white leading-none tabular-nums"
+              style={{ letterSpacing: '0.01em', fontVariantNumeric: 'tabular-nums' }}
+            >
+              #{order.orderNumber}
+            </span>
+            <span
+              className="text-[12px] font-medium leading-none"
+              style={{ color: 'rgba(255,255,255,0.75)' }}
+            >
+              Sent {formatTimeForKDS(new Date(order.timeReceived.getTime() + order.elapsedSeconds * 1000), timeFormat)}
+            </span>
+          </div>
+        </div>
+      ) : (
+      <>
       <div style={{ opacity: 0.65 }}>
         <OrderTypeBadge
           type={order.orderType}
@@ -440,6 +500,8 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem }: His
           )}
         </div>
       </div>
+      </>
+      )}
 
       <OrderAllergenStrip order={order} compact={isCompactLayout} />
 
