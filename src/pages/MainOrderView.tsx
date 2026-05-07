@@ -804,12 +804,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
+      if (kdsMode === 'Expo' && target === 'home') setExpoFilter('all');
+      if (kdsMode === 'Expo' && target === 'seen-orders') setExpoFilter('ready');
+      if (kdsMode === 'Expo' && target === 'unseen-orders') setExpoFilter('recalled');
       setActiveNav(target);
       onCloseSettings?.();
     } else {
       onNavigate(target);
     }
-  }, [onNavigate, onCloseSettings]);
+  }, [onNavigate, onCloseSettings, kdsMode]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
   const activeOrders = useMemo(() => orders.filter(o => o.status !== 'served'), [orders]);
