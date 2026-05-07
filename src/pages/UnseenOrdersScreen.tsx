@@ -98,7 +98,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
       </div>
       <div className="flex-1 overflow-auto p-1.5">
         {isPortrait ? (
-          <div className="grid grid-cols-2 gap-1.5">
+          <div className="grid grid-cols-2 min-[960px]:grid-cols-3 gap-1.5">
             <AnimatePresence mode="popLayout">
               {unseenOrders.map(order => (
                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit">
