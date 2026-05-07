@@ -335,6 +335,52 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
       className="rounded-lg overflow-hidden bg-surface-card shadow-sm transition-all duration-300"
       style={{ minWidth: 'min(220px, 100%)' }}
     >
+      {expoHeader ? (
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={`Recall ticket ${order.orderNumber}`}
+          onClick={() => { if (!selectionMode) onRecall?.(order.id); }}
+          onKeyDown={(e) => {
+            if (selectionMode) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onRecall?.(order.id);
+            }
+          }}
+          className={`select-none ${selectionMode ? 'cursor-default' : 'cursor-pointer active:brightness-95'}`}
+        >
+          {/* Row 1: Order type strip */}
+          <div
+            className="flex items-center px-2"
+            style={{ backgroundColor: headerBgColor, height: '28px' }}
+          >
+            <span className="text-[11px] font-medium uppercase tracking-wide text-white leading-none">
+              {(EXPO_ORDER_TYPE_LABEL[order.orderType] || order.orderType.toUpperCase())}
+              {order.tableName ? <> &middot; {order.tableName}</> : null}
+            </span>
+          </div>
+          {/* Row 2: Ticket info row (neutral dark, no urgency) */}
+          <div
+            className="flex items-center justify-between px-2"
+            style={{ backgroundColor: '#3a3a4a', height: '36px' }}
+          >
+            <span
+              className="text-[18px] font-extrabold text-white leading-none tabular-nums"
+              style={{ letterSpacing: '0.01em', fontVariantNumeric: 'tabular-nums' }}
+            >
+              #{order.orderNumber}
+            </span>
+            <span
+              className="text-[12px] font-medium leading-none"
+              style={{ color: 'rgba(255,255,255,0.75)' }}
+            >
+              Sent {formatTimeForKDS(new Date(order.timeReceived.getTime() + order.elapsedSeconds * 1000), timeFormat)}
+            </span>
+          </div>
+        </div>
+      ) : (
+      <>
       <div style={{ opacity: 0.65 }}>
         <OrderTypeBadge
           type={order.orderType}
@@ -454,6 +500,8 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
           )}
         </div>
       </div>
+      </>
+      )}
 
       <OrderAllergenStrip order={order} compact={isCompactLayout} />
 
