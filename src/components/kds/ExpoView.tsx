@@ -1010,27 +1010,29 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const [sentDemoIds, setSentDemoIds] = useState<Set<string>>(new Set());
   const lastSentDemo = useRef<DemoExpoTicket | null>(null);
 
-  // Demo item tap: cycle pending -> firing -> done
-  const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
+  // Per-item status overrides for real tickets (manual advance/revert).
+  const [itemStatusOverrides, setItemStatusOverrides] = useState<Map<string, ExpoItemStatus>>(new Map());
+
+  const advanceStatus = (s: ExpoItemStatus): ExpoItemStatus =>
+    s === 'pending' ? 'firing' : 'done';
+  const revertStatus = (s: ExpoItemStatus): ExpoItemStatus =>
+    s === 'done' ? 'firing' : 'pending';
+
+  // Demo item helper: cycle status in either direction
+  const cycleDemoItem = useCallback((ticketId: string, itemId: string, dir: 'advance' | 'revert') => {
     setDemoTickets(prev => prev.map(t => {
       if (t.id !== ticketId) return t;
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const updatedItems = t.items.map(item => {
         if (item.id !== itemId) return item;
-        if (item.status === 'pending') return { ...item, status: 'firing' as const, statusLabel: `Since ${timeStr}` };
-        if (item.status === 'firing') return { ...item, status: 'done' as const, statusLabel: `Done ${timeStr}` };
-        return item;
+        const next = dir === 'advance' ? advanceStatus(item.status) : revertStatus(item.status);
+        if (next === item.status) return item;
+        const label =
+          next === 'firing' ? `Since ${timeStr}` :
+          next === 'done' ? `Done ${timeStr}` : undefined;
+        return { ...item, status: next, statusLabel: label };
       });
-
-      // Auto-update station chips based on item statuses
-      const updatedStations = t.stations.map(s => {
-        // Simple heuristic: if any item is firing, first pending station becomes firing
-        // If all items done, all stations done
-        return s;
-      });
-
-      // Smarter station update: derive from items
       const anyFiring = updatedItems.some(i => i.status === 'firing');
       const allDoneItems = updatedItems.every(i => i.status === 'done');
       const smartStations = t.stations.map((s, idx) => {
@@ -1038,21 +1040,52 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
         if (anyFiring && s.status === 'pending' && idx === t.stations.findIndex(st => st.status === 'pending')) {
           return { ...s, status: 'firing' as const };
         }
-        // If item that was firing is now done, check if station should be done
-        const firingItems = updatedItems.filter(i => i.status === 'firing');
-        const doneItems = updatedItems.filter(i => i.status === 'done');
-        if (doneItems.length > 0 && idx < doneItems.length && s.status !== 'done') {
-          // Mark stations done proportionally
-          if (idx < Math.floor((doneItems.length / updatedItems.length) * t.stations.length)) {
-            return { ...s, status: 'done' as const };
-          }
-        }
         return s;
       });
-
       return { ...t, items: updatedItems, stations: smartStations };
     }));
   }, []);
+
+  // Legacy demo handler (advance only) kept for compatibility
+  const handleDemoItemTap = useCallback((ticketId: string, itemId: string) => {
+    cycleDemoItem(ticketId, itemId, 'advance');
+  }, [cycleDemoItem]);
+
+  const handleItemAdvance = useCallback((ticketId: string, itemId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      cycleDemoItem(ticketId, itemId, 'advance');
+      return;
+    }
+    const ticket = rawTickets.find(t => t.id === ticketId);
+    const item = ticket?.items.find(i => i.id === itemId);
+    if (!item) return;
+    setItemStatusOverrides(prev => {
+      const current = prev.get(itemId) ?? item.status;
+      const next = advanceStatus(current);
+      if (next === current) return prev;
+      const map = new Map(prev);
+      map.set(itemId, next);
+      return map;
+    });
+  }, [cycleDemoItem, rawTickets]);
+
+  const handleItemRevert = useCallback((ticketId: string, itemId: string) => {
+    if (ticketId.startsWith('demo-')) {
+      cycleDemoItem(ticketId, itemId, 'revert');
+      return;
+    }
+    const ticket = rawTickets.find(t => t.id === ticketId);
+    const item = ticket?.items.find(i => i.id === itemId);
+    if (!item) return;
+    setItemStatusOverrides(prev => {
+      const current = prev.get(itemId) ?? item.status;
+      const next = revertStatus(current);
+      if (next === current) return prev;
+      const map = new Map(prev);
+      map.set(itemId, next);
+      return map;
+    });
+  }, [cycleDemoItem, rawTickets]);
 
   // Demo send out
   const handleDemoSendOut = useCallback((id: string) => {
