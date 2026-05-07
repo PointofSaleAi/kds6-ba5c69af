@@ -680,6 +680,8 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               onDemoItemTap={onDemoItemTap}
               onItemSend={onItemSend}
               onItemRecall={onItemRecall}
+              onItemAdvance={onItemAdvance}
+              onItemRevert={onItemRevert}
               acknowledgedNewItemIds={acknowledgedNewItemIds}
               onAcknowledgeNewItem={onAcknowledgeNewItem}
               runnerIconSrc={runnerIcon}
