@@ -877,12 +877,16 @@ interface ExpoViewProps {
   onTicketSentOut?: (id: string) => void;
   onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
   selectedProducts?: string[];
+  controlledFilter?: ExpoFilter;
+  hideTopControls?: boolean;
 }
 
-export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [], controlledFilter, hideTopControls }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
   const { textSize, ticketSpacing } = useKDSSettings();
-  const [filter, setFilter] = useState<ExpoFilter>('ready');
+  const [internalFilter, setInternalFilter] = useState<ExpoFilter>('all');
+  const filter = controlledFilter ?? internalFilter;
+  const setFilter = setInternalFilter;
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
   const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
   const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
