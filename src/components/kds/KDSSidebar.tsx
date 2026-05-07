@@ -3,8 +3,9 @@ import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useLanguage } from '@/hooks/use-language';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import {
-  Home, Clock, Bell, Settings, Eye, EyeOff,
+  Home, Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
   ArrowLeftRight,
 } from 'lucide-react';
 import {
@@ -42,16 +43,28 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
   const { t } = useLanguage();
   const { pendingCount: pendingMessageCount } = useKitchenMessages();
   const { unreadCount: unreadNotifCount } = useNotifications();
+  const { mode: kdsMode } = useKDSMode();
   const [expanded, setExpanded] = useState(false);
 
-  const navItems: SidebarItem[] = [
-    { icon: Home, label: t.home, action: 'home' },
-    { icon: Clock, label: t.history, badge: 6, action: 'history' },
-    { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
-    { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
-    { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
-    { icon: Settings, label: t.settings, action: 'settings' },
-  ];
+  const isExpo = kdsMode === 'Expo';
+
+  const navItems: SidebarItem[] = isExpo
+    ? [
+        { icon: Home, label: t.home, action: 'home' },
+        { icon: CheckCircle2, label: 'Ready only', action: 'seen-orders' },
+        { icon: Undo2, label: 'Recalled', action: 'unseen-orders' },
+        { icon: Clock, label: t.history, badge: 6, action: 'history' },
+        { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
+        { icon: Settings, label: t.settings, action: 'settings' },
+      ]
+    : [
+        { icon: Home, label: t.home, action: 'home' },
+        { icon: Clock, label: t.history, badge: 6, action: 'history' },
+        { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
+        { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
+        { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
+        { icon: Settings, label: t.settings, action: 'settings' },
+      ];
 
   const isActive = (item: SidebarItem) => {
     if (item.action === 'settings') return settingsOpen;

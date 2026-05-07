@@ -76,6 +76,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
+  const [expoFilter, setExpoFilter] = useState<'all' | 'ready' | 'recalled'>('all');
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const sortDefaultMap: Record<string, SortMode> = { 'By time': 'newest', 'By table': 'table', 'By type': 'type' };
@@ -803,12 +804,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const handleNavigate = useCallback((target: string) => {
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
+      if (kdsMode === 'Expo' && target === 'home') setExpoFilter('all');
+      if (kdsMode === 'Expo' && target === 'seen-orders') setExpoFilter('ready');
+      if (kdsMode === 'Expo' && target === 'unseen-orders') setExpoFilter('recalled');
       setActiveNav(target);
       onCloseSettings?.();
     } else {
       onNavigate(target);
     }
-  }, [onNavigate, onCloseSettings]);
+  }, [onNavigate, onCloseSettings, kdsMode]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
   const activeOrders = useMemo(() => orders.filter(o => o.status !== 'served'), [orders]);
@@ -1198,9 +1202,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               )}
             </>
           ) : isSeenScreen ? (
-            <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            kdsMode === 'Expo' ? (
+              <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="ready" hideTopControls />
+            ) : (
+              <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            )
           ) : isUnseenScreen ? (
-            <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            kdsMode === 'Expo' ? (
+              <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="recalled" hideTopControls />
+            ) : (
+              <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} />
+            )
           ) : (
             <>
               {isStationView && resolvedStationCourse && (
@@ -1235,7 +1247,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : kdsMode === 'Prep' && !resolvedStationCourse ? (
                 <PrepBoard orders={filteredOrders} />
               ) : kdsMode === 'Expo' ? (
-                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} />
+                <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="all" hideTopControls />
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
                   {(staggerMode || viewMode === 'stagger') ? (

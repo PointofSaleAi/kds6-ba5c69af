@@ -877,12 +877,16 @@ interface ExpoViewProps {
   onTicketSentOut?: (id: string) => void;
   onAllTicketsChange?: (tickets: ExpoTicket[]) => void;
   selectedProducts?: string[];
+  controlledFilter?: ExpoFilter;
+  hideTopControls?: boolean;
 }
 
-export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [] }: ExpoViewProps) {
+export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [], controlledFilter, hideTopControls }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
   const { textSize, ticketSpacing } = useKDSSettings();
-  const [filter, setFilter] = useState<ExpoFilter>('ready');
+  const [internalFilter, setInternalFilter] = useState<ExpoFilter>('all');
+  const filter = controlledFilter ?? internalFilter;
+  const setFilter = setInternalFilter;
   const [sentItemIds, setSentItemIds] = useState<Set<string>>(new Set());
   const [sentQuantities, setSentQuantities] = useState<Map<string, number>>(new Map());
   const [acknowledgedNewItemIds, setAcknowledgedNewItemIds] = useState<Set<string>>(new Set());
@@ -1351,13 +1355,15 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
 
   return (
     <div className={`flex-1 flex flex-col overflow-hidden ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
-      <ExpoTopControls
-        filter={filter}
-        onFilterChange={handleFilterChange}
-        fulfilledTickets={fulfilledTickets}
-        onRecallLast={handleRecallLast}
-        hasRecallable={hasRecallable}
-      />
+      {!hideTopControls && (
+        <ExpoTopControls
+          filter={filter}
+          onFilterChange={handleFilterChange}
+          fulfilledTickets={fulfilledTickets}
+          onRecallLast={handleRecallLast}
+          hasRecallable={hasRecallable}
+        />
+      )}
       <ExpoStationBar />
 
       <div ref={boardRef} className="flex-1 overflow-auto p-3">
