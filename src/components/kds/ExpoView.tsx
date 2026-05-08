@@ -241,7 +241,7 @@ function ExpoItemRow({
   // Double tap = revert one step.
   const isTapToSend = isPrepared && remainingQty > 0;
   const isInteractive = remainingQty > 0;
-  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success pl-[3px]' : 'pl-[6px]'} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isInteractive) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isInteractive) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
 
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (clickTimerRef.current) clearTimeout(clickTimerRef.current); }, []);
@@ -501,7 +501,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Allergen badges */}
       {ticketAllergens.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1 border-b border-border/40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px', marginBottom: '6px' }}>
+        <div className="flex flex-wrap items-center gap-1 border-b border-border/40" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
           {ticketAllergens.map(a => (
             <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="order" />
           ))}
