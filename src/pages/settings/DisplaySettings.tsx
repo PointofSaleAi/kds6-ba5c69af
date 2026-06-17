@@ -59,7 +59,7 @@ export default function DisplaySettings() {
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
   const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
-  React.useEffect(() => {
+  useEffect(() => {
     if (hash === 'language') setLanguageOpen(true);
   }, [hash]);
   const { layout: dockLayout, resetLayout } = useDockLayout();
