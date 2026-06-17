@@ -1,37 +1,68 @@
 ## Goal
-Add an **Unseen / Seen Filtered Views** module to the tracker as a separate workbook (since each module ships as its own `.xlsx`). Note explicitly that ticket-card behaviour inside these screens reuses the new `OrderCard` (3-state lifecycle, allergen chips, course aging, etc.) — different from old KDS's simpler cards — even though the *screen concept* (state-filtered list) is 1:1 with old KDS.
+Create a new module workbook documenting the **Expo (Expediter) view** in the same column structure used for the Unseen/Seen and Ticket-Card-Audit workbooks. Since the old POSAI KDS had no Expediter screen, every row is flagged as **net-new** (Old KDS = "Not available"), and the New KDS column maps to the existing Expo implementation files.
 
 ## Source files mapped
-- `src/pages/UnseenOrdersScreen.tsx`
-- `src/pages/SeenOrdersScreen.tsx`
-- `src/pages/MainOrderView.tsx` (nav wiring at `activeNav === 'unseen-orders' | 'seen-orders'`)
+- `src/components/kds/ExpoView.tsx` (main board)
+- `src/components/kds/ExpoSummaryPanel.tsx` (right-side aggregate panel)
+- `src/data/mock-expo-orders.ts` (ticket/item/course shape)
+- `src/data/mock-expo-demo.ts`
+- `src/pages/settings/ExpoSettings.tsx` (Send button mode)
+- `src/components/kds/NotificationStationSync.tsx` (Expo station tag)
+- `src/hooks/use-kds-mode.tsx` (`mode === 'Expo'`)
 
-## Rows to add (Module = "Unseen / Seen Views")
+## Output
+New workbook: `POSAI - Kitchen Display System (KDS) (UI UX) Ver. 1.0 - Expo_View.xlsx` in `/mnt/documents/`. Reuse the Settings_v3 header rows (1–2) verbatim for column parity, then write rows from row 3.
 
-### Shared (both screens)
-1. **Sidebar entry + active state** — `activeNav` switch routes Home to the filtered list; left rail highlights the entry.
-2. **Real-time filtering** — list re-evaluates as `seenOrderIds` set updates from the order store; tickets appear/disappear without refresh.
-3. **Station-mode awareness** — when Station Mode is active, list scopes to that station's course and empty-state copy adapts (e.g. "No new {course} orders").
-4. **View mode parity** — supports Grid / Horizontal / Stagger display modes from main Settings (no separate toggle inside the screen).
-5. **Summary panel reuse** — same `ItemSummaryPanel` aggregates only the filtered list (Unseen-only or Seen-only).
-6. **Ticket card reuse with new behaviours** — cards render via the new `OrderCard` component, so 3-state lifecycle (Unseen → Preparing → Done), allergen chips, course aging, servable modifiers, new-item indicators and dock layout all apply *inside* these screens — explicit divergence from old KDS, where filtered views showed simpler legacy cards.
+## Rows (Module = "Expo View")
 
-### Unseen Orders Screen
-7. **Title + count** — header shows "New / Unseen orders" with live ticket count.
-8. **Empty state** — friendly "No new unseen orders" (or station-scoped variant).
-9. **Mark seen action** — tapping the card or using primary action transitions to Preparing and removes ticket from this list (drops into Seen list).
-10. **Sort default** — newest-first; respects global Sort Default from Settings.
+### A. Entry & framing
+1. **Mode entry** — KDS Mode toggle adds an "Expo" option; selecting it routes the home board to `ExpoView` and tags notifications as `Expo` station.
+2. **Sidebar + footer parity** — persistent left rail and bottom status bar remain visible (per dock layout rules).
+3. **Header title + live ticket count** — "Expediter" title with count of active tickets.
 
-### Seen Orders Screen
-11. **Title + count** — header shows "Seen orders" with live count.
-12. **Empty state** — "No seen orders" (or station-scoped variant).
-13. **Step-back affordance** — supports `onStepBack` to revert a card to Unseen if mis-acknowledged.
-14. **Bump to Done** — primary action progresses card to Served and removes from list (drops into History).
+### B. Ticket grid (per ExpoTicket)
+4. **Card header** — order number, order type colour (Dine-In / Take-Out / Banquet), table/area name, master timer.
+5. **Station strip** — per-ticket station chips (Grill / Fry / Salad / Dessert / Bar) coloured by `done | firing | pending`.
+6. **Auto-fire countdown** — `autoFireSeconds` shown as inline countdown when set; `0` = firing now.
+7. **Coursing block** — when `hasCoursing`, items grouped by course with `served | active | queued` status and per-course timer reset on `activeCourseFiredAt`.
+8. **Item row** — quantity, name, status label (e.g., "Frying…", "On grill…", "Overdue"), station tag, allergen chips, modifiers (extra/remove/neutral), to-go flag, item-level notes, isNew indicator.
+9. **Order-level notes** — packaging / special-instruction banner sourced from `orderNotes`.
+10. **Send button (per item)** — visibility controlled by `expoSendButtonMode` setting (`always` vs `when-ready`); only enabled once item is `done`.
+11. **Send-all (per product)** — quick action in summary panel sends every done instance of a product across tickets.
+
+### C. Summary panel (`ExpoSummaryPanel`)
+12. **Readiness counters** — Ready to send / In progress / Pending aggregated across tickets.
+13. **Ready-to-send products section** — collapsible; lists products whose all instances are `done`; per-row Send-all.
+14. **Pending-products section** — collapsible; aggregates non-done quantities; highlights `firing` and `isNew`.
+15. **Multi-select + clear** — tap products to highlight matching ticket rows; "Clear all" resets.
+16. **Dock + collapse** — panel supports dock drag handle and collapse rail (consistent with Cooking Summary).
+
+### D. Settings & integrations
+17. **Expo settings page** — `ExpoSettings.tsx` controls the Send-button mode (Always vs When ready).
+18. **Notification scoping** — `NotificationStationSync` sets current station to `Expo` so alerts filter to expediter-relevant events.
+19. **Sound + alert reuse** — reuses global sound/alert system; no new sounds defined.
+20. **View-mode parity** — Expo view supports the same Grid/Horizontal/Stagger display modes as Standard KDS (where applicable).
+
+### E. Lifecycle & flow
+21. **Item lifecycle inside Expo** — items remain read-only with respect to per-item progression; Expo's job is to *send*, not to advance kitchen states.
+22. **Bump to history on send** — sending all items (or the ticket-level send) progresses ticket to Done and drops into History (respects coursing rules).
+23. **Empty state** — friendly "All sent — nothing to expedite" copy.
+24. **New-item indicator** — POS mid-service additions show 2px green border + opacity pulse, matching Standard KDS rules.
+
+## Column values (per row)
+- **Module**: "Expo View"
+- **Sub Module**: section A–E label
+- **Lovable Status**: "Done"
+- **UI Completion**: 100
+- **Old KDS (Before)**: "Not available — Expediter view is net-new in POSAI KDS"
+- **New KDS (After)**: corresponding component file(s) from the source map
+- **Settings Dependency**: e.g., row 10 → "Yes: `expoSendButtonMode`"; row 20 → "Yes: Display mode"
+- **Test case / Edge case**: short note (e.g., "Auto-fire reaches 0", "All items done → ticket bumps")
 
 ## Steps
-1. Reuse the Settings_v3 styling/column structure as the template (Module, Sub Module, Sub-Sub Module, Description, Use case, Edge cases, Test case, Old KDS Before, New KDS After, etc.).
-2. Create a new workbook `POSAI - Kitchen Display System (KDS) (UI UX) Ver. 1.0 - Unseen_Seen.xlsx` in `/mnt/documents/` by copying the Settings_v3 header structure (rows 1–2) only, then writing the 14 rows starting at row 3.
-3. Mark "Old KDS (Before)" column to show parity ("Same concept: state-filtered list of new/seen tickets.") and "New KDS (After)" to call out the OrderCard upgrades when relevant.
-4. Verify by reading rows back.
+1. Copy header rows 1–2 from `Settings_v3.xlsx` into the new workbook for column parity.
+2. Write the 24 rows starting at row 3 with the values above.
+3. Apply freeze panes at A3 and column widths matching existing module workbooks.
+4. Read back to verify formatting.
 
 No `src/` changes.
