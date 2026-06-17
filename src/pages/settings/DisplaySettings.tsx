@@ -124,7 +124,7 @@ export default function DisplaySettings() {
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
           <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
             <button
-              onClick={() => setLanguageOpen(false)}
+              onClick={handleLanguageBack}
               className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
               aria-label="Back"
             >
