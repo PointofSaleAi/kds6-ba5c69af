@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
@@ -59,6 +59,9 @@ export default function DisplaySettings() {
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
   const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
+  useEffect(() => {
+    if (hash === 'language') setLanguageOpen(true);
+  }, [hash]);
   const { layout: dockLayout, resetLayout } = useDockLayout();
   const insets = getOverlayInsets(dockLayout);
   const overlayStyle = { top: insets.top, bottom: insets.bottom, left: insets.left, right: insets.right } as React.CSSProperties;
