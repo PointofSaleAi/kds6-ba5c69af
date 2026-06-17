@@ -55,13 +55,26 @@ export default function DisplaySettings() {
   }, [orders]);
   const [statusOpen, setStatusOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [languageFromHash, setLanguageFromHash] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
   const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
   useEffect(() => {
-    if (hash === 'language') setLanguageOpen(true);
+    if (hash === 'language') {
+      setLanguageOpen(true);
+      setLanguageFromHash(true);
+    }
   }, [hash]);
+  const handleLanguageBack = () => {
+    if (languageFromHash) {
+      setLanguageFromHash(false);
+      setLanguageOpen(false);
+      window.history.back();
+    } else {
+      setLanguageOpen(false);
+    }
+  };
   const { layout: dockLayout, resetLayout } = useDockLayout();
   const insets = getOverlayInsets(dockLayout);
   const overlayStyle = { top: insets.top, bottom: insets.bottom, left: insets.left, right: insets.right } as React.CSSProperties;
