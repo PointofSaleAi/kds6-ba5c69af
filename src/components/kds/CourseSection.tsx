@@ -319,6 +319,20 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       </div>
     );
   }
+  // Course-level manual 86 (long-press on active course header)
+  const { confirmMany: confirm86Many, isConfirmed: is86ConfirmedFn2 } = useFlag86();
+  const [courseManual86Open, setCourseManual86Open] = useState(false);
+  const eligibleCourseItemIds = useMemo(
+    () => courseGroup.items
+      .filter(i => !i.isCancelled && !is86ConfirmedFn2(i.id))
+      .map(i => i.id),
+    [courseGroup.items, is86ConfirmedFn2]
+  );
+  const longPressHeader = useLongPress(() => {
+    if (!isActive) return;
+    if (eligibleCourseItemIds.length === 0) return;
+    setCourseManual86Open(true);
+  }, { enabled: isActive });
 
   return (
     <div className={containerClass} style={containerStyle}>
@@ -326,6 +340,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
         style={{ ...headerStyle, padding: '2px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
+        {...longPressHeader}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
           <span className={`text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} style={{ fontSize: 'var(--kds-course-header)' }}>
