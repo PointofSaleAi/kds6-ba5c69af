@@ -540,8 +540,6 @@ function CourseItemTapRow({
     if (item.isCancelled || is86Active || is86Confirmed) return;
     setManual86Open(true);
   }, { enabled: tappable });
-  // dummy to preserve unused var lint if any
-  void allergenMt;
 
   return (
     <div
