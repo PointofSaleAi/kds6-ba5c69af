@@ -429,6 +429,19 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         </div>
         </div>
       )}
+      <Flag86Modal
+        open={courseManual86Open}
+        onClose={() => setCourseManual86Open(false)}
+        onConfirm={() => {
+          setCourseManual86Open(false);
+          confirm86Many(eligibleCourseItemIds);
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'course', courseGroup.course, eligibleCourseItemIds);
+        }}
+        title={`${tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase()).toUpperCase()} · ${eligibleCourseItemIds.length} ${eligibleCourseItemIds.length === 1 ? 'item' : 'items'}`}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </div>
   );
 }
