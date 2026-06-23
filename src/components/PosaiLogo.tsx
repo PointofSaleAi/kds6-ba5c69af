@@ -12,7 +12,7 @@ interface PosaiLogoProps {
  * - variant="dark"  → black logo (for light backgrounds)
  * - variant="auto"  → picks based on the current theme class on <html>
  */
-export default function PosaiLogo({ variant = 'auto', className = 'h-14 object-contain' }: PosaiLogoProps) {
+export default function PosaiLogo({ variant = 'auto', className = 'h-24 object-contain' }: PosaiLogoProps) {
   const isDark =
     variant === 'light'
       ? true
