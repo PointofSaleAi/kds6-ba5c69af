@@ -6,8 +6,9 @@ import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
-import { Flag86Button } from './Flag86Button';
+import { Flag86Button, Flag86Modal } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
 
@@ -460,7 +461,7 @@ function CourseItemTapRow({
   const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn } = useFlag86();
   const is86Confirmed = is86ConfirmedFn(item.id);
   const is86Active = !!item.is86Flagged && !flag86Cleared.has(item.id) && !is86Confirmed;
-  const show86Pill = !!item.is86Flagged && is86Confirmed;
+  const show86Pill = is86Confirmed;
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
   
