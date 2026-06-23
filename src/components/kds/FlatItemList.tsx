@@ -114,7 +114,7 @@ function ItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
-  const { clearedIds: flag86Cleared } = useFlag86();
+  const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed } = useFlag86();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -163,7 +163,9 @@ function ItemTapRow({
   const seenTextTeal = '#92400E';
 
   // Seen rows alternate green/amber tint; Done rows use a light grey tint.
-  const is86Active = item.is86Flagged && !flag86Cleared.has(item.id);
+  const is86ConfirmedItem = is86Confirmed(item.id);
+  const is86Active = item.is86Flagged && !flag86Cleared.has(item.id) && !is86ConfirmedItem;
+  const show86Pill = !!item.is86Flagged && is86ConfirmedItem;
   const rowBg = is86Active ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
 
   return (
@@ -276,7 +278,7 @@ function ItemTapRow({
             </div>
           )}
         </div>
-        {is86Active && <Flag86Button itemId={item.id} productName={item.name} />}
+        {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
