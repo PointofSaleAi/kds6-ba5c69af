@@ -1,13 +1,13 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Sparkles, ChevronRight, ChevronLeft, Flame, ShieldAlert,
-  Timer, Mic, BarChart3, X, ArrowLeft
+  Timer, Mic, BarChart3, ArrowLeft
 } from 'lucide-react';
 import Index from '@/pages/Index';
 import { useOrderStore } from '@/hooks/use-order-store';
-import { scoreAllergens, detectAllergenConflicts } from '@/lib/ai/allergen-intelligence';
-import { computeStationLoad } from '@/lib/ai/eta-predictor';
+import { topSeverity, detectConflicts } from '@/lib/ai/allergen-intelligence';
+import { computeStationLoad, estimateOrderEta } from '@/lib/ai/eta-predictor';
 import type { Order } from '@/types/kds';
 
 /**
