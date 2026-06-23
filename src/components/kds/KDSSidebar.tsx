@@ -136,7 +136,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
           {/* All nav items with equal spacing */}
           {navItems.map(renderButton)}
 
-
           {/* Switch to POS */}
           <Tooltip>
             <TooltipTrigger asChild>

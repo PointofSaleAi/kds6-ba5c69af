@@ -30,7 +30,6 @@ import AccountSettings from "./pages/settings/AccountSettings.tsx";
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
-import AiKdsView from "./pages/ai/AiKdsView.tsx";
 
 const queryClient = new QueryClient();
 
@@ -72,11 +71,6 @@ const App = () => (
               </Route>
 
               <Route path="/kds-reply" element={<KdsReplyPage />} />
-
-              {/* AI Co-Pilot — overlays AI insights on the real KDS view */}
-              <Route path="/kds/ai" element={<AiKdsView />} />
-              <Route path="/kds/ai/*" element={<Navigate to="/kds/ai" replace />} />
-
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
