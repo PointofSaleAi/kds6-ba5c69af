@@ -154,16 +154,10 @@ function AllergensPanel({ orders }: { orders: Order[] }) {
   const flagged = useMemo(() => {
     return orders.flatMap(o => {
       const items = o.courses.flatMap(c => c.items);
-      const allAllergens = items.flatMap(i => i.allergens || []);
-      if (!allAllergens.length) return [];
-      const scored = scoreAllergens(allAllergens.map(a => a.type));
-      const high = scored.filter(s => s.severity === 'high');
-      const conflicts = detectAllergenConflicts(
-        items.flatMap(i => (i.modifiers || []).map(m => m.text)),
-        items.map(i => i.name)
-      );
-      if (!high.length && !conflicts.length) return [];
-      return [{ order: o, high, conflicts }];
+      const highItems = items.filter(i => topSeverity(i) === 'high');
+      const conflicts = items.flatMap(i => detectConflicts(i));
+      if (!highItems.length && !conflicts.length) return [];
+      return [{ order: o, highItems, conflicts }];
     });
   }, [orders]);
 
@@ -172,17 +166,17 @@ function AllergensPanel({ orders }: { orders: Order[] }) {
   return (
     <>
       <SectionTitle icon={<ShieldAlert size={12} />} label="Allergen Risk" />
-      {flagged.map(({ order, high, conflicts }) => (
+      {flagged.map(({ order, highItems, conflicts }) => (
         <div key={order.id} className="rounded-lg bg-red-500/10 border border-red-400/30 p-2">
           <div className="text-[13px] font-bold text-white">Ticket {order.orderNumber}</div>
-          {high.map(h => (
-            <div key={h.type} className="mt-1 text-[10px] text-red-200 font-semibold uppercase">
-              HIGH · {h.type}
+          {highItems.map(i => (
+            <div key={i.id} className="mt-1 text-[10px] text-red-200 font-semibold uppercase">
+              HIGH · {i.name}
             </div>
           ))}
           {conflicts.map((c, i) => (
             <div key={i} className="mt-1 text-[10px] text-amber-200">
-              Conflict: {c}
+              {c.itemName}: {c.reason}
             </div>
           ))}
         </div>
