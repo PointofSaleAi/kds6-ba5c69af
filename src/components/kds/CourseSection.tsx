@@ -457,10 +457,13 @@ function CourseItemTapRow({
   compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
-  const { clearedIds: flag86Cleared } = useFlag86();
+  const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn } = useFlag86();
+  const is86Confirmed = is86ConfirmedFn(item.id);
+  const is86Active = !!item.is86Flagged && !flag86Cleared.has(item.id) && !is86Confirmed;
+  const show86Pill = !!item.is86Flagged && is86Confirmed;
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const is86Active = !!item.is86Flagged && !flag86Cleared.has(item.id);
+  
 
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -659,7 +662,7 @@ function CourseItemTapRow({
             </div>
           )}
         </div>
-        {is86Active && <Flag86Button itemId={item.id} productName={item.name} />}
+        {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
