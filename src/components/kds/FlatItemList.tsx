@@ -5,8 +5,9 @@ import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
-import { Flag86Button } from './Flag86Button';
+import { Flag86Button, Flag86Modal } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
 
@@ -114,7 +115,8 @@ function ItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
-  const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed } = useFlag86();
+  const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
+  const [manual86Open, setManual86Open] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -165,8 +167,13 @@ function ItemTapRow({
   // Seen rows alternate green/amber tint; Done rows use a light grey tint.
   const is86ConfirmedItem = is86Confirmed(item.id);
   const is86Active = item.is86Flagged && !flag86Cleared.has(item.id) && !is86ConfirmedItem;
-  const show86Pill = !!item.is86Flagged && is86ConfirmedItem;
+  const show86Pill = is86ConfirmedItem;
   const rowBg = is86Active ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
+
+  const longPress = useLongPress(() => {
+    if (item.isCancelled || is86Active || is86ConfirmedItem) return;
+    setManual86Open(true);
+  }, { stopPropagation: true });
 
   return (
     <div
@@ -186,7 +193,8 @@ function ItemTapRow({
           ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         }}
         onClick={handleTap}
-        title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
+        {...longPress}
+        title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
@@ -353,6 +361,19 @@ function ItemTapRow({
           </div>
         </div>
       )}
+      <Flag86Modal
+        open={manual86Open}
+        onClose={() => setManual86Open(false)}
+        onConfirm={() => {
+          setManual86Open(false);
+          confirm86(item.id);
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'item', [item.id]);
+        }}
+        title={item.name}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </div>
   );
 }

@@ -12,6 +12,9 @@ import { TimerBadge, getTimerUrgency } from './TimerBadge';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { CompactOrderCard } from './CompactOrderCard';
+import { Flag86Modal } from './Flag86Button';
+import { useLongPress } from '@/hooks/use-long-press';
+import { useFlag86 } from '@/hooks/use-flag86';
 import { OrderAllergenStrip } from './OrderAllergenStrip';
 import { OrderNotesSection } from './OrderNotesSection';
 import { OrderCardActions } from './OrderCardActions';
@@ -757,6 +760,26 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return `${prevName} fired ${prevCourse.firedAgoLabel || 'recently'}, ${stationName.toLowerCase()} prep triggered automatically`;
   })() : null;
 
+
+  // Ticket-level manual 86 (long-press anywhere on the card)
+  const { confirmMany: confirm86Many, isConfirmed: is86ConfirmedFn } = useFlag86();
+  const [ticketManual86Open, setTicketManual86Open] = useState(false);
+  const eligibleTicketItems = useMemo(() => {
+    const list: { id: string; name: string }[] = [];
+    for (const c of order.courses) {
+      for (const i of c.items) {
+        if (i.isCancelled) continue;
+        if (is86ConfirmedFn(i.id)) continue;
+        list.push({ id: i.id, name: i.name });
+      }
+    }
+    return list;
+  }, [order.courses, is86ConfirmedFn]);
+  const ticketLongPress = useLongPress(() => {
+    if (eligibleTicketItems.length === 0) return;
+    setTicketManual86Open(true);
+  });
+
   return (
     <>
       <div
@@ -765,6 +788,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           minWidth: 'min(220px, 100%)',
           borderLeft: order.isRushed ? '4px solid #c0392b' : undefined,
         }}
+        {...ticketLongPress}
       >
         {/* Header area */}
         <div>
@@ -978,6 +1002,20 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           )}
         </div>
       </div>
+      <Flag86Modal
+        open={ticketManual86Open}
+        onClose={() => setTicketManual86Open(false)}
+        onConfirm={() => {
+          setTicketManual86Open(false);
+          confirm86Many(eligibleTicketItems.map(i => i.id));
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'ticket', order.id, eligibleTicketItems.map(i => i.id));
+        }}
+        title={`${order.tableName} · Order #${order.orderNumber}`}
+        itemNames={eligibleTicketItems.map(i => `${i.name}`)}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </>
   );
 }

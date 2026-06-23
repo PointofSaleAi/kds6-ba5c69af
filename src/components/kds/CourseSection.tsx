@@ -6,8 +6,9 @@ import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
-import { Flag86Button } from './Flag86Button';
+import { Flag86Button, Flag86Modal } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
 
@@ -318,6 +319,20 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       </div>
     );
   }
+  // Course-level manual 86 (long-press on active course header)
+  const { confirmMany: confirm86Many, isConfirmed: is86ConfirmedFn2 } = useFlag86();
+  const [courseManual86Open, setCourseManual86Open] = useState(false);
+  const eligibleCourseItemIds = useMemo(
+    () => courseGroup.items
+      .filter(i => !i.isCancelled && !is86ConfirmedFn2(i.id))
+      .map(i => i.id),
+    [courseGroup.items, is86ConfirmedFn2]
+  );
+  const longPressHeader = useLongPress(() => {
+    if (!isActive) return;
+    if (eligibleCourseItemIds.length === 0) return;
+    setCourseManual86Open(true);
+  }, { enabled: isActive, stopPropagation: true });
 
   return (
     <div className={containerClass} style={containerStyle}>
@@ -325,6 +340,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         className={`flex items-center justify-between flex-nowrap ${headerBg} cursor-pointer select-none`}
         style={{ ...headerStyle, padding: '2px 8px' }}
         onClick={() => setIsExpanded(prev => !prev)}
+        {...longPressHeader}
       >
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
           <span className={`text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} style={{ fontSize: 'var(--kds-course-header)' }}>
@@ -413,6 +429,19 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         </div>
         </div>
       )}
+      <Flag86Modal
+        open={courseManual86Open}
+        onClose={() => setCourseManual86Open(false)}
+        onConfirm={() => {
+          setCourseManual86Open(false);
+          confirm86Many(eligibleCourseItemIds);
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'course', courseGroup.course, eligibleCourseItemIds);
+        }}
+        title={`${tc(courseGroup.course.charAt(0) + courseGroup.course.slice(1).toLowerCase()).toUpperCase()} · ${eligibleCourseItemIds.length} ${eligibleCourseItemIds.length === 1 ? 'item' : 'items'}`}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </div>
   );
 }
@@ -457,10 +486,11 @@ function CourseItemTapRow({
   compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
-  const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn } = useFlag86();
+  const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn, confirm: confirm86 } = useFlag86();
   const is86Confirmed = is86ConfirmedFn(item.id);
+  const [manual86Open, setManual86Open] = useState(false);
   const is86Active = !!item.is86Flagged && !flag86Cleared.has(item.id) && !is86Confirmed;
-  const show86Pill = !!item.is86Flagged && is86Confirmed;
+  const show86Pill = is86Confirmed;
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
   
@@ -534,6 +564,11 @@ function CourseItemTapRow({
   const headerPad = compactRows ? '0px 0 0 0px' : '0px 0 0 0px';
   const allergenMt = compactRows ? '0px' : '0px';
 
+  const longPressRow = useLongPress(() => {
+    if (item.isCancelled || is86Active || is86Confirmed) return;
+    setManual86Open(true);
+  }, { enabled: tappable, stopPropagation: true });
+
   return (
     <div
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
@@ -553,7 +588,8 @@ function CourseItemTapRow({
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
         onClick={tappable ? handleTap : undefined}
-        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
+        {...longPressRow}
+        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86') : undefined}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
@@ -737,6 +773,19 @@ function CourseItemTapRow({
           </div>
         </div>
       )}
+      <Flag86Modal
+        open={manual86Open}
+        onClose={() => setManual86Open(false)}
+        onConfirm={() => {
+          setManual86Open(false);
+          confirm86(item.id);
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'item', [item.id]);
+        }}
+        title={item.name}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </div>
   );
 }
