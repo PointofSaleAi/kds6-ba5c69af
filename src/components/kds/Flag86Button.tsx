@@ -12,7 +12,8 @@ interface Flag86ButtonProps {
 export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
   const [open, setOpen] = useState(false);
   const { orders } = useOrderStore();
-  const { clear } = useFlag86();
+  const { clear, confirm, isConfirmed } = useFlag86();
+  const confirmed = isConfirmed(itemId);
 
   const pendingCount = useMemo(() => {
     let count = 0;
@@ -28,6 +29,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (confirmed) return;
     setOpen(true);
   };
 
@@ -38,10 +40,36 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
 
   const handle86 = () => {
     setOpen(false);
-    clear(itemId);
+    confirm(itemId);
     // eslint-disable-next-line no-console
     console.log(`86 confirmed: ${productName}`);
   };
+
+  if (confirmed) {
+    return (
+      <span
+        aria-label={`${productName} 86'd`}
+        className="shrink-0 inline-flex items-center justify-center"
+        style={{
+          backgroundColor: '#F1F5F9',
+          border: '1px solid #E2E8F0',
+          borderRadius: 10,
+          padding: '2px 8px',
+          marginLeft: 8,
+          marginRight: 4,
+          color: '#9CA3AF',
+          fontSize: 9,
+          fontWeight: 700,
+          letterSpacing: '0.3px',
+          lineHeight: 1,
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        86'd
+      </span>
+    );
+  }
 
   return (
     <>
