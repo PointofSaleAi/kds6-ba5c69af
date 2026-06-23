@@ -4,6 +4,8 @@ interface Options {
   delay?: number;
   moveTolerance?: number;
   enabled?: boolean;
+  /** Stop pointerdown propagation so an ancestor long-press host doesn't also arm. */
+  stopPropagation?: boolean;
 }
 
 /**
@@ -13,7 +15,7 @@ interface Options {
  * underlying tap handler does not also run.
  */
 export function useLongPress(onLongPress: () => void, options: Options = {}) {
-  const { delay = 500, moveTolerance = 8, enabled = true } = options;
+  const { delay = 500, moveTolerance = 8, enabled = true, stopPropagation = false } = options;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startRef = useRef<{ x: number; y: number } | null>(null);
   const firedRef = useRef(false);
@@ -31,6 +33,7 @@ export function useLongPress(onLongPress: () => void, options: Options = {}) {
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
       if (!enabled) return;
+      if (stopPropagation) e.stopPropagation();
       // Only main pointer
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       firedRef.current = false;
