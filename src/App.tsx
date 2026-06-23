@@ -30,13 +30,7 @@ import AccountSettings from "./pages/settings/AccountSettings.tsx";
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
-import AiLayout from "./pages/ai/AiLayout.tsx";
-import AiDashboard from "./pages/ai/AiDashboard.tsx";
-import SequencerScreen from "./pages/ai/SequencerScreen.tsx";
-import AllergensScreen from "./pages/ai/AllergensScreen.tsx";
-import EtaScreen from "./pages/ai/EtaScreen.tsx";
-import VoiceScreen from "./pages/ai/VoiceScreen.tsx";
-import InsightsScreen from "./pages/ai/InsightsScreen.tsx";
+import AiKdsView from "./pages/ai/AiKdsView.tsx";
 
 const queryClient = new QueryClient();
 
