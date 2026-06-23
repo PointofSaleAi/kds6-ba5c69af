@@ -30,6 +30,13 @@ import AccountSettings from "./pages/settings/AccountSettings.tsx";
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
+import AiLayout from "./pages/ai/AiLayout.tsx";
+import AiDashboard from "./pages/ai/AiDashboard.tsx";
+import SequencerScreen from "./pages/ai/SequencerScreen.tsx";
+import AllergensScreen from "./pages/ai/AllergensScreen.tsx";
+import EtaScreen from "./pages/ai/EtaScreen.tsx";
+import VoiceScreen from "./pages/ai/VoiceScreen.tsx";
+import InsightsScreen from "./pages/ai/InsightsScreen.tsx";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +78,18 @@ const App = () => (
               </Route>
 
               <Route path="/kds-reply" element={<KdsReplyPage />} />
+
+              {/* AI-First Lab — isolated route tree, does not touch /kds/full */}
+              <Route path="/kds/ai" element={<AiLayout />}>
+                <Route index element={<Navigate to="dashboard" replace />} />
+                <Route path="dashboard" element={<AiDashboard />} />
+                <Route path="sequencer" element={<SequencerScreen />} />
+                <Route path="allergens" element={<AllergensScreen />} />
+                <Route path="eta" element={<EtaScreen />} />
+                <Route path="voice" element={<VoiceScreen />} />
+                <Route path="insights" element={<InsightsScreen />} />
+              </Route>
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
