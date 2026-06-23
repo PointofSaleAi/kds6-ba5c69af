@@ -170,6 +170,11 @@ function ItemTapRow({
   const show86Pill = is86ConfirmedItem;
   const rowBg = is86Active ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
 
+  const longPress = useLongPress(() => {
+    if (item.isCancelled || is86Active || is86ConfirmedItem) return;
+    setManual86Open(true);
+  });
+
   return (
     <div
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
@@ -188,7 +193,8 @@ function ItemTapRow({
           ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         }}
         onClick={handleTap}
-        title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo' : isSeen ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN')}
+        {...longPress}
+        title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
