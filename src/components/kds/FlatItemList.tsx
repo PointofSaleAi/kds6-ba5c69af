@@ -161,7 +161,7 @@ function ItemTapRow({
   const seenTextTeal = '#92400E';
 
   // Seen rows alternate green/amber tint; Done rows use a light grey tint.
-  const rowBg = isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined;
+  const rowBg = item.is86Flagged ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
 
   return (
     <div
