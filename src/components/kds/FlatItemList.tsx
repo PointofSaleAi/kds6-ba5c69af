@@ -371,7 +371,7 @@ function ItemTapRow({
           console.log('Manual 86 requested:', 'item', [item.id]);
         }}
         title={item.name}
-        subtext="Sends an 86 request to the manager on POS. Once approved, this item will be marked unavailable for new orders."
+        subtext="Asks the manager to confirm this from the POS. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
       />
     </div>
