@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, Check, Globe, ArrowLeftRight } from 'lucide-react';
+import { ArrowLeft, Search, Check, Languages, ArrowLeftRight } from 'lucide-react';
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 
 interface LanguageSettingsProps {
@@ -108,7 +108,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Back">
               <ArrowLeft size={20} className="text-text-secondary" />
             </button>
-            <Globe size={20} className="text-text-muted" />
+            <Languages size={20} className="text-text-muted" />
             <h2 className="text-lg font-bold text-text-primary flex-1">{t.languageRegion}</h2>
           </div>
 

@@ -4,7 +4,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Globe, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send } from 'lucide-react';
+import { X, ChevronRight, Monitor, ShoppingBag, Cpu, User, Languages, Volume2, Printer, Tag, Palette, Server, Clock, Minus, Plus, Sun, Moon, Bug, Send } from 'lucide-react';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/use-theme';
@@ -175,7 +175,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 />
               }
             />
-            <SettingsRow icon={Globe} label={'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
+            <SettingsRow icon={Languages} label={'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
 
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">
