@@ -5,6 +5,7 @@ interface Flag86ContextValue {
   confirmedIds: Set<string>;
   clear: (itemId: string) => void;
   confirm: (itemId: string) => void;
+  confirmMany: (itemIds: string[]) => void;
   isActive: (itemId: string, is86Flagged?: boolean) => boolean;
   isConfirmed: (itemId: string) => boolean;
 }
@@ -33,6 +34,21 @@ export function Flag86Provider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const confirmMany = useCallback((itemIds: string[]) => {
+    if (itemIds.length === 0) return;
+    setConfirmedIds(prev => {
+      let changed = false;
+      const next = new Set(prev);
+      for (const id of itemIds) {
+        if (!next.has(id)) {
+          next.add(id);
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, []);
+
   const isActive = useCallback(
     (itemId: string, is86Flagged?: boolean) => !!is86Flagged && !clearedIds.has(itemId) && !confirmedIds.has(itemId),
     [clearedIds, confirmedIds]
@@ -44,8 +60,8 @@ export function Flag86Provider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ clearedIds, confirmedIds, clear, confirm, isActive, isConfirmed }),
-    [clearedIds, confirmedIds, clear, confirm, isActive, isConfirmed]
+    () => ({ clearedIds, confirmedIds, clear, confirm, confirmMany, isActive, isConfirmed }),
+    [clearedIds, confirmedIds, clear, confirm, confirmMany, isActive, isConfirmed]
   );
 
   return <Flag86Context.Provider value={value}>{children}</Flag86Context.Provider>;
