@@ -517,9 +517,11 @@ function CourseItemTapRow({
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const isHighlightActive = isHighlighted && !item.isCancelled;
-  const productRowBg = isHighlightActive
-    ? 'hsl(var(--destructive) / 0.12)'
-    : stateBg || undefined;
+  const productRowBg = item.is86Flagged
+    ? '#FEF2F2'
+    : isHighlightActive
+      ? 'hsl(var(--destructive) / 0.12)'
+      : stateBg || undefined;
   const stateOpacity = itemOpacity;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
