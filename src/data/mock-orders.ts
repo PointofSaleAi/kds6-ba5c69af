@@ -667,7 +667,7 @@ export const mockOrders: Order[] = [
         _startedAt: new Date(Date.now() - 60000),
         prepTimerLabel: '0:45',
         items: [
-          { id: 'i-032', name: 'Beef Burger',
+          { id: 'i-032', name: 'Beef Burger', is86Flagged: true,
             category: 'Meat', quantity: 2, modifiers: [{ text: 'Well done', type: 'neutral' }, { text: '+ Bacon', type: 'extra' }, { text: 'No pickles', type: 'remove' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'sesame', label: 'SESAME', icon: '\u{1FAD8}' }], station: 'Grill' },
           { id: 'i-033', name: 'Fries',
             category: 'Sides', quantity: 1, modifiers: [{ text: 'Seasoned', type: 'neutral' }], allergens: [], station: 'Fry' },
@@ -768,7 +768,7 @@ export const mockOrders: Order[] = [
         items: [
           { id: 'i-104', name: 'Osso Buco',
             category: 'Meat', quantity: 2, modifiers: [{ id: 'mod-gremolata', text: '+ Gremolata', type: 'extra', isServable: true }], allergens: [], station: 'Grill' },
-          { id: 'i-105', name: 'Grilled Barramundi',
+          { id: 'i-105', name: 'Grilled Barramundi', is86Flagged: true,
             category: 'Seafood', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: 'No fennel', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-106', name: 'Veal Scallopini',
             category: 'Meat', quantity: 1, modifiers: [{ text: 'Marsala Sauce', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
@@ -855,6 +855,7 @@ export const mockOrders: Order[] = [
           {
             id: 'i-new-04',
             name: 'Seared Tuna',
+            is86Flagged: true,
             category: 'Seafood',
             quantity: 1,
             modifiers: [

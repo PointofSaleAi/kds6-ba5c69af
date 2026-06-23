@@ -51,6 +51,8 @@ export interface OrderItem {
   isRecalled?: boolean;
   /** Item is flagged to-go within an otherwise dine-in order */
   isToGo?: boolean;
+  /** Item flagged as 86'd (out of stock) — shows red circle button */
+  is86Flagged?: boolean;
 }
 
 export interface CourseGroup {

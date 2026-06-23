@@ -6,6 +6,7 @@ import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
+import { Flag86Button } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 
@@ -516,9 +517,11 @@ function CourseItemTapRow({
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const isHighlightActive = isHighlighted && !item.isCancelled;
-  const productRowBg = isHighlightActive
-    ? 'hsl(var(--destructive) / 0.12)'
-    : stateBg || undefined;
+  const productRowBg = item.is86Flagged
+    ? '#FEF2F2'
+    : isHighlightActive
+      ? 'hsl(var(--destructive) / 0.12)'
+      : stateBg || undefined;
   const stateOpacity = itemOpacity;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
@@ -653,6 +656,7 @@ function CourseItemTapRow({
             </div>
           )}
         </div>
+        {item.is86Flagged && <Flag86Button productName={item.name} />}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
