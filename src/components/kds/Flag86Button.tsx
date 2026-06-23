@@ -25,7 +25,7 @@ export function Flag86Button({ productName }: Flag86ButtonProps) {
         marginLeft: 8,
         marginRight: 4,
         color: '#FFFFFF',
-        fontSize: 9,
+        fontSize: 14,
         fontWeight: 800,
         letterSpacing: '0.5px',
         lineHeight: 1,
