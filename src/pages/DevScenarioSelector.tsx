@@ -38,7 +38,7 @@ export default function DevScenarioSelector({
         </div>
 
         {/* Logo + Title */}
-        <PosaiLogo variant="light" className="h-14 object-contain mb-3" />
+        <PosaiLogo variant="light" className="h-24 object-contain mb-3" />
         <h1 className="text-white text-xl font-bold mb-1 font-montserrat">Welcome to Point of Sale Ai Kitchen Display</h1>
         <p className="text-sm mb-10 font-montserrat" style={{ color: '#6C7A89' }}>
           Select a scenario to preview the login flow

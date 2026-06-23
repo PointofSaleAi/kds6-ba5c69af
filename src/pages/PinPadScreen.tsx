@@ -114,7 +114,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
       <div className="relative z-10 flex flex-col h-full w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full">
           <div className="flex items-center justify-center gap-5 pt-14 pb-1">
-            <PosaiLogo variant="light" className="h-14 object-contain" />
+            <PosaiLogo variant="light" className="h-24 object-contain" />
             <h1 className="text-white text-xl font-bold font-montserrat">Kitchen Display System</h1>
           </div>
 
