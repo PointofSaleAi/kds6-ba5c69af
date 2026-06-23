@@ -405,3 +405,11 @@
 .animate-message-flash {
   animation: message-flash-in 4s ease-in-out forwards;
 }
+
+@keyframes flag86-pulse {
+  0%, 100% { border-color: #EF4444; }
+  50% { border-color: #FCA5A5; }
+}
+.animate-flag86-pulse {
+  animation: flag86-pulse 2s ease-in-out infinite;
+}
