@@ -855,6 +855,7 @@ export const mockOrders: Order[] = [
           {
             id: 'i-new-04',
             name: 'Seared Tuna',
+            is86Flagged: true,
             category: 'Seafood',
             quantity: 1,
             modifiers: [
