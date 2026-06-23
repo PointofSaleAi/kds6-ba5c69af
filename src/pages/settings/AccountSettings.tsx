@@ -126,7 +126,7 @@ export default function AccountSettings() {
       />
 
       <p className="text-center text-xs mt-4" style={{ color: 'hsl(var(--text-muted))' }}>
-        POSAI Kitchen Display System v2.4.1
+        Point of Sale Ai Kitchen Display System v2.4.1
       </p>
 
       <AlertDialog open={logoutOpen} onOpenChange={setLogoutOpen}>
