@@ -536,6 +536,13 @@ function CourseItemTapRow({
   const headerPad = compactRows ? '0px 0 0 0px' : '0px 0 0 0px';
   const allergenMt = compactRows ? '0px' : '0px';
 
+  const longPressRow = useLongPress(() => {
+    if (item.isCancelled || is86Active || is86Confirmed) return;
+    setManual86Open(true);
+  }, { enabled: tappable });
+  // dummy to preserve unused var lint if any
+  void allergenMt;
+
   return (
     <div
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
@@ -555,7 +562,8 @@ function CourseItemTapRow({
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
         onClick={tappable ? handleTap : undefined}
-        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo' : 'Tap to mark SEEN') : undefined}
+        {...longPressRow}
+        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86') : undefined}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
