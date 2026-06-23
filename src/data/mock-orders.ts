@@ -768,7 +768,7 @@ export const mockOrders: Order[] = [
         items: [
           { id: 'i-104', name: 'Osso Buco',
             category: 'Meat', quantity: 2, modifiers: [{ id: 'mod-gremolata', text: '+ Gremolata', type: 'extra', isServable: true }], allergens: [], station: 'Grill' },
-          { id: 'i-105', name: 'Grilled Barramundi',
+          { id: 'i-105', name: 'Grilled Barramundi', is86Flagged: true,
             category: 'Seafood', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: 'No fennel', type: 'remove' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-106', name: 'Veal Scallopini',
             category: 'Meat', quantity: 1, modifiers: [{ text: 'Marsala Sauce', type: 'neutral' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
