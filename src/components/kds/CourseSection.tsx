@@ -332,7 +332,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
     if (!isActive) return;
     if (eligibleCourseItemIds.length === 0) return;
     setCourseManual86Open(true);
-  }, { enabled: isActive });
+  }, { enabled: isActive, stopPropagation: true });
 
   return (
     <div className={containerClass} style={containerStyle}>
@@ -567,7 +567,7 @@ function CourseItemTapRow({
   const longPressRow = useLongPress(() => {
     if (item.isCancelled || is86Active || is86Confirmed) return;
     setManual86Open(true);
-  }, { enabled: tappable });
+  }, { enabled: tappable, stopPropagation: true });
 
   return (
     <div

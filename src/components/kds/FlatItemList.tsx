@@ -173,7 +173,7 @@ function ItemTapRow({
   const longPress = useLongPress(() => {
     if (item.isCancelled || is86Active || is86ConfirmedItem) return;
     setManual86Open(true);
-  });
+  }, { stopPropagation: true });
 
   return (
     <div
