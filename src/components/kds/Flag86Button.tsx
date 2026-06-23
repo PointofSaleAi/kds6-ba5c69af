@@ -1,38 +1,189 @@
+import { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
+import { Clock } from 'lucide-react';
+import { useOrderStore } from '@/hooks/use-order-store';
+import { useFlag86 } from '@/hooks/use-flag86';
+
 interface Flag86ButtonProps {
+  itemId: string;
   productName: string;
 }
 
-export function Flag86Button({ productName }: Flag86ButtonProps) {
+export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
+  const [open, setOpen] = useState(false);
+  const { orders } = useOrderStore();
+  const { clear } = useFlag86();
+
+  const pendingCount = useMemo(() => {
+    let count = 0;
+    for (const o of orders) {
+      if (o.status === 'served') continue;
+      const hasItem = o.courses.some(c =>
+        c.items.some(i => i.name === productName && !i.isCompleted && !i.isCancelled)
+      );
+      if (hasItem) count += 1;
+    }
+    return count;
+  }, [orders, productName]);
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setOpen(true);
+  };
+
+  const handleNotNow = () => {
+    setOpen(false);
+    clear(itemId);
+  };
+
+  const handle86 = () => {
+    setOpen(false);
+    clear(itemId);
     // eslint-disable-next-line no-console
-    console.log(`86 tapped: ${productName}`);
+    console.log(`86 confirmed: ${productName}`);
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      onDoubleClick={(e) => e.stopPropagation()}
-      aria-label={`86 ${productName}`}
-      className="shrink-0 inline-flex items-center justify-center animate-flag86-pulse"
-      style={{
-        width: 32,
-        height: 32,
-        borderRadius: '50%',
-        backgroundColor: '#DC2626',
-        border: '2px solid #EF4444',
-        marginLeft: 8,
-        marginRight: 4,
-        color: '#FFFFFF',
-        fontSize: 14,
-        fontWeight: 600,
-        letterSpacing: '0.5px',
-        lineHeight: 1,
-        cursor: 'pointer',
-      }}
-    >
-      86
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={handleClick}
+        onDoubleClick={(e) => e.stopPropagation()}
+        aria-label={`86 ${productName}`}
+        className="shrink-0 inline-flex items-center justify-center animate-flag86-pulse"
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          backgroundColor: '#DC2626',
+          border: '2px solid #EF4444',
+          marginLeft: 8,
+          marginRight: 4,
+          color: '#FFFFFF',
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: '0.5px',
+          lineHeight: 1,
+          cursor: 'pointer',
+        }}
+      >
+        86
+      </button>
+
+      {open && createPortal(
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNotNow();
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 16,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`86 ${productName}`}
+            style={{
+              backgroundColor: '#1E2130',
+              border: '1px solid #374151',
+              borderRadius: 14,
+              padding: '22px 20px 18px',
+              width: '100%',
+              maxWidth: 380,
+              boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+            }}
+          >
+            <div
+              style={{
+                fontSize: 22,
+                fontWeight: 800,
+                color: '#FFFFFF',
+                lineHeight: 1.15,
+                marginBottom: 6,
+              }}
+            >
+              {productName}
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#F59E0B',
+                marginBottom: 6,
+              }}
+            >
+              <Clock size={14} color="#F59E0B" />
+              <span>
+                {pendingCount === 0
+                  ? 'No other pending orders'
+                  : `${pendingCount} pending orders`}
+              </span>
+            </div>
+
+            <div
+              style={{
+                fontSize: 12,
+                color: '#6B7280',
+                lineHeight: 1.4,
+                marginBottom: 20,
+              }}
+            >
+              FOH notified. Manager will handle pending orders.
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); handleNotNow(); }}
+                style={{
+                  flex: 1,
+                  backgroundColor: '#252838',
+                  border: '1px solid #374151',
+                  borderRadius: 8,
+                  padding: 13,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: '#9CA3AF',
+                  cursor: 'pointer',
+                }}
+              >
+                Not now
+              </button>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); handle86(); }}
+                style={{
+                  flex: 2,
+                  backgroundColor: '#DC2626',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: 13,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                }}
+              >
+                86 it
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

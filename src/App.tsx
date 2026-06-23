@@ -11,6 +11,7 @@ import { StatusRulesProvider } from "@/hooks/use-status-rules";
 import { LanguageProvider } from "@/hooks/use-language";
 import { KDSSettingsProvider } from "@/hooks/use-kds-settings";
 import { OrderStoreProvider } from "@/hooks/use-order-store";
+import { Flag86Provider } from "@/hooks/use-flag86";
 import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
 import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
@@ -43,6 +44,7 @@ const App = () => (
       <BadgeVisibilityProvider>
       <StatusRulesProvider>
       <OrderStoreProvider>
+      <Flag86Provider>
       <PrinterAssignmentsProvider>
       <PortraitProvider>
       <KitchenMessagesProvider>
@@ -82,6 +84,7 @@ const App = () => (
       </KitchenMessagesProvider>
       </PortraitProvider>
       </PrinterAssignmentsProvider>
+      </Flag86Provider>
       </OrderStoreProvider>
       </StatusRulesProvider>
       </BadgeVisibilityProvider>

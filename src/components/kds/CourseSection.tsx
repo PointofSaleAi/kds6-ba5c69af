@@ -9,6 +9,7 @@ import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useFlag86 } from '@/hooks/use-flag86';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -456,8 +457,10 @@ function CourseItemTapRow({
   compactRows, seenIdx, ticketLayoutCompact,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
+  const { clearedIds: flag86Cleared } = useFlag86();
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const is86Active = !!item.is86Flagged && !flag86Cleared.has(item.id);
 
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -517,7 +520,7 @@ function CourseItemTapRow({
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const isHighlightActive = isHighlighted && !item.isCancelled;
-  const productRowBg = item.is86Flagged
+  const productRowBg = is86Active
     ? '#FEF2F2'
     : isHighlightActive
       ? 'hsl(var(--destructive) / 0.12)'
@@ -656,7 +659,7 @@ function CourseItemTapRow({
             </div>
           )}
         </div>
-        {item.is86Flagged && <Flag86Button productName={item.name} />}
+        {is86Active && <Flag86Button itemId={item.id} productName={item.name} />}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {

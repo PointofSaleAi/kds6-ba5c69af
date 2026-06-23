@@ -8,6 +8,7 @@ import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useFlag86 } from '@/hooks/use-flag86';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
@@ -113,6 +114,7 @@ function ItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
+  const { clearedIds: flag86Cleared } = useFlag86();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -161,7 +163,8 @@ function ItemTapRow({
   const seenTextTeal = '#92400E';
 
   // Seen rows alternate green/amber tint; Done rows use a light grey tint.
-  const rowBg = item.is86Flagged ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
+  const is86Active = item.is86Flagged && !flag86Cleared.has(item.id);
+  const rowBg = is86Active ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
 
   return (
     <div
@@ -273,7 +276,7 @@ function ItemTapRow({
             </div>
           )}
         </div>
-        {item.is86Flagged && <Flag86Button productName={item.name} />}
+        {is86Active && <Flag86Button itemId={item.id} productName={item.name} />}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
