@@ -1002,6 +1002,20 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           )}
         </div>
       </div>
+      <Flag86Modal
+        open={ticketManual86Open}
+        onClose={() => setTicketManual86Open(false)}
+        onConfirm={() => {
+          setTicketManual86Open(false);
+          confirm86Many(eligibleTicketItems.map(i => i.id));
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'ticket', order.id, eligibleTicketItems.map(i => i.id));
+        }}
+        title={`${order.tableName} · Order #${order.orderNumber}`}
+        itemNames={eligibleTicketItems.map(i => `${i.name}`)}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </>
   );
 }
