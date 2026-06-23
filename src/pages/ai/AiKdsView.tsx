@@ -186,25 +186,25 @@ function AllergensPanel({ orders }: { orders: Order[] }) {
 }
 
 function EtaPanel({ orders }: { orders: Order[] }) {
-  const items = orders.flatMap(o =>
-    o.courses.flatMap(c => c.items).filter(i => !i.isCompleted)
-  );
-  const load = computeStationLoad(items.map(i => i.station || 'Grill'));
-  if (!load.length) return <EmptyMsg label="No active station load." />;
+  const load = computeStationLoad(orders);
+  const active = load.filter(s => s.queuedSeconds > 0);
+  if (!active.length) return <EmptyMsg label="No active station load." />;
 
   return (
     <>
       <SectionTitle icon={<Timer size={12} />} label="Station Load" />
-      {load.map(s => (
+      {active.map(s => (
         <div key={s.station} className="rounded-lg bg-white/5 border border-white/10 p-2">
           <div className="flex items-center justify-between text-[12px] font-semibold text-white">
             <span>{s.station}</span>
-            <span className="font-mono text-[11px] text-white/70">{s.active}/{s.capacity}</span>
+            <span className="font-mono text-[11px] text-white/70">
+              {Math.round(s.queuedSeconds / 60)}m / {Math.round(s.capacitySeconds / 60)}m
+            </span>
           </div>
           <div className="mt-1 h-1.5 rounded bg-white/10 overflow-hidden">
             <div
-              className={`h-full ${s.ratio > 0.9 ? 'bg-red-400' : s.ratio > 0.6 ? 'bg-amber-400' : 'bg-emerald-400'}`}
-              style={{ width: `${Math.min(100, Math.round(s.ratio * 100))}%` }}
+              className={`h-full ${s.loadRatio > 0.9 ? 'bg-red-400' : s.loadRatio > 0.6 ? 'bg-amber-400' : 'bg-emerald-400'}`}
+              style={{ width: `${Math.min(100, Math.round(s.loadRatio * 100))}%` }}
             />
           </div>
         </div>
