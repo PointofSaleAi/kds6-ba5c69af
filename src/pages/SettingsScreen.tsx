@@ -266,7 +266,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
 
 
             <div className="text-center py-3 text-xs text-text-muted">
-              POSAI Kitchen Display System v2.4.1
+              Point of Sale Ai Kitchen Display System v2.4.1
             </div>
           </div>
         </motion.div>

@@ -165,7 +165,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
               >
                 <img
                   src={versionIcon}
-                  alt="POSAI"
+                  alt="Point of Sale Ai"
                   className={`${expanded ? 'w-8 h-8' : 'w-9 h-9'} object-contain shrink-0`}
                 />
                 <span className="text-sidebar-foreground/70 text-[9px] font-semibold tracking-wide whitespace-nowrap">
@@ -175,7 +175,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             </TooltipTrigger>
             {!expanded && (
               <TooltipContent side="right" className="text-xs">
-                POSAI v{APP_VERSION}
+                Point of Sale Ai v{APP_VERSION}
               </TooltipContent>
             )}
           </Tooltip>
