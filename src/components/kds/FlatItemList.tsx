@@ -114,6 +114,7 @@ function ItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
+  const { clearedIds: flag86Cleared } = useFlag86();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
