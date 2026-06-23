@@ -73,16 +73,9 @@ const App = () => (
 
               <Route path="/kds-reply" element={<KdsReplyPage />} />
 
-              {/* AI-First Lab — isolated route tree, does not touch /kds/full */}
-              <Route path="/kds/ai" element={<AiLayout />}>
-                <Route index element={<Navigate to="dashboard" replace />} />
-                <Route path="dashboard" element={<AiDashboard />} />
-                <Route path="sequencer" element={<SequencerScreen />} />
-                <Route path="allergens" element={<AllergensScreen />} />
-                <Route path="eta" element={<EtaScreen />} />
-                <Route path="voice" element={<VoiceScreen />} />
-                <Route path="insights" element={<InsightsScreen />} />
-              </Route>
+              {/* AI Co-Pilot — overlays AI insights on the real KDS view */}
+              <Route path="/kds/ai" element={<AiKdsView />} />
+              <Route path="/kds/ai/*" element={<Navigate to="/kds/ai" replace />} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
