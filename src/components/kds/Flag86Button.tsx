@@ -1,8 +1,159 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Clock } from 'lucide-react';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { useFlag86 } from '@/hooks/use-flag86';
+
+export type Flag86Scope = 'item' | 'course' | 'ticket';
+
+interface Flag86ModalProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  /** Optional list of item names rendered as a small list (used for ticket scope). */
+  itemNames?: string[];
+  /** When provided, renders the "N pending orders" line (item scope only). */
+  pendingCount?: number;
+  /** Subtext under the title. */
+  subtext: string;
+  primaryLabel: string;
+}
+
+export function Flag86Modal({
+  open,
+  onClose,
+  onConfirm,
+  title,
+  itemNames,
+  pendingCount,
+  subtext,
+  primaryLabel,
+}: Flag86ModalProps) {
+  if (!open) return null;
+  return createPortal(
+    <div
+      onClick={(e) => { e.stopPropagation(); onClose(); }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0,0,0,0.75)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 16,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        style={{
+          backgroundColor: '#1E2130',
+          border: '1px solid #374151',
+          borderRadius: 14,
+          padding: '22px 20px 18px',
+          width: '100%',
+          maxWidth: 380,
+          boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+        }}
+      >
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15, marginBottom: 6 }}>
+          {title}
+        </div>
+
+        {typeof pendingCount === 'number' && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#F59E0B',
+              marginBottom: 6,
+            }}
+          >
+            <Clock size={14} color="#F59E0B" />
+            <span>{pendingCount === 0 ? 'No other pending orders' : `${pendingCount} pending orders`}</span>
+          </div>
+        )}
+
+        {itemNames && itemNames.length > 0 && (
+          <ul
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: '8px 0 12px',
+              maxHeight: 140,
+              overflowY: 'auto',
+              borderTop: '1px solid #2A2F3F',
+              borderBottom: '1px solid #2A2F3F',
+            }}
+          >
+            {itemNames.map((n, i) => (
+              <li
+                key={`${n}-${i}`}
+                style={{
+                  fontSize: 12,
+                  color: '#D1D5DB',
+                  padding: '4px 0',
+                  borderBottom: i === itemNames.length - 1 ? 'none' : '1px solid #232838',
+                }}
+              >
+                {n}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.4, marginBottom: 20 }}>
+          {subtext}
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            style={{
+              flex: 1,
+              backgroundColor: '#252838',
+              border: '1px solid #374151',
+              borderRadius: 8,
+              padding: 13,
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#9CA3AF',
+              cursor: 'pointer',
+            }}
+          >
+            Not now
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onConfirm(); }}
+            style={{
+              flex: 2,
+              backgroundColor: '#DC2626',
+              border: 'none',
+              borderRadius: 8,
+              padding: 13,
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#FFFFFF',
+              cursor: 'pointer',
+            }}
+          >
+            {primaryLabel}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
 
 interface Flag86ButtonProps {
   itemId: string;
@@ -98,120 +249,15 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
         86
       </button>
 
-      {open && createPortal(
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNotNow();
-          }}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 16,
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`86 ${productName}`}
-            style={{
-              backgroundColor: '#1E2130',
-              border: '1px solid #374151',
-              borderRadius: 14,
-              padding: '22px 20px 18px',
-              width: '100%',
-              maxWidth: 380,
-              boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: 22,
-                fontWeight: 800,
-                color: '#FFFFFF',
-                lineHeight: 1.15,
-                marginBottom: 6,
-              }}
-            >
-              {productName}
-            </div>
-
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                fontSize: 13,
-                fontWeight: 600,
-                color: '#F59E0B',
-                marginBottom: 6,
-              }}
-            >
-              <Clock size={14} color="#F59E0B" />
-              <span>
-                {pendingCount === 0
-                  ? 'No other pending orders'
-                  : `${pendingCount} pending orders`}
-              </span>
-            </div>
-
-            <div
-              style={{
-                fontSize: 12,
-                color: '#6B7280',
-                lineHeight: 1.4,
-                marginBottom: 20,
-              }}
-            >
-              FOH notified. Manager will handle pending orders.
-            </div>
-
-            <div style={{ display: 'flex', gap: 10, width: '100%' }}>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); handleNotNow(); }}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#252838',
-                  border: '1px solid #374151',
-                  borderRadius: 8,
-                  padding: 13,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: '#9CA3AF',
-                  cursor: 'pointer',
-                }}
-              >
-                Not now
-              </button>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); handle86(); }}
-                style={{
-                  flex: 2,
-                  backgroundColor: '#DC2626',
-                  border: 'none',
-                  borderRadius: 8,
-                  padding: 13,
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  cursor: 'pointer',
-                }}
-              >
-                86 it
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      <Flag86Modal
+        open={open}
+        onClose={handleNotNow}
+        onConfirm={handle86}
+        title={productName}
+        pendingCount={pendingCount}
+        subtext="FOH notified. Manager will handle pending orders."
+        primaryLabel="86 it"
+      />
     </>
   );
 }
