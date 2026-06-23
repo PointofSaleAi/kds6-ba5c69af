@@ -760,6 +760,26 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     return `${prevName} fired ${prevCourse.firedAgoLabel || 'recently'}, ${stationName.toLowerCase()} prep triggered automatically`;
   })() : null;
 
+
+  // Ticket-level manual 86 (long-press anywhere on the card)
+  const { confirmMany: confirm86Many, isConfirmed: is86ConfirmedFn } = useFlag86();
+  const [ticketManual86Open, setTicketManual86Open] = useState(false);
+  const eligibleTicketItems = useMemo(() => {
+    const list: { id: string; name: string }[] = [];
+    for (const c of order.courses) {
+      for (const i of c.items) {
+        if (i.isCancelled) continue;
+        if (is86ConfirmedFn(i.id)) continue;
+        list.push({ id: i.id, name: i.name });
+      }
+    }
+    return list;
+  }, [order.courses, is86ConfirmedFn]);
+  const ticketLongPress = useLongPress(() => {
+    if (eligibleTicketItems.length === 0) return;
+    setTicketManual86Open(true);
+  });
+
   return (
     <>
       <div
@@ -768,6 +788,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           minWidth: 'min(220px, 100%)',
           borderLeft: order.isRushed ? '4px solid #c0392b' : undefined,
         }}
+        {...ticketLongPress}
       >
         {/* Header area */}
         <div>
