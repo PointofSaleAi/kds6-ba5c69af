@@ -1013,7 +1013,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         }}
         title={`${order.tableName} · Order #${order.orderNumber}`}
         itemNames={eligibleTicketItems.map(i => `${i.name}`)}
-        subtext="Pending manager approval on POS"
+        subtext="Sends an 86 request to the manager on POS. Once approved, this item will be marked unavailable for new orders."
         primaryLabel="Request 86"
       />
     </>
