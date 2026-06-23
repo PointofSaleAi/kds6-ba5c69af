@@ -47,10 +47,10 @@ export function KitchenMessagesProvider({ children }: { children: ReactNode }) {
 
   const simulateNewMessage = useCallback(() => {
     const samples = [
-      { text: 'Table 5 is asking about their entrees', terminal: 'POS-1', employee: 'Sarah' },
-      { text: '86 the salmon, switching to halibut', terminal: 'POS-2', employee: 'Mike' },
-      { text: 'VIP guest arriving in 10 mins, priority prep', terminal: 'POS-1', employee: 'Manager' },
-      { text: 'Customer wants extra sauce on the side', terminal: 'POS-3', employee: 'Alex' },
+      { text: 'Table 5 is asking about their entrees', terminal: 'Point of Sale-1', employee: 'Sarah' },
+      { text: '86 the salmon, switching to halibut', terminal: 'Point of Sale-2', employee: 'Mike' },
+      { text: 'VIP guest arriving in 10 mins, priority prep', terminal: 'Point of Sale-1', employee: 'Manager' },
+      { text: 'Customer wants extra sauce on the side', terminal: 'Point of Sale-3', employee: 'Alex' },
     ];
     const sample = samples[Math.floor(Math.random() * samples.length)];
     const newMsg: KitchenMessage = {

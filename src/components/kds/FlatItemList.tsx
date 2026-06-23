@@ -371,7 +371,7 @@ function ItemTapRow({
           console.log('Manual 86 requested:', 'item', [item.id]);
         }}
         title={item.name}
-        subtext="Asks the manager to confirm this from the POS. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
+        subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
       />
     </div>

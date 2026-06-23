@@ -1013,7 +1013,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         }}
         title={`${order.tableName} · Order #${order.orderNumber}`}
         itemNames={eligibleTicketItems.map(i => `${i.name}`)}
-        subtext="Asks the manager to confirm this from the POS. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
+        subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
       />
     </>

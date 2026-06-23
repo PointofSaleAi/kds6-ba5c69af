@@ -186,7 +186,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                           <div className="flex items-center gap-2 px-4 py-2 bg-[#7C3AED]/10">
                             <Megaphone size={14} className="text-[#7C3AED] shrink-0" />
                             <span className="text-[11px] font-bold text-[#7C3AED] flex-1 truncate">
-                              {tl(msg.terminal_name || 'POS')}
+                              {tl(msg.terminal_name || 'Point of Sale')}
                             </span>
                             <span className="text-[10px] text-text-muted">{timeAgo(msg.timestamp)}</span>
                           </div>
