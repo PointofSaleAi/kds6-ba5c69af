@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
-  Monitor, Type, Rows3, Palette, Globe,
+  Monitor, Type, Rows3, Palette, Languages,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
   StretchVertical, LayoutPanelLeft,
 } from 'lucide-react';
@@ -383,7 +383,7 @@ export default function DisplaySettings() {
       </Dialog>
 
       <SettingsPill
-        icon={Globe}
+        icon={Languages}
         iconColor="#16A085"
         label="Language"
         helper="Display language for menu items, buttons, and notifications."

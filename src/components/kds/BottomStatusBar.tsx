@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Globe, Filter, Building2 } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2 } from 'lucide-react';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -46,7 +46,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label="Change language"
     >
-      <Globe size={15} className="text-primary-foreground/70" />
+      <Languages size={15} className="text-primary-foreground/70" />
     </button>
   );
 }
