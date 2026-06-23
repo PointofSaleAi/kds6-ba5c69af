@@ -667,7 +667,7 @@ export const mockOrders: Order[] = [
         _startedAt: new Date(Date.now() - 60000),
         prepTimerLabel: '0:45',
         items: [
-          { id: 'i-032', name: 'Beef Burger',
+          { id: 'i-032', name: 'Beef Burger', is86Flagged: true,
             category: 'Meat', quantity: 2, modifiers: [{ text: 'Well done', type: 'neutral' }, { text: '+ Bacon', type: 'extra' }, { text: 'No pickles', type: 'remove' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }, { type: 'sesame', label: 'SESAME', icon: '\u{1FAD8}' }], station: 'Grill' },
           { id: 'i-033', name: 'Fries',
             category: 'Sides', quantity: 1, modifiers: [{ text: 'Seasoned', type: 'neutral' }], allergens: [], station: 'Fry' },
