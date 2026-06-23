@@ -167,7 +167,7 @@ function ItemTapRow({
   // Seen rows alternate green/amber tint; Done rows use a light grey tint.
   const is86ConfirmedItem = is86Confirmed(item.id);
   const is86Active = item.is86Flagged && !flag86Cleared.has(item.id) && !is86ConfirmedItem;
-  const show86Pill = !!item.is86Flagged && is86ConfirmedItem;
+  const show86Pill = is86ConfirmedItem;
   const rowBg = is86Active ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
 
   return (
