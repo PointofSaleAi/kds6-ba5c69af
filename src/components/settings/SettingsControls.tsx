@@ -121,12 +121,24 @@ export function ValueText({ children }: { children: ReactNode }) {
  * after a brief highlight window so a row pulses when arrived at via search.
  */
 export function useHashHighlight(): string | null {
-  const [hash, setHash] = useState<string | null>(() =>
-    typeof window === 'undefined' ? null : window.location.hash.slice(1) || null,
-  );
+  const location = useLocation();
+  const routerHash = (location.hash || '').replace(/^#/, '') || null;
+  const [hash, setHash] = useState<string | null>(routerHash);
+  const [tick, setTick] = useState(0);
 
+  // Re-apply hash whenever the router hash changes, even if it's the same value
+  // (clicking the same link again should re-trigger the highlight/open).
   useEffect(() => {
-    const onChange = () => setHash(window.location.hash.slice(1) || null);
+    setHash(routerHash);
+    setTick((t) => t + 1);
+  }, [routerHash]);
+
+  // Also support direct window hashchange (back/forward, manual edits).
+  useEffect(() => {
+    const onChange = () => {
+      setHash(window.location.hash.slice(1) || null);
+      setTick((t) => t + 1);
+    };
     window.addEventListener('hashchange', onChange);
     return () => window.removeEventListener('hashchange', onChange);
   }, []);
@@ -135,7 +147,7 @@ export function useHashHighlight(): string | null {
     if (!hash) return;
     const t = setTimeout(() => setHash(null), 2500);
     return () => clearTimeout(t);
-  }, [hash]);
+  }, [hash, tick]);
 
   return hash;
 }
