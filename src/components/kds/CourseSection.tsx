@@ -745,6 +745,19 @@ function CourseItemTapRow({
           </div>
         </div>
       )}
+      <Flag86Modal
+        open={manual86Open}
+        onClose={() => setManual86Open(false)}
+        onConfirm={() => {
+          setManual86Open(false);
+          confirm86(item.id);
+          // eslint-disable-next-line no-console
+          console.log('Manual 86 requested:', 'item', [item.id]);
+        }}
+        title={item.name}
+        subtext="Pending manager approval on POS"
+        primaryLabel="Request 86"
+      />
     </div>
   );
 }
