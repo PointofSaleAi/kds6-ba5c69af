@@ -5,8 +5,9 @@ import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
-import { Flag86Button } from './Flag86Button';
+import { Flag86Button, Flag86Modal } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
+import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
 
@@ -114,7 +115,8 @@ function ItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
-  const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed } = useFlag86();
+  const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
+  const [manual86Open, setManual86Open] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
