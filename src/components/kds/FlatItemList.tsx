@@ -273,6 +273,7 @@ function ItemTapRow({
             </div>
           )}
         </div>
+        {item.is86Flagged && <Flag86Button productName={item.name} />}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
