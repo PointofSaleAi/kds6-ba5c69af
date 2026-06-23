@@ -60,6 +60,11 @@ export function Flag86Modal({
           boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
         }}
       >
+        {primaryLabel === 'Request 86' && (
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.8px', color: '#F59E0B', textTransform: 'uppercase', marginBottom: 6 }}>
+            Mark as 86 (unavailable)
+          </div>
+        )}
         <div style={{ fontSize: 22, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15, marginBottom: 6 }}>
           {title}
         </div>
