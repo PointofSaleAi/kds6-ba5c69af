@@ -6,6 +6,7 @@ import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
+import { Flag86Button } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 
