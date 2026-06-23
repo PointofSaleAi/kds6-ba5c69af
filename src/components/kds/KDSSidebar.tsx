@@ -6,7 +6,7 @@ import { useNotifications } from '@/hooks/use-notifications';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import {
   Home, Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
-  ArrowLeftRight, Sparkles,
+  ArrowLeftRight,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -136,27 +136,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
           {/* All nav items with equal spacing */}
           {navItems.map(renderButton)}
 
-          {/* AI Lab entry (opens isolated route tree) */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href="/kds/ai/dashboard"
-                className={`flex-1 flex items-center ${expanded ? 'justify-start px-3 gap-3' : 'justify-center'} rounded-xl hover:bg-white/20 transition-all duration-200 min-h-[44px] border-2 border-transparent`}
-              >
-                <Sparkles size={20} className="text-amber-300 shrink-0" />
-                {expanded && (
-                  <span className="text-sidebar-foreground text-xs font-semibold whitespace-nowrap overflow-hidden">
-                    AI Lab
-                  </span>
-                )}
-              </a>
-            </TooltipTrigger>
-            {!expanded && (
-              <TooltipContent side="right" className="text-xs">
-                AI Lab
-              </TooltipContent>
-            )}
-          </Tooltip>
 
           {/* Switch to POS */}
           <Tooltip>
