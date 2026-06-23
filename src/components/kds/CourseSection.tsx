@@ -463,7 +463,7 @@ function CourseItemTapRow({
   const show86Pill = !!item.is86Flagged && is86Confirmed;
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const is86Active = !!item.is86Flagged && !flag86Cleared.has(item.id);
+  
 
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
