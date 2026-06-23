@@ -5,6 +5,7 @@ import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
+import { Flag86Button } from './Flag86Button';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 
