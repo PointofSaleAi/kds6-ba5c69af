@@ -184,6 +184,7 @@ const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
           onClearHistoryCenters={() => setHistoryCenters([])}
           onSetHistoryCategories={setHistoryCategories}
           onSetHistoryCenters={setHistoryCenters}
+          cardVariant={cardVariant}
         />
       )}
 
