@@ -216,6 +216,19 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         >
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
+        <button
+          onClick={onToggleAiAssistant}
+          aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
+          aria-pressed={aiAssistantOpen}
+          className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
+            aiAssistantOpen
+              ? 'text-white'
+              : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
+          }`}
+          style={aiAssistantOpen ? { background: '#E84C3D' } : undefined}
+        >
+          <Sparkles size={15} />
+        </button>
       </div>
       )}
 
