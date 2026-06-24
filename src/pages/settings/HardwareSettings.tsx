@@ -29,7 +29,7 @@ export default function HardwareSettings() {
         iconColor={GROUP_COLOR.hardware}
         title="Hardware"
         shortDescription="Pair printers, configure sound alerts, and manage your network connection."
-        longDescription="Pair printers, configure sound alerts, and manage your network connection. The KDS supports a dedicated KOT printer for kitchen tickets and an optional Label printer for per-item stickers."
+        longDescription="Pair printers, configure sound alerts, and manage your network connection. The KDS supports a dedicated KOT printer for kitchen tickets and an optional Label printer for per-product stickers."
       />
 
       <SettingsPill
