@@ -1,4 +1,4 @@
-import { User, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 
 interface CustomerContactStripProps {
   customerName?: string;
@@ -41,12 +41,6 @@ export function CustomerContactStrip({ customerName, customerPhone }: CustomerCo
         flexWrap: 'wrap',
       }}
     >
-      {customerName && (
-        <span style={pillStyle}>
-          <User size={11} color={iconColor} strokeWidth={2} />
-          {customerName}
-        </span>
-      )}
       <span style={pillStyle}>
         <Phone size={11} color={iconColor} strokeWidth={2} />
         {customerPhone}
