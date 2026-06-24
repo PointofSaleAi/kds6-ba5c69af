@@ -27,7 +27,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
             {product.name}
           </div>
           {product.modifiers.length > 0 && (
-            <div className="pl-2 mt-0.5">
+            <div className="mt-0.5">
               {product.modifiers.map((m, i) => (
                 <div
                   key={i}
@@ -40,7 +40,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
             </div>
           )}
           {product.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1 pl-2">
+            <div className="flex flex-wrap gap-1 mt-1">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
