@@ -27,13 +27,36 @@ function paletteFor(course: CourseType): CoursePalette {
   }
 }
 
+const ORDER_TYPE_META: Record<OrderType, { color: string; Icon: typeof Hash }> = {
+  'dine-in': { color: '#1A1A2E', Icon: Utensils },
+  'take-out': { color: '#2980B9', Icon: ShoppingBag },
+  'delivery': { color: '#16A085', Icon: Bike },
+  'banquet': { color: '#F39C12', Icon: PartyPopper },
+  'drive-thru': { color: '#2980B9', Icon: ShoppingBag },
+  'curb-side': { color: '#2980B9', Icon: ShoppingBag },
+  'scheduled': { color: '#6B7280', Icon: ShoppingBag },
+  'phone-in': { color: '#7C3AED', Icon: Phone },
+  'custom': { color: '#6B7280', Icon: ShoppingBag },
+};
+
 export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
+  const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
+  const TypeIcon = typeMeta.Icon;
 
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
-      {/* ACCENT BAR */}
-      <div style={{ height: 4, background: '#2563EB' }} />
+      {/* ACCENT BAR coloured by order type */}
+      <div style={{ height: 4, background: typeMeta.color }} />
+
+      {/* ORDER TYPE STRIP */}
+      <div
+        className="flex items-center gap-1.5 px-2 py-1 text-white text-[10px] font-bold uppercase tracking-wide"
+        style={{ background: typeMeta.color }}
+      >
+        <TypeIcon size={11} />
+        <span>{orderTypeLabel(order.orderType)}</span>
+      </div>
 
       {/* METADATA GRID 2x2 */}
       {(() => {
