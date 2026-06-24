@@ -70,7 +70,7 @@ function formatStaticTime(date: Date): string {
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
-  const { servableModifiers: servableModifiersEnabled } = useKDSSettings();
+  const { servableModifiers: servableModifiersEnabled, showHeaderAllergens } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
   const orderMessages = getMessagesForOrder(order.id);
   const liveElapsed = useElapsedSeconds(order.timeReceived);
@@ -907,7 +907,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             )}
           </div>
 
-          {showAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
+          {showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
 
         {order.orderNotes && (

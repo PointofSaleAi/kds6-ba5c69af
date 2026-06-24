@@ -8,6 +8,7 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 export default function OrdersSettings() {
   const {
     showAllergens, setShowAllergens,
+    showHeaderAllergens, setShowHeaderAllergens,
     servableModifiers, setServableModifiers,
   } = useKDSSettings();
   const hash = useHashHighlight();
@@ -35,9 +36,18 @@ export default function OrdersSettings() {
         icon={AlertTriangle}
         iconColor="#C0392B"
         label="Allergen badges"
-        helper="Show colored allergen chips on every ticket containing flagged items."
+        helper="Show colored allergen chips next to each item on the ticket."
         right={<SwitchToggle checked={showAllergens} onChange={setShowAllergens} />}
         highlighted={hash === 'allergen-badges'}
+      />
+
+      <SettingsPill
+        icon={AlertTriangle}
+        iconColor="#C0392B"
+        label="Ticket header allergen summary"
+        helper="Show a combined allergen strip at the top of each ticket card."
+        right={<SwitchToggle checked={showHeaderAllergens} onChange={setShowHeaderAllergens} />}
+        highlighted={hash === 'header-allergen-summary'}
       />
     </>
   );

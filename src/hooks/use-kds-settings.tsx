@@ -48,6 +48,7 @@ export interface KDSSettings {
   cardsPerRow: number;
   textSize: TextSize;
   showAllergens: boolean;
+  showHeaderAllergens: boolean;
   sortDefault: SortDefault;
   staggerMode: boolean;
   servableModifiers: boolean;
@@ -67,6 +68,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setCardsPerRow: (v: number) => void;
   setTextSize: (v: TextSize) => void;
   setShowAllergens: (v: boolean) => void;
+  setShowHeaderAllergens: (v: boolean) => void;
   setSortDefault: (v: SortDefault) => void;
   setStaggerMode: (v: boolean) => void;
   setServableModifiers: (v: boolean) => void;
@@ -88,6 +90,7 @@ const defaults: KDSSettings = {
   cardsPerRow: 4,
   textSize: 'Standard',
   showAllergens: true,
+  showHeaderAllergens: true,
   sortDefault: 'By time',
   staggerMode: false,
   servableModifiers: false,
@@ -142,6 +145,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setCardsPerRow: update('cardsPerRow'),
         setTextSize: update('textSize'),
         setShowAllergens: update('showAllergens'),
+        setShowHeaderAllergens: update('showHeaderAllergens'),
         setSortDefault: update('sortDefault'),
         setStaggerMode: update('staggerMode'),
         setServableModifiers: update('servableModifiers'),
