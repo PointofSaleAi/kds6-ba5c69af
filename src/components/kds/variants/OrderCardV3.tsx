@@ -31,7 +31,33 @@ function paletteFor(course: CourseType): CoursePalette {
   }
 }
 
-function ItemRow({ item, accent }: { item: import('@/types/kds').OrderItem; accent: string }) {
+function ItemRow({
+  item,
+  accent,
+  state,
+  onTap,
+}: {
+  item: import('@/types/kds').OrderItem;
+  accent: string;
+  state: ItemState;
+  onTap: () => void;
+}) {
+  const isDone = state === 'done';
+  const isPreparing = state === 'preparing';
+
+  let btnStyle: React.CSSProperties = { borderColor: '#9CA3AF', background: 'transparent' };
+  let btnIcon = <Check size={10} className="text-[#6B7280]" />;
+  let ariaLabel = 'Mark item preparing';
+  if (isPreparing) {
+    btnStyle = { borderColor: '#E67E22', background: '#FDEBD0' };
+    btnIcon = <CookingPot size={10} style={{ color: '#E67E22' }} />;
+    ariaLabel = 'Mark item done';
+  } else if (isDone) {
+    btnStyle = { borderColor: '#16A085', background: '#16A085' };
+    btnIcon = <Check size={10} className="text-white" strokeWidth={3} />;
+    ariaLabel = 'Item done';
+  }
+
   return (
     <div
       className="flex items-start gap-2 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
@@ -44,11 +70,14 @@ function ItemRow({ item, accent }: { item: import('@/types/kds').OrderItem; acce
         {item.quantity}
       </span>
       <div className="flex-1 min-w-0">
-        <div className="text-[#1F2937]" style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}>
+        <div
+          className={`text-[#1F2937] ${isDone ? 'line-through opacity-60' : ''}`}
+          style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}
+        >
           {item.name}
         </div>
         {item.modifiers.length > 0 && (
-          <div className="mt-0.5">
+          <div className={`mt-0.5 ${isDone ? 'opacity-60' : ''}`}>
             {item.modifiers.map((m, i) => (
               <div
                 key={i}
@@ -56,6 +85,7 @@ function ItemRow({ item, accent }: { item: import('@/types/kds').OrderItem; acce
                   fontSize: 10,
                   lineHeight: 1.3,
                   color: m.type === 'extra' ? '#16A34A' : m.type === 'remove' ? '#D85A30' : '#6B7280',
+                  textDecoration: isDone ? 'line-through' : undefined,
                 }}
               >
                 {m.text}
@@ -66,14 +96,18 @@ function ItemRow({ item, accent }: { item: import('@/types/kds').OrderItem; acce
       </div>
       <button
         type="button"
-        aria-label="Bump item"
-        className="shrink-0 mt-0.5 w-4 h-4 rounded-sm border border-[#9CA3AF] flex items-center justify-center hover:bg-[#F3F4F6]"
+        aria-label={ariaLabel}
+        onClick={isDone ? undefined : onTap}
+        disabled={isDone}
+        className={`shrink-0 mt-0.5 w-4 h-4 rounded-sm border flex items-center justify-center ${isDone ? 'cursor-default' : 'hover:brightness-95'}`}
+        style={btnStyle}
       >
-        <Check size={10} className="text-[#6B7280]" />
+        {btnIcon}
       </button>
     </div>
   );
 }
+
 
 const ORDER_TYPE_META: Record<OrderType, { color: string; Icon: typeof Hash }> = {
   'dine-in': { color: '#1A1A2E', Icon: Utensils },
