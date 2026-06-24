@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { X, Send, RefreshCw, Smartphone } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import type { KitchenMessage } from '@/types/kitchen-message';
+import { issueReplyToken, REPLY_TOKEN_TTL_SECONDS } from '@/lib/demo-auth';
 
 const PRESET_REPLIES = [
   'Got it',
@@ -13,7 +14,7 @@ const PRESET_REPLIES = [
 ];
 
 const MAX_CHARS = 100;
-const QR_EXPIRY_SECONDS = 600; // 10 minutes
+const QR_EXPIRY_SECONDS = REPLY_TOKEN_TTL_SECONDS;
 
 interface KitchenReplyDialogProps {
   message: KitchenMessage;
@@ -23,22 +24,28 @@ interface KitchenReplyDialogProps {
 
 export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDialogProps) {
   const [text, setText] = useState('');
-  const [qrToken, setQrToken] = useState(() => Date.now().toString(36));
-  const [secondsLeft, setSecondsLeft] = useState(QR_EXPIRY_SECONDS);
+  const [tokenInfo, setTokenInfo] = useState(() => issueReplyToken(message.message_id));
+  const [secondsLeft, setSecondsLeft] = useState(() =>
+    Math.max(0, Math.floor((tokenInfo.expiresAt - Date.now()) / 1000))
+  );
 
-  const qrUrl = `${window.location.origin}/kds-reply?messageId=${message.message_id}&token=${qrToken}`;
+  const qrUrl = useMemo(
+    () => `${window.location.origin}/kds-reply?messageId=${encodeURIComponent(message.message_id)}&token=${encodeURIComponent(tokenInfo.token)}`,
+    [message.message_id, tokenInfo.token]
+  );
 
   // Expiry countdown
   useEffect(() => {
     if (secondsLeft <= 0) return;
     const t = setInterval(() => setSecondsLeft(s => Math.max(0, s - 1)), 1000);
     return () => clearInterval(t);
-  }, [secondsLeft, qrToken]);
+  }, [secondsLeft, tokenInfo.token]);
 
   const refreshQr = useCallback(() => {
-    setQrToken(Date.now().toString(36));
-    setSecondsLeft(QR_EXPIRY_SECONDS);
-  }, []);
+    const next = issueReplyToken(message.message_id);
+    setTokenInfo(next);
+    setSecondsLeft(Math.max(0, Math.floor((next.expiresAt - Date.now()) / 1000)));
+  }, [message.message_id]);
 
   const handleSend = () => {
     const trimmed = text.trim();

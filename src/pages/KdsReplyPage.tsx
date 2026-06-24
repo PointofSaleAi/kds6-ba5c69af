@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Send, CheckCircle } from 'lucide-react';
+import { validateReplyToken, consumeReplyToken } from '@/lib/demo-auth';
 
 const PRESET_REPLIES = [
   'Got it',
@@ -16,13 +17,20 @@ const MAX_CHARS = 100;
 export default function KdsReplyPage() {
   const [params] = useSearchParams();
   const messageId = params.get('messageId') || '';
+  const token = params.get('token') || '';
   const [text, setText] = useState('');
   const [sent, setSent] = useState(false);
+
+  const tokenValid = useMemo(
+    () => validateReplyToken(messageId, token),
+    [messageId, token]
+  );
 
   const handleSend = () => {
     const trimmed = text.trim();
     if (!trimmed) return;
-    // Store reply in localStorage for demo purposes
+    // Re-validate at submit time so an expired token can't slip through.
+    if (!validateReplyToken(messageId, token)) return;
     const replies = JSON.parse(localStorage.getItem('kds-mobile-replies') || '[]');
     replies.push({
       messageId,
@@ -30,10 +38,11 @@ export default function KdsReplyPage() {
       timestamp: new Date().toISOString(),
     });
     localStorage.setItem('kds-mobile-replies', JSON.stringify(replies));
+    consumeReplyToken(messageId, token);
     setSent(true);
   };
 
-  if (!messageId) {
+  if (!messageId || !token || !tokenValid) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
         <p className="text-gray-500 text-sm">Invalid or expired reply link.</p>

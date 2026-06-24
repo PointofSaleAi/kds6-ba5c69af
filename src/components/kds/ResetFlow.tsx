@@ -1,6 +1,7 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { blockDemoAuthInProd } from '@/lib/demo-auth';
 
 interface ResetFlowProps {
   type: 'pin' | 'password';
@@ -29,6 +30,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
   }, [hasInput]);
 
   const handleVerifyOtp = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     setStep('new-password');
   }, []);
 

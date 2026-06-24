@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import PosaiLogo from '@/components/PosaiLogo';
+import { blockDemoAuthInProd } from '@/lib/demo-auth';
 
 interface PersonalDeviceLoginScreenProps {
   onSuccess: () => void;
@@ -21,7 +22,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
 
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (email && password) onSuccess();
+    if (email && password && blockDemoAuthInProd()) onSuccess();
   }, [email, password, onSuccess]);
 
   const handleSendOtp = useCallback(() => {
@@ -29,6 +30,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
   }, [phone]);
 
   const handleVerifyOtp = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     onSuccess();
   }, [onSuccess]);
 

@@ -5,6 +5,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
+import { blockDemoAuthInProd } from '@/lib/demo-auth';
 
 interface PinPadScreenProps {
   onSuccess: () => void;
@@ -34,7 +35,10 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
       if (prev.length >= 4) return prev;
       const next = prev + digit;
       if (next.length === 4) {
-        setTimeout(() => onSuccess(), 400);
+        setTimeout(() => {
+          if (!blockDemoAuthInProd()) { setPin(''); return; }
+          onSuccess();
+        }, 400);
       }
       return next;
     });
@@ -43,13 +47,14 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
   const handleClear = useCallback(() => setPin(''), []);
 
   const handleSimulateQrApproval = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     setQrApproved(true);
     setTimeout(() => onSuccess(), 1500);
   }, [onSuccess]);
 
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (input && password) onSuccess();
+    if (input && password && blockDemoAuthInProd()) onSuccess();
   }, [input, password, onSuccess]);
 
   const handleSendOtp = useCallback(() => {
@@ -57,6 +62,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
   }, [input]);
 
   const handleVerifyOtp = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     onSuccess();
   }, [onSuccess]);
 
