@@ -27,6 +27,50 @@ function paletteFor(course: CourseType): CoursePalette {
   }
 }
 
+function ItemRow({ item, accent }: { item: import('@/types/kds').OrderItem; accent: string }) {
+  return (
+    <div
+      className="flex items-start gap-2 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
+      style={{ borderLeft: `3px solid ${accent}` }}
+    >
+      <span
+        className="font-bold shrink-0"
+        style={{ color: accent, fontSize: 11, minWidth: 16, lineHeight: 1.3 }}
+      >
+        {item.quantity}
+      </span>
+      <div className="flex-1 min-w-0">
+        <div className="text-[#1F2937]" style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}>
+          {item.name}
+        </div>
+        {item.modifiers.length > 0 && (
+          <div className="mt-0.5">
+            {item.modifiers.map((m, i) => (
+              <div
+                key={i}
+                style={{
+                  fontSize: 10,
+                  lineHeight: 1.3,
+                  color: m.type === 'extra' ? '#16A34A' : m.type === 'remove' ? '#D85A30' : '#6B7280',
+                }}
+              >
+                {m.text}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <button
+        type="button"
+        aria-label="Bump item"
+        className="shrink-0 mt-0.5 w-4 h-4 rounded-sm border border-[#9CA3AF] flex items-center justify-center hover:bg-[#F3F4F6]"
+      >
+        <Check size={10} className="text-[#6B7280]" />
+      </button>
+    </div>
+  );
+}
+
 const ORDER_TYPE_META: Record<OrderType, { color: string; Icon: typeof Hash }> = {
   'dine-in': { color: '#1A1A2E', Icon: Utensils },
   'take-out': { color: '#2980B9', Icon: ShoppingBag },
