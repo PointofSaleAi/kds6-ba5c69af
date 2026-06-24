@@ -313,7 +313,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
         <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-muted/60">
           <div className="flex-1 min-w-0">
             <div className="text-[13px] font-semibold text-text-primary">Apply to course level</div>
-            <div className="text-[11px] text-text-muted">When enabled, timing rules apply per course. Orders without courses use item-level timing.</div>
+            <div className="text-[11px] text-text-muted">When enabled, timing rules apply per course. Orders without courses use product-level timing.</div>
           </div>
           <button
             onClick={() => setCourseLevelAging(!courseLevelAging)}
