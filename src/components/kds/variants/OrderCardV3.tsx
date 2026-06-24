@@ -235,12 +235,14 @@ export function OrderCardV3({ order, onBump }: Props) {
       <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
         <button
           type="button"
-          onClick={() => onBump?.(order.id)}
-          className="rounded px-3 py-1 text-white text-[12px] font-semibold"
-          style={{ background: '#1A1A2E' }}
+          onClick={bulkState === 'done' ? undefined : bumpAll}
+          disabled={bulkState === 'done'}
+          className={`rounded px-3 py-1 text-white text-[12px] font-semibold ${bulkState === 'done' ? 'cursor-default opacity-80' : ''}`}
+          style={{ background: bumpBg }}
         >
-          Bump all
+          {bumpLabel}
         </button>
+
       </div>
     </div>
   );
