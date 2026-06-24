@@ -3,6 +3,7 @@ import type { Order, CourseType, OrderType } from '@/types/kds';
 import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, CookingPot } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 
 type ItemState = 'unseen' | 'preparing' | 'done';
 
