@@ -68,6 +68,8 @@ const Index = () => {
   
   const [websocketOpen, setWebsocketOpen] = useState(false);
   const { orders } = useOrderStore();
+  const { layout: dockLayout } = useDockLayout();
+  const posInsets = getOverlayInsets(dockLayout);
   const availableCategories = getActiveSummaryCategories(orders);
   
 
