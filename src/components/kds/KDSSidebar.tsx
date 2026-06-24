@@ -139,10 +139,8 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
           {/* Switch to POS */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <a
-                href="https://mobileposapp.lovable.app"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => onNavigate('switch-pos')}
                 className={`flex-1 flex items-center ${expanded ? 'justify-start px-3 gap-3' : 'justify-center'} rounded-xl hover:bg-white/20 transition-all duration-200 min-h-[44px] border-2 border-transparent`}
               >
                 <ArrowLeftRight size={20} className="text-sidebar-foreground shrink-0" />
@@ -151,7 +149,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
                     {t.switchToPOS}
                   </span>
                 )}
-              </a>
+              </button>
             </TooltipTrigger>
             {!expanded && (
               <TooltipContent side="right" className="text-xs">
