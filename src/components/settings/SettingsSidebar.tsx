@@ -41,23 +41,23 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="px-4 pt-4 pb-3 shrink-0">
-        <h2 className="text-xl font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
+      <div className="px-3.5 pt-3.5 pb-3 shrink-0">
+        <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-2 pb-2">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-3.5 pb-2">
         {showResults ? (
-          <div className="px-2">
+          <div>
             <div
-              className="text-xs font-medium uppercase tracking-wider px-2 py-2"
+              className="text-[0.7rem] font-medium uppercase tracking-wider px-3 py-2"
               style={{ color: 'hsl(var(--text-muted))' }}
             >
               {results.length} result{results.length === 1 ? '' : 's'}
             </div>
             {results.length === 0 && (
-              <p className="text-sm px-2 py-3" style={{ color: 'hsl(var(--text-muted))' }}>
+              <p className="text-[0.9rem] px-3 py-3" style={{ color: 'hsl(var(--text-muted))' }}>
                 No matches. Try a different word.
               </p>
             )}
@@ -68,18 +68,28 @@ export function SettingsSidebar() {
                   key={r.id}
                   type="button"
                   onClick={() => handleResultClick(r.path)}
-                  className="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl active:opacity-70 transition-opacity"
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl active:opacity-70 transition-all text-left"
                 >
-                  <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[r.group]} />
-                  <div className="flex-1 min-w-0 text-left">
+                  <div
+                    className="flex items-center justify-center shrink-0"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 8,
+                      backgroundColor: GROUP_COLOR[r.group],
+                    }}
+                  >
+                    <Icon size={18} color="#FFFFFF" strokeWidth={2.2} />
+                  </div>
+                  <div className="flex-1 min-w-0">
                     <div
-                      className="text-sm font-medium truncate"
+                      className="text-[0.9rem] font-medium leading-tight truncate"
                       style={{ color: 'hsl(var(--text-primary))' }}
                     >
                       {r.label}
                     </div>
                     <div
-                      className="text-xs truncate"
+                      className="text-[0.7rem] leading-tight truncate"
                       style={{ color: 'hsl(var(--text-muted))' }}
                     >
                       {r.groupLabel} · {r.description}
@@ -90,7 +100,7 @@ export function SettingsSidebar() {
             })}
           </div>
         ) : (
-          <nav className="flex flex-col px-2 pt-1" style={{ gap: 4 }}>
+          <nav className="flex flex-col" style={{ gap: 2 }}>
             {groupIds.map((id) => {
               const group = SETTINGS_GROUPS[id];
               const Icon = GROUP_ICON[id];
@@ -100,21 +110,18 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center px-2 rounded-full active:opacity-70 transition-all"
+                  className="flex items-center gap-3.5 w-full py-[0.55rem] px-3 rounded-full active:opacity-70 transition-all"
                   style={{
-                    height: 44,
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
-                  <div className="flex items-center min-w-0" style={{ gap: 12 }}>
-                    <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" />
-                    <span
-                      className="text-[15px] font-medium"
-                      style={{ color: 'hsl(var(--text-primary))' }}
-                    >
-                      {group.label}
-                    </span>
-                  </div>
+                  <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" />
+                  <span
+                    className="text-[0.95rem] font-medium leading-tight"
+                    style={{ color: 'hsl(var(--text-primary))' }}
+                  >
+                    {group.label}
+                  </span>
                 </button>
               );
             })}
@@ -122,18 +129,18 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="px-4 pt-3 pb-3 shrink-0">
+      <div className="px-3.5 pt-3 pb-3 shrink-0">
         <div
-          className="flex items-center gap-2 rounded-full px-3.5 py-2.5"
+          className="flex items-center gap-2.5 rounded-full px-3.5 py-[0.45rem]"
           style={{ background: 'hsl(var(--surface-bg))' }}
         >
-          <Search size={16} style={{ color: 'hsl(var(--text-muted))' }} />
+          <Search className="w-[1.1rem] h-[1.1rem] shrink-0" style={{ color: 'hsl(var(--text-muted))' }} />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-sm min-w-0"
+            className="bg-transparent flex-1 outline-none text-[0.9rem] min-w-0"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
           <button
@@ -141,9 +148,8 @@ export function SettingsSidebar() {
             aria-label="Voice search"
             className="shrink-0 active:opacity-70 transition-opacity"
           >
-            <Mic size={16} style={{ color: 'hsl(var(--text-muted))' }} />
+            <Mic className="w-[1.1rem] h-[1.1rem]" style={{ color: 'hsl(var(--text-muted))' }} />
           </button>
-
         </div>
       </div>
     </aside>
