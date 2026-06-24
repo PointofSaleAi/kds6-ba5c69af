@@ -49,6 +49,7 @@ const Index = () => {
     inSettings ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
   );
   const [alertsOpen, setAlertsOpen] = useState(false);
+  const [posOpen, setPosOpen] = useState(false);
 
   // Sub-screen states
   const [languageOpen, setLanguageOpen] = useState(false);
