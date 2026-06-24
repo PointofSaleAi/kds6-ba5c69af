@@ -134,7 +134,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         <div className="flex items-center gap-2 min-w-0">
           <AnimatedAIIcon size={18} />
           <div className="flex flex-col leading-tight min-w-0">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-white/60">AI</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-white/60">Point of Sale Ai</span>
             <span className="text-[12px] font-semibold text-white truncate">Kitchen assistant</span>
           </div>
         </div>
