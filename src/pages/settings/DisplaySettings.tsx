@@ -338,7 +338,7 @@ export default function DisplaySettings() {
               Choose station
             </DialogTitle>
             <DialogDescription style={{ color: 'hsl(var(--text-secondary))' }}>
-              Filter the KDS to show only items for one station. Tap a category to apply.
+              Filter the KDS to show only products for one station. Tap a category to apply.
             </DialogDescription>
           </DialogHeader>
 
