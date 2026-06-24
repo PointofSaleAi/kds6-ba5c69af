@@ -869,6 +869,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
                     {tperson(order.serverName)}
                   </span>
+                  {showCustomerContact && order.customerName && (
+                    <span className="text-[11px] leading-none font-medium text-white/85 max-w-full text-right break-words">
+                      {order.customerName}
+                    </span>
+                  )}
                 </div>
               </>
             ) : ticketHeaderLayout === 'kitchen' ? (
@@ -881,6 +886,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
                     <span className="text-right break-words min-w-0">{tperson(order.serverName)}</span>
                   </span>
+                  {showCustomerContact && order.customerName && (
+                    <span className="text-[12px] leading-none font-medium text-white/85 text-right break-words max-w-full">
+                      {order.customerName}
+                    </span>
+                  )}
                   {order.guestName ? (
                     <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
                       <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
@@ -907,6 +917,11 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
                     {tperson(order.serverName)}
                   </span>
+                  {showCustomerContact && order.customerName && (
+                    <span className="text-[12px] font-medium text-white/85 text-right whitespace-nowrap">
+                      {order.customerName}
+                    </span>
+                  )}
                   <span className="text-[16px] font-semibold text-white">
                     {order.orderNumber}
                   </span>
