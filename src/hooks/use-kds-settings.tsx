@@ -68,6 +68,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setCardsPerRow: (v: number) => void;
   setTextSize: (v: TextSize) => void;
   setShowAllergens: (v: boolean) => void;
+  setShowHeaderAllergens: (v: boolean) => void;
   setSortDefault: (v: SortDefault) => void;
   setStaggerMode: (v: boolean) => void;
   setServableModifiers: (v: boolean) => void;
