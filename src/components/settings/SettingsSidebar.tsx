@@ -132,7 +132,7 @@ export function SettingsSidebar() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search settings"
+            placeholder="Search"
             className="bg-transparent flex-1 outline-none text-sm"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
