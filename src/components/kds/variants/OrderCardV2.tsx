@@ -9,29 +9,29 @@ interface Props {
   onBump?: (orderId: string) => void;
 }
 
-function V2ItemRow({ item }: { item: OrderItem }) {
+function V2ProductRow({ product }: { product: OrderItem }) {
   return (
     <div className="px-2.5 py-1.5 border-b border-border/40 last:border-b-0">
       <div className="flex items-start gap-2">
         <span className="font-bold text-[#1F2937] shrink-0" style={{ fontSize: 15, minWidth: 20, lineHeight: 1.2 }}>
-          {item.quantity}
+          {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
           <div className="text-[#1F2937]" style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.3 }}>
-            {item.name}
+            {product.name}
           </div>
-          {item.modifiers.length > 0 && (
+          {product.modifiers.length > 0 && (
             <div className="mt-0.5">
-              {item.modifiers.map((m, i) => (
+              {product.modifiers.map((m, i) => (
                 <div key={i} style={{ fontSize: 11, lineHeight: 1.3, color: '#E84C3D' }}>
                   {m.text}
                 </div>
               ))}
             </div>
           )}
-          {item.notes && (
+          {product.notes && (
             <div className="italic text-[#6B7280] mt-0.5" style={{ fontSize: 11, lineHeight: 1.3 }}>
-              {item.notes}
+              {product.notes}
             </div>
           )}
         </div>
@@ -65,7 +65,7 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
-      {/* ITEMS  course bands for dine-in, flat list for everything else */}
+      {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
       <div className="flex-1 bg-white">
         {isDineIn ? (
           order.courses.map((course, idx) => (
@@ -76,14 +76,14 @@ export function OrderCardV2({ order, onBump }: Props) {
               >
                 {courseLabel(course.course)}
               </div>
-              {course.items.map((item) => (
-                <V2ItemRow key={item.id} item={item} />
+              {course.items.map((product) => (
+                <V2ProductRow key={product.id} product={product} />
               ))}
             </div>
           ))
         ) : (
-          order.courses.flatMap((c) => c.items).map((item) => (
-            <V2ItemRow key={item.id} item={item} />
+          order.courses.flatMap((c) => c.items).map((product) => (
+            <V2ProductRow key={product.id} product={product} />
           ))
         )}
       </div>

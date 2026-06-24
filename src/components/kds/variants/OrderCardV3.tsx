@@ -5,7 +5,7 @@ import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 
-type ItemState = 'unseen' | 'preparing' | 'done';
+type ProductState = 'unseen' | 'preparing' | 'done';
 
 
 interface Props {
@@ -32,15 +32,15 @@ function paletteFor(course: CourseType): CoursePalette {
   }
 }
 
-function ItemRow({
-  item,
+function ProductRow({
+  product,
   accent,
   state,
   onTap,
 }: {
-  item: import('@/types/kds').OrderItem;
+  product: import('@/types/kds').OrderItem;
   accent: string;
-  state: ItemState;
+  state: ProductState;
   onTap: () => void;
 }) {
   const isDone = state === 'done';
@@ -48,15 +48,15 @@ function ItemRow({
 
   let btnStyle: React.CSSProperties = { borderColor: '#9CA3AF', background: 'transparent' };
   let btnIcon = <Check size={10} className="text-[#6B7280]" />;
-  let ariaLabel = 'Mark item preparing';
+  let ariaLabel = 'Mark product preparing';
   if (isPreparing) {
     btnStyle = { borderColor: '#E67E22', background: '#FDEBD0' };
     btnIcon = <CookingPot size={10} style={{ color: '#E67E22' }} />;
-    ariaLabel = 'Mark item done';
+    ariaLabel = 'Mark product done';
   } else if (isDone) {
     btnStyle = { borderColor: '#16A085', background: '#16A085' };
     btnIcon = <Check size={10} className="text-white" strokeWidth={3} />;
-    ariaLabel = 'Item done';
+    ariaLabel = 'Product done';
   }
 
   return (
@@ -68,18 +68,18 @@ function ItemRow({
         className="font-bold shrink-0"
         style={{ color: accent, fontSize: 11, minWidth: 16, lineHeight: 1.3 }}
       >
-        {item.quantity}
+        {product.quantity}
       </span>
       <div className="flex-1 min-w-0">
         <div
           className={`text-[#1F2937] ${isDone ? 'line-through opacity-60' : ''}`}
           style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}
         >
-          {item.name}
+          {product.name}
         </div>
-        {item.modifiers.length > 0 && (
+        {product.modifiers.length > 0 && (
           <div className={`mt-0.5 ${isDone ? 'opacity-60' : ''}`}>
-            {item.modifiers.map((m, i) => (
+            {product.modifiers.map((m, i) => (
               <div
                 key={i}
                 style={{
@@ -130,11 +130,11 @@ export function OrderCardV3({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
-  const [itemStates, setItemStates] = useState<Record<string, ItemState>>({});
+  const [productStates, setProductStates] = useState<Record<string, ProductState>>({});
   const cycle = (id: string) =>
-    setItemStates((prev) => {
+    setProductStates((prev) => {
       const cur = prev[id] ?? 'unseen';
-      const next: ItemState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
+      const next: ProductState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
       return { ...prev, [id]: next };
     });
 
@@ -187,7 +187,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-      {/* ITEMS  course bands for dine-in, flat list for everything else */}
+      {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
       <div className="flex-1 bg-white">
         {order.orderType === 'dine-in' ? (
           order.courses.map((course, idx) => {
@@ -199,11 +199,11 @@ export function OrderCardV3({ order, onBump }: Props) {
                   style={{ background: p.bg, color: p.text }}
                 >
                   <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
-                  <span className="text-[10px] font-semibold">Items: {course.items.length}</span>
+                  <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
                 </div>
                 <div>
-                  {course.items.map((item) => (
-                    <ItemRow key={item.id} item={item} accent={p.accent} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
+                  {course.items.map((product) => (
+                    <ProductRow key={product.id} product={product} accent={p.accent} state={productStates[product.id] ?? 'unseen'} onTap={() => cycle(product.id)} />
                   ))}
                 </div>
               </div>
@@ -211,8 +211,8 @@ export function OrderCardV3({ order, onBump }: Props) {
           })
         ) : (
           <div>
-            {order.courses.flatMap((c) => c.items).map((item) => (
-              <ItemRow key={item.id} item={item} accent={accentColor} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
+            {order.courses.flatMap((c) => c.items).map((product) => (
+              <ProductRow key={product.id} product={product} accent={accentColor} state={productStates[product.id] ?? 'unseen'} onTap={() => cycle(product.id)} />
             ))}
           </div>
         )}

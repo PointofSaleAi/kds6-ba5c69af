@@ -8,20 +8,20 @@ interface Props {
   onBump?: (orderId: string) => void;
 }
 
-function V1ItemRow({ item }: { item: OrderItem }) {
+function V1ProductRow({ product }: { product: OrderItem }) {
   return (
     <div className="px-2 py-1 border-b border-border/40 last:border-b-0">
       <div className="flex items-start gap-2">
         <span className="font-bold shrink-0" style={{ color: '#E84C3D', fontSize: 13, minWidth: 18 }}>
-          {item.quantity}
+          {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
           <div className="text-[#2C3E50]" style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.25 }}>
-            {item.name}
+            {product.name}
           </div>
-          {item.modifiers.length > 0 && (
+          {product.modifiers.length > 0 && (
             <div className="pl-2 mt-0.5">
-              {item.modifiers.map((m, i) => (
+              {product.modifiers.map((m, i) => (
                 <div
                   key={i}
                   style={{
@@ -35,9 +35,9 @@ function V1ItemRow({ item }: { item: OrderItem }) {
               ))}
             </div>
           )}
-          {item.allergens.length > 0 && (
+          {product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1 pl-2">
-              {item.allergens.map((a) => (
+              {product.allergens.map((a) => (
                 <span
                   key={a.type}
                   className="px-1.5 py-px rounded-full text-[10px] font-semibold"
@@ -94,8 +94,8 @@ export function OrderCardV1({ order, onBump }: Props) {
                   {courseLabel(course.course)}{fire ? ` · Fire ${fire}` : ''}
                 </div>
                 <div className="bg-white">
-                  {course.items.map((item) => (
-                    <V1ItemRow key={item.id} item={item} />
+                  {course.items.map((product) => (
+                    <V1ProductRow key={product.id} product={product} />
                   ))}
                 </div>
               </div>
@@ -103,8 +103,8 @@ export function OrderCardV1({ order, onBump }: Props) {
           })
         ) : (
           <div className="bg-white">
-            {order.courses.flatMap((c) => c.items).map((item) => (
-              <V1ItemRow key={item.id} item={item} />
+            {order.courses.flatMap((c) => c.items).map((product) => (
+              <V1ProductRow key={product.id} product={product} />
             ))}
           </div>
         )}
