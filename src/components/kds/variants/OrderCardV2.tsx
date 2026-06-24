@@ -2,6 +2,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { ArrowUp } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 
 interface Props {
   order: Order;
@@ -43,6 +44,8 @@ export function OrderCardV2({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
+  const { orderTypeDetailedColors } = useKDSSettings();
+  const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
 
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
@@ -51,8 +54,8 @@ export function OrderCardV2({ order, onBump }: Props) {
         <div className="flex items-center justify-between gap-2">
           <span className="font-bold text-[#1F2937] text-[14px] truncate">{headerName}</span>
           <span
-            className="rounded-full px-2 py-0.5 text-white text-[10px] font-semibold uppercase shrink-0"
-            style={{ background: '#E84C3D' }}
+            className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
+            style={{ background: colorSet.headerBg, color: colorSet.headerText }}
           >
             {orderTypeLabel(order.orderType)}
           </span>

@@ -3,6 +3,7 @@ import type { Order, CourseType, OrderType } from '@/types/kds';
 import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, CookingPot } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 
 type ItemState = 'unseen' | 'preparing' | 'done';
 
@@ -125,6 +126,10 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const TypeIcon = typeMeta.Icon;
+  const { orderTypeDetailedColors } = useKDSSettings();
+  const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
+  const accentColor = colorSet.headerBg;
+  const accentText = colorSet.headerText;
   const [itemStates, setItemStates] = useState<Record<string, ItemState>>({});
   const cycle = (id: string) =>
     setItemStates((prev) => {
@@ -137,12 +142,12 @@ export function OrderCardV3({ order, onBump }: Props) {
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* ACCENT BAR coloured by order type */}
-      <div style={{ height: 4, background: typeMeta.color }} />
+      <div style={{ height: 4, background: accentColor }} />
 
       {/* ORDER TYPE STRIP */}
       <div
-        className="flex items-center gap-1.5 px-2 py-1 text-white text-[10px] font-bold uppercase tracking-wide"
-        style={{ background: typeMeta.color }}
+        className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide"
+        style={{ background: accentColor, color: accentText }}
       >
         <TypeIcon size={11} />
         <span>{orderTypeLabel(order.orderType)}</span>
@@ -207,7 +212,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         ) : (
           <div>
             {order.courses.flatMap((c) => c.items).map((item) => (
-              <ItemRow key={item.id} item={item} accent={typeMeta.color} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
+              <ItemRow key={item.id} item={item} accent={accentColor} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
             ))}
           </div>
         )}
@@ -218,8 +223,8 @@ export function OrderCardV3({ order, onBump }: Props) {
         <button
           type="button"
           onClick={() => onBump?.(order.id)}
-          className="rounded px-3 py-1 text-white text-[12px] font-semibold"
-          style={{ background: '#1A1A2E' }}
+          className="rounded px-3 py-1 text-[12px] font-semibold"
+          style={{ background: accentColor, color: accentText }}
         >
           Bump all
         </button>

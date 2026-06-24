@@ -1,6 +1,7 @@
 import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel, courseFireTime } from './variant-utils';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 
 interface Props {
   order: Order;
@@ -55,13 +56,17 @@ function V1ItemRow({ item }: { item: OrderItem }) {
 
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
+  const { orderTypeDetailedColors } = useKDSSettings();
+  const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
+  const headerBg = colorSet.headerBg;
+  const headerText = colorSet.headerText;
 
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER */}
       <div
-        className="flex items-center justify-between px-2 py-1 text-white text-[12px] font-semibold"
-        style={{ background: '#E84C3D' }}
+        className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold"
+        style={{ background: headerBg, color: headerText }}
       >
         <span>#{order.orderNumber} · {fmtElapsed(elapsed)}</span>
         <span className="truncate ml-2">{order.tableName}</span>
@@ -110,8 +115,8 @@ export function OrderCardV1({ order, onBump }: Props) {
         <button
           type="button"
           onClick={() => onBump?.(order.id)}
-          className="rounded-full px-3 py-1 text-white text-[12px] font-semibold"
-          style={{ background: '#E84C3D' }}
+          className="rounded-full px-3 py-1 text-[12px] font-semibold"
+          style={{ background: headerBg, color: headerText }}
         >
           Bump
         </button>
