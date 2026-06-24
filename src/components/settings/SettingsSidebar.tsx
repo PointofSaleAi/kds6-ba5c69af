@@ -129,18 +129,18 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="px-3.5 pt-3 pb-3 shrink-0">
+      <div className="px-5 pt-3 pb-4 shrink-0">
         <div
-          className="flex items-center gap-2.5 rounded-full px-3.5 py-[0.45rem]"
+          className="flex items-center gap-3 rounded-full px-4 py-3"
           style={{ background: 'hsl(var(--surface-bg))' }}
         >
-          <Search className="w-[1.1rem] h-[1.1rem] shrink-0" style={{ color: 'hsl(var(--text-muted))' }} />
+          <Search className="w-5 h-5 shrink-0" style={{ color: 'hsl(var(--text-muted))' }} />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-[0.9rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))]"
+            className="bg-transparent flex-1 outline-none text-[1.05rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))]"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
           <button
@@ -148,7 +148,7 @@ export function SettingsSidebar() {
             aria-label="Voice search"
             className="shrink-0 active:opacity-70 transition-opacity"
           >
-            <Mic className="w-[1.1rem] h-[1.1rem]" style={{ color: 'hsl(var(--text-muted))' }} />
+            <Mic className="w-5 h-5" style={{ color: 'hsl(var(--text-muted))' }} />
           </button>
         </div>
       </div>
