@@ -154,7 +154,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow
               icon={Monitor}
               label="Ticket layout"
-              description={ticketLayout === 'compact' ? 'Compact, item names only, tap to expand' : 'Standard, full details visible'}
+              description={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand' : 'Standard, full details visible'}
               right={
                 <SegmentedToggle
                   options={['Standard', 'Compact']}
