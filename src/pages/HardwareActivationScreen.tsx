@@ -37,6 +37,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
   const detectedMode: 'none' | 'email' | 'phone' = isEmail ? 'email' : (input.length > 0 && isPhone) ? 'phone' : 'none';
 
   const handleActivationSuccess = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     setPhase('set-pin');
   }, []);
 
@@ -64,6 +65,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
   };
 
   const handleSimulateQrApproval = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     setQrApproved(true);
     setTimeout(() => handleActivationSuccess(), 1500);
   }, [handleActivationSuccess]);
@@ -79,6 +81,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
         } else {
           setTimeout(() => {
             if (next === pin) {
+              if (!blockDemoAuthInProd()) { setConfirmPin(''); return; }
               onSuccess();
             } else {
               setPinError(true);
