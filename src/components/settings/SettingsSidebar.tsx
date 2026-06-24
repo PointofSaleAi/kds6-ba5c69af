@@ -41,8 +41,8 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="px-3.5 pt-3.5 pb-3 shrink-0">
-        <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
+      <div className="px-5 pt-5 pb-4 shrink-0">
+        <h2 className="text-[2.25rem] font-bold leading-tight" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
       </div>
@@ -100,7 +100,7 @@ export function SettingsSidebar() {
             })}
           </div>
         ) : (
-          <nav className="flex flex-col" style={{ gap: 2 }}>
+          <nav className="flex flex-col" style={{ gap: 4 }}>
             {groupIds.map((id) => {
               const group = SETTINGS_GROUPS[id];
               const Icon = GROUP_ICON[id];
@@ -110,14 +110,14 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center gap-3.5 w-full py-[0.55rem] px-3 rounded-full active:opacity-70 transition-all"
+                  className="flex items-center gap-4 w-full py-2.5 px-3 rounded-full active:opacity-70 transition-all"
                   style={{
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
                   <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" />
                   <span
-                    className="text-[0.95rem] font-medium leading-tight"
+                    className="text-[1.5rem] font-semibold leading-tight"
                     style={{ color: 'hsl(var(--text-primary))' }}
                   >
                     {group.label}
@@ -129,18 +129,18 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="px-3.5 pt-3 pb-3 shrink-0">
+      <div className="px-5 pt-3 pb-4 shrink-0">
         <div
-          className="flex items-center gap-2.5 rounded-full px-3.5 py-[0.45rem]"
+          className="flex items-center gap-3 rounded-full px-4 py-3"
           style={{ background: 'hsl(var(--surface-bg))' }}
         >
-          <Search className="w-[1.1rem] h-[1.1rem] shrink-0" style={{ color: 'hsl(var(--text-muted))' }} />
+          <Search className="w-5 h-5 shrink-0" style={{ color: 'hsl(var(--text-muted))' }} />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-[0.9rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))]"
+            className="bg-transparent flex-1 outline-none text-[1.05rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))]"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
           <button
@@ -148,7 +148,7 @@ export function SettingsSidebar() {
             aria-label="Voice search"
             className="shrink-0 active:opacity-70 transition-opacity"
           >
-            <Mic className="w-[1.1rem] h-[1.1rem]" style={{ color: 'hsl(var(--text-muted))' }} />
+            <Mic className="w-5 h-5" style={{ color: 'hsl(var(--text-muted))' }} />
           </button>
         </div>
       </div>
