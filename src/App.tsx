@@ -21,6 +21,7 @@ import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import Index from "./pages/Index.tsx";
+import IndexOnlineOrdering from "./pages/IndexOnlineOrdering.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SettingsLayout from "./pages/SettingsLayout.tsx";
 import DisplaySettings from "./pages/settings/DisplaySettings.tsx";
