@@ -120,6 +120,7 @@ function loadSettings(): KDSSettings {
     if (parsed.sortDefault && sortMigration[parsed.sortDefault as string]) {
       parsed.sortDefault = sortMigration[parsed.sortDefault as string];
     }
+    parsed.servableModifiers = false;
     return parsed;
   } catch {
     return defaults;
