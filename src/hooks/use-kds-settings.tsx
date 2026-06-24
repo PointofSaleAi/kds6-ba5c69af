@@ -144,6 +144,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setCardsPerRow: update('cardsPerRow'),
         setTextSize: update('textSize'),
         setShowAllergens: update('showAllergens'),
+        setShowHeaderAllergens: update('showHeaderAllergens'),
         setSortDefault: update('sortDefault'),
         setStaggerMode: update('staggerMode'),
         setServableModifiers: update('servableModifiers'),
