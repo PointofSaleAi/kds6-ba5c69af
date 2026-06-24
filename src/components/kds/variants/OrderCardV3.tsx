@@ -36,24 +36,38 @@ export function OrderCardV3({ order, onBump }: Props) {
       <div style={{ height: 4, background: '#2563EB' }} />
 
       {/* METADATA GRID 2x2 */}
-      <div className="grid grid-cols-2 bg-white border-b border-border">
-        <div className="flex items-start gap-1.5 px-2 py-1.5">
-          <Hash size={12} className="mt-0.5 text-[#6B7280]" />
-          <div className="min-w-0">
-            <div className="font-bold text-[#1F2937] text-[13px] leading-tight truncate">#{order.orderNumber}</div>
-            <div className="text-[10px] text-[#6B7280] truncate">{order.tableName}</div>
-          </div>
-        </div>
-        <div className="flex items-start gap-1.5 px-2 py-1.5 border-l border-border">
-          <User size={12} className="mt-0.5 text-[#6B7280]" />
-          <div className="min-w-0">
-            <div className="font-bold text-[#1F2937] text-[13px] leading-tight truncate">{order.serverName}</div>
-            <div className="text-[10px] text-[#6B7280] truncate">
-              {orderTypeLabel(order.orderType)} · {fmtElapsed(elapsed)}
+      {(() => {
+        const isDineIn = order.orderType === 'dine-in';
+        const cell1Title = isDineIn
+          ? order.tableName
+          : (order.guestName || order.customerName || orderTypeLabel(order.orderType));
+        const cell1Sub = isDineIn
+          ? (order.guestName || order.customerName || 'Dine in')
+          : (order.customerPhone || order.tableName);
+        return (
+          <div className="grid grid-cols-2 bg-white border-b border-border">
+            <div className="flex items-start gap-1.5 px-2 py-1.5">
+              <Hash size={12} className="mt-0.5 text-[#6B7280]" />
+              <div className="min-w-0">
+                <div className="font-bold text-[#1F2937] text-[13px] leading-tight truncate">#{order.orderNumber}</div>
+                <div className="text-[10px] text-[#6B7280] truncate">{cell1Title}</div>
+                {cell1Sub && cell1Sub !== cell1Title && (
+                  <div className="text-[10px] text-[#9CA3AF] truncate">{cell1Sub}</div>
+                )}
+              </div>
+            </div>
+            <div className="flex items-start gap-1.5 px-2 py-1.5 border-l border-border">
+              <User size={12} className="mt-0.5 text-[#6B7280]" />
+              <div className="min-w-0">
+                <div className="font-bold text-[#1F2937] text-[13px] leading-tight truncate">{order.serverName}</div>
+                <div className="text-[10px] text-[#6B7280] truncate">
+                  {orderTypeLabel(order.orderType)} · {fmtElapsed(elapsed)}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        );
+      })()}
 
       {/* COURSES */}
       <div className="flex-1 bg-white">
