@@ -249,7 +249,7 @@ export default function DisplaySettings() {
         icon={Rows3}
         iconColor="#7C3AED"
         label="Ticket layout"
-        helper={ticketLayout === 'compact' ? 'Compact, item names only, tap to expand details.' : 'Standard, full details and modifiers always visible.'}
+        helper={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand details.' : 'Standard, full details and modifiers always visible.'}
         right={
           <SegmentedToggle
             options={['Standard', 'Compact']}
