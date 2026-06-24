@@ -168,7 +168,7 @@ function ItemTapRow({
   const is86ConfirmedItem = is86Confirmed(item.id);
   const is86Active = item.is86Flagged && !flag86Cleared.has(item.id) && !is86ConfirmedItem;
   const show86Pill = is86ConfirmedItem;
-  const rowBg = is86Active ? '#FEF2F2' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
+  const rowBg = is86Active ? 'rgba(26, 26, 46, 0.08)' : (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
 
   const longPress = useLongPress(() => {
     if (item.isCancelled || is86Active || is86ConfirmedItem) return;

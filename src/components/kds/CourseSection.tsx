@@ -554,7 +554,7 @@ function CourseItemTapRow({
   const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const isHighlightActive = isHighlighted && !item.isCancelled;
   const productRowBg = is86Active
-    ? '#FEF2F2'
+    ? 'rgba(26, 26, 46, 0.08)'
     : isHighlightActive
       ? 'hsl(var(--destructive) / 0.12)'
       : stateBg || undefined;
