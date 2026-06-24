@@ -36,7 +36,7 @@ export default function OrdersSettings() {
         icon={AlertTriangle}
         iconColor="#C0392B"
         label="Allergen badges"
-        helper="Show colored allergen chips next to each item on the ticket."
+        helper="Show colored allergen chips next to each product on the ticket."
         right={<SwitchToggle checked={showAllergens} onChange={setShowAllergens} />}
         highlighted={hash === 'allergen-badges'}
       />
