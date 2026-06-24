@@ -98,6 +98,7 @@ const Index = () => {
       case 'alerts': setAlertsOpen(true); break;
       case 'settings': navigate('/kds/full/settings'); break;
       case 'performance': setScreen('performance'); break;
+      case 'switch-pos': setPosOpen(true); break;
     }
   }, [navigate]);
 
