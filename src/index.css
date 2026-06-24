@@ -407,9 +407,10 @@
 }
 
 @keyframes flag86-pulse {
-  0%, 100% { border-color: #EF4444; }
-  50% { border-color: #FCA5A5; }
+  0%, 100% { border-color: #1A1A2E; }
+  50% { border-color: #4B4B6E; }
 }
+
 .animate-flag86-pulse {
   animation: flag86-pulse 2s ease-in-out infinite;
 }

@@ -141,7 +141,7 @@ export function Flag86Modal({
             onClick={(e) => { e.stopPropagation(); onConfirm(); }}
             style={{
               flex: 2,
-              backgroundColor: '#DC2626',
+              backgroundColor: '#1A1A2E',
               border: 'none',
               borderRadius: 8,
               padding: 13,
@@ -239,8 +239,8 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
           width: 32,
           height: 32,
           borderRadius: '50%',
-          backgroundColor: '#DC2626',
-          border: '2px solid #EF4444',
+          backgroundColor: '#1A1A2E',
+          border: '2px solid #1A1A2E',
           marginLeft: 8,
           marginRight: 4,
           color: '#FFFFFF',
@@ -252,6 +252,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
         }}
       >
         86
+
       </button>
 
       <Flag86Modal
