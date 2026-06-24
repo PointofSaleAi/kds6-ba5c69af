@@ -117,7 +117,7 @@ export function SettingsSidebar() {
                 >
                   <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" />
                   <span
-                    className="text-[0.95rem] font-medium leading-tight"
+                    className="text-[0.95rem] font-semibold leading-tight"
                     style={{ color: 'hsl(var(--text-primary))' }}
                   >
                     {group.label}
