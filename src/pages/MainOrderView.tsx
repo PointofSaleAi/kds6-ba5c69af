@@ -15,6 +15,7 @@ import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
+import { AIAssistantPanel } from '@/components/kds/AIAssistantPanel';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { SettingsPanel } from '@/components/kds/SettingsPanel';
