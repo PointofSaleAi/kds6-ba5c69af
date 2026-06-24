@@ -30,6 +30,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
   }, [hasInput]);
 
   const handleVerifyOtp = useCallback(() => {
+    if (!blockDemoAuthInProd()) return;
     setStep('new-password');
   }, []);
 
