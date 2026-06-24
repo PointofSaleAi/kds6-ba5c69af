@@ -1,5 +1,5 @@
-import type { Order, CourseType } from '@/types/kds';
-import { Hash, User, Check } from 'lucide-react';
+import type { Order, CourseType, OrderType } from '@/types/kds';
+import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 
