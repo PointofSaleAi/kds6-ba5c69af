@@ -207,7 +207,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         ) : (
           <div>
             {order.courses.flatMap((c) => c.items).map((item) => (
-              <ItemRow key={item.id} item={item} accent={typeMeta.color} />
+              <ItemRow key={item.id} item={item} accent={typeMeta.color} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
             ))}
           </div>
         )}
