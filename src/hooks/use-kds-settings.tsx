@@ -89,6 +89,7 @@ const defaults: KDSSettings = {
   cardsPerRow: 4,
   textSize: 'Standard',
   showAllergens: true,
+  showHeaderAllergens: true,
   sortDefault: 'By time',
   staggerMode: false,
   servableModifiers: false,
