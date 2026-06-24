@@ -1304,7 +1304,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {!settingsOpen && (
+        {(!settingsOpen || aiAssistantOpen) && (
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
             {aiAssistantOpen ? (
               <AIAssistantPanel onClose={() => setAiAssistantOpen(false)} />
