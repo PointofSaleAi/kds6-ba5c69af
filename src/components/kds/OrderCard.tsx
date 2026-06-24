@@ -809,12 +809,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             stationBadge={undefined}
             
           />
-          {showCustomerContact && (
-            <CustomerContactStrip
-              customerName={order.customerName}
-              customerPhone={order.customerPhone}
-            />
-          )}
 
 
           <div
@@ -918,8 +912,16 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                       <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
                     )}
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
-                  </div>
-                </div>
+          </div>
+
+          {showCustomerContact && (
+            <CustomerContactStrip
+              customerName={order.customerName}
+              customerPhone={order.customerPhone}
+            />
+          )}
+
+
               </>
             )}
           </div>
