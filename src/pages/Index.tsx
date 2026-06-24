@@ -24,9 +24,6 @@ import { useOrderStore } from '@/hooks/use-order-store';
 import { getActiveSummaryCategories } from '@/lib/summary-categories';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
-import { X } from 'lucide-react';
-import { useDockLayout } from '@/hooks/use-dock-layout';
-import { getOverlayInsets } from '@/lib/dock-insets';
 
 const isDevMode = () => true;
 
@@ -52,7 +49,6 @@ const Index = () => {
     inSettings ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
   );
   const [alertsOpen, setAlertsOpen] = useState(false);
-  const [posOpen, setPosOpen] = useState(false);
 
   // Sub-screen states
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -68,8 +64,6 @@ const Index = () => {
   
   const [websocketOpen, setWebsocketOpen] = useState(false);
   const { orders } = useOrderStore();
-  const { layout: dockLayout } = useDockLayout();
-  const posInsets = getOverlayInsets(dockLayout);
   const availableCategories = getActiveSummaryCategories(orders);
   
 
@@ -103,7 +97,6 @@ const Index = () => {
       case 'alerts': setAlertsOpen(true); break;
       case 'settings': navigate('/kds/full/settings'); break;
       case 'performance': setScreen('performance'); break;
-      case 'switch-pos': setPosOpen(true); break;
     }
   }, [navigate]);
 
@@ -212,25 +205,7 @@ const Index = () => {
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
-
-      {posOpen && (
-        <div
-          className="fixed z-40 bg-background flex flex-col"
-          style={{
-            top: posInsets.top,
-            bottom: posInsets.bottom,
-            left: posInsets.left,
-            right: posInsets.right,
-          }}
-        >
-          <iframe
-            src="https://mobileposapp.lovable.app"
-            title="Point of Sale"
-            className="flex-1 w-full border-0"
-          />
-        </div>
-      )}
-
+      
     </>
   );
 };
