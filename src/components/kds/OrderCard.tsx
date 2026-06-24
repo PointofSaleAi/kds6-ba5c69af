@@ -809,12 +809,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             stationBadge={undefined}
             
           />
-          {showCustomerContact && (
-            <CustomerContactStrip
-              customerName={order.customerName}
-              customerPhone={order.customerPhone}
-            />
-          )}
 
 
           <div
@@ -923,6 +917,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               </>
             )}
           </div>
+
+          {showCustomerContact && (
+            <CustomerContactStrip
+              customerName={order.customerName}
+              customerPhone={order.customerPhone}
+            />
+          )}
 
           {showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
