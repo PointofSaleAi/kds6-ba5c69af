@@ -198,7 +198,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                 </div>
                 <div>
                   {course.items.map((item) => (
-                    <ItemRow key={item.id} item={item} accent={p.accent} />
+                    <ItemRow key={item.id} item={item} accent={p.accent} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
                   ))}
                 </div>
               </div>
