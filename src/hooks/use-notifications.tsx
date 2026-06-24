@@ -9,7 +9,7 @@ const mockNotifications: KDSNotification[] = [
   { id: 'n2', type: 'new-order', message: 'New order #27 received (DINE IN, Table 9)', station: 'All', timestamp: new Date(Date.now() - 180000), acknowledged: false },
   { id: 'n3', type: 'item-moved', message: 'Grilled Salmon from Table 6 moved to Table 7', station: 'Grill', timestamp: new Date(Date.now() - 300000), acknowledged: false },
   { id: 'n4', type: 'course-fired', message: 'Course 2 fired for Table 12', station: 'All', timestamp: new Date(Date.now() - 600000), acknowledged: true, acknowledged_at: new Date(Date.now() - 540000), acknowledged_by: 'cook-1' },
-  { id: 'n5', type: 'new-item-added', message: 'New item added to Table 4: 1x Caesar Salad', station: 'Salad', timestamp: new Date(Date.now() - 900000), acknowledged: true, acknowledged_at: new Date(Date.now() - 800000), acknowledged_by: 'cook-2' },
+  { id: 'n5', type: 'new-item-added', message: 'New product added to Table 4: 1x Caesar Salad', station: 'Salad', timestamp: new Date(Date.now() - 900000), acknowledged: true, acknowledged_at: new Date(Date.now() - 800000), acknowledged_by: 'cook-2' },
   { id: 'n6', type: 'general-alert', message: 'VIP guest arriving in 15 minutes', station: 'All', timestamp: new Date(Date.now() - 1500000), acknowledged: true, acknowledged_at: new Date(Date.now() - 1400000), acknowledged_by: 'cook-1' },
   { id: 'n7', type: 'overtime', message: 'Order #22 is 10+ minutes overtime', station: 'Grill', timestamp: new Date(Date.now() - 1800000), acknowledged: false },
   { id: 'n8', type: 'system', message: 'Printer "Kitchen HP" is offline', station: 'All', timestamp: new Date(Date.now() - 2100000), acknowledged: true, acknowledged_at: new Date(Date.now() - 2000000), acknowledged_by: 'cook-1' },

@@ -716,7 +716,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       return { ...o, courses: updatedCourses, itemCount: updatedCourses.reduce((sum, c) => sum + c.items.reduce((itemSum, currentItem) => itemSum + currentItem.quantity, 0), 0) };
     }).filter(o => o.courses.length > 0));
 
-    toast.success('Item recalled to kitchen', { duration: 2000 });
+    toast.success('Product recalled to kitchen', { duration: 2000 });
     setActiveNav('home');
   }, [historyOrders]);
 

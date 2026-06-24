@@ -12,7 +12,7 @@ export interface SettingsSearchEntry {
 
 export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: string }> = {
   display: { label: 'Display', path: '/kds/full/settings/display' },
-  orders: { label: 'Orders', path: '/kds/full/settings/orders' },
+  orders: { label: 'Tickets', path: '/kds/full/settings/orders' },
   expo: { label: 'Expo view', path: '/kds/full/settings/expo' },
   hardware: { label: 'Hardware', path: '/kds/full/settings/hardware' },
   account: { label: 'Account', path: '/kds/full/settings/account' },
@@ -37,19 +37,19 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'language', label: 'Language', description: 'Display language selection', group: 'display', groupLabel: 'Display', path: '/kds/full/settings/display#language', keywords: 'region locale i18n language translation' },
 
   // Orders
-  { id: 'category-filter', label: 'Category filter', description: 'Show only selected categories', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#category-filter', keywords: 'category filter products items' },
-  { id: 'revenue-center', label: 'Revenue center filter', description: 'Filter by station or revenue center', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#revenue-center', keywords: 'station revenue center filter' },
-  { id: 'stagger-mode', label: 'Stagger mode', description: 'Release orders in batches', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#stagger-mode', keywords: 'stagger pacing batch release queue' },
-  { id: 'servable-modifiers', label: 'Servable modifiers', description: 'Track modifier preparation status', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#servable-modifiers', keywords: 'modifiers servable status tracking' },
-  { id: 'allergen-badges', label: 'Allergen badges', description: 'Show allergen chips on tickets', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#allergen-badges', keywords: 'allergen badges chips warnings' },
-  { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Orders', path: '/kds/full/settings/orders#sort-default', keywords: 'sort order time table type default' },
+  { id: 'category-filter', label: 'Category filter', description: 'Show only selected categories', group: 'orders', groupLabel: 'Tickets', path: '/kds/full/settings/orders#category-filter', keywords: 'category filter products' },
+  { id: 'revenue-center', label: 'Revenue center filter', description: 'Filter by station or revenue center', group: 'orders', groupLabel: 'Tickets', path: '/kds/full/settings/orders#revenue-center', keywords: 'station revenue center filter' },
+  { id: 'stagger-mode', label: 'Stagger mode', description: 'Release orders in batches', group: 'orders', groupLabel: 'Tickets', path: '/kds/full/settings/orders#stagger-mode', keywords: 'stagger pacing batch release queue' },
+  { id: 'servable-modifiers', label: 'Servable modifiers', description: 'Track modifier preparation status', group: 'orders', groupLabel: 'Tickets', path: '/kds/full/settings/orders#servable-modifiers', keywords: 'modifiers servable status tracking' },
+  { id: 'allergen-badges', label: 'Allergen badges', description: 'Show allergen chips on tickets', group: 'orders', groupLabel: 'Tickets', path: '/kds/full/settings/orders#allergen-badges', keywords: 'allergen badges chips warnings' },
+  { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Tickets', path: '/kds/full/settings/orders#sort-default', keywords: 'sort order time table type default' },
 
   // Expo
   { id: 'expo-send-button', label: 'Show send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo view', path: '/kds/full/settings/expo#expo-send-button', keywords: 'expo send button ready always' },
 
   // Hardware
   { id: 'kot-printer', label: 'KOT printer', description: 'Kitchen ticket printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#kot-printer', keywords: 'printer kot kitchen ticket' },
-  { id: 'label-printer', label: 'Label printer', description: 'Per-item label printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#label-printer', keywords: 'printer label sticker' },
+  { id: 'label-printer', label: 'Label printer', description: 'Per-product label printer assignment', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#label-printer', keywords: 'printer label sticker' },
   { id: 'sound-settings', label: 'Sound settings', description: 'Volume and notification alerts', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sound-settings', keywords: 'sound volume audio alert beep' },
   { id: 'sync', label: 'Sync', description: 'Force sync of orders and settings', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sync', keywords: 'sync refresh orders settings cloud' },
   { id: 'connection', label: 'Connection', description: 'Network and EdgeOS sync', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#connection', keywords: 'connection network websocket sync edgeos' },

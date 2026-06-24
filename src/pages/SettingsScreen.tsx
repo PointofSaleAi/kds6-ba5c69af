@@ -154,7 +154,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow
               icon={Monitor}
               label="Ticket layout"
-              description={ticketLayout === 'compact' ? 'Compact, item names only, tap to expand' : 'Standard, full details visible'}
+              description={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand' : 'Standard, full details visible'}
               right={
                 <SegmentedToggle
                   options={['Standard', 'Compact']}
@@ -181,7 +181,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <ShoppingBag size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">{t.orders}</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">Tickets</span>
               </div>
             </div>
             <SettingsRow icon={ShoppingBag} label={t.categoryFilter} description={t.manageCategories} onClick={() => onOpenSub('category-filter')} />
@@ -201,7 +201,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow
               icon={Send}
               label="Show send button"
-              description={expoSendButtonMode === 'always' ? 'Always — show on all items' : 'When ready — only when item is marked done on KDS'}
+              description={expoSendButtonMode === 'always' ? 'Always — show on all products' : 'When ready — only when product is marked done on KDS'}
               right={
                 <SegmentedToggle
                   options={['Always', 'When ready']}

@@ -154,7 +154,7 @@ export function ExpoSummaryPanel({
             {!readySectionCollapsed && (
               <>
                 {readyProducts.length === 0 ? (
-                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No items ready yet</div>
+                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No products ready yet</div>
                 ) : (
                   readyProducts.map(p => {
                     const isSelected = selectedSet.has(p.name);
@@ -212,7 +212,7 @@ export function ExpoSummaryPanel({
             {!pendingSectionCollapsed && (
               <>
                 {productList.length === 0 ? (
-                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All items prepared</div>
+                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All products prepared</div>
                 ) : (
                   productList.map(p => {
                     const isSelected = selectedSet.has(p.name);

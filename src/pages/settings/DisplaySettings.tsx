@@ -249,7 +249,7 @@ export default function DisplaySettings() {
         icon={Rows3}
         iconColor="#7C3AED"
         label="Ticket layout"
-        helper={ticketLayout === 'compact' ? 'Compact, item names only, tap to expand details.' : 'Standard, full details and modifiers always visible.'}
+        helper={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand details.' : 'Standard, full details and modifiers always visible.'}
         right={
           <SegmentedToggle
             options={['Standard', 'Compact']}
@@ -338,7 +338,7 @@ export default function DisplaySettings() {
               Choose station
             </DialogTitle>
             <DialogDescription style={{ color: 'hsl(var(--text-secondary))' }}>
-              Filter the KDS to show only items for one station. Tap a category to apply.
+              Filter the KDS to show only products for one station. Tap a category to apply.
             </DialogDescription>
           </DialogHeader>
 
@@ -386,7 +386,7 @@ export default function DisplaySettings() {
         icon={Languages}
         iconColor="#16A085"
         label="Language"
-        helper="Display language for menu items, buttons, and notifications."
+        helper="Display language for menu products, buttons, and notifications."
         right={<ValueText>{languageDisplay}</ValueText>}
         onClick={() => setLanguageOpen(true)}
         highlighted={hash === 'language'}

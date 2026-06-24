@@ -16,7 +16,7 @@ export default function ExpoSettings() {
         iconColor={GROUP_COLOR.expo}
         title="Expo view"
         shortDescription="Control how the Expediter view presents Send actions and ticket readiness."
-        longDescription="Control how the Expediter view presents Send actions and ticket readiness. Choose whether the Send button is always available, or only after stations have marked their items done on the KDS."
+        longDescription="Control how the Expediter view presents Send actions and ticket readiness. Choose whether the Send button is always available, or only after stations have marked their products done on the KDS."
       />
 
       <SettingsPill
@@ -24,8 +24,8 @@ export default function ExpoSettings() {
         iconColor="#7C3AED"
         label="Show send button"
         helper={expoSendButtonMode === 'always'
-          ? 'Always visible on every item.'
-          : 'Only when the item is marked done on the KDS.'}
+          ? 'Always visible on every product.'
+          : 'Only when the product is marked done on the KDS.'}
         right={
           <SegmentedToggle
             options={['Always', 'When ready']}
