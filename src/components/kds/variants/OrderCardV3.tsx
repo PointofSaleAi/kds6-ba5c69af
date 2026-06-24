@@ -4,6 +4,13 @@ import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Coo
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { AllergenBadge } from '@/components/kds/AllergenBadge';
+
+const MODIFIER_CLASS = {
+  extra: 'text-modifier-extra',
+  remove: 'text-modifier-remove',
+  neutral: 'text-modifier-neutral',
+} as const;
 
 type ProductState = 'unseen' | 'preparing' | 'done';
 
@@ -82,15 +89,22 @@ function ProductRow({
             {product.modifiers.map((m, i) => (
               <div
                 key={i}
+                className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
                 style={{
                   fontSize: 10,
                   lineHeight: 1.3,
-                  color: m.type === 'extra' ? '#16A34A' : m.type === 'remove' ? '#D85A30' : '#6B7280',
                   textDecoration: isDone ? 'line-through' : undefined,
                 }}
               >
                 {m.text}
               </div>
+            ))}
+          </div>
+        )}
+        {product.allergens.length > 0 && (
+          <div className={`flex flex-wrap gap-1 mt-1 ${isDone ? 'opacity-60' : ''}`}>
+            {product.allergens.map((a) => (
+              <AllergenBadge key={a.type} allergen={a} variant="item" />
             ))}
           </div>
         )}

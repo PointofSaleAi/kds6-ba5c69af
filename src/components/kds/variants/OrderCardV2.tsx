@@ -3,6 +3,13 @@ import { ArrowUp } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { AllergenBadge } from '@/components/kds/AllergenBadge';
+
+const MODIFIER_CLASS = {
+  extra: 'text-modifier-extra',
+  remove: 'text-modifier-remove',
+  neutral: 'text-modifier-neutral',
+} as const;
 
 interface Props {
   order: Order;
@@ -23,9 +30,16 @@ function V2ProductRow({ product }: { product: OrderItem }) {
           {product.modifiers.length > 0 && (
             <div className="mt-0.5">
               {product.modifiers.map((m, i) => (
-                <div key={i} style={{ fontSize: 11, lineHeight: 1.3, color: '#E84C3D' }}>
+                <div key={i} className={`font-semibold ${MODIFIER_CLASS[m.type]}`} style={{ fontSize: 11, lineHeight: 1.3 }}>
                   {m.text}
                 </div>
+              ))}
+            </div>
+          )}
+          {product.allergens.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {product.allergens.map((a) => (
+                <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
             </div>
           )}
