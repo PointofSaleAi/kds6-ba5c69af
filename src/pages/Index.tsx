@@ -24,6 +24,9 @@ import { useOrderStore } from '@/hooks/use-order-store';
 import { getActiveSummaryCategories } from '@/lib/summary-categories';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
+import { X } from 'lucide-react';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
 
 const isDevMode = () => true;
 
