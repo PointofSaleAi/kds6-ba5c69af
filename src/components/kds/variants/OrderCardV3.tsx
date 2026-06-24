@@ -125,13 +125,31 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const TypeIcon = typeMeta.Icon;
+  const allItems = order.courses.flatMap((c) => c.items);
   const [itemStates, setItemStates] = useState<Record<string, ItemState>>({});
   const cycle = (id: string) =>
     setItemStates((prev) => {
       const cur = prev[id] ?? 'unseen';
-      const next: ItemState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
+      const next: ItemState = cur === 'unseen' ? 'preparing' : 'done';
       return { ...prev, [id]: next };
     });
+  const bulkState: ItemState = allItems.every((i) => (itemStates[i.id] ?? 'unseen') === 'done')
+    ? 'done'
+    : allItems.every((i) => (itemStates[i.id] ?? 'unseen') !== 'unseen')
+      ? 'preparing'
+      : 'unseen';
+  const bumpAll = () => {
+    const target: ItemState = bulkState === 'unseen' ? 'preparing' : 'done';
+    setItemStates(() => {
+      const next: Record<string, ItemState> = {};
+      for (const it of allItems) next[it.id] = target;
+      return next;
+    });
+    onBump?.(order.id);
+  };
+  const bumpLabel = bulkState === 'unseen' ? 'Start preparing' : bulkState === 'preparing' ? 'Mark all done' : 'All done';
+  const bumpBg = bulkState === 'unseen' ? '#1A1A2E' : bulkState === 'preparing' ? '#E67E22' : '#16A085';
+
 
 
   return (
