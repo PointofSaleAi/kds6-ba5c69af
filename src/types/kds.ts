@@ -92,6 +92,9 @@ export interface Order {
   sourceHistoryOrderId?: string;
   /** Set by Expo Rush - triggers visual + audio alert on KDS */
   isRushed?: boolean;
+  /** Optional customer contact info (used for Online Order / Delivery scenarios) */
+  customerName?: string;
+  customerPhone?: string;
 }
 
 export type ViewMode = 'grid' | 'horizontal' | 'stagger';
