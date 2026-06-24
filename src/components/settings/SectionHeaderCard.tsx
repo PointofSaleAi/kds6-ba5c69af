@@ -52,15 +52,15 @@ export function SectionHeaderCard({
       </h1>
       <p
         className="w-full leading-relaxed"
-        style={{ color: 'hsl(var(--text-secondary))', fontSize: 13 }}
+        style={{ color: 'hsl(var(--text-secondary))', fontSize: 14, fontWeight: 500 }}
       >
         {showMore && hasMore ? longDescription : shortDescription}
         {hasMore && (
           <button
             type="button"
             onClick={() => setShowMore(!showMore)}
-            className="ml-1 font-medium"
-            style={{ color: 'hsl(var(--btn-seen))', fontSize: 13 }}
+            className="ml-1"
+            style={{ color: 'hsl(var(--btn-seen))', fontSize: 14, fontWeight: 600 }}
           >
             {showMore ? 'Learn less' : 'Learn more...'}
           </button>
