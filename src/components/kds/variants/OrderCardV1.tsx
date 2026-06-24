@@ -31,11 +31,8 @@ function V1ProductRow({ product }: { product: OrderItem }) {
               {product.modifiers.map((m, i) => (
                 <div
                   key={i}
-                  style={{
-                    fontSize: 11,
-                    lineHeight: 1.3,
-                    color: m.type === 'extra' ? '#16A34A' : m.type === 'remove' ? '#D85A30' : '#6C7A89',
-                  }}
+                  className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
+                  style={{ fontSize: 11, lineHeight: 1.3 }}
                 >
                   {m.text}
                 </div>
@@ -45,13 +42,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
           {product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1 pl-2">
               {product.allergens.map((a) => (
-                <span
-                  key={a.type}
-                  className="px-1.5 py-px rounded-full text-[10px] font-semibold"
-                  style={{ background: '#FEE2E2', color: '#B91C1C' }}
-                >
-                  {a.label}
-                </span>
+                <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
             </div>
           )}
