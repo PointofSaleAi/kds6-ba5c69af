@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Sparkles, X, Send, Monitor, Receipt, Printer, User } from 'lucide-react';
+import { X, Send, Monitor, Receipt, Printer, User } from 'lucide-react';
+import AnimatedAIIcon from './AnimatedAIIcon';
 
 interface AIAssistantPanelProps {
   onClose: () => void;
