@@ -1304,15 +1304,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         </div>
         )}
 
-        {(!settingsOpen || aiAssistantOpen) && (
+        {!settingsOpen && (
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
-            {aiAssistantOpen ? (
-              <AIAssistantPanel onClose={() => setAiAssistantOpen(false)} />
-            ) : kdsMode === 'Expo' && !isSubScreen
+            {kdsMode === 'Expo' && !isSubScreen
               ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
               : <ItemSummaryPanel orders={isHistory ? filteredHistory : isSeenScreen ? seenScreenOrders : isUnseenScreen ? unseenScreenOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={isSubScreen ? undefined : matchingTicketCount} mode={isHistory ? 'completed' : 'active'} />}
           </div>
         )}
+        <AIAssistantPanel open={aiAssistantOpen} onClose={() => setAiAssistantOpen(false)} />
       </div>
 
       <AnimatePresence>
