@@ -838,9 +838,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             {isCompactLayout ? (
               <>
                 {(() => {
-                  const useGuest = ticketHeaderLayout === 'guest' && !!order.guestName;
+                  const useGuest = (ticketHeaderLayout === 'guest' || showCustomerContact) && !!displayGuestName;
                   if (useGuest) {
-                    const translatedGuest = tperson(order.guestName!);
+                    const translatedGuest = tperson(displayGuestName!);
                     const parts = translatedGuest.trim().split(/\s+/);
                     const firstName = parts[0];
                     const restName = parts.slice(1).join(' ');
