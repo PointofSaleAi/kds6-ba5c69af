@@ -1,33 +1,35 @@
-## Goal
-Add an Orders setting that controls whether the aggregated allergen strip is shown in the ticket card header, independently of the existing per-item allergen badges.
+Copy the font sizes, weights, and spacing from `SettingsNavigation.tsx` (project: 6.0 - Mobile APP / Point of Sale) into the KDS `src/components/settings/SettingsSidebar.tsx`. No new icons, no logic changes — visual tokens only.
 
-## Behavior
-- New toggle: "Show allergen summary on ticket header"
-  - ON (default): `OrderAllergenStrip` renders at the top of each ticket card (current behavior).
-  - OFF: header strip is hidden; allergens still appear next to each product (controlled by the existing "Allergen badges" toggle).
-- The existing "Allergen badges" toggle continues to control per-item allergen chips shown near each product.
-- The two toggles are independent so the user can choose: header only, items only, both, or neither.
+## Changes in `src/components/settings/SettingsSidebar.tsx`
 
-## Changes
+**Container padding (was `px-4 pt-4 pb-3` / `px-2`)**
+- Outer scroll area uses `px-3.5 pt-3.5 pb-24` (matches POS tablet layout).
+- Search bar moves into the same padded column at the bottom.
 
-1. `src/hooks/use-kds-settings.tsx`
-   - Add `showHeaderAllergens: boolean` (default `true`) to `KDSSettings`, defaults, and context with `setShowHeaderAllergens`.
-   - Persisted via existing `posai-kds-settings-v2` localStorage.
+**Header "Settings" (was `text-xl font-bold`)**
+- Change to `text-[1.65rem] font-bold mb-3` to match POS.
 
-2. `src/pages/settings/OrdersSettings.tsx`
-   - Add a new `SettingsPill` above "Allergen badges":
-     - Label: "Ticket header allergen summary"
-     - Helper: "Show a combined allergen strip at the top of each ticket card."
-     - Right: `SwitchToggle` bound to `showHeaderAllergens`.
-   - Update the existing "Allergen badges" helper to clarify it controls per-item display: "Show colored allergen chips next to each item on the ticket."
+**Nav row button (was `h-44px px-2 rounded-full gap-12`, label `text-[15px]`)**
+- Row: `flex items-center gap-3.5 w-full py-[0.55rem] px-3 rounded-full active:opacity-70 transition-all`.
+- Active state keeps current `hsl(var(--surface-bg))` background.
+- Remove the fixed `height: 44` inline style — vertical rhythm comes from `py-[0.55rem]`.
+- Icon tile: `w-[2.15rem] h-[2.15rem] rounded-[0.55rem]` (update `SettingsIconTile` call to a custom-sized wrapper, or wrap inline with these classes; size prop stays `xs` only if it already maps to ~2.15rem, otherwise switch to inline sizing).
+- Label: `text-[0.95rem] font-medium leading-tight`.
 
-3. `src/components/kds/OrderCard.tsx`
-   - Read `showHeaderAllergens` from `useKDSSettings`.
-   - Gate the `<OrderAllergenStrip ... />` render on `showHeaderAllergens` in addition to the existing `showAllergens` prop (line ~910). The per-item display path (passing `showAllergens` down to `CourseSection` / `FlatItemList`) is untouched.
+**Search-result row (was `gap-3 px-2 py-2.5 rounded-xl`, label `text-sm`, sub `text-xs`)**
+- Row: `flex items-center gap-3 w-full py-2 px-3 rounded-xl active:opacity-70 transition-all text-left`.
+- Icon tile: `w-[1.9rem] h-[1.9rem] rounded-[0.5rem]` (compact size, matches POS compact variant).
+- Primary label: `text-[0.9rem] font-medium leading-tight truncate`.
+- Secondary: `text-[0.7rem] leading-tight truncate`.
+- Results header count line: keep but tighten to `text-[0.7rem] font-medium uppercase tracking-wider px-3 py-2`.
 
-4. `src/lib/settings-search-index.ts` (if it indexes Orders settings)
-   - Add an entry for the new toggle so it is searchable. Skip if file does not index Orders entries.
+**Search bar (was `px-3.5 py-2.5 gap-2 rounded-full`, input `text-sm`, icons size=16)**
+- Container: `rounded-full px-3.5 py-[0.45rem] flex items-center gap-2.5` (keep `hsl(var(--surface-bg))` background).
+- Search + Mic icons: `size={18}` → use inline `w-[1.1rem] h-[1.1rem]` via className on the lucide icons.
+- Input: `text-[0.9rem] flex-1 min-w-0 bg-transparent outline-none`.
+- Outer wrapper around the search bar uses `px-3.5 pt-3 pb-3` (matches the column padding).
 
-## Out of scope
-- No changes to `AllergenBadge`, `OrderAllergenStrip`, `CourseSection`, `FlatItemList` rendering logic.
-- No changes to compact card / expo / history surfaces unless they also render `OrderAllergenStrip`; if so, same gating applied for consistency.
+## Notes
+- All color tokens stay as-is (`hsl(var(--text-primary))`, `--text-muted`, `--surface-bg`) — only sizing/spacing/weights change.
+- `SettingsIconTile` may need a quick check to confirm `size="xs"` matches ~2.15rem; if not, pass explicit width/height props or override via `className`. (Will verify the component during build.)
+- No changes to routing, search index, or `GROUP_COLOR` mapping.
