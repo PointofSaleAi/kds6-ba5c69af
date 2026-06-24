@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, StationName, OrderItem } from '@/types/kds';
@@ -22,6 +23,7 @@ import { normalizeStationCourses, getLocationLabel } from './station-utils';
 import { ItemRoutingModal } from './ItemRoutingModal';
 import { TicketRoutingModal } from './TicketRoutingModal';
 import { KitchenMessageSection } from './KitchenMessageSection';
+import { CustomerContactStrip } from './CustomerContactStrip';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
@@ -70,6 +72,11 @@ function formatStaticTime(date: Date): string {
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
+  const { pathname } = useLocation();
+  const showCustomerContact =
+    pathname === '/kds/home-onlineordering' &&
+    (order.orderType === 'delivery' || order.orderType === 'phone-in') &&
+    !!order.customerPhone;
   const { servableModifiers: servableModifiersEnabled, showHeaderAllergens } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
   const orderMessages = getMessagesForOrder(order.id);
@@ -799,6 +806,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             stationBadge={undefined}
             
           />
+          {showCustomerContact && (
+            <CustomerContactStrip
+              customerName={order.customerName}
+              customerPhone={order.customerPhone}
+            />
+          )}
+
 
           <div
             role="button"
