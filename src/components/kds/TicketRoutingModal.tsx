@@ -85,7 +85,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
 
             {/* Items list */}
             <div>
-              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Items in this ticket</div>
+              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Products in this ticket</div>
               <div className="bg-muted/60 rounded-xl border border-border overflow-hidden">
                 {allItems.map((item, idx) => (
                   <div
@@ -102,7 +102,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
 
             {/* Station selector */}
             <div>
-              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2.5">Move all items to:</div>
+              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2.5">Move all products to:</div>
               <div className="grid grid-cols-2 gap-2.5">
                 {allStations.map((s) => {
                   const isSelected = s.name === selected;
