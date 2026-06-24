@@ -132,7 +132,7 @@ export default function PerformanceDashboard({ onBack }: PerformanceDashboardPro
 
           {/* Slowest items */}
           <div className="bg-surface-card rounded-lg border border-border p-4">
-            <h3 className="text-sm font-semibold text-text-primary mb-3">Top 3 Slowest Items</h3>
+            <h3 className="text-sm font-semibold text-text-primary mb-3">Top 3 Slowest Products</h3>
             <div className="space-y-3">
               {slowItems.map((item, i) => (
                 <div key={item.name} className="flex items-center gap-3">
