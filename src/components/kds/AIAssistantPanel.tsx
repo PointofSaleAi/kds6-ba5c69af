@@ -128,7 +128,6 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
           <Send size={14} />
         </button>
       </div>
-      </div>
           </motion.div>
         </>
       )}
