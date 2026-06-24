@@ -31,12 +31,7 @@ export function AIAssistantPanel({ onClose }: AIAssistantPanelProps) {
         style={{ background: '#1A1A2E' }}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <div
-            className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: '#E84C3D' }}
-          >
-            <Sparkles size={15} className="text-white" />
-          </div>
+          <AnimatedAIIcon size={18} />
           <div className="flex flex-col leading-tight min-w-0">
             <span className="text-[11px] font-bold uppercase tracking-wider text-white/60">AI</span>
             <span className="text-[12px] font-semibold text-white truncate">Kitchen assistant</span>
@@ -53,11 +48,8 @@ export function AIAssistantPanel({ onClose }: AIAssistantPanelProps) {
 
       {/* Body */}
       <div className="flex-1 overflow-y-auto bg-white px-4 py-5 flex flex-col items-center text-center">
-        <div
-          className="w-14 h-14 rounded-full flex items-center justify-center mb-3"
-          style={{ background: 'rgba(232,76,61,0.1)' }}
-        >
-          <Sparkles size={26} style={{ color: '#E84C3D' }} />
+        <div className="mb-3">
+          <AnimatedAIIcon size={44} />
         </div>
         <h2 className="text-[16px] font-bold text-foreground mb-1">How can I help you?</h2>
         <p className="text-[12px] text-muted-foreground leading-snug mb-5 px-1">
