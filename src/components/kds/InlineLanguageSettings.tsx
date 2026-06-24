@@ -263,7 +263,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   >
                     <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-text-primary">{t.dualLanguage}</div>
-                        <div className="text-[10px] text-text-muted mt-0.5">Two languages per item</div>
+                        <div className="text-[10px] text-text-muted mt-0.5">Two languages per product</div>
                         <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                           <div className="text-[11px] font-bold text-text-primary">2x French Fries</div>
                           <div className="text-[9px] text-text-muted">{getTranslation('fries', selectedLangInList)}</div>
