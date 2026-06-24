@@ -151,7 +151,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
                     {t.switchToPOS}
                   </span>
                 )}
-              </button>
+              </a>
             </TooltipTrigger>
             {!expanded && (
               <TooltipContent side="right" className="text-xs">
