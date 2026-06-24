@@ -1,35 +1,24 @@
-Copy the font sizes, weights, and spacing from `SettingsNavigation.tsx` (project: 6.0 - Mobile APP / Point of Sale) into the KDS `src/components/settings/SettingsSidebar.tsx`. No new icons, no logic changes — visual tokens only.
+## V3 product-level tap progression
 
-## Changes in `src/components/settings/SettingsSidebar.tsx`
+Wire the per-item action button in `OrderCardV3.tsx` to cycle through three local visual states on tap. V1 and V2 are untouched.
 
-**Container padding (was `px-4 pt-4 pb-3` / `px-2`)**
-- Outer scroll area uses `px-3.5 pt-3.5 pb-24` (matches POS tablet layout).
-- Search bar moves into the same padded column at the bottom.
+### State cycle (per item)
 
-**Header "Settings" (was `text-xl font-bold`)**
-- Change to `text-[1.65rem] font-bold mb-3` to match POS.
+1. **UNSEEN (default)** — outlined square button, `Check` icon in grey. Tappable.
+2. **PREPARING** — after 1st tap, icon swaps to `CookingPot` (lucide), button tinted orange (`#E67E22` border + light fill). Tappable.
+3. **DONE** — after 2nd tap, icon swaps to a filled green check (`Check` on `#16A085` background, white stroke). Button becomes disabled (`pointer-events-none`, `cursor-default`) and item name gets `opacity-60` + `line-through` for visual "served" feedback. Further taps do nothing.
 
-**Nav row button (was `h-44px px-2 rounded-full gap-12`, label `text-[15px]`)**
-- Row: `flex items-center gap-3.5 w-full py-[0.55rem] px-3 rounded-full active:opacity-70 transition-all`.
-- Active state keeps current `hsl(var(--surface-bg))` background.
-- Remove the fixed `height: 44` inline style — vertical rhythm comes from `py-[0.55rem]`.
-- Icon tile: `w-[2.15rem] h-[2.15rem] rounded-[0.55rem]` (update `SettingsIconTile` call to a custom-sized wrapper, or wrap inline with these classes; size prop stays `xs` only if it already maps to ~2.15rem, otherwise switch to inline sizing).
-- Label: `text-[0.95rem] font-medium leading-tight`.
+### Implementation
 
-**Search-result row (was `gap-3 px-2 py-2.5 rounded-xl`, label `text-sm`, sub `text-xs`)**
-- Row: `flex items-center gap-3 w-full py-2 px-3 rounded-xl active:opacity-70 transition-all text-left`.
-- Icon tile: `w-[1.9rem] h-[1.9rem] rounded-[0.5rem]` (compact size, matches POS compact variant).
-- Primary label: `text-[0.9rem] font-medium leading-tight truncate`.
-- Secondary: `text-[0.7rem] leading-tight truncate`.
-- Results header count line: keep but tighten to `text-[0.7rem] font-medium uppercase tracking-wider px-3 py-2`.
+File: `src/components/kds/variants/OrderCardV3.tsx`
 
-**Search bar (was `px-3.5 py-2.5 gap-2 rounded-full`, input `text-sm`, icons size=16)**
-- Container: `rounded-full px-3.5 py-[0.45rem] flex items-center gap-2.5` (keep `hsl(var(--surface-bg))` background).
-- Search + Mic icons: `size={18}` → use inline `w-[1.1rem] h-[1.1rem]` via className on the lucide icons.
-- Input: `text-[0.9rem] flex-1 min-w-0 bg-transparent outline-none`.
-- Outer wrapper around the search bar uses `px-3.5 pt-3 pb-3` (matches the column padding).
+- Add local state map inside `OrderCardV3`: `const [itemStates, setItemStates] = useState<Record<string, 'unseen' | 'preparing' | 'done'>>({})`.
+- Add `cycle(itemId)` handler: unseen → preparing → done; done is terminal.
+- Update `ItemRow` to accept `state` and `onTap` props. Render the correct icon, colors, and disabled styling per state. Apply `line-through` + dimmed text on `done`.
+- Pass `state={itemStates[item.id] ?? 'unseen'}` and `onTap={() => cycle(item.id)}` from both the dine-in course branch and the non-dine-in flat branch.
 
-## Notes
-- All color tokens stay as-is (`hsl(var(--text-primary))`, `--text-muted`, `--surface-bg`) — only sizing/spacing/weights change.
-- `SettingsIconTile` may need a quick check to confirm `size="xs"` matches ~2.15rem; if not, pass explicit width/height props or override via `className`. (Will verify the component during build.)
-- No changes to routing, search index, or `GROUP_COLOR` mapping.
+### Out of scope
+
+- No changes to V1 or V2.
+- No wiring to the real order store / global lifecycle — state is local to the card, matching the existing variant-only pattern.
+- No long-press, double-tap, or row-body tap. Only the existing right-side icon button is the hit target.

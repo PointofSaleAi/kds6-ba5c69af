@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import type { Order, CourseType, OrderType } from '@/types/kds';
-import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone } from 'lucide-react';
+import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, CookingPot } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
+
+type ItemState = 'unseen' | 'preparing' | 'done';
+
 
 interface Props {
   order: Order;
