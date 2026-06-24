@@ -41,8 +41,8 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="px-3.5 pt-3.5 pb-3 shrink-0">
-        <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
+      <div className="px-5 pt-5 pb-4 shrink-0">
+        <h2 className="text-[2.25rem] font-bold leading-tight" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
       </div>
