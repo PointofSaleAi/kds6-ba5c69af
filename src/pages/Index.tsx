@@ -212,7 +212,35 @@ const Index = () => {
       <StaggerModeSettings open={staggerOpen} onClose={() => setStaggerOpen(false)} />
       
       <WebSocketSettings open={websocketOpen} onClose={() => setWebsocketOpen(false)} />
-      
+
+      {posOpen && (
+        <div
+          className="fixed z-40 bg-background flex flex-col"
+          style={{
+            top: posInsets.top,
+            bottom: posInsets.bottom,
+            left: posInsets.left,
+            right: posInsets.right,
+          }}
+        >
+          <div className="flex items-center justify-between px-4 h-11 border-b bg-card shrink-0">
+            <span className="text-sm font-semibold">Point of Sale</span>
+            <button
+              onClick={() => setPosOpen(false)}
+              className="p-1 rounded hover:bg-muted"
+              aria-label="Close Point of Sale"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <iframe
+            src="https://mobileposapp.lovable.app"
+            title="Point of Sale"
+            className="flex-1 w-full border-0"
+          />
+        </div>
+      )}
+
     </>
   );
 };
