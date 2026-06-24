@@ -48,6 +48,7 @@ export interface KDSSettings {
   cardsPerRow: number;
   textSize: TextSize;
   showAllergens: boolean;
+  showHeaderAllergens: boolean;
   sortDefault: SortDefault;
   staggerMode: boolean;
   servableModifiers: boolean;
