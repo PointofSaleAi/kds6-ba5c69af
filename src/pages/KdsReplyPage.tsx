@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Send, CheckCircle } from 'lucide-react';
+import { validateReplyToken, consumeReplyToken } from '@/lib/demo-auth';
 
 const PRESET_REPLIES = [
   'Got it',
