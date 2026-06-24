@@ -61,6 +61,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Navigate to="/kds/full" replace />} />
               <Route path="/kds/full" element={<Index />} />
+              <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
               {/* Settings render inside the main KDS shell so the left rail
                   and bottom status bar stay visible. */}
