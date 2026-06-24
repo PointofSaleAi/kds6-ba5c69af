@@ -125,6 +125,14 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const TypeIcon = typeMeta.Icon;
+  const [itemStates, setItemStates] = useState<Record<string, ItemState>>({});
+  const cycle = (id: string) =>
+    setItemStates((prev) => {
+      const cur = prev[id] ?? 'unseen';
+      const next: ItemState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
+      return { ...prev, [id]: next };
+    });
+
 
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
