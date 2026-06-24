@@ -58,8 +58,8 @@ export function SettingsPill({
     : 'flex items-center gap-3 w-full min-w-0 @[340px]/pill:w-auto @[340px]/pill:flex-1';
 
   const labelTextClasses = shouldStack
-    ? 'text-[15px] font-medium text-left break-words min-w-0 flex-1'
-    : 'text-[15px] font-medium text-left break-words min-w-0 flex-1 @[340px]/pill:truncate';
+    ? 'text-[15px] font-semibold text-left break-words min-w-0 flex-1'
+    : 'text-[15px] font-semibold text-left break-words min-w-0 flex-1 @[340px]/pill:truncate';
 
   const rightWrapClasses = shouldStack
     ? 'flex items-center gap-2 w-full pl-[52px] justify-end'
