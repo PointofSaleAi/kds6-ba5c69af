@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Monitor, ShoppingBag, Send, Cpu, User } from 'lucide-react';
+import { Search, Mic, Monitor, ShoppingBag, Send, Cpu, User } from 'lucide-react';
 import {
   SETTINGS_GROUPS,
   searchSettings,
@@ -133,9 +133,17 @@ export function SettingsSidebar() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-sm"
+            className="bg-transparent flex-1 outline-none text-sm min-w-0"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
+          <button
+            type="button"
+            aria-label="Voice search"
+            className="shrink-0 active:opacity-70 transition-opacity"
+          >
+            <Mic size={16} style={{ color: 'hsl(var(--text-muted))' }} />
+          </button>
+
         </div>
       </div>
     </aside>
