@@ -5,6 +5,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
+import { blockDemoAuthInProd } from '@/lib/demo-auth';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
