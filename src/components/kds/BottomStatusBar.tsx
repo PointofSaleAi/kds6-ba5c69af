@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Sparkles } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2 } from 'lucide-react';
+import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -227,7 +228,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           }`}
           style={aiAssistantOpen ? { background: '#E84C3D' } : undefined}
         >
-          <Sparkles size={15} />
+          <AnimatedAIIcon size={18} />
         </button>
       </div>
       )}
