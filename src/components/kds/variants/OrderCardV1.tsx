@@ -18,7 +18,7 @@ interface Props {
 function V1ProductRow({ product }: { product: OrderItem }) {
   return (
     <div className="px-2 py-1 border-b border-border/40 last:border-b-0">
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-1">
         <span className="font-bold shrink-0" style={{ color: '#E84C3D', fontSize: 13, minWidth: 18 }}>
           {product.quantity}
         </span>
