@@ -914,17 +914,16 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                     <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
           </div>
 
+              </>
+            )}
+          </div>
+
           {showCustomerContact && (
             <CustomerContactStrip
               customerName={order.customerName}
               customerPhone={order.customerPhone}
             />
           )}
-
-
-              </>
-            )}
-          </div>
 
           {showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
