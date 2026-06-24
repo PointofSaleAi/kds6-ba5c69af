@@ -201,7 +201,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow
               icon={Send}
               label="Show send button"
-              description={expoSendButtonMode === 'always' ? 'Always — show on all items' : 'When ready — only when item is marked done on KDS'}
+              description={expoSendButtonMode === 'always' ? 'Always — show on all products' : 'When ready — only when product is marked done on KDS'}
               right={
                 <SegmentedToggle
                   options={['Always', 'When ready']}
