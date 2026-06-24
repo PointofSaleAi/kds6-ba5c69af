@@ -27,6 +27,50 @@ function paletteFor(course: CourseType): CoursePalette {
   }
 }
 
+function ItemRow({ item, accent }: { item: import('@/types/kds').OrderItem; accent: string }) {
+  return (
+    <div
+      className="flex items-start gap-2 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
+      style={{ borderLeft: `3px solid ${accent}` }}
+    >
+      <span
+        className="font-bold shrink-0"
+        style={{ color: accent, fontSize: 11, minWidth: 16, lineHeight: 1.3 }}
+      >
+        {item.quantity}
+      </span>
+      <div className="flex-1 min-w-0">
+        <div className="text-[#1F2937]" style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}>
+          {item.name}
+        </div>
+        {item.modifiers.length > 0 && (
+          <div className="mt-0.5">
+            {item.modifiers.map((m, i) => (
+              <div
+                key={i}
+                style={{
+                  fontSize: 10,
+                  lineHeight: 1.3,
+                  color: m.type === 'extra' ? '#16A34A' : m.type === 'remove' ? '#D85A30' : '#6B7280',
+                }}
+              >
+                {m.text}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <button
+        type="button"
+        aria-label="Bump item"
+        className="shrink-0 mt-0.5 w-4 h-4 rounded-sm border border-[#9CA3AF] flex items-center justify-center hover:bg-[#F3F4F6]"
+      >
+        <Check size={10} className="text-[#6B7280]" />
+      </button>
+    </div>
+  );
+}
+
 const ORDER_TYPE_META: Record<OrderType, { color: string; Icon: typeof Hash }> = {
   'dine-in': { color: '#1A1A2E', Icon: Utensils },
   'take-out': { color: '#2980B9', Icon: ShoppingBag },
@@ -92,70 +136,35 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-      {/* COURSES */}
+      {/* ITEMS  course bands for dine-in, flat list for everything else */}
       <div className="flex-1 bg-white">
-        {order.courses.map((course, idx) => {
-          const p = paletteFor(course.course);
-          return (
-            <div key={`${course.course}-${idx}`}>
-              <div
-                className="flex items-center justify-between px-2 py-1"
-                style={{ background: p.bg, color: p.text }}
-              >
-                <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
-                <span className="text-[10px] font-semibold">Items: {course.items.length}</span>
+        {order.orderType === 'dine-in' ? (
+          order.courses.map((course, idx) => {
+            const p = paletteFor(course.course);
+            return (
+              <div key={`${course.course}-${idx}`}>
+                <div
+                  className="flex items-center justify-between px-2 py-1"
+                  style={{ background: p.bg, color: p.text }}
+                >
+                  <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
+                  <span className="text-[10px] font-semibold">Items: {course.items.length}</span>
+                </div>
+                <div>
+                  {course.items.map((item) => (
+                    <ItemRow key={item.id} item={item} accent={p.accent} />
+                  ))}
+                </div>
               </div>
-              <div>
-                {course.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-start gap-2 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
-                    style={{ borderLeft: `3px solid ${p.accent}` }}
-                  >
-                    <span
-                      className="font-bold shrink-0"
-                      style={{ color: p.accent, fontSize: 11, minWidth: 16, lineHeight: 1.3 }}
-                    >
-                      {item.quantity}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[#1F2937]" style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}>
-                        {item.name}
-                      </div>
-                      {item.modifiers.length > 0 && (
-                        <div className="mt-0.5">
-                          {item.modifiers.map((m, i) => (
-                            <div
-                              key={i}
-                              style={{
-                                fontSize: 10,
-                                lineHeight: 1.3,
-                                color: m.type === 'extra'
-                                  ? '#16A34A'
-                                  : m.type === 'remove'
-                                    ? '#D85A30'
-                                    : '#6B7280',
-                              }}
-                            >
-                              {m.text}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      aria-label="Bump item"
-                      className="shrink-0 mt-0.5 w-4 h-4 rounded-sm border border-[#9CA3AF] flex items-center justify-center hover:bg-[#F3F4F6]"
-                    >
-                      <Check size={10} className="text-[#6B7280]" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <div>
+            {order.courses.flatMap((c) => c.items).map((item) => (
+              <ItemRow key={item.id} item={item} accent={typeMeta.color} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* FOOTER */}
