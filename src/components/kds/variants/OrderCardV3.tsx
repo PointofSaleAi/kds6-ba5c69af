@@ -130,11 +130,11 @@ export function OrderCardV3({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
-  const [itemStates, setItemStates] = useState<Record<string, ItemState>>({});
+  const [productStates, setProductStates] = useState<Record<string, ProductState>>({});
   const cycle = (id: string) =>
-    setItemStates((prev) => {
+    setProductStates((prev) => {
       const cur = prev[id] ?? 'unseen';
-      const next: ItemState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
+      const next: ProductState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
       return { ...prev, [id]: next };
     });
 
