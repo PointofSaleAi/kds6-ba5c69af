@@ -44,7 +44,7 @@ export function SectionHeaderCard({
         style={{
           color: 'hsl(var(--text-primary))',
           fontSize: 22,
-          fontWeight: 500,
+          fontWeight: 700,
           lineHeight: 1.2,
         }}
       >
