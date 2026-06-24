@@ -226,7 +226,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
               ? 'text-white'
               : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
           }`}
-          style={aiAssistantOpen ? { background: '#E84C3D' } : undefined}
+          style={aiAssistantOpen ? { background: 'linear-gradient(135deg, hsl(280, 80%, 60%) 0%, hsl(220, 90%, 56%) 100%)' } : undefined}
         >
           <AnimatedAIIcon size={18} />
         </button>
