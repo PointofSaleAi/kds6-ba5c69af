@@ -5,9 +5,10 @@ import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import {
-  Home, Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
+  Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
   ArrowLeftRight,
 } from 'lucide-react';
+import { TicketsIcon } from './icons/TicketsIcon';
 import {
   Tooltip,
   TooltipContent,
