@@ -23,10 +23,10 @@ const TicketsIcon = ({ size = 22, className }: { size?: number; className?: stri
   <img
     src={ticketsIcon}
     alt=""
-    width={size * 1.35}
-    height={size * 1.35}
+    width={size}
+    height={size}
     className={className}
-    style={{ objectFit: 'contain', margin: `${-size * 0.175}px` }}
+    style={{ objectFit: 'contain' }}
   />
 );
 
