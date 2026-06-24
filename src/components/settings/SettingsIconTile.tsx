@@ -18,9 +18,9 @@ export function SettingsIconTile({
   size = 'sm',
   iconColor = '#FFFFFF',
 }: SettingsIconTileProps) {
-  const dim = size === 'lg' ? 64 : size === 'md' ? 36 : size === 'xs' ? 56 : 28;
-  const radius = size === 'lg' ? 16 : size === 'md' ? 10 : size === 'xs' ? 14 : 8;
-  const iconSize = size === 'lg' ? 28 : size === 'md' ? 18 : size === 'xs' ? 28 : 16;
+  const dim = size === 'lg' ? 64 : size === 'md' ? 36 : size === 'xs' ? 34 : 28;
+  const radius = size === 'lg' ? 16 : size === 'md' ? 10 : size === 'xs' ? 9 : 8;
+  const iconSize = size === 'lg' ? 28 : size === 'md' ? 18 : size === 'xs' ? 20 : 16;
   return (
     <div
       className="flex items-center justify-center shrink-0"
