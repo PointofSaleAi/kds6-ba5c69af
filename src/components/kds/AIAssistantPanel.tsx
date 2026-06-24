@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Send, Monitor, Receipt, Printer, User } from 'lucide-react';
+import { X, Send, Monitor, Receipt, Printer, User, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { useDockLayout } from '@/hooks/use-dock-layout';
@@ -26,8 +26,11 @@ const TRY_PROMPTS = [
 
 export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const [input, setInput] = useState('');
+  const [recording, setRecording] = useState(false);
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
+
+  const toggleRecording = () => setRecording(r => !r);
 
   return (
     <AnimatePresence>
@@ -117,9 +120,22 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder="Ask me anything..."
+          placeholder={recording ? 'Listening...' : 'Ask me anything...'}
           className="flex-1 h-9 bg-white border border-border rounded-full px-3 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
         />
+        <button
+          onClick={toggleRecording}
+          aria-label={recording ? 'Stop recording' : 'Start voice input'}
+          aria-pressed={recording}
+          className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+            recording
+              ? 'text-white animate-pulse'
+              : 'bg-white border border-border text-foreground hover:bg-muted'
+          }`}
+          style={recording ? { background: '#E84C3D' } : undefined}
+        >
+          {recording ? <MicOff size={14} /> : <Mic size={14} />}
+        </button>
         <button
           aria-label="Send message"
           className="w-9 h-9 rounded-full flex items-center justify-center text-white shrink-0 transition-opacity hover:opacity-90"
