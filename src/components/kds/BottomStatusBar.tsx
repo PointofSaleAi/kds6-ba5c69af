@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2 } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Sparkles } from 'lucide-react';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -23,6 +23,8 @@ interface BottomStatusBarProps {
   onOpenLanguageSettings?: () => void;
   onOpenCategoryFilter?: () => void;
   onOpenRevenueFilter?: () => void;
+  aiAssistantOpen?: boolean;
+  onToggleAiAssistant?: () => void;
 }
 
 function SoundToggle() {
