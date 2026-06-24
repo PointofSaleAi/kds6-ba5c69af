@@ -18,8 +18,8 @@ export default function OrdersSettings() {
       <SectionHeaderCard
         icon={ShoppingBag}
         iconColor={GROUP_COLOR.orders}
-        title="Orders"
-        shortDescription="Control how items are flagged on tickets."
+        title="Tickets"
+        shortDescription="Control how products are flagged on tickets."
         longDescription="Toggle allergen badges or servable modifiers based on your workflow."
       />
 
