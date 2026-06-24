@@ -386,7 +386,7 @@ export default function DisplaySettings() {
         icon={Languages}
         iconColor="#16A085"
         label="Language"
-        helper="Display language for menu items, buttons, and notifications."
+        helper="Display language for menu products, buttons, and notifications."
         right={<ValueText>{languageDisplay}</ValueText>}
         onClick={() => setLanguageOpen(true)}
         highlighted={hash === 'language'}
