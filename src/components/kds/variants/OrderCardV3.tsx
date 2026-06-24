@@ -187,7 +187,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-      {/* ITEMS  course bands for dine-in, flat list for everything else */}
+      {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
       <div className="flex-1 bg-white">
         {order.orderType === 'dine-in' ? (
           order.courses.map((course, idx) => {
@@ -199,11 +199,11 @@ export function OrderCardV3({ order, onBump }: Props) {
                   style={{ background: p.bg, color: p.text }}
                 >
                   <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
-                  <span className="text-[10px] font-semibold">Items: {course.items.length}</span>
+                  <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
                 </div>
                 <div>
-                  {course.items.map((item) => (
-                    <ItemRow key={item.id} item={item} accent={p.accent} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
+                  {course.items.map((product) => (
+                    <ProductRow key={product.id} product={product} accent={p.accent} state={productStates[product.id] ?? 'unseen'} onTap={() => cycle(product.id)} />
                   ))}
                 </div>
               </div>
@@ -211,8 +211,8 @@ export function OrderCardV3({ order, onBump }: Props) {
           })
         ) : (
           <div>
-            {order.courses.flatMap((c) => c.items).map((item) => (
-              <ItemRow key={item.id} item={item} accent={accentColor} state={itemStates[item.id] ?? 'unseen'} onTap={() => cycle(item.id)} />
+            {order.courses.flatMap((c) => c.items).map((product) => (
+              <ProductRow key={product.id} product={product} accent={accentColor} state={productStates[product.id] ?? 'unseen'} onTap={() => cycle(product.id)} />
             ))}
           </div>
         )}
