@@ -125,6 +125,10 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const TypeIcon = typeMeta.Icon;
+  const { orderTypeDetailedColors } = useKDSSettings();
+  const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
+  const accentColor = colorSet.headerBg;
+  const accentText = colorSet.headerText;
   const [itemStates, setItemStates] = useState<Record<string, ItemState>>({});
   const cycle = (id: string) =>
     setItemStates((prev) => {
