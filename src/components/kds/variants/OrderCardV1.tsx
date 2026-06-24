@@ -115,8 +115,8 @@ export function OrderCardV1({ order, onBump }: Props) {
         <button
           type="button"
           onClick={() => onBump?.(order.id)}
-          className="rounded-full px-3 py-1 text-white text-[12px] font-semibold"
-          style={{ background: '#E84C3D' }}
+          className="rounded-full px-3 py-1 text-[12px] font-semibold"
+          style={{ background: headerBg, color: headerText }}
         >
           Bump
         </button>
