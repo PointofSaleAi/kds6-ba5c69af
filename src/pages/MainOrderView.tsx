@@ -931,6 +931,30 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const isUnseenScreen = activeNav === 'unseen-orders';
   const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
+  const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
+    if (cardVariant === 'v1') return <OrderCardV1 order={displayOrder} onBump={handleBump} />;
+    if (cardVariant === 'v2') return <OrderCardV2 order={displayOrder} onBump={handleBump} />;
+    if (cardVariant === 'v3') return <OrderCardV3 order={displayOrder} onBump={handleBump} />;
+    return (
+      <OrderCard
+        order={displayOrder}
+        onBump={handleBump}
+        onRecall={handleStepBack}
+        onFireCourse={handleFireCourse}
+        onItemStatusChange={handleItemStatusChange}
+        showAllergens={showAllergens}
+        highlightItemNames={highlightItemNames}
+        onMarkSeen={toggleOrderSeen}
+        onItemDismiss={handleItemDismiss}
+        onAcknowledgeNotes={acknowledgeOrderNotes}
+        onUnacknowledgeNotes={unacknowledgeOrderNotes}
+        isAcknowledgmentPending={isAcknowledgmentPending}
+        onBumpBlocked={handleBumpBlocked}
+        compactRows={opts?.compactRows}
+      />
+    );
+  };
+
   return (
     <div className={`fixed inset-0 flex bg-surface-bg ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}>
       {/* Kitchen message flash notification */}
