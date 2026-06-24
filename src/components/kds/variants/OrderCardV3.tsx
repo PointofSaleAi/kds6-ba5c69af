@@ -68,7 +68,7 @@ function ProductRow({
 
   return (
     <div
-      className="flex items-start gap-2 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
+      className="flex items-start gap-1 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
       style={{ borderLeft: `3px solid ${accent}` }}
     >
       <span
