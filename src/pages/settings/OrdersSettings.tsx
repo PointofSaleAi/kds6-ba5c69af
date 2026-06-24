@@ -8,6 +8,7 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 export default function OrdersSettings() {
   const {
     showAllergens, setShowAllergens,
+    showHeaderAllergens, setShowHeaderAllergens,
     servableModifiers, setServableModifiers,
   } = useKDSSettings();
   const hash = useHashHighlight();
