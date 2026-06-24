@@ -407,10 +407,12 @@
 }
 
 @keyframes flag86-pulse {
-  0%, 100% { border-color: #1A1A2E; }
-  50% { border-color: #4B4B6E; }
+  0% { box-shadow: 0 0 0 0 rgba(26, 26, 46, 0.7); transform: scale(1); }
+  70% { box-shadow: 0 0 0 8px rgba(26, 26, 46, 0); transform: scale(1.08); }
+  100% { box-shadow: 0 0 0 0 rgba(26, 26, 46, 0); transform: scale(1); }
 }
 
 .animate-flag86-pulse {
-  animation: flag86-pulse 2s ease-in-out infinite;
+  animation: flag86-pulse 1.4s ease-out infinite;
 }
+
