@@ -5,7 +5,7 @@ import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import {
-  Home, Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
+  Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
   ArrowLeftRight,
 } from 'lucide-react';
 import {
@@ -15,8 +15,20 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import restaurantLogo from '@/assets/icons/restaurant-logo.png';
+import ticketsIcon from '@/assets/icons/tickets.png';
 import versionIcon from '@/assets/version-icon.svg';
 import { DockDragHandle } from './DockDragHandle';
+
+const TicketsIcon = ({ size = 22, className }: { size?: number; className?: string }) => (
+  <img
+    src={ticketsIcon}
+    alt=""
+    width={size}
+    height={size}
+    className={className}
+    style={{ objectFit: 'contain' }}
+  />
+);
 
 const APP_VERSION = '4.10.2';
 
@@ -50,7 +62,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
   const navItems: SidebarItem[] = isExpo
     ? [
-        { icon: Home, label: 'Tickets', action: 'home' },
+        { icon: TicketsIcon, label: 'Tickets', action: 'home' },
         { icon: CheckCircle2, label: 'Ready only', action: 'seen-orders' },
         { icon: Undo2, label: 'Recalled', action: 'unseen-orders' },
         { icon: Clock, label: t.history, badge: 6, action: 'history' },
@@ -58,7 +70,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
         { icon: Settings, label: t.settings, action: 'settings' },
       ]
     : [
-        { icon: Home, label: 'Tickets', action: 'home' },
+        { icon: TicketsIcon, label: 'Tickets', action: 'home' },
         { icon: Clock, label: t.history, badge: 6, action: 'history' },
         { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
         { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
