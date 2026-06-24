@@ -100,7 +100,7 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center px-2 rounded-xl active:opacity-70 transition-all"
+                  className="flex items-center px-2 rounded-full active:opacity-70 transition-all"
                   style={{
                     height: 44,
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
