@@ -19,7 +19,7 @@ interface Props {
 function V2ProductRow({ product }: { product: OrderItem }) {
   return (
     <div className="px-2.5 py-1.5 border-b border-border/40 last:border-b-0">
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-1">
         <span className="font-bold text-[#1F2937] shrink-0" style={{ fontSize: 15, minWidth: 20, lineHeight: 1.2 }}>
           {product.quantity}
         </span>
