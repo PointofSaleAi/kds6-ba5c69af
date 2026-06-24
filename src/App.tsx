@@ -21,6 +21,7 @@ import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import Index from "./pages/Index.tsx";
+import IndexOnlineOrdering from "./pages/IndexOnlineOrdering.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SettingsLayout from "./pages/SettingsLayout.tsx";
 import DisplaySettings from "./pages/settings/DisplaySettings.tsx";
@@ -60,6 +61,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Navigate to="/kds/full" replace />} />
               <Route path="/kds/full" element={<Index />} />
+              <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
               {/* Settings render inside the main KDS shell so the left rail
                   and bottom status bar stay visible. */}
