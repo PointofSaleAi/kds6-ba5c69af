@@ -223,8 +223,8 @@ export function OrderCardV3({ order, onBump }: Props) {
         <button
           type="button"
           onClick={() => onBump?.(order.id)}
-          className="rounded px-3 py-1 text-white text-[12px] font-semibold"
-          style={{ background: '#1A1A2E' }}
+          className="rounded px-3 py-1 text-[12px] font-semibold"
+          style={{ background: accentColor, color: accentText }}
         >
           Bump all
         </button>
