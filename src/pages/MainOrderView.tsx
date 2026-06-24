@@ -15,6 +15,7 @@ import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
+import { AIAssistantPanel } from '@/components/kds/AIAssistantPanel';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
 import { SettingsPanel } from '@/components/kds/SettingsPanel';
@@ -89,6 +90,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [globalItemStatuses, setGlobalItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
 
   // Per-order acknowledgment of order notes (lifted out of OrderNotesSection so MainOrderView can gate ticket removal).
   const [notesAcknowledgedIds, setNotesAcknowledgedIds] = useState<Set<string>>(new Set());
@@ -1304,7 +1306,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
         {!settingsOpen && (
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
-            {kdsMode === 'Expo' && !isSubScreen
+            {aiAssistantOpen ? (
+              <AIAssistantPanel onClose={() => setAiAssistantOpen(false)} />
+            ) : kdsMode === 'Expo' && !isSubScreen
               ? <ExpoSummaryPanel tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets} pinnedTicketIds={expoPinnedIds} onTogglePin={handleExpoTogglePin} onClearAllPins={handleExpoClearAllPins} selectedProducts={expoSelectedProducts} onProductToggle={handleExpoProductToggle} onSendAllProduct={handleExpoSendAllProduct} />
               : <ItemSummaryPanel orders={isHistory ? filteredHistory : isSeenScreen ? seenScreenOrders : isUnseenScreen ? unseenScreenOrders : ordersWithItemStatuses} stationCourse={resolvedStationCourse} selectedItems={selectedSummaryItems} onItemToggle={handleSummaryItemToggle} selectedCategories={selectedSummaryCategories} onCategoryToggle={handleSummaryCategoryToggle} onClearAll={handleSummaryClearAll} matchingTicketCount={isSubScreen ? undefined : matchingTicketCount} mode={isHistory ? 'completed' : 'active'} />}
           </div>
@@ -1325,7 +1329,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/full/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/full/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} />
     </div>
   );
 }

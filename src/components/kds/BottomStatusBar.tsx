@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2 } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Sparkles } from 'lucide-react';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -23,6 +23,8 @@ interface BottomStatusBarProps {
   onOpenLanguageSettings?: () => void;
   onOpenCategoryFilter?: () => void;
   onOpenRevenueFilter?: () => void;
+  aiAssistantOpen?: boolean;
+  onToggleAiAssistant?: () => void;
 }
 
 function SoundToggle() {
@@ -51,7 +53,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, aiAssistantOpen, onToggleAiAssistant }: BottomStatusBarProps) {
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const { isPortrait } = usePortrait();
@@ -213,6 +215,19 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
+        </button>
+        <button
+          onClick={onToggleAiAssistant}
+          aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
+          aria-pressed={aiAssistantOpen}
+          className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
+            aiAssistantOpen
+              ? 'text-white'
+              : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
+          }`}
+          style={aiAssistantOpen ? { background: '#E84C3D' } : undefined}
+        >
+          <Sparkles size={15} />
         </button>
       </div>
       )}
