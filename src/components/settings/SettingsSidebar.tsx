@@ -140,7 +140,7 @@ export function SettingsSidebar() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-[0.9rem] min-w-0"
+            className="bg-transparent flex-1 outline-none text-[0.9rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))]"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
           <button
