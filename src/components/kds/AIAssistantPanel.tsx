@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { X, Send, Monitor, Receipt, Printer, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedAIIcon from './AnimatedAIIcon';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
 
 interface AIAssistantPanelProps {
+  open: boolean;
   onClose: () => void;
 }
 
@@ -20,11 +24,31 @@ const TRY_PROMPTS = [
   'Change language to Spanish',
 ];
 
-export function AIAssistantPanel({ onClose }: AIAssistantPanelProps) {
+export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const [input, setInput] = useState('');
+  const { layout } = useDockLayout();
+  const insets = getOverlayInsets(layout);
 
   return (
-    <div className="w-[280px] flex flex-col shrink-0 overflow-hidden bg-white border-l border-border h-full">
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed bg-brand-dark/30 z-40"
+            style={{ left: insets.left, right: insets.right, top: insets.top, bottom: insets.bottom }}
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed w-[320px] bg-white shadow-2xl z-50 flex flex-col overflow-hidden"
+            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
+          >
       {/* Header */}
       <div
         className="flex items-center justify-between px-3 h-[44px] shrink-0"
@@ -104,6 +128,9 @@ export function AIAssistantPanel({ onClose }: AIAssistantPanelProps) {
           <Send size={14} />
         </button>
       </div>
-    </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
