@@ -142,12 +142,12 @@ export function OrderCardV3({ order, onBump }: Props) {
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* ACCENT BAR coloured by order type */}
-      <div style={{ height: 4, background: typeMeta.color }} />
+      <div style={{ height: 4, background: accentColor }} />
 
       {/* ORDER TYPE STRIP */}
       <div
-        className="flex items-center gap-1.5 px-2 py-1 text-white text-[10px] font-bold uppercase tracking-wide"
-        style={{ background: typeMeta.color }}
+        className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide"
+        style={{ background: accentColor, color: accentText }}
       >
         <TypeIcon size={11} />
         <span>{orderTypeLabel(order.orderType)}</span>
