@@ -40,13 +40,18 @@ type AppScreen =
   | 'main'
   | 'performance';
 
-const Index = () => {
+interface IndexProps {
+  cardVariant?: 'default' | 'v1' | 'v2' | 'v3';
+}
+
+const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const inSettings = location.pathname.startsWith('/kds/full/settings');
-  // When opened directly on a settings route, skip dev selector and go to main.
+  const isVariantRoute = cardVariant !== 'default';
+  // When opened directly on a settings or variant route, skip dev selector and go to main.
   const [screen, setScreen] = useState<AppScreen>(
-    inSettings ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
+    (inSettings || isVariantRoute) ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
   );
   const [alertsOpen, setAlertsOpen] = useState(false);
 
