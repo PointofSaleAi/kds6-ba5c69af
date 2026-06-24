@@ -26,7 +26,7 @@ const TicketsIcon = ({ size = 22, className }: { size?: number; className?: stri
     width={size}
     height={size}
     className={className}
-    style={{ objectFit: 'contain', transform: 'scale(1.48)' }}
+    style={{ objectFit: 'contain' }}
   />
 );
 
