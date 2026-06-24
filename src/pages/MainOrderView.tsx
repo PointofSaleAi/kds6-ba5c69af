@@ -8,6 +8,9 @@ import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { OrderCard } from '@/components/kds/OrderCard';
+import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
+import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
+import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
@@ -53,6 +56,8 @@ interface MainOrderViewProps {
   onClearHistoryCenters?: () => void;
   onSetHistoryCategories?: (cats: string[]) => void;
   onSetHistoryCenters?: (cs: string[]) => void;
+  /** Selects an alternate ticket card layout for the home board only. */
+  cardVariant?: 'default' | 'v1' | 'v2' | 'v3';
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
@@ -64,7 +69,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default' }: MainOrderViewProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
@@ -926,6 +931,30 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const isUnseenScreen = activeNav === 'unseen-orders';
   const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
+  const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
+    if (cardVariant === 'v1') return <OrderCardV1 order={displayOrder} onBump={handleBump} />;
+    if (cardVariant === 'v2') return <OrderCardV2 order={displayOrder} onBump={handleBump} />;
+    if (cardVariant === 'v3') return <OrderCardV3 order={displayOrder} onBump={handleBump} />;
+    return (
+      <OrderCard
+        order={displayOrder}
+        onBump={handleBump}
+        onRecall={handleStepBack}
+        onFireCourse={handleFireCourse}
+        onItemStatusChange={handleItemStatusChange}
+        showAllergens={showAllergens}
+        highlightItemNames={highlightItemNames}
+        onMarkSeen={toggleOrderSeen}
+        onItemDismiss={handleItemDismiss}
+        onAcknowledgeNotes={acknowledgeOrderNotes}
+        onUnacknowledgeNotes={unacknowledgeOrderNotes}
+        isAcknowledgmentPending={isAcknowledgmentPending}
+        onBumpBlocked={handleBumpBlocked}
+        compactRows={opts?.compactRows}
+      />
+    );
+  };
+
   return (
     <div className={`fixed inset-0 flex bg-surface-bg ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}>
       {/* Kitchen message flash notification */}
@@ -1262,7 +1291,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                               const displayOrder = getStationDisplayOrder(order);
                               return (
                                 <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                                  <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} onBumpBlocked={handleBumpBlocked} />
+                                  {renderOrderCard(displayOrder)}
                                 </motion.div>
                               );
                             })}
@@ -1277,7 +1306,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
-                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} onBumpBlocked={handleBumpBlocked} compactRows />
+                              {renderOrderCard(displayOrder, { compactRows: true })}
                             </motion.div>
                           );
                         })}
@@ -1290,7 +1319,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
-                              <OrderCard order={displayOrder} onBump={handleBump} onRecall={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} showAllergens={showAllergens} highlightItemNames={highlightItemNames} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} onAcknowledgeNotes={acknowledgeOrderNotes} onUnacknowledgeNotes={unacknowledgeOrderNotes} isAcknowledgmentPending={isAcknowledgmentPending} onBumpBlocked={handleBumpBlocked} />
+                              {renderOrderCard(displayOrder)}
                             </motion.div>
                           );
                         })}
