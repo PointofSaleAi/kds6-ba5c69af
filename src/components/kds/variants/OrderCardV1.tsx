@@ -2,6 +2,13 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel, courseFireTime } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { AllergenBadge } from '@/components/kds/AllergenBadge';
+
+const MODIFIER_CLASS = {
+  extra: 'text-modifier-extra',
+  remove: 'text-modifier-remove',
+  neutral: 'text-modifier-neutral',
+} as const;
 
 interface Props {
   order: Order;
