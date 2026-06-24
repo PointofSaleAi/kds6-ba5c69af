@@ -77,6 +77,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     pathname === '/kds/home-onlineordering' &&
     (order.orderType === 'delivery' || order.orderType === 'phone-in') &&
     !!order.customerPhone;
+  const displayGuestName = showCustomerContact && order.customerName
+    ? order.customerName
+    : order.guestName;
   const { servableModifiers: servableModifiersEnabled, showHeaderAllergens } = useKDSSettings();
   const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
   const orderMessages = getMessagesForOrder(order.id);
