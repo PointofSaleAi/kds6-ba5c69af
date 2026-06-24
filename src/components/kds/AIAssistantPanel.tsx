@@ -117,25 +117,27 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
 
       {/* Footer input */}
       <div className="shrink-0 bg-muted/40 border-t border-border px-2 py-2 flex items-center gap-2">
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder={recording ? 'Listening...' : 'Ask me anything...'}
-          className="flex-1 h-9 bg-white border border-border rounded-full px-3 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
-        />
-        <button
-          onClick={toggleRecording}
-          aria-label={recording ? 'Stop recording' : 'Start voice input'}
-          aria-pressed={recording}
-          className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-            recording
-              ? 'text-white animate-pulse'
-              : 'bg-white border border-border text-foreground hover:bg-muted'
-          }`}
-          style={recording ? { background: '#E84C3D' } : undefined}
-        >
-          {recording ? <MicOff size={14} /> : <Mic size={14} />}
-        </button>
+        <div className="flex-1 relative">
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder={recording ? 'Listening...' : 'Ask me anything...'}
+            className="w-full h-9 bg-white border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+          />
+          <button
+            onClick={toggleRecording}
+            aria-label={recording ? 'Stop recording' : 'Start voice input'}
+            aria-pressed={recording}
+            className={`absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+              recording
+                ? 'text-white animate-pulse'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+            }`}
+            style={recording ? { background: '#E84C3D' } : undefined}
+          >
+            {recording ? <MicOff size={13} /> : <Mic size={13} />}
+          </button>
+        </div>
         <button
           aria-label="Send message"
           className="w-9 h-9 rounded-full flex items-center justify-center text-white shrink-0 transition-opacity hover:opacity-90"
