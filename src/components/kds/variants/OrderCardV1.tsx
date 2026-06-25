@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, ChevronRight, Loader2 } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
@@ -72,6 +72,15 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
             </div>
           )}
         </div>
+        {compact && !loading && !done && (product.modifiers.length > 0 || product.allergens.length > 0) && (
+          <span
+            className="shrink-0 inline-flex items-center justify-center rounded-full border"
+            style={{ width: 16, height: 16, borderColor: '#CBD2D9', color: '#6C7A89' }}
+            aria-hidden="true"
+          >
+            <ChevronRight size={10} strokeWidth={2.5} />
+          </span>
+        )}
         {loading && (
           <span
             className="shrink-0 flex items-center justify-center rounded-full"
