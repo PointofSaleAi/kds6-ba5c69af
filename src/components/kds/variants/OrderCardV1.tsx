@@ -145,8 +145,8 @@ export function OrderCardV1({ order, onBump }: Props) {
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER */}
       <div
-        className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold"
-        style={{ background: headerBg, color: headerText }}
+        className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-white text-[#2C3E50]"
+        style={{ borderBottom: '0.5px solid #E5E7EB' }}
       >
         <span className="inline-flex items-center gap-1.5">
           <span>#{order.orderNumber}</span>
@@ -165,8 +165,8 @@ export function OrderCardV1({ order, onBump }: Props) {
 
       {/* TABLE / LOCATION ROW */}
       <div
-        className="text-center bg-white text-[#2C3E50]"
-        style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', borderBottom: '0.5px solid #E5E7EB' }}
+        className="text-center"
+        style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', background: headerBg, color: headerText }}
       >
         {order.tableName || orderTypeLabel(order.orderType)}
       </div>
