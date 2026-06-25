@@ -46,7 +46,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
         <div className="flex-1 min-w-0">
           <div
             className="text-[#2C3E50]"
-            style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+            style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
           </div>
