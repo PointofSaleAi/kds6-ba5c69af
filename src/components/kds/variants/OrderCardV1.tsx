@@ -177,7 +177,7 @@ export function OrderCardV1({ order, onBump }: Props) {
 
       {/* COURSES */}
       <div className="flex-1">
-        {order.orderType === 'dine-in' ? (
+        {order.orderType === 'dine-in' && !isCompact ? (
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
               <div
@@ -206,11 +206,13 @@ export function OrderCardV1({ order, onBump }: Props) {
                 product={product}
                 state={rowStates[product.id] ?? 'idle'}
                 onToggle={() => toggleRow(product.id)}
+                compact={isCompact}
               />
             ))}
           </div>
         )}
       </div>
+
 
       {/* FOOTER */}
       <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
