@@ -151,7 +151,9 @@ export function OrderCardV1({ order, onBump }: Props) {
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
+  const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
+
 
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
