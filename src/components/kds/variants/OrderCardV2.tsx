@@ -26,17 +26,27 @@ function V2ProductRow({
   state,
   onToggle,
   onReset,
+  compact = false,
 }: {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  compact?: boolean;
 }) {
   const done = state === 'done';
   const loading = state === 'loading';
+  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
+  const [expanded, setExpanded] = useState(false);
+  const showDetails = !compact || expanded;
+  const canExpand = compact && hasDetails && !loading;
 
   const handleClick = () => {
-    if (loading || done) return;
+    if (loading) return;
+    if (done) {
+      if (canExpand) setExpanded((v) => !v);
+      return;
+    }
     onToggle();
   };
 
@@ -45,8 +55,8 @@ function V2ProductRow({
       role="button"
       tabIndex={loading ? -1 : 0}
       onClick={handleClick}
-      onDoubleClick={(e) => { if (done) { e.stopPropagation(); onReset(); } }}
-      onKeyDown={(e) => { if (!loading && !done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
       aria-pressed={done}
       aria-disabled={loading}
       className={`px-2.5 py-1.5 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
@@ -62,7 +72,7 @@ function V2ProductRow({
           >
             {product.name}
           </div>
-          {product.modifiers.length > 0 && (
+          {showDetails && product.modifiers.length > 0 && (
             <div className="mt-0">
               {product.modifiers.map((m, i) => (
                 <div
@@ -75,19 +85,35 @@ function V2ProductRow({
               ))}
             </div>
           )}
-          {product.allergens.length > 0 && (
+          {showDetails && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
             </div>
           )}
-          {product.notes && (
+          {showDetails && product.notes && (
             <div className="italic text-[#6B7280] mt-0" style={{ fontSize: 11, lineHeight: 1.2 }}>
               {product.notes}
             </div>
           )}
         </div>
+        {canExpand && !done && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+            className="shrink-0 inline-flex items-center justify-center"
+            style={{ width: 20, height: 20, color: '#6C7A89' }}
+            aria-label={expanded ? 'Hide details' : 'Show details'}
+            aria-expanded={expanded}
+          >
+            <ChevronRight
+              size={12}
+              strokeWidth={2.5}
+              style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 120ms ease' }}
+            />
+          </button>
+        )}
         {loading && (
           <span className="shrink-0 flex items-center justify-center" style={{ width: 18, height: 18 }} aria-label="Marking product done">
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
