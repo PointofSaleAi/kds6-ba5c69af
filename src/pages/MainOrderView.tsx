@@ -267,11 +267,19 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     // 2 cols on iPad Mini/Air, 3 cols on iPad Pro (viewport >= 960px).
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
+    if (cardVariant === 'v1') {
+      // V1 cards are denser, mirror grid breakpoints (up to 6 across).
+      if (boardContentWidth < 480) return 3;
+      if (boardContentWidth < 760) return 4;
+      if (boardContentWidth < 1000) return 5;
+      return 6;
+    }
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
     return 5;
-  }, [boardContentWidth, isPortrait, viewportWidth]);
+  }, [boardContentWidth, isPortrait, viewportWidth, cardVariant]);
+
 
   // Move served orders to history immediately
   useEffect(() => {
