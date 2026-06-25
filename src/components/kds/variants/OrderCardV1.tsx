@@ -35,15 +35,24 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0;
   const [expanded, setExpanded] = useState(false);
   const showDetails = !compact || expanded;
+  const canExpand = compact && hasDetails && !loading;
+  const handleRowClick = () => {
+    if (loading) return;
+    if (done) {
+      if (canExpand) setExpanded((v) => !v);
+      return;
+    }
+    onToggle();
+  };
   return (
     <div
       role="button"
-      tabIndex={disabled ? -1 : 0}
-      onClick={() => { if (!disabled) onToggle(); }}
-      onKeyDown={(e) => { if (!disabled && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onToggle(); } }}
+      tabIndex={loading ? -1 : 0}
+      onClick={handleRowClick}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleRowClick(); } }}
       aria-pressed={done}
-      aria-disabled={disabled}
-      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${done ? 'opacity-50 pointer-events-none' : loading ? 'opacity-70 pointer-events-none' : 'hover:bg-black/[0.02]'}`}
+      aria-disabled={loading}
+      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
     >
       <div className={`flex gap-1 ${compact && !expanded ? 'items-center' : 'items-start'}`}>
         <span className="font-bold shrink-0 text-center" style={{ color: '#1F2937', fontSize: 13, minWidth: 20 }}>
@@ -77,7 +86,7 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
             </div>
           )}
         </div>
-        {compact && !loading && !done && hasDetails && (
+        {canExpand && !done && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
