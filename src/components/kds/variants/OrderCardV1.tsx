@@ -103,8 +103,8 @@ export function OrderCardV1({ order, onBump }: Props) {
   const headerBg = colorSet.headerBg;
   const headerText = colorSet.headerText;
   const status = getStatusForElapsed(elapsed);
-  const isFirstRule = elapsed / 60 < 6;
-  const pillBg = isFirstRule ? 'rgba(255,255,255,0.15)' : status.color;
+  const pillBg = status.color;
+  const pillText = status.textColor;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
@@ -152,7 +152,7 @@ export function OrderCardV1({ order, onBump }: Props) {
           <span>#{order.orderNumber}</span>
           <span
             className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
-            style={{ background: pillBg, color: '#FFFFFF' }}
+            style={{ background: pillBg, color: pillText }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${status.label}`}
           >
             {fmtElapsed(elapsed)}
