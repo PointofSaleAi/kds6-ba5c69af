@@ -74,11 +74,11 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
         </div>
         {compact && !loading && !done && (product.modifiers.length > 0 || product.allergens.length > 0) && (
           <span
-            className="shrink-0 inline-flex items-center justify-center rounded-full border"
-            style={{ width: 16, height: 16, borderColor: '#CBD2D9', color: '#6C7A89' }}
+            className="shrink-0 inline-flex items-center justify-center"
+            style={{ width: 16, height: 16, color: '#6C7A89' }}
             aria-hidden="true"
           >
-            <ChevronRight size={10} strokeWidth={2.5} />
+            <ChevronRight size={12} strokeWidth={2.5} />
           </span>
         )}
         {loading && (
