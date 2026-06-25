@@ -82,14 +82,13 @@ export function OrderCardV1({ order, onBump }: Props) {
       <div className="flex-1">
         {order.orderType === 'dine-in' ? (
           order.courses.map((course, idx) => {
-            const fire = courseFireTime(order, idx);
             return (
               <div key={`${course.course}-${idx}`}>
                 <div
                   className="px-2 py-1 text-[11px] font-bold uppercase tracking-wide"
                   style={{ background: '#F3F4F6', color: '#374151' }}
                 >
-                  {courseLabel(course.course)}{fire ? ` · Fire ${fire}` : ''}
+                  {courseLabel(course.course)}
                 </div>
                 <div className="bg-white">
                   {course.items.map((product) => (
