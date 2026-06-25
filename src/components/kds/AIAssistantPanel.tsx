@@ -148,7 +148,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       </div>
 
       {/* Body */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto bg-white">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background">
         {!hasMessages ? (
           <div className="px-4 py-5 flex flex-col items-center text-center">
             <div className="mb-3">
