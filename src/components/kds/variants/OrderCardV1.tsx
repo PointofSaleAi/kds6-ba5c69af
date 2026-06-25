@@ -29,10 +29,12 @@ interface V1ProductRowProps {
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }
 
-function V1ProductRow({ product, state, onToggle, onReset, compact = false }: V1ProductRowProps) {
+function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact = false }: V1ProductRowProps) {
+
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
