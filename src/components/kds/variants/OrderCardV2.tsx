@@ -7,6 +7,8 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { formatTime } from '@/lib/datetime';
+import { useLongPress } from '@/hooks/use-long-press';
+import { RecipeModalV1 } from './RecipeModalV1';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
