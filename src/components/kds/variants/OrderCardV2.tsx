@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { ArrowUp, Check, Loader2 } from 'lucide-react';
+import { ArrowUp, Check, ChevronRight, Loader2 } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
@@ -26,17 +26,27 @@ function V2ProductRow({
   state,
   onToggle,
   onReset,
+  compact = false,
 }: {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  compact?: boolean;
 }) {
   const done = state === 'done';
   const loading = state === 'loading';
+  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
+  const [expanded, setExpanded] = useState(false);
+  const showDetails = !compact || expanded;
+  const canExpand = compact && hasDetails && !loading;
 
   const handleClick = () => {
-    if (loading || done) return;
+    if (loading) return;
+    if (done) {
+      if (canExpand) setExpanded((v) => !v);
+      return;
+    }
     onToggle();
   };
 
@@ -45,8 +55,8 @@ function V2ProductRow({
       role="button"
       tabIndex={loading ? -1 : 0}
       onClick={handleClick}
-      onDoubleClick={(e) => { if (done) { e.stopPropagation(); onReset(); } }}
-      onKeyDown={(e) => { if (!loading && !done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
       aria-pressed={done}
       aria-disabled={loading}
       className={`px-2.5 py-1.5 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
@@ -62,7 +72,7 @@ function V2ProductRow({
           >
             {product.name}
           </div>
-          {product.modifiers.length > 0 && (
+          {showDetails && product.modifiers.length > 0 && (
             <div className="mt-0">
               {product.modifiers.map((m, i) => (
                 <div
@@ -75,19 +85,35 @@ function V2ProductRow({
               ))}
             </div>
           )}
-          {product.allergens.length > 0 && (
+          {showDetails && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
             </div>
           )}
-          {product.notes && (
+          {showDetails && product.notes && (
             <div className="italic text-[#6B7280] mt-0" style={{ fontSize: 11, lineHeight: 1.2 }}>
               {product.notes}
             </div>
           )}
         </div>
+        {canExpand && !done && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+            className="shrink-0 inline-flex items-center justify-center"
+            style={{ width: 20, height: 20, color: '#6C7A89' }}
+            aria-label={expanded ? 'Hide details' : 'Show details'}
+            aria-expanded={expanded}
+          >
+            <ChevronRight
+              size={12}
+              strokeWidth={2.5}
+              style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 120ms ease' }}
+            />
+          </button>
+        )}
         {loading && (
           <span className="shrink-0 flex items-center justify-center" style={{ width: 18, height: 18 }} aria-label="Marking product done">
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
@@ -130,6 +156,9 @@ export function OrderCardV2({ order, onBump }: Props) {
     timersRef.current.push(t);
   };
 
+  const { ticketLayout } = useKDSSettings();
+  const isCompact = ticketLayout === 'compact';
+
   const allItems = order.courses.flatMap((c) => c.items);
 
   const handleBump = () => {
@@ -152,9 +181,16 @@ export function OrderCardV2({ order, onBump }: Props) {
   return (
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER */}
-      <div className="px-2.5 py-2" style={{ background: '#F3F4F6' }}>
+      <div
+        className={`px-2.5 py-2 ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
+        style={{ background: '#F3F4F6' }}
+        onClick={isCompact ? handleBump : undefined}
+        role={isCompact ? 'button' : undefined}
+        aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
+      >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
+            {isCompact && bumping && <Loader2 size={12} className="animate-spin shrink-0" />}
             {showTableInstead ? (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
@@ -188,9 +224,9 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
-      {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
+      {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
       <div className="flex-1 bg-card">
-        {isDineIn ? (
+        {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
               <div
@@ -218,25 +254,28 @@ export function OrderCardV2({ order, onBump }: Props) {
               state={rowStates[product.id] ?? 'idle'}
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
+              compact={isCompact}
             />
           ))
         )}
       </div>
 
       {/* FOOTER */}
-      <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
-        <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
-        <button
-          type="button"
-          onClick={handleBump}
-          disabled={bumping}
-          className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
-          style={{ color: '#2563EB' }}
-        >
-          {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
-          {bumping ? 'Bumping...' : 'Bump'}
-        </button>
-      </div>
+      {!isCompact && (
+        <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
+          <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
+          <button
+            type="button"
+            onClick={handleBump}
+            disabled={bumping}
+            className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
+            style={{ color: '#2563EB' }}
+          >
+            {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
+            {bumping ? 'Bumping...' : 'Bump'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
