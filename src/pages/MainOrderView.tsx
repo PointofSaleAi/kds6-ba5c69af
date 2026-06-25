@@ -950,9 +950,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         ...displayOrder,
         timeReceived: new Date(Date.now() - mins * 60_000),
         elapsedSeconds: mins * 60,
-        courses: displayOrder.courses.map((c) => ({
+        courses: (displayOrder.courses ?? []).map((c) => ({
           ...c,
-          items: c.items.map((it) => {
+          items: (c.items ?? []).map((it) => {
             const keep = flatIdx % 3 === 0;
             flatIdx++;
             return keep ? it : { ...it, modifiers: [], allergens: [] };
