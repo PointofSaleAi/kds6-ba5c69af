@@ -4,6 +4,7 @@ import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loa
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
