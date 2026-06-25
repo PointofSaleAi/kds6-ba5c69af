@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, ChevronRight, Loader2 } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
