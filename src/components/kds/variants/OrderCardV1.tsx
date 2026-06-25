@@ -3,6 +3,7 @@ import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
+import { formatTime } from '@/lib/datetime';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',

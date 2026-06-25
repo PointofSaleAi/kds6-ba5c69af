@@ -1,4 +1,5 @@
 import type { Order, OrderType } from '@/types/kds';
+import { formatTime } from '@/lib/datetime';
 
 export function fmtElapsed(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));

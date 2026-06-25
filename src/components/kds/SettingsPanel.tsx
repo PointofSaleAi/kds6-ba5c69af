@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { formatTime } from '@/lib/datetime';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import StatusSettings from '@/pages/StatusSettings';
