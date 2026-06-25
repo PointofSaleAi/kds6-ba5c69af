@@ -1779,18 +1779,16 @@ export type DateFormatIndex = 0 | 1 | 2;
 /** 0 = 12h, 1 = 24h */
 export type TimeFormatIndex = 0 | 1;
 
-export function formatTimeForKDS(date: Date, timeFormat: TimeFormatIndex): string {
-  const hour12 = timeFormat === 0;
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12 });
+// App-wide standard: 12-hour with AM/PM ("1:15 PM") and day-first date ("25 June 2026").
+// These helpers ignore the per-user format index so formatting stays consistent across the UI.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function formatTimeForKDS(date: Date, _timeFormat: TimeFormatIndex): string {
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 }
 
-export function formatDateForKDS(date: Date, dateFormat: DateFormatIndex): string {
-  switch (dateFormat) {
-    case 0: return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    case 1: return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    case 2: return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    default: return date.toLocaleDateString('en-US');
-  }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function formatDateForKDS(date: Date, _dateFormat: DateFormatIndex): string {
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 interface LanguageContextType {
