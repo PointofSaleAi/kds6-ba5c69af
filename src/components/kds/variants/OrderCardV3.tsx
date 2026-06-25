@@ -252,7 +252,7 @@ export function OrderCardV3({ order, onBump }: Props) {
               </div>
             </div>
             <div className="flex items-start gap-1.5 px-2 py-1.5 border-l border-border">
-              <User size={12} className="mt-0.5 text-[#6B7280]" />
+              <img src={PersonSimpleRunBold} alt="" width={12} height={12} className="mt-0.5 opacity-70 shrink-0" />
               <div className="min-w-0">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
                 <div className="text-[10px] text-[#6B7280] truncate">{fmtElapsed(elapsed)}</div>
