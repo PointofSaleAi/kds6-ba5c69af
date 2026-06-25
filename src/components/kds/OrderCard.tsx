@@ -801,7 +801,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         <div>
           <OrderTypeBadge
             type={order.orderType}
-            time={formatTimeForKDS(order.timeReceived, timeFormat)}
+            time={formatStaticTime(order.timeReceived)}
             tableInfo={getLocationLabel(order.orderType, order.tableName)}
             stationBadge={undefined}
             
