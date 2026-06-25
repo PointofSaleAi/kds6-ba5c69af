@@ -238,7 +238,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={recording ? 'Listening...' : 'Ask me anything...'}
-            className="w-full h-9 bg-white border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+            className="w-full h-9 bg-background border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
           />
           <button
             onClick={toggleRecording}
