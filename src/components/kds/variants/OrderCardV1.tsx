@@ -24,16 +24,16 @@ function V1ProductRow({ product }: { product: OrderItem }) {
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
-          <div className="text-[#2C3E50]" style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.25 }}>
+          <div className="text-[#2C3E50]" style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.2 }}>
             {product.name}
           </div>
           {product.modifiers.length > 0 && (
-            <div className="mt-0.5">
+            <div>
               {product.modifiers.map((m, i) => (
                 <div
                   key={i}
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 11, lineHeight: 1.3 }}
+                  style={{ fontSize: 11, lineHeight: 1.2 }}
                 >
                   {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
@@ -41,7 +41,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
             </div>
           )}
           {product.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
+            <div className="flex flex-wrap gap-0.5 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
