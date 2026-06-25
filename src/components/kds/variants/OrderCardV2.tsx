@@ -7,6 +7,8 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { formatTime } from '@/lib/datetime';
+import { useLongPress } from '@/hooks/use-long-press';
+import { RecipeModalV1 } from './RecipeModalV1';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -26,12 +28,14 @@ function V2ProductRow({
   state,
   onToggle,
   onReset,
+  onLongPress,
   compact = false,
 }: {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }) {
   const done = state === 'done';
@@ -50,6 +54,8 @@ function V2ProductRow({
     onToggle();
   };
 
+  const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
+
   return (
     <div
       role="button"
@@ -57,6 +63,7 @@ function V2ProductRow({
       onClick={handleClick}
       onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
       onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
       className={`px-2.5 py-1.5 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
@@ -160,6 +167,7 @@ export function OrderCardV2({ order, onBump }: Props) {
   const isCompact = ticketLayout === 'compact';
 
   const allItems = order.courses.flatMap((c) => c.items);
+  const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
 
   const handleBump = () => {
     if (bumping) return;
@@ -242,6 +250,7 @@ export function OrderCardV2({ order, onBump }: Props) {
                   state={rowStates[product.id] ?? 'idle'}
                   onToggle={() => toggleRow(product.id)}
                   onReset={() => setRow(product.id, 'idle')}
+                  onLongPress={setRecipeProduct}
                 />
               ))}
             </div>
@@ -254,11 +263,14 @@ export function OrderCardV2({ order, onBump }: Props) {
               state={rowStates[product.id] ?? 'idle'}
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
+              onLongPress={setRecipeProduct}
               compact={isCompact}
             />
           ))
         )}
       </div>
+
+      <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
 
       {/* FOOTER */}
       {!isCompact && (
