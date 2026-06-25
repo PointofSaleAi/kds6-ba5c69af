@@ -1,39 +1,22 @@
 ## Goal
-Make the existing **Settings > Display > Ticket Layout** (`standard` / `compact`) setting affect the `/kds/v1` route. Standard mode behaves exactly as today. Compact mode renders an ultra-dense, read-only product list with no expand affordance.
+In `/kds/v1` compact view, the chevron indicator (signaling hidden modifiers/add-ons/allergens) is currently appearing on nearly every product row because most mock products carry modifiers or allergens. Visually it looks noisy and loses meaning. We want chevrons to appear only on a smaller subset of rows per ticket so they stand out as a real signal.
 
-## Behavior
+## Approach
+Keep the chevron logic itself untouched (still: show when product has modifiers OR allergens, compact mode only). Reduce the number of rows that qualify by trimming mock data in the V1 dataset path only, so other routes/variants are unaffected.
 
-**Standard (current, unchanged)**
-- Quantity + name + modifiers + allergen badges per row.
-- Tap row to mark done (spinner → green check).
-- Dine-in shows course headers (APPS / MAINS / DESSERTS).
+In `src/pages/MainOrderView.tsx` (V1 remap block where `timeReceived` is already overridden for V1), add a deterministic filter: for each ticket, keep modifiers/allergens on roughly 1-2 products per ticket and clear them on the rest. Selection is index-based (e.g., every 3rd product keeps its modifiers/allergens) so it stays stable across renders and aging buckets.
 
-**Compact (new in V1)**
-- Each product row shows **only** quantity + product name on a single line.
-- No modifiers, no allergen badges, no extras shown on the row.
-- No expand / chevron / tap-to-reveal affordance anywhere.
-- Course header bands (APPS / MAINS) are **hidden**; all products flatten into one continuous list, including for Dine-in.
-- Header (table row, order #, timer pill, fired time) and Bump footer remain identical to standard.
-- Tap-to-complete still works (spinner → strikethrough + green check), since it does not require expansion.
+Net effect in compact V1:
+- Most product rows render as clean qty + name only, no chevron.
+- 1-2 rows per ticket keep their modifiers/allergens, so the chevron still appears there and correctly signals "tap to see more".
+- Standard (non-compact) V1 view is unchanged because chevrons only render in compact mode.
+- Other variants (V2, V3, full) untouched because the data trim is gated to V1.
 
-## Implementation
+## Technical notes
+- File: `src/pages/MainOrderView.tsx`, inside the existing V1 mock remap.
+- Change shape: map over `order.items`, and for items where `index % 3 !== 0`, return `{ ...item, modifiers: [], allergens: [] }`.
+- No changes to `OrderCardV1.tsx` chevron rendering.
+- No changes to shared mock fixtures, so V2/V3/full keep full modifier/allergen data.
 
-File: `src/components/kds/variants/OrderCardV1.tsx`
-
-1. Pull `ticketLayout` from `useKDSSettings()`.
-2. Add `compact: boolean` prop to `V1ProductRow`. When `compact`:
-   - Render a single flex line: `<qty>` + `<name>` only.
-   - Skip the modifiers block and the allergens block entirely.
-   - Keep the existing loading/done indicator on the right.
-   - Keep `lineHeight: 1.2`, `fontSize: 13`, `fontWeight: 700` on the name (matches current).
-3. In `OrderCardV1`:
-   - When `ticketLayout === 'compact'`, render the flat `allItems` list for **all** order types (bypass the dine-in course-section branch).
-   - When `'standard'`, keep today's branching (dine-in shows course headers, others flat).
-4. No changes to header, footer, bump animation, timer pill, or color logic.
-
-No other files change. No settings UI changes (the toggle already exists in Display Settings).
-
-## Out of scope
-- V2 / V3 variants.
-- Any change to the meaning of `ticketLayout` on the default `OrderCard`.
-- New settings, new props on the page level.
+## Open question
+Confirm the density you want: keep modifiers/allergens on **every 3rd product** (roughly 1-2 chevrons per ticket), or a different ratio (e.g., every 2nd, or only the first product in each ticket)?

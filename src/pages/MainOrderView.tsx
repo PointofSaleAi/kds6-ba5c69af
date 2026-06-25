@@ -945,10 +945,19 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     if (cardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
+      let flatIdx = 0;
       const v1Order: Order = {
         ...displayOrder,
         timeReceived: new Date(Date.now() - mins * 60_000),
         elapsedSeconds: mins * 60,
+        courses: displayOrder.courses.map((c) => ({
+          ...c,
+          items: c.items.map((it) => {
+            const keep = flatIdx % 3 === 0;
+            flatIdx++;
+            return keep ? it : { ...it, modifiers: [], allergens: [] };
+          }),
+        })),
       };
       return <OrderCardV1 order={v1Order} onBump={handleBump} />;
     }
