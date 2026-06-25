@@ -148,11 +148,16 @@ export function OrderCardV1({ order, onBump }: Props) {
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* TABLE / LOCATION ROW */}
       <div
-        className="text-center"
+        onClick={isCompact ? handleBump : undefined}
+        role={isCompact ? 'button' : undefined}
+        aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
+        className={`text-center ${isCompact ? 'cursor-pointer select-none active:opacity-80 flex items-center justify-center gap-1.5' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
         style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', background: headerBg, color: headerText }}
       >
-        {order.tableName || orderTypeLabel(order.orderType)}
+        {isCompact && bumping && <Loader2 size={14} className="animate-spin" />}
+        <span>{order.tableName || orderTypeLabel(order.orderType)}</span>
       </div>
+
 
       {/* HEADER */}
       <div
