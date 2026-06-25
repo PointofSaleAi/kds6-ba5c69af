@@ -169,16 +169,16 @@ function ProductRow({
 }
 
 
-const ORDER_TYPE_META: Record<OrderType, { color: string; Icon: typeof Hash }> = {
-  'dine-in': { color: '#1A1A2E', Icon: Utensils },
-  'take-out': { color: '#2980B9', Icon: ShoppingBag },
-  'delivery': { color: '#16A085', Icon: Bike },
-  'banquet': { color: '#F39C12', Icon: PartyPopper },
-  'drive-thru': { color: '#2980B9', Icon: ShoppingBag },
-  'curb-side': { color: '#2980B9', Icon: ShoppingBag },
-  'scheduled': { color: '#6B7280', Icon: ShoppingBag },
-  'phone-in': { color: '#7C3AED', Icon: Phone },
-  'custom': { color: '#6B7280', Icon: ShoppingBag },
+const ORDER_TYPE_META: Record<OrderType, { color: string; icon: string }> = {
+  'dine-in': { color: '#1A1A2E', icon: dineInIcon },
+  'take-out': { color: '#2980B9', icon: takeOutIcon },
+  'delivery': { color: '#16A085', icon: deliveryIcon },
+  'banquet': { color: '#F39C12', icon: banquetIcon },
+  'drive-thru': { color: '#2980B9', icon: driveThruIcon },
+  'curb-side': { color: '#2980B9', icon: curbSideIcon },
+  'scheduled': { color: '#6B7280', icon: scheduledIcon },
+  'phone-in': { color: '#7C3AED', icon: phoneInIcon },
+  'custom': { color: '#6B7280', icon: customIcon },
 };
 
 export function OrderCardV3({ order, onBump }: Props) {
