@@ -225,12 +225,12 @@ export function OrderCardV3({ order, onBump }: Props) {
         onClick={isCompact ? handleBump : undefined}
         onKeyDown={isCompact ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBump(); } } : undefined}
         aria-disabled={isCompact ? bumping : undefined}
-        className={`flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
+        className={`relative flex items-center justify-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
         style={{ background: accentColor, color: accentText }}
       >
         <TypeIcon size={11} />
-        <span>{orderTypeLabel(order.orderType)}</span>
-        {isCompact && bumping && <Loader2 size={11} className="ml-auto animate-spin" />}
+        <span>{order.orderType === 'dine-in' ? (order.tableName || orderTypeLabel(order.orderType)) : orderTypeLabel(order.orderType)}</span>
+        {isCompact && bumping && <Loader2 size={11} className="absolute right-2 animate-spin" />}
       </div>
 
       {/* METADATA GRID 2x2 */}
@@ -247,7 +247,7 @@ export function OrderCardV3({ order, onBump }: Props) {
             <div className="flex items-start gap-1.5 px-2 py-1.5">
               <Hash size={12} className="mt-0.5 text-[#6B7280]" />
               <div className="min-w-0">
-                <div className="font-bold text-foreground text-[13px] leading-tight truncate">#{order.orderNumber}</div>
+                <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.orderNumber}</div>
                 <div className="text-[10px] text-[#6B7280] truncate">{cell1Title}</div>
                 {cell1Sub && cell1Sub !== cell1Title && (
                   <div className="text-[10px] text-[#9CA3AF] truncate">{cell1Sub}</div>
@@ -258,9 +258,7 @@ export function OrderCardV3({ order, onBump }: Props) {
               <User size={12} className="mt-0.5 text-[#6B7280]" />
               <div className="min-w-0">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
-                <div className="text-[10px] text-[#6B7280] truncate">
-                  {orderTypeLabel(order.orderType)} · {fmtElapsed(elapsed)}
-                </div>
+                <div className="text-[10px] text-[#6B7280] truncate">{fmtElapsed(elapsed)}</div>
               </div>
             </div>
           </div>
