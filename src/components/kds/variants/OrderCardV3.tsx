@@ -234,8 +234,16 @@ export function OrderCardV3({ order, onBump }: Props) {
       >
         <TypeIcon size={14} />
         <span>{order.orderType === 'dine-in' ? (order.tableName || orderTypeLabel(order.orderType)) : orderTypeLabel(order.orderType)}</span>
+        <span
+          className="absolute right-2 inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold normal-case tracking-normal"
+          style={{ background: agingStatus.color, color: agingStatus.textColor }}
+          aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${agingStatus.label}`}
+        >
+          {fmtElapsed(elapsed)}
+        </span>
         {isCompact && bumping && <Loader2 size={14} className="absolute right-2 animate-spin" />}
       </div>
+
 
       {/* METADATA GRID 2x2 */}
       {(() => {
@@ -259,17 +267,11 @@ export function OrderCardV3({ order, onBump }: Props) {
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
               </div>
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold shrink-0"
-                style={{ background: agingStatus.color, color: agingStatus.textColor }}
-                aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${agingStatus.label}`}
-              >
-                {fmtElapsed(elapsed)}
-              </span>
             </div>
           </div>
         );
       })()}
+
 
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
