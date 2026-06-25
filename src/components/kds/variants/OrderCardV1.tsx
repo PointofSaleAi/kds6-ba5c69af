@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Check } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Check, Loader2 } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
@@ -18,13 +18,24 @@ interface Props {
   onBump?: (orderId: string) => void;
 }
 
-function V1ProductRow({ product }: { product: OrderItem }) {
-  const [done, setDone] = useState(false);
+type RowState = 'idle' | 'loading' | 'done';
+
+interface V1ProductRowProps {
+  product: OrderItem;
+  state: RowState;
+  onToggle: () => void;
+}
+
+function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
+  const done = state === 'done';
+  const loading = state === 'loading';
+  const disabled = loading || done;
   return (
     <button
       type="button"
-      onClick={() => setDone((d) => !d)}
-      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity ${done ? 'opacity-50' : 'hover:bg-black/[0.02]'}`}
+      onClick={() => { if (!disabled) onToggle(); }}
+      disabled={disabled}
+      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity ${done ? 'opacity-50' : loading ? 'opacity-70' : 'hover:bg-black/[0.02]'}`}
       aria-pressed={done}
     >
       <div className="flex items-start gap-1">
@@ -59,9 +70,18 @@ function V1ProductRow({ product }: { product: OrderItem }) {
             </div>
           )}
         </div>
-        {done && (
+        {loading && (
           <span
             className="shrink-0 flex items-center justify-center rounded-full"
+            style={{ width: 18, height: 18 }}
+            aria-label="Marking product done"
+          >
+            <Loader2 size={14} className="animate-spin" color="#6C7A89" />
+          </span>
+        )}
+        {done && (
+          <span
+            className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
             style={{ background: '#27AE60', width: 18, height: 18 }}
             aria-label="Product done"
           >
@@ -80,6 +100,41 @@ export function OrderCardV1({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
   const headerText = colorSet.headerText;
+
+  const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [bumping, setBumping] = useState(false);
+  const timersRef = useRef<number[]>([]);
+
+  useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
+
+  const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
+
+  const toggleRow = (id: string) => {
+    setRow(id, 'loading');
+    const t = window.setTimeout(() => setRow(id, 'done'), 600);
+    timersRef.current.push(t);
+  };
+
+  const allItems = order.courses.flatMap((c) => c.items);
+
+  const handleBump = () => {
+    if (bumping) return;
+    setBumping(true);
+    // Set all not-yet-done rows to loading immediately
+    setRowStates((prev) => {
+      const next = { ...prev };
+      allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
+      return next;
+    });
+    // Stagger flip each to done
+    allItems.forEach((p, idx) => {
+      const t = window.setTimeout(() => setRow(p.id, 'done'), 250 + idx * 120);
+      timersRef.current.push(t);
+    });
+    const total = 250 + allItems.length * 120 + 350;
+    const finish = window.setTimeout(() => onBump?.(order.id), total);
+    timersRef.current.push(finish);
+  };
 
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
@@ -105,27 +160,35 @@ export function OrderCardV1({ order, onBump }: Props) {
       {/* COURSES */}
       <div className="flex-1">
         {order.orderType === 'dine-in' ? (
-          order.courses.map((course, idx) => {
-            return (
-              <div key={`${course.course}-${idx}`}>
-                <div
-                  className="px-2 py-1 text-[11px] font-bold uppercase tracking-wide"
-                  style={{ background: '#F3F4F6', color: '#374151' }}
-                >
-                  {courseLabel(course.course)}
-                </div>
-                <div className="bg-white">
-                  {course.items.map((product) => (
-                    <V1ProductRow key={product.id} product={product} />
-                  ))}
-                </div>
+          order.courses.map((course, idx) => (
+            <div key={`${course.course}-${idx}`}>
+              <div
+                className="px-2 py-1 text-[11px] font-bold uppercase tracking-wide"
+                style={{ background: '#F3F4F6', color: '#374151' }}
+              >
+                {courseLabel(course.course)}
               </div>
-            );
-          })
+              <div className="bg-white">
+                {course.items.map((product) => (
+                  <V1ProductRow
+                    key={product.id}
+                    product={product}
+                    state={rowStates[product.id] ?? 'idle'}
+                    onToggle={() => toggleRow(product.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          ))
         ) : (
           <div className="bg-white">
-            {order.courses.flatMap((c) => c.items).map((product) => (
-              <V1ProductRow key={product.id} product={product} />
+            {allItems.map((product) => (
+              <V1ProductRow
+                key={product.id}
+                product={product}
+                state={rowStates[product.id] ?? 'idle'}
+                onToggle={() => toggleRow(product.id)}
+              />
             ))}
           </div>
         )}
@@ -135,11 +198,13 @@ export function OrderCardV1({ order, onBump }: Props) {
       <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
         <button
           type="button"
-          onClick={() => onBump?.(order.id)}
-          className="rounded-full px-3 py-1 text-[12px] font-semibold"
+          onClick={handleBump}
+          disabled={bumping}
+          className="rounded-full px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
           style={{ background: headerBg, color: headerText }}
         >
-          Bump
+          {bumping && <Loader2 size={12} className="animate-spin" />}
+          {bumping ? 'Bumping...' : 'Bump'}
         </button>
       </div>
     </div>
