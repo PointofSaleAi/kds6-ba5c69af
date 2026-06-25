@@ -99,7 +99,8 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
 
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
-  const { orderTypeDetailedColors } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const isCompact = ticketLayout === 'compact';
   const { getStatusForElapsed } = useStatusRules();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
