@@ -156,6 +156,9 @@ export function OrderCardV2({ order, onBump }: Props) {
     timersRef.current.push(t);
   };
 
+  const { ticketLayout } = useKDSSettings();
+  const isCompact = ticketLayout === 'compact';
+
   const allItems = order.courses.flatMap((c) => c.items);
 
   const handleBump = () => {
