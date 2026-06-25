@@ -180,6 +180,8 @@ export function OrderCardV3({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
+  const { getStatusForElapsed } = useStatusRules();
+  const agingStatus = getStatusForElapsed(elapsed);
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
