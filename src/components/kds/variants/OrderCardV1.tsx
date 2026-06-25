@@ -77,7 +77,7 @@ export function OrderCardV1({ order, onBump }: Props) {
         className="text-center bg-white text-[#2C3E50]"
         style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', borderBottom: '0.5px solid #E5E7EB' }}
       >
-        {orderTypeLabel(order.orderType)}
+        {order.tableName || orderTypeLabel(order.orderType)}
       </div>
 
       {/* COURSES */}
