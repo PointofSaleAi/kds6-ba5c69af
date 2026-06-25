@@ -242,7 +242,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         className={`relative flex items-center justify-start gap-1.5 px-2 py-1 pr-16 text-[13px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
         style={{ background: accentColor, color: accentText }}
       >
-        <TypeIcon size={14} />
+        <img src={typeIcon} alt="" width={14} height={14} className="shrink-0" style={{ filter: accentText === '#FFFFFF' || accentText === '#ffffff' ? 'brightness(0) invert(1)' : 'brightness(0)' }} />
         <span>{order.orderType === 'dine-in' ? (order.tableName || orderTypeLabel(order.orderType)) : orderTypeLabel(order.orderType)}</span>
         <span
           className="absolute right-2 inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold normal-case tracking-normal"
