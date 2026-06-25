@@ -29,7 +29,7 @@ interface V1ProductRowProps {
   compact?: boolean;
 }
 
-function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRowProps) {
+function V1ProductRow({ product, state, onToggle, onReset, compact = false }: V1ProductRowProps) {
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
