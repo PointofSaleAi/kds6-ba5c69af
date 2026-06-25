@@ -148,11 +148,16 @@ export function OrderCardV1({ order, onBump }: Props) {
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* TABLE / LOCATION ROW */}
       <div
-        className="text-center"
+        onClick={isCompact ? handleBump : undefined}
+        role={isCompact ? 'button' : undefined}
+        aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
+        className={`text-center ${isCompact ? 'cursor-pointer select-none active:opacity-80 flex items-center justify-center gap-1.5' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
         style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', background: headerBg, color: headerText }}
       >
-        {order.tableName || orderTypeLabel(order.orderType)}
+        {isCompact && bumping && <Loader2 size={14} className="animate-spin" />}
+        <span>{order.tableName || orderTypeLabel(order.orderType)}</span>
       </div>
+
 
       {/* HEADER */}
       <div
@@ -215,18 +220,21 @@ export function OrderCardV1({ order, onBump }: Props) {
 
 
       {/* FOOTER */}
-      <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
-        <button
-          type="button"
-          onClick={handleBump}
-          disabled={bumping}
-          className="rounded-full px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
-          style={{ background: headerBg, color: headerText }}
-        >
-          {bumping && <Loader2 size={12} className="animate-spin" />}
-          {bumping ? 'Bumping...' : 'Bump'}
-        </button>
-      </div>
+      {!isCompact && (
+        <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
+          <button
+            type="button"
+            onClick={handleBump}
+            disabled={bumping}
+            className="rounded-full px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
+            style={{ background: headerBg, color: headerText }}
+          >
+            {bumping && <Loader2 size={12} className="animate-spin" />}
+            {bumping ? 'Bumping...' : 'Bump'}
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }
