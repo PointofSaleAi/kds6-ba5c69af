@@ -50,13 +50,13 @@ function V2ProductRow({
       className={`px-2.5 py-1.5 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
     >
       <div className="flex items-start gap-1">
-        <span className="font-bold text-foreground shrink-0" style={{ fontSize: 15, minWidth: 20, lineHeight: 1.2 }}>
+        <span className="font-bold text-foreground shrink-0 text-center" style={{ fontSize: 15, minWidth: 20, lineHeight: 1.2 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
           <div
             className="text-foreground"
-            style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+            style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
           </div>
