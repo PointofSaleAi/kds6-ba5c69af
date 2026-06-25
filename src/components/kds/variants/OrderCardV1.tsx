@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Check, ChevronRight, Loader2 } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
+import { useLongPress } from '@/hooks/use-long-press';
+import { RecipeModalV1 } from './RecipeModalV1';
+
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
