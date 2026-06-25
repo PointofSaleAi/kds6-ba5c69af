@@ -268,12 +268,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
     if (cardVariant === 'v1') {
-      // V1 cards are denser, mirror grid breakpoints (up to 6 across).
+      // V1: 4 / 5 / 6 by viewport width
       if (boardContentWidth < 480) return 3;
-      if (boardContentWidth < 760) return 4;
-      if (boardContentWidth < 1000) return 5;
+      if (boardContentWidth < 1100) return 4;
+      if (boardContentWidth < 1400) return 5;
       return 6;
     }
+
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
