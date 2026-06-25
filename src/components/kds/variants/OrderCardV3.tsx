@@ -9,6 +9,7 @@ import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
+import { formatTime } from '@/lib/datetime';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
