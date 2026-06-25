@@ -167,6 +167,7 @@ export function OrderCardV2({ order, onBump }: Props) {
   const isCompact = ticketLayout === 'compact';
 
   const allItems = order.courses.flatMap((c) => c.items);
+  const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
 
   const handleBump = () => {
     if (bumping) return;
