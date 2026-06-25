@@ -143,6 +143,14 @@ export function OrderCardV1({ order, onBump }: Props) {
 
   return (
     <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+      {/* TABLE / LOCATION ROW */}
+      <div
+        className="text-center"
+        style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', background: headerBg, color: headerText }}
+      >
+        {order.tableName || orderTypeLabel(order.orderType)}
+      </div>
+
       {/* HEADER */}
       <div
         className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-white text-[#2C3E50]"
@@ -163,13 +171,6 @@ export function OrderCardV1({ order, onBump }: Props) {
         </span>
       </div>
 
-      {/* TABLE / LOCATION ROW */}
-      <div
-        className="text-center"
-        style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', background: headerBg, color: headerText }}
-      >
-        {order.tableName || orderTypeLabel(order.orderType)}
-      </div>
 
       {/* COURSES */}
       <div className="flex-1">
