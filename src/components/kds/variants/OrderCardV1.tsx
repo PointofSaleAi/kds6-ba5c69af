@@ -148,7 +148,16 @@ export function OrderCardV1({ order, onBump }: Props) {
         className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold"
         style={{ background: headerBg, color: headerText }}
       >
-        <span>#{order.orderNumber} · {fmtElapsed(elapsed)}</span>
+        <span className="inline-flex items-center gap-1.5">
+          <span>#{order.orderNumber}</span>
+          <span
+            className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
+            style={{ background: pillBg, color: '#FFFFFF' }}
+            aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${status.label}`}
+          >
+            {fmtElapsed(elapsed)}
+          </span>
+        </span>
         <span className="ml-2 shrink-0">
           {formatTime(order.timeReceived)}
         </span>
