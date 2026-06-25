@@ -241,6 +241,7 @@ export function OrderCardV1({ order, onBump }: Props) {
                     state={rowStates[product.id] ?? 'idle'}
                     onToggle={() => toggleRow(product.id)}
                     onReset={() => setRow(product.id, 'idle')}
+                    onLongPress={setRecipeProduct}
                   />
                 ))}
               </div>
@@ -255,8 +256,10 @@ export function OrderCardV1({ order, onBump }: Props) {
                 state={rowStates[product.id] ?? 'idle'}
                 onToggle={() => toggleRow(product.id)}
                 onReset={() => setRow(product.id, 'idle')}
+                onLongPress={setRecipeProduct}
                 compact={isCompact}
               />
+
             ))}
           </div>
         )}
