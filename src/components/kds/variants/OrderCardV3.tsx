@@ -267,17 +267,11 @@ export function OrderCardV3({ order, onBump }: Props) {
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
               </div>
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold shrink-0"
-                style={{ background: agingStatus.color, color: agingStatus.textColor }}
-                aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${agingStatus.label}`}
-              >
-                {fmtElapsed(elapsed)}
-              </span>
             </div>
           </div>
         );
       })()}
+
 
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
