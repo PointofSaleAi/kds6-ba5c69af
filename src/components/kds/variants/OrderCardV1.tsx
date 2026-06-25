@@ -25,9 +25,10 @@ interface V1ProductRowProps {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
+  compact?: boolean;
 }
 
-function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
+function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRowProps) {
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
@@ -50,7 +51,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
           >
             {product.name}
           </div>
-          {product.modifiers.length > 0 && (
+          {!compact && product.modifiers.length > 0 && (
             <div>
               {product.modifiers.map((m, i) => (
                 <div
@@ -63,7 +64,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
               ))}
             </div>
           )}
-          {product.allergens.length > 0 && (
+          {!compact && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-0.5 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
@@ -93,6 +94,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
     </button>
   );
 }
+
 
 
 export function OrderCardV1({ order, onBump }: Props) {
