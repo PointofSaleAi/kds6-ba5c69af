@@ -263,7 +263,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                 )}
               </div>
             </div>
-            <div className="flex items-start gap-1.5 px-2 py-1.5 border-l border-border">
+            <div className="flex items-start gap-0.5 px-2 py-1.5 border-l border-border">
               <img src={PersonSimpleRunBold} alt="" width={12} height={12} className="mt-0.5 opacity-70 shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
