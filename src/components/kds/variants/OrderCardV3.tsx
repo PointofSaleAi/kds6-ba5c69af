@@ -4,6 +4,7 @@ import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loa
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
@@ -179,6 +180,8 @@ export function OrderCardV3({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
+  const { getStatusForElapsed } = useStatusRules();
+  const agingStatus = getStatusForElapsed(elapsed);
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
@@ -261,6 +264,9 @@ export function OrderCardV3({ order, onBump }: Props) {
           </div>
         );
       })()}
+
+      {/* AGING BAR */}
+      <div style={{ height: 3, background: agingStatus.color }} aria-label={`Aging: ${agingStatus.label}`} />
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
       <div className="flex-1 bg-card">
