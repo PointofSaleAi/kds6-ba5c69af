@@ -4,6 +4,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { formatTime } from '@/lib/datetime';
 
@@ -97,9 +98,13 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { orderTypeDetailedColors } = useKDSSettings();
+  const { getStatusForElapsed } = useStatusRules();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
   const headerText = colorSet.headerText;
+  const status = getStatusForElapsed(elapsed);
+  const isFirstRule = elapsed / 60 < 6;
+  const pillBg = isFirstRule ? 'rgba(255,255,255,0.15)' : status.color;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
@@ -143,7 +148,16 @@ export function OrderCardV1({ order, onBump }: Props) {
         className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold"
         style={{ background: headerBg, color: headerText }}
       >
-        <span>#{order.orderNumber} · {fmtElapsed(elapsed)}</span>
+        <span className="inline-flex items-center gap-1.5">
+          <span>#{order.orderNumber}</span>
+          <span
+            className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
+            style={{ background: pillBg, color: '#FFFFFF' }}
+            aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${status.label}`}
+          >
+            {fmtElapsed(elapsed)}
+          </span>
+        </span>
         <span className="ml-2 shrink-0">
           {formatTime(order.timeReceived)}
         </span>
