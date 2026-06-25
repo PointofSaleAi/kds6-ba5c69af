@@ -39,7 +39,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
       aria-pressed={done}
     >
       <div className="flex items-start gap-1">
-        <span className="font-bold shrink-0 text-center" style={{ color: '#E84C3D', fontSize: 13, minWidth: 20 }}>
+        <span className="font-bold shrink-0 text-center" style={{ color: '#1F2937', fontSize: 13, minWidth: 20 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
