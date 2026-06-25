@@ -64,8 +64,8 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
       aria-disabled={loading}
       className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
     >
-      <div className={`flex gap-1 ${compact && !expanded ? 'items-center' : 'items-start'}`}>
-        <span className="font-bold shrink-0 text-center text-foreground" style={{ fontSize: 13, minWidth: 20 }}>
+      <div className="flex gap-1 items-center">
+        <span className="font-bold shrink-0 text-center text-foreground self-center" style={{ fontSize: 13, minWidth: 20, lineHeight: 1.2 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
