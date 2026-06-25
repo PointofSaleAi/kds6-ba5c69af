@@ -949,6 +949,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         ...displayOrder,
         timeReceived: new Date(Date.now() - mins * 60_000),
         elapsedSeconds: mins * 60,
+        items: displayOrder.items.map((it, i) =>
+          i % 3 === 0 ? it : { ...it, modifiers: [], allergens: [] }
+        ),
       };
       return <OrderCardV1 order={v1Order} onBump={handleBump} />;
     }
