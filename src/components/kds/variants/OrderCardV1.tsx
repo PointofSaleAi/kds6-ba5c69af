@@ -25,6 +25,7 @@ interface V1ProductRowProps {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
+  onReset: () => void;
   compact?: boolean;
 }
 
