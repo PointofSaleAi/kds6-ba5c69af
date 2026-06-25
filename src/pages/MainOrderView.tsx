@@ -268,12 +268,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
     if (cardVariant === 'v1') {
-      // V1 cards are denser, mirror grid breakpoints (up to 6 across).
+      // V1: 4 / 5 / 6 by viewport width
       if (boardContentWidth < 480) return 3;
-      if (boardContentWidth < 760) return 4;
-      if (boardContentWidth < 1000) return 5;
+      if (boardContentWidth < 1100) return 4;
+      if (boardContentWidth < 1400) return 5;
       return 6;
     }
+
     if (boardContentWidth < 480) return 2;
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
@@ -1208,7 +1209,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
                   {viewMode === 'grid' && (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v1' ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v1' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} expoHeader={kdsMode === 'Expo'} />
@@ -1308,7 +1309,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   ) : viewMode === 'grid' ? (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v1' ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v1' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);

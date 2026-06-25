@@ -1,23 +1,18 @@
 ## Goal
-On `/kds/v1` (full view), show 6 ticket cards per row in grid mode at the current viewport (~1138px), instead of the current 3.
+On `/kds/v1`, make ticket columns scale responsively to screen width: 4 / 5 / 6 cards per row.
 
-## Current behavior
-`MainOrderView.tsx` uses a shared grid for all variants:
-`grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6`
-So 6-up only kicks in at ≥1536px. V1 cards are visually denser than the default and can comfortably fit narrower.
+## Breakpoints (V1 only, landscape Grid and Stagger)
+- < ~1100px → 4 columns
+- ~1100–1400px → 5 columns
+- ≥ ~1400px → 6 columns
 
-## Change
-Apply a V1-specific grid that reaches 6 columns much earlier, only when `cardVariant === 'v1'` and in landscape grid mode. No changes to V2, V3, default, stagger, or horizontal views.
+(Smaller widths keep current 2–3 col behavior; portrait unchanged.)
 
-Proposed V1 grid (landscape):
-`grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-6`
-
-Portrait stays at `grid-cols-2 min-[960px]:grid-cols-3` (small screens can't fit 6 legibly).
-
-## Files
-- `src/pages/MainOrderView.tsx` — branch the grid className on `cardVariant` at line 1303 (active orders grid) and line 1203 (history grid).
+## Changes
+- `src/pages/MainOrderView.tsx`
+  - V1 Grid className: `grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6`
+  - V1 Stagger column logic: width <1100 → 4, <1400 → 5, else 6.
+- Apply to both active and history grids.
 
 ## Out of scope
-- Card internal sizing/typography (already tightened in prior turn).
-- V2 / V3 / default `/kds/full` grid.
-- Portrait/tablet breakpoints.
+V2, V3, default `/kds/full`, portrait, horizontal view, card internals.
