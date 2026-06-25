@@ -242,7 +242,6 @@ export function OrderCardV3({ order, onBump }: Props) {
         return (
           <div className="grid grid-cols-2 bg-card border-b border-border">
             <div className="flex items-start gap-1.5 px-2 py-1.5">
-              <Hash size={12} className="mt-0.5 text-[#6B7280]" />
               <div className="min-w-0">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.orderNumber}</div>
                 {cell1Title && <div className="text-[10px] text-[#6B7280] truncate">{cell1Title}</div>}
