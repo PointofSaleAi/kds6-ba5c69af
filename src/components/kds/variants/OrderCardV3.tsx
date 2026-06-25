@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import type { Order, CourseType, OrderType } from '@/types/kds';
-import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, CookingPot } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
+import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2 } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
@@ -12,8 +12,7 @@ const MODIFIER_CLASS = {
   neutral: 'text-modifier-neutral',
 } as const;
 
-type ProductState = 'unseen' | 'preparing' | 'done';
-
+type RowState = 'idle' | 'loading' | 'done';
 
 interface Props {
   order: Order;
@@ -43,32 +42,33 @@ function ProductRow({
   product,
   accent,
   state,
-  onTap,
+  onToggle,
+  onReset,
 }: {
-  product: import('@/types/kds').OrderItem;
+  product: OrderItem;
   accent: string;
-  state: ProductState;
-  onTap: () => void;
+  state: RowState;
+  onToggle: () => void;
+  onReset: () => void;
 }) {
-  const isDone = state === 'done';
-  const isPreparing = state === 'preparing';
+  const done = state === 'done';
+  const loading = state === 'loading';
 
-  let btnStyle: React.CSSProperties = { borderColor: '#9CA3AF', background: 'transparent' };
-  let btnIcon = <Check size={10} className="text-[#6B7280]" />;
-  let ariaLabel = 'Mark product preparing';
-  if (isPreparing) {
-    btnStyle = { borderColor: '#E67E22', background: '#FDEBD0' };
-    btnIcon = <CookingPot size={10} style={{ color: '#E67E22' }} />;
-    ariaLabel = 'Mark product done';
-  } else if (isDone) {
-    btnStyle = { borderColor: '#16A085', background: '#16A085' };
-    btnIcon = <Check size={10} className="text-white" strokeWidth={3} />;
-    ariaLabel = 'Product done';
-  }
+  const handleClick = () => {
+    if (loading || done) return;
+    onToggle();
+  };
 
   return (
     <div
-      className="flex items-start gap-1 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0"
+      role="button"
+      tabIndex={loading ? -1 : 0}
+      onClick={handleClick}
+      onDoubleClick={(e) => { if (done) { e.stopPropagation(); onReset(); } }}
+      onKeyDown={(e) => { if (!loading && !done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      aria-pressed={done}
+      aria-disabled={loading}
+      className={`flex items-start gap-1 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
       style={{ borderLeft: `3px solid ${accent}` }}
     >
       <span
@@ -79,22 +79,18 @@ function ProductRow({
       </span>
       <div className="flex-1 min-w-0">
         <div
-          className={`text-foreground ${isDone ? 'line-through opacity-60' : ''}`}
-          style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}
+          className="text-foreground"
+          style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
         >
           {product.name}
         </div>
         {product.modifiers.length > 0 && (
-          <div className={`mt-0.5 ${isDone ? 'opacity-60' : ''}`}>
+          <div className="mt-0.5">
             {product.modifiers.map((m, i) => (
               <div
                 key={i}
                 className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                style={{
-                  fontSize: 10,
-                  lineHeight: 1.3,
-                  textDecoration: isDone ? 'line-through' : undefined,
-                }}
+                style={{ fontSize: 10, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
               >
                 {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
               </div>
@@ -102,23 +98,27 @@ function ProductRow({
           </div>
         )}
         {product.allergens.length > 0 && (
-          <div className={`flex flex-wrap gap-1 mt-1 ${isDone ? 'opacity-60' : ''}`}>
+          <div className="flex flex-wrap gap-1 mt-1">
             {product.allergens.map((a) => (
               <AllergenBadge key={a.type} allergen={a} variant="item" />
             ))}
           </div>
         )}
       </div>
-      <button
-        type="button"
-        aria-label={ariaLabel}
-        onClick={isDone ? undefined : onTap}
-        disabled={isDone}
-        className={`shrink-0 mt-0.5 w-4 h-4 rounded-sm border flex items-center justify-center ${isDone ? 'cursor-default' : 'hover:brightness-95'}`}
-        style={btnStyle}
-      >
-        {btnIcon}
-      </button>
+      {loading && (
+        <span className="shrink-0 mt-0.5 flex items-center justify-center" style={{ width: 16, height: 16 }} aria-label="Marking product done">
+          <Loader2 size={12} className="animate-spin" color="#6C7A89" />
+        </span>
+      )}
+      {done && (
+        <span
+          className="shrink-0 mt-0.5 flex items-center justify-center rounded-full animate-scale-in"
+          style={{ background: '#27AE60', width: 16, height: 16 }}
+          aria-label="Product done"
+        >
+          <Check size={10} color="#fff" strokeWidth={3} />
+        </span>
+      )}
     </div>
   );
 }
@@ -144,14 +144,37 @@ export function OrderCardV3({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
-  const [productStates, setProductStates] = useState<Record<string, ProductState>>({});
-  const cycle = (id: string) =>
-    setProductStates((prev) => {
-      const cur = prev[id] ?? 'unseen';
-      const next: ProductState = cur === 'unseen' ? 'preparing' : cur === 'preparing' ? 'done' : 'done';
-      return { ...prev, [id]: next };
-    });
 
+  const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [bumping, setBumping] = useState(false);
+  const timersRef = useRef<number[]>([]);
+  useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
+
+  const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
+  const toggleRow = (id: string) => {
+    setRow(id, 'loading');
+    const t = window.setTimeout(() => setRow(id, 'done'), 600);
+    timersRef.current.push(t);
+  };
+
+  const allItems = order.courses.flatMap((c) => c.items);
+
+  const handleBump = () => {
+    if (bumping) return;
+    setBumping(true);
+    setRowStates((prev) => {
+      const next = { ...prev };
+      allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
+      return next;
+    });
+    allItems.forEach((p, idx) => {
+      const t = window.setTimeout(() => setRow(p.id, 'done'), 250 + idx * 120);
+      timersRef.current.push(t);
+    });
+    const total = 250 + allItems.length * 120 + 350;
+    const finish = window.setTimeout(() => onBump?.(order.id), total);
+    timersRef.current.push(finish);
+  };
 
   return (
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
@@ -217,7 +240,14 @@ export function OrderCardV3({ order, onBump }: Props) {
                 </div>
                 <div>
                   {course.items.map((product) => (
-                    <ProductRow key={product.id} product={product} accent={p.accent} state={productStates[product.id] ?? 'unseen'} onTap={() => cycle(product.id)} />
+                    <ProductRow
+                      key={product.id}
+                      product={product}
+                      accent={p.accent}
+                      state={rowStates[product.id] ?? 'idle'}
+                      onToggle={() => toggleRow(product.id)}
+                      onReset={() => setRow(product.id, 'idle')}
+                    />
                   ))}
                 </div>
               </div>
@@ -225,8 +255,15 @@ export function OrderCardV3({ order, onBump }: Props) {
           })
         ) : (
           <div>
-            {order.courses.flatMap((c) => c.items).map((product) => (
-              <ProductRow key={product.id} product={product} accent={accentColor} state={productStates[product.id] ?? 'unseen'} onTap={() => cycle(product.id)} />
+            {allItems.map((product) => (
+              <ProductRow
+                key={product.id}
+                product={product}
+                accent={accentColor}
+                state={rowStates[product.id] ?? 'idle'}
+                onToggle={() => toggleRow(product.id)}
+                onReset={() => setRow(product.id, 'idle')}
+              />
             ))}
           </div>
         )}
@@ -236,11 +273,13 @@ export function OrderCardV3({ order, onBump }: Props) {
       <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
         <button
           type="button"
-          onClick={() => onBump?.(order.id)}
-          className="rounded px-3 py-1 text-[12px] font-semibold"
+          onClick={handleBump}
+          disabled={bumping}
+          className="rounded px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
           style={{ background: accentColor, color: accentText }}
         >
-          Bump all
+          {bumping && <Loader2 size={12} className="animate-spin" />}
+          {bumping ? 'Bumping...' : 'Bump all'}
         </button>
       </div>
     </div>
