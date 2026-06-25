@@ -1,18 +1,16 @@
 ## Goal
-On `/kds/v1`, make ticket columns scale responsively to screen width: 4 / 5 / 6 cards per row.
+Make the elapsed-timer pill in `/kds/v1` ticket card headers fully driven by the Status Colors configured in Settings > Display > Status Colors, including the first (new) bucket. No other route or component is affected.
 
-## Breakpoints (V1 only, landscape Grid and Stagger)
-- < ~1100px → 4 columns
-- ~1100–1400px → 5 columns
-- ≥ ~1400px → 6 columns
+## Change
+In `src/components/kds/variants/OrderCardV1.tsx`:
 
-(Smaller widths keep current 2–3 col behavior; portrait unchanged.)
-
-## Changes
-- `src/pages/MainOrderView.tsx`
-  - V1 Grid className: `grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6`
-  - V1 Stagger column logic: width <1100 → 4, <1400 → 5, else 6.
-- Apply to both active and history grids.
+- Remove the hardcoded `rgba(255,255,255,0.15)` fallback for the first aging bucket.
+- Always set the pill background to `status.color` returned by `useStatusRules().getStatusForElapsed(elapsed)`.
+- Always set the pill text to `status.textColor` (already returns a hex for white/grey/black), so contrast matches whatever the user picked in Settings.
+- Keep the same pill shape, size, font, and placement. Real-time updates already work because `elapsed` ticks every second.
 
 ## Out of scope
-V2, V3, default `/kds/full`, portrait, horizontal view, card internals.
+- `/kds/full`, `/kds/v2`, `/kds/v3`, `/kds/home-onlineordering`
+- Status rule editor / thresholds / defaults
+- Any other header element (order number, fired time, table row)
+- Sidebar, footer, summary panel

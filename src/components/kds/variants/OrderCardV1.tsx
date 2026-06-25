@@ -103,8 +103,8 @@ export function OrderCardV1({ order, onBump }: Props) {
   const headerBg = colorSet.headerBg;
   const headerText = colorSet.headerText;
   const status = getStatusForElapsed(elapsed);
-  const isFirstRule = elapsed / 60 < 6;
-  const pillBg = isFirstRule ? 'rgba(255,255,255,0.15)' : status.color;
+  const pillBg = status.color;
+  const pillText = status.textColor;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
