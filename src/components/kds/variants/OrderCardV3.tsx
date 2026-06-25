@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
-import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2 } from 'lucide-react';
+import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2, ChevronRight } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
+import { useLongPress } from '@/hooks/use-long-press';
+import { RecipeModalV1 } from './RecipeModalV1';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -44,28 +46,43 @@ function ProductRow({
   state,
   onToggle,
   onReset,
+  onLongPress,
+  compact = false,
 }: {
   product: OrderItem;
   accent: string;
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onLongPress: (p: OrderItem) => void;
+  compact?: boolean;
 }) {
   const done = state === 'done';
   const loading = state === 'loading';
+  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0;
+  const [expanded, setExpanded] = useState(false);
+  const showDetails = !compact || expanded;
+  const canExpand = compact && hasDetails && !loading;
 
   const handleClick = () => {
-    if (loading || done) return;
+    if (loading) return;
+    if (done) {
+      if (canExpand) setExpanded((v) => !v);
+      return;
+    }
     onToggle();
   };
+
+  const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
 
   return (
     <div
       role="button"
       tabIndex={loading ? -1 : 0}
       onClick={handleClick}
-      onDoubleClick={(e) => { if (done) { e.stopPropagation(); onReset(); } }}
-      onKeyDown={(e) => { if (!loading && !done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
       className={`flex items-start gap-1 px-1.5 py-1 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
@@ -84,7 +101,7 @@ function ProductRow({
         >
           {product.name}
         </div>
-        {product.modifiers.length > 0 && (
+        {showDetails && product.modifiers.length > 0 && (
           <div className="mt-0">
             {product.modifiers.map((m, i) => (
               <div
@@ -97,7 +114,7 @@ function ProductRow({
             ))}
           </div>
         )}
-        {product.allergens.length > 0 && (
+        {showDetails && product.allergens.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-0.5">
             {product.allergens.map((a) => (
               <AllergenBadge key={a.type} allergen={a} variant="item" />
@@ -105,6 +122,22 @@ function ProductRow({
           </div>
         )}
       </div>
+      {canExpand && !done && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+          className="shrink-0 inline-flex items-center justify-center"
+          style={{ width: 18, height: 18, color: '#6C7A89' }}
+          aria-label={expanded ? 'Hide details' : 'Show details'}
+          aria-expanded={expanded}
+        >
+          <ChevronRight
+            size={11}
+            strokeWidth={2.5}
+            style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 120ms ease' }}
+          />
+        </button>
+      )}
       {loading && (
         <span className="shrink-0 mt-0.5 flex items-center justify-center" style={{ width: 16, height: 16 }} aria-label="Marking product done">
           <Loader2 size={12} className="animate-spin" color="#6C7A89" />
@@ -140,13 +173,15 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const TypeIcon = typeMeta.Icon;
-  const { orderTypeDetailedColors } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const isCompact = ticketLayout === 'compact';
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
+  const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
@@ -176,18 +211,26 @@ export function OrderCardV3({ order, onBump }: Props) {
     timersRef.current.push(finish);
   };
 
+  const showCourses = !isCompact && order.orderType === 'dine-in';
+
   return (
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* ACCENT BAR coloured by order type */}
       <div style={{ height: 4, background: accentColor }} />
 
-      {/* ORDER TYPE STRIP */}
+      {/* ORDER TYPE STRIP - also bump trigger in compact */}
       <div
-        className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide"
+        role={isCompact ? 'button' : undefined}
+        tabIndex={isCompact ? 0 : -1}
+        onClick={isCompact ? handleBump : undefined}
+        onKeyDown={isCompact ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBump(); } } : undefined}
+        aria-disabled={isCompact ? bumping : undefined}
+        className={`flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
         style={{ background: accentColor, color: accentText }}
       >
         <TypeIcon size={11} />
         <span>{orderTypeLabel(order.orderType)}</span>
+        {isCompact && bumping && <Loader2 size={11} className="ml-auto animate-spin" />}
       </div>
 
       {/* METADATA GRID 2x2 */}
@@ -224,9 +267,9 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-      {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
+      {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
       <div className="flex-1 bg-card">
-        {order.orderType === 'dine-in' ? (
+        {showCourses ? (
           order.courses.map((course, idx) => {
             const p = paletteFor(course.course);
             return (
@@ -247,6 +290,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                       state={rowStates[product.id] ?? 'idle'}
                       onToggle={() => toggleRow(product.id)}
                       onReset={() => setRow(product.id, 'idle')}
+                      onLongPress={setRecipeProduct}
                     />
                   ))}
                 </div>
@@ -263,6 +307,8 @@ export function OrderCardV3({ order, onBump }: Props) {
                 state={rowStates[product.id] ?? 'idle'}
                 onToggle={() => toggleRow(product.id)}
                 onReset={() => setRow(product.id, 'idle')}
+                onLongPress={setRecipeProduct}
+                compact={isCompact}
               />
             ))}
           </div>
@@ -270,18 +316,22 @@ export function OrderCardV3({ order, onBump }: Props) {
       </div>
 
       {/* FOOTER */}
-      <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
-        <button
-          type="button"
-          onClick={handleBump}
-          disabled={bumping}
-          className="rounded px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
-          style={{ background: accentColor, color: accentText }}
-        >
-          {bumping && <Loader2 size={12} className="animate-spin" />}
-          {bumping ? 'Bumping...' : 'Bump all'}
-        </button>
-      </div>
+      {!isCompact && (
+        <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
+          <button
+            type="button"
+            onClick={handleBump}
+            disabled={bumping}
+            className="rounded px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
+            style={{ background: accentColor, color: accentText }}
+          >
+            {bumping && <Loader2 size={12} className="animate-spin" />}
+            {bumping ? 'Bumping...' : 'Bump all'}
+          </button>
+        </div>
+      )}
+
+      <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
     </div>
   );
 }
