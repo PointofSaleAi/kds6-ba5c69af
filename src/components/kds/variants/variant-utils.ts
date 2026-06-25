@@ -1,4 +1,5 @@
 import type { Order, OrderType } from '@/types/kds';
+import { formatTime } from '@/lib/datetime';
 
 export function fmtElapsed(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));
@@ -39,7 +40,7 @@ export function courseFireTime(order: Order, courseIndex: number): string | unde
   const c = order.courses[courseIndex];
   if (!c) return undefined;
   if (c.firedAt) {
-    return c.firedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return formatTime(c.firedAt);
   }
   return undefined;
 }

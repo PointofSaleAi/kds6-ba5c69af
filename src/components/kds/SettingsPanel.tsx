@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { formatTime } from '@/lib/datetime';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import StatusSettings from '@/pages/StatusSettings';
@@ -308,7 +309,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     setTimeout(() => {
       setUploadingLogs(false);
       toast.success('Logs uploaded successfully', {
-        description: `${Object.keys(logs).length} sections collected at ${new Date().toLocaleTimeString()}`,
+        description: `${Object.keys(logs).length} sections collected at ${formatTime(new Date())}`,
       });
     }, 2000);
   };

@@ -7,6 +7,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { KitchenReplyDialog } from '@/components/kds/KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import type { NotificationType } from '@/types/notification';
+import { formatTime } from '@/lib/datetime';
 
 function useTimeAgo() {
   const { t } = useLanguage();
@@ -16,10 +17,6 @@ function useTimeAgo() {
     if (mins < 60) return t.minAgoSuffix.replace('{n}', String(mins));
     return t.hourAgoSuffix.replace('{n}', String(Math.floor(mins / 60)));
   };
-}
-
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 const notifIcons: Record<NotificationType, { icon: React.ElementType; color: string }> = {

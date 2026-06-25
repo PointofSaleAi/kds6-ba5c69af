@@ -3,6 +3,7 @@ import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
+import { formatTime } from '@/lib/datetime';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -68,7 +69,7 @@ export function OrderCardV1({ order, onBump }: Props) {
       >
         <span>#{order.orderNumber} · {fmtElapsed(elapsed)}</span>
         <span className="ml-2 shrink-0">
-          {order.timeReceived.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+          {formatTime(order.timeReceived)}
         </span>
       </div>
 

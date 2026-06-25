@@ -65,10 +65,7 @@ const statusBodyMap: Record<string, string> = {
   recalled: 'border-l-order-take-out',
 };
 
-/** Format a Date to HH:MM for timestamps */
-function formatStaticTime(date: Date): string {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
+import { formatTime as formatStaticTime } from '@/lib/datetime';
 
 export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
@@ -730,7 +727,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   // Record "Done at" timestamp when a course transitions to served
   useEffect(() => {
     if (!isDineIn) return;
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const now = formatStaticTime(new Date());
     setCourseDoneTimestamps(prev => {
       let changed = false;
       const next = new Map(prev);
@@ -804,7 +801,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         <div>
           <OrderTypeBadge
             type={order.orderType}
-            time={formatTimeForKDS(order.timeReceived, timeFormat)}
+            time={formatStaticTime(order.timeReceived)}
             tableInfo={getLocationLabel(order.orderType, order.tableName)}
             stationBadge={undefined}
             

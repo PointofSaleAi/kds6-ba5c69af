@@ -1,5 +1,6 @@
 // TODO: Replace with API endpoint - all data should come from backend
 import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react';
+import { formatTime } from '@/lib/datetime';
 import type { Order } from '@/types/kds';
 import type { ExpoTicket, ExpoStation, ExpoItem, ExpoItemStatus, ExpoCourse, ExpoCourseStatus } from '@/data/mock-expo-orders';
 import { mockOrders } from '@/data/mock-orders';
@@ -119,7 +120,7 @@ function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
     // Build status label for queued courses
     let statusLabel: string | undefined;
     if (status === 'queued' && course._startedAt) {
-      statusLabel = `Preparing at ${course._startedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      statusLabel = `Preparing at ${formatTime(course._startedAt)}`;
     }
     return {
       name: course.course,

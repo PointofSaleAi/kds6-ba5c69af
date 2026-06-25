@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, Minus, Plus } from 'lucide-react';
 import noteIcon from '@/assets/note-bold.svg';
+import { formatTime } from '@/lib/datetime';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
 import { StationBadge, stationColors } from './StationBadge';
@@ -1023,7 +1024,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     setDemoTickets(prev => prev.map(t => {
       if (t.id !== ticketId) return t;
       const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const timeStr = formatTime(now);
       const updatedItems = t.items.map(item => {
         if (item.id !== itemId) return item;
         const next = dir === 'advance' ? advanceStatus(item.status) : revertStatus(item.status);
@@ -1114,7 +1115,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     setDemoTickets(prev => prev.map(t => {
       if (t.id !== ticketId || !t.coursing?.pending) return t;
       const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const timeStr = formatTime(now);
       const newServed = t.coursing.active
         ? { course: t.coursing.active.course, doneAt: timeStr, items: t.items.map(i => ({ name: i.name, quantity: i.quantity })) }
         : t.coursing.served;
