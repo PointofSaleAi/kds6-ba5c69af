@@ -308,7 +308,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     setTimeout(() => {
       setUploadingLogs(false);
       toast.success('Logs uploaded successfully', {
-        description: `${Object.keys(logs).length} sections collected at ${new Date().toLocaleTimeString()}`,
+        description: `${Object.keys(logs).length} sections collected at ${formatTime(new Date())}`,
       });
     }, 2000);
   };

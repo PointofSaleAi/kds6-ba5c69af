@@ -10,16 +10,7 @@ interface KitchenMessageSectionProps {
   onReply: (messageId: string, text: string) => void;
 }
 
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-function timeAgo(date: Date): string {
-  const mins = Math.floor((Date.now() - date.getTime()) / 60000);
-  if (mins < 1) return 'Just now';
-  if (mins < 60) return `${mins}m ago`;
-  return `${Math.floor(mins / 60)}h ago`;
-}
+import { formatTime, formatTimeAgo as timeAgo } from '@/lib/datetime';
 
 export function KitchenMessageSection({ messages, replies, onAcknowledge, onReply }: KitchenMessageSectionProps) {
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);

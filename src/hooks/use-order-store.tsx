@@ -119,7 +119,7 @@ function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
     // Build status label for queued courses
     let statusLabel: string | undefined;
     if (status === 'queued' && course._startedAt) {
-      statusLabel = `Preparing at ${course._startedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      statusLabel = `Preparing at ${formatTime(course._startedAt)}`;
     }
     return {
       name: course.course,

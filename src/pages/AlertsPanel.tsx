@@ -19,7 +19,7 @@ function useTimeAgo() {
 }
 
 function formatTime(date: Date): string {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return formatTime(date);
 }
 
 const notifIcons: Record<NotificationType, { icon: React.ElementType; color: string }> = {

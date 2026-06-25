@@ -39,7 +39,7 @@ export function courseFireTime(order: Order, courseIndex: number): string | unde
   const c = order.courses[courseIndex];
   if (!c) return undefined;
   if (c.firedAt) {
-    return c.firedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return formatTime(c.firedAt);
   }
   return undefined;
 }
