@@ -123,8 +123,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed w-[320px] bg-white shadow-2xl z-50 flex flex-col overflow-hidden"
-            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
+            className="light fixed w-[320px] bg-white shadow-2xl z-50 flex flex-col overflow-hidden text-[#2C3E50]"
+            style={{ right: insets.right, top: insets.top, bottom: insets.bottom, colorScheme: 'light' }}
           >
       {/* Header */}
       <div
