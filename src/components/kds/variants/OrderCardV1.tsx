@@ -67,15 +67,17 @@ export function OrderCardV1({ order, onBump }: Props) {
         style={{ background: headerBg, color: headerText }}
       >
         <span>#{order.orderNumber} · {fmtElapsed(elapsed)}</span>
-        <span className="truncate ml-2">{order.tableName}</span>
+        <span className="ml-2 shrink-0">
+          {order.timeReceived.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+        </span>
       </div>
 
-      {/* ORDER TYPE ROW */}
+      {/* TABLE / LOCATION ROW */}
       <div
         className="text-center bg-white text-[#2C3E50]"
         style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', borderBottom: '0.5px solid #E5E7EB' }}
       >
-        {orderTypeLabel(order.orderType)}
+        {order.tableName || orderTypeLabel(order.orderType)}
       </div>
 
       {/* COURSES */}
