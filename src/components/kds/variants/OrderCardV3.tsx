@@ -267,7 +267,7 @@ export function OrderCardV3({ order, onBump }: Props) {
               <img src={PersonSimpleRunBold} alt="" width={12} height={12} className="mt-0.5 opacity-70 shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
-                <div className="text-[10px] text-[#6B7280] truncate">Fired {formatTime(order.timeReceived)}</div>
+                <div className="text-[10px] text-[#6B7280] truncate">{formatTime(order.timeReceived)}</div>
               </div>
             </div>
           </div>
