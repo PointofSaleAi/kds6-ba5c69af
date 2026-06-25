@@ -50,6 +50,7 @@ function V1ProductRow({ product, state, onToggle, onReset, compact = false }: V1
       role="button"
       tabIndex={loading ? -1 : 0}
       onClick={handleRowClick}
+      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
       onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleRowClick(); } }}
       aria-pressed={done}
       aria-disabled={loading}
