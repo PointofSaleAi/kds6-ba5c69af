@@ -56,17 +56,17 @@ function V2ProductRow({
         <div className="flex-1 min-w-0">
           <div
             className="text-foreground"
-            style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+            style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
           </div>
           {product.modifiers.length > 0 && (
-            <div className="mt-0.5">
+            <div className="mt-0">
               {product.modifiers.map((m, i) => (
                 <div
                   key={i}
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 11, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+                  style={{ fontSize: 11, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                 >
                   {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
@@ -74,14 +74,14 @@ function V2ProductRow({
             </div>
           )}
           {product.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
+            <div className="flex flex-wrap gap-1 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
             </div>
           )}
           {product.notes && (
-            <div className="italic text-[#6B7280] mt-0.5" style={{ fontSize: 11, lineHeight: 1.3 }}>
+            <div className="italic text-[#6B7280] mt-0" style={{ fontSize: 11, lineHeight: 1.2 }}>
               {product.notes}
             </div>
           )}
