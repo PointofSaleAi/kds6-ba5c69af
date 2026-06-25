@@ -940,8 +940,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const isUnseenScreen = activeNav === 'unseen-orders';
   const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
 
+  const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
-    if (cardVariant === 'v1') return <OrderCardV1 order={displayOrder} onBump={handleBump} />;
+    if (cardVariant === 'v1') {
+      const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
+      const mins = V1_AGING_SPREAD_MIN[idx];
+      const v1Order: Order = {
+        ...displayOrder,
+        timeReceived: new Date(Date.now() - mins * 60_000),
+        elapsedSeconds: mins * 60,
+      };
+      return <OrderCardV1 order={v1Order} onBump={handleBump} />;
+    }
     if (cardVariant === 'v2') return <OrderCardV2 order={displayOrder} onBump={handleBump} />;
     if (cardVariant === 'v3') return <OrderCardV3 order={displayOrder} onBump={handleBump} />;
     return (
