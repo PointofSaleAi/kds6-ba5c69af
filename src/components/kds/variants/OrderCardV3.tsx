@@ -7,6 +7,7 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
+import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
