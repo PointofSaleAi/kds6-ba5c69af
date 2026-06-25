@@ -79,7 +79,7 @@ function ProductRow({
       </span>
       <div className="flex-1 min-w-0">
         <div
-          className={`text-[#1F2937] ${isDone ? 'line-through opacity-60' : ''}`}
+          className={`text-foreground ${isDone ? 'line-through opacity-60' : ''}`}
           style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}
         >
           {product.name}
@@ -154,7 +154,7 @@ export function OrderCardV3({ order, onBump }: Props) {
 
 
   return (
-    <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* ACCENT BAR coloured by order type */}
       <div style={{ height: 4, background: accentColor }} />
 
@@ -177,11 +177,11 @@ export function OrderCardV3({ order, onBump }: Props) {
           ? (order.guestName || order.customerName || 'Dine in')
           : (order.customerPhone || order.tableName);
         return (
-          <div className="grid grid-cols-2 bg-white border-b border-border">
+          <div className="grid grid-cols-2 bg-card border-b border-border">
             <div className="flex items-start gap-1.5 px-2 py-1.5">
               <Hash size={12} className="mt-0.5 text-[#6B7280]" />
               <div className="min-w-0">
-                <div className="font-bold text-[#1F2937] text-[13px] leading-tight truncate">#{order.orderNumber}</div>
+                <div className="font-bold text-foreground text-[13px] leading-tight truncate">#{order.orderNumber}</div>
                 <div className="text-[10px] text-[#6B7280] truncate">{cell1Title}</div>
                 {cell1Sub && cell1Sub !== cell1Title && (
                   <div className="text-[10px] text-[#9CA3AF] truncate">{cell1Sub}</div>
@@ -191,7 +191,7 @@ export function OrderCardV3({ order, onBump }: Props) {
             <div className="flex items-start gap-1.5 px-2 py-1.5 border-l border-border">
               <User size={12} className="mt-0.5 text-[#6B7280]" />
               <div className="min-w-0">
-                <div className="font-bold text-[#1F2937] text-[13px] leading-tight truncate">{order.serverName}</div>
+                <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
                 <div className="text-[10px] text-[#6B7280] truncate">
                   {orderTypeLabel(order.orderType)} · {fmtElapsed(elapsed)}
                 </div>
@@ -202,7 +202,7 @@ export function OrderCardV3({ order, onBump }: Props) {
       })()}
 
       {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
-      <div className="flex-1 bg-white">
+      <div className="flex-1 bg-card">
         {order.orderType === 'dine-in' ? (
           order.courses.map((course, idx) => {
             const p = paletteFor(course.course);
