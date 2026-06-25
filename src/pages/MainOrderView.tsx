@@ -961,7 +961,21 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return <OrderCardV1 order={v1Order} onBump={handleBump} />;
     }
-    if (cardVariant === 'v2') return <OrderCardV2 order={displayOrder} onBump={handleBump} />;
+    if (cardVariant === 'v2') {
+      let flatIdx2 = 0;
+      const v2Order: Order = {
+        ...displayOrder,
+        courses: (displayOrder.courses ?? []).map((c) => ({
+          ...c,
+          items: (c.items ?? []).map((it) => {
+            const keep = flatIdx2 % 3 === 0;
+            flatIdx2++;
+            return keep ? it : { ...it, modifiers: [], allergens: [], notes: undefined };
+          }),
+        })),
+      };
+      return <OrderCardV2 order={v2Order} onBump={handleBump} />;
+    }
     if (cardVariant === 'v3') return <OrderCardV3 order={displayOrder} onBump={handleBump} />;
     return (
       <OrderCard
