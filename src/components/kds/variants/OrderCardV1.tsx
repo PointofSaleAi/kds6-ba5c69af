@@ -25,9 +25,10 @@ interface V1ProductRowProps {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
+  compact?: boolean;
 }
 
-function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
+function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRowProps) {
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
@@ -50,7 +51,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
           >
             {product.name}
           </div>
-          {product.modifiers.length > 0 && (
+          {!compact && product.modifiers.length > 0 && (
             <div>
               {product.modifiers.map((m, i) => (
                 <div
@@ -63,7 +64,7 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
               ))}
             </div>
           )}
-          {product.allergens.length > 0 && (
+          {!compact && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-0.5 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
@@ -95,9 +96,11 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
 }
 
 
+
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
-  const { orderTypeDetailedColors } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const isCompact = ticketLayout === 'compact';
   const { getStatusForElapsed } = useStatusRules();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
@@ -174,7 +177,7 @@ export function OrderCardV1({ order, onBump }: Props) {
 
       {/* COURSES */}
       <div className="flex-1">
-        {order.orderType === 'dine-in' ? (
+        {order.orderType === 'dine-in' && !isCompact ? (
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
               <div
@@ -203,11 +206,13 @@ export function OrderCardV1({ order, onBump }: Props) {
                 product={product}
                 state={rowStates[product.id] ?? 'idle'}
                 onToggle={() => toggleRow(product.id)}
+                compact={isCompact}
               />
             ))}
           </div>
         )}
       </div>
+
 
       {/* FOOTER */}
       <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
