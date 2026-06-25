@@ -10,6 +10,15 @@ import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import { formatTime } from '@/lib/datetime';
+import dineInIcon from '@/assets/icons/order-types/dine-in.svg';
+import takeOutIcon from '@/assets/icons/order-types/take-out.svg';
+import deliveryIcon from '@/assets/icons/order-types/delivery.svg';
+import banquetIcon from '@/assets/icons/order-types/banquet.svg';
+import driveThruIcon from '@/assets/icons/order-types/drive-thru.svg';
+import curbSideIcon from '@/assets/icons/order-types/curb-side.svg';
+import scheduledIcon from '@/assets/icons/order-types/scheduled.svg';
+import phoneInIcon from '@/assets/icons/order-types/phone-in.svg';
+import customIcon from '@/assets/icons/order-types/custom.svg';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -160,22 +169,22 @@ function ProductRow({
 }
 
 
-const ORDER_TYPE_META: Record<OrderType, { color: string; Icon: typeof Hash }> = {
-  'dine-in': { color: '#1A1A2E', Icon: Utensils },
-  'take-out': { color: '#2980B9', Icon: ShoppingBag },
-  'delivery': { color: '#16A085', Icon: Bike },
-  'banquet': { color: '#F39C12', Icon: PartyPopper },
-  'drive-thru': { color: '#2980B9', Icon: ShoppingBag },
-  'curb-side': { color: '#2980B9', Icon: ShoppingBag },
-  'scheduled': { color: '#6B7280', Icon: ShoppingBag },
-  'phone-in': { color: '#7C3AED', Icon: Phone },
-  'custom': { color: '#6B7280', Icon: ShoppingBag },
+const ORDER_TYPE_META: Record<OrderType, { color: string; icon: string }> = {
+  'dine-in': { color: '#1A1A2E', icon: dineInIcon },
+  'take-out': { color: '#2980B9', icon: takeOutIcon },
+  'delivery': { color: '#16A085', icon: deliveryIcon },
+  'banquet': { color: '#F39C12', icon: banquetIcon },
+  'drive-thru': { color: '#2980B9', icon: driveThruIcon },
+  'curb-side': { color: '#2980B9', icon: curbSideIcon },
+  'scheduled': { color: '#6B7280', icon: scheduledIcon },
+  'phone-in': { color: '#7C3AED', icon: phoneInIcon },
+  'custom': { color: '#6B7280', icon: customIcon },
 };
 
 export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
-  const TypeIcon = typeMeta.Icon;
+  const typeIcon = typeMeta.icon;
   const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
@@ -233,7 +242,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         className={`relative flex items-center justify-start gap-1.5 px-2 py-1 pr-16 text-[13px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
         style={{ background: accentColor, color: accentText }}
       >
-        <TypeIcon size={14} />
+        <img src={typeIcon} alt="" width={14} height={14} className="shrink-0" style={{ filter: accentText === '#FFFFFF' || accentText === '#ffffff' ? 'brightness(0) invert(1)' : 'brightness(0)' }} />
         <span>{order.orderType === 'dine-in' ? (order.tableName || orderTypeLabel(order.orderType)) : orderTypeLabel(order.orderType)}</span>
         <span
           className="absolute right-2 inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold normal-case tracking-normal"
