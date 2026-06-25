@@ -181,9 +181,16 @@ export function OrderCardV2({ order, onBump }: Props) {
   return (
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER */}
-      <div className="px-2.5 py-2" style={{ background: '#F3F4F6' }}>
+      <div
+        className={`px-2.5 py-2 ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
+        style={{ background: '#F3F4F6' }}
+        onClick={isCompact ? handleBump : undefined}
+        role={isCompact ? 'button' : undefined}
+        aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
+      >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
+            {isCompact && bumping && <Loader2 size={12} className="animate-spin shrink-0" />}
             {showTableInstead ? (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
@@ -217,9 +224,9 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
-      {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
+      {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
       <div className="flex-1 bg-card">
-        {isDineIn ? (
+        {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
               <div
@@ -247,25 +254,28 @@ export function OrderCardV2({ order, onBump }: Props) {
               state={rowStates[product.id] ?? 'idle'}
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
+              compact={isCompact}
             />
           ))
         )}
       </div>
 
       {/* FOOTER */}
-      <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
-        <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
-        <button
-          type="button"
-          onClick={handleBump}
-          disabled={bumping}
-          className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
-          style={{ color: '#2563EB' }}
-        >
-          {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
-          {bumping ? 'Bumping...' : 'Bump'}
-        </button>
-      </div>
+      {!isCompact && (
+        <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
+          <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
+          <button
+            type="button"
+            onClick={handleBump}
+            disabled={bumping}
+            className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
+            style={{ color: '#2563EB' }}
+          >
+            {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
+            {bumping ? 'Bumping...' : 'Bump'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
