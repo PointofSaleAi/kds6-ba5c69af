@@ -31,7 +31,7 @@ function V2ProductRow({ product }: { product: OrderItem }) {
             <div className="mt-0.5">
               {product.modifiers.map((m, i) => (
                 <div key={i} className={`font-semibold ${MODIFIER_CLASS[m.type]}`} style={{ fontSize: 11, lineHeight: 1.3 }}>
-                  {m.text}
+                  {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
               ))}
             </div>
