@@ -98,9 +98,13 @@ function V1ProductRow({ product, state, onToggle }: V1ProductRowProps) {
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { orderTypeDetailedColors } = useKDSSettings();
+  const { getStatusForElapsed } = useStatusRules();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
   const headerText = colorSet.headerText;
+  const status = getStatusForElapsed(elapsed);
+  const isFirstRule = elapsed / 60 < 6;
+  const pillBg = isFirstRule ? 'rgba(255,255,255,0.15)' : status.color;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
