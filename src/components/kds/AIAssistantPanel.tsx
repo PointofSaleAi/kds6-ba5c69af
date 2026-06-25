@@ -123,8 +123,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="light fixed w-[320px] bg-white shadow-2xl z-50 flex flex-col overflow-hidden text-[#2C3E50]"
-            style={{ right: insets.right, top: insets.top, bottom: insets.bottom, colorScheme: 'light' }}
+            className="fixed w-[320px] bg-background shadow-2xl z-50 flex flex-col overflow-hidden"
+            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
       {/* Header */}
       <div
@@ -148,7 +148,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       </div>
 
       {/* Body */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto bg-white">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background">
         {!hasMessages ? (
           <div className="px-4 py-5 flex flex-col items-center text-center">
             <div className="mb-3">
@@ -238,7 +238,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={recording ? 'Listening...' : 'Ask me anything...'}
-            className="w-full h-9 bg-white border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+            className="w-full h-9 bg-background border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
           />
           <button
             onClick={toggleRecording}
