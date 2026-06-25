@@ -34,7 +34,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
                   style={{ fontSize: 11, lineHeight: 1.3 }}
                 >
-                  {m.text}
+                  {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
               ))}
             </div>

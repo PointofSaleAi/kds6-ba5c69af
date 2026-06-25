@@ -96,7 +96,7 @@ function ProductRow({
                   textDecoration: isDone ? 'line-through' : undefined,
                 }}
               >
-                {m.text}
+                {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
               </div>
             ))}
           </div>
