@@ -20,11 +20,11 @@ function V2ProductRow({ product }: { product: OrderItem }) {
   return (
     <div className="px-2.5 py-1.5 border-b border-border/40 last:border-b-0">
       <div className="flex items-start gap-1">
-        <span className="font-bold text-[#1F2937] shrink-0" style={{ fontSize: 15, minWidth: 20, lineHeight: 1.2 }}>
+        <span className="font-bold text-foreground shrink-0" style={{ fontSize: 15, minWidth: 20, lineHeight: 1.2 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
-          <div className="text-[#1F2937]" style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.3 }}>
+          <div className="text-foreground" style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.3 }}>
             {product.name}
           </div>
           {product.modifiers.length > 0 && (
@@ -62,11 +62,11 @@ export function OrderCardV2({ order, onBump }: Props) {
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
 
   return (
-    <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER */}
       <div className="px-2.5 py-2" style={{ background: '#F3F4F6' }}>
         <div className="flex items-center justify-between gap-2">
-          <span className="font-bold text-[#1F2937] text-[14px] truncate">{headerName}</span>
+          <span className="font-bold text-foreground text-[14px] truncate">{headerName}</span>
           <span
             className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
             style={{ background: colorSet.headerBg, color: colorSet.headerText }}
@@ -80,7 +80,7 @@ export function OrderCardV2({ order, onBump }: Props) {
       </div>
 
       {/* PRODUCTS  course bands for dine-in, flat list for everything else */}
-      <div className="flex-1 bg-white">
+      <div className="flex-1 bg-card">
         {isDineIn ? (
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
@@ -103,7 +103,7 @@ export function OrderCardV2({ order, onBump }: Props) {
       </div>
 
       {/* FOOTER */}
-      <div className="flex items-center justify-between px-2.5 py-1.5 bg-white border-t border-border">
+      <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
         <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
         <button
           type="button"

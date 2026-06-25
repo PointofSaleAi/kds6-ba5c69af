@@ -62,7 +62,7 @@ function V1ProductRow({ product, state, onToggle, onReset, compact = false }: V1
         </span>
         <div className="flex-1 min-w-0">
           <div
-            className="text-[#2C3E50]"
+            className="text-foreground"
             style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
@@ -177,7 +177,7 @@ export function OrderCardV1({ order, onBump }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* TABLE / LOCATION ROW */}
       <div
         onClick={isCompact ? handleBump : undefined}
@@ -193,7 +193,7 @@ export function OrderCardV1({ order, onBump }: Props) {
 
       {/* HEADER */}
       <div
-        className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-white text-[#2C3E50]"
+        className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-card text-foreground"
         style={{ borderBottom: '0.5px solid #E5E7EB' }}
       >
         <span className="inline-flex items-center gap-1.5">
@@ -223,7 +223,7 @@ export function OrderCardV1({ order, onBump }: Props) {
               >
                 {courseLabel(course.course)}
               </div>
-              <div className="bg-white">
+              <div className="bg-card">
                 {course.items.map((product) => (
                   <V1ProductRow
                     key={product.id}
@@ -237,7 +237,7 @@ export function OrderCardV1({ order, onBump }: Props) {
             </div>
           ))
         ) : (
-          <div className="bg-white">
+          <div className="bg-card">
             {allItems.map((product) => (
               <V1ProductRow
                 key={product.id}
