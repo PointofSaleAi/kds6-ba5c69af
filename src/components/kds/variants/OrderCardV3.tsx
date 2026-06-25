@@ -68,29 +68,29 @@ function ProductRow({
       onKeyDown={(e) => { if (!loading && !done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`flex items-start gap-1 pl-2 pr-1.5 py-1 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      className={`flex items-start gap-1 px-1.5 py-1 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
       style={{ borderLeft: `3px solid ${accent}` }}
     >
       <span
-        className="font-bold shrink-0"
-        style={{ color: accent, fontSize: 11, minWidth: 16, lineHeight: 1.3 }}
+        className="font-bold shrink-0 text-center"
+        style={{ color: accent, fontSize: 11, minWidth: 18, lineHeight: '14.3px' }}
       >
         {product.quantity}
       </span>
       <div className="flex-1 min-w-0">
         <div
           className="text-foreground"
-          style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+          style={{ fontSize: 11, fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
         >
           {product.name}
         </div>
         {product.modifiers.length > 0 && (
-          <div className="mt-0.5">
+          <div className="mt-0">
             {product.modifiers.map((m, i) => (
               <div
                 key={i}
                 className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                style={{ fontSize: 10, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+                style={{ fontSize: 10, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
               >
                 {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
               </div>
@@ -98,7 +98,7 @@ function ProductRow({
           </div>
         )}
         {product.allergens.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1">
+          <div className="flex flex-wrap gap-1 mt-0.5">
             {product.allergens.map((a) => (
               <AllergenBadge key={a.type} allergen={a} variant="item" />
             ))}
