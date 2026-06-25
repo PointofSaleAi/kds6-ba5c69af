@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Check } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
@@ -17,14 +19,23 @@ interface Props {
 }
 
 function V1ProductRow({ product }: { product: OrderItem }) {
+  const [done, setDone] = useState(false);
   return (
-    <div className="px-2 py-1 border-b border-border/40 last:border-b-0">
+    <button
+      type="button"
+      onClick={() => setDone((d) => !d)}
+      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity ${done ? 'opacity-50' : 'hover:bg-black/[0.02]'}`}
+      aria-pressed={done}
+    >
       <div className="flex items-start gap-1">
         <span className="font-bold shrink-0 text-center" style={{ color: '#E84C3D', fontSize: 13, minWidth: 20 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
-          <div className="text-[#2C3E50]" style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.2 }}>
+          <div
+            className="text-[#2C3E50]"
+            style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+          >
             {product.name}
           </div>
           {product.modifiers.length > 0 && (
@@ -33,7 +44,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
                 <div
                   key={i}
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 11, lineHeight: 1.2 }}
+                  style={{ fontSize: 11, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                 >
                   {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
@@ -48,10 +59,20 @@ function V1ProductRow({ product }: { product: OrderItem }) {
             </div>
           )}
         </div>
+        {done && (
+          <span
+            className="shrink-0 flex items-center justify-center rounded-full"
+            style={{ background: '#27AE60', width: 18, height: 18 }}
+            aria-label="Product done"
+          >
+            <Check size={12} color="#fff" strokeWidth={3} />
+          </span>
+        )}
       </div>
-    </div>
+    </button>
   );
 }
+
 
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
