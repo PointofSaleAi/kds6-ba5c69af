@@ -10,6 +10,15 @@ import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import { formatTime } from '@/lib/datetime';
+import dineInIcon from '@/assets/icons/order-types/dine-in.svg';
+import takeOutIcon from '@/assets/icons/order-types/take-out.svg';
+import deliveryIcon from '@/assets/icons/order-types/delivery.svg';
+import banquetIcon from '@/assets/icons/order-types/banquet.svg';
+import driveThruIcon from '@/assets/icons/order-types/drive-thru.svg';
+import curbSideIcon from '@/assets/icons/order-types/curb-side.svg';
+import scheduledIcon from '@/assets/icons/order-types/scheduled.svg';
+import phoneInIcon from '@/assets/icons/order-types/phone-in.svg';
+import customIcon from '@/assets/icons/order-types/custom.svg';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
