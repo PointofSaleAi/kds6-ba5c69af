@@ -152,7 +152,7 @@ export function OrderCardV1({ order, onBump }: Props) {
           <span>#{order.orderNumber}</span>
           <span
             className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
-            style={{ background: pillBg, color: '#FFFFFF' }}
+            style={{ background: pillBg, color: pillText }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${status.label}`}
           >
             {fmtElapsed(elapsed)}
