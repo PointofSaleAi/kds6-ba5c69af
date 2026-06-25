@@ -50,6 +50,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
     }
     onToggle();
   };
+  const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
   return (
     <div
       role="button"
@@ -57,7 +58,9 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
       onClick={handleRowClick}
       onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
       onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleRowClick(); } }}
+      {...longPress}
       aria-pressed={done}
+
       aria-disabled={loading}
       className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
     >
