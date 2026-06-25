@@ -113,6 +113,10 @@ export function OrderCardV2({ order, onBump }: Props) {
   const isDineIn = order.orderType === 'dine-in';
   const { orderTypeDetailedColors } = useKDSSettings();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
+  const { getStatusForElapsed } = useStatusRules();
+  const timerStatus = getStatusForElapsed(elapsed);
+  const firedTime = order.timeReceived ? formatTime(order.timeReceived) : '';
+  const showTableInstead = isDineIn && !!order.tableName;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
