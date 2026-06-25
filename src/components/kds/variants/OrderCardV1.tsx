@@ -282,6 +282,7 @@ export function OrderCardV1({ order, onBump }: Props) {
         </div>
       )}
 
+      <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
     </div>
   );
 }
