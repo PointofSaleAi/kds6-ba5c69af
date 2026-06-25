@@ -225,7 +225,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         onClick={isCompact ? handleBump : undefined}
         onKeyDown={isCompact ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleBump(); } } : undefined}
         aria-disabled={isCompact ? bumping : undefined}
-        className={`relative flex items-center justify-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
+        className={`relative flex items-center justify-center gap-1.5 px-2 py-1.5 text-[13px] font-bold uppercase tracking-wide ${isCompact ? 'cursor-pointer select-none' : ''} ${isCompact && bumping ? 'opacity-70 pointer-events-none' : ''}`}
         style={{ background: accentColor, color: accentText }}
       >
         <TypeIcon size={11} />
