@@ -25,10 +25,11 @@ interface V1ProductRowProps {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
+  onReset: () => void;
   compact?: boolean;
 }
 
-function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRowProps) {
+function V1ProductRow({ product, state, onToggle, onReset, compact = false }: V1ProductRowProps) {
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
@@ -49,6 +50,7 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
       role="button"
       tabIndex={loading ? -1 : 0}
       onClick={handleRowClick}
+      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
       onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleRowClick(); } }}
       aria-pressed={done}
       aria-disabled={loading}
@@ -228,6 +230,7 @@ export function OrderCardV1({ order, onBump }: Props) {
                     product={product}
                     state={rowStates[product.id] ?? 'idle'}
                     onToggle={() => toggleRow(product.id)}
+                    onReset={() => setRow(product.id, 'idle')}
                   />
                 ))}
               </div>
@@ -241,6 +244,7 @@ export function OrderCardV1({ order, onBump }: Props) {
                 product={product}
                 state={rowStates[product.id] ?? 'idle'}
                 onToggle={() => toggleRow(product.id)}
+                onReset={() => setRow(product.id, 'idle')}
                 compact={isCompact}
               />
             ))}
