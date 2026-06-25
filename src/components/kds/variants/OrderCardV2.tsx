@@ -155,7 +155,6 @@ export function OrderCardV2({ order, onBump }: Props) {
       <div className="px-2.5 py-2" style={{ background: '#F3F4F6' }}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-bold text-foreground text-[14px] shrink-0">#{order.orderNumber}</span>
             {showTableInstead ? (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
@@ -171,6 +170,7 @@ export function OrderCardV2({ order, onBump }: Props) {
                 {orderTypeLabel(order.orderType)}
               </span>
             )}
+            <span className="font-bold text-foreground text-[14px] shrink-0">#{order.orderNumber}</span>
           </div>
           <span
             className="rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums"
