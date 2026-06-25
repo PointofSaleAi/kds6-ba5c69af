@@ -20,7 +20,7 @@ function V1ProductRow({ product }: { product: OrderItem }) {
   return (
     <div className="px-2 py-1 border-b border-border/40 last:border-b-0">
       <div className="flex items-start gap-1">
-        <span className="font-bold shrink-0" style={{ color: '#E84C3D', fontSize: 13, minWidth: 18 }}>
+        <span className="font-bold shrink-0 text-center" style={{ color: '#E84C3D', fontSize: 13, minWidth: 20 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
