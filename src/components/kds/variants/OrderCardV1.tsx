@@ -40,7 +40,7 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
       className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity ${done ? 'opacity-50' : loading ? 'opacity-70' : 'hover:bg-black/[0.02]'}`}
       aria-pressed={done}
     >
-      <div className="flex items-start gap-1">
+      <div className={`flex gap-1 ${compact ? 'items-center' : 'items-start'}`}>
         <span className="font-bold shrink-0 text-center" style={{ color: '#1F2937', fontSize: 13, minWidth: 20 }}>
           {product.quantity}
         </span>
@@ -160,7 +160,7 @@ export function OrderCardV1({ order, onBump }: Props) {
         style={{ borderBottom: '0.5px solid #E5E7EB' }}
       >
         <span className="inline-flex items-center gap-1.5">
-          <span>#{order.orderNumber}</span>
+          <span style={{ fontSize: 14, fontWeight: 800 }}>#{order.orderNumber}</span>
           <span
             className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
             style={{ background: pillBg, color: pillText }}
