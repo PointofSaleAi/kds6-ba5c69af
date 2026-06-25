@@ -32,15 +32,20 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
+  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0;
+  const [expanded, setExpanded] = useState(false);
+  const showDetails = !compact || expanded;
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
       onClick={() => { if (!disabled) onToggle(); }}
-      disabled={disabled}
-      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity ${done ? 'opacity-50' : loading ? 'opacity-70' : 'hover:bg-black/[0.02]'}`}
+      onKeyDown={(e) => { if (!disabled && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onToggle(); } }}
       aria-pressed={done}
+      aria-disabled={disabled}
+      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${done ? 'opacity-50 pointer-events-none' : loading ? 'opacity-70 pointer-events-none' : 'hover:bg-black/[0.02]'}`}
     >
-      <div className={`flex gap-1 ${compact ? 'items-center' : 'items-start'}`}>
+      <div className={`flex gap-1 ${compact && !expanded ? 'items-center' : 'items-start'}`}>
         <span className="font-bold shrink-0 text-center" style={{ color: '#1F2937', fontSize: 13, minWidth: 20 }}>
           {product.quantity}
         </span>
@@ -51,7 +56,7 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
           >
             {product.name}
           </div>
-          {!compact && product.modifiers.length > 0 && (
+          {showDetails && product.modifiers.length > 0 && (
             <div>
               {product.modifiers.map((m, i) => (
                 <div
@@ -64,7 +69,7 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
               ))}
             </div>
           )}
-          {!compact && product.allergens.length > 0 && (
+          {showDetails && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-0.5 mt-0.5">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
@@ -72,14 +77,21 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
             </div>
           )}
         </div>
-        {compact && !loading && !done && (product.modifiers.length > 0 || product.allergens.length > 0) && (
-          <span
+        {compact && !loading && !done && hasDetails && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
             className="shrink-0 inline-flex items-center justify-center"
-            style={{ width: 16, height: 16, color: '#6C7A89' }}
-            aria-hidden="true"
+            style={{ width: 20, height: 20, color: '#6C7A89' }}
+            aria-label={expanded ? 'Hide details' : 'Show details'}
+            aria-expanded={expanded}
           >
-            <ChevronRight size={12} strokeWidth={2.5} />
-          </span>
+            <ChevronRight
+              size={12}
+              strokeWidth={2.5}
+              style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 120ms ease' }}
+            />
+          </button>
         )}
         {loading && (
           <span
@@ -100,7 +112,7 @@ function V1ProductRow({ product, state, onToggle, compact = false }: V1ProductRo
           </span>
         )}
       </div>
-    </button>
+    </div>
   );
 }
 
