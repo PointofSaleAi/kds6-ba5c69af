@@ -236,7 +236,10 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
+
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => (
@@ -276,7 +279,6 @@ export function OrderCardV2({ order, onBump }: Props) {
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
 
 
