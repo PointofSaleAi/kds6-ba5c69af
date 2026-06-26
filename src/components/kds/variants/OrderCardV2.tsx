@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { ArrowUp, Check, ChefHat, ChevronRight, Loader2, SquareCheck } from 'lucide-react';
+import { ArrowUp, Check, ChevronRight, Loader2, SquareCheck } from 'lucide-react';
+import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
@@ -149,7 +150,7 @@ function V2ProductRow({
             aria-label="Mark product done"
             title="Tap when ready"
           >
-            <ChefHat size={18} strokeWidth={2.2} className="animate-[bounce_0.9s_ease-in-out_infinite]" />
+            <ClocheIcon size={18} strokeWidth={2.2} className="animate-[bounce_0.9s_ease-in-out_infinite]" />
           </button>
         )}
         {!loading && !done && state !== 'cooking' && (
