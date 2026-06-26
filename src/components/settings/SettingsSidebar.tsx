@@ -134,24 +134,27 @@ export function SettingsSidebar() {
 
       <div className="px-3.5 pt-3 pb-3 shrink-0">
         <div
-          className="flex items-center gap-2.5 rounded-full px-3.5 py-[0.45rem]"
-          style={{ background: 'hsl(var(--surface-bg))' }}
+          className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
+          style={{
+            background: 'hsl(var(--text-primary) / 0.06)',
+            boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.04)',
+          }}
         >
-          <Search className="w-[1.1rem] h-[1.1rem] shrink-0" style={{ color: 'hsl(var(--text-muted))' }} />
+          <Search className="w-[1.05rem] h-[1.05rem] shrink-0" style={{ color: 'hsl(var(--text-muted))' }} strokeWidth={2.5} />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-[0.9rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))]"
+            className="bg-transparent flex-1 outline-none text-[0.95rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))] tracking-[-0.01em]"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
           <button
             type="button"
             aria-label="Voice search"
-            className="shrink-0 active:opacity-70 transition-opacity"
+            className="shrink-0 active:opacity-60 transition-opacity"
           >
-            <Mic className="w-[1.1rem] h-[1.1rem]" style={{ color: 'hsl(var(--text-muted))' }} />
+            <Mic className="w-[1.05rem] h-[1.05rem]" style={{ color: 'hsl(var(--text-muted))' }} strokeWidth={2.2} />
           </button>
         </div>
       </div>
