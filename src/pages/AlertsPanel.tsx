@@ -40,6 +40,105 @@ interface AlertsPanelProps {
 
 type TabFilter = 'notifications' | 'messages';
 
+const PRIORITY: Record<string, number> = {
+  overtime: 0,
+  system: 1,
+  'table-transfer': 2,
+  'item-moved': 2,
+  'general-alert': 3,
+  'course-fired': 4,
+  'new-item-added': 4,
+  'new-order': 5,
+  recalled: 5,
+};
+
+function buildAiSummary(unread: KDSNotification[]): string {
+  if (unread.length === 0) return '';
+  const sorted = [...unread].sort((a, b) => (PRIORITY[a.type] ?? 9) - (PRIORITY[b.type] ?? 9));
+  const top = sorted.slice(0, 3).map(n => n.message.replace(/\.$/, ''));
+  const intro = unread.length === 1 ? '1 item needs attention' : `${unread.length} items need attention`;
+  return `${intro} — ${top.join(', ')}.`;
+}
+
+type ChipStyle = 'default' | 'urgent' | 'hardware';
+interface AiChipConfig {
+  label: string;
+  style: ChipStyle;
+  response: string;
+  primary: string;
+  secondary?: string;
+}
+
+function getAiChipConfig(type: string, message: string): AiChipConfig {
+  const lower = message.toLowerCase();
+  if (type === 'overtime') {
+    return {
+      label: 'Suggest action',
+      style: 'urgent',
+      response: 'This ticket is past the target time. Bump items that are plated and check the pass before firing anything new.',
+      primary: 'Bump now',
+      secondary: 'Go to ticket',
+    };
+  }
+  if (type === 'system' && /printer|offline|hardware/.test(lower)) {
+    return {
+      label: 'How to fix?',
+      style: 'hardware',
+      response: 'Check the printer power and network cable. If still offline, reassign tickets to a backup printer in Hardware settings.',
+      primary: 'Go to hardware settings',
+      secondary: 'Dismiss',
+    };
+  }
+  if (type === 'new-order') {
+    return {
+      label: 'Fire immediately or hold?',
+      style: 'default',
+      response: 'Station load is normal. Safe to fire now unless this is part of a coursed table.',
+      primary: 'Fire now',
+      secondary: 'Hold',
+    };
+  }
+  if (type === 'table-transfer' || type === 'item-moved') {
+    return {
+      label: 'What should I do?',
+      style: 'default',
+      response: 'Update the ticket header to the new table and notify the runner so the food lands at the right seat.',
+      primary: 'Update tickets',
+      secondary: 'Dismiss',
+    };
+  }
+  if (type === 'course-fired') {
+    return {
+      label: 'Check timing',
+      style: 'default',
+      response: 'Confirm the previous course has cleared. Stagger this fire by ~2 minutes if the table is still eating.',
+      primary: 'Acknowledge',
+    };
+  }
+  if (type === 'general-alert' && /vip/.test(lower)) {
+    return {
+      label: 'Prioritise now?',
+      style: 'urgent',
+      response: 'Move this table to the top of the queue and assign your most experienced cook to the station.',
+      primary: 'Prioritise tickets',
+      secondary: 'Dismiss',
+    };
+  }
+  return {
+    label: 'What should I do?',
+    style: 'default',
+    response: 'Acknowledge this notification and continue with your current ticket priority.',
+    primary: 'Acknowledge',
+    secondary: 'Dismiss',
+  };
+}
+
+const CHIP_STYLES: Record<ChipStyle, string> = {
+  default: 'bg-[#EEF2FF] text-[#4338CA] border-[#C7D2FE]',
+  urgent: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]',
+  hardware: 'bg-[#FFF7ED] text-[#C2410C] border-[#FED7AA]',
+};
+
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [tab, setTab] = useState<TabFilter>('notifications');
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
