@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Mic, MicOff, Settings, Sparkles } from 'lucide-react';
+import { X, Send, Mic, MicOff, Settings, Bot, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
