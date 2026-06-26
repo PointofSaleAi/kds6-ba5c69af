@@ -33,6 +33,7 @@ function loadPref(key: string, fallback: string): string {
 
 
 export default function AIIntegrationSettings() {
+  const navigate = useNavigate();
   const hash = useHashHighlight();
   const [enabled, setEnabled] = useState(false);
   const [provider, setProvider] = useState<string>('');
