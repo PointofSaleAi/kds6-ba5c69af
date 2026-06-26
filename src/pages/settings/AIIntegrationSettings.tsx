@@ -51,6 +51,7 @@ export default function AIIntegrationSettings() {
     } catch {
       // ignore quota errors
     }
+    emitAIIntegrationChange();
   };
 
   const handleToggleEnabled = (next: boolean) => {
@@ -72,9 +73,11 @@ export default function AIIntegrationSettings() {
     }
     setIsSaving(true);
     try {
+      const nextStatus: ConnectionStatus = 'connected';
+      setStatus(nextStatus);
       persist(STORAGE_KEYS.enabled, String(enabled));
       persist(STORAGE_KEYS.provider, provider);
-      persist(STORAGE_KEYS.status, status);
+      persist(STORAGE_KEYS.status, nextStatus);
       toast.success('AI integration settings saved');
     } finally {
       setIsSaving(false);
@@ -86,8 +89,10 @@ export default function AIIntegrationSettings() {
     setEnabled(false);
     setProvider('');
     setStatus('not_configured');
+    emitAIIntegrationChange();
     toast.success('AI integration removed');
   };
+
 
   const statusStyle = STATUS_LABEL[status];
 
