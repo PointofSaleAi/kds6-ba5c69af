@@ -164,6 +164,24 @@ export default function DisplaySettings() {
               <div className="grid gap-3">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
+                    Ticket header
+                  </span>
+                  <SegmentedToggle
+                    options={['Default', 'V1', 'V2', 'V3']}
+                    value={
+                      ticketHeaderStyle === 'v1' ? 'V1'
+                      : ticketHeaderStyle === 'v2' ? 'V2'
+                      : ticketHeaderStyle === 'v3' ? 'V3'
+                      : 'Default'
+                    }
+                    onChange={(v) => {
+                      const map = { Default: 'default', V1: 'v1', V2: 'v2', V3: 'v3' } as const;
+                      setTicketHeaderStyle(map[v as 'Default' | 'V1' | 'V2' | 'V3']);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Ticket spacing
                   </span>
                   <SegmentedToggle
