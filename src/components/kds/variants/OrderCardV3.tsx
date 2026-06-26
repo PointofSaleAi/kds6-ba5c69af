@@ -71,7 +71,7 @@ function ProductRow({
 }) {
   const done = state === 'done';
   const loading = state === 'loading';
-  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0;
+  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
   const [expanded, setExpanded] = useState(false);
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
@@ -131,6 +131,11 @@ function ProductRow({
             {product.allergens.map((a) => (
               <AllergenBadge key={a.type} allergen={a} variant="item" />
             ))}
+          </div>
+        )}
+        {showDetails && product.notes && (
+          <div className="italic text-[#6B7280] mt-0.5" style={{ fontSize: 10, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}>
+            Note: {product.notes}
           </div>
         )}
       </div>
