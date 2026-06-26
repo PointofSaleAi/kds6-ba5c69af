@@ -146,6 +146,12 @@ export default function AIIntegrationSettings() {
 
       {/* Provider Selection */}
       <div
+        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider"
+        style={{ color: 'hsl(var(--text-muted))' }}
+      >
+        AI Provider
+      </div>
+      <div
         id="ai-provider"
         className={`mb-3 rounded-[28px] overflow-hidden ${hash === 'ai-provider' ? 'ring-2 ring-[hsl(var(--btn-seen))]' : ''}`}
         style={{
@@ -153,12 +159,6 @@ export default function AIIntegrationSettings() {
           border: '1px solid hsl(var(--border))',
         }}
       >
-        <div
-          className="px-4 pt-3 pb-2 text-[11px] font-semibold uppercase tracking-wider"
-          style={{ color: 'hsl(var(--text-muted))' }}
-        >
-          AI Provider
-        </div>
         {PROVIDERS.map((p, idx) => {
           const selected = provider === p.id;
           return (
