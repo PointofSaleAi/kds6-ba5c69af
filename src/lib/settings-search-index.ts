@@ -57,6 +57,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
 
   // System
   { id: 'ai-integration', label: 'AI Integration', description: 'External AI provider with your own API key', group: 'system', groupLabel: 'System', path: '/kds/full/settings/system#ai-integration', keywords: 'ai integration settings openai chatgpt gemini google maya api key provider external' },
+  { id: 'ai-instructions', label: 'AI Instructions', description: 'Rules, custom instructions & restaurant knowledge base', group: 'system', groupLabel: 'System', path: '/kds/full/settings/system/ai-integration/ai-instructions', keywords: 'ai instructions rules dos donts custom prompt system prompt knowledge base restaurant type' },
 
   // Account
   { id: 'device-name', label: 'Device name', description: 'Identifier for this Kitchen Display', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#device-name', keywords: 'device name identifier kds station' },
