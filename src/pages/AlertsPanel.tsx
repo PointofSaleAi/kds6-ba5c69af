@@ -254,6 +254,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 )
               )}
             </div>
+            </div>
           </motion.div>
 
           {replyTarget && (
