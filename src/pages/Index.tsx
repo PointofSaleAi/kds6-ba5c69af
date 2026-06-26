@@ -101,7 +101,7 @@ const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
       case 'home': navigate('/kds/full'); setScreen('main'); break;
-      case 'alerts': setAlertsOpen(true); break;
+      case 'alerts': setAlertsOpen((v) => !v); break;
       case 'settings': navigate('/kds/full/settings'); break;
       case 'performance': setScreen('performance'); break;
     }
