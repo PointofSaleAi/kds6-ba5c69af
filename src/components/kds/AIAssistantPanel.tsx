@@ -180,8 +180,11 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
           <AnimatedAIIcon size={18} />
           <div className="flex flex-col leading-tight min-w-0">
             <span className="text-[11px] font-bold uppercase tracking-wider text-white/60">Point of Sale Ai</span>
-            <span className="text-[12px] font-semibold text-white truncate">Kitchen assistant</span>
+            <span className="text-[12px] font-semibold text-white truncate">
+              {providerReady ? `Kitchen assistant · ${providerLabel}` : 'Kitchen assistant'}
+            </span>
           </div>
+
         </div>
         <button
           onClick={onClose}
