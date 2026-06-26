@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Monitor, Receipt, Printer, User, Mic, MicOff, Check } from 'lucide-react';
+import { X, Send, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
@@ -10,91 +11,113 @@ interface AIAssistantPanelProps {
   onClose: () => void;
 }
 
-const QUICK_ACTIONS = [
-  { label: 'Display', icon: Monitor, prompt: 'Show display settings' },
-  { label: 'Tickets', icon: Receipt, prompt: 'Show ticket settings' },
-  { label: 'Hardware', icon: Printer, prompt: 'Show hardware settings' },
-  { label: 'Account', icon: User, prompt: 'Show account settings' },
-];
-
 const TRY_PROMPTS = [
-  'Set text size to large',
-  'Enable allergen badges',
-  'Switch to compact layout',
-  'Change language to Spanish',
+  'How should I prioritize an 18-minute-old ticket?',
+  'Explain the SEEN → IN PROGRESS → SERVED flow',
+  'What do the order type header colors mean?',
+  'How do I handle a shellfish allergen on a ticket?',
 ];
 
 type ChatMessage = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
-  action?: string;
 };
 
-function generateResponse(prompt: string): { text: string; action?: string } {
-  const p = prompt.toLowerCase();
-  if (p.includes('text size') && p.includes('large')) {
-    return { text: 'Text size set to Large.', action: 'Applied: Display → Text size → Large' };
-  }
-  if (p.includes('allergen')) {
-    return { text: 'Allergen badges enabled on all tickets.', action: 'Applied: Display → Allergen badges → On' };
-  }
-  if (p.includes('compact')) {
-    return { text: 'Switched to compact layout.', action: 'Applied: Display → Ticket spacing → Compact' };
-  }
-  if (p.includes('spanish') || p.includes('language')) {
-    return { text: 'Language changed to Spanish.', action: 'Applied: Account → Language → Español' };
-  }
-  if (p.includes('display')) {
-    return { text: 'Opening display settings.', action: 'Navigated: Settings → Display' };
-  }
-  if (p.includes('ticket')) {
-    return { text: 'Opening ticket settings.', action: 'Navigated: Settings → Tickets' };
-  }
-  if (p.includes('hardware') || p.includes('printer')) {
-    return { text: 'Opening hardware settings.', action: 'Navigated: Settings → Hardware' };
-  }
-  if (p.includes('account')) {
-    return { text: 'Opening account settings.', action: 'Navigated: Settings → Account' };
-  }
-  return { text: `Got it. I'll handle: "${prompt}".`, action: 'Request queued' };
-}
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/kds-ai-chat`;
 
 export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const [input, setInput] = useState('');
   const [recording, setRecording] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [thinking, setThinking] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, thinking]);
+  }, [messages, streaming]);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 100);
   }, [open]);
 
+  useEffect(() => () => abortRef.current?.abort(), []);
+
   const toggleRecording = () => setRecording(r => !r);
 
-  const submitPrompt = (prompt: string) => {
+  const submitPrompt = async (prompt: string) => {
     const trimmed = prompt.trim();
-    if (!trimmed || thinking) return;
+    if (!trimmed || streaming) return;
     const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text: trimmed };
-    setMessages(m => [...m, userMsg]);
+    const assistantId = `a-${Date.now()}`;
+    const nextHistory = [...messages, userMsg];
+    setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: '' }]);
     setInput('');
-    setThinking(true);
-    setTimeout(() => {
-      const res = generateResponse(trimmed);
-      setMessages(m => [
-        ...m,
-        { id: `a-${Date.now()}`, role: 'assistant', text: res.text, action: res.action },
-      ]);
-      setThinking(false);
-    }, 600);
+    setStreaming(true);
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    try {
+      const res = await fetch(CHAT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: nextHistory.map(m => ({ role: m.role, content: m.text })),
+        }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok || !res.body) {
+        let errMsg = 'Assistant is unavailable. Please try again.';
+        try {
+          const data = await res.json();
+          if (data?.error) errMsg = data.error;
+        } catch {}
+        setMessages(m => m.map(msg => msg.id === assistantId ? { ...msg, text: errMsg } : msg));
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let acc = '';
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+        for (const raw of lines) {
+          const line = raw.trim();
+          if (!line.startsWith('data:')) continue;
+          const data = line.slice(5).trim();
+          if (!data || data === '[DONE]') continue;
+          try {
+            const json = JSON.parse(data);
+            const delta = json.choices?.[0]?.delta?.content ?? '';
+            if (delta) {
+              acc += delta;
+              setMessages(m => m.map(msg => msg.id === assistantId ? { ...msg, text: acc } : msg));
+            }
+          } catch {}
+        }
+      }
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        setMessages(m => m.map(msg => msg.id === assistantId
+          ? { ...msg, text: 'Connection error. Please try again.' }
+          : msg));
+      }
+    } finally {
+      setStreaming(false);
+      abortRef.current = null;
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -105,6 +128,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   };
 
   const hasMessages = messages.length > 0;
+  const lastMsg = messages[messages.length - 1];
+  const showThinking = streaming && lastMsg?.role === 'assistant' && lastMsg.text === '';
 
   return (
     <AnimatePresence>
@@ -126,7 +151,6 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             className="fixed w-[320px] bg-background shadow-2xl z-50 flex flex-col overflow-hidden"
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
-      {/* Header */}
       <div
         className="flex items-center justify-between px-3 h-[44px] shrink-0"
         style={{ background: '#1A1A2E' }}
@@ -147,7 +171,6 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         </button>
       </div>
 
-      {/* Body */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background">
         {!hasMessages ? (
           <div className="px-4 py-5 flex flex-col items-center text-center">
@@ -156,24 +179,9 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             </div>
             <h2 className="text-[16px] font-bold text-foreground mb-1">How can I help you?</h2>
             <p className="text-[12px] text-muted-foreground leading-snug mb-5 px-1">
-              I can configure your KDS settings. Just tell me what you need.
+              Ask me anything about tickets, allergens, courses, or KDS settings.
             </p>
 
-            {/* Quick action chips */}
-            <div className="grid grid-cols-2 gap-2 w-full mb-5">
-              {QUICK_ACTIONS.map(({ label, icon: Icon, prompt }) => (
-                <button
-                  key={label}
-                  onClick={() => submitPrompt(prompt)}
-                  className="flex items-center gap-1.5 justify-center px-2 py-2 rounded-full border border-border bg-background hover:bg-muted active:scale-95 transition-all text-[12px] font-semibold text-foreground"
-                >
-                  <Icon size={13} />
-                  <span>{label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Try asking */}
             <div className="w-full text-left">
               <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
                 Try asking
@@ -202,20 +210,16 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                 <div key={m.id} className="self-start max-w-[90%] flex gap-1.5">
                   <div className="shrink-0 mt-0.5"><AnimatedAIIcon size={16} /></div>
                   <div className="flex flex-col gap-1 min-w-0">
-                    <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-muted text-[12px] text-foreground">
-                      {m.text}
-                    </div>
-                    {m.action && (
-                      <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-success/10 text-success text-[11px] font-semibold">
-                        <Check size={11} />
-                        <span className="truncate">{m.action}</span>
+                    {m.text ? (
+                      <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-muted text-[12px] text-foreground prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-strong:text-foreground">
+                        <ReactMarkdown>{m.text}</ReactMarkdown>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               )
             ))}
-            {thinking && (
+            {showThinking && (
               <div className="self-start flex gap-1.5 items-center px-3 py-2">
                 <AnimatedAIIcon size={16} />
                 <div className="flex gap-1">
@@ -229,7 +233,6 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         )}
       </div>
 
-      {/* Footer input */}
       <div className="shrink-0 bg-muted/40 border-t border-border px-2 py-2 flex items-center gap-2">
         <div className="flex-1 relative">
           <input
@@ -238,7 +241,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={recording ? 'Listening...' : 'Ask me anything...'}
-            className="w-full h-9 bg-background border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+            disabled={streaming}
+            className="w-full h-9 bg-background border border-border rounded-full pl-3 pr-10 text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-60"
           />
           <button
             onClick={toggleRecording}
@@ -256,7 +260,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         </div>
         <button
           onClick={() => submitPrompt(input)}
-          disabled={!input.trim() || thinking}
+          disabled={!input.trim() || streaming}
           aria-label="Send message"
           className="w-9 h-9 rounded-full flex items-center justify-center text-white shrink-0 transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
           style={{ background: '#1A1A2E' }}
