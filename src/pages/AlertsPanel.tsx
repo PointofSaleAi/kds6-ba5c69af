@@ -118,8 +118,8 @@ function getAiAction(type: string, message: string): AiAction {
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [tab, setTab] = useState<TabFilter>('notifications');
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
-  const [expandedChipId, setExpandedChipId] = useState<string | null>(null);
   const [aiSummaryOpen, setAiSummaryOpen] = useState(false);
+  const navigate = useNavigate();
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
   const { t, tl, tperson, tn } = useLanguage();
