@@ -18,7 +18,7 @@ const MODIFIER_CLASS = {
   neutral: 'text-modifier-neutral',
 } as const;
 
-type RowState = 'idle' | 'loading' | 'done';
+type RowState = 'idle' | 'cooking' | 'loading' | 'done';
 
 interface Props {
   order: Order;
