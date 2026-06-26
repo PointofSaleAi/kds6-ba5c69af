@@ -195,7 +195,21 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         </button>
       </div>
 
+      {!providerReady && (
+        <div className="shrink-0 px-3 py-2 text-[11px] leading-snug border-b border-border" style={{ background: '#FEF3C7', color: '#92400E' }}>
+          {!ai.enabled
+            ? 'AI integration is off. '
+            : !ai.provider
+              ? 'No provider selected. '
+              : `${providerLabel} is ${ai.status.replace('_', ' ')}. `}
+          <Link to="/kds/full/settings/system/ai-integration" onClick={onClose} className="underline font-semibold">
+            Open AI Integration
+          </Link>
+        </div>
+      )}
+
       <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background">
+
         {!hasMessages ? (
           <div className="px-4 py-5 flex flex-col items-center text-center">
             <div className="mb-3">
