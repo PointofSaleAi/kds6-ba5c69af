@@ -99,13 +99,23 @@ export default function AIIntegrationSettings() {
 
   return (
     <>
-      <SectionHeaderCard
-        iconSrc={aiIntegrationIcon}
-        iconColor="#3B82F6"
-        title="AI Integration & Settings"
-        shortDescription="Configure external AI providers, manage API keys, and control AI-powered features."
-        longDescription="Configure external AI providers using your own API keys. AI-powered features across the Kitchen Display System will use this integration when enabled. Keys are stored securely as project secrets and never sent to the browser."
-      />
+      <div className="flex items-center justify-between pt-0 pb-4 mb-2 relative">
+        <button
+          type="button"
+          onClick={() => navigate('/kds/full/settings/system')}
+          className="w-10 h-10 rounded-full flex items-center justify-center active:opacity-70 transition-opacity"
+          style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}
+          aria-label="Back"
+        >
+          <ChevronLeft size={20} style={{ color: 'hsl(var(--text-primary))' }} />
+        </button>
+        <h1
+          className="absolute left-1/2 -translate-x-1/2"
+          style={{ color: 'hsl(var(--text-primary))', fontSize: 20, fontWeight: 600 }}
+        >
+          AI Integration & Settings
+        </h1>
+      </div>
 
       {/* Enable / Disable */}
       <div
