@@ -210,7 +210,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             </div>
 
             {/* Tab pills */}
-            <div className="flex gap-2 px-4 py-3 border-b border-border">
+            <div className="flex gap-2 px-4 py-3 border-b border-border flex-wrap">
               <button
                 onClick={() => setTab('notifications')}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative
@@ -235,44 +235,39 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                   </span>
                 )}
               </button>
-            </div>
-
-            {/* AI Summary Button - notifications tab only, unread > 0 */}
-            {tab === 'notifications' && unreadNotifications.length > 0 && (
-              <div className="flex-shrink-0">
+              {tab === 'notifications' && unreadNotifications.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setAiSummaryOpen(v => !v)}
-                  className="flex items-center justify-between bg-transparent border border-[#1A1A2E] rounded-lg"
-                  style={{ margin: '10px 16px', padding: '8px 14px', width: 'calc(100% - 32px)' }}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative inline-flex items-center gap-1.5
+                    ${aiSummaryOpen ? 'bg-[#1A1A2E] text-white' : 'bg-muted text-[#1A1A2E] hover:bg-muted/80'}`}
                 >
-                  <span className="flex items-center" style={{ gap: '6px' }}>
-                    <Sparkles size={12} className="text-[#1A1A2E]" />
-                    <span className="text-[12px] font-medium text-[#1A1A2E]">AI summary</span>
-                  </span>
-                  <span
-                    className="bg-[#E84C3D] text-white font-semibold"
-                    style={{ fontSize: '9px', borderRadius: '10px', padding: '1px 6px' }}
-                  >
+                  <Sparkles size={12} />
+                  AI summary
+                  <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
                     {unreadNotifications.length}
                   </span>
                 </button>
-                {aiSummaryOpen && aiSummary && (
-                  <div
-                    className="bg-[#1A1A2E]"
-                    style={{ borderRadius: '8px', padding: '10px 14px', margin: '0 16px 8px' }}
+              )}
+            </div>
+
+            {/* AI Summary expanded block */}
+            {tab === 'notifications' && aiSummaryOpen && aiSummary && (
+              <div className="flex-shrink-0">
+                <div
+                  className="bg-[#1A1A2E]"
+                  style={{ borderRadius: '8px', padding: '10px 14px', margin: '10px 16px' }}
+                >
+                  <p className="text-white" style={{ fontSize: '11px', lineHeight: 1.5 }}>{aiSummary}</p>
+                  <button
+                    onClick={openAiAssistant}
+                    className="mt-1 inline-flex items-center gap-1 hover:underline"
+                    style={{ fontSize: '10px', color: '#93C5FD' }}
                   >
-                    <p className="text-white" style={{ fontSize: '11px', lineHeight: 1.5 }}>{aiSummary}</p>
-                    <button
-                      onClick={openAiAssistant}
-                      className="mt-1 inline-flex items-center gap-1 hover:underline"
-                      style={{ fontSize: '10px', color: '#93C5FD' }}
-                    >
-                      <MessageSquare size={10} />
-                      Ask AI what to do
-                    </button>
-                  </div>
-                )}
+                    <MessageSquare size={10} />
+                    Ask AI what to do
+                  </button>
+                </div>
               </div>
             )}
 
