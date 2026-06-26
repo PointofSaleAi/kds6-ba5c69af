@@ -13,7 +13,6 @@ import { TimerBadge, getTimerUrgency } from './TimerBadge';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { CompactOrderCard } from './CompactOrderCard';
-import { ExpandedOrderCard } from './ExpandedOrderCard';
 import { Flag86Modal } from './Flag86Button';
 import { useLongPress } from '@/hooks/use-long-press';
 import { useFlag86 } from '@/hooks/use-flag86';
