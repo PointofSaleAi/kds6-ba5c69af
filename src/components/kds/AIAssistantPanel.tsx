@@ -170,6 +170,63 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
 
   const toggleRecording = () => setRecording(r => !r);
 
+  const handleSelectPreset = (preset: RestaurantPreset) => {
+    setSelectedPresetId(preset.id);
+    // Replace any existing pending preset message; append new one
+    setMessages(prev => {
+      const filtered = prev.filter(m => !(m.presetId && !m.presetApplied));
+      return [
+        ...filtered,
+        {
+          id: `preset-${preset.id}-${Date.now()}`,
+          role: 'assistant',
+          text: buildPresetMessage(preset),
+          presetId: preset.id,
+          presetApplied: false,
+        },
+      ];
+    });
+  };
+
+  const handleApplyPreset = (messageId: string, presetId: RestaurantPresetId) => {
+    const preset = RESTAURANT_PRESETS.find(p => p.id === presetId);
+    if (!preset) return;
+    // Apply wired settings
+    kdsSettings.setTextSize(preset.textSize);
+    kdsSettings.setTicketSpacing(preset.ticketSpacing);
+    kdsSettings.setTicketLayout(preset.ticketLayout);
+    kdsSettings.setShowAllergens(preset.allergenBadges);
+    kdsSettings.setShowHeaderAllergens(preset.ticketHeaderAllergenSummary);
+    kdsSettings.setServableModifiers(preset.servableModifiers);
+    statusRules.setCourseLevelAging(preset.applyToCourseLevel);
+    // Best-effort persistence for remaining keys
+    try {
+      localStorage.setItem('posai-ticket-identifier', preset.ticketIdentifier);
+      localStorage.setItem('posai-aging-preset', preset.agingRules);
+      localStorage.setItem('posai-mode-switcher', preset.modeSwitcher);
+      localStorage.setItem('posai-language-mode', preset.language);
+      localStorage.setItem('posai-enable-badge', String(preset.enableBadge));
+      localStorage.setItem('posai-sound-volume', String(preset.volume));
+      localStorage.setItem('posai-alert-sound', preset.alertSound);
+      localStorage.setItem('posai-restaurant-preset', preset.id);
+    } catch { /* ignore */ }
+
+    setMessages(prev => prev.map(m =>
+      m.id === messageId ? { ...m, presetApplied: true } : m,
+    ).concat({
+      id: `applied-${Date.now()}`,
+      role: 'assistant',
+      text: `✓ **${preset.label}** settings applied. You can adjust any of these individually in settings anytime.`,
+    }));
+    setSelectedPresetId(null);
+  };
+
+  const handleCancelPreset = (messageId: string) => {
+    setMessages(prev => prev.filter(m => m.id !== messageId));
+    setSelectedPresetId(null);
+  };
+
+
   const openAISettings = () => {
     onClose();
     navigate('/kds/full/settings/system/ai-integration');
