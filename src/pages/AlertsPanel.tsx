@@ -237,28 +237,42 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
               </button>
             </div>
 
-            {/* AI Summary Strip - notifications tab only, unread > 0 */}
-            {tab === 'notifications' && unreadNotifications.length > 0 && aiSummary && (
-              <div className="flex-shrink-0 flex items-start gap-3 px-4 py-3 bg-[#1A1A2E]">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                  style={{ background: 'linear-gradient(135deg, #7C3AED, #E84C3D)' }}
+            {/* AI Summary Button - notifications tab only, unread > 0 */}
+            {tab === 'notifications' && unreadNotifications.length > 0 && (
+              <div className="flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setAiSummaryOpen(v => !v)}
+                  className="flex items-center justify-between bg-transparent border border-[#1A1A2E] rounded-lg"
+                  style={{ margin: '10px 16px', padding: '8px 14px', width: 'calc(100% - 32px)' }}
                 >
-                  <Sparkles size={14} className="text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[9px] uppercase font-semibold" style={{ color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>
-                    AI summary
-                  </div>
-                  <p className="text-[11px] text-white leading-[1.5] mt-0.5">{aiSummary}</p>
-                  <button
-                    onClick={openAiAssistant}
-                    className="mt-1 text-[10px] text-[#93C5FD] inline-flex items-center gap-1 hover:underline"
+                  <span className="flex items-center" style={{ gap: '6px' }}>
+                    <Sparkles size={12} className="text-[#1A1A2E]" />
+                    <span className="text-[12px] font-medium text-[#1A1A2E]">AI summary</span>
+                  </span>
+                  <span
+                    className="bg-[#E84C3D] text-white font-semibold"
+                    style={{ fontSize: '9px', borderRadius: '10px', padding: '1px 6px' }}
                   >
-                    <MessageSquare size={10} />
-                    Ask AI what to do
-                  </button>
-                </div>
+                    {unreadNotifications.length}
+                  </span>
+                </button>
+                {aiSummaryOpen && aiSummary && (
+                  <div
+                    className="bg-[#1A1A2E]"
+                    style={{ borderRadius: '8px', padding: '10px 14px', margin: '0 16px 8px' }}
+                  >
+                    <p className="text-white" style={{ fontSize: '11px', lineHeight: 1.5 }}>{aiSummary}</p>
+                    <button
+                      onClick={openAiAssistant}
+                      className="mt-1 inline-flex items-center gap-1 hover:underline"
+                      style={{ fontSize: '10px', color: '#93C5FD' }}
+                    >
+                      <MessageSquare size={10} />
+                      Ask AI what to do
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
