@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { ArrowUp, Check, ChevronRight, Loader2, SquareCheck } from 'lucide-react';
+import { ArrowUp, Check, ChefHat, ChevronRight, Loader2, SquareCheck } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
@@ -18,7 +18,7 @@ const MODIFIER_CLASS = {
   neutral: 'text-modifier-neutral',
 } as const;
 
-type RowState = 'idle' | 'loading' | 'done';
+type RowState = 'idle' | 'cooking' | 'loading' | 'done';
 
 interface Props {
   order: Order;
@@ -140,13 +140,25 @@ function V2ProductRow({
             <Check size={14} color="#fff" strokeWidth={3} />
           </span>
         )}
-        {!loading && !done && (
+        {!loading && !done && state === 'cooking' && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            className="shrink-0 flex items-center justify-center rounded-md active:scale-95 transition animate-scale-in"
+            style={{ width: 22, height: 22, color: '#E67E22' }}
+            aria-label="Mark product done"
+            title="Tap when ready"
+          >
+            <ChefHat size={18} strokeWidth={2.2} className="animate-[bounce_0.9s_ease-in-out_infinite]" />
+          </button>
+        )}
+        {!loading && !done && state !== 'cooking' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onToggle(); }}
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
-            aria-label="Mark product done"
+            aria-label="Start cooking"
           >
             <SquareCheck size={18} strokeWidth={2} />
           </button>
@@ -174,9 +186,12 @@ export function OrderCardV2({ order, onBump }: Props) {
 
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const toggleRow = (id: string) => {
-    setRow(id, 'loading');
-    const t = window.setTimeout(() => setRow(id, 'done'), 600);
-    timersRef.current.push(t);
+    setRowStates((p) => {
+      const current = p[id] ?? 'idle';
+      if (current === 'idle') return { ...p, [id]: 'cooking' };
+      if (current === 'cooking') return { ...p, [id]: 'done' };
+      return p;
+    });
   };
 
   const { ticketLayout } = useKDSSettings();
