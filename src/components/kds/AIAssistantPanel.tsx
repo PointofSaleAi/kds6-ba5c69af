@@ -405,6 +405,40 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       <span className="text-xs font-medium text-white">{providerLabel}</span>
                     </div>
 
+                    {isSettingsRoute && (
+                      <div className="w-full max-w-lg mb-5">
+                        <p
+                          className="mb-2 text-left"
+                          style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}
+                        >
+                          Set up for your restaurant type
+                        </p>
+                        <div className="flex flex-wrap" style={{ gap: 6 }}>
+                          {RESTAURANT_PRESETS.map(p => {
+                            const active = selectedPresetId === p.id;
+                            return (
+                              <button
+                                key={p.id}
+                                onClick={() => handleSelectPreset(p)}
+                                style={{
+                                  fontSize: 11,
+                                  fontWeight: 500,
+                                  padding: '5px 12px',
+                                  borderRadius: 20,
+                                  background: active ? '#1A1A2E' : '#F3F4F6',
+                                  color: active ? '#FFFFFF' : '#374151',
+                                  border: `0.5px solid ${active ? '#1A1A2E' : '#E5E7EB'}`,
+                                }}
+                                className="transition-colors active:opacity-80"
+                              >
+                                {p.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 justify-center max-w-lg">
                       {SUGGESTION_CHIPS.map(chip => (
                         <button
