@@ -1059,6 +1059,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
       />
+      {headerOnlyModalOpen && (
+        <ExpandedOrderCard
+          order={order}
+          onClose={() => setHeaderOnlyModalOpen(false)}
+          onBump={onBump}
+        />
+      )}
     </>
   );
 }
