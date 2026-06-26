@@ -1061,11 +1061,35 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         primaryLabel="Request 86"
       />
       {headerOnlyModalOpen && (
-        <ExpandedOrderCard
-          order={order}
-          onClose={() => setHeaderOnlyModalOpen(false)}
-          onBump={onBump}
-        />
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setHeaderOnlyModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-[480px] max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <OrderCard
+              order={order}
+              compact={compact}
+              onBump={(id) => { onBump?.(id); setHeaderOnlyModalOpen(false); }}
+              onRecall={onRecall}
+              onFireCourse={onFireCourse}
+              onItemStatusChange={onItemStatusChange}
+              onAcknowledgeNotes={onAcknowledgeNotes}
+              onUnacknowledgeNotes={onUnacknowledgeNotes}
+              onMarkSeen={onMarkSeen}
+              onItemDismiss={onItemDismiss}
+              isAcknowledgmentPending={isAcknowledgmentPending}
+              onBumpBlocked={onBumpBlocked}
+              stationCourse={stationCourse}
+              showAllergens={showAllergens}
+              highlightItemNames={highlightItemNames}
+              compactRows={compactRows}
+              layoutOverride="standard"
+            />
+          </div>
+        </div>
       )}
     </>
   );
