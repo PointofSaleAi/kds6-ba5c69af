@@ -104,6 +104,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
 
+  useEffect(() => {
+    const handler = () => setAiAssistantOpen(true);
+    window.addEventListener('kds:open-ai-assistant', handler);
+    return () => window.removeEventListener('kds:open-ai-assistant', handler);
+  }, []);
+
   // Per-order acknowledgment of order notes (lifted out of OrderNotesSection so MainOrderView can gate ticket removal).
   const [notesAcknowledgedIds, setNotesAcknowledgedIds] = useState<Set<string>>(new Set());
   const acknowledgeOrderNotes = useCallback((orderId: string) => {

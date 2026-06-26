@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage } from '@/hooks/use-language';
 import { KitchenReplyDialog } from '@/components/kds/KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
-import type { NotificationType } from '@/types/notification';
+import type { NotificationType, KDSNotification } from '@/types/notification';
 import { formatTime } from '@/lib/datetime';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
@@ -40,15 +40,123 @@ interface AlertsPanelProps {
 
 type TabFilter = 'notifications' | 'messages';
 
+const PRIORITY: Record<string, number> = {
+  overtime: 0,
+  system: 1,
+  'table-transfer': 2,
+  'item-moved': 2,
+  'general-alert': 3,
+  'course-fired': 4,
+  'new-item-added': 4,
+  'new-order': 5,
+  recalled: 5,
+};
+
+function buildAiSummary(unread: KDSNotification[]): string {
+  if (unread.length === 0) return '';
+  const sorted = [...unread].sort((a, b) => (PRIORITY[a.type] ?? 9) - (PRIORITY[b.type] ?? 9));
+  const top = sorted.slice(0, 3).map(n => n.message.replace(/\.$/, ''));
+  const intro = unread.length === 1 ? '1 item needs attention' : `${unread.length} items need attention`;
+  return `${intro} — ${top.join(', ')}.`;
+}
+
+type ChipStyle = 'default' | 'urgent' | 'hardware';
+interface AiChipConfig {
+  label: string;
+  style: ChipStyle;
+  response: string;
+  primary: string;
+  secondary?: string;
+}
+
+function getAiChipConfig(type: string, message: string): AiChipConfig {
+  const lower = message.toLowerCase();
+  if (type === 'overtime') {
+    return {
+      label: 'Suggest action',
+      style: 'urgent',
+      response: 'This ticket is past the target time. Bump items that are plated and check the pass before firing anything new.',
+      primary: 'Bump now',
+      secondary: 'Go to ticket',
+    };
+  }
+  if (type === 'system' && /printer|offline|hardware/.test(lower)) {
+    return {
+      label: 'How to fix?',
+      style: 'hardware',
+      response: 'Check the printer power and network cable. If still offline, reassign tickets to a backup printer in Hardware settings.',
+      primary: 'Go to hardware settings',
+      secondary: 'Dismiss',
+    };
+  }
+  if (type === 'new-order') {
+    return {
+      label: 'Fire immediately or hold?',
+      style: 'default',
+      response: 'Station load is normal. Safe to fire now unless this is part of a coursed table.',
+      primary: 'Fire now',
+      secondary: 'Hold',
+    };
+  }
+  if (type === 'table-transfer' || type === 'item-moved') {
+    return {
+      label: 'What should I do?',
+      style: 'default',
+      response: 'Update the ticket header to the new table and notify the runner so the food lands at the right seat.',
+      primary: 'Update tickets',
+      secondary: 'Dismiss',
+    };
+  }
+  if (type === 'course-fired') {
+    return {
+      label: 'Check timing',
+      style: 'default',
+      response: 'Confirm the previous course has cleared. Stagger this fire by ~2 minutes if the table is still eating.',
+      primary: 'Acknowledge',
+    };
+  }
+  if (type === 'general-alert' && /vip/.test(lower)) {
+    return {
+      label: 'Prioritise now?',
+      style: 'urgent',
+      response: 'Move this table to the top of the queue and assign your most experienced cook to the station.',
+      primary: 'Prioritise tickets',
+      secondary: 'Dismiss',
+    };
+  }
+  return {
+    label: 'What should I do?',
+    style: 'default',
+    response: 'Acknowledge this notification and continue with your current ticket priority.',
+    primary: 'Acknowledge',
+    secondary: 'Dismiss',
+  };
+}
+
+const CHIP_STYLES: Record<ChipStyle, string> = {
+  default: 'bg-[#EEF2FF] text-[#4338CA] border-[#C7D2FE]',
+  urgent: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]',
+  hardware: 'bg-[#FFF7ED] text-[#C2410C] border-[#FED7AA]',
+};
+
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [tab, setTab] = useState<TabFilter>('notifications');
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
+  const [expandedChipId, setExpandedChipId] = useState<string | null>(null);
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
   const { t, tl, tperson, tn } = useLanguage();
   const timeAgo = useTimeAgo();
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
+
+  const unreadNotifications = useMemo(() => notifications.filter(n => !n.acknowledged), [notifications]);
+  const aiSummary = useMemo(() => buildAiSummary(unreadNotifications), [unreadNotifications]);
+
+  const openAiAssistant = () => {
+    window.dispatchEvent(new CustomEvent('kds:open-ai-assistant'));
+    onClose();
+  };
 
   // Sort messages: pending first, then by timestamp desc
   const sortedMessages = [...messages].sort((a, b) => {
@@ -128,6 +236,31 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
               </button>
             </div>
 
+            {/* AI Summary Strip - notifications tab only, unread > 0 */}
+            {tab === 'notifications' && unreadNotifications.length > 0 && aiSummary && (
+              <div className="flex-shrink-0 flex items-start gap-3 px-4 py-3 bg-[#1A1A2E]">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                  style={{ background: 'linear-gradient(135deg, #7C3AED, #E84C3D)' }}
+                >
+                  <Sparkles size={14} className="text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[9px] uppercase font-semibold" style={{ color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>
+                    AI summary
+                  </div>
+                  <p className="text-[11px] text-white leading-[1.5] mt-0.5">{aiSummary}</p>
+                  <button
+                    onClick={openAiAssistant}
+                    className="mt-1 text-[10px] text-[#93C5FD] inline-flex items-center gap-1 hover:underline"
+                  >
+                    <MessageSquare size={10} />
+                    Ask AI what to do
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Content */}
             <div className="flex-1 overflow-y-auto">
               {tab === 'notifications' ? (
@@ -142,36 +275,83 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                     {notifications.map((notif) => {
                       const config = notifIcons[notif.type] || notifIcons['system'];
                       const Icon = config.icon;
+                      const isUnread = !notif.acknowledged;
+                      const chip = isUnread ? getAiChipConfig(notif.type, notif.message) : null;
+                      const isExpanded = expandedChipId === notif.id;
                       return (
-                        <button
+                        <div
                           key={notif.id}
-                          onClick={() => !notif.acknowledged && acknowledge(notif.id)}
-                          className={`w-full text-left flex gap-3 px-4 py-3 transition-colors ${!notif.acknowledged ? 'hover:bg-muted/50' : ''}`}
+                          className={`flex gap-3 px-4 py-3 transition-colors ${isUnread ? 'hover:bg-muted/50 cursor-pointer' : 'opacity-60'}`}
+                          onClick={() => isUnread && acknowledge(notif.id)}
                         >
                           {/* Unread dot */}
                           <div className="flex items-start pt-1.5 w-3 shrink-0">
-                            {!notif.acknowledged && (
+                            {isUnread && (
                               <span className="w-2.5 h-2.5 rounded-full bg-warning shrink-0" />
                             )}
                           </div>
                           <Icon size={18} className={`${config.color} shrink-0 mt-0.5`} />
                           <div className="flex-1 min-w-0">
-                            <p className={`text-sm leading-snug ${!notif.acknowledged ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
+                            <p className={`text-sm leading-snug ${isUnread ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
                               {tn(notif.message)}
                             </p>
                             <div className="flex items-center gap-1.5 mt-1 text-[10px] text-text-muted">
                               <span className="px-1.5 py-0.5 rounded bg-muted text-text-secondary font-medium">{tl(notif.station)}</span>
                               <span>·</span>
                               <span>{timeAgo(notif.timestamp)}</span>
-                              {notif.acknowledged && (
+                              {!isUnread && (
                                 <>
                                   <span>·</span>
                                   <span className="text-success">{t.readLabel}</span>
                                 </>
                               )}
                             </div>
+                            {chip && (
+                              <div className="mt-2">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedChipId(isExpanded ? null : notif.id);
+                                  }}
+                                  className={`inline-flex items-center gap-1 rounded-[10px] border px-2 py-[3px] text-[10px] font-medium transition-colors ${CHIP_STYLES[chip.style]}`}
+                                  style={{ borderWidth: '0.5px' }}
+                                >
+                                  <Sparkles size={10} />
+                                  {chip.label}
+                                </button>
+                                {isExpanded && (
+                                  <div
+                                    className="mt-2 rounded-lg bg-[#F0FDF4] border border-[#A7F3D0] px-[10px] py-2"
+                                    style={{ borderWidth: '0.5px' }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <p className="text-[11px] text-[#065F46] leading-[1.5]">{chip.response}</p>
+                                    <div className="flex gap-1.5 mt-2">
+                                      <button
+                                        type="button"
+                                        onClick={(e) => { e.stopPropagation(); acknowledge(notif.id); setExpandedChipId(null); }}
+                                        className="rounded-[10px] bg-[#059669] text-white text-[10px] font-medium px-[9px] py-[3px] hover:opacity-90"
+                                      >
+                                        {chip.primary}
+                                      </button>
+                                      {chip.secondary && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => { e.stopPropagation(); setExpandedChipId(null); }}
+                                          className="rounded-[10px] bg-white text-[#059669] text-[10px] font-medium px-[9px] py-[3px] border border-[#059669] hover:bg-[#F0FDF4]"
+                                          style={{ borderWidth: '0.5px' }}
+                                        >
+                                          {chip.secondary}
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
