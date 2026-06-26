@@ -124,7 +124,13 @@ export function SettingsSidebar() {
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
-                  <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" iconSrc={id === 'system' ? systemIcon : undefined} />
+                  <SettingsIconTile
+                    icon={Icon}
+                    bgColor={GROUP_COLOR[id]}
+                    size="xs"
+                    iconSrc={id === 'system' ? systemIcon : undefined}
+                    iconNode={id === 'orders' ? <TicketsIcon size={22} className="text-white" /> : undefined}
+                  />
                   <span
                     className="text-[0.95rem] font-semibold leading-tight"
                     style={{ color: 'hsl(var(--text-primary))' }}
