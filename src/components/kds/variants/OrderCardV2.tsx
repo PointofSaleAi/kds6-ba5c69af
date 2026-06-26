@@ -100,8 +100,8 @@ function V2ProductRow({
             </div>
           )}
           {showDetails && product.notes && (
-            <div className="italic text-[#6B7280] mt-0" style={{ fontSize: 11, lineHeight: 1.2 }}>
-              {product.notes}
+            <div className="italic text-[#6B7280] mt-0.5" style={{ fontSize: 11, lineHeight: 1.2 }}>
+              Note: {product.notes}
             </div>
           )}
         </div>
