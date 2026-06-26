@@ -189,11 +189,14 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
               <div className="flex-shrink-0 px-4 py-3 border-b border-neutral-800/60 flex items-center justify-between">
                 <button
                   onClick={openAISettings}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-800/60 hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/40"
+                  className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-neutral-800/60 hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/40"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-                  <span className="text-sm font-medium text-white">Point of Sale Ai</span>
+                  <span className="w-6 h-6 rounded-full bg-emerald-500/15 flex items-center justify-center">
+                    <Bot className="w-3.5 h-3.5 text-emerald-400" />
+                  </span>
+                  <span className="text-sm font-semibold text-white">Point of Sale Ai</span>
                   <span className="text-xs text-neutral-400">· {providerLabel}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
                 </button>
 
                 <div className="flex items-center gap-2">
