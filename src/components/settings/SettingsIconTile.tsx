@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 interface SettingsIconTileProps {
   icon: LucideIcon;
@@ -6,6 +7,7 @@ interface SettingsIconTileProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   iconColor?: string;
   iconSrc?: string;
+  iconNode?: ReactNode;
 }
 
 /**
