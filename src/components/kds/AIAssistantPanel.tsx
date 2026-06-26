@@ -5,6 +5,9 @@ import ReactMarkdown from 'react-markdown';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
+import { useAIIntegration, AI_PROVIDER_LABELS } from '@/hooks/use-ai-integration';
+import { Link } from 'react-router-dom';
+
 
 interface AIAssistantPanelProps {
   open: boolean;
