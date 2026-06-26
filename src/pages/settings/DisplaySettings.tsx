@@ -31,6 +31,7 @@ export default function DisplaySettings() {
     ticketLayout, setTicketLayout,
     ticketHeaderLayout, setTicketHeaderLayout,
     ticketSpacing, setTicketSpacing,
+    ticketHeaderStyle, setTicketHeaderStyle,
   } = useKDSSettings();
   const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
   const languageDisplay = displayMode === 'dual'
