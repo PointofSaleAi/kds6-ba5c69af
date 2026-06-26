@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { ArrowUp, Check, ChevronRight, Loader2 } from 'lucide-react';
+import { ArrowUp, Check, ChevronRight, Loader2, SquareCheck } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
@@ -141,9 +141,15 @@ function V2ProductRow({
           </span>
         )}
         {!loading && !done && (
-          <span className="shrink-0" onClick={(e) => e.stopPropagation()}>
-            <KdsActionIcon icon="seen" label="Mark seen" size={22} onClick={onToggle} />
-          </span>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
+            style={{ width: 22, height: 22, color: '#6C7A89' }}
+            aria-label="Mark product done"
+          >
+            <SquareCheck size={18} strokeWidth={2} />
+          </button>
         )}
       </div>
     </div>
