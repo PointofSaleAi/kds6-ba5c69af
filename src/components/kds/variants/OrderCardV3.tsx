@@ -292,9 +292,10 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
+
       <div className="flex-1 bg-card">
         {showCourses ? (
           order.courses.map((course, idx) => {
