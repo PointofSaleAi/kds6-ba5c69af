@@ -97,7 +97,10 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
             </div>
           )}
           {showDetails && product.notes && (
-            <div className="italic text-[#6B7280] mt-0.5" style={{ fontSize: 11, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}>
+            <div
+              className="mt-1 inline-block rounded px-1.5 py-0.5"
+              style={{ fontSize: 11, lineHeight: 1.25, fontWeight: 600, color: '#92400E', background: '#FEF3C7', border: '1px solid #FDE68A', textDecoration: done ? 'line-through' : 'none' }}
+            >
               Note: {product.notes}
             </div>
           )}
