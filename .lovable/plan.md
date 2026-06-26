@@ -1,42 +1,43 @@
 ## Goal
-Port the real-LLM chat behavior from the Mobile Point of Sale project's AI panels into the KDS `AIAssistantPanel`, replacing the hardcoded `generateResponse()` canned strings with a live, streaming Kitchen Assistant powered by Lovable AI Gateway.
+Add a new "Ticket header" section at the top of the Ticket Layout page (Settings → Display → Ticket Layout) with a segmented pill: Default / V1 / V2 / V3. Selecting an option swaps only the header region of the standard OrderCard with the header UI from OrderCardV1, V2, or V3. No changes to ticket card body, products, or actions.
 
-Out of scope (per your selection): settings tool-calling, ticket-context awareness, real mic transcription. The mic icon stays as a visual stub.
+## Changes
 
-## What changes
+### 1. New setting: `ticketHeaderStyle`
+`src/hooks/use-kds-settings.tsx`
+- Add type `TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3'`.
+- Add field `ticketHeaderStyle` (default `'default'`) + setter, persisted in the same localStorage blob.
 
-### 1. Enable Lovable Cloud
-Provision Cloud + `LOVABLE_API_KEY` for this KDS project so the edge function can call the AI Gateway. No tables or auth needed.
+### 2. Extract header-only components from variants
+Create three small presentational components that render only the header portion currently inside OrderCardV1/V2/V3 (order type strip + order number/guest + timer pill + any metadata row). Pure JSX + props, no tap/done/long-press logic. Files:
+- `src/components/kds/variants/headers/V1Header.tsx`
+- `src/components/kds/variants/headers/V2Header.tsx`
+- `src/components/kds/variants/headers/V3Header.tsx`
 
-### 2. New edge function: `kds-ai-chat`
-`supabase/functions/kds-ai-chat/index.ts`
-- Streams `text/event-stream` responses from `google/gemini-3-flash-preview` via Lovable AI Gateway (`https://ai.gateway.lovable.dev/v1/chat/completions`, `Lovable-API-Key` header).
-- CORS enabled, `verify_jwt = false` (public read-only assistant, no PII).
-- System prompt scoped to the KDS Kitchen Assistant role: helps cooks understand tickets, allergens, course timing, KDS settings, terminology ("Point of Sale", "Point of Sale Ai", "Served/Queued/Station"), and the SEEN → IN PROGRESS → SERVED flow. Refuses to invent ticket data.
-- Handles 429 (rate limited) and 402 (credits exhausted) by returning a JSON error the client surfaces as a chat bubble.
-- Accepts `{ messages: {role, content}[] }` and forwards the full conversation history every turn.
+Each takes `{ order, effectiveStatusColor, elapsedSeconds }` (plus whatever the existing header needs from settings/status rules, read internally via hooks). The original V1/V2/V3 OrderCards then import these so there is one source of truth.
 
-### 3. Rewire `src/components/kds/AIAssistantPanel.tsx`
-- Delete the `generateResponse()` mock and the `QUICK_ACTIONS` / `TRY_PROMPTS` "Applied: …" green action badges (no longer meaningful without tool calls). Keep the suggestion chips but make them seed prompts that hit the real model.
-- Replace `setTimeout(..., 600)` simulation with a streaming `fetch` to the edge function. Append assistant tokens to the last message as they arrive (SSE parse loop).
-- Keep thinking indicator while `status === 'submitted'` (before first token).
-- Render assistant text with `react-markdown` (`bun add react-markdown`) so the model can format lists, bold allergens, etc.
-- Preserve the existing visual design: navy `#1A1A2E` header, animated "e" logo, mic stub, input pill, dock-aware insets, light/dark theme.
-- Surface gateway errors (429/402/network) as an inline assistant bubble with a clear message.
+### 3. Wire header swap into the default `OrderCard`
+`src/components/kds/OrderCard.tsx`
+- Read `ticketHeaderStyle` from `useKDSSettings`.
+- When it is `v1` / `v2` / `v3`, replace ONLY the existing header JSX block (the OrderTypeBadge + order number/guest header around lines 800–910) with `<V1Header/>` / `<V2Header/>` / `<V3Header/>`.
+- When `default`, render today's header unchanged.
+- Everything below the header (allergen strip, courses, products, actions) is unaffected.
 
-### 4. No data persistence
-Conversation lives only in component state for this session (matches current behavior). No threads, no DB.
+### 4. Settings UI
+`src/pages/settings/DisplaySettings.tsx` (inside the `ticketSpacingOpen` overlay, left options column)
+- Add a new field at the TOP of the options stack, above "Ticket spacing":
+  ```
+  Ticket header
+  [ Default | V1 | V2 | V3 ]   (SegmentedToggle)
+  ```
+- Bind to `ticketHeaderStyle` / `setTicketHeaderStyle`.
+- The right-side preview already renders `<OrderCard order={previewTicket} .../>`, so it will automatically show the chosen header style.
+
+### 5. No other surfaces change
+- V1/V2/V3 route pages keep using their own OrderCardVx (unchanged behavior, just refactored to import the shared header).
+- Right-edge value on the outer "Ticket Layout" pill stays as the current density label.
 
 ## Technical notes
-- Edge function uses `npm:` Deno imports for `ai`/`@ai-sdk/openai-compatible` is not required — a direct OpenAI-compatible `fetch` to `/v1/chat/completions` with `stream: true` keeps the function small and avoids extra deps.
-- Client reads `import.meta.env.VITE_SUPABASE_URL` to build the function URL.
-- Keep `LOVABLE_API_KEY` server-side only.
-
-## Files touched
-- `supabase/functions/kds-ai-chat/index.ts` (new)
-- `supabase/config.toml` (register function, `verify_jwt = false`)
-- `src/components/kds/AIAssistantPanel.tsx` (rewire to streaming)
-- `package.json` (`react-markdown` dep)
-
-## Verification
-After build, open the assistant from the KDS rail, ask a free-form question like "how should I prioritize a ticket that's been waiting 18 minutes?", confirm tokens stream in and markdown renders. Trigger a forced 402/429 path to confirm the error bubble.
+- Header components stay purely visual; tap-to-complete, recipe long-press, compact toggling, and bump logic remain in their respective OrderCard files.
+- Status color / aging values passed into headers come from the same `effectiveStatusColor` + `useElapsedSeconds` already computed in OrderCard, so aging pill colors continue to work in Default card too.
+- Persisted key reuses existing `posai-kds-settings-v2`; default `'default'` keeps current look for all existing users.

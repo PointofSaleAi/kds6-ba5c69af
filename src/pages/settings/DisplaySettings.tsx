@@ -31,6 +31,7 @@ export default function DisplaySettings() {
     ticketLayout, setTicketLayout,
     ticketHeaderLayout, setTicketHeaderLayout,
     ticketSpacing, setTicketSpacing,
+    ticketHeaderStyle, setTicketHeaderStyle,
   } = useKDSSettings();
   const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
   const languageDisplay = displayMode === 'dual'
@@ -161,6 +162,24 @@ export default function DisplaySettings() {
                 Controls padding, row gap, text size, layout density, and the primary ticket identifier.
               </p>
               <div className="grid gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
+                    Ticket header
+                  </span>
+                  <SegmentedToggle
+                    options={['Default', 'V1', 'V2', 'V3']}
+                    value={
+                      ticketHeaderStyle === 'v1' ? 'V1'
+                      : ticketHeaderStyle === 'v2' ? 'V2'
+                      : ticketHeaderStyle === 'v3' ? 'V3'
+                      : 'Default'
+                    }
+                    onChange={(v) => {
+                      const map = { Default: 'default', V1: 'v1', V2: 'v2', V3: 'v3' } as const;
+                      setTicketHeaderStyle(map[v as 'Default' | 'V1' | 'V2' | 'V3']);
+                    }}
+                  />
+                </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Ticket spacing
