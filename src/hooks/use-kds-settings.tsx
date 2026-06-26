@@ -8,6 +8,7 @@ export type TicketHeaderLayout = 'kitchen' | 'guest';
 export type ExpoSendButtonMode = 'always' | 'when-ready';
 export type TicketLayout = 'standard' | 'compact';
 export type TicketSpacing = 'Compact' | 'Standard' | 'Spacious';
+export type TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3';
 
 export type OrderTypeColors = Record<string, string>;
 
@@ -62,6 +63,7 @@ export interface KDSSettings {
   expoSendButtonMode: ExpoSendButtonMode;
   ticketLayout: TicketLayout;
   ticketSpacing: TicketSpacing;
+  ticketHeaderStyle: TicketHeaderStyle;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -82,6 +84,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setExpoSendButtonMode: (v: ExpoSendButtonMode) => void;
   setTicketLayout: (v: TicketLayout) => void;
   setTicketSpacing: (v: TicketSpacing) => void;
+  setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
 }
 
 const STORAGE_KEY = 'posai-kds-settings-v2';
@@ -104,6 +107,7 @@ const defaults: KDSSettings = {
   expoSendButtonMode: 'when-ready',
   ticketLayout: 'standard',
   ticketSpacing: 'Compact',
+  ticketHeaderStyle: 'default',
 };
 
 function loadSettings(): KDSSettings {
@@ -160,6 +164,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setExpoSendButtonMode: update('expoSendButtonMode'),
         setTicketLayout: update('ticketLayout'),
         setTicketSpacing: update('ticketSpacing'),
+        setTicketHeaderStyle: update('ticketHeaderStyle'),
       }}
     >
       {children}
