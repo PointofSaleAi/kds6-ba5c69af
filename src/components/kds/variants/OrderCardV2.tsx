@@ -71,7 +71,7 @@ function V2ProductRow({
       aria-disabled={loading}
       className={`px-2.5 py-1.5 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
     >
-      <div className="flex items-start gap-1">
+      <div className={`flex gap-1 ${showDetails && (product.modifiers.length > 0 || product.allergens.length > 0 || product.notes) ? 'items-start' : 'items-center'}`}>
         <span className="font-bold text-foreground shrink-0 text-center" style={{ fontSize: 15, minWidth: 20, lineHeight: '14.4px' }}>
           {product.quantity}
         </span>
