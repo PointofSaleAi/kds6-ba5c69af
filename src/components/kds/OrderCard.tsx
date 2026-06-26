@@ -93,8 +93,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const innerLayoutMode: 'standard' | 'compact' = resolvedTicketLayout === 'compact' ? 'compact' : 'standard';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
-  const [headerOnlyExpanded, setHeaderOnlyExpanded] = useState(false);
-  const effectiveHeaderOnly = isHeaderOnly && !headerOnlyExpanded;
+  const [headerOnlyModalOpen, setHeaderOnlyModalOpen] = useState(false);
+  const effectiveHeaderOnly = isHeaderOnly;
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
   const [dismissedItemIds, setDismissedItemIds] = useState<Set<string>>(new Set());
   // FIX 3: Track the order in which items were first marked seen within this ticket.
