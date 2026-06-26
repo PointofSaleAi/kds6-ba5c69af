@@ -16,6 +16,7 @@ export default function AccountSettings() {
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
   const [bugReporting, setBugReporting] = useState(() => localStorage.getItem('posai-bug-reporting') === 'true');
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
   const hash = useHashHighlight();
