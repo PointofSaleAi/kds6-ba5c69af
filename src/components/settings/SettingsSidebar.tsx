@@ -7,6 +7,7 @@ import {
   type SettingsGroupId,
 } from '@/lib/settings-search-index';
 import { SettingsIconTile } from './SettingsIconTile';
+import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import systemIcon from '@/assets/icons/settings-system.png';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
