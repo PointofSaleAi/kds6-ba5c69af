@@ -23,7 +23,7 @@ export default function SystemSettings() {
         icon={Sparkles}
         iconColor="#3B82F6"
         label="AI Integration & Settings"
-        helper="Connect an external AI provider (OpenAI, Gemini, Maya) with your own API key."
+        helper="Configure external AI providers, manage API keys, and control AI-powered features."
         onClick={() => navigate('/kds/full/settings/system/ai-integration')}
         highlighted={hash === 'ai-integration'}
       />
