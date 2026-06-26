@@ -63,69 +63,56 @@ function buildAiSummary(unread: KDSNotification[]): string {
   return `${intro} — ${top.join(', ')}.`;
 }
 
-type ChipStyle = 'default' | 'urgent' | 'hardware';
-interface AiChipConfig {
+type ActionColor = 'navy' | 'green' | 'red' | 'orange';
+interface AiAction {
   label: string;
-  style: ChipStyle;
-  response: string;
-  primary: string;
-  secondary?: string;
+  color: ActionColor;
+  kind: 'navigate-ticket' | 'navigate-home' | 'navigate-hardware' | 'fire' | 'bump' | 'update-table' | 'prioritise' | 'view';
+  ticketNumber?: string;
+  targetTable?: string;
 }
 
-function getAiChipConfig(type: string, message: string): AiChipConfig {
+const COLOR_CLASSES: Record<ActionColor, string> = {
+  navy: 'bg-[#1A1A2E] text-white',
+  green: 'bg-[#059669] text-white',
+  red: 'bg-[#E84C3D] text-white',
+  orange: 'bg-[#F97316] text-white',
+};
+
+function extractTicket(msg: string): string | undefined {
+  const m = msg.match(/#\s?(\d{2,})/);
+  return m?.[1];
+}
+
+function getAiAction(type: string, message: string): AiAction {
   const lower = message.toLowerCase();
+  const ticket = extractTicket(message);
   if (type === 'overtime') {
-    return {
-      label: 'Suggest action',
-      style: 'urgent',
-      response: 'This ticket is past the target time. Bump items that are plated and check the pass before firing anything new.',
-      primary: 'Bump now',
-      secondary: 'Go to ticket',
-    };
-  }
-  if (type === 'system' && /printer|offline|hardware/.test(lower)) {
-    return {
-      label: 'How to fix?',
-      style: 'hardware',
-      response: 'Check the printer power and network cable. If still offline, reassign tickets to a backup printer in Hardware settings.',
-      primary: 'Go to hardware settings',
-      secondary: 'Dismiss',
-    };
+    return { label: ticket ? `Bump ticket #${ticket}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
   }
   if (type === 'new-order') {
-    return {
-      label: 'Fire immediately or hold?',
-      style: 'default',
-      response: 'Station load is normal. Safe to fire now unless this is part of a coursed table.',
-      primary: 'Fire now',
-      secondary: 'Hold',
-    };
+    return { label: ticket ? `Fire order #${ticket}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
   }
-  if (type === 'table-transfer' || type === 'item-moved') {
-    return {
-      label: 'What should I do?',
-      style: 'default',
-      response: 'Update the ticket header to the new table and notify the runner so the food lands at the right seat.',
-      primary: 'Update tickets',
-      secondary: 'Dismiss',
-    };
+  if (type === 'table-transfer') {
+    const tables = message.match(/table\s+(\w+)/gi);
+    const target = tables && tables.length > 1 ? tables[tables.length - 1].replace(/table\s+/i, '') : undefined;
+    return { label: target ? `Update to Table ${target}` : 'Update tables', color: 'navy', kind: 'update-table', targetTable: target };
   }
-  if (type === 'course-fired') {
-    return {
-      label: 'Check timing',
-      style: 'default',
-      response: 'Confirm the previous course has cleared. Stagger this fire by ~2 minutes if the table is still eating.',
-      primary: 'Acknowledge',
-    };
+  if (type === 'item-moved') {
+    return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+  }
+  if (type === 'system' && /printer|offline|hardware/.test(lower)) {
+    return { label: 'Go to hardware', color: 'orange', kind: 'navigate-hardware' };
   }
   if (type === 'general-alert' && /vip/.test(lower)) {
-    return {
-      label: 'Prioritise now?',
-      style: 'urgent',
-      response: 'Move this table to the top of the queue and assign your most experienced cook to the station.',
-      primary: 'Prioritise tickets',
-      secondary: 'Dismiss',
-    };
+    return { label: 'Prioritise now', color: 'navy', kind: 'prioritise' };
+  }
+  if (type === 'course-fired') {
+    return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+  }
+  return { label: 'View', color: 'navy', kind: 'view' };
+}
+
   }
   return {
     label: 'What should I do?',
