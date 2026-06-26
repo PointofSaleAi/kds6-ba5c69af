@@ -241,7 +241,7 @@ export default function DisplaySettings() {
         iconColor="#0E7460"
         label="Ticket Layout"
         helper="Controls spacing, text size, layout density, and ticket identifier."
-        right={<ValueText>{ticketSpacing}</ValueText>}
+        right={<ValueText>{ticketLayout === 'compact' ? 'Compact' : 'Standard'}</ValueText>}
         onClick={() => setTicketSpacingOpen(true)}
         highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />
