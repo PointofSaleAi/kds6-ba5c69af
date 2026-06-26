@@ -7,6 +7,7 @@ import AnimatedAIIcon from './AnimatedAIIcon';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
 import { useAIIntegration, AI_PROVIDER_LABELS, AI_PROVIDER_SHORT_LABELS, AI_PROVIDER_MODELS } from '@/hooks/use-ai-integration';
+import { AIProviderSwitcher } from './AIProviderSwitcher';
 import { cn } from '@/lib/utils';
 
 interface AIAssistantPanelProps {
