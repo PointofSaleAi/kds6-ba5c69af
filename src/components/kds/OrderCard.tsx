@@ -13,6 +13,7 @@ import { TimerBadge, getTimerUrgency } from './TimerBadge';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { CompactOrderCard } from './CompactOrderCard';
+import { ExpandedOrderCard } from './ExpandedOrderCard';
 import { Flag86Modal } from './Flag86Button';
 import { useLongPress } from '@/hooks/use-long-press';
 import { useFlag86 } from '@/hooks/use-flag86';
@@ -93,8 +94,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const innerLayoutMode: 'standard' | 'compact' = resolvedTicketLayout === 'compact' ? 'compact' : 'standard';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
-  const [headerOnlyExpanded, setHeaderOnlyExpanded] = useState(false);
-  const effectiveHeaderOnly = isHeaderOnly && !headerOnlyExpanded;
+  const [headerOnlyModalOpen, setHeaderOnlyModalOpen] = useState(false);
+  const effectiveHeaderOnly = isHeaderOnly;
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
   const [dismissedItemIds, setDismissedItemIds] = useState<Set<string>>(new Set());
   // FIX 3: Track the order in which items were first marked seen within this ticket.
@@ -806,10 +807,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       >
         {/* Header area */}
         <div
-          onClick={isHeaderOnly ? () => setHeaderOnlyExpanded(v => !v) : undefined}
+          onClick={isHeaderOnly ? () => setHeaderOnlyModalOpen(true) : undefined}
           className={isHeaderOnly ? 'cursor-pointer' : undefined}
           role={isHeaderOnly ? 'button' : undefined}
-          aria-expanded={isHeaderOnly ? headerOnlyExpanded : undefined}
+          aria-expanded={isHeaderOnly ? headerOnlyModalOpen : undefined}
         >
           {ticketHeaderStyle === 'v1' ? (
             <V1Header order={order} />
@@ -834,13 +835,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 aria-label={`Advance ticket (currently ${ticketState})`}
                 title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
                 onClick={(e) => {
-                  if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyExpanded(v => !v); return; }
+                  if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyModalOpen(true); return; }
                   handleTicketAdvance(order.id);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    if (isHeaderOnly) { setHeaderOnlyExpanded(v => !v); return; }
+                    if (isHeaderOnly) { setHeaderOnlyModalOpen(true); return; }
                     handleTicketAdvance(order.id);
                   }
                 }}
@@ -1059,6 +1060,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
       />
+      {headerOnlyModalOpen && (
+        <ExpandedOrderCard
+          order={order}
+          onClose={() => setHeaderOnlyModalOpen(false)}
+          onBump={onBump}
+        />
+      )}
     </>
   );
 }
