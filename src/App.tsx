@@ -79,6 +79,7 @@ const App = () => (
                 <Route path="hardware" element={<HardwareSettings />} />
                 <Route path="system" element={<SystemSettings />} />
                 <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
+                <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
                 <Route path="account" element={<AccountSettings />} />
               </Route>
 
