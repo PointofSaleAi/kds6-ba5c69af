@@ -135,6 +135,43 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
     onClose();
   };
 
+  const runAiAction = (notifId: string, action: AiAction) => {
+    acknowledge(notifId);
+    switch (action.kind) {
+      case 'bump':
+        toast.success(action.ticketNumber ? `Bumped ticket #${action.ticketNumber}` : 'Bumped ticket');
+        onClose();
+        break;
+      case 'fire':
+        toast.success(action.ticketNumber ? `Fired order #${action.ticketNumber}` : 'Fired order');
+        onClose();
+        break;
+      case 'update-table':
+        toast.success(action.targetTable ? `Tickets updated to Table ${action.targetTable}` : 'Tables updated');
+        onClose();
+        break;
+      case 'prioritise':
+        toast.success('VIP tickets prioritised');
+        window.dispatchEvent(new CustomEvent('kds:prioritise-vip'));
+        onClose();
+        break;
+      case 'navigate-hardware':
+        onClose();
+        navigate('/kds/full/settings/hardware');
+        break;
+      case 'navigate-ticket':
+        onClose();
+        navigate(action.ticketNumber ? `/kds/full?ticket=${action.ticketNumber}` : '/kds/full');
+        break;
+      case 'view':
+      case 'navigate-home':
+      default:
+        onClose();
+        navigate('/kds/full');
+        break;
+    }
+  };
+
   // Sort messages: pending first, then by timestamp desc
   const sortedMessages = [...messages].sort((a, b) => {
     if (a.status !== b.status) return a.status === 'pending' ? -1 : 1;
