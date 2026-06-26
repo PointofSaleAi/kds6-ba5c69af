@@ -833,10 +833,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 tabIndex={0}
                 aria-label={`Advance ticket (currently ${ticketState})`}
                 title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
-                onClick={() => handleTicketAdvance(order.id)}
+                onClick={(e) => {
+                  if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyExpanded(v => !v); return; }
+                  handleTicketAdvance(order.id);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    if (isHeaderOnly) { setHeaderOnlyExpanded(v => !v); return; }
                     handleTicketAdvance(order.id);
                   }
                 }}
