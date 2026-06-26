@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2, Sparkles } from 'lucide-react';
+import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
@@ -210,7 +211,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             </div>
 
             {/* Tab pills */}
-            <div className="flex gap-2 px-4 py-3 border-b border-border flex-wrap">
+            <div className="flex gap-2 px-4 py-3 border-b border-border items-center">
               <button
                 onClick={() => setTab('notifications')}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative
@@ -239,11 +240,11 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 <button
                   type="button"
                   onClick={() => setAiSummaryOpen(v => !v)}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-colors min-h-[36px] relative inline-flex items-center gap-1.5
-                    ${aiSummaryOpen ? 'bg-[#1A1A2E] text-white' : 'bg-muted text-[#1A1A2E] hover:bg-muted/80'}`}
+                  aria-label="AI summary"
+                  className={`ml-auto relative w-9 h-9 rounded-full flex items-center justify-center transition-colors
+                    ${aiSummaryOpen ? 'bg-[#1A1A2E]' : 'bg-muted hover:bg-muted/80'}`}
                 >
-                  <Sparkles size={12} />
-                  AI summary
+                  <AnimatedAIIcon size={18} />
                   <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
                     {unreadNotifications.length}
                   </span>
