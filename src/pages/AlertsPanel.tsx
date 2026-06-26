@@ -113,21 +113,7 @@ function getAiAction(type: string, message: string): AiAction {
   return { label: 'View', color: 'navy', kind: 'view' };
 }
 
-  }
-  return {
-    label: 'What should I do?',
-    style: 'default',
-    response: 'Acknowledge this notification and continue with your current ticket priority.',
-    primary: 'Acknowledge',
-    secondary: 'Dismiss',
-  };
-}
 
-const CHIP_STYLES: Record<ChipStyle, string> = {
-  default: 'bg-[#EEF2FF] text-[#4338CA] border-[#C7D2FE]',
-  urgent: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]',
-  hardware: 'bg-[#FFF7ED] text-[#C2410C] border-[#FED7AA]',
-};
 
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [tab, setTab] = useState<TabFilter>('notifications');
