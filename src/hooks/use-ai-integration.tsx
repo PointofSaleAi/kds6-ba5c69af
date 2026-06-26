@@ -70,6 +70,12 @@ export interface AIIntegrationState {
   enabled: boolean;
   provider: AIProviderId;
   status: AIConnectionStatus;
+  model: string;
+}
+
+  enabled: boolean;
+  provider: AIProviderId;
+  status: AIConnectionStatus;
 }
 
 function read(): AIIntegrationState {
