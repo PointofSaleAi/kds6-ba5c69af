@@ -490,6 +490,32 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                               )}
                             </div>
                           )}
+                          {m.presetId && !m.presetApplied && (
+                            <div className="flex gap-2 mt-2">
+                              <button
+                                onClick={() => handleApplyPreset(m.id, m.presetId!)}
+                                style={{
+                                  background: '#E84C3D', color: '#FFFFFF',
+                                  fontSize: 12, fontWeight: 600,
+                                  padding: '8px 20px', borderRadius: 8,
+                                }}
+                                className="active:opacity-80 transition-opacity"
+                              >
+                                Apply
+                              </button>
+                              <button
+                                onClick={() => handleCancelPreset(m.id)}
+                                style={{
+                                  background: '#F3F4F6', color: '#374151',
+                                  fontSize: 12, fontWeight: 600,
+                                  padding: '8px 20px', borderRadius: 8,
+                                }}
+                                className="active:opacity-80 transition-opacity"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
