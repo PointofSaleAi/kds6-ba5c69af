@@ -18,6 +18,7 @@ export function SectionHeaderCard({
   shortDescription,
   longDescription,
   iconSrc,
+  iconNode,
 }: SectionHeaderCardProps) {
   const [showMore, setShowMore] = useState(false);
   const hasMore = Boolean(longDescription);
@@ -38,9 +39,12 @@ export function SectionHeaderCard({
           height: 52,
           borderRadius: 12,
           backgroundColor: iconColor,
+          color: '#FFFFFF',
         }}
       >
-        {iconSrc ? (
+        {iconNode ? (
+          iconNode
+        ) : iconSrc ? (
           <img src={iconSrc} alt={title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
         ) : Icon ? (
           <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
