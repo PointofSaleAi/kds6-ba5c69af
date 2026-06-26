@@ -151,14 +151,14 @@ export default function DisplaySettings() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket spacing</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Ticket layout</h1>
         </div>
         <div className="flex-1 px-6 pb-6 overflow-hidden">
           <div className="h-full flex gap-6 min-h-0">
             {/* LEFT: options */}
             <div className="w-[320px] shrink-0 flex flex-col gap-4 overflow-y-auto">
               <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
-                Controls padding and row gap inside each ticket card.
+                Controls padding, row gap, text size, layout density, and the primary ticket identifier.
               </p>
               <div className="grid gap-3">
                 <div className="flex flex-col gap-1.5">
@@ -183,12 +183,22 @@ export default function DisplaySettings() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Ticket layout
+                    Layout density
                   </span>
                   <SegmentedToggle
                     options={['Standard', 'Compact']}
                     value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
                     onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
+                    Ticket identifier
+                  </span>
+                  <SegmentedToggle
+                    options={['Order number', 'Guest name']}
+                    value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'}
+                    onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')}
                   />
                 </div>
               </div>
