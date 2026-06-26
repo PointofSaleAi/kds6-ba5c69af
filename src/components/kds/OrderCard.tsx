@@ -806,10 +806,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       >
         {/* Header area */}
         <div
-          onClick={isHeaderOnly ? () => setHeaderOnlyExpanded(v => !v) : undefined}
+          onClick={isHeaderOnly ? () => setHeaderOnlyModalOpen(true) : undefined}
           className={isHeaderOnly ? 'cursor-pointer' : undefined}
           role={isHeaderOnly ? 'button' : undefined}
-          aria-expanded={isHeaderOnly ? headerOnlyExpanded : undefined}
+          aria-expanded={isHeaderOnly ? headerOnlyModalOpen : undefined}
         >
           {ticketHeaderStyle === 'v1' ? (
             <V1Header order={order} />
@@ -834,13 +834,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 aria-label={`Advance ticket (currently ${ticketState})`}
                 title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
                 onClick={(e) => {
-                  if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyExpanded(v => !v); return; }
+                  if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyModalOpen(true); return; }
                   handleTicketAdvance(order.id);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    if (isHeaderOnly) { setHeaderOnlyExpanded(v => !v); return; }
+                    if (isHeaderOnly) { setHeaderOnlyModalOpen(true); return; }
                     handleTicketAdvance(order.id);
                   }
                 }}
