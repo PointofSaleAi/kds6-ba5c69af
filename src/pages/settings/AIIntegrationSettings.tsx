@@ -30,10 +30,10 @@ const STORAGE_KEYS = {
   status: 'kds.ai_integration.status',
 };
 
-function loadPref<T extends string>(key: string, fallback: T): T {
+function loadPref(key: string, fallback: string): string {
   if (typeof window === 'undefined') return fallback;
   const v = window.localStorage.getItem(key);
-  return (v as T) ?? fallback;
+  return v ?? fallback;
 }
 
 export default function AIIntegrationSettings() {
@@ -46,7 +46,7 @@ export default function AIIntegrationSettings() {
   useEffect(() => {
     setEnabled(loadPref(STORAGE_KEYS.enabled, 'false') === 'true');
     setProvider(loadPref(STORAGE_KEYS.provider, ''));
-    setStatus(loadPref<ConnectionStatus>(STORAGE_KEYS.status, 'not_configured'));
+    setStatus(loadPref(STORAGE_KEYS.status, 'not_configured') as ConnectionStatus);
   }, []);
 
   const persist = (key: string, value: string) => {

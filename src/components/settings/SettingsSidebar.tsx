@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Mic, Monitor, ShoppingBag, Send, Cpu, User } from 'lucide-react';
+import { Search, Mic, Monitor, ShoppingBag, Send, Cpu, Cog, User } from 'lucide-react';
 import {
   SETTINGS_GROUPS,
   searchSettings,
@@ -13,6 +13,7 @@ const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
   orders: ShoppingBag,
   expo: Send,
   hardware: Cpu,
+  system: Cog,
   account: User,
 };
 
@@ -21,6 +22,7 @@ export const GROUP_COLOR: Record<SettingsGroupId, string> = {
   orders: '#F9900E',
   expo: '#7C3AED',
   hardware: '#5E4DD8',
+  system: '#34A885',
   account: '#0A84FF',
 };
 
@@ -37,7 +39,7 @@ export function SettingsSidebar() {
     navigate(path);
   };
 
-  const groupIds: SettingsGroupId[] = ['account', 'orders', 'hardware', 'display'];
+  const groupIds: SettingsGroupId[] = ['account', 'orders', 'hardware', 'display', 'system'];
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
