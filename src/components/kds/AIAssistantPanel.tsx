@@ -89,9 +89,31 @@ const FALLBACK_CONTENT: RouteContent = {
   ],
 };
 
-function getRouteContent(pathname: string): RouteContent {
+const VIEW_CONTENT: Record<string, RouteContent> = {
+  history: ROUTE_CONTENT['/kds/full/history'],
+  'seen-orders': {
+    chips: ['Mark all served', 'Filter by station', 'Show overtime', 'Allergen alerts'],
+    examples: [
+      '"How many seen tickets are overtime?"',
+      '"Show seen dine-in tickets"',
+      '"Mark ticket #33 as served"',
+      '"What stations have the most seen tickets?"',
+    ],
+  },
+  'unseen-orders': {
+    chips: ['Mark all seen', 'Oldest first', 'Filter by order type', 'Allergen alerts'],
+    examples: [
+      '"How many unseen tickets are waiting?"',
+      '"Show the oldest unseen ticket"',
+      '"Mark ticket #33 as seen"',
+      '"Show all unseen delivery tickets"',
+    ],
+  },
+};
+
+function getRouteContent(pathname: string, view?: string | null): RouteContent {
+  if (view && VIEW_CONTENT[view]) return VIEW_CONTENT[view];
   if (ROUTE_CONTENT[pathname]) return ROUTE_CONTENT[pathname];
-  // Match nested settings routes by prefix
   const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== '/kds/full');
   if (match) return ROUTE_CONTENT[match];
   if (pathname === '/' || pathname.startsWith('/kds/full')) return HOME_CONTENT;
