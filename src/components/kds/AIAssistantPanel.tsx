@@ -9,6 +9,7 @@ import { getOverlayInsets } from '@/lib/dock-insets';
 import { useAIIntegration, AI_PROVIDER_LABELS, AI_PROVIDER_SHORT_LABELS, AI_PROVIDER_MODELS } from '@/hooks/use-ai-integration';
 import { AIProviderSwitcher } from './AIProviderSwitcher';
 import { cn } from '@/lib/utils';
+import { useActiveKDSView } from '@/hooks/use-active-kds-view';
 
 interface AIAssistantPanelProps {
   open: boolean;
@@ -138,7 +139,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const ai = useAIIntegration();
   const navigate = useNavigate();
   const location = useLocation();
-  const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname);
+  const { view: activeKDSView } = useActiveKDSView();
+  const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
   const providerShort = ai.provider ? AI_PROVIDER_SHORT_LABELS[ai.provider] : 'AI';
