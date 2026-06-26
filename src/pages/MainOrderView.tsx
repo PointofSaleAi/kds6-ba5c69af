@@ -37,6 +37,7 @@ import { usePortrait } from '@/hooks/use-portrait';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { Megaphone } from 'lucide-react';
 import { useDockLayout } from '@/hooks/use-dock-layout';
+import { useActiveKDSView } from '@/hooks/use-active-kds-view';
 import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 
@@ -83,6 +84,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
+  const { setView: setActiveKDSView } = useActiveKDSView();
+  useEffect(() => {
+    if (activeNav === 'home' || activeNav === 'history' || activeNav === 'seen-orders' || activeNav === 'unseen-orders') {
+      setActiveKDSView(activeNav as any);
+    }
+  }, [activeNav, setActiveKDSView]);
   const [expoFilter, setExpoFilter] = useState<'all' | 'ready' | 'recalled'>('all');
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
