@@ -275,36 +275,83 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                     {notifications.map((notif) => {
                       const config = notifIcons[notif.type] || notifIcons['system'];
                       const Icon = config.icon;
+                      const isUnread = !notif.acknowledged;
+                      const chip = isUnread ? getAiChipConfig(notif.type, notif.message) : null;
+                      const isExpanded = expandedChipId === notif.id;
                       return (
-                        <button
+                        <div
                           key={notif.id}
-                          onClick={() => !notif.acknowledged && acknowledge(notif.id)}
-                          className={`w-full text-left flex gap-3 px-4 py-3 transition-colors ${!notif.acknowledged ? 'hover:bg-muted/50' : ''}`}
+                          className={`flex gap-3 px-4 py-3 transition-colors ${isUnread ? 'hover:bg-muted/50 cursor-pointer' : 'opacity-60'}`}
+                          onClick={() => isUnread && acknowledge(notif.id)}
                         >
                           {/* Unread dot */}
                           <div className="flex items-start pt-1.5 w-3 shrink-0">
-                            {!notif.acknowledged && (
+                            {isUnread && (
                               <span className="w-2.5 h-2.5 rounded-full bg-warning shrink-0" />
                             )}
                           </div>
                           <Icon size={18} className={`${config.color} shrink-0 mt-0.5`} />
                           <div className="flex-1 min-w-0">
-                            <p className={`text-sm leading-snug ${!notif.acknowledged ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
+                            <p className={`text-sm leading-snug ${isUnread ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>
                               {tn(notif.message)}
                             </p>
                             <div className="flex items-center gap-1.5 mt-1 text-[10px] text-text-muted">
                               <span className="px-1.5 py-0.5 rounded bg-muted text-text-secondary font-medium">{tl(notif.station)}</span>
                               <span>·</span>
                               <span>{timeAgo(notif.timestamp)}</span>
-                              {notif.acknowledged && (
+                              {!isUnread && (
                                 <>
                                   <span>·</span>
                                   <span className="text-success">{t.readLabel}</span>
                                 </>
                               )}
                             </div>
+                            {chip && (
+                              <div className="mt-2">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedChipId(isExpanded ? null : notif.id);
+                                  }}
+                                  className={`inline-flex items-center gap-1 rounded-[10px] border px-2 py-[3px] text-[10px] font-medium transition-colors ${CHIP_STYLES[chip.style]}`}
+                                  style={{ borderWidth: '0.5px' }}
+                                >
+                                  <Sparkles size={10} />
+                                  {chip.label}
+                                </button>
+                                {isExpanded && (
+                                  <div
+                                    className="mt-2 rounded-lg bg-[#F0FDF4] border border-[#A7F3D0] px-[10px] py-2"
+                                    style={{ borderWidth: '0.5px' }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <p className="text-[11px] text-[#065F46] leading-[1.5]">{chip.response}</p>
+                                    <div className="flex gap-1.5 mt-2">
+                                      <button
+                                        type="button"
+                                        onClick={(e) => { e.stopPropagation(); acknowledge(notif.id); setExpandedChipId(null); }}
+                                        className="rounded-[10px] bg-[#059669] text-white text-[10px] font-medium px-[9px] py-[3px] hover:opacity-90"
+                                      >
+                                        {chip.primary}
+                                      </button>
+                                      {chip.secondary && (
+                                        <button
+                                          type="button"
+                                          onClick={(e) => { e.stopPropagation(); setExpandedChipId(null); }}
+                                          className="rounded-[10px] bg-white text-[#059669] text-[10px] font-medium px-[9px] py-[3px] border border-[#059669] hover:bg-[#F0FDF4]"
+                                          style={{ borderWidth: '0.5px' }}
+                                        >
+                                          {chip.secondary}
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
