@@ -8,6 +8,8 @@ import { KitchenReplyDialog } from '@/components/kds/KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import type { NotificationType } from '@/types/notification';
 import { formatTime } from '@/lib/datetime';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
 
 function useTimeAgo() {
   const { t } = useLanguage();
@@ -45,6 +47,8 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
   const { t, tl, tperson, tn } = useLanguage();
   const timeAgo = useTimeAgo();
+  const { layout } = useDockLayout();
+  const insets = getOverlayInsets(layout);
 
   // Sort messages: pending first, then by timestamp desc
   const sortedMessages = [...messages].sort((a, b) => {
@@ -60,31 +64,38 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-brand-dark/30 z-40"
+            className="fixed bg-black/40 z-40"
+            style={{ left: insets.left, right: insets.right, top: insets.top, bottom: insets.bottom }}
             onClick={onClose}
           />
           <motion.div
-            initial={{ x: '100%' }}
+            initial={{ x: '110%' }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed right-0 top-0 bottom-0 w-[360px] bg-surface-card shadow-2xl z-50 flex flex-col"
+            exit={{ x: '110%' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 280 }}
+            className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
+            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
+            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <div className="flex-shrink-0 px-4 py-3 border-b border-border flex items-center justify-between">
               <h2 className="text-lg font-bold text-text-primary">{t.notificationsTitle}</h2>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {tab === 'notifications' && (
                   <button
                     onClick={clearAcknowledged}
-                    className="text-sm text-text-muted hover:text-destructive flex items-center gap-1 transition-colors"
+                    className="text-xs text-text-muted hover:text-destructive flex items-center gap-1 transition-colors px-2"
                   >
                     <Trash2 size={14} />
                     {t.clearRead}
                   </button>
                 )}
-                <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close alerts">
-                  <X size={20} className="text-text-secondary" />
+                <button
+                  onClick={onClose}
+                  aria-label="Close alerts"
+                  className="w-10 h-10 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center active:opacity-70 transition-opacity"
+                >
+                  <X className="w-5 h-5 text-text-secondary" />
                 </button>
               </div>
             </div>
@@ -242,6 +253,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                   </div>
                 )
               )}
+            </div>
             </div>
           </motion.div>
 
