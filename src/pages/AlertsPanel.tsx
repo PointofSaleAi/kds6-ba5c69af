@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2, Sparkles } from 'lucide-react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -61,90 +63,63 @@ function buildAiSummary(unread: KDSNotification[]): string {
   return `${intro} — ${top.join(', ')}.`;
 }
 
-type ChipStyle = 'default' | 'urgent' | 'hardware';
-interface AiChipConfig {
+type ActionColor = 'navy' | 'green' | 'red' | 'orange';
+interface AiAction {
   label: string;
-  style: ChipStyle;
-  response: string;
-  primary: string;
-  secondary?: string;
+  color: ActionColor;
+  kind: 'navigate-ticket' | 'navigate-home' | 'navigate-hardware' | 'fire' | 'bump' | 'update-table' | 'prioritise' | 'view';
+  ticketNumber?: string;
+  targetTable?: string;
 }
 
-function getAiChipConfig(type: string, message: string): AiChipConfig {
+const COLOR_CLASSES: Record<ActionColor, string> = {
+  navy: 'bg-[#1A1A2E] text-white',
+  green: 'bg-[#059669] text-white',
+  red: 'bg-[#E84C3D] text-white',
+  orange: 'bg-[#F97316] text-white',
+};
+
+function extractTicket(msg: string): string | undefined {
+  const m = msg.match(/#\s?(\d{2,})/);
+  return m?.[1];
+}
+
+function getAiAction(type: string, message: string): AiAction {
   const lower = message.toLowerCase();
+  const ticket = extractTicket(message);
   if (type === 'overtime') {
-    return {
-      label: 'Suggest action',
-      style: 'urgent',
-      response: 'This ticket is past the target time. Bump items that are plated and check the pass before firing anything new.',
-      primary: 'Bump now',
-      secondary: 'Go to ticket',
-    };
-  }
-  if (type === 'system' && /printer|offline|hardware/.test(lower)) {
-    return {
-      label: 'How to fix?',
-      style: 'hardware',
-      response: 'Check the printer power and network cable. If still offline, reassign tickets to a backup printer in Hardware settings.',
-      primary: 'Go to hardware settings',
-      secondary: 'Dismiss',
-    };
+    return { label: ticket ? `Bump ticket #${ticket}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
   }
   if (type === 'new-order') {
-    return {
-      label: 'Fire immediately or hold?',
-      style: 'default',
-      response: 'Station load is normal. Safe to fire now unless this is part of a coursed table.',
-      primary: 'Fire now',
-      secondary: 'Hold',
-    };
+    return { label: ticket ? `Fire order #${ticket}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
   }
-  if (type === 'table-transfer' || type === 'item-moved') {
-    return {
-      label: 'What should I do?',
-      style: 'default',
-      response: 'Update the ticket header to the new table and notify the runner so the food lands at the right seat.',
-      primary: 'Update tickets',
-      secondary: 'Dismiss',
-    };
+  if (type === 'table-transfer') {
+    const tables = message.match(/table\s+(\w+)/gi);
+    const target = tables && tables.length > 1 ? tables[tables.length - 1].replace(/table\s+/i, '') : undefined;
+    return { label: target ? `Update to Table ${target}` : 'Update tables', color: 'navy', kind: 'update-table', targetTable: target };
   }
-  if (type === 'course-fired') {
-    return {
-      label: 'Check timing',
-      style: 'default',
-      response: 'Confirm the previous course has cleared. Stagger this fire by ~2 minutes if the table is still eating.',
-      primary: 'Acknowledge',
-    };
+  if (type === 'item-moved') {
+    return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+  }
+  if (type === 'system' && /printer|offline|hardware/.test(lower)) {
+    return { label: 'Go to hardware', color: 'orange', kind: 'navigate-hardware' };
   }
   if (type === 'general-alert' && /vip/.test(lower)) {
-    return {
-      label: 'Prioritise now?',
-      style: 'urgent',
-      response: 'Move this table to the top of the queue and assign your most experienced cook to the station.',
-      primary: 'Prioritise tickets',
-      secondary: 'Dismiss',
-    };
+    return { label: 'Prioritise now', color: 'navy', kind: 'prioritise' };
   }
-  return {
-    label: 'What should I do?',
-    style: 'default',
-    response: 'Acknowledge this notification and continue with your current ticket priority.',
-    primary: 'Acknowledge',
-    secondary: 'Dismiss',
-  };
+  if (type === 'course-fired') {
+    return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+  }
+  return { label: 'View', color: 'navy', kind: 'view' };
 }
 
-const CHIP_STYLES: Record<ChipStyle, string> = {
-  default: 'bg-[#EEF2FF] text-[#4338CA] border-[#C7D2FE]',
-  urgent: 'bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]',
-  hardware: 'bg-[#FFF7ED] text-[#C2410C] border-[#FED7AA]',
-};
+
 
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [tab, setTab] = useState<TabFilter>('notifications');
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
-  const [expandedChipId, setExpandedChipId] = useState<string | null>(null);
   const [aiSummaryOpen, setAiSummaryOpen] = useState(false);
+  const navigate = useNavigate();
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
   const { t, tl, tperson, tn } = useLanguage();
@@ -158,6 +133,43 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const openAiAssistant = () => {
     window.dispatchEvent(new CustomEvent('kds:open-ai-assistant'));
     onClose();
+  };
+
+  const runAiAction = (notifId: string, action: AiAction) => {
+    acknowledge(notifId);
+    switch (action.kind) {
+      case 'bump':
+        toast.success(action.ticketNumber ? `Bumped ticket #${action.ticketNumber}` : 'Bumped ticket');
+        onClose();
+        break;
+      case 'fire':
+        toast.success(action.ticketNumber ? `Fired order #${action.ticketNumber}` : 'Fired order');
+        onClose();
+        break;
+      case 'update-table':
+        toast.success(action.targetTable ? `Tickets updated to Table ${action.targetTable}` : 'Tables updated');
+        onClose();
+        break;
+      case 'prioritise':
+        toast.success('VIP tickets prioritised');
+        window.dispatchEvent(new CustomEvent('kds:prioritise-vip'));
+        onClose();
+        break;
+      case 'navigate-hardware':
+        onClose();
+        navigate('/kds/full/settings/hardware');
+        break;
+      case 'navigate-ticket':
+        onClose();
+        navigate(action.ticketNumber ? `/kds/full?ticket=${action.ticketNumber}` : '/kds/full');
+        break;
+      case 'view':
+      case 'navigate-home':
+      default:
+        onClose();
+        navigate('/kds/full');
+        break;
+    }
   };
 
   // Sort messages: pending first, then by timestamp desc
@@ -287,12 +299,11 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                       const config = notifIcons[notif.type] || notifIcons['system'];
                       const Icon = config.icon;
                       const isUnread = !notif.acknowledged;
-                      const chip = isUnread ? getAiChipConfig(notif.type, notif.message) : null;
-                      const isExpanded = expandedChipId === notif.id;
+                      const action = isUnread ? getAiAction(notif.type, notif.message) : null;
                       return (
                         <div
                           key={notif.id}
-                          className={`flex gap-3 px-4 py-3 transition-colors ${isUnread ? 'hover:bg-muted/50 cursor-pointer' : 'opacity-60'}`}
+                          className={`flex gap-3 px-4 py-3 transition-colors ${isUnread ? 'hover:bg-muted/50 cursor-pointer' : 'opacity-50'}`}
                           onClick={() => isUnread && acknowledge(notif.id)}
                         >
                           {/* Unread dot */}
@@ -317,49 +328,19 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                                 </>
                               )}
                             </div>
-                            {chip && (
-                              <div className="mt-2">
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setExpandedChipId(isExpanded ? null : notif.id);
-                                  }}
-                                  className={`inline-flex items-center gap-1 rounded-[10px] border px-2 py-[3px] text-[10px] font-medium transition-colors ${CHIP_STYLES[chip.style]}`}
-                                  style={{ borderWidth: '0.5px' }}
-                                >
-                                  <Sparkles size={10} />
-                                  {chip.label}
-                                </button>
-                                {isExpanded && (
-                                  <div
-                                    className="mt-2 rounded-lg bg-[#F0FDF4] border border-[#A7F3D0] px-[10px] py-2"
-                                    style={{ borderWidth: '0.5px' }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <p className="text-[11px] text-[#065F46] leading-[1.5]">{chip.response}</p>
-                                    <div className="flex gap-1.5 mt-2">
-                                      <button
-                                        type="button"
-                                        onClick={(e) => { e.stopPropagation(); acknowledge(notif.id); setExpandedChipId(null); }}
-                                        className="rounded-[10px] bg-[#059669] text-white text-[10px] font-medium px-[9px] py-[3px] hover:opacity-90"
-                                      >
-                                        {chip.primary}
-                                      </button>
-                                      {chip.secondary && (
-                                        <button
-                                          type="button"
-                                          onClick={(e) => { e.stopPropagation(); setExpandedChipId(null); }}
-                                          className="rounded-[10px] bg-white text-[#059669] text-[10px] font-medium px-[9px] py-[3px] border border-[#059669] hover:bg-[#F0FDF4]"
-                                          style={{ borderWidth: '0.5px' }}
-                                        >
-                                          {chip.secondary}
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
+                            {action && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAiAction(notif.id, action);
+                                }}
+                                className={`inline-flex items-center rounded-lg hover:opacity-90 active:opacity-80 transition-opacity ${COLOR_CLASSES[action.color]}`}
+                                style={{ gap: '5px', fontSize: '11px', fontWeight: 600, padding: '5px 12px', marginTop: '6px' }}
+                              >
+                                <Sparkles size={11} className="text-white" />
+                                {action.label}
+                              </button>
                             )}
                           </div>
                         </div>
@@ -367,6 +348,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                     })}
                   </div>
                 )
+
               ) : (
                 /* Kitchen messages tab */
                 sortedMessages.length === 0 ? (
