@@ -275,6 +275,10 @@ export function OrderCardV2({ order, onBump }: Props) {
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
 
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+
+
+
       {/* FOOTER */}
       {!isCompact && (
         <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
