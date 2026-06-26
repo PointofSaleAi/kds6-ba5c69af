@@ -266,7 +266,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                   </div>
                 ) : (
                   <>
-                    {messages.map(m => (
+                    {messages.filter(m => !(m.role === 'assistant' && !m.text)).map(m => (
                       <div
                         key={m.id}
                         className={cn('flex gap-3', m.role === 'user' ? 'justify-end' : 'justify-start')}
