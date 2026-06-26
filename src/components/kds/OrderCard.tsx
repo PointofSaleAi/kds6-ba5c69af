@@ -83,7 +83,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const liveElapsed = useElapsedSeconds(order.timeReceived);
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
-  const { ticketHeaderLayout, ticketLayout } = useKDSSettings();
+  const { ticketHeaderLayout, ticketLayout, ticketHeaderStyle } = useKDSSettings();
   const resolvedTicketLayout: 'standard' | 'compact' = layoutOverride ?? ticketLayout;
   const isCompactLayout = resolvedTicketLayout === 'compact';
   const statusColor = getStatusForElapsed(liveElapsed);
@@ -799,121 +799,131 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       >
         {/* Header area */}
         <div>
-          <OrderTypeBadge
-            type={order.orderType}
-            time={formatStaticTime(order.timeReceived)}
-            tableInfo={getLocationLabel(order.orderType, order.tableName)}
-            stationBadge={undefined}
-            
-          />
+          {ticketHeaderStyle === 'v1' ? (
+            <V1Header order={order} />
+          ) : ticketHeaderStyle === 'v2' ? (
+            <V2Header order={order} />
+          ) : ticketHeaderStyle === 'v3' ? (
+            <V3Header order={order} />
+          ) : (
+            <>
+              <OrderTypeBadge
+                type={order.orderType}
+                time={formatStaticTime(order.timeReceived)}
+                tableInfo={getLocationLabel(order.orderType, order.tableName)}
+                stationBadge={undefined}
+                
+              />
 
 
-          <div
-            role="button"
-            tabIndex={0}
-            aria-label={`Advance ticket (currently ${ticketState})`}
-            title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
-            onClick={() => handleTicketAdvance(order.id)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleTicketAdvance(order.id);
-              }
-            }}
-            className="flex items-center justify-between transition-all duration-200 cursor-pointer select-none active:brightness-95"
-            style={{
-              backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
-              padding: '12px',
-            }}
-          >
-            {isCompactLayout ? (
-              <>
-                {(() => {
-                  const useGuest = (ticketHeaderLayout === 'guest' || showCustomerContact) && !!displayGuestName;
-                  if (useGuest) {
-                    const translatedGuest = tperson(displayGuestName!);
-                    const parts = translatedGuest.trim().split(/\s+/);
-                    const firstName = parts[0];
-                    const restName = parts.slice(1).join(' ');
-                    const longest = Math.max(firstName.length, restName.length);
-                    const fontSize = longest > 12 ? 11 : longest > 9 ? 13 : longest > 6 ? 14 : 16;
-                    return (
-                      <div
-                        className="text-white font-black min-w-0 leading-tight break-words"
-                        style={{ fontSize: `${fontSize}px` }}
-                      >
-                        <div>{firstName}</div>
-                        {restName && <div>{restName}</div>}
-                      </div>
-                    );
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label={`Advance ticket (currently ${ticketState})`}
+                title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
+                onClick={() => handleTicketAdvance(order.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleTicketAdvance(order.id);
                   }
-                  return (
-                    <div className="text-white font-black shrink-0 leading-none min-w-0 truncate" style={{ fontSize: '28px' }}>
+                }}
+                className="flex items-center justify-between transition-all duration-200 cursor-pointer select-none active:brightness-95"
+                style={{
+                  backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
+                  padding: '12px',
+                }}
+              >
+                {isCompactLayout ? (
+                  <>
+                    {(() => {
+                      const useGuest = (ticketHeaderLayout === 'guest' || showCustomerContact) && !!displayGuestName;
+                      if (useGuest) {
+                        const translatedGuest = tperson(displayGuestName!);
+                        const parts = translatedGuest.trim().split(/\s+/);
+                        const firstName = parts[0];
+                        const restName = parts.slice(1).join(' ');
+                        const longest = Math.max(firstName.length, restName.length);
+                        const fontSize = longest > 12 ? 11 : longest > 9 ? 13 : longest > 6 ? 14 : 16;
+                        return (
+                          <div
+                            className="text-white font-black min-w-0 leading-tight break-words"
+                            style={{ fontSize: `${fontSize}px` }}
+                          >
+                            <div>{firstName}</div>
+                            {restName && <div>{restName}</div>}
+                          </div>
+                        );
+                      }
+                      return (
+                        <div className="text-white font-black shrink-0 leading-none min-w-0 truncate" style={{ fontSize: '28px' }}>
+                          {order.orderNumber}
+                        </div>
+                      );
+                    })()}
+                    <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
+                      <div className="flex items-center gap-1.5 leading-none">
+                        {order.isRushed && (
+                          <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
+                        )}
+                        <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
+                      </div>
+                      <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
+                        {tperson(order.serverName)}
+                      </span>
+                    </div>
+                  </>
+                ) : ticketHeaderLayout === 'kitchen' ? (
+                  <>
+                    <div className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
                       {order.orderNumber}
                     </div>
-                  );
-                })()}
-                <div className="flex flex-col items-end justify-center shrink-0 ml-2" style={{ gap: '4px' }}>
-                  <div className="flex items-center gap-1.5 leading-none">
-                    {order.isRushed && (
-                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
-                    )}
-                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
-                  </div>
-                  <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
-                    {tperson(order.serverName)}
-                  </span>
-                </div>
-              </>
-            ) : ticketHeaderLayout === 'kitchen' ? (
-              <>
-                <div className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
-                  {order.orderNumber}
-                </div>
-                <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
-                  <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white max-w-full">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                    <span className="text-right break-words min-w-0">{tperson(order.serverName)}</span>
-                  </span>
-                  {displayGuestName ? (
-                    <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
-                      <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                      <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{tperson(displayGuestName)}</span>
-                    </span>
-                  ) : (
-                    <span className="h-[14px]" />
-                  )}
-                  <div className="flex items-center gap-1.5 leading-none">
-                    {order.isRushed && (
-                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
-                    )}
-                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1">
-                  {displayGuestName ? tperson(displayGuestName) : order.orderNumber}
-                </div>
-                <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
-                  <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
-                    <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                    {tperson(order.serverName)}
-                  </span>
-                  <span className="text-[16px] font-semibold text-white">
-                    {order.orderNumber}
-                  </span>
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    {order.isRushed && (
-                      <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
-                    )}
-                    <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+                    <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
+                      <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white max-w-full">
+                        <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                        <span className="text-right break-words min-w-0">{tperson(order.serverName)}</span>
+                      </span>
+                      {displayGuestName ? (
+                        <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
+                          <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                          <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{tperson(displayGuestName)}</span>
+                        </span>
+                      ) : (
+                        <span className="h-[14px]" />
+                      )}
+                      <div className="flex items-center gap-1.5 leading-none">
+                        {order.isRushed && (
+                          <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
+                        )}
+                        <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1">
+                      {displayGuestName ? tperson(displayGuestName) : order.orderNumber}
+                    </div>
+                    <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
+                      <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
+                        <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
+                        {tperson(order.serverName)}
+                      </span>
+                      <span className="text-[16px] font-semibold text-white">
+                        {order.orderNumber}
+                      </span>
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        {order.isRushed && (
+                          <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
+                        )}
+                        <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] font-bold" />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
 
           {showCustomerContact && (
             <CustomerContactStrip
