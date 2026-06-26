@@ -4,6 +4,7 @@ import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { useHashHighlight } from '@/components/settings/SettingsControls';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import systemIcon from '@/assets/icons/settings-system.png';
 
 export default function SystemSettings() {
   const navigate = useNavigate();
@@ -13,11 +14,13 @@ export default function SystemSettings() {
     <>
       <SectionHeaderCard
         icon={Cog}
+        iconSrc={systemIcon}
         iconColor={GROUP_COLOR.system}
         title="System"
-        shortDescription="Manage system-level integrations and platform connections for this Kitchen Display."
-        longDescription="Manage system-level integrations and platform connections for this Kitchen Display. Configure external AI providers, automation, and other platform-wide services without impacting core KDS behaviour."
+        shortDescription="These settings allow you to manage and personalise your Point of Sale environment while maintaining stable system performance and functionality."
+        longDescription="These settings allow you to manage and personalise your Point of Sale environment while maintaining stable system performance and functionality. Configure essential controls and preferences to ensure smooth daily operations without impacting core system behaviour."
       />
+
 
       <SettingsPill
         icon={Sparkles}
