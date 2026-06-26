@@ -7,6 +7,7 @@ import {
   type SettingsGroupId,
 } from '@/lib/settings-search-index';
 import { SettingsIconTile } from './SettingsIconTile';
+import systemIcon from '@/assets/icons/settings-system.png';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
   display: Monitor,
