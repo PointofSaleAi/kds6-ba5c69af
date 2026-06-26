@@ -279,7 +279,6 @@ export function OrderCardV2({ order, onBump }: Props) {
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
 
 
