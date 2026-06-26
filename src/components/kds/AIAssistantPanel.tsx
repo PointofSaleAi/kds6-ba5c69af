@@ -36,9 +36,13 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const [streaming, setStreaming] = useState(false);
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
+  const ai = useAIIntegration();
+  const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
+  const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : '';
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
