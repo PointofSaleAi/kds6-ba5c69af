@@ -7,6 +7,7 @@ interface SectionHeaderCardProps {
   title: string;
   shortDescription: string;
   longDescription?: string;
+  iconSrc?: string;
 }
 
 export function SectionHeaderCard({
@@ -15,6 +16,7 @@ export function SectionHeaderCard({
   title,
   shortDescription,
   longDescription,
+  iconSrc,
 }: SectionHeaderCardProps) {
   const [showMore, setShowMore] = useState(false);
   const hasMore = Boolean(longDescription);
@@ -37,7 +39,11 @@ export function SectionHeaderCard({
           backgroundColor: iconColor,
         }}
       >
-        <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
+        {iconSrc ? (
+          <img src={iconSrc} alt={title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
+        ) : (
+          <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
+        )}
       </div>
       <h1
         className="mb-2"
