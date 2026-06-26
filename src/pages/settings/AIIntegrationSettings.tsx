@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Sparkles, ShieldCheck, Info, Check } from 'lucide-react';
+import { ShieldCheck, Info, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { AI_STORAGE_KEYS as STORAGE_KEYS, emitAIIntegrationChange } from '@/hooks/use-ai-integration';
+import aiIntegrationIcon from '@/assets/icons/ai-integration.png';
 
 type ConnectionStatus = 'not_configured' | 'connected' | 'invalid_key' | 'error';
 
@@ -99,10 +100,10 @@ export default function AIIntegrationSettings() {
   return (
     <>
       <SectionHeaderCard
-        icon={Sparkles}
-        iconColor="#7C3AED"
-        title="AI Integration"
-        shortDescription="Configure an external AI provider with your own API key for AI-powered KDS features."
+        iconSrc={aiIntegrationIcon}
+        iconColor="#3B82F6"
+        title="AI Integration & Settings"
+        shortDescription="Configure external AI providers, manage API keys, and control AI-powered features."
         longDescription="Configure external AI providers using your own API keys. AI-powered features across the Kitchen Display System will use this integration when enabled. Keys are stored securely as project secrets and never sent to the browser."
       />
 
