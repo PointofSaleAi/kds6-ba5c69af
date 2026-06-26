@@ -180,7 +180,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             animate={{ x: 0 }}
             exit={{ x: '110%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed z-50 w-[380px] max-w-[95vw] p-[10px] pl-0"
+            className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
             <div
