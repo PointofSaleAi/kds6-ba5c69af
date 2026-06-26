@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { LucideIcon } from 'lucide-react';
 
 interface SectionHeaderCardProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   iconColor: string;
   title: string;
   shortDescription: string;
