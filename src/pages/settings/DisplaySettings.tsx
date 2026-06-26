@@ -237,38 +237,15 @@ export default function DisplaySettings() {
       />
 
       <SettingsPill
-        icon={Type}
-        iconColor="#0A84FF"
-        label="Text size"
-        helper="Compact fits more tickets, Large is easier from a distance."
-        right={<SegmentedToggle options={['Compact', 'Standard', 'Large']} value={textSize} onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')} />}
-        highlighted={hash === 'text-size'}
-      />
-
-      <SettingsPill
         icon={StretchVertical}
         iconColor="#0E7460"
-        label="Ticket spacing"
-        helper="Controls padding and row gap inside each ticket card."
+        label="Ticket Layout"
+        helper="Controls spacing, text size, layout density, and ticket identifier."
         right={<ValueText>{ticketSpacing}</ValueText>}
         onClick={() => setTicketSpacingOpen(true)}
-        highlighted={hash === 'ticket-spacing'}
+        highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />
 
-      <SettingsPill
-        icon={Rows3}
-        iconColor="#7C3AED"
-        label="Ticket layout"
-        helper={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand details.' : 'Standard, full details and modifiers always visible.'}
-        right={
-          <SegmentedToggle
-            options={['Standard', 'Compact']}
-            value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
-            onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
-          />
-        }
-        highlighted={hash === 'ticket-layout'}
-      />
 
       <SettingsPill
         icon={Palette}
