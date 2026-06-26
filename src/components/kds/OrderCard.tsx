@@ -29,6 +29,9 @@ import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import UsersBold from '@/assets/users-bold.svg';
+import { V1Header } from './variants/headers/V1Header';
+import { V2Header } from './variants/headers/V2Header';
+import { V3Header } from './variants/headers/V3Header';
 
 interface OrderCardProps {
   order: Order;
