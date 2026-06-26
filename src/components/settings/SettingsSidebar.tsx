@@ -55,7 +55,7 @@ export function SettingsSidebar() {
         {showResults ? (
           <div>
             <div
-              className="text-[0.7rem] font-medium uppercase tracking-wider px-3 py-2"
+              className="text-[0.7rem] font-medium tracking-wide px-3 py-2"
               style={{ color: 'hsl(var(--text-muted))' }}
             >
               {results.length} result{results.length === 1 ? '' : 's'}

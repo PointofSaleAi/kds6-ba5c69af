@@ -162,7 +162,7 @@ export default function DisplaySettings() {
               </p>
               <div className="grid gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Ticket spacing
                   </span>
                   <SegmentedToggle
@@ -172,7 +172,7 @@ export default function DisplaySettings() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Text size
                   </span>
                   <SegmentedToggle
@@ -182,7 +182,7 @@ export default function DisplaySettings() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'hsl(var(--text-muted))' }}>
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Ticket layout
                   </span>
                   <SegmentedToggle

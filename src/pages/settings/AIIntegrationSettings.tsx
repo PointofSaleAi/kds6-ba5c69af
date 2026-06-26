@@ -146,7 +146,7 @@ export default function AIIntegrationSettings() {
 
       {/* Provider Selection */}
       <div
-        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider"
+        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold tracking-wide"
         style={{ color: 'hsl(var(--text-muted))' }}
       >
         AI Provider
@@ -191,7 +191,7 @@ export default function AIIntegrationSettings() {
       {provider && (
         <>
           <div
-            className="px-3 pt-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider"
+            className="px-3 pt-2 pb-1.5 text-[11px] font-semibold tracking-wide"
             style={{ color: 'hsl(var(--text-muted))' }}
           >
             API Key
@@ -256,7 +256,7 @@ export default function AIIntegrationSettings() {
 
       {/* AI Behavior */}
       <div
-        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider"
+        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold tracking-wide"
         style={{ color: 'hsl(var(--text-muted))' }}
       >
         AI Behavior
