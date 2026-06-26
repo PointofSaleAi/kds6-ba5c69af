@@ -341,6 +341,10 @@ export function OrderCardV3({ order, onBump }: Props) {
         )}
       </div>
 
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+
+
+
       {/* FOOTER */}
       {!isCompact && (
         <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
