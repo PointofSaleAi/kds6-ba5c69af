@@ -5,6 +5,7 @@ interface SettingsIconTileProps {
   bgColor: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   iconColor?: string;
+  iconSrc?: string;
 }
 
 /**
@@ -17,6 +18,7 @@ export function SettingsIconTile({
   bgColor,
   size = 'sm',
   iconColor = '#FFFFFF',
+  iconSrc,
 }: SettingsIconTileProps) {
   const dim = size === 'lg' ? 64 : size === 'md' ? 36 : size === 'xs' ? 34 : 28;
   const radius = size === 'lg' ? 16 : size === 'md' ? 10 : size === 'xs' ? 9 : 8;
@@ -31,9 +33,16 @@ export function SettingsIconTile({
         backgroundColor: bgColor,
       }}
     >
-      <Icon size={iconSize} color={iconColor} strokeWidth={2.2} />
+      {iconSrc ? (
+        <img src={iconSrc} alt="" style={{ width: iconSize, height: iconSize, objectFit: 'contain' }} />
+      ) : (
+        <Icon size={iconSize} color={iconColor} strokeWidth={2.2} />
+      )}
     </div>
   );
 }
+
+export default SettingsIconTile;
+
 
 export default SettingsIconTile;
