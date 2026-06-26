@@ -145,6 +145,10 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { view: activeKDSView } = useActiveKDSView();
+  const kdsSettings = useKDSSettings();
+  const statusRules = useStatusRules();
+  const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
+  const isSettingsRoute = location.pathname.startsWith('/kds/full/settings');
   const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
