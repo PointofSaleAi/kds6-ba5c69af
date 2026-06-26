@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { useNotifications } from '@/hooks/use-notifications';
