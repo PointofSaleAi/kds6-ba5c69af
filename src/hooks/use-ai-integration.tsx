@@ -1,29 +1,68 @@
 import { useEffect, useState } from 'react';
 
-export type AIProviderId = 'openai' | 'google' | 'maya' | '';
+export type AIProviderId = 'posai' | 'openai' | 'claude' | 'google' | 'maya' | '';
 export type AIConnectionStatus = 'not_configured' | 'connected' | 'invalid_key' | 'error';
 
 export const AI_STORAGE_KEYS = {
   enabled: 'kds.ai_integration.enabled',
   provider: 'kds.ai_integration.provider',
   status: 'kds.ai_integration.status',
+  model: 'kds.ai_integration.model',
 } as const;
 
 export const AI_PROVIDER_LABELS: Record<Exclude<AIProviderId, ''>, string> = {
+  posai: 'POS AI',
   openai: 'OpenAI (ChatGPT)',
+  claude: 'Anthropic Claude',
   google: 'Google Gemini',
   maya: 'Maya AI',
 };
 
 export const AI_PROVIDER_SHORT_LABELS: Record<Exclude<AIProviderId, ''>, string> = {
+  posai: 'POS AI',
   openai: 'ChatGPT',
+  claude: 'Claude',
   google: 'Gemini',
-  maya: 'Maya',
+  maya: 'Maya AI',
+};
+
+export interface AIModelOption {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export const AI_PROVIDER_MODEL_OPTIONS: Record<Exclude<AIProviderId, ''>, AIModelOption[]> = {
+  posai: [
+    { id: 'posai-pro', name: 'POS AI Pro', description: 'Most capable' },
+    { id: 'posai-lite', name: 'POS AI Lite', description: 'Fast & efficient' },
+  ],
+  openai: [
+    { id: 'gpt-4o', name: 'GPT-4o', description: 'Most capable' },
+    { id: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Fast & efficient' },
+    { id: 'gpt-3.5', name: 'GPT-3.5', description: 'Legacy model' },
+  ],
+  claude: [
+    { id: 'sonnet-4', name: 'Sonnet 4', description: 'Most capable' },
+    { id: 'haiku-4', name: 'Haiku 4', description: 'Fast & efficient' },
+    { id: 'opus-3', name: 'Opus 3', description: 'Legacy model' },
+  ],
+  google: [
+    { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: 'Most capable' },
+    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Fast & efficient' },
+  ],
+  maya: [
+    { id: 'maya-1', name: 'Maya 1', description: 'Most capable' },
+    { id: 'maya-mini', name: 'Maya Mini', description: 'Fast & efficient' },
+    { id: 'maya-lite', name: 'Maya Lite', description: 'Legacy model' },
+  ],
 };
 
 export const AI_PROVIDER_MODELS: Record<Exclude<AIProviderId, ''>, string> = {
+  posai: 'POS AI Pro',
   openai: 'GPT-4o',
-  google: 'Gemini 2.5',
+  claude: 'Sonnet 4',
+  google: 'Gemini 2.5 Pro',
   maya: 'Maya 1',
 };
 
