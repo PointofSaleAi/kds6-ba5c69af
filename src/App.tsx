@@ -31,6 +31,7 @@ import HardwareSettings from "./pages/settings/HardwareSettings.tsx";
 import AccountSettings from "./pages/settings/AccountSettings.tsx";
 import SystemSettings from "./pages/settings/SystemSettings.tsx";
 import AIIntegrationSettings from "./pages/settings/AIIntegrationSettings.tsx";
+import AIInstructionsSettings from "./pages/settings/AIInstructionsSettings.tsx";
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
@@ -78,6 +79,7 @@ const App = () => (
                 <Route path="hardware" element={<HardwareSettings />} />
                 <Route path="system" element={<SystemSettings />} />
                 <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
+                <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
                 <Route path="account" element={<AccountSettings />} />
               </Route>
 
