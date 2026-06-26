@@ -10,6 +10,9 @@ import { useAIIntegration, AI_PROVIDER_LABELS, AI_PROVIDER_SHORT_LABELS, AI_PROV
 import { AIProviderSwitcher } from './AIProviderSwitcher';
 import { cn } from '@/lib/utils';
 import { useActiveKDSView } from '@/hooks/use-active-kds-view';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useStatusRules } from '@/hooks/use-status-rules';
+import { RESTAURANT_PRESETS, buildPresetMessage, type RestaurantPreset, type RestaurantPresetId } from '@/data/restaurant-presets';
 
 interface AIAssistantPanelProps {
   open: boolean;
@@ -125,6 +128,8 @@ type ChatMessage = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
+  presetId?: RestaurantPresetId;
+  presetApplied?: boolean;
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/kds-ai-chat`;
@@ -140,6 +145,10 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { view: activeKDSView } = useActiveKDSView();
+  const kdsSettings = useKDSSettings();
+  const statusRules = useStatusRules();
+  const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
+  const isSettingsRoute = location.pathname.startsWith('/kds/full/settings');
   const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
@@ -160,6 +169,63 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   useEffect(() => () => abortRef.current?.abort(), []);
 
   const toggleRecording = () => setRecording(r => !r);
+
+  const handleSelectPreset = (preset: RestaurantPreset) => {
+    setSelectedPresetId(preset.id);
+    // Replace any existing pending preset message; append new one
+    setMessages(prev => {
+      const filtered = prev.filter(m => !(m.presetId && !m.presetApplied));
+      return [
+        ...filtered,
+        {
+          id: `preset-${preset.id}-${Date.now()}`,
+          role: 'assistant',
+          text: buildPresetMessage(preset),
+          presetId: preset.id,
+          presetApplied: false,
+        },
+      ];
+    });
+  };
+
+  const handleApplyPreset = (messageId: string, presetId: RestaurantPresetId) => {
+    const preset = RESTAURANT_PRESETS.find(p => p.id === presetId);
+    if (!preset) return;
+    // Apply wired settings
+    kdsSettings.setTextSize(preset.textSize);
+    kdsSettings.setTicketSpacing(preset.ticketSpacing);
+    kdsSettings.setTicketLayout(preset.ticketLayout);
+    kdsSettings.setShowAllergens(preset.allergenBadges);
+    kdsSettings.setShowHeaderAllergens(preset.ticketHeaderAllergenSummary);
+    kdsSettings.setServableModifiers(preset.servableModifiers);
+    statusRules.setCourseLevelAging(preset.applyToCourseLevel);
+    // Best-effort persistence for remaining keys
+    try {
+      localStorage.setItem('posai-ticket-identifier', preset.ticketIdentifier);
+      localStorage.setItem('posai-aging-preset', preset.agingRules);
+      localStorage.setItem('posai-mode-switcher', preset.modeSwitcher);
+      localStorage.setItem('posai-language-mode', preset.language);
+      localStorage.setItem('posai-enable-badge', String(preset.enableBadge));
+      localStorage.setItem('posai-sound-volume', String(preset.volume));
+      localStorage.setItem('posai-alert-sound', preset.alertSound);
+      localStorage.setItem('posai-restaurant-preset', preset.id);
+    } catch { /* ignore */ }
+
+    setMessages(prev => prev.map(m =>
+      m.id === messageId ? { ...m, presetApplied: true } : m,
+    ).concat({
+      id: `applied-${Date.now()}`,
+      role: 'assistant',
+      text: `✓ **${preset.label}** settings applied. You can adjust any of these individually in settings anytime.`,
+    }));
+    setSelectedPresetId(null);
+  };
+
+  const handleCancelPreset = (messageId: string) => {
+    setMessages(prev => prev.filter(m => m.id !== messageId));
+    setSelectedPresetId(null);
+  };
+
 
   const openAISettings = () => {
     onClose();
@@ -339,6 +405,40 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       <span className="text-xs font-medium text-white">{providerLabel}</span>
                     </div>
 
+                    {isSettingsRoute && (
+                      <div className="w-full max-w-lg mb-5">
+                        <p
+                          className="mb-2 text-left"
+                          style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}
+                        >
+                          Set up for your restaurant type
+                        </p>
+                        <div className="flex flex-wrap" style={{ gap: 6 }}>
+                          {RESTAURANT_PRESETS.map(p => {
+                            const active = selectedPresetId === p.id;
+                            return (
+                              <button
+                                key={p.id}
+                                onClick={() => handleSelectPreset(p)}
+                                style={{
+                                  fontSize: 11,
+                                  fontWeight: 500,
+                                  padding: '5px 12px',
+                                  borderRadius: 20,
+                                  background: active ? '#1A1A2E' : '#F3F4F6',
+                                  color: active ? '#FFFFFF' : '#374151',
+                                  border: `0.5px solid ${active ? '#1A1A2E' : '#E5E7EB'}`,
+                                }}
+                                className="transition-colors active:opacity-80"
+                              >
+                                {p.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 justify-center max-w-lg">
                       {SUGGESTION_CHIPS.map(chip => (
                         <button
@@ -388,6 +488,32 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                               ) : (
                                 <p className="whitespace-pre-wrap">{m.text}</p>
                               )}
+                            </div>
+                          )}
+                          {m.presetId && !m.presetApplied && (
+                            <div className="flex gap-2 mt-2">
+                              <button
+                                onClick={() => handleApplyPreset(m.id, m.presetId!)}
+                                style={{
+                                  background: '#E84C3D', color: '#FFFFFF',
+                                  fontSize: 12, fontWeight: 600,
+                                  padding: '8px 20px', borderRadius: 8,
+                                }}
+                                className="active:opacity-80 transition-opacity"
+                              >
+                                Apply
+                              </button>
+                              <button
+                                onClick={() => handleCancelPreset(m.id)}
+                                style={{
+                                  background: '#F3F4F6', color: '#374151',
+                                  fontSize: 12, fontWeight: 600,
+                                  padding: '8px 20px', borderRadius: 8,
+                                }}
+                                className="active:opacity-80 transition-opacity"
+                              >
+                                Cancel
+                              </button>
                             </div>
                           )}
                         </div>
