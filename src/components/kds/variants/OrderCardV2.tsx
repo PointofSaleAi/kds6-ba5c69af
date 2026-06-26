@@ -10,6 +10,7 @@ import { formatTime } from '@/lib/datetime';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
