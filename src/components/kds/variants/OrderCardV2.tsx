@@ -174,9 +174,12 @@ export function OrderCardV2({ order, onBump }: Props) {
 
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const toggleRow = (id: string) => {
-    setRow(id, 'loading');
-    const t = window.setTimeout(() => setRow(id, 'done'), 600);
-    timersRef.current.push(t);
+    setRowStates((p) => {
+      const current = p[id] ?? 'idle';
+      if (current === 'idle') return { ...p, [id]: 'cooking' };
+      if (current === 'cooking') return { ...p, [id]: 'done' };
+      return p;
+    });
   };
 
   const { ticketLayout } = useKDSSettings();
