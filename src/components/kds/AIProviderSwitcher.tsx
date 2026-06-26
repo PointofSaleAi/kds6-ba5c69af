@@ -33,7 +33,7 @@ export function AIProviderSwitcher({ provider, model }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const activeProvider: Exclude<AIProviderId, ''> =
-    (provider && provider !== '' ? provider : 'openai') as Exclude<AIProviderId, ''>;
+    (provider ? provider : 'openai') as Exclude<AIProviderId, ''>;
   const activeMeta = PROVIDERS.find(p => p.id === activeProvider) ?? PROVIDERS[1];
   const ActiveIcon = activeMeta.icon;
   const modelOptions = AI_PROVIDER_MODEL_OPTIONS[activeProvider] ?? [];
