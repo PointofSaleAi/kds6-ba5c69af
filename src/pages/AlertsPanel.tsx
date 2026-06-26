@@ -299,12 +299,11 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                       const config = notifIcons[notif.type] || notifIcons['system'];
                       const Icon = config.icon;
                       const isUnread = !notif.acknowledged;
-                      const chip = isUnread ? getAiChipConfig(notif.type, notif.message) : null;
-                      const isExpanded = expandedChipId === notif.id;
+                      const action = isUnread ? getAiAction(notif.type, notif.message) : null;
                       return (
                         <div
                           key={notif.id}
-                          className={`flex gap-3 px-4 py-3 transition-colors ${isUnread ? 'hover:bg-muted/50 cursor-pointer' : 'opacity-60'}`}
+                          className={`flex gap-3 px-4 py-3 transition-colors ${isUnread ? 'hover:bg-muted/50 cursor-pointer' : 'opacity-50'}`}
                           onClick={() => isUnread && acknowledge(notif.id)}
                         >
                           {/* Unread dot */}
@@ -329,49 +328,19 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                                 </>
                               )}
                             </div>
-                            {chip && (
-                              <div className="mt-2">
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setExpandedChipId(isExpanded ? null : notif.id);
-                                  }}
-                                  className={`inline-flex items-center gap-1 rounded-[10px] border px-2 py-[3px] text-[10px] font-medium transition-colors ${CHIP_STYLES[chip.style]}`}
-                                  style={{ borderWidth: '0.5px' }}
-                                >
-                                  <Sparkles size={10} />
-                                  {chip.label}
-                                </button>
-                                {isExpanded && (
-                                  <div
-                                    className="mt-2 rounded-lg bg-[#F0FDF4] border border-[#A7F3D0] px-[10px] py-2"
-                                    style={{ borderWidth: '0.5px' }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <p className="text-[11px] text-[#065F46] leading-[1.5]">{chip.response}</p>
-                                    <div className="flex gap-1.5 mt-2">
-                                      <button
-                                        type="button"
-                                        onClick={(e) => { e.stopPropagation(); acknowledge(notif.id); setExpandedChipId(null); }}
-                                        className="rounded-[10px] bg-[#059669] text-white text-[10px] font-medium px-[9px] py-[3px] hover:opacity-90"
-                                      >
-                                        {chip.primary}
-                                      </button>
-                                      {chip.secondary && (
-                                        <button
-                                          type="button"
-                                          onClick={(e) => { e.stopPropagation(); setExpandedChipId(null); }}
-                                          className="rounded-[10px] bg-white text-[#059669] text-[10px] font-medium px-[9px] py-[3px] border border-[#059669] hover:bg-[#F0FDF4]"
-                                          style={{ borderWidth: '0.5px' }}
-                                        >
-                                          {chip.secondary}
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
+                            {action && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  runAiAction(notif.id, action);
+                                }}
+                                className={`inline-flex items-center rounded-lg hover:opacity-90 active:opacity-80 transition-opacity ${COLOR_CLASSES[action.color]}`}
+                                style={{ gap: '5px', fontSize: '11px', fontWeight: 600, padding: '5px 12px', marginTop: '6px' }}
+                              >
+                                <Sparkles size={11} className="text-white" />
+                                {action.label}
+                              </button>
                             )}
                           </div>
                         </div>
@@ -379,6 +348,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                     })}
                   </div>
                 )
+
               ) : (
                 /* Kitchen messages tab */
                 sortedMessages.length === 0 ? (
