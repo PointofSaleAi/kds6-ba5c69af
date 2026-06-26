@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
 import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2, ChevronRight } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -340,6 +341,10 @@ export function OrderCardV3({ order, onBump }: Props) {
           </div>
         )}
       </div>
+
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+
+
 
       {/* FOOTER */}
       {!isCompact && (

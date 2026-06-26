@@ -3,6 +3,7 @@ import { Check, ChevronRight, Loader2 } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
+import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
@@ -273,6 +274,10 @@ export function OrderCardV1({ order, onBump }: Props) {
           </div>
         )}
       </div>
+
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+
+
 
 
       {/* FOOTER */}

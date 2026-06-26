@@ -9,6 +9,7 @@ import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { formatTime } from '@/lib/datetime';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
+import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -274,6 +275,10 @@ export function OrderCardV2({ order, onBump }: Props) {
       </div>
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
+
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+
+
 
       {/* FOOTER */}
       {!isCompact && (
