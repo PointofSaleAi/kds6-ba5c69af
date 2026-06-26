@@ -146,7 +146,7 @@ function V2ProductRow({
             type="button"
             onClick={(e) => { e.stopPropagation(); onToggle(); }}
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
-            style={{ width: 22, height: 22, background: '#F7C948', color: '#fff' }}
+            style={{ width: 22, height: 22, background: '#F0A500', color: '#fff' }}
             aria-label="Mark product done"
             title="Tap when ready"
           >
