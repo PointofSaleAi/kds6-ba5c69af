@@ -47,6 +47,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const navigate = useNavigate();
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
+  const providerShort = ai.provider ? AI_PROVIDER_SHORT_LABELS[ai.provider] : 'AI';
+  const providerModel = ai.provider ? AI_PROVIDER_MODELS[ai.provider] : '';
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
