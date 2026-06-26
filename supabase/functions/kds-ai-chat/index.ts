@@ -35,13 +35,23 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { messages } = await req.json();
+    const { messages, provider } = await req.json();
     if (!Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: "messages array required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Map the user-selected provider (from Settings → AI Integration) to a
+    // gateway-supported model. Maya AI has no gateway equivalent and falls
+    // back to Gemini so chat still works.
+    const PROVIDER_MODEL: Record<string, string> = {
+      openai: "openai/gpt-5-mini",
+      google: "google/gemini-3-flash-preview",
+      maya: "google/gemini-3-flash-preview",
+    };
+    const model = PROVIDER_MODEL[String(provider ?? "").toLowerCase()] ?? "google/gemini-3-flash-preview";
 
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -50,7 +60,7 @@ Deno.serve(async (req) => {
         "Lovable-API-Key": LOVABLE_API_KEY,
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model,
         stream: true,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
@@ -58,6 +68,7 @@ Deno.serve(async (req) => {
         ],
       }),
     });
+
 
     if (!upstream.ok) {
       const status = upstream.status;

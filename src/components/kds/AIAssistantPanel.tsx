@@ -5,6 +5,9 @@ import ReactMarkdown from 'react-markdown';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
+import { useAIIntegration, AI_PROVIDER_LABELS } from '@/hooks/use-ai-integration';
+import { Link } from 'react-router-dom';
+
 
 interface AIAssistantPanelProps {
   open: boolean;
@@ -33,9 +36,13 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const [streaming, setStreaming] = useState(false);
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
+  const ai = useAIIntegration();
+  const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
+  const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : '';
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
@@ -55,6 +62,18 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text: trimmed };
     const assistantId = `a-${Date.now()}`;
     const nextHistory = [...messages, userMsg];
+
+    if (!providerReady) {
+      const reason = !ai.enabled
+        ? 'AI integration is turned off. Enable it in Settings → System → AI Integration to start chatting.'
+        : !ai.provider
+          ? 'No AI provider is selected. Pick one in Settings → System → AI Integration.'
+          : `${providerLabel} is not connected (status: ${ai.status.replace('_', ' ')}). Save the provider in Settings → System → AI Integration to connect.`;
+      setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: reason }]);
+      setInput('');
+      return;
+    }
+
     setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: '' }]);
     setInput('');
     setStreaming(true);
@@ -67,10 +86,12 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          provider: ai.provider,
           messages: nextHistory.map(m => ({ role: m.role, content: m.text })),
         }),
         signal: controller.signal,
       });
+
 
       if (!res.ok || !res.body) {
         let errMsg = 'Assistant is unavailable. Please try again.';
@@ -159,8 +180,11 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
           <AnimatedAIIcon size={18} />
           <div className="flex flex-col leading-tight min-w-0">
             <span className="text-[11px] font-bold uppercase tracking-wider text-white/60">Point of Sale Ai</span>
-            <span className="text-[12px] font-semibold text-white truncate">Kitchen assistant</span>
+            <span className="text-[12px] font-semibold text-white truncate">
+              {providerReady ? `Kitchen assistant · ${providerLabel}` : 'Kitchen assistant'}
+            </span>
           </div>
+
         </div>
         <button
           onClick={onClose}
@@ -171,7 +195,21 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         </button>
       </div>
 
+      {!providerReady && (
+        <div className="shrink-0 px-3 py-2 text-[11px] leading-snug border-b border-border" style={{ background: '#FEF3C7', color: '#92400E' }}>
+          {!ai.enabled
+            ? 'AI integration is off. '
+            : !ai.provider
+              ? 'No provider selected. '
+              : `${providerLabel} is ${ai.status.replace('_', ' ')}. `}
+          <Link to="/kds/full/settings/system/ai-integration" onClick={onClose} className="underline font-semibold">
+            Open AI Integration
+          </Link>
+        </div>
+      )}
+
       <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background">
+
         {!hasMessages ? (
           <div className="px-4 py-5 flex flex-col items-center text-center">
             <div className="mb-3">

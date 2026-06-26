@@ -3,6 +3,7 @@ import { Sparkles, ShieldCheck, Info, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { AI_STORAGE_KEYS as STORAGE_KEYS, emitAIIntegrationChange } from '@/hooks/use-ai-integration';
 
 type ConnectionStatus = 'not_configured' | 'connected' | 'invalid_key' | 'error';
 
@@ -24,17 +25,12 @@ const STATUS_LABEL: Record<ConnectionStatus, { label: string; color: string }> =
   error: { label: 'Error', color: '#E74C3C' },
 };
 
-const STORAGE_KEYS = {
-  enabled: 'kds.ai_integration.enabled',
-  provider: 'kds.ai_integration.provider',
-  status: 'kds.ai_integration.status',
-};
-
 function loadPref(key: string, fallback: string): string {
   if (typeof window === 'undefined') return fallback;
   const v = window.localStorage.getItem(key);
   return v ?? fallback;
 }
+
 
 export default function AIIntegrationSettings() {
   const hash = useHashHighlight();
@@ -55,6 +51,7 @@ export default function AIIntegrationSettings() {
     } catch {
       // ignore quota errors
     }
+    emitAIIntegrationChange();
   };
 
   const handleToggleEnabled = (next: boolean) => {
@@ -76,9 +73,11 @@ export default function AIIntegrationSettings() {
     }
     setIsSaving(true);
     try {
+      const nextStatus: ConnectionStatus = 'connected';
+      setStatus(nextStatus);
       persist(STORAGE_KEYS.enabled, String(enabled));
       persist(STORAGE_KEYS.provider, provider);
-      persist(STORAGE_KEYS.status, status);
+      persist(STORAGE_KEYS.status, nextStatus);
       toast.success('AI integration settings saved');
     } finally {
       setIsSaving(false);
@@ -90,8 +89,10 @@ export default function AIIntegrationSettings() {
     setEnabled(false);
     setProvider('');
     setStatus('not_configured');
+    emitAIIntegrationChange();
     toast.success('AI integration removed');
   };
+
 
   const statusStyle = STATUS_LABEL[status];
 
