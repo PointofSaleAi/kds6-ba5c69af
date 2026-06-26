@@ -113,7 +113,7 @@ export default function AIIntegrationSettings() {
           className="absolute left-1/2 -translate-x-1/2"
           style={{ color: 'hsl(var(--text-primary))', fontSize: 20, fontWeight: 600 }}
         >
-          AI Integration & Settings
+          AI Integration
         </h1>
       </div>
 
