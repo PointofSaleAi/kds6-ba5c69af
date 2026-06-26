@@ -43,6 +43,3 @@ export function SettingsIconTile({
 }
 
 export default SettingsIconTile;
-
-
-export default SettingsIconTile;
