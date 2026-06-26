@@ -246,7 +246,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                     </p>
 
                     <div className="flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full bg-neutral-800/60 border border-neutral-700/40">
-                      <Sparkles className="w-3 h-3 text-violet-400" />
+                      <Bot className="w-3 h-3 text-emerald-400" />
                       <span className="text-xs text-neutral-400">Powered by</span>
                       <span className="text-xs font-medium text-white">{providerLabel}</span>
                     </div>
