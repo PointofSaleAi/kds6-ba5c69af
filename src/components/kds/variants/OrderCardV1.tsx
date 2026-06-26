@@ -277,7 +277,6 @@ export function OrderCardV1({ order, onBump }: Props) {
         )}
       </div>
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
 
 
