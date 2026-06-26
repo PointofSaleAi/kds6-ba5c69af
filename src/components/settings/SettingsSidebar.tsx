@@ -81,9 +81,14 @@ export function SettingsSidebar() {
                       height: 30,
                       borderRadius: 8,
                       backgroundColor: GROUP_COLOR[r.group],
+                      color: '#FFFFFF',
                     }}
                   >
-                    <Icon size={18} color="#FFFFFF" strokeWidth={2.2} />
+                    {r.group === 'orders' ? (
+                      <TicketsIcon size={20} className="text-white" />
+                    ) : (
+                      <Icon size={18} color="#FFFFFF" strokeWidth={2.2} />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div
