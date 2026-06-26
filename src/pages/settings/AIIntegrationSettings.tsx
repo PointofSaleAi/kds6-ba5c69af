@@ -3,6 +3,7 @@ import { Sparkles, ShieldCheck, Info, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { AI_STORAGE_KEYS as STORAGE_KEYS, emitAIIntegrationChange } from '@/hooks/use-ai-integration';
 
 type ConnectionStatus = 'not_configured' | 'connected' | 'invalid_key' | 'error';
 
@@ -24,17 +25,12 @@ const STATUS_LABEL: Record<ConnectionStatus, { label: string; color: string }> =
   error: { label: 'Error', color: '#E74C3C' },
 };
 
-const STORAGE_KEYS = {
-  enabled: 'kds.ai_integration.enabled',
-  provider: 'kds.ai_integration.provider',
-  status: 'kds.ai_integration.status',
-};
-
 function loadPref(key: string, fallback: string): string {
   if (typeof window === 'undefined') return fallback;
   const v = window.localStorage.getItem(key);
   return v ?? fallback;
 }
+
 
 export default function AIIntegrationSettings() {
   const hash = useHashHighlight();
