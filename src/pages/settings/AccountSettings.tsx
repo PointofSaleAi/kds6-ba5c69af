@@ -53,6 +53,34 @@ export default function AccountSettings() {
     setTimeout(() => window.location.reload(), 0);
   };
 
+  const handleResetDefaults = () => {
+    setResetOpen(false);
+    try {
+      const preserve = new Set(['posai-auth', 'posai-session']);
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k) continue;
+        if (preserve.has(k)) continue;
+        if (
+          k.startsWith('posai-') ||
+          k.startsWith('kds-') ||
+          k.startsWith('kds.')
+        ) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    } catch {
+      // ignore
+    }
+    toast({
+      title: 'Settings reset',
+      description: 'All system settings have been restored to defaults.',
+    });
+    setTimeout(() => window.location.reload(), 300);
+  };
+
   return (
     <>
       <SectionHeaderCard
