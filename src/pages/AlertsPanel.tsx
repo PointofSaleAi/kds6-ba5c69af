@@ -142,12 +142,21 @@ const CHIP_STYLES: Record<ChipStyle, string> = {
 export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const [tab, setTab] = useState<TabFilter>('notifications');
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
+  const [expandedChipId, setExpandedChipId] = useState<string | null>(null);
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
   const { t, tl, tperson, tn } = useLanguage();
   const timeAgo = useTimeAgo();
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
+
+  const unreadNotifications = useMemo(() => notifications.filter(n => !n.acknowledged), [notifications]);
+  const aiSummary = useMemo(() => buildAiSummary(unreadNotifications), [unreadNotifications]);
+
+  const openAiAssistant = () => {
+    window.dispatchEvent(new CustomEvent('kds:open-ai-assistant'));
+    onClose();
+  };
 
   // Sort messages: pending first, then by timestamp desc
   const sortedMessages = [...messages].sort((a, b) => {
