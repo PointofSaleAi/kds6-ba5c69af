@@ -15,6 +15,18 @@ export const AI_PROVIDER_LABELS: Record<Exclude<AIProviderId, ''>, string> = {
   maya: 'Maya AI',
 };
 
+export const AI_PROVIDER_SHORT_LABELS: Record<Exclude<AIProviderId, ''>, string> = {
+  openai: 'ChatGPT',
+  google: 'Gemini',
+  maya: 'Maya',
+};
+
+export const AI_PROVIDER_MODELS: Record<Exclude<AIProviderId, ''>, string> = {
+  openai: 'GPT-4o',
+  google: 'Gemini 2.5',
+  maya: 'Maya 1',
+};
+
 export interface AIIntegrationState {
   enabled: boolean;
   provider: AIProviderId;
