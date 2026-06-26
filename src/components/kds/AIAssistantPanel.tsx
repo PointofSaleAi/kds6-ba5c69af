@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { X, Send, Mic, MicOff, Settings, Bot, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
@@ -15,19 +15,88 @@ interface AIAssistantPanelProps {
   onClose: () => void;
 }
 
-const SUGGESTION_CHIPS = [
-  'Prioritize an 18-min ticket',
-  'Explain SEEN → IN PROGRESS → SERVED',
-  'Order type header colors',
-  'Handle shellfish allergen',
-];
+type RouteContent = { chips: string[]; examples: string[] };
 
-const TRY_EXAMPLES = [
-  '"How many tickets are overtime?"',
-  '"What stations are busiest right now?"',
-  '"Mark ticket 1024 as served"',
-  '"Show me all dine-in tickets"',
-];
+const HOME_CONTENT: RouteContent = {
+  chips: ['Prioritise tickets', 'Filter by order type', 'Show overtime', 'Allergen alerts'],
+  examples: [
+    '"How many tickets are overtime?"',
+    '"Show me all dine-in tickets"',
+    '"What stations are busiest right now?"',
+    '"Mark ticket #33 as seen"',
+  ],
+};
+
+const ROUTE_CONTENT: Record<string, RouteContent> = {
+  '/kds/full': HOME_CONTENT,
+  '/kds/v1': HOME_CONTENT,
+  '/kds/v2': HOME_CONTENT,
+  '/kds/v3': HOME_CONTENT,
+  '/kds/full/history': {
+    chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
+    examples: [
+      '"Show tickets bumped in the last hour"',
+      '"Recall ticket #32"',
+      '"How many tickets were served today?"',
+      '"Show all delivery tickets from today"',
+    ],
+  },
+  '/kds/full/settings/display': {
+    chips: ['Text size', 'Ticket layout', 'Dark mode', 'Reset display'],
+    examples: [
+      '"Set text size to large"',
+      '"Switch to compact layout"',
+      '"Turn on dark mode"',
+      '"Reset display settings to defaults"',
+    ],
+  },
+  '/kds/full/settings/orders': {
+    chips: ['Allergen badges', 'Servable modifiers', 'Ticket aging rules', 'Reset tickets'],
+    examples: [
+      '"Enable allergen badges"',
+      '"Turn on servable modifiers"',
+      '"Show ticket header allergen summary"',
+      '"Reset ticket settings to defaults"',
+    ],
+  },
+  '/kds/full/settings/hardware': {
+    chips: ['KOT printer', 'Sound settings', 'Sync now', 'Connection'],
+    examples: [
+      '"Set up my KOT printer"',
+      '"Change the alert sound"',
+      '"What is my connection status?"',
+      '"Force sync orders now"',
+    ],
+  },
+  '/kds/full/settings/account': {
+    chips: ['Device name', 'Station ID', 'Bug reporting', 'Log out'],
+    examples: [
+      '"What is my station ID?"',
+      '"Change my device name"',
+      '"Upload diagnostic logs"',
+      '"How do I log out?"',
+    ],
+  },
+};
+
+const FALLBACK_CONTENT: RouteContent = {
+  chips: ['Display settings', 'Ticket settings', 'Hardware', 'Account'],
+  examples: [
+    '"Set text size to large"',
+    '"Enable allergen badges"',
+    '"Change language to Spanish"',
+    '"Reset settings to defaults"',
+  ],
+};
+
+function getRouteContent(pathname: string): RouteContent {
+  if (ROUTE_CONTENT[pathname]) return ROUTE_CONTENT[pathname];
+  // Match nested settings routes by prefix
+  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== '/kds/full');
+  if (match) return ROUTE_CONTENT[match];
+  if (pathname === '/' || pathname.startsWith('/kds/full')) return HOME_CONTENT;
+  return FALLBACK_CONTENT;
+}
 
 type ChatMessage = {
   id: string;
