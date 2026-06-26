@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ShieldCheck, Info, Check, ChevronLeft } from 'lucide-react';
+import { ShieldCheck, Info, Check, ChevronLeft, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { SettingsPill } from '@/components/settings/SettingsPill';
 import { AI_STORAGE_KEYS as STORAGE_KEYS, emitAIIntegrationChange } from '@/hooks/use-ai-integration';
 
 type ConnectionStatus = 'not_configured' | 'connected' | 'invalid_key' | 'error';
