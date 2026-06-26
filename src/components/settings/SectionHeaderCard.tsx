@@ -41,9 +41,9 @@ export function SectionHeaderCard({
       >
         {iconSrc ? (
           <img src={iconSrc} alt={title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
-        ) : (
+        ) : Icon ? (
           <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
-        )}
+        ) : null}
       </div>
       <h1
         className="mb-2"
