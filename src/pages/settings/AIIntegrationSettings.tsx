@@ -254,6 +254,40 @@ export default function AIIntegrationSettings() {
         </p>
       </div>
 
+      {/* AI Behavior */}
+      <div
+        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider"
+        style={{ color: 'hsl(var(--text-muted))' }}
+      >
+        AI Behavior
+      </div>
+      <div className="mb-6 rounded-[28px] overflow-hidden" style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}>
+        <button
+          type="button"
+          onClick={() => navigate('/kds/full/settings/system/ai-integration/ai-instructions')}
+          className="flex items-center justify-between w-full py-3.5 px-4 active:opacity-70 transition-opacity"
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: 'rgba(124, 58, 237, 0.15)' }}
+            >
+              <BookOpen size={16} style={{ color: '#7C3AED' }} />
+            </div>
+            <div className="text-left">
+              <span className="block text-[15px] font-medium" style={{ color: 'hsl(var(--text-primary))' }}>
+                AI Instructions
+              </span>
+              <span className="text-[12px]" style={{ color: 'hsl(var(--text-muted))' }}>
+                Rules, custom instructions & knowledge base
+              </span>
+            </div>
+          </div>
+          <ChevronRight size={18} style={{ color: 'hsl(var(--text-muted))' }} />
+        </button>
+      </div>
+
+
     </>
   );
 }
