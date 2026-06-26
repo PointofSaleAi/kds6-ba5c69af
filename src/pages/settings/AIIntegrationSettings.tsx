@@ -118,25 +118,15 @@ export default function AIIntegrationSettings() {
         </h1>
       </div>
 
-      {/* Enable / Disable */}
-      <div
-        id="ai-enabled"
-        className={`mb-3 rounded-[28px] px-4 py-3 flex items-center justify-between ${hash === 'ai-enabled' ? 'ring-2 ring-[hsl(var(--btn-seen))]' : ''}`}
-        style={{
-          background: 'hsl(var(--surface-card))',
-          border: '1px solid hsl(var(--border))',
-        }}
-      >
-        <div>
-          <div className="text-[15px] font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
-            Enable AI Integration
-          </div>
-          <div className="text-xs mt-0.5" style={{ color: 'hsl(var(--text-muted))' }}>
-            Master toggle for all external AI features on this device.
-          </div>
-        </div>
-        <SwitchToggle checked={enabled} onChange={handleToggleEnabled} />
-      </div>
+      <SettingsPill
+        icon={Sparkles}
+        iconColor="#7C3AED"
+        label="Enable AI Integration"
+        helper="Master toggle for all external AI features on this device."
+        right={<SwitchToggle checked={enabled} onChange={handleToggleEnabled} />}
+        highlighted={hash === 'ai-enabled'}
+      />
+
 
       {/* Connection Status */}
       <div
