@@ -38,7 +38,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
   const done = state === 'done';
   const loading = state === 'loading';
   const disabled = loading || done;
-  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0;
+  const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
   const [expanded, setExpanded] = useState(false);
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
