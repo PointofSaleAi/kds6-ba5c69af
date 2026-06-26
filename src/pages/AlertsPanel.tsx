@@ -244,7 +244,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                   className={`ml-auto relative w-9 h-9 rounded-full flex items-center justify-center transition-colors
                     ${aiSummaryOpen ? 'bg-[#1A1A2E]' : 'bg-muted hover:bg-muted/80'}`}
                 >
-                  <AnimatedAIIcon size={18} color={aiSummaryOpen ? '#FFFFFF' : '#1A1A2E'} />
+                  <AnimatedAIIcon size={18} />
                   <span className="absolute -top-1 -right-1 bg-destructive text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5">
                     {unreadNotifications.length}
                   </span>
