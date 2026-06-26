@@ -258,7 +258,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                           onClick={() => submitPrompt(chip)}
                           className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50"
                         >
-                          <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+                          <Bot className="w-3.5 h-3.5 text-violet-400" />
                           {chip}
                         </button>
                       ))}
