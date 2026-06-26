@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 
 interface SectionHeaderCardProps {
@@ -8,6 +8,7 @@ interface SectionHeaderCardProps {
   shortDescription: string;
   longDescription?: string;
   iconSrc?: string;
+  iconNode?: ReactNode;
 }
 
 export function SectionHeaderCard({
