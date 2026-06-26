@@ -6,7 +6,7 @@ import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage } from '@/hooks/use-language';
 import { KitchenReplyDialog } from '@/components/kds/KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
-import type { NotificationType } from '@/types/notification';
+import type { NotificationType, KDSNotification } from '@/types/notification';
 import { formatTime } from '@/lib/datetime';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
