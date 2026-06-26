@@ -189,30 +189,31 @@ export default function AIIntegrationSettings() {
 
       {/* API Key managed server-side note */}
       {provider && (
-        <div
-          id="ai-api-key"
-          className={`mb-3 rounded-[28px] p-4 flex gap-3 ${hash === 'ai-api-key' ? 'ring-2 ring-[hsl(var(--btn-seen))]' : ''}`}
-          style={{
-            background: 'hsl(var(--surface-card))',
-            border: '1px solid hsl(var(--border))',
-          }}
-        >
-          <ShieldCheck size={20} className="shrink-0 mt-0.5" style={{ color: '#16A085' }} />
-          <div>
-            <div
-              className="text-[13px] font-semibold mb-1"
-              style={{ color: 'hsl(var(--text-primary))' }}
-            >
-              API Key
-            </div>
+        <>
+          <div
+            className="px-3 pt-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider"
+            style={{ color: 'hsl(var(--text-muted))' }}
+          >
+            API Key
+          </div>
+          <div
+            id="ai-api-key"
+            className={`mb-3 rounded-[28px] p-4 flex gap-3 ${hash === 'ai-api-key' ? 'ring-2 ring-[hsl(var(--btn-seen))]' : ''}`}
+            style={{
+              background: 'hsl(var(--surface-card))',
+              border: '1px solid hsl(var(--border))',
+            }}
+          >
+            <ShieldCheck size={20} className="shrink-0 mt-0.5" style={{ color: '#16A085' }} />
             <p className="text-[13px] leading-relaxed" style={{ color: 'hsl(var(--text-secondary))' }}>
               For security, provider API keys are configured server-side as a project secret
               (<span className="font-mono">EXTERNAL_AI_API_KEY</span>). Ask your workspace admin to
               set or rotate the key. Keys are never stored in the database or sent to the browser.
             </p>
           </div>
-        </div>
+        </>
       )}
+
 
       {/* Actions */}
       {provider && (
