@@ -122,7 +122,7 @@ export default function AIIntegrationSettings() {
         icon={Sparkles}
         iconColor="#7C3AED"
         label="Enable AI Integration"
-        helper="Master toggle for all external AI features on this device."
+        helper="Configure external AI providers using your own API keys. AI-powered features across the platform will use this integration when enabled."
         right={<SwitchToggle checked={enabled} onChange={handleToggleEnabled} />}
         highlighted={hash === 'ai-enabled'}
       />
