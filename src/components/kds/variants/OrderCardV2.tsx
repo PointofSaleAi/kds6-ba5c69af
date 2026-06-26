@@ -102,9 +102,9 @@ function V2ProductRow({
           {showDetails && product.notes && (
             <div
               className="mt-1 inline-block rounded px-1.5 py-0.5"
-              style={{ fontSize: 11, lineHeight: 1.25, fontWeight: 600, color: '#92400E', background: '#FEF3C7', border: '1px solid #FDE68A' }}
+              style={{ fontSize: 11, lineHeight: 1.25, fontWeight: 600, fontStyle: 'italic', color: '#92400E', background: '#FEF3C7', border: '1px solid #FDE68A' }}
             >
-              Note: {product.notes}
+              “{product.notes}”
             </div>
           )}
         </div>
