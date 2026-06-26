@@ -205,9 +205,9 @@ export default function DisplaySettings() {
                     Layout
                   </span>
                   <SegmentedToggle
-                    options={['Standard', 'Compact']}
-                    value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
-                    onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
+                    options={['Standard', 'Compact', 'Header']}
+                    value={ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}
+                    onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : v === 'Header' ? 'header' : 'standard')}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -260,7 +260,7 @@ export default function DisplaySettings() {
         iconColor="#0E7460"
         label="Ticket Layout"
         helper="Controls spacing, text size, layout density, and ticket identifier."
-        right={<ValueText>{ticketLayout === 'compact' ? 'Compact' : 'Standard'}</ValueText>}
+        right={<ValueText>{ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}</ValueText>}
         onClick={() => setTicketSpacingOpen(true)}
         highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />

@@ -54,7 +54,7 @@ interface OrderCardProps {
   /** When true (grid view), apply tighter row spacing inside courses. */
   compactRows?: boolean;
   /** Override the global ticketLayout setting (used by previews). */
-  layoutOverride?: 'standard' | 'compact';
+  layoutOverride?: 'standard' | 'compact' | 'header';
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -87,8 +87,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const urgency = getTimerUrgency(liveElapsed, order.targetSeconds);
   const { getStatusForElapsed, courseLevelAging } = useStatusRules();
   const { ticketHeaderLayout, ticketLayout, ticketHeaderStyle } = useKDSSettings();
-  const resolvedTicketLayout: 'standard' | 'compact' = layoutOverride ?? ticketLayout;
+  const resolvedTicketLayout: 'standard' | 'compact' | 'header' = layoutOverride ?? ticketLayout;
+  const isHeaderOnly = resolvedTicketLayout === 'header';
   const isCompactLayout = resolvedTicketLayout === 'compact';
+  const innerLayoutMode: 'standard' | 'compact' = resolvedTicketLayout === 'compact' ? 'compact' : 'standard';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
@@ -928,17 +930,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             </>
           )}
 
-          {showCustomerContact && (
+          {!isHeaderOnly && showCustomerContact && (
             <CustomerContactStrip
               customerName={order.customerName}
               customerPhone={order.customerPhone}
             />
           )}
 
-          {showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
+          {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
 
-        {order.orderNotes && (
+        {!isHeaderOnly && order.orderNotes && (
           <OrderNotesSection
             notes={order.orderNotes}
             orderId={order.id}
@@ -947,7 +949,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {orderMessages.length > 0 && (
+        {!isHeaderOnly && orderMessages.length > 0 && (
           <KitchenMessageSection
             messages={orderMessages}
             replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
@@ -956,7 +958,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {isDineIn && stationNotification && (
+        {!isHeaderOnly && isDineIn && stationNotification && (
           <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
             <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
             <span className="text-[10px] font-medium text-success">
@@ -965,70 +967,72 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         )}
 
-        <div className="border-t border-border">
-          {isDineIn ? (
-            sortedDisplayCourses
-              .filter((courseGroup) => (courseLifecycleMap.get(courseGroup.course) || 'pending') !== 'served')
-              .map((courseGroup) => {
-                const lifecycleStatus = courseLifecycleMap.get(courseGroup.course) || 'pending';
-                let forcedStatus: StationStatus | undefined;
-                if (stationCourse && stationIdx >= 0) {
-                  const originalIdx = displayCourses.indexOf(courseGroup);
-                  if (originalIdx < stationIdx) forcedStatus = 'fired';
-                  else if (originalIdx === stationIdx) forcedStatus = 'active';
-                  else forcedStatus = 'pending';
-                }
-                return (
-                  <CourseSection
-                    key={courseGroup.course}
-                    courseGroup={courseGroup}
-                    onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
-                    itemStatuses={itemStatuses}
-                    itemTimestamps={itemTimestamps}
-                    onAdvanceItem={handleAdvanceItem}
-                    onUndoItem={handleUndoItem}
-                    onBulkAdvanceCourse={handleBulkAdvanceCourse}
-                    stationCourse={stationCourse}
-                    forcedStationStatus={forcedStatus}
-                    onReRouteItem={undefined}
-                    showAllergens={showAllergens}
-                    highlightItemNames={highlightItemNames}
-                    lifecycleStatus={lifecycleStatus}
-                    courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
-                    servableModifiersEnabled={servableModifiersEnabled}
-                    modifierStatuses={modifierStatuses}
-                    modifierTimestamps={modifierTimestamps}
-                    onAdvanceModifier={handleAdvanceModifier}
-                    onUndoModifier={handleUndoModifier}
-                    courseAgingColor={courseStatusColors.get(courseGroup.course)}
-                    dismissedItemIds={dismissedItemIds}
-                    onDismissItem={handleDismissItem}
-                    compactRows={compactRows}
-                    seenOrderIndex={seenOrderIndex}
-                    ticketLayoutMode={resolvedTicketLayout}
-                  />
-                );
-              })
-          ) : (
-            <FlatItemList
-              courses={orderWithStations.courses}
-              itemStatuses={itemStatuses}
-              itemTimestamps={itemTimestamps}
-              onAdvanceItem={handleAdvanceItem}
-              onUndoItem={handleUndoItem}
-              onReRouteItem={undefined}
-              showAllergens={showAllergens}
-              servableModifiersEnabled={servableModifiersEnabled}
-              modifierStatuses={modifierStatuses}
-              modifierTimestamps={modifierTimestamps}
-              onAdvanceModifier={handleAdvanceModifier}
-              onUndoModifier={handleUndoModifier}
-              dismissedItemIds={dismissedItemIds}
-              onDismissItem={handleDismissItem}
-              ticketLayoutMode={resolvedTicketLayout}
-            />
-          )}
-        </div>
+        {!isHeaderOnly && (
+          <div className="border-t border-border">
+            {isDineIn ? (
+              sortedDisplayCourses
+                .filter((courseGroup) => (courseLifecycleMap.get(courseGroup.course) || 'pending') !== 'served')
+                .map((courseGroup) => {
+                  const lifecycleStatus = courseLifecycleMap.get(courseGroup.course) || 'pending';
+                  let forcedStatus: StationStatus | undefined;
+                  if (stationCourse && stationIdx >= 0) {
+                    const originalIdx = displayCourses.indexOf(courseGroup);
+                    if (originalIdx < stationIdx) forcedStatus = 'fired';
+                    else if (originalIdx === stationIdx) forcedStatus = 'active';
+                    else forcedStatus = 'pending';
+                  }
+                  return (
+                    <CourseSection
+                      key={courseGroup.course}
+                      courseGroup={courseGroup}
+                      onFireCourse={onFireCourse ? (course) => onFireCourse(order.id, course) : undefined}
+                      itemStatuses={itemStatuses}
+                      itemTimestamps={itemTimestamps}
+                      onAdvanceItem={handleAdvanceItem}
+                      onUndoItem={handleUndoItem}
+                      onBulkAdvanceCourse={handleBulkAdvanceCourse}
+                      stationCourse={stationCourse}
+                      forcedStationStatus={forcedStatus}
+                      onReRouteItem={undefined}
+                      showAllergens={showAllergens}
+                      highlightItemNames={highlightItemNames}
+                      lifecycleStatus={lifecycleStatus}
+                      courseDoneAt={courseDoneTimestamps.get(courseGroup.course)}
+                      servableModifiersEnabled={servableModifiersEnabled}
+                      modifierStatuses={modifierStatuses}
+                      modifierTimestamps={modifierTimestamps}
+                      onAdvanceModifier={handleAdvanceModifier}
+                      onUndoModifier={handleUndoModifier}
+                      courseAgingColor={courseStatusColors.get(courseGroup.course)}
+                      dismissedItemIds={dismissedItemIds}
+                      onDismissItem={handleDismissItem}
+                      compactRows={compactRows}
+                      seenOrderIndex={seenOrderIndex}
+                      ticketLayoutMode={innerLayoutMode}
+                    />
+                  );
+                })
+            ) : (
+              <FlatItemList
+                courses={orderWithStations.courses}
+                itemStatuses={itemStatuses}
+                itemTimestamps={itemTimestamps}
+                onAdvanceItem={handleAdvanceItem}
+                onUndoItem={handleUndoItem}
+                onReRouteItem={undefined}
+                showAllergens={showAllergens}
+                servableModifiersEnabled={servableModifiersEnabled}
+                modifierStatuses={modifierStatuses}
+                modifierTimestamps={modifierTimestamps}
+                onAdvanceModifier={handleAdvanceModifier}
+                onUndoModifier={handleUndoModifier}
+                dismissedItemIds={dismissedItemIds}
+                onDismissItem={handleDismissItem}
+                ticketLayoutMode={innerLayoutMode}
+              />
+            )}
+          </div>
+        )}
       </div>
       <Flag86Modal
         open={ticketManual86Open}

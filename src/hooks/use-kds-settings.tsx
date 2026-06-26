@@ -6,7 +6,7 @@ export type TempUnit = 'F' | 'C';
 export type WeekStart = 'Sunday' | 'Monday';
 export type TicketHeaderLayout = 'kitchen' | 'guest';
 export type ExpoSendButtonMode = 'always' | 'when-ready';
-export type TicketLayout = 'standard' | 'compact';
+export type TicketLayout = 'standard' | 'compact' | 'header';
 export type TicketSpacing = 'Compact' | 'Standard' | 'Spacious';
 export type TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3';
 
