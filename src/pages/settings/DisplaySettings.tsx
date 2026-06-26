@@ -274,20 +274,6 @@ export default function DisplaySettings() {
         highlighted={hash === 'enable-badge'}
       />
 
-      <SettingsPill
-        icon={IdCard}
-        iconColor="#2980B9"
-        label="Ticket Identifier"
-        helper={ticketHeaderLayout === 'guest' ? 'Show guest name as primary card label.' : 'Show order number as primary card label.'}
-        right={
-          <SegmentedToggle
-            options={['Order number', 'Guest name']}
-            value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'}
-            onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')}
-          />
-        }
-        highlighted={hash === 'ticket-identifier'}
-      />
 
       <SettingsPill
         icon={SlidersHorizontal}
