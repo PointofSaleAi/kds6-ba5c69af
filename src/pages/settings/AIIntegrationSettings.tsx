@@ -137,7 +137,7 @@ export default function AIIntegrationSettings() {
         }}
       >
         <span className="text-[15px] font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
-          Connection status
+          Status
         </span>
         <span className="text-sm font-semibold" style={{ color: statusStyle.color }}>
           {statusStyle.label}
