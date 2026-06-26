@@ -93,6 +93,8 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const innerLayoutMode: 'standard' | 'compact' = resolvedTicketLayout === 'compact' ? 'compact' : 'standard';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+  const [headerOnlyExpanded, setHeaderOnlyExpanded] = useState(false);
+  const effectiveHeaderOnly = isHeaderOnly && !headerOnlyExpanded;
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
   const [dismissedItemIds, setDismissedItemIds] = useState<Set<string>>(new Set());
   // FIX 3: Track the order in which items were first marked seen within this ticket.
@@ -803,7 +805,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         {...ticketLongPress}
       >
         {/* Header area */}
-        <div>
+        <div
+          onClick={isHeaderOnly ? () => setHeaderOnlyExpanded(v => !v) : undefined}
+          className={isHeaderOnly ? 'cursor-pointer' : undefined}
+          role={isHeaderOnly ? 'button' : undefined}
+          aria-expanded={isHeaderOnly ? headerOnlyExpanded : undefined}
+        >
           {ticketHeaderStyle === 'v1' ? (
             <V1Header order={order} />
           ) : ticketHeaderStyle === 'v2' ? (
@@ -826,10 +833,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 tabIndex={0}
                 aria-label={`Advance ticket (currently ${ticketState})`}
                 title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
-                onClick={() => handleTicketAdvance(order.id)}
+                onClick={(e) => {
+                  if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyExpanded(v => !v); return; }
+                  handleTicketAdvance(order.id);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    if (isHeaderOnly) { setHeaderOnlyExpanded(v => !v); return; }
                     handleTicketAdvance(order.id);
                   }
                 }}
@@ -930,17 +941,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             </>
           )}
 
-          {!isHeaderOnly && showCustomerContact && (
+          {!effectiveHeaderOnly && showCustomerContact && (
             <CustomerContactStrip
               customerName={order.customerName}
               customerPhone={order.customerPhone}
             />
           )}
 
-          {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
+          {!effectiveHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
 
-        {!isHeaderOnly && order.orderNotes && (
+        {!effectiveHeaderOnly && order.orderNotes && (
           <OrderNotesSection
             notes={order.orderNotes}
             orderId={order.id}
@@ -949,7 +960,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {!isHeaderOnly && orderMessages.length > 0 && (
+        {!effectiveHeaderOnly && orderMessages.length > 0 && (
           <KitchenMessageSection
             messages={orderMessages}
             replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
@@ -958,7 +969,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {!isHeaderOnly && isDineIn && stationNotification && (
+        {!effectiveHeaderOnly && isDineIn && stationNotification && (
           <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
             <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
             <span className="text-[10px] font-medium text-success">
@@ -967,7 +978,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         )}
 
-        {!isHeaderOnly && (
+        {!effectiveHeaderOnly && (
           <div className="border-t border-border">
             {isDineIn ? (
               sortedDisplayCourses
