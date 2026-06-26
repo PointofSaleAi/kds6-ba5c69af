@@ -1,4 +1,4 @@
-export type SettingsGroupId = 'display' | 'orders' | 'expo' | 'hardware' | 'account';
+export type SettingsGroupId = 'display' | 'orders' | 'expo' | 'hardware' | 'system' | 'account';
 
 export interface SettingsSearchEntry {
   id: string;
@@ -15,6 +15,7 @@ export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: str
   orders: { label: 'Tickets', path: '/kds/full/settings/orders' },
   expo: { label: 'Expo view', path: '/kds/full/settings/expo' },
   hardware: { label: 'Hardware', path: '/kds/full/settings/hardware' },
+  system: { label: 'System', path: '/kds/full/settings/system' },
   account: { label: 'Account', path: '/kds/full/settings/account' },
 };
 
@@ -53,6 +54,9 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'sound-settings', label: 'Sound settings', description: 'Volume and notification alerts', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sound-settings', keywords: 'sound volume audio alert beep' },
   { id: 'sync', label: 'Sync', description: 'Force sync of orders and settings', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#sync', keywords: 'sync refresh orders settings cloud' },
   { id: 'connection', label: 'Connection', description: 'Network and EdgeOS sync', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#connection', keywords: 'connection network websocket sync edgeos' },
+
+  // System
+  { id: 'ai-integration', label: 'AI Integration', description: 'External AI provider with your own API key', group: 'system', groupLabel: 'System', path: '/kds/full/settings/system#ai-integration', keywords: 'ai integration openai chatgpt gemini google maya api key provider external' },
 
   // Account
   { id: 'device-name', label: 'Device name', description: 'Identifier for this Kitchen Display', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#device-name', keywords: 'device name identifier kds station' },
