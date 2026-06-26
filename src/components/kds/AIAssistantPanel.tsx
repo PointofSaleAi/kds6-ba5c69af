@@ -62,6 +62,18 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text: trimmed };
     const assistantId = `a-${Date.now()}`;
     const nextHistory = [...messages, userMsg];
+
+    if (!providerReady) {
+      const reason = !ai.enabled
+        ? 'AI integration is turned off. Enable it in Settings → System → AI Integration to start chatting.'
+        : !ai.provider
+          ? 'No AI provider is selected. Pick one in Settings → System → AI Integration.'
+          : `${providerLabel} is not connected (status: ${ai.status.replace('_', ' ')}). Save the provider in Settings → System → AI Integration to connect.`;
+      setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: reason }]);
+      setInput('');
+      return;
+    }
+
     setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: '' }]);
     setInput('');
     setStreaming(true);
@@ -74,10 +86,12 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          provider: ai.provider,
           messages: nextHistory.map(m => ({ role: m.role, content: m.text })),
         }),
         signal: controller.signal,
       });
+
 
       if (!res.ok || !res.body) {
         let errMsg = 'Assistant is unavailable. Please try again.';
