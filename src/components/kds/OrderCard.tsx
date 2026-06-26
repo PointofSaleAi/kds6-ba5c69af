@@ -805,7 +805,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         {...ticketLongPress}
       >
         {/* Header area */}
-        <div>
+        <div
+          onClick={isHeaderOnly ? () => setHeaderOnlyExpanded(v => !v) : undefined}
+          className={isHeaderOnly ? 'cursor-pointer' : undefined}
+          role={isHeaderOnly ? 'button' : undefined}
+          aria-expanded={isHeaderOnly ? headerOnlyExpanded : undefined}
+        >
           {ticketHeaderStyle === 'v1' ? (
             <V1Header order={order} />
           ) : ticketHeaderStyle === 'v2' ? (
