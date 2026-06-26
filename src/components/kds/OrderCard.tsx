@@ -941,17 +941,17 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             </>
           )}
 
-          {!isHeaderOnly && showCustomerContact && (
+          {!effectiveHeaderOnly && showCustomerContact && (
             <CustomerContactStrip
               customerName={order.customerName}
               customerPhone={order.customerPhone}
             />
           )}
 
-          {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
+          {!effectiveHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
 
-        {!isHeaderOnly && order.orderNotes && (
+        {!effectiveHeaderOnly && order.orderNotes && (
           <OrderNotesSection
             notes={order.orderNotes}
             orderId={order.id}
@@ -960,7 +960,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {!isHeaderOnly && orderMessages.length > 0 && (
+        {!effectiveHeaderOnly && orderMessages.length > 0 && (
           <KitchenMessageSection
             messages={orderMessages}
             replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
@@ -969,7 +969,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {!isHeaderOnly && isDineIn && stationNotification && (
+        {!effectiveHeaderOnly && isDineIn && stationNotification && (
           <div className="px-2 py-1 flex items-center gap-1.5 bg-success/10">
             <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
             <span className="text-[10px] font-medium text-success">
@@ -978,7 +978,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           </div>
         )}
 
-        {!isHeaderOnly && (
+        {!effectiveHeaderOnly && (
           <div className="border-t border-border">
             {isDineIn ? (
               sortedDisplayCourses
