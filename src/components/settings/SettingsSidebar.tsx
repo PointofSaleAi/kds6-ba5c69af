@@ -7,6 +7,7 @@ import {
   type SettingsGroupId,
 } from '@/lib/settings-search-index';
 import { SettingsIconTile } from './SettingsIconTile';
+import systemIcon from '@/assets/icons/settings-system.png';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
   display: Monitor,
@@ -117,7 +118,7 @@ export function SettingsSidebar() {
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
-                  <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" />
+                  <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" iconSrc={id === 'system' ? systemIcon : undefined} />
                   <span
                     className="text-[0.95rem] font-semibold leading-tight"
                     style={{ color: 'hsl(var(--text-primary))' }}
