@@ -146,6 +146,15 @@ export default function AccountSettings() {
       />
 
       <SettingsPill
+        icon={RotateCcw}
+        iconColor="#0A84FF"
+        label="Reset to default"
+        helper="Restore all system settings to their original defaults on this device."
+        onClick={() => setResetOpen(true)}
+        highlighted={hash === 'reset-to-default'}
+      />
+
+      <SettingsPill
         icon={LogOut}
         iconColor="#C0392B"
         label="Log out"
@@ -153,6 +162,27 @@ export default function AccountSettings() {
         onClick={() => setLogoutOpen(true)}
         highlighted={hash === 'log-out'}
       />
+
+      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+        <AlertDialogContent className="bg-surface-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-text-primary">Reset all settings to default?</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
+              This will restore display, orders, hardware, AI, and account preferences to their system defaults on this device. Your session will not be signed out.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleResetDefaults}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
+            >
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
 
       <p className="text-center text-xs mt-4" style={{ color: 'hsl(var(--text-muted))' }}>
         Point of Sale Ai Kitchen Display System v2.4.1
