@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Smartphone, Bug, LogOut, Hash, AlertCircle, Upload, MessageSquare } from 'lucide-react';
+import { User, Smartphone, Bug, LogOut, Hash, AlertCircle, Upload, MessageSquare, RotateCcw } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -16,6 +16,7 @@ export default function AccountSettings() {
   const [devMode, setDevMode] = useState(() => localStorage.getItem('posai-dev-mode') === 'true');
   const [bugReporting, setBugReporting] = useState(() => localStorage.getItem('posai-bug-reporting') === 'true');
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
   const hash = useHashHighlight();
@@ -50,6 +51,34 @@ export default function AccountSettings() {
     setLogoutOpen(false);
     navigate('/kds/full', { replace: true });
     setTimeout(() => window.location.reload(), 0);
+  };
+
+  const handleResetDefaults = () => {
+    setResetOpen(false);
+    try {
+      const preserve = new Set(['posai-auth', 'posai-session']);
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k) continue;
+        if (preserve.has(k)) continue;
+        if (
+          k.startsWith('posai-') ||
+          k.startsWith('kds-') ||
+          k.startsWith('kds.')
+        ) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    } catch {
+      // ignore
+    }
+    toast({
+      title: 'Settings reset',
+      description: 'All system settings have been restored to defaults.',
+    });
+    setTimeout(() => window.location.reload(), 300);
   };
 
   return (
@@ -117,6 +146,15 @@ export default function AccountSettings() {
       />
 
       <SettingsPill
+        icon={RotateCcw}
+        iconColor="#0A84FF"
+        label="Reset to default"
+        helper="Restore all system settings to their original defaults on this device."
+        onClick={() => setResetOpen(true)}
+        highlighted={hash === 'reset-to-default'}
+      />
+
+      <SettingsPill
         icon={LogOut}
         iconColor="#C0392B"
         label="Log out"
@@ -124,6 +162,27 @@ export default function AccountSettings() {
         onClick={() => setLogoutOpen(true)}
         highlighted={hash === 'log-out'}
       />
+
+      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+        <AlertDialogContent className="bg-surface-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-text-primary">Reset all settings to default?</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
+              This will restore display, orders, hardware, AI, and account preferences to their system defaults on this device. Your session will not be signed out.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleResetDefaults}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
+            >
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
 
       <p className="text-center text-xs mt-4" style={{ color: 'hsl(var(--text-muted))' }}>
         Point of Sale Ai Kitchen Display System v2.4.1
