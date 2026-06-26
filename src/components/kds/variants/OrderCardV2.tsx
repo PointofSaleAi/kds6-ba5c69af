@@ -146,12 +146,13 @@ function V2ProductRow({
             type="button"
             onClick={(e) => { e.stopPropagation(); onToggle(); }}
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
-            style={{ width: 22, height: 22, background: '#E67E22', color: '#fff' }}
+            style={{ width: 22, height: 22, background: '#F5C518', color: '#fff' }}
             aria-label="Mark product done"
             title="Tap when ready"
           >
             <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
           </button>
+
         )}
         {!loading && !done && state !== 'cooking' && (
           <button
