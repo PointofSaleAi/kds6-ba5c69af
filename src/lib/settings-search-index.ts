@@ -56,7 +56,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'connection', label: 'Connection', description: 'Network and EdgeOS sync', group: 'hardware', groupLabel: 'Hardware', path: '/kds/full/settings/hardware#connection', keywords: 'connection network websocket sync edgeos' },
 
   // System
-  { id: 'ai-integration', label: 'AI Integration & Settings', description: 'External AI provider with your own API key', group: 'system', groupLabel: 'System', path: '/kds/full/settings/system#ai-integration', keywords: 'ai integration settings openai chatgpt gemini google maya api key provider external' },
+  { id: 'ai-integration', label: 'AI Integration', description: 'External AI provider with your own API key', group: 'system', groupLabel: 'System', path: '/kds/full/settings/system#ai-integration', keywords: 'ai integration settings openai chatgpt gemini google maya api key provider external' },
 
   // Account
   { id: 'device-name', label: 'Device name', description: 'Identifier for this Kitchen Display', group: 'account', groupLabel: 'Account', path: '/kds/full/settings/account#device-name', keywords: 'device name identifier kds station' },
