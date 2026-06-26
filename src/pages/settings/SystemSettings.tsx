@@ -21,8 +21,8 @@ export default function SystemSettings() {
 
       <SettingsPill
         icon={Sparkles}
-        iconColor="#7C3AED"
-        label="AI Integration"
+        iconColor="#3B82F6"
+        label="AI Integration & Settings"
         helper="Connect an external AI provider (OpenAI, Gemini, Maya) with your own API key."
         onClick={() => navigate('/kds/full/settings/system/ai-integration')}
         highlighted={hash === 'ai-integration'}
