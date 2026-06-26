@@ -115,6 +115,8 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const insets = getOverlayInsets(layout);
   const ai = useAIIntegration();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
   const providerShort = ai.provider ? AI_PROVIDER_SHORT_LABELS[ai.provider] : 'AI';
