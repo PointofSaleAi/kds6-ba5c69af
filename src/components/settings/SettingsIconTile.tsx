@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 interface SettingsIconTileProps {
   icon: LucideIcon;
@@ -6,6 +7,7 @@ interface SettingsIconTileProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   iconColor?: string;
   iconSrc?: string;
+  iconNode?: ReactNode;
 }
 
 /**
@@ -19,6 +21,7 @@ export function SettingsIconTile({
   size = 'sm',
   iconColor = '#FFFFFF',
   iconSrc,
+  iconNode,
 }: SettingsIconTileProps) {
   const dim = size === 'lg' ? 64 : size === 'md' ? 36 : size === 'xs' ? 34 : 28;
   const radius = size === 'lg' ? 16 : size === 'md' ? 10 : size === 'xs' ? 9 : 8;
@@ -31,9 +34,12 @@ export function SettingsIconTile({
         height: dim,
         borderRadius: radius,
         backgroundColor: bgColor,
+        color: iconColor,
       }}
     >
-      {iconSrc ? (
+      {iconNode ? (
+        iconNode
+      ) : iconSrc ? (
         <img src={iconSrc} alt="" style={{ width: iconSize, height: iconSize, objectFit: 'contain' }} />
       ) : (
         <Icon size={iconSize} color={iconColor} strokeWidth={2.2} />

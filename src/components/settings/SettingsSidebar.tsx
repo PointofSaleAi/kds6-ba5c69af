@@ -7,6 +7,7 @@ import {
   type SettingsGroupId,
 } from '@/lib/settings-search-index';
 import { SettingsIconTile } from './SettingsIconTile';
+import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import systemIcon from '@/assets/icons/settings-system.png';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
@@ -80,9 +81,14 @@ export function SettingsSidebar() {
                       height: 30,
                       borderRadius: 8,
                       backgroundColor: GROUP_COLOR[r.group],
+                      color: '#FFFFFF',
                     }}
                   >
-                    <Icon size={18} color="#FFFFFF" strokeWidth={2.2} />
+                    {r.group === 'orders' ? (
+                      <TicketsIcon size={20} className="text-white" />
+                    ) : (
+                      <Icon size={18} color="#FFFFFF" strokeWidth={2.2} />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div
@@ -118,7 +124,13 @@ export function SettingsSidebar() {
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
                 >
-                  <SettingsIconTile icon={Icon} bgColor={GROUP_COLOR[id]} size="xs" iconSrc={id === 'system' ? systemIcon : undefined} />
+                  <SettingsIconTile
+                    icon={Icon}
+                    bgColor={GROUP_COLOR[id]}
+                    size="xs"
+                    iconSrc={id === 'system' ? systemIcon : undefined}
+                    iconNode={id === 'orders' ? <TicketsIcon size={22} className="text-white" /> : undefined}
+                  />
                   <span
                     className="text-[0.95rem] font-semibold leading-tight"
                     style={{ color: 'hsl(var(--text-primary))' }}

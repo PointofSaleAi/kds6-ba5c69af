@@ -4,6 +4,7 @@ import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 
 export default function OrdersSettings() {
   const {
@@ -18,10 +19,12 @@ export default function OrdersSettings() {
       <SectionHeaderCard
         icon={ShoppingBag}
         iconColor={GROUP_COLOR.orders}
+        iconNode={<TicketsIcon size={28} className="text-white" />}
         title="Tickets"
         shortDescription="Control how products are flagged on tickets."
         longDescription="Toggle allergen badges or servable modifiers based on your workflow."
       />
+
 
       <SettingsPill
         icon={Sparkles}
