@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Sparkles, ShieldCheck, Info, Check } from 'lucide-react';
+import { ShieldCheck, Info, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { AI_STORAGE_KEYS as STORAGE_KEYS, emitAIIntegrationChange } from '@/hooks/use-ai-integration';
+import aiIntegrationIcon from '@/assets/icons/ai-integration.png';
 
 type ConnectionStatus = 'not_configured' | 'connected' | 'invalid_key' | 'error';
 
