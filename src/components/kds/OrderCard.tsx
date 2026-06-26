@@ -899,14 +899,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                         <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
                         <span className="text-right break-words min-w-0">{tperson(order.serverName)}</span>
                       </span>
-                      {displayGuestName ? (
-                        <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full">
-                          <img src={UsersBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                          <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">{tperson(displayGuestName)}</span>
+                      <span className="flex items-center gap-1 text-[15px] leading-tight font-medium text-white max-w-full" aria-hidden={!displayGuestName}>
+                        <img src={UsersBold} alt="" width={14} height={14} className={`invert opacity-90 shrink-0 ${displayGuestName ? '' : 'invisible'}`} />
+                        <span className="text-right break-words min-w-0 whitespace-nowrap overflow-hidden text-ellipsis">
+                          {displayGuestName ? tperson(displayGuestName) : '\u00A0'}
                         </span>
-                      ) : (
-                        <span className="h-[14px]" />
-                      )}
+                      </span>
                       <div className="flex items-center gap-1.5 leading-none">
                         {order.isRushed && (
                           <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
