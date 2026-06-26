@@ -17,6 +17,7 @@ import { PortraitProvider } from "@/hooks/use-portrait";
 import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
 import { NotificationsProvider } from "@/hooks/use-notifications";
 import { DockLayoutProvider } from "@/hooks/use-dock-layout";
+import { ActiveKDSViewProvider } from "@/hooks/use-active-kds-view";
 import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
@@ -54,6 +55,7 @@ const App = () => (
       <KitchenMessagesProvider>
       <NotificationsProvider>
       <DockLayoutProvider>
+      <ActiveKDSViewProvider>
       <TooltipProvider>
         <DockDragLayer>
           <NotificationToastStack />
@@ -90,6 +92,7 @@ const App = () => (
           </BrowserRouter>
         </DockDragLayer>
       </TooltipProvider>
+      </ActiveKDSViewProvider>
       </DockLayoutProvider>
       </NotificationsProvider>
       </KitchenMessagesProvider>
