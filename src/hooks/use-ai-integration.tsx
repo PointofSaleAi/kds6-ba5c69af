@@ -73,19 +73,15 @@ export interface AIIntegrationState {
   model: string;
 }
 
-  enabled: boolean;
-  provider: AIProviderId;
-  status: AIConnectionStatus;
-}
-
 function read(): AIIntegrationState {
   if (typeof window === 'undefined') {
-    return { enabled: false, provider: '', status: 'not_configured' };
+    return { enabled: false, provider: '', status: 'not_configured', model: '' };
   }
   return {
     enabled: window.localStorage.getItem(AI_STORAGE_KEYS.enabled) === 'true',
     provider: (window.localStorage.getItem(AI_STORAGE_KEYS.provider) ?? '') as AIProviderId,
     status: (window.localStorage.getItem(AI_STORAGE_KEYS.status) ?? 'not_configured') as AIConnectionStatus,
+    model: window.localStorage.getItem(AI_STORAGE_KEYS.model) ?? '',
   };
 }
 
