@@ -10,6 +10,7 @@ import { formatTime } from '@/lib/datetime';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -126,17 +127,22 @@ function V2ProductRow({
           </button>
         )}
         {loading && (
-          <span className="shrink-0 flex items-center justify-center" style={{ width: 18, height: 18 }} aria-label="Marking product done">
+          <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking product done">
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
           </span>
         )}
         {done && (
           <span
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
-            style={{ background: '#27AE60', width: 18, height: 18 }}
+            style={{ background: '#27AE60', width: 22, height: 22 }}
             aria-label="Product done"
           >
-            <Check size={12} color="#fff" strokeWidth={3} />
+            <Check size={14} color="#fff" strokeWidth={3} />
+          </span>
+        )}
+        {!loading && !done && (
+          <span className="shrink-0" onClick={(e) => e.stopPropagation()}>
+            <KdsActionIcon icon="seen" label="Mark seen" size={22} onClick={onToggle} />
           </span>
         )}
       </div>
