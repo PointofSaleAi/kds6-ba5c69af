@@ -231,9 +231,11 @@ export function OrderCardV1({ order, onBump }: Props) {
         </span>
       </div>
 
+      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}
       <div className="flex-1">
+
         {order.orderType === 'dine-in' && !isCompact ? (
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
