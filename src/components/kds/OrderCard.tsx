@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
 
@@ -62,6 +61,8 @@ interface OrderCardProps {
   layoutOverride?: 'standard' | 'compact' | 'header';
   /** Force a specific header style override (used by header-layout modal). */
   forceEmphasizedV1Header?: boolean;
+  /** When true, strips the outer card border/shadow so the content sits inside another container (e.g. the sidebar drawer). */
+  bare?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -77,7 +78,7 @@ const statusBodyMap: Record<string, string> = {
 
 import { formatTime as formatStaticTime } from '@/lib/datetime';
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { pathname } = useLocation();
   const showCustomerContact =
@@ -804,12 +805,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   return (
     <>
       <div
-        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
+        className={`${bare ? '' : 'rounded-lg overflow-hidden bg-surface-card shadow-sm'} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
         style={{
-          minWidth: 'min(220px, 100%)',
+          minWidth: bare ? undefined : 'min(220px, 100%)',
           borderLeft: order.isRushed ? '4px solid #c0392b' : undefined,
         }}
-        {...ticketLongPress}
+        {...(bare ? {} : ticketLongPress)}
       >
         {/* Header area */}
         <div
@@ -1090,6 +1091,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           compactRows={compactRows}
           layoutOverride="standard"
           forceEmphasizedV1Header
+          bare
         />
       </HeaderOnlyDrawer>
     </>
@@ -1120,13 +1122,6 @@ function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose:
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
-              <button
-                onClick={onClose}
-                aria-label="Close ticket"
-                className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center active:opacity-70 transition-opacity shrink-0"
-              >
-                <X className="w-5 h-5 text-white" />
-              </button>
               <div
                 className="flex-1 overflow-y-auto px-3 pb-3"
                 style={{

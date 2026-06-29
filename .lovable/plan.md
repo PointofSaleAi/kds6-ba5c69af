@@ -1,43 +1,46 @@
-## Goal
-Add a new "Ticket header" section at the top of the Ticket Layout page (Settings → Display → Ticket Layout) with a segmented pill: Default / V1 / V2 / V3. Selecting an option swaps only the header region of the standard OrderCard with the header UI from OrderCardV1, V2, or V3. No changes to ticket card body, products, or actions.
+## Problem
+The `HeaderOnlyDrawer` currently nests a full `OrderCard` with `rounded-lg bg-surface-card shadow-sm` styling inside the already-styled sidebar. This creates a "card inside a card" look. Additionally, an `X` close button sits on top of the content.
 
 ## Changes
 
-### 1. New setting: `ticketHeaderStyle`
-`src/hooks/use-kds-settings.tsx`
-- Add type `TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3'`.
-- Add field `ticketHeaderStyle` (default `'default'`) + setter, persisted in the same localStorage blob.
+### 1. Add a `bare` prop to `OrderCard`
+- New optional boolean prop `bare?: boolean` in `OrderCardProps`.
+- When `bare` is true, remove the outer wrapper classes `rounded-lg overflow-hidden bg-surface-card shadow-sm transition-all duration-300`.
+- Keep all internal content (header, courses, flat list, actions, bump button) exactly as-is.
+- Prevent the card-level `ticketLongPress` handler from attaching when `bare` is true to avoid competing with sidebar interactions.
 
-### 2. Extract header-only components from variants
-Create three small presentational components that render only the header portion currently inside OrderCardV1/V2/V3 (order type strip + order number/guest + timer pill + any metadata row). Pure JSX + props, no tap/done/long-press logic. Files:
-- `src/components/kds/variants/headers/V1Header.tsx`
-- `src/components/kds/variants/headers/V2Header.tsx`
-- `src/components/kds/variants/headers/V3Header.tsx`
+### 2. Update `HeaderOnlyDrawer` in `OrderCard.tsx`
+- Remove the `<button>` containing `<X className="..." />` from the drawer entirely.
+- Keep the backdrop click-to-dismiss behaviour.
+- Change the nested `OrderCard` to pass `bare` instead of `layoutOverride="standard"` and `forceEmphasizedV1Header`. Wait — the user said "show full ticket but without card border". The drawer should still show the full ticket. But what layout should it use?
 
-Each takes `{ order, effectiveStatusColor, elapsedSeconds }` (plus whatever the existing header needs from settings/status rules, read internally via hooks). The original V1/V2/V3 OrderCards then import these so there is one source of truth.
+Actually, looking back: the user previously said "just open the exact ticket in a modal with same actions". So the drawer should show the ticket with its current configured layout settings (which might be standard, compact, or header), not force standard. But showing header inside header would be weird. However, the user explicitly said "Show full ticket but without card border", which means they want the complete ticket content directly in the sidebar.
 
-### 3. Wire header swap into the default `OrderCard`
-`src/components/kds/OrderCard.tsx`
-- Read `ticketHeaderStyle` from `useKDSSettings`.
-- When it is `v1` / `v2` / `v3`, replace ONLY the existing header JSX block (the OrderTypeBadge + order number/guest header around lines 800–910) with `<V1Header/>` / `<V2Header/>` / `<V3Header/>`.
-- When `default`, render today's header unchanged.
-- Everything below the header (allergen strip, courses, products, actions) is unaffected.
+So in the drawer, we should pass `bare` to the `OrderCard`, and remove the `layoutOverride` and `forceEmphasizedV1Header` overrides, letting it respect the user's current `ticketLayout` and `ticketHeaderStyle` settings. But we need to prevent recursion: if `ticketLayout` is "header", the nested OrderCard would also show a header-only view and try to open another drawer.
 
-### 4. Settings UI
-`src/pages/settings/DisplaySettings.tsx` (inside the `ticketSpacingOpen` overlay, left options column)
-- Add a new field at the TOP of the options stack, above "Ticket spacing":
-  ```
-  Ticket header
-  [ Default | V1 | V2 | V3 ]   (SegmentedToggle)
-  ```
-- Bind to `ticketHeaderStyle` / `setTicketHeaderStyle`.
-- The right-side preview already renders `<OrderCard order={previewTicket} .../>`, so it will automatically show the chosen header style.
+To fix this: pass `layoutOverride="standard"` (or better, pass the user's current layout but if it's "header", default to "standard") while also passing `bare`. Or simply keep `layoutOverride="standard"` but add `bare` to strip the card border.
 
-### 5. No other surfaces change
-- V1/V2/V3 route pages keep using their own OrderCardVx (unchanged behavior, just refactored to import the shared header).
-- Right-edge value on the outer "Ticket Layout" pill stays as the current density label.
+Given the user's answer "Show full ticket but without card border", I think the safest interpretation is: keep `layoutOverride="standard"` (so we see the full ticket) but strip the card border with `bare`. The user previously specifically wanted the full ticket in the sidebar.
 
-## Technical notes
-- Header components stay purely visual; tap-to-complete, recipe long-press, compact toggling, and bump logic remain in their respective OrderCard files.
-- Status color / aging values passed into headers come from the same `effectiveStatusColor` + `useElapsedSeconds` already computed in OrderCard, so aging pill colors continue to work in Default card too.
-- Persisted key reuses existing `posai-kds-settings-v2`; default `'default'` keeps current look for all existing users.
+### Wait — actually the user said in the original message:
+"why you show the actual ticket in right side bar. use the right side bar as ticket layout container."
+
+This suggests they don't want a nested OrderCard at all. They want the sidebar to BE the container. So instead of:
+```
+<Sidebar> → <OrderCard>...</OrderCard> → content
+```
+They want:
+```
+<Sidebar> → content directly
+```
+
+But to avoid massive duplication, the pragmatic approach is adding a `bare` prop that renders the same content without the outer card wrapper. This effectively makes the sidebar the container.
+
+### 3. Ensure no recursive drawer
+- In the `OrderCard` component, the `isHeaderOnly` check triggers the drawer open. If `bare` is true and `layoutOverride` is standard, `isHeaderOnly` would be false (since resolvedTicketLayout would be standard), so no recursion issue.
+
+### File changes
+- `src/components/kds/OrderCard.tsx`: add `bare` prop to `OrderCardProps`, conditionally strip outer card wrapper, update `HeaderOnlyDrawer` to remove X button and pass `bare` to nested `OrderCard`.
+
+### No other files needed
+This is a self-contained change within `OrderCard.tsx`.
