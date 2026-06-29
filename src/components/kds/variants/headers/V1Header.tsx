@@ -22,52 +22,43 @@ export function V1Header({ order, emphasized = false }: Props) {
 
   if (emphasized) {
     return (
-      <div>
-        <div
-          className="text-center uppercase tracking-wide"
-          style={{
-            fontSize: 22,
-            fontWeight: 800,
-            padding: '14px 12px',
-            background: colorSet.headerBg,
-            color: colorSet.headerText,
-            letterSpacing: '0.04em',
-          }}
-        >
-          {order.tableName || orderTypeLabel(order.orderType)}
-        </div>
-        <div
-          className="flex items-center justify-between px-3"
-          style={{
-            background: status.color,
-            color: status.textColor,
-            padding: '10px 14px',
-          }}
-        >
-          <span className="inline-flex items-center gap-2.5">
-            <span style={{ fontSize: 26, fontWeight: 900, lineHeight: 1 }}>
-              #{order.orderNumber}
-            </span>
-            <span
-              className="inline-flex items-center rounded-full font-mono-timer tabular-nums"
-              style={{
-                background: '#1A1A2E',
-                color: '#FFFFFF',
-                fontSize: 14,
-                fontWeight: 700,
-                padding: '4px 12px',
-              }}
-            >
-              {fmtElapsed(elapsed)}
-            </span>
+      <div
+        className="flex items-center justify-between"
+        style={{
+          background: colorSet.headerBg,
+          color: colorSet.headerText,
+          padding: '14px 16px',
+        }}
+      >
+        <span className="inline-flex items-center gap-3 min-w-0">
+          <span
+            className="truncate uppercase tracking-wide"
+            style={{ fontSize: 20, fontWeight: 800, letterSpacing: '0.04em' }}
+          >
+            {order.tableName || orderTypeLabel(order.orderType)}
+          </span>
+          <span style={{ fontSize: 22, fontWeight: 900, lineHeight: 1, opacity: 0.95 }}>
+            #{order.orderNumber}
           </span>
           <span
-            className="shrink-0"
-            style={{ fontSize: 15, fontWeight: 500, opacity: 0.95 }}
+            className="inline-flex items-center rounded-full font-mono-timer tabular-nums"
+            style={{
+              background: status.color,
+              color: status.textColor,
+              fontSize: 14,
+              fontWeight: 700,
+              padding: '4px 12px',
+            }}
           >
-            {formatTime(order.timeReceived)}
+            {fmtElapsed(elapsed)}
           </span>
-        </div>
+        </span>
+        <span
+          className="shrink-0"
+          style={{ fontSize: 15, fontWeight: 500, opacity: 0.9 }}
+        >
+          {formatTime(order.timeReceived)}
+        </span>
       </div>
     );
   }
