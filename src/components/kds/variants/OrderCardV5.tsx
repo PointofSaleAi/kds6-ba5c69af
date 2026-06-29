@@ -5,11 +5,24 @@ import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { V2Header } from './headers/V2Header';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useLanguage } from '@/hooks/use-language';
 
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
 }
+
+type Translators = {
+  tp: (s: string) => string;
+  tpSecondary: (s: string) => string;
+  tm: (s: string) => string;
+  tmSecondary: (s: string) => string;
+  tn: (s: string) => string;
+  ta: (s: string) => string;
+  showSecondaryMenu: boolean;
+  displayMode: string;
+  secondaryDir: 'ltr' | 'rtl';
+};
 
 type RowState = 'idle' | 'loading' | 'done';
 
