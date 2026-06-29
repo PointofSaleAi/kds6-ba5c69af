@@ -1005,6 +1005,25 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return <OrderCardV3 order={v3Order} onBump={handleBump} />;
     }
+    if (cardVariant === 'v4') {
+      const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
+      const mins = V1_AGING_SPREAD_MIN[idx];
+      let flatIdx4 = 0;
+      const v4Order: Order = {
+        ...displayOrder,
+        timeReceived: new Date(Date.now() - mins * 60_000),
+        elapsedSeconds: mins * 60,
+        courses: (displayOrder.courses ?? []).map((c) => ({
+          ...c,
+          items: (c.items ?? []).map((it) => {
+            const keep = flatIdx4 % 3 === 0;
+            flatIdx4++;
+            return keep ? it : { ...it, modifiers: [], allergens: [] };
+          }),
+        })),
+      };
+      return <OrderCardV4 order={v4Order} onBump={handleBump} />;
+    }
     return (
       <OrderCard
         order={displayOrder}
