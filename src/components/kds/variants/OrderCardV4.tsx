@@ -147,7 +147,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 
 
-export function OrderCardV1({ order, onBump }: Props) {
+export function OrderCardV4({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
