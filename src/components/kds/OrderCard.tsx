@@ -1,6 +1,11 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
+
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, StationName, OrderItem } from '@/types/kds';
 import type { ItemStatus, StationStatus } from './CourseSection';
@@ -1061,45 +1066,86 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
       />
-      {headerOnlyModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onClick={() => setHeaderOnlyModalOpen(false)}
-        >
-          <div
-            className="w-full max-w-[480px] max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              '--kds-item-name': '16px',
-              '--kds-item-qty': '15px',
-              '--kds-modifier': '13px',
-              '--kds-allergen-font': '12px',
-              '--kds-course-header': '12px',
-            } as React.CSSProperties}
-          >
-            <OrderCard
-              order={order}
-              compact={compact}
-              onBump={(id) => { onBump?.(id); setHeaderOnlyModalOpen(false); }}
-              onRecall={onRecall}
-              onFireCourse={onFireCourse}
-              onItemStatusChange={onItemStatusChange}
-              onAcknowledgeNotes={onAcknowledgeNotes}
-              onUnacknowledgeNotes={onUnacknowledgeNotes}
-              onMarkSeen={onMarkSeen}
-              onItemDismiss={onItemDismiss}
-              isAcknowledgmentPending={isAcknowledgmentPending}
-              onBumpBlocked={onBumpBlocked}
-              stationCourse={stationCourse}
-              showAllergens={showAllergens}
-              highlightItemNames={highlightItemNames}
-              compactRows={compactRows}
-              layoutOverride="standard"
-              forceEmphasizedV1Header
-            />
-          </div>
-        </div>
-      )}
+      <HeaderOnlyDrawer
+        open={headerOnlyModalOpen}
+        onClose={() => setHeaderOnlyModalOpen(false)}
+        title={order.tableName || `#${order.orderNumber}`}
+      >
+        <OrderCard
+          order={order}
+          compact={compact}
+          onBump={(id) => { onBump?.(id); setHeaderOnlyModalOpen(false); }}
+          onRecall={onRecall}
+          onFireCourse={onFireCourse}
+          onItemStatusChange={onItemStatusChange}
+          onAcknowledgeNotes={onAcknowledgeNotes}
+          onUnacknowledgeNotes={onUnacknowledgeNotes}
+          onMarkSeen={onMarkSeen}
+          onItemDismiss={onItemDismiss}
+          isAcknowledgmentPending={isAcknowledgmentPending}
+          onBumpBlocked={onBumpBlocked}
+          stationCourse={stationCourse}
+          showAllergens={showAllergens}
+          highlightItemNames={highlightItemNames}
+          compactRows={compactRows}
+          layoutOverride="standard"
+          forceEmphasizedV1Header
+        />
+      </HeaderOnlyDrawer>
     </>
+  );
+}
+
+function HeaderOnlyDrawer({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) {
+  const { layout } = useDockLayout();
+  const insets = getOverlayInsets(layout);
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed bg-black/40 z-40"
+            style={{ left: insets.left, right: insets.right, top: insets.top, bottom: insets.bottom }}
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ x: '110%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '110%' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 280 }}
+            className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
+            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
+          >
+            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
+              <div className="flex-shrink-0 px-4 py-3 border-b border-border flex items-center justify-between">
+                <h2 className="text-lg font-bold text-text-primary truncate">{title}</h2>
+                <button
+                  onClick={onClose}
+                  aria-label="Close ticket"
+                  className="w-10 h-10 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center active:opacity-70 transition-opacity shrink-0"
+                >
+                  <X className="w-5 h-5 text-text-secondary" />
+                </button>
+              </div>
+              <div
+                className="flex-1 overflow-y-auto p-3"
+                style={{
+                  '--kds-item-name': '16px',
+                  '--kds-item-qty': '15px',
+                  '--kds-modifier': '13px',
+                  '--kds-allergen-font': '12px',
+                  '--kds-course-header': '12px',
+                } as React.CSSProperties}
+              >
+                {children}
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
