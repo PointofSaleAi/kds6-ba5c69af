@@ -69,6 +69,7 @@ const App = () => (
               <Route path="/kds/v1" element={<Index cardVariant="v1" />} />
               <Route path="/kds/v2" element={<Index cardVariant="v2" />} />
               <Route path="/kds/v3" element={<Index cardVariant="v3" />} />
+              <Route path="/kds/v4" element={<Index cardVariant="v4" />} />
               <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
               {/* Settings render inside the main KDS shell so the left rail

@@ -43,7 +43,7 @@ type AppScreen =
   | 'performance';
 
 interface IndexProps {
-  cardVariant?: 'default' | 'v1' | 'v2' | 'v3';
+  cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4';
 }
 
 const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
