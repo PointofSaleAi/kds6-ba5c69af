@@ -18,6 +18,7 @@ type Translators = {
   tm: (s: string) => string;
   tmSecondary: (s: string) => string;
   tn: (s: string) => string;
+  tnSecondary: (s: string) => string;
   ta: (s: string) => string;
   showSecondaryMenu: boolean;
   displayMode: string;
