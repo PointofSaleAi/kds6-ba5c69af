@@ -66,7 +66,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
       className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
     >
       <div className="flex gap-1 items-start">
-        <span className="font-bold shrink-0 text-center text-foreground" style={{ fontSize: 13, minWidth: 20, lineHeight: 1.2 }}>
+        <span className="font-semibold shrink-0 text-center text-foreground" style={{ fontSize: 13, minWidth: 20, lineHeight: 1.2 }}>
 
           {product.quantity}
         </span>
@@ -240,7 +240,7 @@ export function OrderCardV4({ order, onBump }: Props) {
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
               <div
-                className="px-2 py-1 text-[11px] font-bold uppercase tracking-wide"
+                className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wide"
                 style={{ background: '#F3F4F6', color: '#374151' }}
               >
                 {courseLabel(course.course)}
