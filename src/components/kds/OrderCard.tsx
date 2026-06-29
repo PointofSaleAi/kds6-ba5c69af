@@ -817,6 +817,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         {...(bare ? {} : ticketLongPress)}
       >
         {/* Header area */}
+        {!suppressHeader && (
         <div
           onClick={isHeaderOnly ? () => setHeaderOnlyModalOpen(true) : undefined}
           className={isHeaderOnly ? 'cursor-pointer' : undefined}
