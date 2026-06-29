@@ -12,6 +12,7 @@ import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
 import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
+import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
