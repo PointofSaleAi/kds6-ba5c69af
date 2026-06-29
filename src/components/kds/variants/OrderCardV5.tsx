@@ -119,17 +119,20 @@ function ProductPill({
             {tx.tp(product.name)}
           </div>
           {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
-            <div
-              className="truncate"
-              dir={tx.secondaryDir}
-              style={{
-                fontSize: 11,
-                fontWeight: 500,
-                color: '#9CA3AF',
-                textDecoration: done ? 'line-through' : 'none',
-              }}
-            >
-              {tx.tpSecondary(product.name)}
+            <div className="flex items-center gap-1">
+              <Languages size={10} color="#6B7280" />
+              <div
+                className="truncate"
+                dir={tx.secondaryDir}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 500,
+                  color: '#9CA3AF',
+                  textDecoration: done ? 'line-through' : 'none',
+                }}
+              >
+                {tx.tpSecondary(product.name)}
+              </div>
             </div>
           )}
         </div>
