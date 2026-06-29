@@ -445,7 +445,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
                 >
                   {durationText}
                 </span>
-                <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
+                <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right truncate">
                   {tperson(order.serverName)}
                 </span>
               </div>
