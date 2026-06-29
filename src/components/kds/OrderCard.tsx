@@ -1149,7 +1149,3 @@ function HeaderOnlyDrawer({ open, onClose, title, children }: { open: boolean; o
     </AnimatePresence>
   );
 }
-
-    </>
-  );
-}
