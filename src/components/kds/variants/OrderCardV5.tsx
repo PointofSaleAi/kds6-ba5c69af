@@ -262,7 +262,7 @@ export function OrderCardV5({ order, onBump }: Props) {
             }}
           >
             <FileText size={14} color="#D1D5DB" className="shrink-0" />
-            <span className="text-white truncate" style={{ fontSize: 12, fontWeight: 500 }}>
+            <span className="text-white break-words" style={{ fontSize: 12, fontWeight: 500 }}>
               {order.orderNotes}
             </span>
           </div>
