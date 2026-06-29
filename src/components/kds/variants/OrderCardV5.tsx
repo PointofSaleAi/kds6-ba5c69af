@@ -180,7 +180,18 @@ function ProductPill({
             />
           )}
           {product.notes && (
-            <ModifierRow prefix={"\u2022"} text={`"${tx.tn(product.notes)}"`} done={done} italic />
+            <ModifierRow
+              prefix={"\u2022"}
+              text={`"${tx.tn(product.notes)}"`}
+              secondaryText={
+                tx.displayMode === 'dual' && tx.showSecondaryMenu
+                  ? `"${tx.tnSecondary(product.notes)}"`
+                  : undefined
+              }
+              secondaryDir={tx.secondaryDir}
+              done={done}
+              italic
+            />
           )}
         </div>
       )}
