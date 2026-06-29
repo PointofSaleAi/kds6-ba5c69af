@@ -239,8 +239,8 @@ export function OrderCardV4({ order, onBump }: Props) {
           order.courses.map((course, idx) => (
             <div key={`${course.course}-${idx}`}>
               <div
-                className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wide"
-                style={{ background: '#F3F4F6', color: '#374151' }}
+                className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-text-primary"
+                style={{ background: '#F3F4F6' }}
               >
                 {courseLabel(course.course)}
               </div>
