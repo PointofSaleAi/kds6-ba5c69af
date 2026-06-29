@@ -187,52 +187,63 @@ function ProductPill({
 function ModifierRow({
   prefix,
   text,
+  secondaryText,
+  secondaryDir,
   done,
   italic,
   tone,
 }: {
   prefix: string;
   text: string;
+  secondaryText?: string;
+  secondaryDir?: 'ltr' | 'rtl';
   done: boolean;
   italic?: boolean;
   tone?: 'allergen';
 }) {
+  const color = tone === 'allergen' ? '#FCA5A5' : '#D1D5DB';
   return (
     <div className="flex items-start gap-1.5" style={{ lineHeight: 1.25 }}>
       <span
         aria-hidden
         className="shrink-0 select-none"
-        style={{
-          color: '#6B7280',
-          fontFamily: 'monospace',
-          fontSize: 11,
-          marginTop: 1,
-        }}
+        style={{ color: '#6B7280', fontFamily: 'monospace', fontSize: 11, marginTop: 1 }}
       >
         {'\u2514\u2500'}
       </span>
       <span
         className="shrink-0"
-        style={{
-          color: tone === 'allergen' ? '#FCA5A5' : '#D1D5DB',
-          fontSize: 11,
-          width: 10,
-          textAlign: 'center',
-        }}
+        style={{ color, fontSize: 11, width: 10, textAlign: 'center' }}
       >
         {prefix}
       </span>
-      <span
-        className="flex-1 min-w-0 truncate"
-        style={{
-          color: tone === 'allergen' ? '#FCA5A5' : '#D1D5DB',
-          fontSize: 11,
-          fontStyle: italic ? 'italic' : 'normal',
-          textDecoration: done ? 'line-through' : 'none',
-        }}
-      >
-        {text}
-      </span>
+      <div className="flex-1 min-w-0">
+        <div
+          className="truncate"
+          style={{
+            color,
+            fontSize: 11,
+            fontStyle: italic ? 'italic' : 'normal',
+            textDecoration: done ? 'line-through' : 'none',
+          }}
+        >
+          {text}
+        </div>
+        {secondaryText && secondaryText !== text && (
+          <div
+            className="truncate"
+            dir={secondaryDir}
+            style={{
+              color: '#9CA3AF',
+              fontSize: 10,
+              fontStyle: italic ? 'italic' : 'normal',
+              textDecoration: done ? 'line-through' : 'none',
+            }}
+          >
+            {secondaryText}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
