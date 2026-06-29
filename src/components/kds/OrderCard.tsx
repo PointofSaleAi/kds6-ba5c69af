@@ -1096,7 +1096,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   );
 }
 
-function HeaderOnlyDrawer({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) {
+function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) {
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
   return (
@@ -1119,19 +1119,16 @@ function HeaderOnlyDrawer({ open, onClose, title, children }: { open: boolean; o
             className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
-            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
-              <div className="flex-shrink-0 px-4 py-3 border-b border-border flex items-center justify-between">
-                <h2 className="text-lg font-bold text-text-primary truncate">{title}</h2>
-                <button
-                  onClick={onClose}
-                  aria-label="Close ticket"
-                  className="w-10 h-10 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center active:opacity-70 transition-opacity shrink-0"
-                >
-                  <X className="w-5 h-5 text-text-secondary" />
-                </button>
-              </div>
+            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
+              <button
+                onClick={onClose}
+                aria-label="Close ticket"
+                className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center active:opacity-70 transition-opacity shrink-0"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
               <div
-                className="flex-1 overflow-y-auto p-3"
+                className="flex-1 overflow-y-auto px-3 pb-3"
                 style={{
                   '--kds-item-name': '16px',
                   '--kds-item-qty': '15px',
