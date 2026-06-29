@@ -129,15 +129,14 @@ function ProductPill({
               done={done}
             />
           ))}
-          {product.allergens.map((a) => (
+          {product.allergens.length > 0 && (
             <ModifierRow
-              key={`a-${a.type}`}
               prefix="!"
-              text={`Allergen: ${a.label}`}
+              text={product.allergens.map((a) => a.label).join(', ')}
               done={done}
               tone="allergen"
             />
-          ))}
+          )}
           {product.notes && (
             <ModifierRow prefix="\u2022" text={`"${product.notes}"`} done={done} italic />
           )}
