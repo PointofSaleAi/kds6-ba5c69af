@@ -1065,6 +1065,13 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           <div
             className="w-full max-w-[480px] max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              '--kds-item-name': '16px',
+              '--kds-item-qty': '15px',
+              '--kds-modifier': '13px',
+              '--kds-allergen-font': '12px',
+              '--kds-course-header': '12px',
+            } as React.CSSProperties}
           >
             <OrderCard
               order={order}
