@@ -1123,13 +1123,6 @@ function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose:
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
-              <button
-                onClick={onClose}
-                aria-label="Close ticket"
-                className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center active:opacity-70 transition-opacity shrink-0"
-              >
-                <X className="w-5 h-5 text-white" />
-              </button>
               <div
                 className="flex-1 overflow-y-auto px-3 pb-3"
                 style={{
