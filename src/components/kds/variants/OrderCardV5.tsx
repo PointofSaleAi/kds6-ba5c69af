@@ -13,11 +13,6 @@ interface Props {
 
 type RowState = 'idle' | 'loading' | 'done';
 
-// Approximate price per product so the row mimics the reference layout.
-function priceFor(p: OrderItem): string {
-  const base = (p.name.length % 9) * 2 + 6; // 6..22 deterministic
-  return `$ ${(base * p.quantity).toFixed(2)}`;
-}
 
 function modifierPrefix(type: 'extra' | 'remove' | 'neutral'): string {
   if (type === 'extra') return '+';
@@ -106,18 +101,6 @@ function ProductPill({
           }}
         >
           {product.name}
-        </span>
-
-        {/* Price */}
-        <span
-          className="shrink-0 text-white"
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            textDecoration: done ? 'line-through' : 'none',
-          }}
-        >
-          {priceFor(product)}
         </span>
 
         {/* Status */}
