@@ -454,3 +454,8 @@
 .v5-dark-scope .v2-header .text-\[\#6B7280\] {
   color: #9CA3AF !important;
 }
+
+/* V5 footer (BottomStatusBar) dark override */
+.v5-dark-scope .bg-brand-dark {
+  background-color: #1B1C20 !important;
+}
