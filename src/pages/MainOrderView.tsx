@@ -1025,6 +1025,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return <OrderCardV4 order={v4Order} onBump={handleBump} />;
     }
+    if (cardVariant === 'v5') {
+      const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
+      const mins = V1_AGING_SPREAD_MIN[idx];
+      const v5Order: Order = {
+        ...displayOrder,
+        timeReceived: new Date(Date.now() - mins * 60_000),
+        elapsedSeconds: mins * 60,
+      };
+      return <OrderCardV5 order={v5Order} onBump={handleBump} />;
+    }
     return (
       <OrderCard
         order={displayOrder}
