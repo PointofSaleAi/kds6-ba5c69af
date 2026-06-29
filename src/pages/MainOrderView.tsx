@@ -281,7 +281,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     // 2 cols on iPad Mini/Air, 3 cols on iPad Pro (viewport >= 960px).
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
-    if (cardVariant === 'v1') {
+    if (cardVariant === 'v1' || cardVariant === 'v4') {
       // V1: 4 / 5 / 6 by viewport width
       if (boardContentWidth < 480) return 3;
       if (boardContentWidth < 1100) return 4;
