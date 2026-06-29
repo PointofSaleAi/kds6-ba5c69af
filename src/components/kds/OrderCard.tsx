@@ -63,6 +63,10 @@ interface OrderCardProps {
   forceEmphasizedV1Header?: boolean;
   /** When true, strips the outer card border/shadow so the content sits inside another container (e.g. the sidebar drawer). */
   bare?: boolean;
+  /** When true, the card's own header area is not rendered (parent provides its own header). */
+  suppressHeader?: boolean;
+  /** When true, kitchen messaging block is not rendered. */
+  suppressKitchenMessages?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
