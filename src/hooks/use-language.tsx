@@ -1814,6 +1814,7 @@ interface LanguageContextType {
   setSecondaryLang: (lang: LanguageCode) => void;
   tpSecondary: (name: string) => string;
   tmSecondary: (text: string) => string;
+  tnSecondary: (text: string) => string;
   dateFormat: DateFormatIndex;
   setDateFormat: (f: DateFormatIndex) => void;
   timeFormat: TimeFormatIndex;
@@ -1851,6 +1852,7 @@ const defaultLanguageContext: LanguageContextType = {
   setSecondaryLang: () => {},
   tpSecondary: (name: string) => name,
   tmSecondary: (text: string) => text,
+  tnSecondary: (text: string) => text,
   scope: 'both',
   setScope: () => {},
   showSecondaryMenu: true,
@@ -1951,6 +1953,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return modifierTexts[secondaryLang]?.[text] || text;
   }, [secondaryLang, scope]);
 
+  const tnSecondary = useCallback((text: string) => {
+    if (!text) return text;
+    if (scope === 'interface') return text;
+    return noteTexts[secondaryLang]?.[text] || text;
+  }, [secondaryLang, scope]);
+
   const tc = useCallback((course: string) => {
     if (scope === 'interface') return course;
     const lang = displayMode === 'dual' ? primaryLang : language;
@@ -2030,6 +2038,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setSecondaryLang,
     tpSecondary,
     tmSecondary,
+    tnSecondary,
     dateFormat,
     setDateFormat,
     timeFormat,
