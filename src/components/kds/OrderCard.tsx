@@ -55,6 +55,8 @@ interface OrderCardProps {
   compactRows?: boolean;
   /** Override the global ticketLayout setting (used by previews). */
   layoutOverride?: 'standard' | 'compact' | 'header';
+  /** Force a specific header style override (used by header-layout modal). */
+  forceEmphasizedV1Header?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -70,7 +72,7 @@ const statusBodyMap: Record<string, string> = {
 
 import { formatTime as formatStaticTime } from '@/lib/datetime';
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { pathname } = useLocation();
   const showCustomerContact =
@@ -811,7 +813,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           role={isHeaderOnly ? 'button' : undefined}
           aria-expanded={isHeaderOnly ? headerOnlyModalOpen : undefined}
         >
-          {ticketHeaderStyle === 'v1' ? (
+          {forceEmphasizedV1Header ? (
+            <V1Header order={order} emphasized />
+          ) : ticketHeaderStyle === 'v1' ? (
             <V1Header order={order} />
           ) : ticketHeaderStyle === 'v2' ? (
             <V2Header order={order} />
@@ -1091,6 +1095,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               highlightItemNames={highlightItemNames}
               compactRows={compactRows}
               layoutOverride="standard"
+              forceEmphasizedV1Header
             />
           </div>
         </div>
