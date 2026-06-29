@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Check, Loader2, FileText } from 'lucide-react';
+import { Check, Loader2, FileText, Languages } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
