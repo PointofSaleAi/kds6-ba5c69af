@@ -1092,6 +1092,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           compactRows={compactRows}
           layoutOverride="standard"
           forceEmphasizedV1Header
+          bare
         />
       </HeaderOnlyDrawer>
     </>
