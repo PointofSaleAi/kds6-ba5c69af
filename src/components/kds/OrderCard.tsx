@@ -1161,21 +1161,21 @@ function DrawerHeader({ order }: { order: Order }) {
         >
           {pillLabel}
         </span>
-        <span
-          className="truncate"
-          style={{ fontSize: 12, fontWeight: 500, color: 'rgba(0,0,0,0.45)' }}
-        >
-          {formatStaticTime(order.timeReceived)}
-        </span>
       </div>
       <div className="flex items-center justify-center" style={{ flex: 1 }}>
         <span style={{ fontSize: 22, fontWeight: 800, color: '#1A1A2E' }}>
           #{order.orderNumber}
         </span>
       </div>
-      <div className="flex items-center justify-end" style={{ flex: 1 }}>
+      <div className="flex items-center justify-end gap-2" style={{ flex: 1 }}>
         <span
-          className="font-mono-timer tabular-nums"
+          className="whitespace-nowrap shrink-0"
+          style={{ fontSize: 12, fontWeight: 500, color: 'rgba(0,0,0,0.45)' }}
+        >
+          {formatStaticTime(order.timeReceived)}
+        </span>
+        <span
+          className="font-mono-timer tabular-nums shrink-0"
           style={{
             background: status.color,
             color: status.textColor,
@@ -1188,6 +1188,7 @@ function DrawerHeader({ order }: { order: Order }) {
           {mm}:{ss}
         </span>
       </div>
+
     </div>
   );
 }
