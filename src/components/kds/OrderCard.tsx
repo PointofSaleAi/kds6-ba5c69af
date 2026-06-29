@@ -82,7 +82,7 @@ const statusBodyMap: Record<string, string> = {
 
 import { formatTime as formatStaticTime } from '@/lib/datetime';
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare, suppressHeader, suppressKitchenMessages }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { pathname } = useLocation();
   const showCustomerContact =
