@@ -176,7 +176,7 @@ function ProductPill({
             />
           )}
           {product.notes && (
-            <ModifierRow prefix="\u2022" text={`"${tx.tn(product.notes)}"`} done={done} italic />
+            <ModifierRow prefix={"\u2022"} text={`"${tx.tn(product.notes)}"`} done={done} italic />
           )}
         </div>
       )}
