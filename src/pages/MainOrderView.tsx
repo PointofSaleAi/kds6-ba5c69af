@@ -12,6 +12,7 @@ import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
 import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
+import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
@@ -59,7 +60,7 @@ interface MainOrderViewProps {
   onSetHistoryCategories?: (cats: string[]) => void;
   onSetHistoryCenters?: (cs: string[]) => void;
   /** Selects an alternate ticket card layout for the home board only. */
-  cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4';
+  cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5';
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
@@ -281,7 +282,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     // 2 cols on iPad Mini/Air, 3 cols on iPad Pro (viewport >= 960px).
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
-    if (cardVariant === 'v1' || cardVariant === 'v4') {
+    if (cardVariant === 'v1' || cardVariant === 'v4' || cardVariant === 'v5') {
       // V1: 4 / 5 / 6 by viewport width
       if (boardContentWidth < 480) return 3;
       if (boardContentWidth < 1100) return 4;
@@ -1024,6 +1025,16 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return <OrderCardV4 order={v4Order} onBump={handleBump} />;
     }
+    if (cardVariant === 'v5') {
+      const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
+      const mins = V1_AGING_SPREAD_MIN[idx];
+      const v5Order: Order = {
+        ...displayOrder,
+        timeReceived: new Date(Date.now() - mins * 60_000),
+        elapsedSeconds: mins * 60,
+      };
+      return <OrderCardV5 order={v5Order} onBump={handleBump} />;
+    }
     return (
       <OrderCard
         order={displayOrder}
@@ -1289,7 +1300,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
                   {viewMode === 'grid' && (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : (cardVariant === 'v1' || cardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : (cardVariant === 'v1' || cardVariant === 'v4' || cardVariant === 'v5') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <HistoryOrderCard order={order} onRecall={handleRecall} onRecallItem={handleRecallItem} expoHeader={kdsMode === 'Expo'} />
@@ -1389,7 +1400,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   ) : viewMode === 'grid' ? (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : (cardVariant === 'v1' || cardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : (cardVariant === 'v1' || cardVariant === 'v4' || cardVariant === 'v5') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
