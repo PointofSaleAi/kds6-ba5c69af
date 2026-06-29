@@ -257,9 +257,9 @@ function ModifierRow({
 
 export function OrderCardV5({ order, onBump }: Props) {
   const { ticketLayout } = useKDSSettings();
-  const { tp, tpSecondary, tm, tmSecondary, tn, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
+  const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
   const tx: Translators = {
-    tp, tpSecondary, tm, tmSecondary, tn, ta,
+    tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta,
     showSecondaryMenu, displayMode,
     secondaryDir: secondaryLang === 'ar' ? 'rtl' : 'ltr',
   };
