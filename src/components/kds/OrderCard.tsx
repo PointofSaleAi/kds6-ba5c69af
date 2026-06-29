@@ -974,7 +974,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           />
         )}
 
-        {!effectiveHeaderOnly && orderMessages.length > 0 && (
+        {!effectiveHeaderOnly && !suppressKitchenMessages && orderMessages.length > 0 && (
           <KitchenMessageSection
             messages={orderMessages}
             replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
