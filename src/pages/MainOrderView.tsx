@@ -1061,7 +1061,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   };
 
   return (
-    <div className={`fixed inset-0 flex bg-surface-bg ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}>
+    <div className={`fixed inset-0 flex bg-surface-bg ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'} ${cardVariant === 'v5' ? 'v5-dark-scope' : ''}`}>
       {/* Kitchen message flash notification */}
       <AnimatePresence>
         {messageFlash && (
