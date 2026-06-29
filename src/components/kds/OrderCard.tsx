@@ -62,6 +62,8 @@ interface OrderCardProps {
   layoutOverride?: 'standard' | 'compact' | 'header';
   /** Force a specific header style override (used by header-layout modal). */
   forceEmphasizedV1Header?: boolean;
+  /** When true, strips the outer card border/shadow so the content sits inside another container (e.g. the sidebar drawer). */
+  bare?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
