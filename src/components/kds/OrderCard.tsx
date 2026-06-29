@@ -848,7 +848,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 style={{
                   backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
                   padding: '12px',
-                  minHeight: isCompactLayout ? undefined : 110,
                 }}
               >
                 {isCompactLayout ? (
@@ -916,15 +915,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   </>
                 ) : (
                   <>
-                    <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1">
+                    <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1 truncate">
                       {displayGuestName ? tperson(displayGuestName) : order.orderNumber}
                     </div>
-                    <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
-                      <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
+                    <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0 min-w-0 max-w-[55%]">
+                      <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap min-w-0 max-w-full">
                         <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                        {tperson(order.serverName)}
+                        <span className="truncate">{tperson(order.serverName)}</span>
                       </span>
-                      <span className="text-[16px] font-semibold text-white">
+                      <span className="text-[16px] font-semibold text-white truncate max-w-full">
                         {order.orderNumber}
                       </span>
                       <div className="flex items-center gap-1.5 mb-0.5">
