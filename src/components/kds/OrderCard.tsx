@@ -1076,7 +1076,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       <HeaderOnlyDrawer
         open={headerOnlyModalOpen}
         onClose={() => setHeaderOnlyModalOpen(false)}
-        title={order.tableName || `#${order.orderNumber}`}
+        order={order}
       >
         <OrderCard
           order={order}
@@ -1096,15 +1096,103 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           highlightItemNames={highlightItemNames}
           compactRows={compactRows}
           layoutOverride="standard"
-          forceEmphasizedV1Header
           bare
+          suppressHeader
+          suppressKitchenMessages
         />
       </HeaderOnlyDrawer>
     </>
   );
 }
 
-function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose: () => void; title: string; children: React.ReactNode }) {
+function DrawerHeader({ order }: { order: Order }) {
+  const { orderTypeDetailedColors } = useKDSSettings();
+  const { getStatusForElapsed } = useStatusRules();
+  const elapsed = useElapsedSeconds(order.timeReceived);
+  const status = getStatusForElapsed(elapsed);
+  const colorSet =
+    orderTypeDetailedColors[order.orderType] ||
+    ({ headerBg: '#1A1A2E', headerText: '#FFFFFF' } as { headerBg: string; headerText: string });
+
+  // Order type pill label: prefer the same value shown on the ticket card header
+  const pillLabel =
+    order.orderType === 'dine-in'
+      ? (order.tableName || 'Dine in')
+      : order.orderType === 'take-out'
+      ? 'Take out'
+      : order.orderType === 'delivery'
+      ? 'Delivery'
+      : order.orderType === 'banquet'
+      ? (order.tableName || 'Banquet')
+      : order.orderType === 'drive-thru'
+      ? 'Drive-thru'
+      : order.orderType === 'curb-side'
+      ? 'Curb-side'
+      : order.orderType === 'scheduled'
+      ? 'Scheduled'
+      : order.orderType === 'phone-in'
+      ? 'Phone in'
+      : (order.tableName || 'Order');
+
+  const mm = Math.floor(elapsed / 60).toString().padStart(2, '0');
+  const ss = Math.floor(elapsed % 60).toString().padStart(2, '0');
+
+  return (
+    <div
+      className="flex items-center"
+      style={{
+        background: '#ffffff',
+        borderBottom: '1px solid rgba(0,0,0,0.08)',
+        padding: '10px 16px',
+      }}
+    >
+      <div className="flex items-center justify-start gap-2" style={{ flex: 1, minWidth: 0 }}>
+        <span
+          className="inline-flex items-center shrink-0"
+          style={{
+            background: colorSet.headerBg,
+            color: '#ffffff',
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.03em',
+            padding: '4px 11px',
+            borderRadius: 20,
+          }}
+        >
+          {pillLabel}
+        </span>
+        <span
+          className="truncate"
+          style={{ fontSize: 12, fontWeight: 500, color: 'rgba(0,0,0,0.45)' }}
+        >
+          {formatStaticTime(order.timeReceived)}
+        </span>
+      </div>
+      <div className="flex items-center justify-center" style={{ flex: 1 }}>
+        <span style={{ fontSize: 22, fontWeight: 800, color: '#1A1A2E' }}>
+          #{order.orderNumber}
+        </span>
+      </div>
+      <div className="flex items-center justify-end" style={{ flex: 1 }}>
+        <span
+          className="font-mono-timer tabular-nums"
+          style={{
+            background: status.color,
+            color: status.textColor,
+            fontSize: 13,
+            fontWeight: 700,
+            padding: '4px 12px',
+            borderRadius: 20,
+          }}
+        >
+          {mm}:{ss}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function HeaderOnlyDrawer({ open, onClose, order, children }: { open: boolean; onClose: () => void; order: Order; children: React.ReactNode }) {
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
   return (
@@ -1128,6 +1216,7 @@ function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose:
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
             <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border-b border-border bg-surface-card flex flex-col">
+              <DrawerHeader order={order} />
               <div
                 className="flex-1 overflow-y-auto"
                 style={{
