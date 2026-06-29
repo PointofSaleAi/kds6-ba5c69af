@@ -884,7 +884,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                         )}
                         <TimerBadge seconds={liveElapsed} urgency={urgency} invertColor className="text-[20px] leading-none font-bold" />
                       </div>
-                      <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right break-words">
+                      <span className="text-[12px] leading-none font-medium text-white/70 max-w-full text-right truncate">
                         {tperson(order.serverName)}
                       </span>
                     </div>
