@@ -326,17 +326,31 @@ export function OrderCardV5({ order, onBump }: Props) {
       {order.orderNotes && (
         <div className="px-2 pt-2">
           <div
-            className="rounded-xl px-2.5 py-2 flex items-center gap-2"
+            className="rounded-xl px-2.5 py-2 flex items-start gap-2"
             style={{
               background:
                 'linear-gradient(180deg, rgba(60,64,73,0.95) 0%, rgba(40,43,50,0.95) 100%)',
               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
             }}
           >
-            <FileText size={14} color="#D1D5DB" className="shrink-0" />
-            <span className="text-white break-words" style={{ fontSize: 12, fontWeight: 500 }}>
-              {tn(order.orderNotes)}
-            </span>
+            <FileText size={14} color="#D1D5DB" className="shrink-0 mt-0.5" />
+            <div className="min-w-0 flex-1">
+              <div className="text-white break-words" style={{ fontSize: 12, fontWeight: 500 }}>
+                {tn(order.orderNotes)}
+              </div>
+              {displayMode === 'dual' && showSecondaryMenu && (
+                <div className="flex items-start gap-1 mt-0.5">
+                  <Languages size={10} color="#6B7280" className="mt-0.5 shrink-0" />
+                  <div
+                    className="break-words"
+                    dir={tx.secondaryDir}
+                    style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}
+                  >
+                    {tnSecondary(order.orderNotes)}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
