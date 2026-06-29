@@ -334,6 +334,7 @@ export function OrderCardV5({ order, onBump }: Props) {
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
               onLongPress={setRecipeProduct}
+              tx={tx}
             />
           ))}
         </div>
