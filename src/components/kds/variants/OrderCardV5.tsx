@@ -244,7 +244,7 @@ function ModifierRow({
         >
           {text}
         </div>
-        {secondaryText && secondaryText !== text && (
+        {secondaryText && (
           <div className="flex items-center gap-1">
             <Languages size={10} color="#6B7280" />
             <div
