@@ -848,7 +848,6 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 style={{
                   backgroundColor: order.isRushed ? '#c0392b' : effectiveStatusColor.color,
                   padding: '12px',
-                  minHeight: isCompactLayout ? undefined : 110,
                 }}
               >
                 {isCompactLayout ? (
