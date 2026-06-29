@@ -806,12 +806,12 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   return (
     <>
       <div
-        className={`rounded-lg overflow-hidden bg-surface-card shadow-sm ${statusBodyMap[order.status] || ''} transition-all duration-300`}
+        className={`${bare ? '' : 'rounded-lg overflow-hidden bg-surface-card shadow-sm'} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
         style={{
-          minWidth: 'min(220px, 100%)',
+          minWidth: bare ? undefined : 'min(220px, 100%)',
           borderLeft: order.isRushed ? '4px solid #c0392b' : undefined,
         }}
-        {...ticketLongPress}
+        {...(bare ? {} : ticketLongPress)}
       >
         {/* Header area */}
         <div
