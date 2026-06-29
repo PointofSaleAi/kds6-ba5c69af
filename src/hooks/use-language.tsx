@@ -1814,6 +1814,7 @@ interface LanguageContextType {
   setSecondaryLang: (lang: LanguageCode) => void;
   tpSecondary: (name: string) => string;
   tmSecondary: (text: string) => string;
+  tnSecondary: (text: string) => string;
   dateFormat: DateFormatIndex;
   setDateFormat: (f: DateFormatIndex) => void;
   timeFormat: TimeFormatIndex;
