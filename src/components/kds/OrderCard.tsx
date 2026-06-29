@@ -1121,7 +1121,7 @@ function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose:
             className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
-            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
+            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-t-0 border-border bg-surface-card flex flex-col">
               <div
                 className="flex-1 overflow-y-auto"
                 style={{
