@@ -7,9 +7,10 @@ import { formatTime } from '@/lib/datetime';
 
 interface Props {
   order: Order;
+  emphasized?: boolean;
 }
 
-export function V1Header({ order }: Props) {
+export function V1Header({ order, emphasized = false }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { orderTypeDetailedColors } = useKDSSettings();
   const { getStatusForElapsed } = useStatusRules();
@@ -18,6 +19,58 @@ export function V1Header({ order }: Props) {
     DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] ||
     DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const status = getStatusForElapsed(elapsed);
+
+  if (emphasized) {
+    return (
+      <div>
+        <div
+          className="text-center uppercase tracking-wide"
+          style={{
+            fontSize: 22,
+            fontWeight: 800,
+            padding: '14px 12px',
+            background: colorSet.headerBg,
+            color: colorSet.headerText,
+            letterSpacing: '0.04em',
+          }}
+        >
+          {order.tableName || orderTypeLabel(order.orderType)}
+        </div>
+        <div
+          className="flex items-center justify-between px-3"
+          style={{
+            background: status.color,
+            color: status.textColor,
+            padding: '10px 14px',
+          }}
+        >
+          <span className="inline-flex items-center gap-2.5">
+            <span style={{ fontSize: 26, fontWeight: 900, lineHeight: 1 }}>
+              #{order.orderNumber}
+            </span>
+            <span
+              className="inline-flex items-center rounded-full font-mono-timer tabular-nums"
+              style={{
+                background: '#1A1A2E',
+                color: '#FFFFFF',
+                fontSize: 14,
+                fontWeight: 700,
+                padding: '4px 12px',
+              }}
+            >
+              {fmtElapsed(elapsed)}
+            </span>
+          </span>
+          <span
+            className="shrink-0"
+            style={{ fontSize: 15, fontWeight: 500, opacity: 0.95 }}
+          >
+            {formatTime(order.timeReceived)}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
