@@ -1118,7 +1118,7 @@ function HeaderOnlyDrawer({ open, onClose, children }: { open: boolean; onClose:
             animate={{ x: 0 }}
             exit={{ x: '110%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed z-50 w-[440px] max-w-[95vw]"
+            className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
             style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
             <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-t-0 border-border bg-surface-card flex flex-col">
