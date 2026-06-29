@@ -59,7 +59,7 @@ interface MainOrderViewProps {
   onSetHistoryCategories?: (cats: string[]) => void;
   onSetHistoryCenters?: (cs: string[]) => void;
   /** Selects an alternate ticket card layout for the home board only. */
-  cardVariant?: 'default' | 'v1' | 'v2' | 'v3';
+  cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4';
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
