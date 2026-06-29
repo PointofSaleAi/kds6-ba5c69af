@@ -1095,6 +1095,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
               highlightItemNames={highlightItemNames}
               compactRows={compactRows}
               layoutOverride="standard"
+              forceEmphasizedV1Header
             />
           </div>
         </div>
