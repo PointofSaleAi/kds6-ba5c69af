@@ -482,9 +482,9 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
                 {order.guestName ? tperson(order.guestName) : order.orderNumber}
               </div>
               <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0">
-                <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap">
+                <span className="flex items-center gap-1 text-[16px] font-medium text-white whitespace-nowrap min-w-0 max-w-full">
                   <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />
-                  {tperson(order.serverName)}
+                  <span className="truncate min-w-0">{tperson(order.serverName)}</span>
                 </span>
                 <span className="text-[16px] font-semibold text-white line-through">
                   {order.orderNumber}
