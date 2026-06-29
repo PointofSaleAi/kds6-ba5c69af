@@ -107,16 +107,32 @@ function ProductPill({
         </span>
 
         {/* Name */}
-        <span
-          className="flex-1 min-w-0 truncate text-white"
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            textDecoration: done ? 'line-through' : 'none',
-          }}
-        >
-          {product.name}
-        </span>
+        <div className="flex-1 min-w-0">
+          <div
+            className="truncate text-white"
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              textDecoration: done ? 'line-through' : 'none',
+            }}
+          >
+            {tx.tp(product.name)}
+          </div>
+          {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
+            <div
+              className="truncate"
+              dir={tx.secondaryDir}
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                color: '#9CA3AF',
+                textDecoration: done ? 'line-through' : 'none',
+              }}
+            >
+              {tx.tpSecondary(product.name)}
+            </div>
+          )}
+        </div>
 
         {/* Status */}
         {loading && (
@@ -136,24 +152,31 @@ function ProductPill({
       {/* Modifier / allergen / notes tree */}
       {hasDetails && (
         <div className="mt-1.5 pl-2">
-          {product.modifiers.map((m, i) => (
-            <ModifierRow
-              key={`m-${i}`}
-              prefix={modifierPrefix(m.type)}
-              text={m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
-              done={done}
-            />
-          ))}
+          {product.modifiers.map((m, i) => {
+            const raw = m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text;
+            return (
+              <ModifierRow
+                key={`m-${i}`}
+                prefix={modifierPrefix(m.type)}
+                text={tx.tm(raw)}
+                secondaryText={
+                  tx.displayMode === 'dual' && tx.showSecondaryMenu ? tx.tmSecondary(raw) : undefined
+                }
+                secondaryDir={tx.secondaryDir}
+                done={done}
+              />
+            );
+          })}
           {product.allergens.length > 0 && (
             <ModifierRow
               prefix="!"
-              text={product.allergens.map((a) => a.label).join(', ')}
+              text={product.allergens.map((a) => tx.ta(a.label)).join(', ')}
               done={done}
               tone="allergen"
             />
           )}
           {product.notes && (
-            <ModifierRow prefix="\u2022" text={`"${product.notes}"`} done={done} italic />
+            <ModifierRow prefix="\u2022" text={`"${tx.tn(product.notes)}"`} done={done} italic />
           )}
         </div>
       )}
