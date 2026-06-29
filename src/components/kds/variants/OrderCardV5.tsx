@@ -39,12 +39,14 @@ function ProductPill({
   onToggle,
   onReset,
   onLongPress,
+  tx,
 }: {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
   onLongPress: (p: OrderItem) => void;
+  tx: Translators;
 }) {
   const done = state === 'done';
   const loading = state === 'loading';
