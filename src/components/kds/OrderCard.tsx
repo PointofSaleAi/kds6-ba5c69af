@@ -1,6 +1,11 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { useDockLayout } from '@/hooks/use-dock-layout';
+import { getOverlayInsets } from '@/lib/dock-insets';
+
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, StationName, OrderItem } from '@/types/kds';
 import type { ItemStatus, StationStatus } from './CourseSection';
