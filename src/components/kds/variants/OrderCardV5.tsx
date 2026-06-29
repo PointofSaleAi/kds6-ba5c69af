@@ -5,11 +5,24 @@ import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { V2Header } from './headers/V2Header';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useLanguage } from '@/hooks/use-language';
 
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
 }
+
+type Translators = {
+  tp: (s: string) => string;
+  tpSecondary: (s: string) => string;
+  tm: (s: string) => string;
+  tmSecondary: (s: string) => string;
+  tn: (s: string) => string;
+  ta: (s: string) => string;
+  showSecondaryMenu: boolean;
+  displayMode: string;
+  secondaryDir: 'ltr' | 'rtl';
+};
 
 type RowState = 'idle' | 'loading' | 'done';
 
@@ -26,12 +39,14 @@ function ProductPill({
   onToggle,
   onReset,
   onLongPress,
+  tx,
 }: {
   product: OrderItem;
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
   onLongPress: (p: OrderItem) => void;
+  tx: Translators;
 }) {
   const done = state === 'done';
   const loading = state === 'loading';
@@ -92,16 +107,32 @@ function ProductPill({
         </span>
 
         {/* Name */}
-        <span
-          className="flex-1 min-w-0 truncate text-white"
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            textDecoration: done ? 'line-through' : 'none',
-          }}
-        >
-          {product.name}
-        </span>
+        <div className="flex-1 min-w-0">
+          <div
+            className="truncate text-white"
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              textDecoration: done ? 'line-through' : 'none',
+            }}
+          >
+            {tx.tp(product.name)}
+          </div>
+          {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
+            <div
+              className="truncate"
+              dir={tx.secondaryDir}
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                color: '#9CA3AF',
+                textDecoration: done ? 'line-through' : 'none',
+              }}
+            >
+              {tx.tpSecondary(product.name)}
+            </div>
+          )}
+        </div>
 
         {/* Status */}
         {loading && (
@@ -121,24 +152,31 @@ function ProductPill({
       {/* Modifier / allergen / notes tree */}
       {hasDetails && (
         <div className="mt-1.5 pl-2">
-          {product.modifiers.map((m, i) => (
-            <ModifierRow
-              key={`m-${i}`}
-              prefix={modifierPrefix(m.type)}
-              text={m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
-              done={done}
-            />
-          ))}
+          {product.modifiers.map((m, i) => {
+            const raw = m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text;
+            return (
+              <ModifierRow
+                key={`m-${i}`}
+                prefix={modifierPrefix(m.type)}
+                text={tx.tm(raw)}
+                secondaryText={
+                  tx.displayMode === 'dual' && tx.showSecondaryMenu ? tx.tmSecondary(raw) : undefined
+                }
+                secondaryDir={tx.secondaryDir}
+                done={done}
+              />
+            );
+          })}
           {product.allergens.length > 0 && (
             <ModifierRow
               prefix="!"
-              text={product.allergens.map((a) => a.label).join(', ')}
+              text={product.allergens.map((a) => tx.ta(a.label)).join(', ')}
               done={done}
               tone="allergen"
             />
           )}
           {product.notes && (
-            <ModifierRow prefix="\u2022" text={`"${product.notes}"`} done={done} italic />
+            <ModifierRow prefix="\u2022" text={`"${tx.tn(product.notes)}"`} done={done} italic />
           )}
         </div>
       )}
@@ -149,58 +187,75 @@ function ProductPill({
 function ModifierRow({
   prefix,
   text,
+  secondaryText,
+  secondaryDir,
   done,
   italic,
   tone,
 }: {
   prefix: string;
   text: string;
+  secondaryText?: string;
+  secondaryDir?: 'ltr' | 'rtl';
   done: boolean;
   italic?: boolean;
   tone?: 'allergen';
 }) {
+  const color = tone === 'allergen' ? '#FCA5A5' : '#D1D5DB';
   return (
     <div className="flex items-start gap-1.5" style={{ lineHeight: 1.25 }}>
       <span
         aria-hidden
         className="shrink-0 select-none"
-        style={{
-          color: '#6B7280',
-          fontFamily: 'monospace',
-          fontSize: 11,
-          marginTop: 1,
-        }}
+        style={{ color: '#6B7280', fontFamily: 'monospace', fontSize: 11, marginTop: 1 }}
       >
         {'\u2514\u2500'}
       </span>
       <span
         className="shrink-0"
-        style={{
-          color: tone === 'allergen' ? '#FCA5A5' : '#D1D5DB',
-          fontSize: 11,
-          width: 10,
-          textAlign: 'center',
-        }}
+        style={{ color, fontSize: 11, width: 10, textAlign: 'center' }}
       >
         {prefix}
       </span>
-      <span
-        className="flex-1 min-w-0 truncate"
-        style={{
-          color: tone === 'allergen' ? '#FCA5A5' : '#D1D5DB',
-          fontSize: 11,
-          fontStyle: italic ? 'italic' : 'normal',
-          textDecoration: done ? 'line-through' : 'none',
-        }}
-      >
-        {text}
-      </span>
+      <div className="flex-1 min-w-0">
+        <div
+          className="truncate"
+          style={{
+            color,
+            fontSize: 11,
+            fontStyle: italic ? 'italic' : 'normal',
+            textDecoration: done ? 'line-through' : 'none',
+          }}
+        >
+          {text}
+        </div>
+        {secondaryText && secondaryText !== text && (
+          <div
+            className="truncate"
+            dir={secondaryDir}
+            style={{
+              color: '#9CA3AF',
+              fontSize: 10,
+              fontStyle: italic ? 'italic' : 'normal',
+              textDecoration: done ? 'line-through' : 'none',
+            }}
+          >
+            {secondaryText}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 export function OrderCardV5({ order, onBump }: Props) {
   const { ticketLayout } = useKDSSettings();
+  const { tp, tpSecondary, tm, tmSecondary, tn, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
+  const tx: Translators = {
+    tp, tpSecondary, tm, tmSecondary, tn, ta,
+    showSecondaryMenu, displayMode,
+    secondaryDir: secondaryLang === 'ar' ? 'rtl' : 'ltr',
+  };
   const isHeaderOnly = ticketLayout === 'header';
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
@@ -262,7 +317,7 @@ export function OrderCardV5({ order, onBump }: Props) {
           >
             <FileText size={14} color="#D1D5DB" className="shrink-0" />
             <span className="text-white break-words" style={{ fontSize: 12, fontWeight: 500 }}>
-              {order.orderNotes}
+              {tn(order.orderNotes)}
             </span>
           </div>
         </div>
@@ -279,6 +334,7 @@ export function OrderCardV5({ order, onBump }: Props) {
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
               onLongPress={setRecipeProduct}
+              tx={tx}
             />
           ))}
         </div>
