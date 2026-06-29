@@ -1852,6 +1852,7 @@ const defaultLanguageContext: LanguageContextType = {
   setSecondaryLang: () => {},
   tpSecondary: (name: string) => name,
   tmSecondary: (text: string) => text,
+  tnSecondary: (text: string) => text,
   scope: 'both',
   setScope: () => {},
   showSecondaryMenu: true,
