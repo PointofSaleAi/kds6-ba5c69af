@@ -963,6 +963,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
           {!effectiveHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
         </div>
+        )}
 
         {!effectiveHeaderOnly && order.orderNotes && (
           <OrderNotesSection
