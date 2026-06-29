@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
 import { useDockLayout } from '@/hooks/use-dock-layout';
 import { getOverlayInsets } from '@/lib/dock-insets';
 
