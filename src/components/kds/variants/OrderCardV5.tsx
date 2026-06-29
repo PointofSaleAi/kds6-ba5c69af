@@ -246,7 +246,7 @@ export function OrderCardV5({ order, onBump }: Props) {
       style={{ background: '#1F2128' }}
     >
       {/* HEADER: reuse V2 header */}
-      <div onClick={isHeaderOnly ? handleBump : undefined} role={isHeaderOnly ? 'button' : undefined}>
+      <div onClick={handleBump} role="button" className="cursor-pointer">
         <V2Header order={order} />
       </div>
 
