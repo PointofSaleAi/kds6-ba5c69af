@@ -813,7 +813,9 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           role={isHeaderOnly ? 'button' : undefined}
           aria-expanded={isHeaderOnly ? headerOnlyModalOpen : undefined}
         >
-          {ticketHeaderStyle === 'v1' ? (
+          {forceEmphasizedV1Header ? (
+            <V1Header order={order} emphasized />
+          ) : ticketHeaderStyle === 'v1' ? (
             <V1Header order={order} />
           ) : ticketHeaderStyle === 'v2' ? (
             <V2Header order={order} />
