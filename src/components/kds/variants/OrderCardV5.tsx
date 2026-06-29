@@ -233,17 +233,20 @@ function ModifierRow({
           {text}
         </div>
         {secondaryText && secondaryText !== text && (
-          <div
-            className="truncate"
-            dir={secondaryDir}
-            style={{
-              color: '#9CA3AF',
-              fontSize: 10,
-              fontStyle: italic ? 'italic' : 'normal',
-              textDecoration: done ? 'line-through' : 'none',
-            }}
-          >
-            {secondaryText}
+          <div className="flex items-center gap-1">
+            <Languages size={10} color="#6B7280" />
+            <div
+              className="truncate"
+              dir={secondaryDir}
+              style={{
+                color: '#9CA3AF',
+                fontSize: 10,
+                fontStyle: italic ? 'italic' : 'normal',
+                textDecoration: done ? 'line-through' : 'none',
+              }}
+            >
+              {secondaryText}
+            </div>
           </div>
         )}
       </div>
