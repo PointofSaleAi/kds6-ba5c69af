@@ -250,6 +250,12 @@ function ModifierRow({
 
 export function OrderCardV5({ order, onBump }: Props) {
   const { ticketLayout } = useKDSSettings();
+  const { tp, tpSecondary, tm, tmSecondary, tn, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
+  const tx: Translators = {
+    tp, tpSecondary, tm, tmSecondary, tn, ta,
+    showSecondaryMenu, displayMode,
+    secondaryDir: secondaryLang === 'ar' ? 'rtl' : 'ltr',
+  };
   const isHeaderOnly = ticketLayout === 'header';
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
