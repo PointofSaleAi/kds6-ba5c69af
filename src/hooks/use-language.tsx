@@ -2038,6 +2038,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setSecondaryLang,
     tpSecondary,
     tmSecondary,
+    tnSecondary,
     dateFormat,
     setDateFormat,
     timeFormat,
