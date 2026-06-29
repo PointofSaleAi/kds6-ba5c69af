@@ -1951,6 +1951,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return modifierTexts[secondaryLang]?.[text] || text;
   }, [secondaryLang, scope]);
 
+  const tnSecondary = useCallback((text: string) => {
+    if (!text) return text;
+    if (scope === 'interface') return text;
+    return noteTexts[secondaryLang]?.[text] || text;
+  }, [secondaryLang, scope]);
+
   const tc = useCallback((course: string) => {
     if (scope === 'interface') return course;
     const lang = displayMode === 'dual' ? primaryLang : language;
