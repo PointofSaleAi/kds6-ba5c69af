@@ -55,6 +55,8 @@ interface OrderCardProps {
   compactRows?: boolean;
   /** Override the global ticketLayout setting (used by previews). */
   layoutOverride?: 'standard' | 'compact' | 'header';
+  /** Force a specific header style override (used by header-layout modal). */
+  forceEmphasizedV1Header?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
