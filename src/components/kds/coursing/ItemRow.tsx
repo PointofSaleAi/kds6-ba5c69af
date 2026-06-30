@@ -45,17 +45,24 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           <div
             dir={secondaryDir}
             className="flex items-center text-[11px] font-bold uppercase"
-            style={{ gap: '6px', marginTop: '1px', color: '#AAAAAA' }}
+            style={{ gap: '6px', marginTop: '1px', color: '#AAAAAA', justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
           >
-            <span className="relative text-[13px] font-normal shrink-0">
-              <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
-              <span className="absolute inset-0 flex items-center justify-center">
-                <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
-                  <Languages size={10} className="text-text-secondary" />
+            {secondaryDir !== 'rtl' && (
+              <span className="relative text-[13px] font-normal shrink-0">
+                <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
+                    <Languages size={10} className="text-text-secondary" />
+                  </span>
                 </span>
               </span>
-            </span>
-            <span style={{ flex: 1, textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}>{tpSecondary(item.name)}</span>
+            )}
+            <span style={{ textAlign: secondaryDir === 'rtl' ? 'right' : 'left', minWidth: 0, overflowWrap: 'anywhere' }}>{tpSecondary(item.name)}</span>
+            {secondaryDir === 'rtl' && (
+              <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
+                <Languages size={10} className="text-text-secondary" />
+              </span>
+            )}
           </div>
         )}
 
