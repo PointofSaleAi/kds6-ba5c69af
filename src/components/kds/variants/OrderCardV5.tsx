@@ -340,7 +340,11 @@ export function OrderCardV5({ order, onBump }: Props) {
                 {displayMode === 'dual' && showSecondaryMenu && (
                   <div
                     className="flex items-start gap-1 mt-0.5"
-                    style={{ justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
+                    style={{
+                      justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start',
+                      paddingRight: tx.secondaryDir === 'rtl' ? 14 : undefined,
+                      position: 'relative',
+                    }}
                   >
                     {tx.secondaryDir !== 'rtl' && (
                       <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
@@ -358,7 +362,11 @@ export function OrderCardV5({ order, onBump }: Props) {
                       {tnSecondary(order.orderNotes)}
                     </div>
                     {tx.secondaryDir === 'rtl' && (
-                      <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                      <Languages
+                        size={10}
+                        className="mt-0.5 shrink-0 text-muted-foreground"
+                        style={{ position: 'absolute', right: 0, top: 0 }}
+                      />
                     )}
                   </div>
                 )}
