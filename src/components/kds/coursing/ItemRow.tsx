@@ -87,7 +87,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true">
               {item.quantity}x
             </span>
-            <div className="text-[11px] text-text-muted italic leading-snug min-w-0">
+            <div className="text-[11px] italic leading-snug min-w-0" style={{ color: '#AAAAAA' }}>
               "{item.notes}"
             </div>
           </div>

@@ -191,6 +191,7 @@ function ProductPill({
               secondaryDir={tx.secondaryDir}
               done={done}
               italic
+              color="#9CA3AF"
             />
           )}
         </div>
@@ -207,6 +208,7 @@ function ModifierRow({
   done,
   italic,
   tone,
+  color: colorProp,
 }: {
   prefix: string;
   text: string;
@@ -215,8 +217,9 @@ function ModifierRow({
   done: boolean;
   italic?: boolean;
   tone?: 'allergen';
+  color?: string;
 }) {
-  const color = tone === 'allergen' ? '#FCA5A5' : '#D1D5DB';
+  const color = colorProp ?? (tone === 'allergen' ? '#FCA5A5' : '#D1D5DB');
   return (
     <div className="flex items-start gap-1.5" style={{ lineHeight: 1.25 }}>
       <span
