@@ -416,4 +416,18 @@
   animation: flag86-pulse 1.4s ease-out infinite;
 }
 
+/* V5 ticket card — preserve original dark theme palette */
+.dark .v5-card {
+  background-color: #1F2128 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+.dark .v5-card [data-v2header] {
+  background-color: #2A2D36 !important;
+}
+.dark .v5-card .v5-pill {
+  background-color: #2A2D36 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+
 

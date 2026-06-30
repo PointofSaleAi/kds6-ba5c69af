@@ -82,9 +82,10 @@ function ProductPill({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
+      className={`v5-pill relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
         loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-60' : ''
       }`}
+
     >
       <div className="flex items-center gap-2">
         {/* Quantity circle */}
@@ -304,7 +305,7 @@ export function OrderCardV5({ order, onBump }: Props) {
   };
 
   return (
-    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div className="v5-card bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER: reuse V2 header */}
       <div onClick={handleBump} role="button" className="cursor-pointer">
         <V2Header order={order} />
@@ -313,7 +314,7 @@ export function OrderCardV5({ order, onBump }: Props) {
       {/* Order notes strip */}
       {order.orderNotes && (
         <div className="px-2 pt-2">
-          <div className="rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
+          <div className="v5-pill rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
             <FileText size={14} className="text-muted-foreground shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
               <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
