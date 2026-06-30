@@ -55,7 +55,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
                 </span>
               </span>
             </span>
-            <span>{tpSecondary(item.name)}</span>
+            <span style={{ flex: 1, textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}>{tpSecondary(item.name)}</span>
           </div>
         )}
 
