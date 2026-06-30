@@ -265,17 +265,24 @@ function ItemTapRow({
             <div
               dir="ltr"
               className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
-              style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1' }}
+              style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1', justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
             >
-              <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block', lineHeight: 1 }}>
-                <span className="invisible" aria-hidden="true">0x</span>
-                <span className="absolute inset-0 flex items-center justify-end">
-                  <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
-                    <Languages size={8} className="text-text-secondary" />
+              {secondaryDir !== 'rtl' && (
+                <span className="relative font-normal shrink-0" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block', lineHeight: 1 }}>
+                  <span className="invisible" aria-hidden="true">0x</span>
+                  <span className="absolute inset-0 flex items-center justify-end">
+                    <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted">
+                      <Languages size={8} className="text-text-secondary" />
+                    </span>
                   </span>
                 </span>
-              </span>
-              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext', flex: 1, textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+              )}
+              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', minWidth: 0, overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+              {secondaryDir === 'rtl' && (
+                <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
+                  <Languages size={8} className="text-text-secondary" />
+                </span>
+              )}
             </div>
           )}
 
