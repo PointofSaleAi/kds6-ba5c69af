@@ -4,6 +4,7 @@ import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
+import { LegacyActionPill } from './LegacyActionPill';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
@@ -703,23 +704,22 @@ function CourseItemTapRow({
           )}
         </div>
         {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
-        {legacyActions && tappable && !is86Active && !show86Pill && (() => {
-          const icon: 'seen' | 'preparing' | 'done' = isDone ? 'done' : isSeen ? 'preparing' : 'seen';
-          const onIconClick = () => {
-            if (isDone) onUndoItem?.(item.id);
-            else onAdvanceItem?.(item.id);
-          };
-          return (
-            <div className="shrink-0 ml-1" onClick={(e) => e.stopPropagation()}>
-              <KdsActionIcon
-                icon={icon}
-                onClick={onIconClick}
-                title={isDone ? 'Undo (back to In Progress)' : isSeen ? 'Mark Done' : 'Mark Seen / In Progress'}
-                label={isDone ? 'Undo' : isSeen ? 'Mark Done' : 'Mark Seen'}
-              />
-            </div>
-          );
-        })()}
+        {legacyActions && tappable && !is86Active && !show86Pill && (
+          <div className="shrink-0 ml-1 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+            {!isSeen && !isDone && (
+              <LegacyActionPill variant="seen" onClick={() => onAdvanceItem?.(item.id)} title="Mark Seen / In Progress" />
+            )}
+            {(isSeen || isDone) && (
+              <LegacyActionPill variant="undo" onClick={() => onUndoItem?.(item.id)} title="Undo" />
+            )}
+            {isSeen && !isDone && (
+              <LegacyActionPill variant="bell" onClick={() => onAdvanceItem?.(item.id)} title="Mark Done" />
+            )}
+            {isDone && (
+              <LegacyActionPill variant="check" onClick={() => onUndoItem?.(item.id)} title="Undo (back to In Progress)" />
+            )}
+          </div>
+        )}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {

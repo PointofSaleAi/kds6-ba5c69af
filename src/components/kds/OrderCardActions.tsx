@@ -9,9 +9,11 @@ interface OrderCardActionsProps {
   ticketState: TicketState;
   onTicketAdvance?: (orderId: string) => void;
   onTicketRecall?: (orderId: string) => void;
+  /** When true, use the rounded-square pill color set from the /old design. */
+  legacyActions?: boolean;
 }
 
-export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTicketRecall }: OrderCardActionsProps) {
+export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTicketRecall, legacyActions }: OrderCardActionsProps) {
   const { t } = useLanguage();
 
   const buttonLabel = ticketState === 'seen'
@@ -20,11 +22,17 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
       ? t.inProgress.toUpperCase()
       : t.done;
 
-  const buttonColorClass = ticketState === 'seen'
-    ? ''
-    : ticketState === 'in-progress'
-      ? 'bg-btn-in-progress'
-      : 'bg-btn-done';
+  const legacyBg =
+    ticketState === 'seen' ? '#3F6FD8'
+    : ticketState === 'in-progress' ? '#E74C3C'
+    : '#7D3C98';
+
+  const defaultBgInline = ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {};
+  const buttonColorClass = !legacyActions && ticketState === 'in-progress'
+    ? 'bg-btn-in-progress'
+    : !legacyActions && ticketState === 'done'
+      ? 'bg-btn-done'
+      : '';
 
   const showUndo = ticketState !== 'seen';
 
@@ -48,7 +56,7 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
       <button
         onClick={() => onTicketAdvance?.(orderId)}
         className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
-        style={{ fontSize: '16px', fontWeight: 700, ...(ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {}) }}
+        style={{ fontSize: '16px', fontWeight: 700, ...(legacyActions ? { backgroundColor: legacyBg } : defaultBgInline) }}
       >
         <IconComponent size={22} color="#FFFFFF" strokeWidth={2.5} />
         {buttonLabel}
