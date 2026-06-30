@@ -66,6 +66,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Navigate to="/kds/full" replace />} />
               <Route path="/kds/full" element={<Index />} />
+              <Route path="/kds/old" element={<Index legacyActions />} />
               <Route path="/kds/v1" element={<Index cardVariant="v1" />} />
               <Route path="/kds/v2" element={<Index cardVariant="v2" />} />
               <Route path="/kds/v3" element={<Index cardVariant="v3" />} />
@@ -76,6 +77,18 @@ const App = () => (
               {/* Settings render inside the main KDS shell so the left rail
                   and bottom status bar stay visible. */}
               <Route path="/kds/full/settings" element={<Index />}>
+                <Route index element={<Navigate to="display" replace />} />
+                <Route path="display" element={<DisplaySettings />} />
+                <Route path="orders" element={<OrdersSettings />} />
+                <Route path="expo" element={<ExpoSettings />} />
+                <Route path="hardware" element={<HardwareSettings />} />
+                <Route path="system" element={<SystemSettings />} />
+                <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
+                <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
+                <Route path="account" element={<AccountSettings />} />
+              </Route>
+
+              <Route path="/kds/old/settings" element={<Index legacyActions />}>
                 <Route index element={<Navigate to="display" replace />} />
                 <Route path="display" element={<DisplaySettings />} />
                 <Route path="orders" element={<OrdersSettings />} />

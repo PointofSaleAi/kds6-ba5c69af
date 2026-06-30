@@ -67,6 +67,8 @@ interface OrderCardProps {
   suppressHeader?: boolean;
   /** When true, kitchen messaging block is not rendered. */
   suppressKitchenMessages?: boolean;
+  /** When true, restore legacy per-product icon actions on product rows. */
+  legacyActions?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -82,7 +84,7 @@ const statusBodyMap: Record<string, string> = {
 
 import { formatTime as formatStaticTime } from '@/lib/datetime';
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare, suppressHeader, suppressKitchenMessages }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare, suppressHeader, suppressKitchenMessages, legacyActions }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { pathname } = useLocation();
   const showCustomerContact =
@@ -1034,6 +1036,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                       compactRows={compactRows}
                       seenOrderIndex={seenOrderIndex}
                       ticketLayoutMode={innerLayoutMode}
+                      legacyActions={legacyActions}
                     />
                   );
                 })
@@ -1054,6 +1057,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 dismissedItemIds={dismissedItemIds}
                 onDismissItem={handleDismissItem}
                 ticketLayoutMode={innerLayoutMode}
+                legacyActions={legacyActions}
               />
             )}
           </div>

@@ -61,6 +61,8 @@ interface MainOrderViewProps {
   onSetHistoryCenters?: (cs: string[]) => void;
   /** Selects an alternate ticket card layout for the home board only. */
   cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5';
+  /** When true, restore legacy per-product icon actions on product rows. */
+  legacyActions?: boolean;
 }
 
 function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
@@ -72,7 +74,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default' }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default', legacyActions = false }: MainOrderViewProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
@@ -1056,6 +1058,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         isAcknowledgmentPending={isAcknowledgmentPending}
         onBumpBlocked={handleBumpBlocked}
         compactRows={opts?.compactRows}
+        legacyActions={legacyActions}
       />
     );
   };

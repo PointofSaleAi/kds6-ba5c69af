@@ -44,16 +44,18 @@ type AppScreen =
 
 interface IndexProps {
   cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5';
+  legacyActions?: boolean;
 }
 
-const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
+const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = {}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const inSettings = location.pathname.startsWith('/kds/full/settings');
+  const basePath = legacyActions ? '/kds/old' : '/kds/full';
+  const inSettings = location.pathname.startsWith(`${basePath}/settings`);
   const isVariantRoute = cardVariant !== 'default';
   // When opened directly on a settings or variant route, skip dev selector and go to main.
   const [screen, setScreen] = useState<AppScreen>(
-    (inSettings || isVariantRoute) ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
+    (inSettings || isVariantRoute || legacyActions) ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
   );
   const [alertsOpen, setAlertsOpen] = useState(false);
 
@@ -100,12 +102,12 @@ const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
-      case 'home': navigate('/kds/full'); setScreen('main'); break;
+      case 'home': navigate(basePath); setScreen('main'); break;
       case 'alerts': setAlertsOpen((v) => !v); break;
-      case 'settings': navigate('/kds/full/settings'); break;
+      case 'settings': navigate(`${basePath}/settings`); break;
       case 'performance': setScreen('performance'); break;
     }
-  }, [navigate]);
+  }, [navigate, basePath]);
 
   // Keep main screen mounted whenever we land on a settings route.
   useEffect(() => {
@@ -176,7 +178,7 @@ const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
         <MainOrderView
           onNavigate={handleNavigate}
           settingsOpen={inSettings}
-          onCloseSettings={() => navigate('/kds/full')}
+          onCloseSettings={() => navigate(basePath)}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
@@ -187,6 +189,7 @@ const Index = ({ cardVariant = 'default' }: IndexProps = {}) => {
           onSetHistoryCategories={setHistoryCategories}
           onSetHistoryCenters={setHistoryCenters}
           cardVariant={cardVariant}
+          legacyActions={legacyActions}
         />
       )}
 

@@ -42,6 +42,8 @@ interface CourseSectionProps {
   seenOrderIndex?: Map<string, number>;
   /** Override the global ticketLayout (used by previews). */
   ticketLayoutMode?: 'standard' | 'compact';
+  /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
+  legacyActions?: boolean;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -95,7 +97,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode, legacyActions }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang, tl } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
@@ -422,6 +424,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 compactRows={compactRows}
                 seenIdx={seenOrderIndex?.get(item.id)}
                 ticketLayoutCompact={ticketLayoutCompact}
+                legacyActions={legacyActions}
               />
             );
           });
@@ -474,6 +477,7 @@ interface CourseItemTapRowProps {
   compactRows?: boolean;
   seenIdx?: number;
   ticketLayoutCompact?: boolean;
+  legacyActions?: boolean;
 }
 
 function CourseItemTapRow({
@@ -483,7 +487,7 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
-  compactRows, seenIdx, ticketLayoutCompact,
+  compactRows, seenIdx, ticketLayoutCompact, legacyActions,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn, confirm: confirm86 } = useFlag86();
@@ -580,16 +584,16 @@ function CourseItemTapRow({
       }}
     >
       <div
-        className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
+        className={`flex items-center transition-colors select-none ${tappable && !legacyActions ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{
           padding: isolateModifierRows ? '0px 8px 0 8px' : headerPad,
           gap: 0,
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
-        onClick={tappable ? handleTap : undefined}
+        onClick={tappable && !legacyActions ? handleTap : undefined}
         {...longPressRow}
-        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86') : undefined}
+        title={tappable ? (legacyActions ? 'Hold to 86' : (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')) : undefined}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
@@ -699,6 +703,23 @@ function CourseItemTapRow({
           )}
         </div>
         {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
+        {legacyActions && tappable && !is86Active && !show86Pill && (() => {
+          const icon: 'seen' | 'preparing' | 'done' = isDone ? 'done' : isSeen ? 'preparing' : 'seen';
+          const onIconClick = () => {
+            if (isDone) onUndoItem?.(item.id);
+            else onAdvanceItem?.(item.id);
+          };
+          return (
+            <div className="shrink-0 ml-1" onClick={(e) => e.stopPropagation()}>
+              <KdsActionIcon
+                icon={icon}
+                onClick={onIconClick}
+                title={isDone ? 'Undo (back to In Progress)' : isSeen ? 'Mark Done' : 'Mark Seen / In Progress'}
+                label={isDone ? 'Undo' : isSeen ? 'Mark Done' : 'Mark Seen'}
+              />
+            </div>
+          );
+        })()}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
