@@ -1,6 +1,9 @@
-import { Eye, ConciergeBell, Check, CheckCircle } from 'lucide-react';
+import { Eye, ConciergeBell, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import undoIcon from '@/assets/undo-icon.svg';
+import seenIcon from '@/assets/seen-icon.svg';
+import preparingIcon from '@/assets/preparing-icon.svg';
+import itemReadyIcon from '@/assets/item-ready-icon.svg';
 
 export type TicketState = 'seen' | 'in-progress' | 'done';
 
