@@ -23,27 +23,28 @@ export type OrderTypeDetailedColors = Record<string, OrderTypeColorSet>;
 
 export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
   'dine-in': '#1A1A2E',
-  'take-out': '#1B4F8A',
-  'delivery': '#5B21B6',
-  'banquet': '#1F4E79',
-  'drive-thru': '#065F46',
-  'curb-side': '#0E7460',
-  'scheduled': '#1E3A5F',
-  'phone-in': '#164E63',
-  'custom': '#312E81',
+  'take-out': '#2563EB',
+  'delivery': '#7C3AED',
+  'banquet': '#0E7490',
+  'drive-thru': '#15803D',
+  'curb-side': '#134E4A',
+  'scheduled': '#3730A3',
+  'phone-in': '#334155',
+  'custom': '#581C87',
 };
 
 export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
   'dine-in': { headerBg: '#1A1A2E', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'take-out': { headerBg: '#1B4F8A', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'delivery': { headerBg: '#5B21B6', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'banquet': { headerBg: '#1F4E79', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'drive-thru': { headerBg: '#065F46', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'curb-side': { headerBg: '#0E7460', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'scheduled': { headerBg: '#1E3A5F', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'phone-in': { headerBg: '#164E63', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'custom': { headerBg: '#312E81', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'take-out': { headerBg: '#2563EB', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'delivery': { headerBg: '#7C3AED', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'banquet': { headerBg: '#0E7490', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'drive-thru': { headerBg: '#15803D', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'curb-side': { headerBg: '#134E4A', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'scheduled': { headerBg: '#3730A3', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'phone-in': { headerBg: '#334155', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'custom': { headerBg: '#581C87', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
 };
+
 
 export interface KDSSettings {
   cardsPerRow: number;
