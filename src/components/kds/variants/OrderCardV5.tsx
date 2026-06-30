@@ -232,7 +232,7 @@ function ModifierRow({
       <div className="flex-1 min-w-0">
         <div style={{ display: 'inline-block', maxWidth: '100%', minWidth: 0 }}>
           <div
-            className={`truncate ${colorClass}`}
+            className={`break-words ${colorClass}`}
             style={{
               fontSize: 11,
               fontWeight: 500,
@@ -251,7 +251,7 @@ function ModifierRow({
                 <Languages size={10} className="text-muted-foreground shrink-0" />
               )}
               <div
-                className="truncate text-muted-foreground"
+                className="break-words text-muted-foreground"
                 dir={secondaryDir}
                 style={{
                   fontSize: 10,
