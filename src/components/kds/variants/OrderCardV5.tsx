@@ -242,8 +242,13 @@ function ModifierRow({
           {text}
         </div>
         {secondaryText && (
-          <div className="flex items-center gap-1">
-            <Languages size={10} className="text-muted-foreground" />
+          <div
+            className="flex items-center gap-1"
+            style={{ justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
+          >
+            {secondaryDir !== 'rtl' && (
+              <Languages size={10} className="text-muted-foreground shrink-0" />
+            )}
             <div
               className="truncate text-muted-foreground"
               dir={secondaryDir}
@@ -251,10 +256,15 @@ function ModifierRow({
                 fontSize: 10,
                 fontStyle: italic ? 'italic' : 'normal',
                 textDecoration: done ? 'line-through' : 'none',
+                textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+                minWidth: 0,
               }}
             >
               {secondaryText}
             </div>
+            {secondaryDir === 'rtl' && (
+              <Languages size={10} className="text-muted-foreground shrink-0" />
+            )}
           </div>
         )}
       </div>
