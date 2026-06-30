@@ -191,6 +191,7 @@ function ProductPill({
               secondaryDir={tx.secondaryDir}
               done={done}
               italic
+              color="#9CA3AF"
             />
           )}
         </div>
