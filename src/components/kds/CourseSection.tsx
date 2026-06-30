@@ -538,6 +538,7 @@ function CourseItemTapRow({
 
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
+  const hasSecondaryLine = showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled;
   const hasModifiers = item.modifiers.length > 0;
   // A modifier is "servable" (independently actionable) only if the feature is on,
   // the modifier is flagged servable, it is not a removal, and it has an id.
@@ -650,15 +651,15 @@ function CourseItemTapRow({
                     >
                       {tp(item.name)}
                     </span>
-                    {showDetails && showAllergens && item.allergens.map((a) => (
+                    {!hasSecondaryLine && showDetails && showAllergens && item.allergens.map((a) => (
                       <AllergenBadge key={a.type} allergen={a} variant="item" />
                     ))}
                   </span>
                 }
-                secondary={showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled ? (
+                secondary={hasSecondaryLine ? (
                   <div
                     dir="ltr"
-                    className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
+                    className={`flex flex-wrap items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
                     style={{
                       gap: '4px',
                       marginBottom: '0px',
@@ -671,7 +672,10 @@ function CourseItemTapRow({
                     <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                       <Languages size={8} className="text-text-secondary" />
                     </span>
-                    <span className="min-w-0 flex-1" style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+                    <span className="min-w-0" style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+                    {showAllergens && item.allergens.map((a) => (
+                      <AllergenBadge key={a.type} allergen={a} variant="item" />
+                    ))}
                   </div>
                 ) : undefined}
               />
