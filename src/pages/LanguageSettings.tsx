@@ -19,6 +19,10 @@ const languages: Language[] = [
   { code: 'en-GB', name: 'English (UK)', native: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
   { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
+  { code: 'zh', name: 'Chinese', native: '中文', flag: '🇨🇳' },
+  { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'ko', name: 'Korean', native: '한국어', flag: '🇰🇷' },
+  { code: 'ja', name: 'Japanese', native: '日本語', flag: '🇯🇵' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
@@ -26,6 +30,10 @@ const translations: Record<string, Record<string, string>> = {
   'en-GB': { fries: 'Chips', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
   es: { fries: 'Papas fritas', chicken: 'Pollo a la parrilla', salad: 'Ensalada César' },
   ar: { fries: 'بطاطس مقلية', chicken: 'دجاج مشوي', salad: 'سلطة سيزر' },
+  zh: { fries: '薯条', chicken: '烤鸡', salad: '凯撒沙拉' },
+  vi: { fries: 'Khoai tây chiên', chicken: 'Gà nướng', salad: 'Salad Caesar' },
+  ko: { fries: '감자튀김', chicken: '그릴드 치킨', salad: '시저 샐러드' },
+  ja: { fries: 'フライドポテト', chicken: 'グリルドチキン', salad: 'シーザーサラダ' },
 };
 
 const previewItems = [
