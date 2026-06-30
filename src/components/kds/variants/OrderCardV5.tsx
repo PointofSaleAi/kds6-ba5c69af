@@ -82,9 +82,10 @@ function ProductPill({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
+      className={`v5-pill relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
         loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-60' : ''
       }`}
+
     >
       <div className="flex items-center gap-2">
         {/* Quantity circle */}
