@@ -26,14 +26,22 @@ export function TightWidthBox({
     const el = primaryRef.current;
     if (!el) return;
     try {
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      const rects = range.getClientRects();
       let max = 0;
-      for (let i = 0; i < rects.length; i++) {
-        if (rects[i].width > max) max = rects[i].width;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        const text = (node as Text).nodeValue ?? '';
+        if (text.trim().length > 0) {
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const rects = range.getClientRects();
+          for (let i = 0; i < rects.length; i++) {
+            if (rects[i].width > max) max = rects[i].width;
+          }
+          range.detach?.();
+        }
+        node = walker.nextNode();
       }
-      range.detach?.();
       if (max > 0) setWidth(Math.ceil(max));
     } catch {
       /* noop */
