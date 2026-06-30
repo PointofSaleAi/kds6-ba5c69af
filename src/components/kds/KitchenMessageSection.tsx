@@ -59,9 +59,9 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                   <button
                     onClick={() => setReplyTarget(msg)}
                     aria-label="Reply"
-                    className="w-7 h-7 rounded-md bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center hover:bg-[#7C3AED]/20 transition-colors"
+                    className="w-7 h-7 rounded-md bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
                   >
-                    <Reply size={14} />
+                    <Reply size={20} strokeWidth={2.5} className="text-gray-800" />
                   </button>
                 </div>
               )}
