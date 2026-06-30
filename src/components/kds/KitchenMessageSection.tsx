@@ -57,9 +57,10 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                   <button
                     onClick={() => onAcknowledge(msg.message_id)}
                     aria-label="Acknowledge"
-                    className="w-7 h-7 rounded-md bg-success/10 text-success flex items-center justify-center hover:bg-success/20 transition-colors"
+                    className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
+                    style={{ backgroundColor: '#EBD7FF' }}
                   >
-                    <Check size={14} />
+                    <Check size={14} color="#9226FE" strokeWidth={2.5} />
                   </button>
                 </div>
               )}
