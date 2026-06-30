@@ -335,15 +335,28 @@ export function OrderCardV5({ order, onBump }: Props) {
                 {tn(order.orderNotes)}
               </div>
               {displayMode === 'dual' && showSecondaryMenu && (
-                <div className="flex items-start gap-1 mt-0.5">
-                  <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                <div
+                  className="flex items-start gap-1 mt-0.5"
+                  style={{ justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
+                >
+                  {tx.secondaryDir !== 'rtl' && (
+                    <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                  )}
                   <div
                     className="break-words text-muted-foreground"
                     dir={tx.secondaryDir}
-                    style={{ fontSize: 11, fontWeight: 500 }}
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 500,
+                      textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                      minWidth: 0,
+                    }}
                   >
                     {tnSecondary(order.orderNotes)}
                   </div>
+                  {tx.secondaryDir === 'rtl' && (
+                    <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                  )}
                 </div>
               )}
             </div>
