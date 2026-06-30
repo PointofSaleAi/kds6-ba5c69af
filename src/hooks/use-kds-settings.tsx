@@ -88,7 +88,9 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings-v2';
+const STORAGE_KEY = 'posai-kds-settings-v3';
+const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v2'];
+
 
 const defaults: KDSSettings = {
   cardsPerRow: 4,
