@@ -275,17 +275,20 @@ function ModifierRow({
 }
 
 /**
- * Wraps children whose first child is the "primary" text block. Measures the
- * widest rendered (wrapped) line of that text and sizes itself to that width,
- * so siblings (e.g. RTL secondary text) right-align to the primary's true edge.
+ * Renders a primary text block at its natural (wrapping) width and, if a
+ * secondary block is provided, sizes the secondary container to the widest
+ * rendered line of the primary. The primary itself is never width-constrained,
+ * so it wraps naturally; only the secondary aligns to the primary's true edge.
  */
 function TightWidthBox({
-  children,
+  primary,
+  secondary,
   deps = [],
   className,
   style,
 }: {
-  children: ReactNode;
+  primary: ReactNode;
+  secondary?: ReactNode;
   deps?: unknown[];
   className?: string;
   style?: React.CSSProperties;
@@ -326,16 +329,11 @@ function TightWidthBox({
   }, [measure, ...deps]);
 
   return (
-    <div
-      ref={wrapperRef}
-      className={className}
-      style={{ width, maxWidth: '100%', minWidth: 0, ...style }}
-    >
-      <div ref={primaryRef}>
-        {/* primary slot */}
-        {Array.isArray(children) ? children[0] : children}
-      </div>
-      {Array.isArray(children) ? children.slice(1) : null}
+    <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
+      <div ref={primaryRef}>{primary}</div>
+      {secondary && (
+        <div style={{ width, maxWidth: '100%' }}>{secondary}</div>
+      )}
     </div>
   );
 }
@@ -401,35 +399,39 @@ export function OrderCardV5({ order, onBump }: Props) {
             <div className="min-w-0 flex-1">
               <TightWidthBox
                 deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
-              >
-                <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
-                  {tn(order.orderNotes)}
-                </div>
-                {displayMode === 'dual' && showSecondaryMenu && (
-                  <div
-                    className="flex items-start gap-1 mt-0.5"
-                    style={{
-                      flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
-                    <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                primary={
+                  <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
+                    {tn(order.orderNotes)}
+                  </div>
+                }
+                secondary={
+                  displayMode === 'dual' && showSecondaryMenu ? (
                     <div
-                      className="break-words text-muted-foreground"
-                      dir={tx.secondaryDir}
+                      className="flex items-start gap-1 mt-0.5"
                       style={{
-                        fontSize: 11,
-                        fontWeight: 500,
-                        textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
-                        minWidth: 0,
-                        flex: 1,
+                        flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
+                        justifyContent: 'flex-start',
                       }}
                     >
-                      {tnSecondary(order.orderNotes)}
+                      <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                      <div
+                        className="break-words text-muted-foreground"
+                        dir={tx.secondaryDir}
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 500,
+                          textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                          minWidth: 0,
+                          flex: 1,
+                        }}
+                      >
+                        {tnSecondary(order.orderNotes)}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </TightWidthBox>
+                  ) : undefined
+                }
+              />
+
             </div>
           </div>
         </div>
