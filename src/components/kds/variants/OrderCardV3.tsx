@@ -108,19 +108,17 @@ function ProductRow({
         {product.quantity}
       </span>
       <div className="flex-1 min-w-0">
-        <div
-          className="text-foreground"
-          style={{ fontSize: 11, fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
-        >
-          {product.name}
+        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+          <span
+            className="text-foreground"
+            style={{ fontSize: 11, fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+          >
+            {product.name}
+          </span>
+          {showDetails && product.allergens.map((a) => (
+            <AllergenBadge key={a.type} allergen={a} variant="item" />
+          ))}
         </div>
-        {showDetails && product.allergens.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-0.5">
-            {product.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} variant="item" />
-            ))}
-          </div>
-        )}
         {showDetails && product.modifiers.length > 0 && (
           <div className="mt-0">
             {product.modifiers.map((m, i) => (
