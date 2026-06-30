@@ -27,71 +27,6 @@ type Translators = {
 
 type RowState = 'idle' | 'loading' | 'done';
 
-function SecondaryTranslationLine({
-  text,
-  dir,
-  done,
-  italic,
-  fontSize = 10,
-  wrap = false,
-}: {
-  text: string;
-  dir: 'ltr' | 'rtl';
-  done?: boolean;
-  italic?: boolean;
-  fontSize?: number;
-  wrap?: boolean;
-}) {
-  const rtl = dir === 'rtl';
-
-  if (rtl) {
-    return (
-      <div className="relative mt-0.5 overflow-visible">
-        <div
-          className={`text-muted-foreground ${wrap ? 'break-words' : 'truncate'}`}
-          dir="rtl"
-          style={{
-            fontSize,
-            fontWeight: 500,
-            fontStyle: italic ? 'italic' : 'normal',
-            textDecoration: done ? 'line-through' : 'none',
-            textAlign: 'right',
-            minWidth: 0,
-          }}
-        >
-          {text}
-        </div>
-        <Languages
-          size={10}
-          className="absolute top-0.5 text-muted-foreground"
-          style={{ right: -14 }}
-          aria-hidden
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex items-start gap-1 mt-0.5 justify-start">
-      <Languages size={10} className="mt-0.5 text-muted-foreground shrink-0" aria-hidden />
-      <div
-        className={`text-muted-foreground ${wrap ? 'break-words' : 'truncate'}`}
-        dir="ltr"
-        style={{
-          fontSize,
-          fontWeight: 500,
-          fontStyle: italic ? 'italic' : 'normal',
-          textDecoration: done ? 'line-through' : 'none',
-          textAlign: 'left',
-          minWidth: 0,
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-}
-
 
 function modifierPrefix(type: 'extra' | 'remove' | 'neutral'): string {
   if (type === 'extra') return '+';
@@ -180,12 +115,22 @@ function ProductPill({
               {tx.tp(product.name)}
             </div>
             {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
-              <SecondaryTranslationLine
-                text={tx.tpSecondary(product.name)}
-                dir={tx.secondaryDir}
-                done={done}
-                fontSize={11}
-              />
+              <div className="flex items-center gap-1" style={{ justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}>
+                {tx.secondaryDir !== 'rtl' && <Languages size={10} className="text-muted-foreground shrink-0" />}
+                <div
+                  className="truncate text-muted-foreground"
+                  dir={tx.secondaryDir}
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 500,
+                    textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                    textDecoration: done ? 'line-through' : 'none',
+                  }}
+                >
+                  {tx.tpSecondary(product.name)}
+                </div>
+                {tx.secondaryDir === 'rtl' && <Languages size={10} className="text-muted-foreground shrink-0" />}
+              </div>
             )}
           </div>
         </div>
@@ -298,12 +243,30 @@ function ModifierRow({
             {text}
           </div>
           {secondaryText && (
-            <SecondaryTranslationLine
-              text={secondaryText}
-              dir={secondaryDir ?? 'ltr'}
-              done={done}
-              italic={italic}
-            />
+            <div
+              className="flex items-center gap-1"
+              style={{ justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
+            >
+              {secondaryDir !== 'rtl' && (
+                <Languages size={10} className="text-muted-foreground shrink-0" />
+              )}
+              <div
+                className="truncate text-muted-foreground"
+                dir={secondaryDir}
+                style={{
+                  fontSize: 10,
+                  fontStyle: italic ? 'italic' : 'normal',
+                  textDecoration: done ? 'line-through' : 'none',
+                  textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+                  minWidth: 0,
+                }}
+              >
+                {secondaryText}
+              </div>
+              {secondaryDir === 'rtl' && (
+                <Languages size={10} className="text-muted-foreground shrink-0" />
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -375,12 +338,37 @@ export function OrderCardV5({ order, onBump }: Props) {
                   {tn(order.orderNotes)}
                 </div>
                 {displayMode === 'dual' && showSecondaryMenu && (
-                  <SecondaryTranslationLine
-                    text={tnSecondary(order.orderNotes)}
-                    dir={tx.secondaryDir}
-                    fontSize={11}
-                    wrap
-                  />
+                  <div
+                    className="flex items-start gap-1 mt-0.5"
+                    style={{
+                      justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start',
+                      paddingRight: tx.secondaryDir === 'rtl' ? 14 : undefined,
+                      position: 'relative',
+                    }}
+                  >
+                    {tx.secondaryDir !== 'rtl' && (
+                      <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                    )}
+                    <div
+                      className="break-words text-muted-foreground"
+                      dir={tx.secondaryDir}
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 500,
+                        textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                        minWidth: 0,
+                      }}
+                    >
+                      {tnSecondary(order.orderNotes)}
+                    </div>
+                    {tx.secondaryDir === 'rtl' && (
+                      <Languages
+                        size={10}
+                        className="mt-0.5 shrink-0 text-muted-foreground"
+                        style={{ position: 'absolute', right: 0, top: 0 }}
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             </div>
