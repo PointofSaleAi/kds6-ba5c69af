@@ -241,6 +241,7 @@ function ModifierRow({
           style={{
             color,
             fontSize: 11,
+            fontWeight: 500,
             fontStyle: italic ? 'italic' : 'normal',
             textDecoration: done ? 'line-through' : 'none',
           }}
