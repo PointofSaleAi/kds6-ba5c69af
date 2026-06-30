@@ -638,16 +638,21 @@ function CourseItemTapRow({
                 constrainSecondary={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir, isHighlighted]}
                 primary={
-                  <span
-                    className={`block font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
-                    style={{
-                      fontSize: 'var(--kds-item-name)',
-                      lineHeight: 1.1,
-                      wordBreak: 'break-word',
-                      ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
-                    }}
-                  >
-                    {tp(item.name)}
+                  <span className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <span
+                      className={`font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+                      style={{
+                        fontSize: 'var(--kds-item-name)',
+                        lineHeight: 1.1,
+                        wordBreak: 'break-word',
+                        ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
+                      }}
+                    >
+                      {tp(item.name)}
+                    </span>
+                    {showDetails && showAllergens && item.allergens.map((a) => (
+                      <AllergenBadge key={a.type} allergen={a} variant="item" />
+                    ))}
                   </span>
                 }
                 secondary={showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled ? (
@@ -694,18 +699,6 @@ function CourseItemTapRow({
             )}
           </div>
 
-          {showDetails && showAllergens && item.allergens.length > 0 && (
-            <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', lineHeight: 1 }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
-                0x
-              </span>
-              <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
-                {item.allergens.map((a) => (
-                  <AllergenBadge key={a.type} allergen={a} variant="item" />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
         {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
         {legacyActions && tappable && !is86Active && !show86Pill && (
