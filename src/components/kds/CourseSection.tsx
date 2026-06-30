@@ -4,6 +4,7 @@ import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
+import { LegacyActionPill } from './LegacyActionPill';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
