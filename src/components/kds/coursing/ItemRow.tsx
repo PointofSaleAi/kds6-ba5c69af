@@ -20,12 +20,33 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-start flex-nowrap min-w-0" style={{ gap: '6px', lineHeight: 1.1 }}>
-          <span className="text-[13px] font-normal text-text-secondary">
+          <span className="text-[13px] font-normal text-text-secondary shrink-0">
             {item.quantity}×
           </span>
-          <span className="text-[13px] font-bold text-text-primary uppercase min-w-0 flex-1 break-words" style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
-            {tp(item.name)}
-          </span>
+          <div className="flex-1 min-w-0 flex flex-col" style={{ gap: '1px' }}>
+            <span className="text-[13px] font-bold text-text-primary uppercase break-words" style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
+              {tp(item.name)}
+            </span>
+            {displayMode === 'dual' && showSecondaryMenu && (
+              <div
+                dir="ltr"
+                className="flex items-center text-[11px] font-bold uppercase"
+                style={{ gap: '6px', color: '#AAAAAA', justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
+              >
+                {secondaryDir !== 'rtl' && (
+                  <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
+                    <Languages size={10} className="text-text-secondary" />
+                  </span>
+                )}
+                <span style={{ textAlign: secondaryDir === 'rtl' ? 'right' : 'left', minWidth: 0, overflowWrap: 'anywhere', unicodeBidi: 'plaintext' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+                {secondaryDir === 'rtl' && (
+                  <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
+                    <Languages size={10} className="text-text-secondary" />
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {item.allergens.length > 0 && (
@@ -38,31 +59,6 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
                 <AllergenBadge key={a.type} allergen={a} variant="item" />
               ))}
             </div>
-          </div>
-        )}
-
-        {displayMode === 'dual' && showSecondaryMenu && (
-          <div
-            dir={secondaryDir}
-            className="flex items-center text-[11px] font-bold uppercase"
-            style={{ gap: '6px', marginTop: '1px', color: '#AAAAAA', justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
-          >
-            {secondaryDir !== 'rtl' && (
-              <span className="relative text-[13px] font-normal shrink-0">
-                <span className="invisible" aria-hidden="true">{item.quantity}&times;</span>
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted">
-                    <Languages size={10} className="text-text-secondary" />
-                  </span>
-                </span>
-              </span>
-            )}
-            <span style={{ textAlign: secondaryDir === 'rtl' ? 'right' : 'left', minWidth: 0, overflowWrap: 'anywhere' }}>{tpSecondary(item.name)}</span>
-            {secondaryDir === 'rtl' && (
-              <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-muted shrink-0">
-                <Languages size={10} className="text-text-secondary" />
-              </span>
-            )}
           </div>
         )}
 
