@@ -117,11 +117,12 @@ function ProductPill({
             <div className="flex items-center gap-1">
               <Languages size={10} className="text-muted-foreground shrink-0" />
               <div
-                className="truncate text-muted-foreground"
+                className="truncate text-muted-foreground flex-1"
                 dir={tx.secondaryDir}
                 style={{
                   fontSize: 11,
                   fontWeight: 500,
+                  textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
                   textDecoration: done ? 'line-through' : 'none',
                 }}
               >
