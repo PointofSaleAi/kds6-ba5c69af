@@ -648,7 +648,7 @@ function CourseItemTapRow({
                 CANCELLED
               </span>
             )}
-            {tappable && isSeen && timestamps?.seenAt && (
+            {!legacyActions && tappable && isSeen && timestamps?.seenAt && (
               <span
                 style={{ fontSize: '11px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }}
                 className="ml-1 shrink-0 whitespace-nowrap"
@@ -656,7 +656,7 @@ function CourseItemTapRow({
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}
-            {tappable && isDone && timestamps?.doneAt && (
+            {!legacyActions && tappable && isDone && timestamps?.doneAt && (
               <span
                 style={{ fontSize: '11px', color: '#374151', fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }}
                 className="ml-1 shrink-0 whitespace-nowrap"
