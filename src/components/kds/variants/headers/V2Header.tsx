@@ -24,7 +24,7 @@ export function V2Header({ order }: Props) {
   const firedTime = order.timeReceived ? formatTime(order.timeReceived) : '';
 
   return (
-    <div data-v2header className="v2-header px-2.5 py-2" style={{ background: '#F3F4F6' }}>
+    <div data-v2header className="v2-header px-2.5 py-2 bg-muted">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 min-w-0">
           {showTableInstead ? (
@@ -53,7 +53,7 @@ export function V2Header({ order }: Props) {
       </div>
       <div className="flex items-center justify-between gap-2 mt-0.5">
         <span className="text-[12px] font-medium text-foreground truncate">{headerName}</span>
-        <span className="text-[11px] text-[#6B7280] shrink-0 truncate">
+        <span className="text-[11px] text-muted-foreground shrink-0 truncate">
           {order.serverName}{firedTime ? ` · ${firedTime}` : ''}
         </span>
       </div>
