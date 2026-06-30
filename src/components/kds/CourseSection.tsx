@@ -424,6 +424,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 compactRows={compactRows}
                 seenIdx={seenOrderIndex?.get(item.id)}
                 ticketLayoutCompact={ticketLayoutCompact}
+                legacyActions={legacyActions}
               />
             );
           });
@@ -476,6 +477,7 @@ interface CourseItemTapRowProps {
   compactRows?: boolean;
   seenIdx?: number;
   ticketLayoutCompact?: boolean;
+  legacyActions?: boolean;
 }
 
 function CourseItemTapRow({
@@ -485,7 +487,7 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
-  compactRows, seenIdx, ticketLayoutCompact,
+  compactRows, seenIdx, ticketLayoutCompact, legacyActions,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn, confirm: confirm86 } = useFlag86();
