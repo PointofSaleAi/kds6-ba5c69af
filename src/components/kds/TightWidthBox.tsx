@@ -69,7 +69,15 @@ export function TightWidthBox({
     <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
       <div ref={primaryRef} style={{ maxWidth: '100%' }}>{primary}</div>
       {secondary && (
-        <div style={constrainSecondary ? { width, maxWidth: '100%' } : { maxWidth: '100%' }}>{secondary}</div>
+        <div
+          style={
+            constrainSecondary
+              ? { minWidth: width, width: 'max-content', maxWidth: '100%' }
+              : { maxWidth: '100%' }
+          }
+        >
+          {secondary}
+        </div>
       )}
     </div>
   );
