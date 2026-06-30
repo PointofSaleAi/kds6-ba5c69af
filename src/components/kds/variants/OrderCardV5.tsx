@@ -305,7 +305,7 @@ export function OrderCardV5({ order, onBump }: Props) {
   };
 
   return (
-    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div className="v5-card bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER: reuse V2 header */}
       <div onClick={handleBump} role="button" className="cursor-pointer">
         <V2Header order={order} />
