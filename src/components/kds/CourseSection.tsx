@@ -42,6 +42,8 @@ interface CourseSectionProps {
   seenOrderIndex?: Map<string, number>;
   /** Override the global ticketLayout (used by previews). */
   ticketLayoutMode?: 'standard' | 'compact';
+  /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
+  legacyActions?: boolean;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
