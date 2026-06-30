@@ -47,14 +47,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                 )}
               </div>
               {isPending && (
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => setReplyTarget(msg)}
-                    aria-label="Reply"
-                    className="w-7 h-7 rounded-md bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center hover:bg-[#7C3AED]/20 transition-colors"
-                  >
-                    <Reply size={14} />
-                  </button>
+                <div className="flex flex-col items-center gap-1 shrink-0">
                   <button
                     onClick={() => onAcknowledge(msg.message_id)}
                     aria-label="Acknowledge"
@@ -62,6 +55,13 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                     style={{ backgroundColor: '#EBD7FF' }}
                   >
                     <img src={itemReadyIcon} alt="" style={{ width: 24, height: 18 }} />
+                  </button>
+                  <button
+                    onClick={() => setReplyTarget(msg)}
+                    aria-label="Reply"
+                    className="w-7 h-7 rounded-md bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center hover:bg-[#7C3AED]/20 transition-colors"
+                  >
+                    <Reply size={14} />
                   </button>
                 </div>
               )}
