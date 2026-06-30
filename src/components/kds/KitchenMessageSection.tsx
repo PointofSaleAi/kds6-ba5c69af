@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MessageCircle, Check, Reply } from 'lucide-react';
+import { MessageCircle, Reply } from 'lucide-react';
+import itemReadyIcon from '@/assets/item-ready-icon.svg';
 import type { KitchenMessage, KitchenReply } from '@/types/kitchen-message';
 import { KitchenReplyDialog } from './KitchenReplyDialog';
 
