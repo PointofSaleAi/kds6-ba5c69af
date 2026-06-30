@@ -82,24 +82,17 @@ function ProductPill({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity ${
+      className={`relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
         loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-60' : ''
       }`}
-      style={{
-        background:
-          'linear-gradient(180deg, rgba(60,64,73,0.95) 0%, rgba(40,43,50,0.95) 100%)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 1px 2px rgba(0,0,0,0.4)',
-      }}
     >
       <div className="flex items-center gap-2">
         {/* Quantity circle */}
         <span
-          className="shrink-0 inline-flex items-center justify-center rounded-full"
+          className="shrink-0 inline-flex items-center justify-center rounded-full bg-white text-gray-900"
           style={{
             width: 22,
             height: 22,
-            background: '#FFFFFF',
-            color: '#1A1A2E',
             fontSize: 12,
             fontWeight: 700,
           }}
@@ -110,7 +103,7 @@ function ProductPill({
         {/* Name */}
         <div className="flex-1 min-w-0">
           <div
-            className="truncate text-white"
+            className="truncate text-foreground"
             style={{
               fontSize: 13,
               fontWeight: 700,
@@ -121,14 +114,13 @@ function ProductPill({
           </div>
           {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
             <div className="flex items-center gap-1">
-              <Languages size={10} color="#6B7280" />
+              <Languages size={10} className="text-muted-foreground shrink-0" />
               <div
-                className="truncate"
+                className="truncate text-muted-foreground"
                 dir={tx.secondaryDir}
                 style={{
                   fontSize: 11,
                   fontWeight: 500,
-                  color: '#9CA3AF',
                   textDecoration: done ? 'line-through' : 'none',
                 }}
               >
@@ -140,12 +132,12 @@ function ProductPill({
 
         {/* Status */}
         {loading && (
-          <Loader2 size={14} className="animate-spin shrink-0" color="#9CA3AF" />
+          <Loader2 size={14} className="animate-spin shrink-0 text-muted-foreground" />
         )}
         {done && (
           <span
-            className="shrink-0 inline-flex items-center justify-center rounded-full animate-scale-in"
-            style={{ background: '#27AE60', width: 18, height: 18 }}
+            className="shrink-0 inline-flex items-center justify-center rounded-full animate-scale-in bg-success"
+            style={{ width: 18, height: 18 }}
             aria-label="Product done"
           >
             <Check size={12} color="#fff" strokeWidth={3} />
@@ -191,7 +183,6 @@ function ProductPill({
               secondaryDir={tx.secondaryDir}
               done={done}
               italic
-              color="#D1D5DB"
             />
           )}
         </div>
@@ -208,7 +199,6 @@ function ModifierRow({
   done,
   italic,
   tone,
-  color: colorProp,
 }: {
   prefix: string;
   text: string;
@@ -217,29 +207,27 @@ function ModifierRow({
   done: boolean;
   italic?: boolean;
   tone?: 'allergen';
-  color?: string;
 }) {
-  const color = colorProp ?? (tone === 'allergen' ? '#FCA5A5' : '#D1D5DB');
+  const colorClass = tone === 'allergen' ? 'text-red-400' : 'text-muted-foreground';
   return (
     <div className="flex items-start gap-1.5" style={{ lineHeight: 1.25 }}>
       <span
         aria-hidden
-        className="shrink-0 select-none"
-        style={{ color: '#6B7280', fontFamily: 'monospace', fontSize: 11, marginTop: 1 }}
+        className="shrink-0 select-none text-muted-foreground"
+        style={{ fontFamily: 'monospace', fontSize: 11, marginTop: 1 }}
       >
         {'\u2514\u2500'}
       </span>
       <span
-        className="shrink-0"
-        style={{ color, fontSize: 11, width: 10, textAlign: 'center' }}
+        className={`shrink-0 ${colorClass}`}
+        style={{ fontSize: 11, width: 10, textAlign: 'center' }}
       >
         {prefix}
       </span>
       <div className="flex-1 min-w-0">
         <div
-          className="truncate"
+          className={`truncate ${colorClass}`}
           style={{
-            color,
             fontSize: 11,
             fontWeight: 500,
             fontStyle: italic ? 'italic' : 'normal',
@@ -250,12 +238,11 @@ function ModifierRow({
         </div>
         {secondaryText && (
           <div className="flex items-center gap-1">
-            <Languages size={10} color="#6B7280" />
+            <Languages size={10} className="text-muted-foreground" />
             <div
-              className="truncate"
+              className="truncate text-muted-foreground"
               dir={secondaryDir}
               style={{
-                color: '#9CA3AF',
                 fontSize: 10,
                 fontStyle: italic ? 'italic' : 'normal',
                 textDecoration: done ? 'line-through' : 'none',
@@ -317,10 +304,7 @@ export function OrderCardV5({ order, onBump }: Props) {
   };
 
   return (
-    <div
-      className="rounded-md overflow-hidden border border-border shadow-sm flex flex-col"
-      style={{ background: '#1F2128' }}
-    >
+    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER: reuse V2 header */}
       <div onClick={handleBump} role="button" className="cursor-pointer">
         <V2Header order={order} />
@@ -329,26 +313,19 @@ export function OrderCardV5({ order, onBump }: Props) {
       {/* Order notes strip */}
       {order.orderNotes && (
         <div className="px-2 pt-2">
-          <div
-            className="rounded-xl px-2.5 py-2 flex items-start gap-2"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(60,64,73,0.95) 0%, rgba(40,43,50,0.95) 100%)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
-            }}
-          >
-            <FileText size={14} color="#D1D5DB" className="shrink-0 mt-0.5" />
+          <div className="rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
+            <FileText size={14} className="text-muted-foreground shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
-              <div className="text-white break-words" style={{ fontSize: 12, fontWeight: 500 }}>
+              <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
                 {tn(order.orderNotes)}
               </div>
               {displayMode === 'dual' && showSecondaryMenu && (
                 <div className="flex items-start gap-1 mt-0.5">
-                  <Languages size={10} color="#6B7280" className="mt-0.5 shrink-0" />
+                  <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
                   <div
-                    className="break-words"
+                    className="break-words text-muted-foreground"
                     dir={tx.secondaryDir}
-                    style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}
+                    style={{ fontSize: 11, fontWeight: 500 }}
                   >
                     {tnSecondary(order.orderNotes)}
                   </div>
