@@ -330,7 +330,7 @@ function TightWidthBox({
 
   return (
     <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
-      <div ref={primaryRef}>{primary}</div>
+      <div ref={primaryRef} style={{ width, maxWidth: '100%' }}>{primary}</div>
       {secondary && (
         <div style={{ width, maxWidth: '100%' }}>{secondary}</div>
       )}
