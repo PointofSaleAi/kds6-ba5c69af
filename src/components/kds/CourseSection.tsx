@@ -584,16 +584,16 @@ function CourseItemTapRow({
       }}
     >
       <div
-        className={`flex items-center transition-colors select-none ${tappable ? 'cursor-pointer active:bg-muted/50' : ''}`}
+        className={`flex items-center transition-colors select-none ${tappable && !legacyActions ? 'cursor-pointer active:bg-muted/50' : ''}`}
         style={{
           padding: isolateModifierRows ? '0px 8px 0 8px' : headerPad,
           gap: 0,
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
-        onClick={tappable ? handleTap : undefined}
+        onClick={tappable && !legacyActions ? handleTap : undefined}
         {...longPressRow}
-        title={tappable ? (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86') : undefined}
+        title={tappable ? (legacyActions ? 'Hold to 86' : (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')) : undefined}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
@@ -703,6 +703,23 @@ function CourseItemTapRow({
           )}
         </div>
         {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
+        {legacyActions && tappable && !is86Active && !show86Pill && (() => {
+          const icon: 'seen' | 'preparing' | 'done' = isDone ? 'done' : isSeen ? 'preparing' : 'seen';
+          const onIconClick = () => {
+            if (isDone) onUndoItem?.(item.id);
+            else onAdvanceItem?.(item.id);
+          };
+          return (
+            <div className="shrink-0 ml-1" onClick={(e) => e.stopPropagation()}>
+              <KdsActionIcon
+                icon={icon}
+                onClick={onIconClick}
+                title={isDone ? 'Undo (back to In Progress)' : isSeen ? 'Mark Done' : 'Mark Seen / In Progress'}
+                label={isDone ? 'Undo' : isSeen ? 'Mark Done' : 'Mark Seen'}
+              />
+            </div>
+          );
+        })()}
       </div>
 
       {showDetails && item.modifiers.length > 0 && (() => {
