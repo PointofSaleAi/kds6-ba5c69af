@@ -275,7 +275,7 @@ function ItemTapRow({
                   </span>
                 </span>
               </span>
-              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext', flex: 1, textAlign: secondaryLang === 'ar' ? 'right' : 'left' }} dir={secondaryLang === 'ar' ? 'rtl' : 'ltr'}>{tpSecondary(item.name)}</span>
+              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext', flex: 1, textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
             </div>
           )}
 
