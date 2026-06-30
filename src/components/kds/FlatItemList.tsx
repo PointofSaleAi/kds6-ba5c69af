@@ -7,6 +7,7 @@ import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
 import { KdsActionIcon, type KdsIconType } from './KdsActionIcon';
+import { LegacyActionPill } from './LegacyActionPill';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
