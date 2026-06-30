@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MessageCircle, Check, Reply } from 'lucide-react';
+import { MessageCircle, Reply } from 'lucide-react';
+import itemReadyIcon from '@/assets/item-ready-icon.svg';
 import type { KitchenMessage, KitchenReply } from '@/types/kitchen-message';
 import { KitchenReplyDialog } from './KitchenReplyDialog';
 
@@ -60,7 +61,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                     className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
                     style={{ backgroundColor: '#EBD7FF' }}
                   >
-                    <Check size={14} color="#9226FE" strokeWidth={2.5} />
+                    <img src={itemReadyIcon} alt="" style={{ width: 20, height: 15 }} />
                   </button>
                 </div>
               )}
