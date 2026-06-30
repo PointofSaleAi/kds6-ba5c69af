@@ -376,7 +376,7 @@ function ItemTapRow({
             0x
           </span>
           <div
-            className={`italic leading-snug min-w-0 text-text-muted ${isDone ? 'line-through' : ''}`}
+            className={`italic leading-snug min-w-0 text-text-muted font-medium ${isDone ? 'line-through' : ''}`}
             style={{ fontSize: 'var(--kds-modifier)' }}
           >
             "{tn(item.notes)}"

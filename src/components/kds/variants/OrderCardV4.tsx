@@ -98,7 +98,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
           )}
           {showDetails && product.notes && (
             <div
-              className={`italic leading-snug text-text-muted ${done ? 'line-through' : ''}`}
+              className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
               style={{ fontSize: 11 }}
             >
               "{product.notes}"
