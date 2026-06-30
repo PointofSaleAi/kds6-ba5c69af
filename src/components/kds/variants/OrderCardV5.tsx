@@ -251,7 +251,7 @@ function ModifierRow({
                 <Languages size={10} className="text-muted-foreground shrink-0" />
               )}
               <div
-                className="truncate text-muted-foreground"
+                className="break-words text-muted-foreground"
                 dir={secondaryDir}
                 style={{
                   fontSize: 10,
