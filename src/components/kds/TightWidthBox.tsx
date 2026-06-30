@@ -11,18 +11,22 @@ export function TightWidthBox({
   deps = [],
   className,
   style,
+  constrainSecondary = true,
 }: {
   primary: ReactNode;
   secondary?: ReactNode;
   deps?: unknown[];
   className?: string;
   style?: CSSProperties;
+  /** When false, secondary wraps to the full available width instead of the primary text's rendered width. */
+  constrainSecondary?: boolean;
 }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const primaryRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<number | undefined>(undefined);
 
   const measure = useCallback(() => {
+    if (!constrainSecondary) return;
     const el = primaryRef.current;
     if (!el) return;
     try {
@@ -46,7 +50,7 @@ export function TightWidthBox({
     } catch {
       /* noop */
     }
-  }, []);
+  }, [constrainSecondary]);
 
   useLayoutEffect(() => {
     measure();
@@ -65,7 +69,7 @@ export function TightWidthBox({
     <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
       <div ref={primaryRef} style={{ maxWidth: '100%' }}>{primary}</div>
       {secondary && (
-        <div style={{ width, maxWidth: '100%' }}>{secondary}</div>
+        <div style={constrainSecondary ? { width, maxWidth: '100%' } : { maxWidth: '100%' }}>{secondary}</div>
       )}
     </div>
   );
