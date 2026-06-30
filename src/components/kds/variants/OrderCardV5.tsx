@@ -402,7 +402,7 @@ export function OrderCardV5({ order, onBump }: Props) {
               <TightWidthBox
                 deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
               >
-                <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500, textWrap: 'balance' } as React.CSSProperties}>
+                <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
                   {tn(order.orderNotes)}
                 </div>
                 {displayMode === 'dual' && showSecondaryMenu && (
