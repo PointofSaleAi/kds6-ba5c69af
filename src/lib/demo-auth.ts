@@ -5,7 +5,10 @@
 // Replace this with real server-side authentication (Lovable Cloud / Supabase
 // Auth, JWT, or your POS backend) before shipping to production users.
 
-export const isDemoAuthAllowed = (): boolean => import.meta.env.DEV;
+// Prototype/demo build: mock auth is enabled in all environments so the
+// published preview can sign in the same way as the dev preview. Replace
+// with a real auth provider before shipping to real users.
+export const isDemoAuthAllowed = (): boolean => true;
 
 export const blockDemoAuthInProd = (): boolean => {
   if (isDemoAuthAllowed()) return true;
