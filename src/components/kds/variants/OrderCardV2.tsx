@@ -104,7 +104,7 @@ function V2ProductRow({
           )}
           {showDetails && product.notes && (
             <div
-              className={`italic leading-snug text-text-muted ${done ? 'line-through' : ''}`}
+              className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
               style={{ fontSize: 11 }}
             >
               "{product.notes}"

@@ -213,7 +213,7 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
               0x
             </span>
             <div
-              className="italic leading-snug min-w-0 text-text-muted line-through"
+              className="italic leading-snug min-w-0 text-text-muted line-through font-medium"
               style={{ fontSize: 'var(--kds-modifier)' }}
             >
               "{tn(item.notes)}"

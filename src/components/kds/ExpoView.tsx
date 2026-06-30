@@ -219,7 +219,7 @@ function ExpoItemRow({
     <div className="flex items-start" style={{ gap: '4px', marginTop: '1px' }}>
       {indentPlaceholder}
       <div
-        className="italic leading-snug min-w-0 text-text-muted"
+        className="italic leading-snug min-w-0 text-text-muted font-medium"
         style={{ fontSize: 'var(--kds-modifier)' }}
       >
         "{item.notes}"
