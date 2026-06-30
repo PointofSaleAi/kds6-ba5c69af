@@ -556,7 +556,7 @@ function CourseItemTapRow({
   const seenTextTeal = '#92400E';
 
   // Seen rows use a very light tint (alternating); Done rows use a light grey tint.
-  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : isSeen ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
+  const stateBg = tappable && (isDone ? 'rgba(149, 165, 166, 0.12)' : (isSeen && !legacyActions) ? (useTeal ? seenBgTeal : seenBgGreen) : undefined);
   const isHighlightActive = isHighlighted && !item.isCancelled;
   const productRowBg = is86Active
     ? 'rgba(26, 26, 46, 0.08)'
