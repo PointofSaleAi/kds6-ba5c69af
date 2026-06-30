@@ -205,7 +205,7 @@ export default function DisplaySettings() {
                     Layout
                   </span>
                   <SegmentedToggle
-                    options={['Standard', 'Compact', 'Header']}
+                    options={['Compact', 'Standard', 'Header']}
                     value={ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}
                     onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : v === 'Header' ? 'header' : 'standard')}
                   />
