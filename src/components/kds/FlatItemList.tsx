@@ -47,7 +47,6 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
       {(() => {
         const visibleItems = allItems.filter((item) => {
           if (dismissedItemIds?.has(item.id)) return false;
-          if (legacyActions && itemStatuses?.get(item.id) === 'done') return false;
           return true;
         });
         let seenIdx = 0;
@@ -306,7 +305,7 @@ function ItemTapRow({
               <LegacyActionPill variant="bell" onClick={() => onAdvanceItem(item.id)} title="Mark Done" />
             )}
             {isDone && (
-              <LegacyActionPill variant="check" onClick={() => onUndoItem(item.id)} title="Undo (back to In Progress)" />
+              <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
             )}
           </div>
         )}
