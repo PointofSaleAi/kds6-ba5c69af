@@ -1,4 +1,4 @@
-import { Eye, ConciergeBell, CheckCircle } from 'lucide-react';
+import { Eye, ConciergeBell, Check, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import undoIcon from '@/assets/undo-icon.svg';
 
