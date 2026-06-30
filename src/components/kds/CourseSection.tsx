@@ -8,6 +8,7 @@ import { LegacyActionPill } from './LegacyActionPill';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
+import { TightWidthBox } from './TightWidthBox';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
@@ -633,42 +634,41 @@ function CourseItemTapRow({
               {item.quantity}x
             </span>
             <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 'var(--kds-child-gap, 1px)' }}>
-              <span
-                className={`font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
-                style={{
-                  fontSize: 'var(--kds-item-name)',
-                  lineHeight: 1.1,
-                  wordBreak: 'break-word',
-                  ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
-                }}
-              >
-                {tp(item.name)}
-              </span>
-              {showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled && (
-                <div
-                  dir="ltr"
-                  className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
-                  style={{
-                    gap: '4px',
-                    marginBottom: '0px',
-                    fontSize: 'var(--kds-modifier)',
-                    lineHeight: '1',
-                    justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start',
-                  }}
-                >
-                  {secondaryDir !== 'rtl' && (
+              <TightWidthBox
+                deps={[item.name, displayMode, showSecondaryMenu, secondaryDir, isHighlighted]}
+                primary={
+                  <span
+                    className={`block font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+                    style={{
+                      fontSize: 'var(--kds-item-name)',
+                      lineHeight: 1.1,
+                      wordBreak: 'break-word',
+                      ...(isHighlighted && !item.isCancelled ? { color: '#1D4ED8' } : {}),
+                    }}
+                  >
+                    {tp(item.name)}
+                  </span>
+                }
+                secondary={showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled ? (
+                  <div
+                    dir="ltr"
+                    className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
+                    style={{
+                      gap: '4px',
+                      marginBottom: '0px',
+                      fontSize: 'var(--kds-modifier)',
+                      lineHeight: '1',
+                      flexDirection: secondaryDir === 'rtl' ? 'row-reverse' : 'row',
+                      justifyContent: 'flex-start',
+                    }}
+                  >
                     <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                       <Languages size={8} className="text-text-secondary" />
                     </span>
-                  )}
-                  <span style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', minWidth: 0, overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
-                  {secondaryDir === 'rtl' && (
-                    <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
-                      <Languages size={8} className="text-text-secondary" />
-                    </span>
-                  )}
-                </div>
-              )}
+                    <span className="min-w-0 flex-1" style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+                  </div>
+                ) : undefined}
+              />
             </div>
             {item.isCancelled && (
               <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded shrink-0">
