@@ -61,7 +61,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                     className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
                     style={{ backgroundColor: '#EBD7FF' }}
                   >
-                    <Check size={14} color="#9226FE" strokeWidth={2.5} />
+                    <img src={itemReadyIcon} alt="" style={{ width: 20, height: 15 }} />
                   </button>
                 </div>
               )}
