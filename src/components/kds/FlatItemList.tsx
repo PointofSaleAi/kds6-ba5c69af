@@ -190,16 +190,16 @@ function ItemTapRow({
       }}
     >
       <div
-        className="flex items-center cursor-pointer active:bg-muted/50 transition-colors select-none"
+        className={`flex items-center transition-colors select-none ${legacyActions ? '' : 'cursor-pointer active:bg-muted/50'}`}
         style={{
           padding: isolateModifierRows ? '0px 8px 0 8px' : `0px 0 0 0px`,
           gap: 0,
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         }}
-        onClick={handleTap}
+        onClick={legacyActions ? undefined : handleTap}
         {...longPress}
-        title={item.isCancelled ? undefined : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')}
+        title={item.isCancelled ? undefined : (legacyActions ? 'Hold to 86' : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86'))}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
