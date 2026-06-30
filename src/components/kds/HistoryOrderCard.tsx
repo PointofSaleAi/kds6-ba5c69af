@@ -363,7 +363,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
           {/* Row 2: Ticket info row (neutral dark, no urgency) */}
           <div
             className="flex items-center justify-between px-2"
-            style={{ backgroundColor: '#3a3a4a', height: '36px' }}
+            style={{ backgroundColor: '#2A2D36', height: '36px' }}
           >
             <span
               className="text-[18px] font-extrabold text-white leading-none tabular-nums"

@@ -246,7 +246,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
       {/* Filter status bar */}
       {selectionCount > 0 && (
-        <div className="flex items-center justify-between px-3 py-1.5 bg-[#EFF6FF] border-l border-border border-b border-b-border transition-all duration-150">
+        <div className="flex items-center justify-between px-3 py-1.5 bg-[#EFF6FF] dark:bg-muted border-l border-border border-b border-b-border transition-all duration-150">
           <span
             className="text-[11px] font-bold text-white rounded px-1.5 py-0.5"
             style={{ backgroundColor: '#3B82F6', borderRadius: '4px' }}
