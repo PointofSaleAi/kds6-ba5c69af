@@ -1,52 +1,40 @@
 ## Goal
-On the `/old` KDS route only, replace the current circular per-product action icons with the rounded-square "pill" action buttons shown in the screenshots, and align the footer SEEN / IN PROGRESS / DONE button colors to match.
+Make the order-notes wrapper in `OrderCardV5.tsx` shrink to the actual rendered width of the wrapped primary text (so the box ends at the last line's right edge), and have the secondary Arabic text right-align to that same edge.
 
-Scope is strictly visual + per-product icon swap on the legacy-actions code path. Behavior, lifecycle, and other routes (`/kds/full`, `/v1`–`/v5`) are unchanged.
+## Approach
+Replace the current `inline-grid` / `max-content` wrapper with a JS-measured tight width.
 
-## Per-product icon spec (rounded-square, ~40×30, radius 4)
+### Changes in `src/components/kds/variants/OrderCardV5.tsx` (order notes block, ~L330-368)
 
-| Product state | Right-side controls |
-| --- | --- |
-| Unseen (initial) | Single **Eye** pill: light-blue bg `#D9EAFF`, eye icon `#176ACA`. Tap → mark Seen / In Progress. |
-| In Progress (seen) | **Undo** pill (`#BDC1CD` bg, white undo arrow) + **Bell** pill (light-red `#FADBD8` bg, red `#E74C3C` bell). Bell → mark Done. Undo → back to Unseen. |
-| Done | **Undo** pill + **Check** pill (light-purple `#E8DAEF` bg, purple `#7D3C98` check). Undo → back to In Progress. |
+1. Add a `useTightTextWidth` hook (small local helper or inline `useLayoutEffect`):
+   - Attach a `ref` to the primary text `<div>`.
+   - Use `Range.getBoundingClientRect()` (or iterate `getClientRects()` and take `Math.max(width)` across lines) to get the widest rendered line of the wrapped text.
+   - Set that pixel value as `width` on the shared wrapper.
+   - Re-measure on:
+     - `ResizeObserver` for the parent container (card resize, sidebar dock changes).
+     - Font load (`document.fonts.ready`).
+     - Changes to `order.orderNotes`, `displayMode`, `showSecondaryMenu`, and the active language (primary + secondary).
 
-Reuse the existing SVG assets where they match (`seen-icon.svg`, `undo-icon.svg`); render the bell and check states as the same rounded-square wrapper with a Lucide `ConciergeBell` / `Check` icon recolored per spec.
+2. Wrapper structure:
+   ```
+   <div ref={wrapperRef} style={{ width: measuredWidth, maxWidth: '100%', minWidth: 0 }}>
+     <div ref={primaryRef} className="break-words">{tn(order.orderNotes)}</div>
+     {secondary && (
+       <div style={{ textAlign: 'right' for rtl, flex-direction row-reverse for icon }}>
+         <Languages /> <div dir={secondaryDir}>{tnSecondary(...)}</div>
+       </div>
+     )}
+   </div>
+   ```
+   - Before measurement completes, fall back to current `max-content` capped at 100% to avoid layout flash.
 
-## Footer button colors (legacy-actions only)
-Match the screenshots:
-- SEEN button: blue `#3F6FD8`
-- IN PROGRESS button: red `#E74C3C`
-- DONE button: purple `#7D3C98`
-Undo mini-button remains the grey square already present.
+3. Keep all existing color, padding, icon, and RTL behavior unchanged. Only the wrapper sizing changes.
 
-## Implementation
+### Out of scope
+- No change to product modifier/add-on/note alignment (already handled separately).
+- No change to other variants (V1–V4, /full, /old) — this is V5 only, matching the screenshot.
 
-1. **New component** `src/components/kds/LegacyActionPill.tsx`
-   - Props: `variant: 'seen' | 'bell' | 'check' | 'undo'`, `onClick`, `title`.
-   - Renders a 40×30 rounded-`[4px]` button with the correct bg + icon color from the table above.
-
-2. **`src/components/kds/FlatItemList.tsx`** (lines ~295–311)
-   - Replace the `KdsActionIcon` block with logic that renders:
-     - `seen` pill when status is unseen
-     - `undo` + `bell` pills when status is `preparing`
-     - `undo` + `check` pills when status is `done`
-   - Wire `onAdvanceItem` / `onUndoItem` accordingly.
-
-3. **`src/components/kds/CourseSection.tsx`** (lines ~706–720) – mirror the same replacement inside `CourseItemTapRow` so coursed tickets behave identically.
-
-4. **`src/components/kds/OrderCardActions.tsx`**
-   - Accept an optional `legacyActions?: boolean` prop (passed from `OrderCard` only when the route is `/old`).
-   - When true, override `buttonColorClass` / inline bg with the blue / red / purple values above.
-
-5. **`src/components/kds/OrderCard.tsx`** – forward existing `legacyActions` prop into `OrderCardActions`.
-
-## Out of scope
-- Any change to `/kds/full`, `/v1`–`/v5`, history, or expo views.
-- Lifecycle / status logic, long-press 86 behavior, allergens, modifiers.
-- Settings, theming tokens, or dark mode.
-
-## Verification
-- Visit `/kds/old`: confirm the three product-row states render as the pill set in the screenshots and that tapping each pill advances/undoes the product as before.
-- Confirm footer button color cycles blue → red → purple as ticket state advances.
-- Visit `/kds/full` and `/kds/v1`: confirm visuals are unchanged.
+## Technical notes
+- Use `useLayoutEffect` to avoid flicker.
+- Guard `ResizeObserver` for SSR (not needed here, CSR only, but cheap to guard).
+- Round measured width up by 1px to avoid sub-pixel re-wrap.

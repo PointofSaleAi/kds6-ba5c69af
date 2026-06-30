@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, type ReactNode } from 'react';
 import { Check, Loader2, FileText, Languages } from 'lucide-react';
 import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
@@ -274,6 +274,72 @@ function ModifierRow({
   );
 }
 
+/**
+ * Wraps children whose first child is the "primary" text block. Measures the
+ * widest rendered (wrapped) line of that text and sizes itself to that width,
+ * so siblings (e.g. RTL secondary text) right-align to the primary's true edge.
+ */
+function TightWidthBox({
+  children,
+  deps = [],
+  className,
+  style,
+}: {
+  children: ReactNode;
+  deps?: unknown[];
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const primaryRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState<number | undefined>(undefined);
+
+  const measure = useCallback(() => {
+    const el = primaryRef.current;
+    if (!el) return;
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const rects = range.getClientRects();
+      let max = 0;
+      for (let i = 0; i < rects.length; i++) {
+        if (rects[i].width > max) max = rects[i].width;
+      }
+      range.detach?.();
+      if (max > 0) setWidth(Math.ceil(max));
+    } catch {
+      /* noop */
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    measure();
+    let ro: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== 'undefined' && wrapperRef.current?.parentElement) {
+      ro = new ResizeObserver(() => measure());
+      ro.observe(wrapperRef.current.parentElement);
+    }
+    const fonts = (document as Document & { fonts?: { ready?: Promise<unknown> } }).fonts;
+    fonts?.ready?.then(() => measure());
+    return () => ro?.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [measure, ...deps]);
+
+  return (
+    <div
+      ref={wrapperRef}
+      className={className}
+      style={{ width, maxWidth: '100%', minWidth: 0, ...style }}
+    >
+      <div ref={primaryRef}>
+        {/* primary slot */}
+        {Array.isArray(children) ? children[0] : children}
+      </div>
+      {Array.isArray(children) ? children.slice(1) : null}
+    </div>
+  );
+}
+
 export function OrderCardV5({ order, onBump }: Props) {
   const { ticketLayout } = useKDSSettings();
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
@@ -333,7 +399,9 @@ export function OrderCardV5({ order, onBump }: Props) {
           <div className="v5-pill rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
             <FileText size={14} className="text-muted-foreground shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
-              <div style={{ display: 'inline-grid', gridTemplateColumns: 'minmax(0, max-content)', maxWidth: '100%', minWidth: 0 }}>
+              <TightWidthBox
+                deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
+              >
                 <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
                   {tn(order.orderNotes)}
                 </div>
@@ -342,7 +410,7 @@ export function OrderCardV5({ order, onBump }: Props) {
                     className="flex items-start gap-1 mt-0.5"
                     style={{
                       flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
-                      justifyContent: tx.secondaryDir === 'rtl' ? 'flex-start' : 'flex-start',
+                      justifyContent: 'flex-start',
                     }}
                   >
                     <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
@@ -361,7 +429,7 @@ export function OrderCardV5({ order, onBump }: Props) {
                     </div>
                   </div>
                 )}
-              </div>
+              </TightWidthBox>
             </div>
           </div>
         </div>
