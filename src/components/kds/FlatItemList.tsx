@@ -249,12 +249,12 @@ function ItemTapRow({
                 CANCELLED
               </span>
             )}
-            {isSeen && timestamps?.seenAt && (
+            {!legacyActions && isSeen && timestamps?.seenAt && (
               <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }} className="ml-1">
                 {t.seenAt} {timestamps.seenAt}
               </span>
             )}
-            {isDone && timestamps?.doneAt && (
+            {!legacyActions && isDone && timestamps?.doneAt && (
               <span style={{ fontSize: '10px', color: '#374151', fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }} className="ml-1">
                 {t.doneAt} {timestamps.doneAt}
               </span>
