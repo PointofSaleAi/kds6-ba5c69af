@@ -1356,7 +1356,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           ) : (
             <>
               {isStationView && resolvedStationCourse && (
-                <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#111827' }}>
+                <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#1F2128' }}>
                   <div className="flex items-center gap-2">
                     <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
                       {resolvedStationCourse}
