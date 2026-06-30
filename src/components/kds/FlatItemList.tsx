@@ -47,7 +47,6 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
       {(() => {
         const visibleItems = allItems.filter((item) => {
           if (dismissedItemIds?.has(item.id)) return false;
-          if (legacyActions && itemStatuses?.get(item.id) === 'done') return false;
           return true;
         });
         let seenIdx = 0;
