@@ -676,6 +676,7 @@ function CourseItemTapRow({
                 marginBottom: '0px',
                 fontSize: 'var(--kds-modifier)',
                 lineHeight: '1',
+                justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start',
               }}
             >
               {secondaryDir !== 'rtl' && (
