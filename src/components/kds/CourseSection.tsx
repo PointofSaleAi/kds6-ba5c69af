@@ -381,7 +381,6 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
           {(() => {
           const visibleItems = courseGroup.items.filter((item) => {
             if (dismissedItemIds?.has(item.id)) return false;
-            if (legacyActions && itemStatuses?.get(item.id) === 'done') return false;
             return true;
           });
           return visibleItems.map((item, visibleIdx) => {
@@ -717,7 +716,7 @@ function CourseItemTapRow({
               <LegacyActionPill variant="bell" onClick={() => onAdvanceItem?.(item.id)} title="Mark Done" />
             )}
             {isDone && (
-              <LegacyActionPill variant="check" onClick={() => onUndoItem?.(item.id)} title="Undo (back to In Progress)" />
+              <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
             )}
           </div>
         )}
