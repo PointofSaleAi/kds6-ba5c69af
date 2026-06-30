@@ -275,17 +275,20 @@ function ModifierRow({
 }
 
 /**
- * Wraps children whose first child is the "primary" text block. Measures the
- * widest rendered (wrapped) line of that text and sizes itself to that width,
- * so siblings (e.g. RTL secondary text) right-align to the primary's true edge.
+ * Renders a primary text block at its natural (wrapping) width and, if a
+ * secondary block is provided, sizes the secondary container to the widest
+ * rendered line of the primary. The primary itself is never width-constrained,
+ * so it wraps naturally; only the secondary aligns to the primary's true edge.
  */
 function TightWidthBox({
-  children,
+  primary,
+  secondary,
   deps = [],
   className,
   style,
 }: {
-  children: ReactNode;
+  primary: ReactNode;
+  secondary?: ReactNode;
   deps?: unknown[];
   className?: string;
   style?: React.CSSProperties;
@@ -326,16 +329,11 @@ function TightWidthBox({
   }, [measure, ...deps]);
 
   return (
-    <div
-      ref={wrapperRef}
-      className={className}
-      style={{ width, maxWidth: '100%', minWidth: 0, ...style }}
-    >
-      <div ref={primaryRef}>
-        {/* primary slot */}
-        {Array.isArray(children) ? children[0] : children}
-      </div>
-      {Array.isArray(children) ? children.slice(1) : null}
+    <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
+      <div ref={primaryRef}>{primary}</div>
+      {secondary && (
+        <div style={{ width, maxWidth: '100%' }}>{secondary}</div>
+      )}
     </div>
   );
 }
