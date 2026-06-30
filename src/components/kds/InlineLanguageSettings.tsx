@@ -19,6 +19,10 @@ const languages: Language[] = [
   { code: 'en-GB', name: 'English (UK)', native: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸' },
   { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
+  { code: 'zh', name: 'Chinese', native: '中文', flag: '🇨🇳' },
+  { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'ko', name: 'Korean', native: '한국어', flag: '🇰🇷' },
+  { code: 'ja', name: 'Japanese', native: '日本語', flag: '🇯🇵' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
