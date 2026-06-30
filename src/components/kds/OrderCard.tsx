@@ -1062,6 +1062,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             )}
           </div>
         )}
+        {legacyActions && !bare && !isHeaderOnly && (
+          <OrderCardActions
+            orderId={order.id}
+            ticketState={ticketState}
+            onTicketAdvance={handleTicketAdvance}
+            onTicketRecall={handleTicketRecall}
+            legacyActions
+          />
+        )}
       </div>
       <Flag86Modal
         open={ticketManual86Open}
