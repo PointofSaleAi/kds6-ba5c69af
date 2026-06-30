@@ -6,6 +6,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
+import { KdsActionIcon, type KdsIconType } from './KdsActionIcon';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
@@ -28,9 +29,11 @@ interface FlatItemListProps {
   onDismissItem?: (itemId: string) => void;
   /** Override the global ticketLayout (used by previews). */
   ticketLayoutMode?: 'standard' | 'compact';
+  /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
+  legacyActions?: boolean;
 }
 
-export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode, legacyActions }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary, t, showSecondaryMenu, secondaryLang } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
@@ -76,6 +79,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             onUndoItem={onUndoItem}
             onDismissItem={onDismissItem}
             ticketLayoutCompact={ticketLayoutCompact}
+            legacyActions={legacyActions}
           />
         );
       });
@@ -106,13 +110,14 @@ interface ItemTapRowProps {
   onUndoItem: (itemId: string) => void;
   onDismissItem?: (itemId: string) => void;
   ticketLayoutCompact?: boolean;
+  legacyActions?: boolean;
 }
 
 function ItemTapRow({
   item, status, timestamps, seenIdx, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
-  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact,
+  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact, legacyActions,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
