@@ -399,7 +399,9 @@ export function OrderCardV5({ order, onBump }: Props) {
           <div className="v5-pill rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
             <FileText size={14} className="text-muted-foreground shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
-              <div style={{ display: 'inline-grid', gridTemplateColumns: 'minmax(0, max-content)', maxWidth: '100%', minWidth: 0 }}>
+              <TightWidthBox
+                deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
+              >
                 <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
                   {tn(order.orderNotes)}
                 </div>
@@ -408,7 +410,7 @@ export function OrderCardV5({ order, onBump }: Props) {
                     className="flex items-start gap-1 mt-0.5"
                     style={{
                       flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
-                      justifyContent: tx.secondaryDir === 'rtl' ? 'flex-start' : 'flex-start',
+                      justifyContent: 'flex-start',
                     }}
                   >
                     <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
@@ -427,7 +429,7 @@ export function OrderCardV5({ order, onBump }: Props) {
                     </div>
                   </div>
                 )}
-              </div>
+              </TightWidthBox>
             </div>
           </div>
         </div>
