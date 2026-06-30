@@ -88,7 +88,9 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings-v2';
+const STORAGE_KEY = 'posai-kds-settings-v3';
+const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v2'];
+
 
 const defaults: KDSSettings = {
   cardsPerRow: 4,
@@ -114,9 +116,28 @@ const defaults: KDSSettings = {
 function loadSettings(): KDSSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaults;
+    if (!raw) {
+      // Migrate from legacy storage but discard old order type color defaults
+      // so the refreshed manufacturer palette takes effect.
+      for (const legacyKey of LEGACY_STORAGE_KEYS) {
+        const legacy = localStorage.getItem(legacyKey);
+        if (legacy) {
+          try {
+            const parsedLegacy = JSON.parse(legacy);
+            delete parsedLegacy.orderTypeColors;
+            delete parsedLegacy.orderTypeDetailedColors;
+            localStorage.removeItem(legacyKey);
+            const migrated = { ...defaults, ...parsedLegacy };
+            migrated.servableModifiers = false;
+            return migrated;
+          } catch {
+            localStorage.removeItem(legacyKey);
+          }
+        }
+      }
+      return defaults;
+    }
     const parsed = { ...defaults, ...JSON.parse(raw) };
-    // Migrate legacy Title-case sortDefault values to the current lowercase variants.
     const sortMigration: Record<string, SortDefault> = {
       'By Time': 'By time',
       'By Table': 'By table',
@@ -131,6 +152,7 @@ function loadSettings(): KDSSettings {
     return defaults;
   }
 }
+
 
 const KDSSettingsContext = createContext<KDSSettingsContextValue | null>(null);
 
