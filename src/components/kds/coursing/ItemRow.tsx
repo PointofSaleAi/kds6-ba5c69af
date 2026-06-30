@@ -24,9 +24,14 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
             {item.quantity}×
           </span>
           <div className="flex-1 min-w-0 flex flex-col" style={{ gap: '1px' }}>
-            <span className="text-[13px] font-bold text-text-primary uppercase break-words" style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
-              {tp(item.name)}
-            </span>
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span className="text-[13px] font-bold text-text-primary uppercase break-words" style={{ lineHeight: 1.1, wordBreak: 'break-word' }}>
+                {tp(item.name)}
+              </span>
+              {item.allergens.map((a) => (
+                <AllergenBadge key={a.type} allergen={a} variant="item" />
+              ))}
+            </div>
             {displayMode === 'dual' && showSecondaryMenu && (
               <div
                 dir="ltr"
@@ -49,18 +54,6 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
           </div>
         </div>
 
-        {item.allergens.length > 0 && (
-          <div className="flex items-start" style={{ gap: '6px', marginTop: '1px', lineHeight: 1 }}>
-            <span className="invisible shrink-0 font-normal text-[13px]" aria-hidden="true" style={{ lineHeight: 1 }}>
-              {item.quantity}×
-            </span>
-            <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
-              {item.allergens.map((a) => (
-                <AllergenBadge key={a.type} allergen={a} variant="item" />
-              ))}
-            </div>
-          </div>
-        )}
 
         {item.modifiers.length > 0 && (
           <div style={{ marginTop: '1px' }}>
