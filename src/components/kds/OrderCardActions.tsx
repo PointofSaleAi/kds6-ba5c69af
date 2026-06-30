@@ -1,4 +1,4 @@
-import { Eye, ConciergeBell, CheckCircle } from 'lucide-react';
+import { Eye, ConciergeBell, Check, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import undoIcon from '@/assets/undo-icon.svg';
 
@@ -40,7 +40,16 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
     ? Eye
     : ticketState === 'in-progress'
       ? ConciergeBell
-      : CheckCircle;
+      : legacyActions ? Check : CheckCircle;
+
+  const legacyIconBg =
+    ticketState === 'seen' ? '#D9EAFF'
+    : ticketState === 'in-progress' ? '#FADBD8'
+    : '#E8DAEF';
+  const legacyIconColor =
+    ticketState === 'seen' ? '#176ACA'
+    : ticketState === 'in-progress' ? '#E74C3C'
+    : '#7D3C98';
 
   return (
     <div className="p-1.5 border-t border-border flex gap-1.5">
@@ -58,7 +67,16 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
         className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
         style={{ fontSize: '16px', fontWeight: 700, ...(legacyActions ? { backgroundColor: legacyBg } : defaultBgInline) }}
       >
-        <IconComponent size={22} color="#FFFFFF" strokeWidth={2.5} />
+        {legacyActions ? (
+          <span
+            className="flex items-center justify-center"
+            style={{ width: 32, height: 24, borderRadius: 4, backgroundColor: legacyIconBg }}
+          >
+            <IconComponent size={16} color={legacyIconColor} strokeWidth={2.5} />
+          </span>
+        ) : (
+          <IconComponent size={22} color="#FFFFFF" strokeWidth={2.5} />
+        )}
         {buttonLabel}
       </button>
     </div>
