@@ -241,6 +241,7 @@ function ItemTapRow({
             </span>
             <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 'var(--kds-child-gap, 1px)' }}>
               <TightWidthBox
+                constrainSecondary={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir]}
                 primary={
                   <span
