@@ -40,7 +40,16 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
     ? Eye
     : ticketState === 'in-progress'
       ? ConciergeBell
-      : CheckCircle;
+      : legacyActions ? Check : CheckCircle;
+
+  const legacyIconBg =
+    ticketState === 'seen' ? '#D9EAFF'
+    : ticketState === 'in-progress' ? '#FADBD8'
+    : '#E8DAEF';
+  const legacyIconColor =
+    ticketState === 'seen' ? '#176ACA'
+    : ticketState === 'in-progress' ? '#E74C3C'
+    : '#7D3C98';
 
   return (
     <div className="p-1.5 border-t border-border flex gap-1.5">
