@@ -686,7 +686,7 @@ function CourseItemTapRow({
                   </span>
                 </span>
               </span>
-              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext' }}>{tpSecondary(item.name)}</span>
+              <span style={{ lineHeight: 1, unicodeBidi: 'plaintext', flex: 1, textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
             </div>
           )}
 
