@@ -244,11 +244,16 @@ function ItemTapRow({
                 constrainSecondary={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir]}
                 primary={
-                  <span
-                    className={`block font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
-                    style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
-                  >
-                    {tp(item.name)}
+                  <span className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <span
+                      className={`font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+                      style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
+                    >
+                      {tp(item.name)}
+                    </span>
+                    {showDetails && showAllergens && item.allergens.map((a) => (
+                      <AllergenBadge key={a.type} allergen={a} variant="item" />
+                    ))}
                   </span>
                 }
                 secondary={showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled ? (
