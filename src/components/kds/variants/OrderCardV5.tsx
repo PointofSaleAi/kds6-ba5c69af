@@ -103,33 +103,36 @@ function ProductPill({
 
         {/* Name */}
         <div className="flex-1 min-w-0">
-          <div
-            className="truncate text-foreground"
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              textDecoration: done ? 'line-through' : 'none',
-            }}
-          >
-            {tx.tp(product.name)}
-          </div>
-          {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
-            <div className="flex items-center gap-1">
-              <Languages size={10} className="text-muted-foreground shrink-0" />
-              <div
-                className="truncate text-muted-foreground flex-1"
-                dir={tx.secondaryDir}
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
-                  textDecoration: done ? 'line-through' : 'none',
-                }}
-              >
-                {tx.tpSecondary(product.name)}
-              </div>
+          <div style={{ display: 'inline-block', maxWidth: '100%', minWidth: 0 }}>
+            <div
+              className="truncate text-foreground"
+              style={{
+                fontSize: 13,
+                fontWeight: 700,
+                textDecoration: done ? 'line-through' : 'none',
+              }}
+            >
+              {tx.tp(product.name)}
             </div>
-          )}
+            {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
+              <div className="flex items-center gap-1" style={{ justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}>
+                {tx.secondaryDir !== 'rtl' && <Languages size={10} className="text-muted-foreground shrink-0" />}
+                <div
+                  className="truncate text-muted-foreground"
+                  dir={tx.secondaryDir}
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 500,
+                    textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                    textDecoration: done ? 'line-through' : 'none',
+                  }}
+                >
+                  {tx.tpSecondary(product.name)}
+                </div>
+                {tx.secondaryDir === 'rtl' && <Languages size={10} className="text-muted-foreground shrink-0" />}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Status */}
