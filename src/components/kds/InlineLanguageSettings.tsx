@@ -30,6 +30,10 @@ const translations: Record<string, Record<string, string>> = {
   'en-GB': { fries: 'Chips', chicken: 'Grilled Chicken', salad: 'Caesar Salad' },
   es: { fries: 'Papas fritas', chicken: 'Pollo a la parrilla', salad: 'Ensalada César' },
   ar: { fries: 'بطاطس مقلية', chicken: 'دجاج مشوي', salad: 'سلطة سيزر' },
+  zh: { fries: '薯条', chicken: '烤鸡', salad: '凯撒沙拉' },
+  vi: { fries: 'Khoai tây chiên', chicken: 'Gà nướng', salad: 'Salad Caesar' },
+  ko: { fries: '감자튀김', chicken: '그릴드 치킨', salad: '시저 샐러드' },
+  ja: { fries: 'フライドポテト', chicken: 'グリルドチキン', salad: 'シーザーサラダ' },
 };
 
 const dateFormats = ['27 March 2026', 'March 27, 2026', '27/03/2026'];
