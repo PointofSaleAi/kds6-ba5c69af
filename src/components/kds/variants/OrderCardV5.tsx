@@ -333,7 +333,7 @@ export function OrderCardV5({ order, onBump }: Props) {
           <div className="v5-pill rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
             <FileText size={14} className="text-muted-foreground shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
-              <div style={{ display: 'inline-block', maxWidth: '100%', minWidth: 0 }}>
+              <div style={{ display: 'inline-grid', gridTemplateColumns: 'minmax(0, max-content)', maxWidth: '100%', minWidth: 0 }}>
                 <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
                   {tn(order.orderNotes)}
                 </div>
@@ -341,14 +341,11 @@ export function OrderCardV5({ order, onBump }: Props) {
                   <div
                     className="flex items-start gap-1 mt-0.5"
                     style={{
-                      justifyContent: tx.secondaryDir === 'rtl' ? 'flex-end' : 'flex-start',
-                      paddingRight: tx.secondaryDir === 'rtl' ? 14 : undefined,
-                      position: 'relative',
+                      flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
+                      justifyContent: tx.secondaryDir === 'rtl' ? 'flex-start' : 'flex-start',
                     }}
                   >
-                    {tx.secondaryDir !== 'rtl' && (
-                      <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
-                    )}
+                    <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
                     <div
                       className="break-words text-muted-foreground"
                       dir={tx.secondaryDir}
@@ -357,17 +354,11 @@ export function OrderCardV5({ order, onBump }: Props) {
                         fontWeight: 500,
                         textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
                         minWidth: 0,
+                        flex: 1,
                       }}
                     >
                       {tnSecondary(order.orderNotes)}
                     </div>
-                    {tx.secondaryDir === 'rtl' && (
-                      <Languages
-                        size={10}
-                        className="mt-0.5 shrink-0 text-muted-foreground"
-                        style={{ position: 'absolute', right: 0, top: 0 }}
-                      />
-                    )}
                   </div>
                 )}
               </div>
