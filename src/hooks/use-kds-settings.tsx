@@ -23,7 +23,7 @@ export type OrderTypeDetailedColors = Record<string, OrderTypeColorSet>;
 
 export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
   'dine-in': '#1A1A2E',
-  'take-out': '#2563EB',
+  'take-out': '#DB2777',
   'delivery': '#7C3AED',
   'banquet': '#0E7490',
   'drive-thru': '#15803D',
@@ -35,7 +35,7 @@ export const DEFAULT_ORDER_TYPE_COLORS: OrderTypeColors = {
 
 export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
   'dine-in': { headerBg: '#1A1A2E', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
-  'take-out': { headerBg: '#2563EB', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
+  'take-out': { headerBg: '#DB2777', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
   'delivery': { headerBg: '#7C3AED', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
   'banquet': { headerBg: '#0E7490', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
   'drive-thru': { headerBg: '#15803D', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
@@ -88,8 +88,8 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings-v3';
-const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v2'];
+const STORAGE_KEY = 'posai-kds-settings-v4';
+const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v3', 'posai-kds-settings-v2'];
 
 
 const defaults: KDSSettings = {
