@@ -114,6 +114,13 @@ function ProductRow({
         >
           {product.name}
         </div>
+        {showDetails && product.allergens.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {product.allergens.map((a) => (
+              <AllergenBadge key={a.type} allergen={a} variant="item" />
+            ))}
+          </div>
+        )}
         {showDetails && product.modifiers.length > 0 && (
           <div className="mt-0">
             {product.modifiers.map((m, i) => (
@@ -124,13 +131,6 @@ function ProductRow({
               >
                 {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
               </div>
-            ))}
-          </div>
-        )}
-        {showDetails && product.allergens.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-0.5">
-            {product.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} variant="item" />
             ))}
           </div>
         )}
