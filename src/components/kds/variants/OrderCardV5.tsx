@@ -399,35 +399,39 @@ export function OrderCardV5({ order, onBump }: Props) {
             <div className="min-w-0 flex-1">
               <TightWidthBox
                 deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
-              >
-                <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
-                  {tn(order.orderNotes)}
-                </div>
-                {displayMode === 'dual' && showSecondaryMenu && (
-                  <div
-                    className="flex items-start gap-1 mt-0.5"
-                    style={{
-                      flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
-                    <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                primary={
+                  <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
+                    {tn(order.orderNotes)}
+                  </div>
+                }
+                secondary={
+                  displayMode === 'dual' && showSecondaryMenu ? (
                     <div
-                      className="break-words text-muted-foreground"
-                      dir={tx.secondaryDir}
+                      className="flex items-start gap-1 mt-0.5"
                       style={{
-                        fontSize: 11,
-                        fontWeight: 500,
-                        textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
-                        minWidth: 0,
-                        flex: 1,
+                        flexDirection: tx.secondaryDir === 'rtl' ? 'row-reverse' : 'row',
+                        justifyContent: 'flex-start',
                       }}
                     >
-                      {tnSecondary(order.orderNotes)}
+                      <Languages size={10} className="mt-0.5 shrink-0 text-muted-foreground" />
+                      <div
+                        className="break-words text-muted-foreground"
+                        dir={tx.secondaryDir}
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 500,
+                          textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                          minWidth: 0,
+                          flex: 1,
+                        }}
+                      >
+                        {tnSecondary(order.orderNotes)}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </TightWidthBox>
+                  ) : undefined
+                }
+              />
+
             </div>
           </div>
         </div>
