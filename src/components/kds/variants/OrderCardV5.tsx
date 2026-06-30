@@ -314,7 +314,7 @@ export function OrderCardV5({ order, onBump }: Props) {
       {/* Order notes strip */}
       {order.orderNotes && (
         <div className="px-2 pt-2">
-          <div className="rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
+          <div className="v5-pill rounded-xl px-2.5 py-2 flex items-start gap-2 bg-muted border border-border/60">
             <FileText size={14} className="text-muted-foreground shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
               <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
