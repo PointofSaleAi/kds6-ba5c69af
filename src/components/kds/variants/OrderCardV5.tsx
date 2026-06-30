@@ -103,37 +103,33 @@ function ProductPill({
 
         {/* Name */}
         <div className="flex-1 min-w-0">
-          <div className="inline-block max-w-full align-top">
-            <div
-              className="truncate text-foreground"
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                textDecoration: done ? 'line-through' : 'none',
-              }}
-            >
-              {tx.tp(product.name)}
-            </div>
-            {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
-              <div
-                className="flex items-center gap-1 w-full"
-                dir={tx.secondaryDir}
-              >
-                <Languages size={10} className="text-muted-foreground shrink-0" />
-                <div
-                  className="truncate text-muted-foreground flex-1"
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 500,
-                    textAlign: 'start',
-                    textDecoration: done ? 'line-through' : 'none',
-                  }}
-                >
-                  {tx.tpSecondary(product.name)}
-                </div>
-              </div>
-            )}
+          <div
+            className="truncate text-foreground"
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              textDecoration: done ? 'line-through' : 'none',
+            }}
+          >
+            {tx.tp(product.name)}
           </div>
+          {tx.displayMode === 'dual' && tx.showSecondaryMenu && (
+            <div className="flex items-center gap-1">
+              <Languages size={10} className="text-muted-foreground shrink-0" />
+              <div
+                className="truncate text-muted-foreground flex-1"
+                dir={tx.secondaryDir}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 500,
+                  textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
+                  textDecoration: done ? 'line-through' : 'none',
+                }}
+              >
+                {tx.tpSecondary(product.name)}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Status */}
