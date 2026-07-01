@@ -269,8 +269,6 @@ export function OrderCardV3({ order, onBump }: Props) {
       {/* METADATA GRID 2x2 */}
       {(() => {
         const isDineIn = order.orderType === 'dine-in';
-        const guest = order.guestName || order.customerName || '';
-        const cell1Title = guest;
         const cell1Sub = isDineIn ? '' : (order.customerPhone || '');
         return (
           <div className="grid grid-cols-2 bg-card border-b border-border">
