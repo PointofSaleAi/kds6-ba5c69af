@@ -637,6 +637,7 @@ function CourseItemTapRow({
             <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 'var(--kds-child-gap, 1px)' }}>
               <TightWidthBox
                 constrainSecondary={secondaryDir === 'rtl'}
+                alignSecondaryEnd={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir, isHighlighted]}
                 expandSecondaryToContent={hasSecondaryLine && showAllergens && item.allergens.length > 0 && secondaryDir !== 'rtl'}
                 primary={
@@ -665,6 +666,12 @@ function CourseItemTapRow({
                   >
                     {secondaryDir === 'rtl' ? (
                       <>
+                        <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
+                          <Languages size={8} className="text-text-secondary" />
+                        </span>
+                        {showAllergens && item.allergens.map((a) => (
+                          <AllergenBadge key={a.type} allergen={a} variant="item" />
+                        ))}
                         <span
                           className="min-w-0"
                           style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: 'right', overflowWrap: 'anywhere' }}
@@ -672,9 +679,6 @@ function CourseItemTapRow({
                         >
                           {tpSecondary(item.name)}
                         </span>
-                        {showAllergens && item.allergens.map((a) => (
-                          <AllergenBadge key={a.type} allergen={a} variant="item" />
-                        ))}
                       </>
                     ) : (
                       <>
