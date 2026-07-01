@@ -6,13 +6,18 @@ import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
 import { blockDemoAuthInProd } from '@/lib/demo-auth';
+import { useActiveIdentity } from '@/hooks/use-active-identity';
 
 interface PinPadScreenProps {
   onSuccess: () => void;
   onFallback?: () => void;
+  context?: 'login' | 'staff-switch';
+  onCancel?: () => void;
 }
 
-export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProps) {
+export default function PinPadScreen({ onSuccess, onFallback, context = 'login', onCancel }: PinPadScreenProps) {
+  const { identity, signInWithPin, signInAsRestaurant } = useActiveIdentity();
+  const currentLabel = identity.kind === 'restaurant' ? identity.name : identity.name;
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
