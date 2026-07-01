@@ -19,16 +19,21 @@ interface AIAssistantPanelProps {
   onClose: () => void;
 }
 
-type RouteContent = { chips: string[]; examples: string[] };
+type RouteContent = { chips: string[]; example: string; contextKey: string };
 
 const HOME_CONTENT: RouteContent = {
-  chips: ['Prioritise tickets', 'Filter by order type', 'Show overtime', 'Allergen alerts'],
-  examples: [
-    '"How many tickets are overtime?"',
-    '"Show me all dine-in tickets"',
-    '"What stations are busiest right now?"',
-    '"Mark ticket #33 as seen"',
+  contextKey: 'home-unseen',
+  chips: [
+    'Mark all seen',
+    'Oldest first',
+    'Filter by order type',
+    'Allergen alerts',
+    'Show overtime tickets',
+    'Sort by table',
+    'Hide seen tickets',
+    'Show all tickets',
   ],
+  example: '"How many unseen tickets are waiting?"',
 };
 
 const ROUTE_CONTENT: Record<string, RouteContent> = {
@@ -37,82 +42,82 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
   '/kds/v3': HOME_CONTENT,
   '/kds/v4': HOME_CONTENT,
   '/kds/v1/history': {
-    chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
-    examples: [
-      '"Show tickets bumped in the last hour"',
-      '"Recall ticket #32"',
-      '"How many tickets were served today?"',
-      '"Show all delivery tickets from today"',
+    contextKey: 'history',
+    chips: [
+      'Recall a ticket',
+      "Today's summary",
+      'Filter by time',
+      'Search by table',
+      'Show cancelled tickets',
+      'Filter by order type',
+      'Show overtime tickets',
+      'Export summary',
     ],
+    example: '"Recall ticket 32"',
   },
   '/kds/v1/settings/display': {
-    chips: ['Text size', 'Ticket layout', 'Dark mode', 'Reset display'],
-    examples: [
-      '"Set text size to large"',
-      '"Switch to compact layout"',
-      '"Turn on dark mode"',
-      '"Reset display settings to defaults"',
+    contextKey: 'settings-display',
+    chips: [
+      'Text size',
+      'Ticket layout',
+      'Dark mode',
+      'Reset display',
+      'Order type colours',
+      'Language',
+      'Allergen badges',
+      'Ticket spacing',
     ],
+    example: '"Switch to compact layout"',
   },
   '/kds/v1/settings/orders': {
+    contextKey: 'settings-orders',
     chips: ['Allergen badges', 'Servable modifiers', 'Ticket aging rules', 'Reset tickets'],
-    examples: [
-      '"Enable allergen badges"',
-      '"Turn on servable modifiers"',
-      '"Show ticket header allergen summary"',
-      '"Reset ticket settings to defaults"',
-    ],
+    example: '"Enable allergen badges"',
   },
   '/kds/v1/settings/hardware': {
+    contextKey: 'settings-hardware',
     chips: ['KOT printer', 'Sound settings', 'Sync now', 'Connection'],
-    examples: [
-      '"Set up my KOT printer"',
-      '"Change the alert sound"',
-      '"What is my connection status?"',
-      '"Force sync orders now"',
-    ],
+    example: '"Set up my KOT printer"',
   },
   '/kds/v1/settings/account': {
+    contextKey: 'settings-account',
     chips: ['Device name', 'Station ID', 'Bug reporting', 'Log out'],
-    examples: [
-      '"What is my station ID?"',
-      '"Change my device name"',
-      '"Upload diagnostic logs"',
-      '"How do I log out?"',
-    ],
+    example: '"What is my station ID?"',
   },
 };
 
 const FALLBACK_CONTENT: RouteContent = {
-  chips: ['Display settings', 'Ticket settings', 'Hardware', 'Account'],
-  examples: [
-    '"Set text size to large"',
-    '"Enable allergen badges"',
-    '"Change language to Spanish"',
-    '"Reset settings to defaults"',
+  contextKey: 'settings-nav',
+  chips: [
+    'Display settings',
+    'Ticket settings',
+    'Hardware',
+    'Account',
+    'Language',
+    'Sound settings',
+    'Order type colours',
+    'Reset to defaults',
   ],
+  example: '"Set text size to large"',
 };
 
 const VIEW_CONTENT: Record<string, RouteContent> = {
   history: ROUTE_CONTENT['/kds/v1/history'],
   'seen-orders': {
-    chips: ['Mark all served', 'Filter by station', 'Show overtime', 'Allergen alerts'],
-    examples: [
-      '"How many seen tickets are overtime?"',
-      '"Show seen dine-in tickets"',
-      '"Mark ticket #33 as served"',
-      '"What stations have the most seen tickets?"',
+    contextKey: 'home-seen',
+    chips: [
+      'Show overtime tickets',
+      'Filter by station',
+      'Allergen alerts',
+      'Sort by order type',
+      'Mark all done',
+      'Show unseen tickets',
+      'Filter by time',
+      'Show all tickets',
     ],
+    example: '"Show all overtime tickets"',
   },
-  'unseen-orders': {
-    chips: ['Mark all seen', 'Oldest first', 'Filter by order type', 'Allergen alerts'],
-    examples: [
-      '"How many unseen tickets are waiting?"',
-      '"Show the oldest unseen ticket"',
-      '"Mark ticket #33 as seen"',
-      '"Show all unseen delivery tickets"',
-    ],
-  },
+  'unseen-orders': HOME_CONTENT,
 };
 
 function getRouteContent(pathname: string, view?: string | null): RouteContent {
@@ -122,6 +127,24 @@ function getRouteContent(pathname: string, view?: string | null): RouteContent {
   if (match) return ROUTE_CONTENT[match];
   if (pathname === '/' || pathname.startsWith('/kds/v1')) return HOME_CONTENT;
   return FALLBACK_CONTENT;
+}
+
+const LEARNED_STORAGE_KEY = 'posai-maya-learned-queries';
+type LearnedMap = Record<string, string[]>;
+
+function loadLearned(): LearnedMap {
+  try {
+    const raw = localStorage.getItem(LEARNED_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveLearned(map: LearnedMap) {
+  try {
+    localStorage.setItem(LEARNED_STORAGE_KEY, JSON.stringify(map));
+  } catch { /* ignore */ }
 }
 
 type ChatMessage = {
