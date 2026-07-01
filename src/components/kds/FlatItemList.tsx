@@ -273,12 +273,12 @@ function ItemTapRow({
                         >
                           {tpSecondary(item.name)}
                         </span>
-                        <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
-                          <Languages size={8} className="text-text-secondary" />
-                        </span>
                         {showAllergens && item.allergens.map((a) => (
                           <AllergenBadge key={a.type} allergen={a} variant="item" />
                         ))}
+                        <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
+                          <Languages size={8} className="text-text-secondary" />
+                        </span>
                       </>
                     ) : (
                       <>
