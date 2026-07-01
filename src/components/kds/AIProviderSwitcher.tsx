@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bot, ChevronDown, ChevronUp, Check } from 'lucide-react';
+import { ChevronDown, ChevronUp, Check } from 'lucide-react';
+import aiEIcon from "@/assets/ai-e-icon.png";
 import {
   AI_PROVIDER_SHORT_LABELS,
   AI_PROVIDER_MODEL_OPTIONS,
@@ -43,7 +44,7 @@ export function AIProviderSwitcher({ provider, model }: Props) {
         className="flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full bg-neutral-800/70 hover:bg-neutral-700/70 active:opacity-70 transition-all border border-neutral-700/50 whitespace-nowrap"
       >
         <span className="w-7 h-7 rounded-full bg-pink-500/15 flex items-center justify-center shrink-0">
-          <Bot className="w-4 h-4 text-pink-400" />
+          <img src={aiEIcon} alt="Maya" className="w-4 h-4" style={{ filter: "brightness(1.2)" }} />
         </span>
         <span className="text-sm font-semibold text-white leading-none">
           {AI_PROVIDER_SHORT_LABELS[activeProvider]}
