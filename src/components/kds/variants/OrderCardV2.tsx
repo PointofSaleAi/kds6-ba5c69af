@@ -198,7 +198,7 @@ export function OrderCardV2({ order, onBump }: Props) {
     });
   };
 
-  const { ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
