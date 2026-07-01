@@ -121,7 +121,7 @@ export default function AIIntegrationSettings() {
         icon={Sparkles}
         iconColor="#7C3AED"
         label="Enable AI Integration"
-        helper="Configure external AI providers using your own API keys. AI-powered features across the platform will use this integration when enabled."
+        helper="Maya powers all AI-powered features across the platform when enabled."
         right={<SwitchToggle checked={enabled} onChange={handleToggleEnabled} />}
         highlighted={hash === 'ai-enabled'}
       />
