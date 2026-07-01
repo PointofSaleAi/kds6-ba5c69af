@@ -341,7 +341,7 @@ function TightWidthBox({
 }
 
 export function OrderCardV5({ order, onBump }: Props) {
-  const { ticketLayout } = useKDSSettings();
+  const { ticketLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
   const tx: Translators = {
     tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta,
