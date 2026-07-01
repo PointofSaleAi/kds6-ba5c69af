@@ -87,11 +87,11 @@ export default function AIIntegrationSettings() {
 
   const handleReset = () => {
     Object.values(STORAGE_KEYS).forEach((k) => window.localStorage.removeItem(k));
-    setEnabled(false);
-    setProvider('');
-    setStatus('not_configured');
+    setEnabled(true);
+    setProvider('maya');
+    setStatus('connected');
     emitAIIntegrationChange();
-    toast.success('AI integration removed');
+    toast.success('AI integration reset to default');
   };
 
 
