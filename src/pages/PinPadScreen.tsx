@@ -172,6 +172,11 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
               <AnimatePresence mode="wait">
                 {rightMode === 'pin' && (
                   <motion.div key="pin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
+                    {context === 'staff-switch' && (
+                      <p className="text-center font-montserrat mb-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px' }}>
+                        Currently signed in as: <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{currentLabel}</span>
+                      </p>
+                    )}
                     <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
                       Enter your PIN
                     </p>
