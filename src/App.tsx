@@ -64,7 +64,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Navigate to="/kds/full" replace />} />
+              <Route path="/" element={<Navigate to="/kds/default" replace />} />
               <Route path="/kds/full" element={<Index />} />
               <Route path="/kds/default" element={<Index legacyActions />} />
               <Route path="/kds/v1" element={<Index cardVariant="v1" />} />
