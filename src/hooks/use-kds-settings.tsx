@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+
 
 export type TextSize = 'Compact' | 'Standard' | 'Large';
 export type SortDefault = 'By time' | 'By table' | 'By type';
@@ -183,8 +183,33 @@ const KDSSettingsContext = createContext<KDSSettingsContextValue | null>(null);
 
 export function KDSSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<KDSSettings>(loadSettings);
-  const location = useLocation();
-  const activeTicketsRoute = useMemo(() => pathToRouteKey(location.pathname), [location.pathname]);
+  const [pathname, setPathname] = useState<string>(() =>
+    typeof window !== 'undefined' ? window.location.pathname : '/',
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const update = () => setPathname(window.location.pathname);
+    window.addEventListener('popstate', update);
+    // Patch pushState/replaceState to emit updates for SPA navigation.
+    const origPush = window.history.pushState;
+    const origReplace = window.history.replaceState;
+    window.history.pushState = function (...args) {
+      const r = origPush.apply(this, args as any);
+      update();
+      return r;
+    };
+    window.history.replaceState = function (...args) {
+      const r = origReplace.apply(this, args as any);
+      update();
+      return r;
+    };
+    return () => {
+      window.removeEventListener('popstate', update);
+      window.history.pushState = origPush;
+      window.history.replaceState = origReplace;
+    };
+  }, []);
+  const activeTicketsRoute = useMemo(() => pathToRouteKey(pathname), [pathname]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
