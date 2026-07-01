@@ -56,7 +56,16 @@ export default function AccountSettings() {
   const handleResetDefaults = () => {
     setResetOpen(false);
     try {
-      const preserve = new Set(['posai-auth', 'posai-session']);
+      // Device-specific keys are excluded from reset — they represent this
+      // physical device's identity and paired hardware, not user preferences.
+      const preserve = new Set([
+        'posai-auth',
+        'posai-session',
+        'posai-device-name',
+        'posai-station-id',
+        'posai-printer-assignments',
+        'posai-cloud-server',
+      ]);
       const keysToRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
