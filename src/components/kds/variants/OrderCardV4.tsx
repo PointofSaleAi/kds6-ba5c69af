@@ -148,7 +148,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 export function OrderCardV4({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
-  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const { getStatusForElapsed } = useStatusRules();
