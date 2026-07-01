@@ -4,7 +4,6 @@ import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/us
 
 interface ProfileSectionProps {
   onSwitchStaff: () => void;
-  onLogOutDevice: () => void;
 }
 
 type TabKey = 'today' | 'total';
@@ -21,7 +20,7 @@ function formatHours(hours: number): string {
   return `${h}h ${m.toString().padStart(2, '0')}m`;
 }
 
-export function ProfileSection({ onSwitchStaff, onLogOutDevice }: ProfileSectionProps) {
+export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
   const { identity, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
   const [tab, setTab] = useState<TabKey>('today');
 
@@ -105,14 +104,6 @@ export function ProfileSection({ onSwitchStaff, onLogOutDevice }: ProfileSection
         Switch staff — enter PIN
       </button>
 
-      <button
-        onClick={onLogOutDevice}
-        className="w-full mt-2 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold font-montserrat text-sm transition-colors"
-        style={{ color: '#E84C3D' }}
-      >
-        <LogOut size={16} />
-        Log out device
-      </button>
     </div>
   );
 }
