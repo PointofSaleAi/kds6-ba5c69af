@@ -419,7 +419,7 @@ export function OrderCardV5({ order, onBump }: Props) {
                         className="break-words text-muted-foreground"
                         dir={tx.secondaryDir}
                         style={{
-                          fontSize: 11,
+                          fontSize: 'var(--kds-modifier)',
                           fontWeight: 500,
                           textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
                           minWidth: 0,
