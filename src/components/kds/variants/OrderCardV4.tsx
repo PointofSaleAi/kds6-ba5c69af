@@ -147,8 +147,9 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 export function OrderCardV4({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
-  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
+  const isHeaderOnly = ticketLayout === 'header';
   const { getStatusForElapsed } = useStatusRules();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
@@ -156,6 +157,9 @@ export function OrderCardV4({ order, onBump }: Props) {
   const status = getStatusForElapsed(elapsed);
   const pillBg = status.color;
   const pillText = status.textColor;
+  const identifier = ticketHeaderLayout === 'guest'
+    ? (order.guestName || order.customerName || order.serverName || 'Guest')
+    : `#${order.orderNumber}`;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
@@ -178,13 +182,11 @@ export function OrderCardV4({ order, onBump }: Props) {
   const handleBump = () => {
     if (bumping) return;
     setBumping(true);
-    // Set all not-yet-done rows to loading immediately
     setRowStates((prev) => {
       const next = { ...prev };
       allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
       return next;
     });
-    // Stagger flip each to done
     allItems.forEach((p, idx) => {
       const t = window.setTimeout(() => setRow(p.id, 'done'), 250 + idx * 120);
       timersRef.current.push(t);
@@ -214,10 +216,10 @@ export function OrderCardV4({ order, onBump }: Props) {
         className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-card text-foreground"
         style={{ borderBottom: '0.5px solid #E5E7EB' }}
       >
-        <span className="inline-flex items-center gap-1.5">
-          <span style={{ fontSize: 14, fontWeight: 800 }}>#{order.orderNumber}</span>
+        <span className="inline-flex items-center gap-1.5 min-w-0">
+          <span className="truncate" style={{ fontSize: 14, fontWeight: 500 }}>{identifier}</span>
           <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
+            className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors shrink-0"
             style={{ background: pillBg, color: pillText }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${status.label}`}
           >
@@ -229,9 +231,10 @@ export function OrderCardV4({ order, onBump }: Props) {
         </span>
       </div>
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}
+      {!isHeaderOnly && (
       <div className="flex-1">
 
         {order.orderType === 'dine-in' && !isCompact ? (
@@ -274,11 +277,7 @@ export function OrderCardV4({ order, onBump }: Props) {
           </div>
         )}
       </div>
-
-
-
-
-
+      )}
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
     </div>
