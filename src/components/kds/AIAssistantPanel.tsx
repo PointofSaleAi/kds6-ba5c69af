@@ -342,9 +342,21 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     }
   };
 
+  const recordLearnedQuery = (query: string) => {
+    const q = query.trim();
+    if (!q) return;
+    setLearnedMap(prev => {
+      const existing = (prev[contextKey] || []).filter(x => x.toLowerCase() !== q.toLowerCase());
+      const next = { ...prev, [contextKey]: [q, ...existing].slice(0, 3) };
+      saveLearned(next);
+      return next;
+    });
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      recordLearnedQuery(input);
       submitPrompt(input);
     }
   };
