@@ -232,6 +232,7 @@ export function OrderCardV4({ order, onBump }: Props) {
         </span>
       </div>
 
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}
