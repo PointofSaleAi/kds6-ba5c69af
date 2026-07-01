@@ -18,6 +18,7 @@ import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
 import { NotificationsProvider } from "@/hooks/use-notifications";
 import { DockLayoutProvider } from "@/hooks/use-dock-layout";
 import { ActiveKDSViewProvider } from "@/hooks/use-active-kds-view";
+import { ActiveIdentityProvider } from "@/hooks/use-active-identity";
 import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
@@ -56,6 +57,7 @@ const App = () => (
       <NotificationsProvider>
       <DockLayoutProvider>
       <ActiveKDSViewProvider>
+      <ActiveIdentityProvider>
       <TooltipProvider>
         <DockDragLayer>
           <NotificationToastStack />
@@ -96,6 +98,7 @@ const App = () => (
           </BrowserRouter>
         </DockDragLayer>
       </TooltipProvider>
+      </ActiveIdentityProvider>
       </ActiveKDSViewProvider>
       </DockLayoutProvider>
       </NotificationsProvider>

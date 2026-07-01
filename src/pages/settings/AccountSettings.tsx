@@ -9,6 +9,8 @@ import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, ValueText, useHashHighlight } from '@/components/settings/SettingsControls';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { ProfileSection } from '@/components/settings/ProfileSection';
+import PinPadScreen from '@/pages/PinPadScreen';
 import { toast } from '@/hooks/use-toast';
 
 export default function AccountSettings() {
@@ -19,6 +21,7 @@ export default function AccountSettings() {
   const [resetOpen, setResetOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
+  const [staffSwitchOpen, setStaffSwitchOpen] = useState(false);
   const hash = useHashHighlight();
 
   const handleDevModeChange = (v: boolean) => {
@@ -92,13 +95,30 @@ export default function AccountSettings() {
 
   return (
     <>
+      <ProfileSection
+        onSwitchStaff={() => setStaffSwitchOpen(true)}
+        onLogOutDevice={() => setLogoutOpen(true)}
+      />
+
+      <div className="my-4 border-t" style={{ borderColor: 'hsl(var(--border))' }} />
+
       <SectionHeaderCard
         icon={User}
         iconColor={GROUP_COLOR.account}
-        title="Account"
+        title="Device settings"
         shortDescription="Manage this device's identity, developer tools, and session."
         longDescription="Manage this device's identity, developer tools, and session. Use Dev mode to surface the scenario selector during development. Logging out returns the device to the activation flow."
       />
+
+      {staffSwitchOpen && (
+        <div className="fixed inset-0 z-[100]">
+          <PinPadScreen
+            context="staff-switch"
+            onSuccess={() => setStaffSwitchOpen(false)}
+            onCancel={() => setStaffSwitchOpen(false)}
+          />
+        </div>
+      )}
 
       <SettingsPill
         icon={Smartphone}

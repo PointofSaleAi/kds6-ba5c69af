@@ -6,13 +6,18 @@ import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
 import { blockDemoAuthInProd } from '@/lib/demo-auth';
+import { useActiveIdentity } from '@/hooks/use-active-identity';
 
 interface PinPadScreenProps {
   onSuccess: () => void;
   onFallback?: () => void;
+  context?: 'login' | 'staff-switch';
+  onCancel?: () => void;
 }
 
-export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProps) {
+export default function PinPadScreen({ onSuccess, onFallback, context = 'login', onCancel }: PinPadScreenProps) {
+  const { identity, signInWithPin, signInAsRestaurant } = useActiveIdentity();
+  const currentLabel = identity.kind === 'restaurant' ? identity.name : identity.name;
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
   const [qrApproved, setQrApproved] = useState(false);
@@ -37,25 +42,27 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
       if (next.length === 4) {
         setTimeout(() => {
           if (!blockDemoAuthInProd()) { setPin(''); return; }
+          signInWithPin(next);
           onSuccess();
         }, 400);
       }
       return next;
     });
-  }, [onSuccess]);
+  }, [onSuccess, signInWithPin]);
 
   const handleClear = useCallback(() => setPin(''), []);
 
   const handleSimulateQrApproval = useCallback(() => {
     if (!blockDemoAuthInProd()) return;
     setQrApproved(true);
+    signInAsRestaurant();
     setTimeout(() => onSuccess(), 1500);
-  }, [onSuccess]);
+  }, [onSuccess, signInAsRestaurant]);
 
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (input && password && blockDemoAuthInProd()) onSuccess();
-  }, [input, password, onSuccess]);
+    if (input && password && blockDemoAuthInProd()) { signInAsRestaurant(); onSuccess(); }
+  }, [input, password, onSuccess, signInAsRestaurant]);
 
   const handleSendOtp = useCallback(() => {
     if (input) setOtpSent(true);
@@ -63,8 +70,9 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
 
   const handleVerifyOtp = useCallback(() => {
     if (!blockDemoAuthInProd()) return;
+    signInAsRestaurant();
     onSuccess();
-  }, [onSuccess]);
+  }, [onSuccess, signInAsRestaurant]);
 
   const handleOtpDigit = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -136,7 +144,7 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                     </div>
                     <div style={{ maxWidth: '340px' }}>
                       <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                        Scan directly with your phone camera. You will be asked to enter your email, password to verify.
+                        Scan with your phone camera to sign in.
                       </p>
                     </div>
                   </motion.div>
@@ -164,6 +172,11 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
               <AnimatePresence mode="wait">
                 {rightMode === 'pin' && (
                   <motion.div key="pin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
+                    {context === 'staff-switch' && (
+                      <p className="text-center font-montserrat mb-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px' }}>
+                        Currently signed in as: <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{currentLabel}</span>
+                      </p>
+                    )}
                     <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
                       Enter your PIN
                     </p>
@@ -215,6 +228,13 @@ export default function PinPadScreen({ onSuccess, onFallback }: PinPadScreenProp
                         Sign in with email or mobile
                       </button>
                     </div>
+                    {context === 'staff-switch' && onCancel && (
+                      <div className="flex justify-center mt-3">
+                        <button onClick={onCancel} className="text-sm font-montserrat" style={{ ...linkStyle, opacity: 0.75 }}>
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
