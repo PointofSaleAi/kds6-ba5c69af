@@ -13,9 +13,8 @@ interface ProviderOption {
   name: string;
 }
 
+// Manufacturer default: Maya AI is the only selectable provider.
 const PROVIDERS: ProviderOption[] = [
-  { id: 'openai', name: 'OpenAI (ChatGPT)' },
-  { id: 'google', name: 'Google Gemini' },
   { id: 'maya', name: 'Maya AI' },
 ];
 
