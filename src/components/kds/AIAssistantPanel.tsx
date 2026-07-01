@@ -19,16 +19,21 @@ interface AIAssistantPanelProps {
   onClose: () => void;
 }
 
-type RouteContent = { chips: string[]; examples: string[] };
+type RouteContent = { chips: string[]; example: string; contextKey: string };
 
 const HOME_CONTENT: RouteContent = {
-  chips: ['Prioritise tickets', 'Filter by order type', 'Show overtime', 'Allergen alerts'],
-  examples: [
-    '"How many tickets are overtime?"',
-    '"Show me all dine-in tickets"',
-    '"What stations are busiest right now?"',
-    '"Mark ticket #33 as seen"',
+  contextKey: 'home-unseen',
+  chips: [
+    'Mark all seen',
+    'Oldest first',
+    'Filter by order type',
+    'Allergen alerts',
+    'Show overtime tickets',
+    'Sort by table',
+    'Hide seen tickets',
+    'Show all tickets',
   ],
+  example: '"How many unseen tickets are waiting?"',
 };
 
 const ROUTE_CONTENT: Record<string, RouteContent> = {
@@ -37,82 +42,82 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
   '/kds/v3': HOME_CONTENT,
   '/kds/v4': HOME_CONTENT,
   '/kds/v1/history': {
-    chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
-    examples: [
-      '"Show tickets bumped in the last hour"',
-      '"Recall ticket #32"',
-      '"How many tickets were served today?"',
-      '"Show all delivery tickets from today"',
+    contextKey: 'history',
+    chips: [
+      'Recall a ticket',
+      "Today's summary",
+      'Filter by time',
+      'Search by table',
+      'Show cancelled tickets',
+      'Filter by order type',
+      'Show overtime tickets',
+      'Export summary',
     ],
+    example: '"Recall ticket 32"',
   },
   '/kds/v1/settings/display': {
-    chips: ['Text size', 'Ticket layout', 'Dark mode', 'Reset display'],
-    examples: [
-      '"Set text size to large"',
-      '"Switch to compact layout"',
-      '"Turn on dark mode"',
-      '"Reset display settings to defaults"',
+    contextKey: 'settings-display',
+    chips: [
+      'Text size',
+      'Ticket layout',
+      'Dark mode',
+      'Reset display',
+      'Order type colours',
+      'Language',
+      'Allergen badges',
+      'Ticket spacing',
     ],
+    example: '"Switch to compact layout"',
   },
   '/kds/v1/settings/orders': {
+    contextKey: 'settings-orders',
     chips: ['Allergen badges', 'Servable modifiers', 'Ticket aging rules', 'Reset tickets'],
-    examples: [
-      '"Enable allergen badges"',
-      '"Turn on servable modifiers"',
-      '"Show ticket header allergen summary"',
-      '"Reset ticket settings to defaults"',
-    ],
+    example: '"Enable allergen badges"',
   },
   '/kds/v1/settings/hardware': {
+    contextKey: 'settings-hardware',
     chips: ['KOT printer', 'Sound settings', 'Sync now', 'Connection'],
-    examples: [
-      '"Set up my KOT printer"',
-      '"Change the alert sound"',
-      '"What is my connection status?"',
-      '"Force sync orders now"',
-    ],
+    example: '"Set up my KOT printer"',
   },
   '/kds/v1/settings/account': {
+    contextKey: 'settings-account',
     chips: ['Device name', 'Station ID', 'Bug reporting', 'Log out'],
-    examples: [
-      '"What is my station ID?"',
-      '"Change my device name"',
-      '"Upload diagnostic logs"',
-      '"How do I log out?"',
-    ],
+    example: '"What is my station ID?"',
   },
 };
 
 const FALLBACK_CONTENT: RouteContent = {
-  chips: ['Display settings', 'Ticket settings', 'Hardware', 'Account'],
-  examples: [
-    '"Set text size to large"',
-    '"Enable allergen badges"',
-    '"Change language to Spanish"',
-    '"Reset settings to defaults"',
+  contextKey: 'settings-nav',
+  chips: [
+    'Display settings',
+    'Ticket settings',
+    'Hardware',
+    'Account',
+    'Language',
+    'Sound settings',
+    'Order type colours',
+    'Reset to defaults',
   ],
+  example: '"Set text size to large"',
 };
 
 const VIEW_CONTENT: Record<string, RouteContent> = {
   history: ROUTE_CONTENT['/kds/v1/history'],
   'seen-orders': {
-    chips: ['Mark all served', 'Filter by station', 'Show overtime', 'Allergen alerts'],
-    examples: [
-      '"How many seen tickets are overtime?"',
-      '"Show seen dine-in tickets"',
-      '"Mark ticket #33 as served"',
-      '"What stations have the most seen tickets?"',
+    contextKey: 'home-seen',
+    chips: [
+      'Show overtime tickets',
+      'Filter by station',
+      'Allergen alerts',
+      'Sort by order type',
+      'Mark all done',
+      'Show unseen tickets',
+      'Filter by time',
+      'Show all tickets',
     ],
+    example: '"Show all overtime tickets"',
   },
-  'unseen-orders': {
-    chips: ['Mark all seen', 'Oldest first', 'Filter by order type', 'Allergen alerts'],
-    examples: [
-      '"How many unseen tickets are waiting?"',
-      '"Show the oldest unseen ticket"',
-      '"Mark ticket #33 as seen"',
-      '"Show all unseen delivery tickets"',
-    ],
-  },
+  'unseen-orders': HOME_CONTENT,
 };
 
 function getRouteContent(pathname: string, view?: string | null): RouteContent {
@@ -122,6 +127,24 @@ function getRouteContent(pathname: string, view?: string | null): RouteContent {
   if (match) return ROUTE_CONTENT[match];
   if (pathname === '/' || pathname.startsWith('/kds/v1')) return HOME_CONTENT;
   return FALLBACK_CONTENT;
+}
+
+const LEARNED_STORAGE_KEY = 'posai-maya-learned-queries';
+type LearnedMap = Record<string, string[]>;
+
+function loadLearned(): LearnedMap {
+  try {
+    const raw = localStorage.getItem(LEARNED_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveLearned(map: LearnedMap) {
+  try {
+    localStorage.setItem(LEARNED_STORAGE_KEY, JSON.stringify(map));
+  } catch { /* ignore */ }
 }
 
 type ChatMessage = {
@@ -149,7 +172,10 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const statusRules = useStatusRules();
   const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
   const isSettingsRoute = location.pathname.startsWith('/kds/v1/settings');
-  const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
+  const routeContent = getRouteContent(location.pathname, activeKDSView);
+  const { chips: SUGGESTION_CHIPS, example: TRY_EXAMPLE, contextKey } = routeContent;
+  const [learnedMap, setLearnedMap] = useState<LearnedMap>(() => loadLearned());
+  const learnedForContext = (learnedMap[contextKey] || []).slice(0, 3);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
   const providerShort = ai.provider ? AI_PROVIDER_SHORT_LABELS[ai.provider] : 'AI';
@@ -316,9 +342,21 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     }
   };
 
+  const recordLearnedQuery = (query: string) => {
+    const q = query.trim();
+    if (!q) return;
+    setLearnedMap(prev => {
+      const existing = (prev[contextKey] || []).filter(x => x.toLowerCase() !== q.toLowerCase());
+      const next = { ...prev, [contextKey]: [q, ...existing].slice(0, 3) };
+      saveLearned(next);
+      return next;
+    });
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      recordLearnedQuery(input);
       submitPrompt(input);
     }
   };
@@ -388,25 +426,24 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
               {/* Messages / Empty state */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4">
                 {!hasMessages ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center px-2">
-                    <div className="mb-4 overflow-visible">
-                      <AnimatedAIIcon size={56} />
-                    </div>
-                    <h2 className="text-xl font-semibold text-white mb-1">
-                      How can I help you today?
-                    </h2>
-                    <p className="text-neutral-400 text-sm mb-4 max-w-sm">
-                      Ask about tickets, allergens, courses, or KDS settings.
-                    </p>
-
-                    <div className="flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full bg-neutral-800/60 border border-neutral-700/40">
-                      <Bot className="w-3 h-3 text-emerald-400" />
-                      <span className="text-xs text-neutral-400">Powered by</span>
-                      <span className="text-xs font-medium text-white">{providerLabel}</span>
+                  <div className="h-full flex flex-col px-1">
+                    {/* Hero: horizontal layout */}
+                    <div className="flex items-center gap-3 mb-5 text-left">
+                      <div className="flex-shrink-0 overflow-visible">
+                        <AnimatedAIIcon size={44} />
+                      </div>
+                      <div className="min-w-0">
+                        <h2 className="text-base font-semibold text-white leading-tight">
+                          How can I help you today?
+                        </h2>
+                        <p className="text-neutral-400 text-xs mt-0.5">
+                          Ask about tickets, allergens, courses, or KDS settings.
+                        </p>
+                      </div>
                     </div>
 
                     {isSettingsRoute && (
-                      <div className="w-full max-w-lg mb-5">
+                      <div className="w-full mb-4">
                         <p
                           className="mb-2 text-left"
                           style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}
@@ -439,26 +476,39 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       </div>
                     )}
 
-                    <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                    <div className="grid grid-cols-2 gap-2">
+                      {learnedForContext.map(q => {
+                        const label = q.length > 30 ? q.slice(0, 30) + '…' : q;
+                        return (
+                          <button
+                            key={`learned-${q}`}
+                            onClick={() => submitPrompt(q)}
+                            title={q}
+                            className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-violet-500/10 text-sm text-white hover:bg-violet-500/20 active:opacity-70 transition-all border border-violet-400/30 text-left"
+                          >
+                            <Bot className="w-3.5 h-3.5 text-violet-300 flex-shrink-0" />
+                            <span className="truncate">{label}</span>
+                          </button>
+                        );
+                      })}
                       {SUGGESTION_CHIPS.map(chip => (
                         <button
                           key={chip}
                           onClick={() => submitPrompt(chip)}
-                          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50"
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50 text-left"
                         >
-                          <Bot className="w-3.5 h-3.5 text-violet-400" />
-                          {chip}
+                          <Bot className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
+                          <span className="truncate">{chip}</span>
                         </button>
                       ))}
                     </div>
 
-                    <div className="mt-8 text-center">
-                      <p className="text-xs text-neutral-400 mb-1.5">Try asking:</p>
-                      <div className="space-y-1 text-xs text-neutral-500">
-                        {TRY_EXAMPLES.map(e => <p key={e}>{e}</p>)}
-                      </div>
+                    <div className="mt-5 text-left">
+                      <p className="text-xs text-neutral-400 mb-1">Try asking:</p>
+                      <p className="text-xs text-neutral-500">{TRY_EXAMPLE}</p>
                     </div>
                   </div>
+
                 ) : (
                   <>
                     {messages.filter(m => !(m.role === 'assistant' && !m.text)).map(m => (
@@ -544,7 +594,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
               {/* Input */}
               <div className="flex-shrink-0 p-4 border-t border-neutral-800/60">
                 <form
-                  onSubmit={(e) => { e.preventDefault(); submitPrompt(input); }}
+                  onSubmit={(e) => { e.preventDefault(); recordLearnedQuery(input); submitPrompt(input); }}
                   className="flex gap-3 items-center"
                 >
                   <button
