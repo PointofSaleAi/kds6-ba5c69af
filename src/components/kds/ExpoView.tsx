@@ -848,7 +848,7 @@ function ExpoTopControls({
     if (fulfilledTickets.length === 0) {
       toast('No recently fulfilled tickets.');
     } else {
-      toast(`Recently fulfilled: ${fulfilledTickets.map(n => `#${n}`).join(', ')}`);
+      toast(`Recently fulfilled: ${fulfilledTickets.map(n => `${n}`).join(', ')}`);
     }
     onFilterChange('recalled');
   };

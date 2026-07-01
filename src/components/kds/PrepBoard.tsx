@@ -102,7 +102,7 @@ export function PrepBoard({ orders }: PrepBoardProps) {
                       )}
                     </div>
                     <div className="text-[11px] text-text-muted mt-0.5">
-                      Orders: {item.orderNumbers.map(n => `#${n}`).join(', ')}
+                      Orders: {item.orderNumbers.map(n => `${n}`).join(', ')}
                     </div>
                   </div>
                 </div>
