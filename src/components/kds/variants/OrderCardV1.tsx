@@ -63,18 +63,18 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
       aria-pressed={done}
 
       aria-disabled={loading}
-      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      className={`w-full text-left border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
-      <div className="flex gap-1 items-start">
-        <span className="font-bold shrink-0 text-center text-foreground" style={{ fontSize: 13, minWidth: 20, lineHeight: 1.2 }}>
-
+      <div className="flex items-start" style={{ gap: 'var(--kds-item-gap)' }}>
+        <span className="font-bold shrink-0 text-center text-foreground" style={{ fontSize: 'var(--kds-item-qty)', minWidth: 20, lineHeight: 1.2 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
             <span
               className="text-foreground"
-              style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+              style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
             >
               {product.name}
             </span>
@@ -88,7 +88,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
                 <div
                   key={i}
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 11, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                  style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                 >
                   {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
@@ -98,7 +98,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
           {showDetails && product.notes && (
             <div
               className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-              style={{ fontSize: 11 }}
+              style={{ fontSize: 'var(--kds-modifier)' }}
             >
               "{product.notes}"
             </div>
