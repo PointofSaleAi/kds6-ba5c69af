@@ -122,18 +122,30 @@ export function ActiveIdentityProvider({ children }: { children: ReactNode }) {
         onTimeRateToday: 0.94, // TODO(vineet): backend
         onTimeRateAllTime: 0.91, // TODO(vineet): backend
         itemsPreparedToday: 412, // TODO(vineet): backend
-        itemsPreparedTotal: 15ָ208 as unknown as number, // fixed below
+        itemsPreparedTotal: 15208,
         busiestHourLabel: '7–8 PM',
       };
     }
     // Session-scoped for staff — resets per PIN
     const minutesActive = Math.max(1, Math.floor((Date.now() - identity.sessionStart) / 60000));
     const seed = identity.pin.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const ticketsCompletedToday = (seed % 40) + 12;
+    const ticketsCompletedTotal = ticketsCompletedToday * 47 + (seed % 100);
     return {
-      ticketsToday: (seed % 40) + 12,
-      ticketsTotal: (seed % 40) + 12,
-      avgTicketTimeSec: 7 * 60 + (seed % 90),
+      ticketsToday: ticketsCompletedToday,
+      ticketsTotal: ticketsCompletedTotal,
+      avgTicketTimeSec: 7 * 60 + (seed % 90), // TODO(vineet): backend
+      avgTicketTimeAllTimeSec: 7 * 60 + 40, // TODO(vineet): backend
       hoursWorked: minutesActive / 60,
+      hoursWorkedTotal: 312 + (seed % 80),
+      ticketsInQueue: 0,
+      overtimeToday: seed % 5, // TODO(vineet): backend
+      overtimeTotal: (seed % 5) * 24, // TODO(vineet): backend
+      onTimeRateToday: 0.91, // TODO(vineet): backend
+      onTimeRateAllTime: 0.89, // TODO(vineet): backend
+      itemsPreparedToday: ticketsCompletedToday * 3, // TODO(vineet): backend
+      itemsPreparedTotal: ticketsCompletedTotal * 3, // TODO(vineet): backend
+      busiestHourLabel: null,
     };
   }, [identity]);
 
