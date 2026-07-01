@@ -65,18 +65,18 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Navigate to="/kds/default" replace />} />
-              <Route path="/kds/full" element={<Index />} />
+              <Route path="/kds/v1" element={<Index />} />
               <Route path="/kds/default" element={<Index legacyActions />} />
-              <Route path="/kds/v1" element={<Index cardVariant="v1" />} />
-              <Route path="/kds/v2" element={<Index cardVariant="v2" />} />
-              <Route path="/kds/v3" element={<Index cardVariant="v3" />} />
-              <Route path="/kds/v4" element={<Index cardVariant="v4" />} />
-              <Route path="/kds/v5" element={<Index cardVariant="v5" />} />
+              <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
+              <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
+              <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
+              <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
+              <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
               <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
               {/* Settings render inside the main KDS shell so the left rail
                   and bottom status bar stay visible. */}
-              <Route path="/kds/full/settings" element={<Index />}>
+              <Route path="/kds/v1/settings" element={<Index />}>
                 <Route index element={<Navigate to="display" replace />} />
                 <Route path="display" element={<DisplaySettings />} />
                 <Route path="orders" element={<OrdersSettings />} />
