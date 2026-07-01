@@ -36,6 +36,17 @@ import AIInstructionsSettings from "./pages/settings/AIInstructionsSettings.tsx"
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
+import {
+  KDS_DEFAULT,
+  KDS_ONLINE_ORDERING,
+  KDS_REPLY,
+  KDS_SETTINGS,
+  KDS_V2,
+  KDS_V3,
+  KDS_V4,
+  KDS_V5,
+  KDS_V6,
+} from "@/lib/routes";
 
 const queryClient = new QueryClient();
 
