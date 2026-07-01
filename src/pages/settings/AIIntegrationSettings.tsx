@@ -13,9 +13,9 @@ interface ProviderOption {
   name: string;
 }
 
-// Manufacturer default: Maya AI is the only selectable provider.
+// Manufacturer default: Maya is the only selectable provider.
 const PROVIDERS: ProviderOption[] = [
-  { id: 'maya', name: 'Maya AI' },
+  { id: 'maya', name: 'Maya' },
 ];
 
 const STATUS_LABEL: Record<ConnectionStatus, { label: string; color: string }> = {
@@ -160,7 +160,7 @@ export default function AIIntegrationSettings() {
       >
         <div className="w-full flex items-center justify-between px-4 py-3">
           <span className="text-[15px] font-medium" style={{ color: 'hsl(var(--text-primary))' }}>
-            Maya AI
+            Maya
           </span>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full" style={{ background: '#16A085' }} />
