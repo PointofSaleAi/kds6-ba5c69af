@@ -42,20 +42,22 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
       if (next.length === 4) {
         setTimeout(() => {
           if (!blockDemoAuthInProd()) { setPin(''); return; }
+          signInWithPin(next);
           onSuccess();
         }, 400);
       }
       return next;
     });
-  }, [onSuccess]);
+  }, [onSuccess, signInWithPin]);
 
   const handleClear = useCallback(() => setPin(''), []);
 
   const handleSimulateQrApproval = useCallback(() => {
     if (!blockDemoAuthInProd()) return;
     setQrApproved(true);
+    signInAsRestaurant();
     setTimeout(() => onSuccess(), 1500);
-  }, [onSuccess]);
+  }, [onSuccess, signInAsRestaurant]);
 
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
