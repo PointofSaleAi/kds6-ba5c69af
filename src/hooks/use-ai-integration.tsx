@@ -73,15 +73,25 @@ export interface AIIntegrationState {
   model: string;
 }
 
+// Manufacturer defaults: AI integration ON, provider hardcoded to Maya AI.
+const DEFAULT_ENABLED = true;
+const DEFAULT_PROVIDER: AIProviderId = 'maya';
+const DEFAULT_STATUS: AIConnectionStatus = 'connected';
+const DEFAULT_MODEL = AI_PROVIDER_MODELS.maya;
+
 function read(): AIIntegrationState {
   if (typeof window === 'undefined') {
-    return { enabled: false, provider: '', status: 'not_configured', model: '' };
+    return { enabled: DEFAULT_ENABLED, provider: DEFAULT_PROVIDER, status: DEFAULT_STATUS, model: DEFAULT_MODEL };
   }
+  const rawEnabled = window.localStorage.getItem(AI_STORAGE_KEYS.enabled);
+  const rawProvider = window.localStorage.getItem(AI_STORAGE_KEYS.provider);
+  const rawStatus = window.localStorage.getItem(AI_STORAGE_KEYS.status);
+  const rawModel = window.localStorage.getItem(AI_STORAGE_KEYS.model);
   return {
-    enabled: window.localStorage.getItem(AI_STORAGE_KEYS.enabled) === 'true',
-    provider: (window.localStorage.getItem(AI_STORAGE_KEYS.provider) ?? '') as AIProviderId,
-    status: (window.localStorage.getItem(AI_STORAGE_KEYS.status) ?? 'not_configured') as AIConnectionStatus,
-    model: window.localStorage.getItem(AI_STORAGE_KEYS.model) ?? '',
+    enabled: rawEnabled === null ? DEFAULT_ENABLED : rawEnabled === 'true',
+    provider: (rawProvider ?? DEFAULT_PROVIDER) as AIProviderId,
+    status: (rawStatus ?? DEFAULT_STATUS) as AIConnectionStatus,
+    model: rawModel ?? DEFAULT_MODEL,
   };
 }
 
