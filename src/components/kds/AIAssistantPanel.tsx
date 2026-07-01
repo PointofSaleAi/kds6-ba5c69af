@@ -473,7 +473,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
               {/* Messages / Empty state */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4">
                 {!hasMessages ? (
-                  <div className="h-full flex flex-col justify-center px-1">
+                  <div className="min-h-full flex flex-col justify-center px-1">
                     {/* Hero: horizontal layout */}
                     <div className="flex items-center gap-3 mb-5 text-left">
                       <div className="flex-shrink-0 overflow-visible">
