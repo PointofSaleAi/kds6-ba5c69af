@@ -21,7 +21,7 @@ function formatHours(hours: number): string {
 }
 
 export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
-  const { identity, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
+  const { identity, restaurant, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
   const [tab, setTab] = useState<TabKey>('today');
 
   const isStaff = identity.kind === 'staff';
