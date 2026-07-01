@@ -393,6 +393,8 @@ export function OrderCardV5({ order, onBump }: Props) {
         <V2Header order={order} />
       </div>
 
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} />}
+
       {/* Order notes strip */}
       {order.orderNotes && (
         <div className="px-2 pt-2">
