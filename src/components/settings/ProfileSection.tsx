@@ -158,7 +158,7 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {cards.map(c => (
           <div key={c.label} className="rounded-xl p-4 text-center" style={{ background: 'hsl(var(--muted))' }}>
             <div className="text-xl font-semibold font-montserrat" style={{ color: 'hsl(var(--text-primary))' }}>{c.value}</div>
