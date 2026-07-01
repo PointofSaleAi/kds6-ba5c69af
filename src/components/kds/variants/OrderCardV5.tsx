@@ -4,7 +4,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { V2Header } from './headers/V2Header';
-import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
+
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useLanguage } from '@/hooks/use-language';
 
