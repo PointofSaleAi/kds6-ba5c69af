@@ -75,8 +75,8 @@ export function TightWidthBox({
         <div
           style={
             constrainSecondary && !expandSecondaryToContent
-              ? { minWidth: width, width: 'max-content', maxWidth: '100%' }
-              : { maxWidth: '100%' }
+              ? { minWidth: width, width: 'max-content', maxWidth: '100%', '--tight-primary-width': width ? `${width}px` : undefined } as CSSProperties
+              : { maxWidth: '100%', '--tight-primary-width': width ? `${width}px` : undefined } as CSSProperties
           }
         >
           {secondary}
