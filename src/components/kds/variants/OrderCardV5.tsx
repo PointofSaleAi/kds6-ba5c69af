@@ -440,7 +440,7 @@ export function OrderCardV5({ order, onBump }: Props) {
 
       {/* PRODUCTS */}
       {!isHeaderOnly && (
-        <div className="p-2 space-y-1.5">
+        <div className="flex flex-col" style={{ padding: 'var(--kds-card-padding)', gap: 'var(--kds-item-gap)' }}>
           {allItems.map((product) => (
             <ProductPill
               key={product.id}
