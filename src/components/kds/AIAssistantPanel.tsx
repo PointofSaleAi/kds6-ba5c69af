@@ -426,25 +426,24 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
               {/* Messages / Empty state */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4">
                 {!hasMessages ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center px-2">
-                    <div className="mb-4 overflow-visible">
-                      <AnimatedAIIcon size={56} />
-                    </div>
-                    <h2 className="text-xl font-semibold text-white mb-1">
-                      How can I help you today?
-                    </h2>
-                    <p className="text-neutral-400 text-sm mb-4 max-w-sm">
-                      Ask about tickets, allergens, courses, or KDS settings.
-                    </p>
-
-                    <div className="flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full bg-neutral-800/60 border border-neutral-700/40">
-                      <Bot className="w-3 h-3 text-emerald-400" />
-                      <span className="text-xs text-neutral-400">Powered by</span>
-                      <span className="text-xs font-medium text-white">{providerLabel}</span>
+                  <div className="h-full flex flex-col px-1">
+                    {/* Hero: horizontal layout */}
+                    <div className="flex items-center gap-3 mb-5 text-left">
+                      <div className="flex-shrink-0 overflow-visible">
+                        <AnimatedAIIcon size={44} />
+                      </div>
+                      <div className="min-w-0">
+                        <h2 className="text-base font-semibold text-white leading-tight">
+                          How can I help you today?
+                        </h2>
+                        <p className="text-neutral-400 text-xs mt-0.5">
+                          Ask about tickets, allergens, courses, or KDS settings.
+                        </p>
+                      </div>
                     </div>
 
                     {isSettingsRoute && (
-                      <div className="w-full max-w-lg mb-5">
+                      <div className="w-full mb-4">
                         <p
                           className="mb-2 text-left"
                           style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}
@@ -477,26 +476,39 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       </div>
                     )}
 
-                    <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                    <div className="grid grid-cols-2 gap-2">
+                      {learnedForContext.map(q => {
+                        const label = q.length > 30 ? q.slice(0, 30) + '…' : q;
+                        return (
+                          <button
+                            key={`learned-${q}`}
+                            onClick={() => submitPrompt(q)}
+                            title={q}
+                            className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-violet-500/10 text-sm text-white hover:bg-violet-500/20 active:opacity-70 transition-all border border-violet-400/30 text-left"
+                          >
+                            <Bot className="w-3.5 h-3.5 text-violet-300 flex-shrink-0" />
+                            <span className="truncate">{label}</span>
+                          </button>
+                        );
+                      })}
                       {SUGGESTION_CHIPS.map(chip => (
                         <button
                           key={chip}
                           onClick={() => submitPrompt(chip)}
-                          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50"
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50 text-left"
                         >
-                          <Bot className="w-3.5 h-3.5 text-violet-400" />
-                          {chip}
+                          <Bot className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
+                          <span className="truncate">{chip}</span>
                         </button>
                       ))}
                     </div>
 
-                    <div className="mt-8 text-center">
-                      <p className="text-xs text-neutral-400 mb-1.5">Try asking:</p>
-                      <div className="space-y-1 text-xs text-neutral-500">
-                        {TRY_EXAMPLES.map(e => <p key={e}>{e}</p>)}
-                      </div>
+                    <div className="mt-5 text-left">
+                      <p className="text-xs text-neutral-400 mb-1">Try asking:</p>
+                      <p className="text-xs text-neutral-500">{TRY_EXAMPLE}</p>
                     </div>
                   </div>
+
                 ) : (
                   <>
                     {messages.filter(m => !(m.role === 'assistant' && !m.text)).map(m => (
