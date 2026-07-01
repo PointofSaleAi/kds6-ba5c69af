@@ -32,11 +32,11 @@ const HOME_CONTENT: RouteContent = {
 };
 
 const ROUTE_CONTENT: Record<string, RouteContent> = {
-  '/kds/v1': HOME_CONTENT,
+  '/kds/v6': HOME_CONTENT,
   '/kds/v2': HOME_CONTENT,
   '/kds/v3': HOME_CONTENT,
   '/kds/v4': HOME_CONTENT,
-  '/kds/v1/history': {
+  '/kds/v6/history': {
     chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
     examples: [
       '"Show tickets bumped in the last hour"',
@@ -45,7 +45,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Show all delivery tickets from today"',
     ],
   },
-  '/kds/v1/settings/display': {
+  '/kds/v6/settings/display': {
     chips: ['Text size', 'Ticket layout', 'Dark mode', 'Reset display'],
     examples: [
       '"Set text size to large"',
@@ -54,7 +54,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Reset display settings to defaults"',
     ],
   },
-  '/kds/v1/settings/orders': {
+  '/kds/v6/settings/orders': {
     chips: ['Allergen badges', 'Servable modifiers', 'Ticket aging rules', 'Reset tickets'],
     examples: [
       '"Enable allergen badges"',
@@ -63,7 +63,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Reset ticket settings to defaults"',
     ],
   },
-  '/kds/v1/settings/hardware': {
+  '/kds/v6/settings/hardware': {
     chips: ['KOT printer', 'Sound settings', 'Sync now', 'Connection'],
     examples: [
       '"Set up my KOT printer"',
@@ -72,7 +72,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Force sync orders now"',
     ],
   },
-  '/kds/v1/settings/account': {
+  '/kds/v6/settings/account': {
     chips: ['Device name', 'Station ID', 'Bug reporting', 'Log out'],
     examples: [
       '"What is my station ID?"',
@@ -94,7 +94,7 @@ const FALLBACK_CONTENT: RouteContent = {
 };
 
 const VIEW_CONTENT: Record<string, RouteContent> = {
-  history: ROUTE_CONTENT['/kds/v1/history'],
+  history: ROUTE_CONTENT['/kds/v6/history'],
   'seen-orders': {
     chips: ['Mark all served', 'Filter by station', 'Show overtime', 'Allergen alerts'],
     examples: [
@@ -118,9 +118,9 @@ const VIEW_CONTENT: Record<string, RouteContent> = {
 function getRouteContent(pathname: string, view?: string | null): RouteContent {
   if (view && VIEW_CONTENT[view]) return VIEW_CONTENT[view];
   if (ROUTE_CONTENT[pathname]) return ROUTE_CONTENT[pathname];
-  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== '/kds/v1');
+  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== '/kds/v6');
   if (match) return ROUTE_CONTENT[match];
-  if (pathname === '/' || pathname.startsWith('/kds/v1')) return HOME_CONTENT;
+  if (pathname === '/' || pathname.startsWith('/kds/v6')) return HOME_CONTENT;
   return FALLBACK_CONTENT;
 }
 
@@ -148,7 +148,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const kdsSettings = useKDSSettings();
   const statusRules = useStatusRules();
   const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
-  const isSettingsRoute = location.pathname.startsWith('/kds/v1/settings');
+  const isSettingsRoute = location.pathname.startsWith('/kds/v6/settings');
   const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
@@ -229,7 +229,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
 
   const openAISettings = () => {
     onClose();
-    navigate('/kds/v1/settings/system/ai-integration');
+    navigate('/kds/v6/settings/system/ai-integration');
   };
 
   const submitPrompt = async (prompt: string) => {
