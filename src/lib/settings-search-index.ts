@@ -1,3 +1,5 @@
+import { KDS_SETTINGS_GROUP, KDS_SETTINGS_SYSTEM_AI_INSTRUCTIONS } from './routes';
+
 export type SettingsGroupId = 'display' | 'orders' | 'expo' | 'hardware' | 'system' | 'account';
 
 export interface SettingsSearchEntry {
@@ -11,12 +13,12 @@ export interface SettingsSearchEntry {
 }
 
 export const SETTINGS_GROUPS: Record<SettingsGroupId, { label: string; path: string }> = {
-  display: { label: 'Display', path: `${KDS_SETTINGS_GROUP.display}` },
-  orders: { label: 'Tickets', path: `${KDS_SETTINGS_GROUP.orders}` },
-  expo: { label: 'Expo view', path: `${KDS_SETTINGS_GROUP.expo}` },
-  hardware: { label: 'Hardware', path: `${KDS_SETTINGS_GROUP.hardware}` },
-  system: { label: 'System', path: `${KDS_SETTINGS_GROUP.system}` },
-  account: { label: 'Account', path: `${KDS_SETTINGS_GROUP.account}` },
+  display: { label: 'Display', path: KDS_SETTINGS_GROUP.display },
+  orders: { label: 'Tickets', path: KDS_SETTINGS_GROUP.orders },
+  expo: { label: 'Expo view', path: KDS_SETTINGS_GROUP.expo },
+  hardware: { label: 'Hardware', path: KDS_SETTINGS_GROUP.hardware },
+  system: { label: 'System', path: KDS_SETTINGS_GROUP.system },
+  account: { label: 'Account', path: KDS_SETTINGS_GROUP.account },
 };
 
 /**
