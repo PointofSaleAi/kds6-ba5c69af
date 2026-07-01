@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import { KeyRound } from 'lucide-react';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
 
@@ -8,20 +8,47 @@ interface ProfileSectionProps {
 
 type TabKey = 'today' | 'total';
 
-function formatMinutes(sec: number): string {
+function formatMinutes(sec: number | null): string {
+  if (sec == null) return '—';
   const m = Math.floor(sec / 60);
   const s = Math.round(sec % 60);
   return `${m}m ${s.toString().padStart(2, '0')}s`;
 }
 
-function formatHours(hours: number): string {
+function formatHours(hours: number | null): string {
+  if (hours == null) return '—';
   const h = Math.floor(hours);
   const m = Math.round((hours - h) * 60);
   return `${h}h ${m.toString().padStart(2, '0')}m`;
 }
 
+function formatPct(v: number | null): string {
+  if (v == null) return '—';
+  return `${Math.round(v * 100)}%`;
+}
+
+function formatCount(v: number | null): string {
+  if (v == null) return '—';
+  return v.toLocaleString('en-US');
+}
+
+function queueDotColor(n: number): string {
+  if (n <= 5) return '#16A085';
+  if (n <= 10) return '#F39C12';
+  return '#E84C3D';
+}
+
 export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
-  const { identity, restaurant, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
+  const {
+    identity, restaurant,
+    ticketsToday, ticketsTotal,
+    avgTicketTimeSec, avgTicketTimeAllTimeSec,
+    hoursWorked, hoursWorkedTotal,
+    ticketsInQueue, overtimeToday, overtimeTotal,
+    onTimeRateToday, onTimeRateAllTime,
+    itemsPreparedToday, itemsPreparedTotal,
+    busiestHourLabel,
+  } = useActiveIdentity();
   const [tab, setTab] = useState<TabKey>('today');
 
   const isStaff = identity.kind === 'staff';
@@ -36,15 +63,53 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
   const avatarBg = useMemo(() => colorFromString(displayName + (isStaff ? identity.role : '')), [displayName, identity, isStaff]);
 
-  const cards = isStaff
+  type Card = { label: string; value: ReactNode };
+
+  const restaurantCards: Card[] = tab === 'today'
     ? [
-        { label: 'Tickets completed', value: tab === 'today' ? ticketsToday : ticketsTotal },
-        { label: 'Hours worked', value: formatHours(hoursWorked) },
+        { label: 'Tickets today', value: formatCount(ticketsToday) },
+        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeSec) },
+        {
+          label: 'Tickets in queue',
+          value: (
+            <span className="inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ background: queueDotColor(ticketsInQueue) }} />
+              {formatCount(ticketsInQueue)}
+            </span>
+          ),
+        },
+        { label: 'Overtime tickets', value: formatCount(overtimeToday) },
+        { label: 'On-time rate', value: formatPct(onTimeRateToday) },
+        { label: 'Items prepared', value: formatCount(itemsPreparedToday) },
       ]
     : [
-        { label: tab === 'today' ? 'Tickets today' : 'Total tickets', value: tab === 'today' ? ticketsToday : ticketsTotal },
-        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeSec) },
+        { label: 'Total tickets', value: formatCount(ticketsTotal) },
+        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeAllTimeSec) },
+        { label: 'Busiest hour', value: busiestHourLabel ?? '—' },
+        { label: 'Total overtime tickets', value: formatCount(overtimeTotal) },
+        { label: 'On-time rate', value: formatPct(onTimeRateAllTime) },
+        { label: 'Total items prepared', value: formatCount(itemsPreparedTotal) },
       ];
+
+  const staffCards: Card[] = tab === 'today'
+    ? [
+        { label: 'Tickets completed', value: formatCount(ticketsToday) },
+        { label: 'Hours worked', value: formatHours(hoursWorked) },
+        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeSec) },
+        { label: 'Items prepared', value: formatCount(itemsPreparedToday) },
+        { label: 'On-time rate', value: formatPct(onTimeRateToday) },
+        { label: 'Overtime tickets', value: formatCount(overtimeToday) },
+      ]
+    : [
+        { label: 'Total tickets completed', value: formatCount(ticketsTotal) },
+        { label: 'Total hours worked', value: formatHours(hoursWorkedTotal) },
+        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeAllTimeSec) },
+        { label: 'Total items prepared', value: formatCount(itemsPreparedTotal) },
+        { label: 'On-time rate', value: formatPct(onTimeRateAllTime) },
+        { label: 'Total overtime tickets', value: formatCount(overtimeTotal) },
+      ];
+
+  const cards = isStaff ? staffCards : restaurantCards;
 
   return (
     <div className="relative rounded-2xl p-5 mb-4" style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}>
@@ -96,7 +161,7 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
       <div className="grid grid-cols-2 gap-3">
         {cards.map(c => (
           <div key={c.label} className="rounded-xl p-4 text-center" style={{ background: 'hsl(var(--muted))' }}>
-            <div className="text-xl font-bold font-montserrat" style={{ color: 'hsl(var(--text-primary))' }}>{c.value}</div>
+            <div className="text-xl font-semibold font-montserrat" style={{ color: 'hsl(var(--text-primary))' }}>{c.value}</div>
             <div className="text-xs font-montserrat mt-1" style={{ color: 'hsl(var(--text-muted))' }}>{c.label}</div>
           </div>
         ))}

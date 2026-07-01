@@ -54,7 +54,18 @@ interface IdentityContextValue {
   ticketsToday: number;
   ticketsTotal: number;
   avgTicketTimeSec: number;
+  avgTicketTimeAllTimeSec: number;
   hoursWorked: number;
+  hoursWorkedTotal: number;
+  // Restaurant-scoped
+  ticketsInQueue: number;
+  overtimeToday: number;
+  overtimeTotal: number;
+  onTimeRateToday: number | null; // 0-1
+  onTimeRateAllTime: number | null;
+  itemsPreparedToday: number;
+  itemsPreparedTotal: number;
+  busiestHourLabel: string | null;
 }
 
 const IdentityContext = createContext<IdentityContextValue | null>(null);
@@ -93,18 +104,48 @@ export function ActiveIdentityProvider({ children }: { children: ReactNode }) {
   const signOutStaff = useCallback(() => setIdentity(RESTAURANT_DEFAULT), []);
 
   // Deterministic mock stats derived from identity so cards feel populated.
+  // TODO(vineet): Metrics marked below require per-ticket completion timestamp
+  // data from the backend. Currently mocked; when backend is unavailable, return
+  // null so the UI renders "—" instead of a misleading 0.
   const stats = useMemo(() => {
     if (identity.kind === 'restaurant') {
-      return { ticketsToday: 128, ticketsTotal: 4831, avgTicketTimeSec: 9 * 60 + 42, hoursWorked: 0 };
+      return {
+        ticketsToday: 128,
+        ticketsTotal: 4831,
+        avgTicketTimeSec: 9 * 60 + 42, // TODO(vineet): backend
+        avgTicketTimeAllTimeSec: 10 * 60 + 18, // TODO(vineet): backend
+        hoursWorked: 0,
+        hoursWorkedTotal: 0,
+        ticketsInQueue: 7,
+        overtimeToday: 3, // TODO(vineet): backend
+        overtimeTotal: 142, // TODO(vineet): backend
+        onTimeRateToday: 0.94, // TODO(vineet): backend
+        onTimeRateAllTime: 0.91, // TODO(vineet): backend
+        itemsPreparedToday: 412, // TODO(vineet): backend
+        itemsPreparedTotal: 15208,
+        busiestHourLabel: '7–8 PM',
+      };
     }
     // Session-scoped for staff — resets per PIN
     const minutesActive = Math.max(1, Math.floor((Date.now() - identity.sessionStart) / 60000));
     const seed = identity.pin.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const ticketsCompletedToday = (seed % 40) + 12;
+    const ticketsCompletedTotal = ticketsCompletedToday * 47 + (seed % 100);
     return {
-      ticketsToday: (seed % 40) + 12,
-      ticketsTotal: (seed % 40) + 12,
-      avgTicketTimeSec: 7 * 60 + (seed % 90),
+      ticketsToday: ticketsCompletedToday,
+      ticketsTotal: ticketsCompletedTotal,
+      avgTicketTimeSec: 7 * 60 + (seed % 90), // TODO(vineet): backend
+      avgTicketTimeAllTimeSec: 7 * 60 + 40, // TODO(vineet): backend
       hoursWorked: minutesActive / 60,
+      hoursWorkedTotal: 312 + (seed % 80),
+      ticketsInQueue: 0,
+      overtimeToday: seed % 5, // TODO(vineet): backend
+      overtimeTotal: (seed % 5) * 24, // TODO(vineet): backend
+      onTimeRateToday: 0.91, // TODO(vineet): backend
+      onTimeRateAllTime: 0.89, // TODO(vineet): backend
+      itemsPreparedToday: ticketsCompletedToday * 3, // TODO(vineet): backend
+      itemsPreparedTotal: ticketsCompletedTotal * 3, // TODO(vineet): backend
+      busiestHourLabel: null,
     };
   }, [identity]);
 
