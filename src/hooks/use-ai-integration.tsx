@@ -15,7 +15,7 @@ export const AI_PROVIDER_LABELS: Record<Exclude<AIProviderId, ''>, string> = {
   openai: 'OpenAI (ChatGPT)',
   claude: 'Anthropic Claude',
   google: 'Google Gemini',
-  maya: 'Maya AI',
+  maya: 'Maya',
 };
 
 export const AI_PROVIDER_SHORT_LABELS: Record<Exclude<AIProviderId, ''>, string> = {
@@ -23,7 +23,7 @@ export const AI_PROVIDER_SHORT_LABELS: Record<Exclude<AIProviderId, ''>, string>
   openai: 'ChatGPT',
   claude: 'Claude',
   google: 'Gemini',
-  maya: 'Maya AI',
+  maya: 'Maya',
 };
 
 export interface AIModelOption {
@@ -73,7 +73,7 @@ export interface AIIntegrationState {
   model: string;
 }
 
-// Manufacturer defaults: AI integration ON, provider hardcoded to Maya AI.
+// Manufacturer defaults: AI integration ON, provider hardcoded to Maya.
 const DEFAULT_ENABLED = true;
 const DEFAULT_PROVIDER: AIProviderId = 'maya';
 const DEFAULT_STATUS: AIConnectionStatus = 'connected';
