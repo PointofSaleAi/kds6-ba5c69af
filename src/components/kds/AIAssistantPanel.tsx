@@ -31,21 +31,23 @@ const HOME_CONTENT: RouteContent = {
   ],
 };
 
+const HISTORY_CONTENT: RouteContent = {
+  chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
+  examples: [
+    '"Show tickets bumped in the last hour"',
+    '"Recall ticket #32"',
+    '"How many tickets were served today?"',
+    '"Show all delivery tickets from today"',
+  ],
+};
+
 const ROUTE_CONTENT: Record<string, RouteContent> = {
-  '/kds/v6': HOME_CONTENT,
-  '/kds/v2': HOME_CONTENT,
-  '/kds/v3': HOME_CONTENT,
-  '/kds/v4': HOME_CONTENT,
-  '/kds/v6/history': {
-    chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
-    examples: [
-      '"Show tickets bumped in the last hour"',
-      '"Recall ticket #32"',
-      '"How many tickets were served today?"',
-      '"Show all delivery tickets from today"',
-    ],
-  },
-  '/kds/v6/settings/display': {
+  [KDS_ROOT]: HOME_CONTENT,
+  [KDS_V2]: HOME_CONTENT,
+  [KDS_V3]: HOME_CONTENT,
+  [KDS_V4]: HOME_CONTENT,
+  [`${KDS_ROOT}/history`]: HISTORY_CONTENT,
+  [KDS_SETTINGS_GROUP.display]: {
     chips: ['Text size', 'Ticket layout', 'Dark mode', 'Reset display'],
     examples: [
       '"Set text size to large"',
@@ -54,7 +56,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Reset display settings to defaults"',
     ],
   },
-  '/kds/v6/settings/orders': {
+  [KDS_SETTINGS_GROUP.orders]: {
     chips: ['Allergen badges', 'Servable modifiers', 'Ticket aging rules', 'Reset tickets'],
     examples: [
       '"Enable allergen badges"',
@@ -63,7 +65,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Reset ticket settings to defaults"',
     ],
   },
-  '/kds/v6/settings/hardware': {
+  [KDS_SETTINGS_GROUP.hardware]: {
     chips: ['KOT printer', 'Sound settings', 'Sync now', 'Connection'],
     examples: [
       '"Set up my KOT printer"',
@@ -72,7 +74,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Force sync orders now"',
     ],
   },
-  '/kds/v6/settings/account': {
+  [KDS_SETTINGS_GROUP.account]: {
     chips: ['Device name', 'Station ID', 'Bug reporting', 'Log out'],
     examples: [
       '"What is my station ID?"',
