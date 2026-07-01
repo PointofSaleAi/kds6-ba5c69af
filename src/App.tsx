@@ -85,9 +85,18 @@ const App = () => (
               <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
               <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
+              <Route path="/" element={<Navigate to={KDS_DEFAULT} replace />} />
+              <Route path={KDS_DEFAULT} element={<Index legacyActions />} />
+              <Route path={KDS_V2} element={<Index cardVariant="v1" />} />
+              <Route path={KDS_V3} element={<Index cardVariant="v2" />} />
+              <Route path={KDS_V4} element={<Index cardVariant="v3" />} />
+              <Route path={KDS_V5} element={<Index cardVariant="v4" />} />
+              <Route path={KDS_V6} element={<Index cardVariant="v5" />} />
+              <Route path={KDS_ONLINE_ORDERING} element={<IndexOnlineOrdering />} />
+
               {/* Settings render inside the main KDS shell so the left rail
                   and bottom status bar stay visible. */}
-              <Route path="/kds/v6/settings" element={<Index />}>
+              <Route path={KDS_SETTINGS} element={<Index />}>
                 <Route index element={<Navigate to="display" replace />} />
                 <Route path="display" element={<DisplaySettings />} />
                 <Route path="orders" element={<OrdersSettings />} />
@@ -100,7 +109,7 @@ const App = () => (
               </Route>
 
 
-              <Route path="/kds-reply" element={<KdsReplyPage />} />
+              <Route path={KDS_REPLY} element={<KdsReplyPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
