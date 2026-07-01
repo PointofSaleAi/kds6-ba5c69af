@@ -63,7 +63,7 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
   const avatarBg = useMemo(() => colorFromString(displayName + (isStaff ? identity.role : '')), [displayName, identity, isStaff]);
 
-  type Card = { label: string; value: React.ReactNode };
+  type Card = { label: string; value: ReactNode };
 
   const restaurantCards: Card[] = tab === 'today'
     ? [
