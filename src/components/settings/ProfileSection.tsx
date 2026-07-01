@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { KeyRound, LogOut } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
 
 interface ProfileSectionProps {
