@@ -294,10 +294,11 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
 
+      {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {showCourses ? (
           order.courses.map((course, idx) => {
@@ -344,12 +345,13 @@ export function OrderCardV3({ order, onBump }: Props) {
           </div>
         )}
       </div>
+      )}
 
 
 
 
       {/* FOOTER */}
-      {!isCompact && (
+      {!isCompact && !isHeaderOnly && (
         <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
           <button
             type="button"
