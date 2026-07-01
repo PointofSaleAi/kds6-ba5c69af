@@ -399,7 +399,27 @@ export function OrderCardV5({ order, onBump }: Props) {
         <V2Header order={order} />
       </div>
 
-      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} />}
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && (() => {
+        const allAllergens = order.courses.flatMap((c) => c.items.flatMap((i) => i.allergens));
+        const unique = Array.from(new Map(allAllergens.map((a) => [a.type, a])).values());
+        if (unique.length === 0) return null;
+        return (
+          <div className="px-2 pt-1 flex items-center gap-1.5">
+            <span
+              className="shrink-0 text-red-400"
+              style={{ fontSize: 'var(--kds-modifier)', fontWeight: 700, width: 10, textAlign: 'center', lineHeight: 1.25 }}
+            >
+              !
+            </span>
+            <span
+              className="text-red-400 break-words"
+              style={{ fontSize: 'var(--kds-modifier)', fontWeight: 700, lineHeight: 1.25 }}
+            >
+              {unique.map((a) => ta(a.label)).join(', ')}
+            </span>
+          </div>
+        );
+      })()}
 
       {/* Order notes strip */}
       {order.orderNotes && (
