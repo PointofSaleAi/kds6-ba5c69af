@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bot, ChevronDown, ChevronUp, Check } from 'lucide-react';
+import { ChevronDown, ChevronUp, Check } from 'lucide-react';
+import aiEIcon from "@/assets/ai-e-icon.png";
 import {
   AI_PROVIDER_SHORT_LABELS,
   AI_PROVIDER_MODEL_OPTIONS,
