@@ -88,10 +88,10 @@ function getAiAction(type: string, message: string): AiAction {
   const lower = message.toLowerCase();
   const ticket = extractTicket(message);
   if (type === 'overtime') {
-    return { label: ticket ? `Bump ticket ${ticket.}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
+    return { label: ticket ? `Bump ticket ${ticket}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
   }
   if (type === 'new-order') {
-    return { label: ticket ? `Fire order ${ticket.}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
+    return { label: ticket ? `Fire order ${ticket}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
   }
   if (type === 'table-transfer') {
     const tables = message.match(/table\s+(\w+)/gi);
