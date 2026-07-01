@@ -21,13 +21,13 @@ export default function SettingsLayout() {
       case 'seen-orders':
       case 'unseen-orders':
       case 'alerts':
-        navigate('/kds/v1');
+        navigate('/kds/v6');
         break;
       case 'settings':
-        navigate('/kds/v1/settings');
+        navigate('/kds/v6/settings');
         break;
       default:
-        navigate('/kds/v1');
+        navigate('/kds/v6');
     }
   };
 
