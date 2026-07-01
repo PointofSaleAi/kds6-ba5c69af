@@ -98,6 +98,7 @@ const App = () => (
           </BrowserRouter>
         </DockDragLayer>
       </TooltipProvider>
+      </ActiveIdentityProvider>
       </ActiveKDSViewProvider>
       </DockLayoutProvider>
       </NotificationsProvider>
