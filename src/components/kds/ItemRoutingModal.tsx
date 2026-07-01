@@ -61,7 +61,7 @@ export function ItemRoutingModal({ item, order, onClose, onConfirm }: ItemRoutin
               <div>
                 <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route Product</div>
                 <div className="text-[11px] text-text-secondary mt-0.5 font-medium">
-                  Ticket <span className="font-bold text-text-primary">#{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
+                  Ticket <span className="font-bold text-text-primary">{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
                 </div>
               </div>
             </div>

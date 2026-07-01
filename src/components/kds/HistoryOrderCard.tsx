@@ -369,7 +369,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
               className="text-[18px] font-extrabold text-white leading-none tabular-nums"
               style={{ letterSpacing: '0.01em', fontVariantNumeric: 'tabular-nums' }}
             >
-              #{order.orderNumber}
+              {order.orderNumber}
             </span>
             <span
               className="text-[12px] font-medium leading-none"

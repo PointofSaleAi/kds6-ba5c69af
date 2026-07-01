@@ -38,7 +38,7 @@ export function V1Header({ order, emphasized = false }: Props) {
             {order.tableName || orderTypeLabel(order.orderType)}
           </span>
           <span style={{ fontSize: 22, fontWeight: 900, lineHeight: 1, opacity: 0.95 }}>
-            #{order.orderNumber}
+            {order.orderNumber}
           </span>
           <span
             className="inline-flex items-center rounded-full font-mono-timer tabular-nums"
@@ -82,7 +82,7 @@ export function V1Header({ order, emphasized = false }: Props) {
         style={{ borderBottom: '0.5px solid #E5E7EB' }}
       >
         <span className="inline-flex items-center gap-1.5">
-          <span style={{ fontSize: 14, fontWeight: 800 }}>#{order.orderNumber}</span>
+          <span style={{ fontSize: 14, fontWeight: 800 }}>{order.orderNumber}</span>
           <span
             className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold"
             style={{ background: status.color, color: status.textColor }}

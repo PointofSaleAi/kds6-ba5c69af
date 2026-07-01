@@ -159,7 +159,7 @@ export function OrderCardV4({ order, onBump }: Props) {
   const pillText = status.textColor;
   const identifier = ticketHeaderLayout === 'guest'
     ? (order.guestName || order.customerName || order.serverName || 'Guest')
-    : `#${order.orderNumber}`;
+    : `${order.orderNumber}`;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);

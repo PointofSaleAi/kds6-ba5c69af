@@ -21,8 +21,8 @@ export function V2Header({ order }: Props) {
   const isDineIn = order.orderType === 'dine-in';
   const showTableInstead = isDineIn && !!order.tableName;
   const guestName = order.guestName || order.customerName || order.serverName || 'Guest';
-  const identifier = ticketHeaderLayout === 'guest' ? guestName : `#${order.orderNumber}`;
-  const secondaryName = ticketHeaderLayout === 'guest' ? `#${order.orderNumber}` : guestName;
+  const identifier = ticketHeaderLayout === 'guest' ? guestName : `${order.orderNumber}`;
+  const secondaryName = ticketHeaderLayout === 'guest' ? `${order.orderNumber}` : guestName;
   const firedTime = order.timeReceived ? formatTime(order.timeReceived) : '';
 
   return (

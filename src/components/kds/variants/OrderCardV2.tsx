@@ -202,7 +202,7 @@ export function OrderCardV2({ order, onBump }: Props) {
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
     ? (order.guestName || order.customerName || order.serverName || 'Guest')
-    : `#${order.orderNumber}`;
+    : `${order.orderNumber}`;
 
   const allItems = order.courses.flatMap((c) => c.items);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
