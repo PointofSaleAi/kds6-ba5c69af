@@ -1,3 +1,4 @@
+import { KDS_SETTINGS_SYSTEM_AI_INTEGRATION } from '@/lib/routes';
 import { useNavigate } from 'react-router-dom';
 import { Cog, Sparkles } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
@@ -27,7 +28,7 @@ export default function SystemSettings() {
         iconColor="#3B82F6"
         label="AI Integration"
         helper="Configure external AI providers, manage API keys, and control AI-powered features."
-        onClick={() => navigate('/kds/v6/settings/system/ai-integration')}
+        onClick={() => navigate(KDS_SETTINGS_SYSTEM_AI_INTEGRATION)}
         highlighted={hash === 'ai-integration'}
       />
     </>

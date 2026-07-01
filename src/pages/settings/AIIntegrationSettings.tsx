@@ -1,3 +1,4 @@
+import { KDS_SETTINGS_GROUP, KDS_SETTINGS_SYSTEM_AI_INSTRUCTIONS } from '@/lib/routes';
 import { useEffect, useState } from 'react';
 import { ShieldCheck, Info, Check, ChevronLeft, Sparkles, BookOpen, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -102,7 +103,7 @@ export default function AIIntegrationSettings() {
       <div className="flex items-center justify-between pt-0 pb-4 mb-2 relative">
         <button
           type="button"
-          onClick={() => navigate('/kds/v6/settings/system')}
+          onClick={() => navigate(KDS_SETTINGS_GROUP.system)}
           className="w-10 h-10 rounded-full flex items-center justify-center active:opacity-70 transition-opacity"
           style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}
           aria-label="Back"
@@ -263,7 +264,7 @@ export default function AIIntegrationSettings() {
       <div className="mb-6 rounded-[28px] overflow-hidden" style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}>
         <button
           type="button"
-          onClick={() => navigate('/kds/v6/settings/system/ai-integration/ai-instructions')}
+          onClick={() => navigate(KDS_SETTINGS_SYSTEM_AI_INSTRUCTIONS)}
           className="flex items-center justify-between w-full py-3.5 px-4 active:opacity-70 transition-opacity"
         >
           <div className="flex items-center gap-3">

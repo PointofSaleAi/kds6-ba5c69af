@@ -1,3 +1,4 @@
+import { KDS_ROOT } from '@/lib/routes';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Smartphone, Bug, LogOut, Hash, AlertCircle, Upload, MessageSquare, RotateCcw } from 'lucide-react';
@@ -49,7 +50,7 @@ export default function AccountSettings() {
 
   const handleLogOut = () => {
     setLogoutOpen(false);
-    navigate('/kds/v6', { replace: true });
+    navigate(KDS_ROOT, { replace: true });
     setTimeout(() => window.location.reload(), 0);
   };
 
