@@ -9,6 +9,8 @@ import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, ValueText, useHashHighlight } from '@/components/settings/SettingsControls';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { ProfileSection } from '@/components/settings/ProfileSection';
+import PinPadScreen from '@/pages/PinPadScreen';
 import { toast } from '@/hooks/use-toast';
 
 export default function AccountSettings() {
