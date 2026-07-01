@@ -1,3 +1,4 @@
+import { KDS_ROOT, KDS_V2, KDS_V3, KDS_V4, KDS_SETTINGS, KDS_SETTINGS_GROUP, KDS_SETTINGS_SYSTEM_AI_INTEGRATION } from '@/lib/routes';
 import { useState, useRef, useEffect } from 'react';
 import { X, Send, Mic, MicOff, Settings, Bot, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -96,7 +97,7 @@ const FALLBACK_CONTENT: RouteContent = {
 };
 
 const VIEW_CONTENT: Record<string, RouteContent> = {
-  history: ROUTE_CONTENT['/kds/v6/history'],
+  history: HISTORY_CONTENT,
   'seen-orders': {
     chips: ['Mark all served', 'Filter by station', 'Show overtime', 'Allergen alerts'],
     examples: [
@@ -120,9 +121,9 @@ const VIEW_CONTENT: Record<string, RouteContent> = {
 function getRouteContent(pathname: string, view?: string | null): RouteContent {
   if (view && VIEW_CONTENT[view]) return VIEW_CONTENT[view];
   if (ROUTE_CONTENT[pathname]) return ROUTE_CONTENT[pathname];
-  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== '/kds/v6');
+  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== KDS_ROOT);
   if (match) return ROUTE_CONTENT[match];
-  if (pathname === '/' || pathname.startsWith('/kds/v6')) return HOME_CONTENT;
+  if (pathname === '/' || pathname.startsWith(KDS_ROOT)) return HOME_CONTENT;
   return FALLBACK_CONTENT;
 }
 
@@ -150,7 +151,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const kdsSettings = useKDSSettings();
   const statusRules = useStatusRules();
   const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
-  const isSettingsRoute = location.pathname.startsWith('/kds/v6/settings');
+  const isSettingsRoute = location.pathname.startsWith(KDS_SETTINGS);
   const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
@@ -231,7 +232,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
 
   const openAISettings = () => {
     onClose();
-    navigate('/kds/v6/settings/system/ai-integration');
+    navigate(KDS_SETTINGS_SYSTEM_AI_INTEGRATION);
   };
 
   const submitPrompt = async (prompt: string) => {
