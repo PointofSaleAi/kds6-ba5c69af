@@ -847,7 +847,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       if (kdsMode === 'Expo' && target === 'seen-orders') setExpoFilter('ready');
       if (kdsMode === 'Expo' && target === 'unseen-orders') setExpoFilter('recalled');
       setActiveNav(target);
-      onCloseSettings?.();
+      if (target === 'home') {
+        // Route to the layout the user selected in Settings > Ticket Layout.
+        onNavigate('home');
+      } else {
+        onCloseSettings?.();
+      }
     } else {
       onNavigate(target);
     }

@@ -14,6 +14,11 @@ export default function SettingsLayout() {
   const location = useLocation();
   const { isPortrait } = usePortrait();
 
+  const resolveTicketsRoute = () => {
+    const stored = localStorage.getItem('kds-tickets-route') || 'Default';
+    return stored === 'Default' ? '/kds/default' : `/kds/${stored}`;
+  };
+
   const handleKdsNavigate = (target: string) => {
     switch (target) {
       case 'home':
@@ -21,13 +26,13 @@ export default function SettingsLayout() {
       case 'seen-orders':
       case 'unseen-orders':
       case 'alerts':
-        navigate('/kds/v1');
+        navigate(resolveTicketsRoute());
         break;
       case 'settings':
         navigate('/kds/v1/settings');
         break;
       default:
-        navigate('/kds/v1');
+        navigate(resolveTicketsRoute());
     }
   };
 
