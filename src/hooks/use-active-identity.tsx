@@ -45,6 +45,7 @@ const RESTAURANT_DEFAULT: RestaurantIdentity = {
 
 interface IdentityContextValue {
   identity: ActiveIdentity;
+  restaurant: RestaurantIdentity;
   signInAsRestaurant: () => void;
   signInWithPin: (pin: string) => StaffIdentity | null;
   signOutStaff: () => void;
