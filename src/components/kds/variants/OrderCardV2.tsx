@@ -69,16 +69,17 @@ function V2ProductRow({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`px-2.5 py-1.5 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      className={`border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
       <div className={`flex gap-1 ${showDetails && (product.modifiers.length > 0 || product.allergens.length > 0 || product.notes) ? 'items-start' : 'items-center'}`}>
-        <span className="font-bold text-foreground shrink-0 text-center" style={{ fontSize: 15, minWidth: 20, lineHeight: '14.4px' }}>
+        <span className="font-bold text-foreground shrink-0 text-center" style={{ fontSize: 'var(--kds-item-qty)', minWidth: 20, lineHeight: '14.4px' }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
           <div
             className="text-foreground"
-            style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+            style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
           </div>
@@ -95,7 +96,7 @@ function V2ProductRow({
                 <div
                   key={i}
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 11, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                  style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                 >
                   {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
@@ -105,7 +106,7 @@ function V2ProductRow({
           {showDetails && product.notes && (
             <div
               className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-              style={{ fontSize: 11 }}
+              style={{ fontSize: 'var(--kds-modifier)' }}
             >
               "{product.notes}"
             </div>
@@ -196,8 +197,12 @@ export function OrderCardV2({ order, onBump }: Props) {
     });
   };
 
-  const { ticketLayout } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
+  const isHeaderOnly = ticketLayout === 'header';
+  const identifier = ticketHeaderLayout === 'guest'
+    ? (order.guestName || order.customerName || order.serverName || 'Guest')
+    : `#${order.orderNumber}`;
 
   const allItems = order.courses.flatMap((c) => c.items);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
@@ -247,7 +252,7 @@ export function OrderCardV2({ order, onBump }: Props) {
                 {orderTypeLabel(order.orderType)}
               </span>
             )}
-            <span className="font-bold text-foreground text-[14px] shrink-0">#{order.orderNumber}</span>
+            <span className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
           </div>
           <span
             className="rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums"
@@ -265,10 +270,11 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
 
+      {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => (
@@ -305,14 +311,12 @@ export function OrderCardV2({ order, onBump }: Props) {
           ))
         )}
       </div>
+      )}
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
 
-
-
-
       {/* FOOTER */}
-      {!isCompact && (
+      {!isCompact && !isHeaderOnly && (
         <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
           <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
           <button

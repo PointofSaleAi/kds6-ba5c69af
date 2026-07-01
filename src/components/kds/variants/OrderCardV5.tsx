@@ -82,9 +82,10 @@ function ProductPill({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`v5-pill relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
+      className={`v5-pill relative rounded-xl select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
         loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-60' : ''
       }`}
+      style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
 
     >
       <div className="flex items-center gap-2">
@@ -94,7 +95,7 @@ function ProductPill({
           style={{
             width: 22,
             height: 22,
-            fontSize: 12,
+            fontSize: 'var(--kds-item-qty)',
             fontWeight: 700,
           }}
         >
@@ -107,7 +108,7 @@ function ProductPill({
             <div
               className="truncate text-foreground"
               style={{
-                fontSize: 13,
+                fontSize: 'var(--kds-item-name)',
                 fontWeight: 700,
                 textDecoration: done ? 'line-through' : 'none',
               }}
@@ -121,7 +122,7 @@ function ProductPill({
                   className="truncate text-muted-foreground"
                   dir={tx.secondaryDir}
                   style={{
-                    fontSize: 11,
+                    fontSize: 'var(--kds-modifier)',
                     fontWeight: 500,
                     textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
                     textDecoration: done ? 'line-through' : 'none',
@@ -219,13 +220,13 @@ function ModifierRow({
       <span
         aria-hidden
         className="shrink-0 select-none text-muted-foreground"
-        style={{ fontFamily: 'monospace', fontSize: 11, marginTop: 1 }}
+        style={{ fontFamily: 'monospace', fontSize: 'var(--kds-modifier)', marginTop: 1 }}
       >
         {'\u2514\u2500'}
       </span>
       <span
         className={`shrink-0 ${colorClass}`}
-        style={{ fontSize: 11, width: 10, textAlign: 'center' }}
+        style={{ fontSize: 'var(--kds-modifier)', width: 10, textAlign: 'center' }}
       >
         {prefix}
       </span>
@@ -234,7 +235,7 @@ function ModifierRow({
           <div
             className={`break-words ${colorClass}`}
             style={{
-              fontSize: 11,
+              fontSize: 'var(--kds-modifier)',
               fontWeight: 500,
               fontStyle: italic ? 'italic' : 'normal',
               textDecoration: done ? 'line-through' : 'none',
@@ -254,7 +255,7 @@ function ModifierRow({
                 className="break-words text-muted-foreground"
                 dir={secondaryDir}
                 style={{
-                  fontSize: 10,
+                  fontSize: 'var(--kds-modifier)',
                   fontStyle: italic ? 'italic' : 'normal',
                   textDecoration: done ? 'line-through' : 'none',
                   textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
@@ -400,7 +401,7 @@ export function OrderCardV5({ order, onBump }: Props) {
               <TightWidthBox
                 deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
                 primary={
-                  <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
+                  <div className="text-foreground break-words" style={{ fontSize: 'var(--kds-item-name)', fontWeight: 500 }}>
                     {tn(order.orderNotes)}
                   </div>
                 }
@@ -418,7 +419,7 @@ export function OrderCardV5({ order, onBump }: Props) {
                         className="break-words text-muted-foreground"
                         dir={tx.secondaryDir}
                         style={{
-                          fontSize: 11,
+                          fontSize: 'var(--kds-modifier)',
                           fontWeight: 500,
                           textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
                           minWidth: 0,
@@ -439,7 +440,7 @@ export function OrderCardV5({ order, onBump }: Props) {
 
       {/* PRODUCTS */}
       {!isHeaderOnly && (
-        <div className="p-2 space-y-1.5">
+        <div className="flex flex-col" style={{ padding: 'var(--kds-card-padding)', gap: 'var(--kds-item-gap)' }}>
           {allItems.map((product) => (
             <ProductPill
               key={product.id}

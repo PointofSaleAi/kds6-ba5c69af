@@ -98,12 +98,12 @@ function ProductRow({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`flex items-start gap-1 px-1.5 py-1 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
-      style={{ borderLeft: `3px solid ${accent}` }}
+      className={`flex items-start border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 6, paddingRight: 6, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)', gap: 4 }}
     >
       <span
         className="font-bold shrink-0 text-center"
-        style={{ color: accent, fontSize: 11, minWidth: 18, lineHeight: '14.3px' }}
+        style={{ color: accent, fontSize: 'var(--kds-item-qty)', minWidth: 18, lineHeight: '14.3px' }}
       >
         {product.quantity}
       </span>
@@ -111,7 +111,7 @@ function ProductRow({
         <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
           <span
             className="text-foreground"
-            style={{ fontSize: 11, fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+            style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
           </span>
@@ -125,7 +125,7 @@ function ProductRow({
               <div
                 key={i}
                 className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                style={{ fontSize: 10, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
               >
                 {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
               </div>
@@ -135,7 +135,7 @@ function ProductRow({
         {showDetails && product.notes && (
           <div
             className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-            style={{ fontSize: 10 }}
+            style={{ fontSize: 'var(--kds-modifier)' }}
           >
             "{product.notes}"
           </div>
@@ -192,8 +192,12 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const typeIcon = typeMeta.icon;
-  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
+  const isHeaderOnly = ticketLayout === 'header';
+  const guestName = order.guestName || order.customerName || order.serverName || 'Guest';
+  const identifierPrimary = ticketHeaderLayout === 'guest' ? guestName : order.orderNumber;
+  const identifierSub = ticketHeaderLayout === 'guest' ? `#${order.orderNumber}` : (order.guestName || order.customerName || '');
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
@@ -265,16 +269,14 @@ export function OrderCardV3({ order, onBump }: Props) {
       {/* METADATA GRID 2x2 */}
       {(() => {
         const isDineIn = order.orderType === 'dine-in';
-        const guest = order.guestName || order.customerName || '';
-        const cell1Title = guest;
         const cell1Sub = isDineIn ? '' : (order.customerPhone || '');
         return (
           <div className="grid grid-cols-2 bg-card border-b border-border">
             <div className="flex items-start gap-1.5 px-2 py-1.5">
               <div className="min-w-0">
-                <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.orderNumber}</div>
-                {cell1Title && <div className="text-[10px] text-[#6B7280] truncate">{cell1Title}</div>}
-                {cell1Sub && cell1Sub !== cell1Title && (
+                <div className="font-bold text-foreground text-[13px] leading-tight truncate">{identifierPrimary}</div>
+                {identifierSub && <div className="text-[10px] text-[#6B7280] truncate">{identifierSub}</div>}
+                {cell1Sub && cell1Sub !== identifierSub && cell1Sub !== identifierPrimary && (
                   <div className="text-[10px] text-[#9CA3AF] truncate">{cell1Sub}</div>
                 )}
               </div>
@@ -290,10 +292,11 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
 
+      {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {showCourses ? (
           order.courses.map((course, idx) => {
@@ -340,12 +343,13 @@ export function OrderCardV3({ order, onBump }: Props) {
           </div>
         )}
       </div>
+      )}
 
 
 
 
       {/* FOOTER */}
-      {!isCompact && (
+      {!isCompact && !isHeaderOnly && (
         <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
           <button
             type="button"

@@ -63,18 +63,18 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
       aria-pressed={done}
 
       aria-disabled={loading}
-      className={`w-full text-left px-2 py-1 border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      className={`w-full text-left border-b border-border/40 last:border-b-0 transition-opacity cursor-pointer select-none ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
-      <div className="flex gap-1 items-start">
-        <span className="font-bold shrink-0 text-center text-foreground" style={{ fontSize: 13, minWidth: 20, lineHeight: 1.2 }}>
-
+      <div className="flex items-start" style={{ gap: 'var(--kds-item-gap)' }}>
+        <span className="font-bold shrink-0 text-center text-foreground" style={{ fontSize: 'var(--kds-item-qty)', minWidth: 20, lineHeight: 1.2 }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
             <span
               className="text-foreground"
-              style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+              style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
             >
               {product.name}
             </span>
@@ -88,7 +88,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
                 <div
                   key={i}
                   className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 11, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                  style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                 >
                   {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
                 </div>
@@ -98,7 +98,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
           {showDetails && product.notes && (
             <div
               className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-              style={{ fontSize: 11 }}
+              style={{ fontSize: 'var(--kds-modifier)' }}
             >
               "{product.notes}"
             </div>
@@ -147,8 +147,9 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 export function OrderCardV1({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
-  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
+  const isHeaderOnly = ticketLayout === 'header';
   const { getStatusForElapsed } = useStatusRules();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const headerBg = colorSet.headerBg;
@@ -156,6 +157,9 @@ export function OrderCardV1({ order, onBump }: Props) {
   const status = getStatusForElapsed(elapsed);
   const pillBg = status.color;
   const pillText = status.textColor;
+  const identifier = ticketHeaderLayout === 'guest'
+    ? (order.guestName || order.customerName || order.serverName || 'Guest')
+    : `#${order.orderNumber}`;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [bumping, setBumping] = useState(false);
@@ -214,10 +218,10 @@ export function OrderCardV1({ order, onBump }: Props) {
         className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-card text-foreground"
         style={{ borderBottom: '0.5px solid #E5E7EB' }}
       >
-        <span className="inline-flex items-center gap-1.5">
-          <span style={{ fontSize: 14, fontWeight: 800 }}>#{order.orderNumber}</span>
+        <span className="inline-flex items-center gap-1.5 min-w-0">
+          <span className="truncate" style={{ fontSize: 14, fontWeight: 800 }}>{identifier}</span>
           <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors"
+            className="inline-flex items-center rounded-full px-2 py-0.5 font-mono-timer text-[11px] font-semibold transition-colors shrink-0"
             style={{ background: pillBg, color: pillText }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${status.label}`}
           >
@@ -229,9 +233,10 @@ export function OrderCardV1({ order, onBump }: Props) {
         </span>
       </div>
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}
+      {!isHeaderOnly && (
       <div className="flex-1">
 
         {order.orderType === 'dine-in' && !isCompact ? (
@@ -274,11 +279,7 @@ export function OrderCardV1({ order, onBump }: Props) {
           </div>
         )}
       </div>
-
-
-
-
-
+      )}
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
     </div>
