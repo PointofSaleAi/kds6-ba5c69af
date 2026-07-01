@@ -289,3 +289,31 @@ export function useKDSSettings() {
   if (!ctx) throw new Error('useKDSSettings must be used within KDSSettingsProvider');
   return ctx;
 }
+
+/**
+ * Overrides the effective per-route settings within its subtree so a
+ * preview renders as if the app were on the given tickets route.
+ */
+export function KDSSettingsPreviewScope({
+  route,
+  children,
+}: {
+  route: TicketsRouteKey;
+  children: ReactNode;
+}) {
+  const ctx = useContext(KDSSettingsContext);
+  if (!ctx) throw new Error('KDSSettingsPreviewScope must be used within KDSSettingsProvider');
+  const value: KDSSettingsContextValue = {
+    ...ctx,
+    textSize: ctx.getRouteSetting(route, 'textSize'),
+    ticketSpacing: ctx.getRouteSetting(route, 'ticketSpacing'),
+    ticketLayout: ctx.getRouteSetting(route, 'ticketLayout'),
+    ticketHeaderLayout: ctx.getRouteSetting(route, 'ticketHeaderLayout'),
+    setTextSize: (v) => ctx.setRouteSetting(route, 'textSize', v),
+    setTicketSpacing: (v) => ctx.setRouteSetting(route, 'ticketSpacing', v),
+    setTicketLayout: (v) => ctx.setRouteSetting(route, 'ticketLayout', v),
+    setTicketHeaderLayout: (v) => ctx.setRouteSetting(route, 'ticketHeaderLayout', v),
+    activeTicketsRoute: route,
+  };
+  return <KDSSettingsContext.Provider value={value}>{children}</KDSSettingsContext.Provider>;
+}
