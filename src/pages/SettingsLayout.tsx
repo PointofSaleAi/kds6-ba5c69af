@@ -2,6 +2,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { usePortrait } from '@/hooks/use-portrait';
+import { KDS_ROOT, KDS_SETTINGS } from '@/lib/routes';
 
 /**
  * Settings shell rendered inside the main KDS frame: the KDS left rail stays
@@ -21,13 +22,13 @@ export default function SettingsLayout() {
       case 'seen-orders':
       case 'unseen-orders':
       case 'alerts':
-        navigate('/kds/v6');
+        navigate(KDS_ROOT);
         break;
       case 'settings':
-        navigate('/kds/v6/settings');
+        navigate(KDS_SETTINGS);
         break;
       default:
-        navigate('/kds/v6');
+        navigate(KDS_ROOT);
     }
   };
 

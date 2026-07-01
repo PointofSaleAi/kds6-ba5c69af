@@ -22,6 +22,7 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { getActiveSummaryCategories } from '@/lib/summary-categories';
+import { KDS_ROOT } from '@/lib/routes';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
@@ -50,7 +51,7 @@ interface IndexProps {
 const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = {}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const basePath = '/kds/v6';
+  const basePath = KDS_ROOT;
   const inSettings = location.pathname.startsWith(`${basePath}/settings`);
   const isVariantRoute = cardVariant !== 'default';
   // When opened directly on a settings or variant route, skip dev selector and go to main.
