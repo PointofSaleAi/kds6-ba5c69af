@@ -63,7 +63,7 @@ export const AI_PROVIDER_MODELS: Record<Exclude<AIProviderId, ''>, string> = {
   openai: 'GPT-4o',
   claude: 'Sonnet 4',
   google: 'Gemini 2.5 Pro',
-  maya: 'Maya 1',
+  maya: 'Maya Pro',
 };
 
 export interface AIIntegrationState {
