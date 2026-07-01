@@ -594,7 +594,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
               {/* Input */}
               <div className="flex-shrink-0 p-4 border-t border-neutral-800/60">
                 <form
-                  onSubmit={(e) => { e.preventDefault(); submitPrompt(input); }}
+                  onSubmit={(e) => { e.preventDefault(); recordLearnedQuery(input); submitPrompt(input); }}
                   className="flex gap-3 items-center"
                 >
                   <button
