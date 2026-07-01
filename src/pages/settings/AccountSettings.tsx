@@ -49,7 +49,7 @@ export default function AccountSettings() {
 
   const handleLogOut = () => {
     setLogoutOpen(false);
-    navigate('/kds/full', { replace: true });
+    navigate('/kds/v1', { replace: true });
     setTimeout(() => window.location.reload(), 0);
   };
 

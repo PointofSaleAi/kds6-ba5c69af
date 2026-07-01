@@ -157,17 +157,17 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
         break;
       case 'navigate-hardware':
         onClose();
-        navigate('/kds/full/settings/hardware');
+        navigate('/kds/v1/settings/hardware');
         break;
       case 'navigate-ticket':
         onClose();
-        navigate(action.ticketNumber ? `/kds/full?ticket=${action.ticketNumber}` : '/kds/full');
+        navigate(action.ticketNumber ? `/kds/v1?ticket=${action.ticketNumber}` : '/kds/v1');
         break;
       case 'view':
       case 'navigate-home':
       default:
         onClose();
-        navigate('/kds/full');
+        navigate('/kds/v1');
         break;
     }
   };
