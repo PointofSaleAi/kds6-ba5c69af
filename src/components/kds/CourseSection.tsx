@@ -638,6 +638,7 @@ function CourseItemTapRow({
               <TightWidthBox
                 constrainSecondary={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir, isHighlighted]}
+                expandSecondaryToContent={hasSecondaryLine && showAllergens && item.allergens.length > 0}
                 primary={
                   <span className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                     <span
@@ -665,14 +666,26 @@ function CourseItemTapRow({
                       marginBottom: '0px',
                       fontSize: 'var(--kds-modifier)',
                       lineHeight: '1',
-                      flexDirection: secondaryDir === 'rtl' ? 'row-reverse' : 'row',
+                      flexDirection: 'row',
                       justifyContent: 'flex-start',
                     }}
                   >
                     <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
                       <Languages size={8} className="text-text-secondary" />
                     </span>
-                    <span className="min-w-0" style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
+                    <span
+                      className="min-w-0"
+                      style={{
+                        lineHeight: 1,
+                        unicodeBidi: 'plaintext',
+                        textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+                        overflowWrap: 'anywhere',
+                        ...(secondaryDir === 'rtl' ? { minWidth: 'var(--tight-primary-width, 0px)', display: 'inline-block' } : {}),
+                      }}
+                      dir={secondaryDir}
+                    >
+                      {tpSecondary(item.name)}
+                    </span>
                     {showAllergens && item.allergens.map((a) => (
                       <AllergenBadge key={a.type} allergen={a} variant="item" />
                     ))}
