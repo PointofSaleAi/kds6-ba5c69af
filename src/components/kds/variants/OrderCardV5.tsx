@@ -401,7 +401,7 @@ export function OrderCardV5({ order, onBump }: Props) {
               <TightWidthBox
                 deps={[order.orderNotes, displayMode, showSecondaryMenu, tx.secondaryDir, tn, tnSecondary]}
                 primary={
-                  <div className="text-foreground break-words" style={{ fontSize: 12, fontWeight: 500 }}>
+                  <div className="text-foreground break-words" style={{ fontSize: 'var(--kds-item-name)', fontWeight: 500 }}>
                     {tn(order.orderNotes)}
                   </div>
                 }
