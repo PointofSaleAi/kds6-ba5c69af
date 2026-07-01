@@ -2550,7 +2550,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const [displayMode, setDisplayModeState] = useState<DisplayMode>(() => {
     const saved = localStorage.getItem('posai-display-mode');
-    return (saved as DisplayMode) || 'dual';
+    return (saved as DisplayMode) || 'single';
   });
 
   const [primaryLang, setPrimaryLangState] = useState<LanguageCode>(() => {

@@ -88,8 +88,8 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings-v4';
-const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v3', 'posai-kds-settings-v2'];
+const STORAGE_KEY = 'posai-kds-settings-v5';
+const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v4', 'posai-kds-settings-v3', 'posai-kds-settings-v2'];
 
 
 const defaults: KDSSettings = {
@@ -109,7 +109,7 @@ const defaults: KDSSettings = {
   ticketHeaderLayout: 'kitchen',
   expoSendButtonMode: 'when-ready',
   ticketLayout: 'standard',
-  ticketSpacing: 'Compact',
+  ticketSpacing: 'Standard',
   ticketHeaderStyle: 'default',
 };
 

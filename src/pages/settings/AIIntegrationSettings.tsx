@@ -13,9 +13,8 @@ interface ProviderOption {
   name: string;
 }
 
+// Manufacturer default: Maya AI is the only selectable provider.
 const PROVIDERS: ProviderOption[] = [
-  { id: 'openai', name: 'OpenAI (ChatGPT)' },
-  { id: 'google', name: 'Google Gemini' },
   { id: 'maya', name: 'Maya AI' },
 ];
 
@@ -36,15 +35,15 @@ function loadPref(key: string, fallback: string): string {
 export default function AIIntegrationSettings() {
   const navigate = useNavigate();
   const hash = useHashHighlight();
-  const [enabled, setEnabled] = useState(false);
-  const [provider, setProvider] = useState<string>('');
-  const [status, setStatus] = useState<ConnectionStatus>('not_configured');
+  const [enabled, setEnabled] = useState(true);
+  const [provider, setProvider] = useState<string>('maya');
+  const [status, setStatus] = useState<ConnectionStatus>('connected');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setEnabled(loadPref(STORAGE_KEYS.enabled, 'false') === 'true');
-    setProvider(loadPref(STORAGE_KEYS.provider, ''));
-    setStatus(loadPref(STORAGE_KEYS.status, 'not_configured') as ConnectionStatus);
+    setEnabled(loadPref(STORAGE_KEYS.enabled, 'true') === 'true');
+    setProvider(loadPref(STORAGE_KEYS.provider, 'maya'));
+    setStatus(loadPref(STORAGE_KEYS.status, 'connected') as ConnectionStatus);
   }, []);
 
   const persist = (key: string, value: string) => {
@@ -88,11 +87,11 @@ export default function AIIntegrationSettings() {
 
   const handleReset = () => {
     Object.values(STORAGE_KEYS).forEach((k) => window.localStorage.removeItem(k));
-    setEnabled(false);
-    setProvider('');
-    setStatus('not_configured');
+    setEnabled(true);
+    setProvider('maya');
+    setStatus('connected');
     emitAIIntegrationChange();
-    toast.success('AI integration removed');
+    toast.success('AI integration reset to default');
   };
 
 
