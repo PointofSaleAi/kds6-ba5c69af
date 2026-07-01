@@ -48,12 +48,6 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
 
   return (
     <div className="relative rounded-2xl p-5 mb-4" style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}>
-      {isStaff && (
-        <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide"
-             style={{ background: 'rgba(37, 99, 235, 0.15)', color: '#2563EB' }}>
-          PIN active
-        </div>
-      )}
 
       <div className="flex flex-col items-center text-center">
         <div className="relative mb-3">
