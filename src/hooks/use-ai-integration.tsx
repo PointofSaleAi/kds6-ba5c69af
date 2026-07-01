@@ -52,7 +52,7 @@ export const AI_PROVIDER_MODEL_OPTIONS: Record<Exclude<AIProviderId, ''>, AIMode
     { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Fast & efficient' },
   ],
   maya: [
-    { id: 'maya-1', name: 'Maya 1', description: 'Most capable' },
+    { id: 'maya-1', name: 'Maya Pro', description: 'Most capable' },
     { id: 'maya-mini', name: 'Maya Mini', description: 'Fast & efficient' },
     { id: 'maya-lite', name: 'Maya Lite', description: 'Legacy model' },
   ],
