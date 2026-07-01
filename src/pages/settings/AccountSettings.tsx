@@ -175,6 +175,22 @@ export default function AccountSettings() {
         highlighted={hash === 'log-out'}
       />
 
+      {staffSwitchOpen && (
+        <div className="fixed inset-0 z-[100]">
+          <PinPadScreen
+            context="staff-switch"
+            onSuccess={() => setStaffSwitchOpen(false)}
+            onCancel={() => setStaffSwitchOpen(false)}
+          />
+        </div>
+      )}
+
+      <div className="my-4 border-t" style={{ borderColor: 'hsl(var(--border))' }} />
+
+      <ProfileSection
+        onSwitchStaff={() => setStaffSwitchOpen(true)}
+      />
+
       <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
