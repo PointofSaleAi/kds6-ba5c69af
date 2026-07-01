@@ -255,7 +255,7 @@ export default function DisplaySettings() {
                   ) : ticketsRoute === 'v6' ? (
                     <OrderCardV5 order={previewTicket} />
                   ) : (
-                    <OrderCard order={previewTicket} layoutOverride={ticketLayout} />
+                    <OrderCard order={previewTicket} layoutOverride={ticketLayout} legacyActions={ticketsRoute === 'Default'} />
                   )}
                 </div>
               </div>
