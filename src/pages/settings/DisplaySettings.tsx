@@ -164,7 +164,7 @@ export default function DisplaySettings() {
               <div className="grid gap-3">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Header
+                    Layout
                   </span>
                   <SegmentedToggle
                     options={['Default', 'V1', 'V2', 'V3']}
@@ -202,7 +202,7 @@ export default function DisplaySettings() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Layout
+                    Appearance
                   </span>
                   <SegmentedToggle
                     options={['Compact', 'Standard', 'Header']}
