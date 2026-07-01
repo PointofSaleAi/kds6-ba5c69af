@@ -56,7 +56,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'connection', label: 'Connection', description: 'Network and EdgeOS sync', group: 'hardware', groupLabel: 'Hardware', path: '/kds/v1/settings/hardware#connection', keywords: 'connection network websocket sync edgeos' },
 
   // System
-  { id: 'ai-integration', label: 'AI Integration', description: 'External AI provider with your own API key', group: 'system', groupLabel: 'System', path: '/kds/v1/settings/system#ai-integration', keywords: 'ai integration settings openai chatgpt gemini google maya api key provider external' },
+  { id: 'ai-integration', label: 'AI Integration', description: 'Maya AI integration', group: 'system', groupLabel: 'System', path: '/kds/v1/settings/system#ai-integration', keywords: 'ai integration settings maya provider' },
   { id: 'ai-instructions', label: 'AI Instructions', description: 'Rules, custom instructions & restaurant knowledge base', group: 'system', groupLabel: 'System', path: '/kds/v1/settings/system/ai-integration/ai-instructions', keywords: 'ai instructions rules dos donts custom prompt system prompt knowledge base restaurant type' },
 
   // Account
