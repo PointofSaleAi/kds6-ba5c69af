@@ -110,6 +110,7 @@ export function ActiveIdentityProvider({ children }: { children: ReactNode }) {
 
   const value: IdentityContextValue = {
     identity,
+    restaurant: RESTAURANT_DEFAULT,
     signInAsRestaurant,
     signInWithPin,
     signOutStaff,
