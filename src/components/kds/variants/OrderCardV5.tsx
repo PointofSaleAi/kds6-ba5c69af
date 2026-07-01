@@ -4,6 +4,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { V2Header } from './headers/V2Header';
+import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useLanguage } from '@/hooks/use-language';
 
@@ -340,7 +341,7 @@ function TightWidthBox({
 }
 
 export function OrderCardV5({ order, onBump }: Props) {
-  const { ticketLayout } = useKDSSettings();
+  const { ticketLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
   const tx: Translators = {
     tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta,
@@ -391,6 +392,8 @@ export function OrderCardV5({ order, onBump }: Props) {
       <div onClick={handleBump} role="button" className="cursor-pointer">
         <V2Header order={order} />
       </div>
+
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} />}
 
       {/* Order notes strip */}
       {order.orderNotes && (

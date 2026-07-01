@@ -11,6 +11,7 @@ import { formatTime } from '@/lib/datetime';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 
 const MODIFIER_CLASS = {
@@ -197,7 +198,7 @@ export function OrderCardV2({ order, onBump }: Props) {
     });
   };
 
-  const { ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
@@ -270,6 +271,7 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}

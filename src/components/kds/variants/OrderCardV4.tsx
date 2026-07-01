@@ -4,6 +4,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
@@ -147,7 +148,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 export function OrderCardV4({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
-  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const { getStatusForElapsed } = useStatusRules();
@@ -231,6 +232,7 @@ export function OrderCardV4({ order, onBump }: Props) {
         </span>
       </div>
 
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}

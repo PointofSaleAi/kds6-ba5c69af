@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
 import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2, ChevronRight } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -192,7 +193,7 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const typeIcon = typeMeta.icon;
-  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const guestName = order.guestName || order.customerName || order.serverName || 'Guest';
@@ -292,6 +293,7 @@ export function OrderCardV3({ order, onBump }: Props) {
         );
       })()}
 
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
