@@ -271,6 +271,7 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
