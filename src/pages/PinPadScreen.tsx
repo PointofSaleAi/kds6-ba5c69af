@@ -61,8 +61,8 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
 
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
-    if (input && password && blockDemoAuthInProd()) onSuccess();
-  }, [input, password, onSuccess]);
+    if (input && password && blockDemoAuthInProd()) { signInAsRestaurant(); onSuccess(); }
+  }, [input, password, onSuccess, signInAsRestaurant]);
 
   const handleSendOtp = useCallback(() => {
     if (input) setOtpSent(true);
@@ -70,8 +70,9 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
 
   const handleVerifyOtp = useCallback(() => {
     if (!blockDemoAuthInProd()) return;
+    signInAsRestaurant();
     onSuccess();
-  }, [onSuccess]);
+  }, [onSuccess, signInAsRestaurant]);
 
   const handleOtpDigit = (index: number, value: string) => {
     if (value.length > 1) return;
