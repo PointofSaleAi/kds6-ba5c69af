@@ -228,6 +228,13 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                         Sign in with email or mobile
                       </button>
                     </div>
+                    {context === 'staff-switch' && onCancel && (
+                      <div className="flex justify-center mt-3">
+                        <button onClick={onCancel} className="text-sm font-montserrat" style={{ ...linkStyle, opacity: 0.75 }}>
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
