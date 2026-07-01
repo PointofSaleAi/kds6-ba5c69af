@@ -144,7 +144,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                     </div>
                     <div style={{ maxWidth: '340px' }}>
                       <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                        Scan directly with your phone camera. You will be asked to enter your email, password to verify.
+                        Scan with your phone camera to sign in.
                       </p>
                     </div>
                   </motion.div>
