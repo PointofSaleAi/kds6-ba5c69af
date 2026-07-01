@@ -1,4 +1,3 @@
-import { KDS_ROOT, KDS_V2, KDS_V3, KDS_V4, KDS_SETTINGS, KDS_SETTINGS_GROUP, KDS_SETTINGS_SYSTEM_AI_INTEGRATION } from '@/lib/routes';
 import { useState, useRef, useEffect } from 'react';
 import { X, Send, Mic, MicOff, Settings, Bot, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,23 +31,21 @@ const HOME_CONTENT: RouteContent = {
   ],
 };
 
-const HISTORY_CONTENT: RouteContent = {
-  chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
-  examples: [
-    '"Show tickets bumped in the last hour"',
-    '"Recall ticket #32"',
-    '"How many tickets were served today?"',
-    '"Show all delivery tickets from today"',
-  ],
-};
-
 const ROUTE_CONTENT: Record<string, RouteContent> = {
-  [KDS_ROOT]: HOME_CONTENT,
-  [KDS_V2]: HOME_CONTENT,
-  [KDS_V3]: HOME_CONTENT,
-  [KDS_V4]: HOME_CONTENT,
-  [`${KDS_ROOT}/history`]: HISTORY_CONTENT,
-  [KDS_SETTINGS_GROUP.display]: {
+  '/kds/v1': HOME_CONTENT,
+  '/kds/v2': HOME_CONTENT,
+  '/kds/v3': HOME_CONTENT,
+  '/kds/v4': HOME_CONTENT,
+  '/kds/v1/history': {
+    chips: ['Recall a ticket', "Today's summary", 'Filter by time', 'Search by table'],
+    examples: [
+      '"Show tickets bumped in the last hour"',
+      '"Recall ticket #32"',
+      '"How many tickets were served today?"',
+      '"Show all delivery tickets from today"',
+    ],
+  },
+  '/kds/v1/settings/display': {
     chips: ['Text size', 'Ticket layout', 'Dark mode', 'Reset display'],
     examples: [
       '"Set text size to large"',
@@ -57,7 +54,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Reset display settings to defaults"',
     ],
   },
-  [KDS_SETTINGS_GROUP.orders]: {
+  '/kds/v1/settings/orders': {
     chips: ['Allergen badges', 'Servable modifiers', 'Ticket aging rules', 'Reset tickets'],
     examples: [
       '"Enable allergen badges"',
@@ -66,7 +63,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Reset ticket settings to defaults"',
     ],
   },
-  [KDS_SETTINGS_GROUP.hardware]: {
+  '/kds/v1/settings/hardware': {
     chips: ['KOT printer', 'Sound settings', 'Sync now', 'Connection'],
     examples: [
       '"Set up my KOT printer"',
@@ -75,7 +72,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
       '"Force sync orders now"',
     ],
   },
-  [KDS_SETTINGS_GROUP.account]: {
+  '/kds/v1/settings/account': {
     chips: ['Device name', 'Station ID', 'Bug reporting', 'Log out'],
     examples: [
       '"What is my station ID?"',
@@ -97,7 +94,7 @@ const FALLBACK_CONTENT: RouteContent = {
 };
 
 const VIEW_CONTENT: Record<string, RouteContent> = {
-  history: HISTORY_CONTENT,
+  history: ROUTE_CONTENT['/kds/v1/history'],
   'seen-orders': {
     chips: ['Mark all served', 'Filter by station', 'Show overtime', 'Allergen alerts'],
     examples: [
@@ -121,9 +118,9 @@ const VIEW_CONTENT: Record<string, RouteContent> = {
 function getRouteContent(pathname: string, view?: string | null): RouteContent {
   if (view && VIEW_CONTENT[view]) return VIEW_CONTENT[view];
   if (ROUTE_CONTENT[pathname]) return ROUTE_CONTENT[pathname];
-  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== KDS_ROOT);
+  const match = Object.keys(ROUTE_CONTENT).find(k => pathname.startsWith(k) && k !== '/kds/v1');
   if (match) return ROUTE_CONTENT[match];
-  if (pathname === '/' || pathname.startsWith(KDS_ROOT)) return HOME_CONTENT;
+  if (pathname === '/' || pathname.startsWith('/kds/v1')) return HOME_CONTENT;
   return FALLBACK_CONTENT;
 }
 
@@ -151,7 +148,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const kdsSettings = useKDSSettings();
   const statusRules = useStatusRules();
   const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
-  const isSettingsRoute = location.pathname.startsWith(KDS_SETTINGS);
+  const isSettingsRoute = location.pathname.startsWith('/kds/v1/settings');
   const { chips: SUGGESTION_CHIPS, examples: TRY_EXAMPLES } = getRouteContent(location.pathname, activeKDSView);
   const providerReady = ai.enabled && !!ai.provider && ai.status === 'connected';
   const providerLabel = ai.provider ? AI_PROVIDER_LABELS[ai.provider] : 'Not configured';
@@ -232,7 +229,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
 
   const openAISettings = () => {
     onClose();
-    navigate(KDS_SETTINGS_SYSTEM_AI_INTEGRATION);
+    navigate('/kds/v1/settings/system/ai-integration');
   };
 
   const submitPrompt = async (prompt: string) => {

@@ -1,4 +1,3 @@
-import { KDS_ONLINE_ORDERING } from '@/lib/routes';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -89,7 +88,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const { timeFormat, tperson, tl } = useLanguage();
   const { pathname } = useLocation();
   const showCustomerContact =
-    pathname === KDS_ONLINE_ORDERING &&
+    pathname === '/kds/home-onlineordering' &&
     (order.orderType === 'delivery' || order.orderType === 'phone-in') &&
     !!order.customerPhone;
   const displayGuestName = showCustomerContact && order.customerName

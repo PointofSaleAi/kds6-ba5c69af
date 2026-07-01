@@ -1,4 +1,3 @@
-import { KDS_SETTINGS_SYSTEM_AI_INTEGRATION } from '@/lib/routes';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -178,7 +177,7 @@ export default function AIInstructionsSettings() {
       <div className="flex items-center justify-between pt-0 pb-4 mb-2 relative">
         <button
           type="button"
-          onClick={() => navigate(KDS_SETTINGS_SYSTEM_AI_INTEGRATION)}
+          onClick={() => navigate('/kds/v1/settings/system/ai-integration')}
           className="w-10 h-10 rounded-full flex items-center justify-center active:opacity-70 transition-opacity"
           style={cardStyle}
           aria-label="Back"

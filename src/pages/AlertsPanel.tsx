@@ -1,4 +1,3 @@
-import { KDS_ROOT, KDS_SETTINGS_GROUP } from '@/lib/routes';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -158,17 +157,17 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
         break;
       case 'navigate-hardware':
         onClose();
-        navigate(KDS_SETTINGS_GROUP.hardware);
+        navigate('/kds/v1/settings/hardware');
         break;
       case 'navigate-ticket':
         onClose();
-        navigate(action.ticketNumber ? `${KDS_ROOT}?ticket=${action.ticketNumber}` : KDS_ROOT);
+        navigate(action.ticketNumber ? `/kds/v1?ticket=${action.ticketNumber}` : '/kds/v1');
         break;
       case 'view':
       case 'navigate-home':
       default:
         onClose();
-        navigate(KDS_ROOT);
+        navigate('/kds/v1');
         break;
     }
   };
