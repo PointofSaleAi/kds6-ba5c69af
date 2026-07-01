@@ -97,7 +97,6 @@ export default function AccountSettings() {
     <>
       <ProfileSection
         onSwitchStaff={() => setStaffSwitchOpen(true)}
-        onLogOutDevice={() => setLogoutOpen(true)}
       />
 
       <div className="my-4 border-t" style={{ borderColor: 'hsl(var(--border))' }} />
