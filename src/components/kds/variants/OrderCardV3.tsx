@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
 import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2, ChevronRight } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
