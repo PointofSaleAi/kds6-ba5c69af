@@ -523,7 +523,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-wrap gap-2 justify-center">
                       {learnedForContext.map(q => {
                         const label = q.length > 30 ? q.slice(0, 30) + '…' : q;
                         return (
