@@ -33,6 +33,7 @@ export default function DisplaySettings() {
     ticketSpacing, setTicketSpacing,
     ticketHeaderStyle, setTicketHeaderStyle,
   } = useKDSSettings();
+  const [ticketsRoute, setTicketsRoute] = useState<string>(() => localStorage.getItem('kds-tickets-route') || 'Default');
   const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
   const languageDisplay = displayMode === 'dual'
     ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
