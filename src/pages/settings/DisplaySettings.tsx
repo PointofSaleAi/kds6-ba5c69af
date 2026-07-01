@@ -9,6 +9,11 @@ import {
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { OrderCard } from '@/components/kds/OrderCard';
+import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
+import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
+import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
+import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
+import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
 import { previewTicket } from '@/data/mock-preview-ticket';
 import {
   SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
@@ -229,9 +234,21 @@ export default function DisplaySettings() {
               </p>
               <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
                 <div
-                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass}`}
+                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass} ${ticketsRoute === 'v6' ? 'v5-route' : ''}`}
                 >
-                  <OrderCard order={previewTicket} layoutOverride={ticketLayout} />
+                  {ticketsRoute === 'v2' ? (
+                    <OrderCardV1 order={previewTicket} />
+                  ) : ticketsRoute === 'v3' ? (
+                    <OrderCardV2 order={previewTicket} />
+                  ) : ticketsRoute === 'v4' ? (
+                    <OrderCardV3 order={previewTicket} />
+                  ) : ticketsRoute === 'v5' ? (
+                    <OrderCardV4 order={previewTicket} />
+                  ) : ticketsRoute === 'v6' ? (
+                    <OrderCardV5 order={previewTicket} />
+                  ) : (
+                    <OrderCard order={previewTicket} layoutOverride={ticketLayout} />
+                  )}
                 </div>
               </div>
             </div>
