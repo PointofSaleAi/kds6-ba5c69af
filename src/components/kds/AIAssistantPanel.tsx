@@ -550,7 +550,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       ))}
                     </div>
 
-                    <div className="mt-5 text-left">
+                    <div className="mt-5 text-center">
                       <p className="text-xs text-neutral-400 mb-1">Try asking:</p>
                       <p className="text-xs text-neutral-500">{TRY_EXAMPLE}</p>
                     </div>
