@@ -18,7 +18,7 @@ import { previewTicket } from '@/data/mock-preview-ticket';
 import {
   SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
 } from '@/components/settings/SettingsControls';
-import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useKDSSettings, KDSSettingsPreviewScope } from '@/hooks/use-kds-settings';
 import { useLanguage, languageNames } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useDockLayout } from '@/hooks/use-dock-layout';
