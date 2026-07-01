@@ -20,7 +20,7 @@ function formatHours(hours: number): string {
   return `${h}h ${m.toString().padStart(2, '0')}m`;
 }
 
-export function ProfileSection({ onSwitchStaff, onLogOutDevice }: ProfileSectionProps) {
+export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
   const { identity, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
   const [tab, setTab] = useState<TabKey>('today');
 
