@@ -192,8 +192,12 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const typeIcon = typeMeta.icon;
-  const { orderTypeDetailedColors, ticketLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
+  const isHeaderOnly = ticketLayout === 'header';
+  const guestName = order.guestName || order.customerName || order.serverName || 'Guest';
+  const identifierPrimary = ticketHeaderLayout === 'guest' ? guestName : order.orderNumber;
+  const identifierSub = ticketHeaderLayout === 'guest' ? `#${order.orderNumber}` : (order.guestName || order.customerName || '');
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const accentColor = colorSet.headerBg;
   const accentText = colorSet.headerText;
