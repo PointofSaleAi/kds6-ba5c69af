@@ -4,7 +4,6 @@ import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/us
 
 interface ProfileSectionProps {
   onSwitchStaff: () => void;
-  onLogOutDevice: () => void;
 }
 
 type TabKey = 'today' | 'total';
