@@ -21,6 +21,7 @@ export default function AccountSettings() {
   const [resetOpen, setResetOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
+  const [staffSwitchOpen, setStaffSwitchOpen] = useState(false);
   const hash = useHashHighlight();
 
   const handleDevModeChange = (v: boolean) => {
