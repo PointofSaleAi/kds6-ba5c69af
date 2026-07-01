@@ -88,8 +88,8 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings-v5';
-const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v4', 'posai-kds-settings-v3', 'posai-kds-settings-v2'];
+const STORAGE_KEY = 'posai-kds-settings-v6';
+const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v5', 'posai-kds-settings-v4', 'posai-kds-settings-v3', 'posai-kds-settings-v2'];
 
 
 const defaults: KDSSettings = {
@@ -98,7 +98,7 @@ const defaults: KDSSettings = {
   showAllergens: true,
   showHeaderAllergens: true,
   sortDefault: 'By time',
-  staggerMode: false,
+  staggerMode: true,
   servableModifiers: false,
   timezone: 'auto',
   currency: 'USD',
