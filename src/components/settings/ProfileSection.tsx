@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import { KeyRound } from 'lucide-react';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
 
