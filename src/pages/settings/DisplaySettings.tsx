@@ -168,15 +168,13 @@ export default function DisplaySettings() {
                   </span>
                   <SegmentedToggle
                     options={['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6']}
-                    value={(() => {
-                      const seg = window.location.pathname.split('/')[2] || 'default';
-                      return ['v1','v2','v3','v4','v5','v6'].includes(seg) ? seg : 'Default';
-                    })()}
+                    value={ticketsRoute}
                     onChange={(v) => {
-                      const route = v === 'Default' ? '/kds/default' : `/kds/${v}`;
-                      window.location.assign(route);
+                      setTicketsRoute(v);
+                      localStorage.setItem('kds-tickets-route', v);
                     }}
                   />
+                </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
