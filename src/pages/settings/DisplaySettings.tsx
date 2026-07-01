@@ -9,6 +9,11 @@ import {
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { OrderCard } from '@/components/kds/OrderCard';
+import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
+import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
+import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
+import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
+import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
 import { previewTicket } from '@/data/mock-preview-ticket';
 import {
   SegmentedToggle, SwitchToggle, ValueText, useHashHighlight,
