@@ -266,9 +266,6 @@ function ItemTapRow({
                   >
                     {secondaryDir === 'rtl' ? (
                       <>
-                        {showAllergens && item.allergens.map((a) => (
-                          <AllergenBadge key={a.type} allergen={a} variant="item" />
-                        ))}
                         <span
                           className="min-w-0"
                           style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: 'right', overflowWrap: 'anywhere' }}
@@ -276,6 +273,9 @@ function ItemTapRow({
                         >
                           {tpSecondary(item.name)}
                         </span>
+                        {showAllergens && item.allergens.map((a) => (
+                          <AllergenBadge key={a.type} allergen={a} variant="item" />
+                        ))}
                       </>
                     ) : (
                       <>
