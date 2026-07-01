@@ -12,6 +12,7 @@ export function TightWidthBox({
   className,
   style,
   constrainSecondary = true,
+  expandSecondaryToContent = false,
 }: {
   primary: ReactNode;
   secondary?: ReactNode;
@@ -20,6 +21,8 @@ export function TightWidthBox({
   style?: CSSProperties;
   /** When false, secondary wraps to the full available width instead of the primary text's rendered width. */
   constrainSecondary?: boolean;
+  /** When true, secondary content such as inline allergen chips can use the full available line width. */
+  expandSecondaryToContent?: boolean;
 }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const primaryRef = useRef<HTMLDivElement | null>(null);
@@ -71,7 +74,7 @@ export function TightWidthBox({
       {secondary && (
         <div
           style={
-            constrainSecondary
+            constrainSecondary && !expandSecondaryToContent
               ? { minWidth: width, width: 'max-content', maxWidth: '100%' }
               : { maxWidth: '100%' }
           }

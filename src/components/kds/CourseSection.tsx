@@ -638,6 +638,7 @@ function CourseItemTapRow({
               <TightWidthBox
                 constrainSecondary={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir, isHighlighted]}
+                expandSecondaryToContent={hasSecondaryLine && showAllergens && item.allergens.length > 0}
                 primary={
                   <span className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                     <span
@@ -665,7 +666,7 @@ function CourseItemTapRow({
                       marginBottom: '0px',
                       fontSize: 'var(--kds-modifier)',
                       lineHeight: '1',
-                      flexDirection: secondaryDir === 'rtl' ? 'row-reverse' : 'row',
+                      flexDirection: 'row',
                       justifyContent: 'flex-start',
                     }}
                   >
