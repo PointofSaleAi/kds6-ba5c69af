@@ -33,6 +33,7 @@ export default function DisplaySettings() {
     ticketSpacing, setTicketSpacing,
     ticketHeaderStyle, setTicketHeaderStyle,
   } = useKDSSettings();
+  const [ticketsRoute, setTicketsRoute] = useState<string>(() => localStorage.getItem('kds-tickets-route') || 'Default');
   const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
   const languageDisplay = displayMode === 'dual'
     ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
@@ -168,13 +169,10 @@ export default function DisplaySettings() {
                   </span>
                   <SegmentedToggle
                     options={['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6']}
-                    value={(() => {
-                      const seg = window.location.pathname.split('/')[2] || 'default';
-                      return ['v1','v2','v3','v4','v5','v6'].includes(seg) ? seg : 'Default';
-                    })()}
+                    value={ticketsRoute}
                     onChange={(v) => {
-                      const route = v === 'Default' ? '/kds/default' : `/kds/${v}`;
-                      window.location.assign(route);
+                      setTicketsRoute(v);
+                      localStorage.setItem('kds-tickets-route', v);
                     }}
                   />
                 </div>

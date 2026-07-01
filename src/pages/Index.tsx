@@ -102,7 +102,13 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
-      case 'home': navigate(basePath); setScreen('main'); break;
+      case 'home': {
+        const stored = localStorage.getItem('kds-tickets-route') || 'Default';
+        const route = stored === 'Default' ? '/kds/default' : `/kds/${stored}`;
+        navigate(route);
+        setScreen('main');
+        break;
+      }
       case 'alerts': setAlertsOpen((v) => !v); break;
       case 'settings': navigate(`${basePath}/settings`); break;
       case 'performance': setScreen('performance'); break;
