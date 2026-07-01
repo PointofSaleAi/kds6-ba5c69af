@@ -217,11 +217,11 @@ function ModifierRow({
 }) {
   const colorClass = tone === 'allergen' ? 'text-red-400' : 'text-muted-foreground';
   return (
-    <div className="flex items-start gap-1.5" style={{ lineHeight: 1.25 }}>
+    <div className="flex items-center gap-1.5" style={{ lineHeight: 1.25 }}>
       <span
         aria-hidden
         className="shrink-0 select-none text-muted-foreground"
-        style={{ fontFamily: 'monospace', fontSize: 'var(--kds-modifier)', marginTop: 1 }}
+        style={{ fontFamily: 'monospace', fontSize: 'var(--kds-modifier)' }}
       >
         {'\u2514\u2500'}
       </span>
