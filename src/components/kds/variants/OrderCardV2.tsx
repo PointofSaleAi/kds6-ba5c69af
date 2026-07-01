@@ -270,10 +270,11 @@ export function OrderCardV2({ order, onBump }: Props) {
         </div>
       </div>
 
-      {order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
 
+      {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => (
@@ -310,14 +311,12 @@ export function OrderCardV2({ order, onBump }: Props) {
           ))
         )}
       </div>
+      )}
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
 
-
-
-
       {/* FOOTER */}
-      {!isCompact && (
+      {!isCompact && !isHeaderOnly && (
         <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
           <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
           <button
