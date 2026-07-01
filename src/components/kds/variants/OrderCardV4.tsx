@@ -4,6 +4,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
+import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
