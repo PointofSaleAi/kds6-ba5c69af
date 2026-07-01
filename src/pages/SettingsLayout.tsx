@@ -2,6 +2,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { usePortrait } from '@/hooks/use-portrait';
+import { KDS_ROOT, KDS_SETTINGS } from '@/lib/routes';
 
 /**
  * Settings shell rendered inside the main KDS frame: the KDS left rail stays
