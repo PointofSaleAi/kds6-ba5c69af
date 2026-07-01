@@ -220,13 +220,13 @@ function ModifierRow({
       <span
         aria-hidden
         className="shrink-0 select-none text-muted-foreground"
-        style={{ fontFamily: 'monospace', fontSize: 11, marginTop: 1 }}
+        style={{ fontFamily: 'monospace', fontSize: 'var(--kds-modifier)', marginTop: 1 }}
       >
         {'\u2514\u2500'}
       </span>
       <span
         className={`shrink-0 ${colorClass}`}
-        style={{ fontSize: 11, width: 10, textAlign: 'center' }}
+        style={{ fontSize: 'var(--kds-modifier)', width: 10, textAlign: 'center' }}
       >
         {prefix}
       </span>
@@ -235,7 +235,7 @@ function ModifierRow({
           <div
             className={`break-words ${colorClass}`}
             style={{
-              fontSize: 11,
+              fontSize: 'var(--kds-modifier)',
               fontWeight: 500,
               fontStyle: italic ? 'italic' : 'normal',
               textDecoration: done ? 'line-through' : 'none',
