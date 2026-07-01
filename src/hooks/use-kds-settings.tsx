@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export type TextSize = 'Compact' | 'Standard' | 'Large';
 export type SortDefault = 'By time' | 'By table' | 'By type';
@@ -45,6 +46,17 @@ export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
   'custom': { headerBg: '#581C87', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
 };
 
+export type TicketsRouteKey = 'Default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5' | 'v6';
+export const TICKETS_ROUTE_KEYS: TicketsRouteKey[] = ['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+
+export interface RouteOverride {
+  textSize?: TextSize;
+  ticketSpacing?: TicketSpacing;
+  ticketLayout?: TicketLayout;
+  ticketHeaderLayout?: TicketHeaderLayout;
+}
+
+export type RouteOverrides = Partial<Record<TicketsRouteKey, RouteOverride>>;
 
 export interface KDSSettings {
   cardsPerRow: number;
@@ -65,6 +77,7 @@ export interface KDSSettings {
   ticketLayout: TicketLayout;
   ticketSpacing: TicketSpacing;
   ticketHeaderStyle: TicketHeaderStyle;
+  routeOverrides: RouteOverrides;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -86,10 +99,14 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketLayout: (v: TicketLayout) => void;
   setTicketSpacing: (v: TicketSpacing) => void;
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
+  /** Currently-active tickets route ('Default'..'v6') or null when not on a tickets route. */
+  activeTicketsRoute: TicketsRouteKey | null;
+  getRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K) => NonNullable<RouteOverride[K]>;
+  setRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K, value: NonNullable<RouteOverride[K]>) => void;
 }
 
-const STORAGE_KEY = 'posai-kds-settings-v6';
-const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v5', 'posai-kds-settings-v4', 'posai-kds-settings-v3', 'posai-kds-settings-v2'];
+const STORAGE_KEY = 'posai-kds-settings-v7';
+const LEGACY_STORAGE_KEYS = ['posai-kds-settings-v6', 'posai-kds-settings-v5', 'posai-kds-settings-v4', 'posai-kds-settings-v3', 'posai-kds-settings-v2'];
 
 
 const defaults: KDSSettings = {
@@ -111,14 +128,13 @@ const defaults: KDSSettings = {
   ticketLayout: 'standard',
   ticketSpacing: 'Standard',
   ticketHeaderStyle: 'default',
+  routeOverrides: {},
 };
 
 function loadSettings(): KDSSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      // Migrate from legacy storage but discard old order type color defaults
-      // so the refreshed manufacturer palette takes effect.
       for (const legacyKey of LEGACY_STORAGE_KEYS) {
         const legacy = localStorage.getItem(legacyKey);
         if (legacy) {
@@ -129,6 +145,7 @@ function loadSettings(): KDSSettings {
             localStorage.removeItem(legacyKey);
             const migrated = { ...defaults, ...parsedLegacy };
             migrated.servableModifiers = false;
+            migrated.routeOverrides = migrated.routeOverrides || {};
             return migrated;
           } catch {
             localStorage.removeItem(legacyKey);
@@ -147,17 +164,27 @@ function loadSettings(): KDSSettings {
       parsed.sortDefault = sortMigration[parsed.sortDefault as string];
     }
     parsed.servableModifiers = false;
+    parsed.routeOverrides = parsed.routeOverrides || {};
     return parsed;
   } catch {
     return defaults;
   }
 }
 
+function pathToRouteKey(pathname: string): TicketsRouteKey | null {
+  const m = pathname.match(/^\/kds\/(default|v[1-6])(?:\/|$)/i);
+  if (!m) return null;
+  const seg = m[1].toLowerCase();
+  if (seg === 'default') return 'Default';
+  return seg as TicketsRouteKey;
+}
 
 const KDSSettingsContext = createContext<KDSSettingsContextValue | null>(null);
 
 export function KDSSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<KDSSettings>(loadSettings);
+  const location = useLocation();
+  const activeTicketsRoute = useMemo(() => pathToRouteKey(location.pathname), [location.pathname]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
@@ -166,12 +193,46 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
   const update = <K extends keyof KDSSettings>(key: K) => (value: KDSSettings[K]) =>
     setSettings(prev => ({ ...prev, [key]: value }));
 
+  const getRouteSetting = <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K): NonNullable<RouteOverride[K]> => {
+    const override = settings.routeOverrides?.[route]?.[key];
+    if (override !== undefined) return override as NonNullable<RouteOverride[K]>;
+    return settings[key] as NonNullable<RouteOverride[K]>;
+  };
+
+  const setRouteSetting = <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K, value: NonNullable<RouteOverride[K]>) => {
+    setSettings(prev => ({
+      ...prev,
+      routeOverrides: {
+        ...prev.routeOverrides,
+        [route]: { ...(prev.routeOverrides?.[route] || {}), [key]: value },
+      },
+    }));
+  };
+
+  // Route-aware setters: when on a tickets route, write to per-route override.
+  const setPerRoute = <K extends keyof RouteOverride>(key: K) => (value: NonNullable<RouteOverride[K]>) => {
+    if (activeTicketsRoute) {
+      setRouteSetting(activeTicketsRoute, key, value);
+    } else {
+      update(key as keyof KDSSettings)(value as KDSSettings[keyof KDSSettings]);
+    }
+  };
+
+  const effectiveTextSize = activeTicketsRoute ? getRouteSetting(activeTicketsRoute, 'textSize') : settings.textSize;
+  const effectiveSpacing = activeTicketsRoute ? getRouteSetting(activeTicketsRoute, 'ticketSpacing') : settings.ticketSpacing;
+  const effectiveLayout = activeTicketsRoute ? getRouteSetting(activeTicketsRoute, 'ticketLayout') : settings.ticketLayout;
+  const effectiveHeaderLayout = activeTicketsRoute ? getRouteSetting(activeTicketsRoute, 'ticketHeaderLayout') : settings.ticketHeaderLayout;
+
   return (
     <KDSSettingsContext.Provider
       value={{
         ...settings,
+        textSize: effectiveTextSize,
+        ticketSpacing: effectiveSpacing,
+        ticketLayout: effectiveLayout,
+        ticketHeaderLayout: effectiveHeaderLayout,
         setCardsPerRow: update('cardsPerRow'),
-        setTextSize: update('textSize'),
+        setTextSize: setPerRoute('textSize'),
         setShowAllergens: update('showAllergens'),
         setShowHeaderAllergens: update('showHeaderAllergens'),
         setSortDefault: update('sortDefault'),
@@ -183,11 +244,14 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setWeekStart: update('weekStart'),
         setOrderTypeColors: update('orderTypeColors'),
         setOrderTypeDetailedColors: update('orderTypeDetailedColors'),
-        setTicketHeaderLayout: update('ticketHeaderLayout'),
+        setTicketHeaderLayout: setPerRoute('ticketHeaderLayout'),
         setExpoSendButtonMode: update('expoSendButtonMode'),
-        setTicketLayout: update('ticketLayout'),
-        setTicketSpacing: update('ticketSpacing'),
+        setTicketLayout: setPerRoute('ticketLayout'),
+        setTicketSpacing: setPerRoute('ticketSpacing'),
         setTicketHeaderStyle: update('ticketHeaderStyle'),
+        activeTicketsRoute,
+        getRouteSetting,
+        setRouteSetting,
       }}
     >
       {children}
