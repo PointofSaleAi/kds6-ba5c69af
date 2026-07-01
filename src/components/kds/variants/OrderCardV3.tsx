@@ -193,7 +193,7 @@ export function OrderCardV3({ order, onBump }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const typeIcon = typeMeta.icon;
-  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const guestName = order.guestName || order.customerName || order.serverName || 'Guest';
