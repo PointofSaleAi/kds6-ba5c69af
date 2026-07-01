@@ -191,11 +191,6 @@ export default function AccountSettings() {
         </div>
       )}
 
-      <div className="my-4 border-t" style={{ borderColor: 'hsl(var(--border))' }} />
-
-      <ProfileSection
-        onSwitchStaff={() => setStaffSwitchOpen(true)}
-      />
 
       <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
