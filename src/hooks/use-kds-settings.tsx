@@ -109,7 +109,7 @@ const defaults: KDSSettings = {
   ticketHeaderLayout: 'kitchen',
   expoSendButtonMode: 'when-ready',
   ticketLayout: 'standard',
-  ticketSpacing: 'Compact',
+  ticketSpacing: 'Standard',
   ticketHeaderStyle: 'default',
 };
 
