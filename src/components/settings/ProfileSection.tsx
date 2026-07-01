@@ -8,7 +8,8 @@ interface ProfileSectionProps {
 
 type TabKey = 'today' | 'total';
 
-function formatMinutes(sec: number): string {
+function formatMinutes(sec: number | null): string {
+  if (sec == null) return '—';
   const m = Math.floor(sec / 60);
   const s = Math.round(sec % 60);
   return `${m}m ${s.toString().padStart(2, '0')}s`;
