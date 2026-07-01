@@ -103,6 +103,12 @@ export default function AccountSettings() {
         longDescription="Manage this device's identity, developer tools, and session. Use Dev mode to surface the scenario selector during development. Logging out returns the device to the activation flow."
       />
 
+      <ProfileSection
+        onSwitchStaff={() => setStaffSwitchOpen(true)}
+      />
+
+      <div className="my-4 border-t" style={{ borderColor: 'hsl(var(--border))' }} />
+
       <SettingsPill
         icon={Smartphone}
         iconColor="#0A84FF"
