@@ -32,13 +32,21 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 
 export default function DisplaySettings() {
   const {
-    textSize, setTextSize,
-    ticketLayout, setTicketLayout,
-    ticketHeaderLayout, setTicketHeaderLayout,
-    ticketSpacing, setTicketSpacing,
     ticketHeaderStyle, setTicketHeaderStyle,
+    getRouteSetting, setRouteSetting,
   } = useKDSSettings();
-  const [ticketsRoute, setTicketsRoute] = useState<string>(() => localStorage.getItem('kds-tickets-route') || 'Default');
+  const [ticketsRoute, setTicketsRoute] = useState<import('@/hooks/use-kds-settings').TicketsRouteKey>(
+    () => (localStorage.getItem('kds-tickets-route') as any) || 'Default',
+  );
+  // Read values scoped to the currently-selected preview route
+  const textSize = getRouteSetting(ticketsRoute, 'textSize');
+  const ticketSpacing = getRouteSetting(ticketsRoute, 'ticketSpacing');
+  const ticketLayout = getRouteSetting(ticketsRoute, 'ticketLayout');
+  const ticketHeaderLayout = getRouteSetting(ticketsRoute, 'ticketHeaderLayout');
+  const setTextSize = (v: any) => setRouteSetting(ticketsRoute, 'textSize', v);
+  const setTicketSpacing = (v: any) => setRouteSetting(ticketsRoute, 'ticketSpacing', v);
+  const setTicketLayout = (v: any) => setRouteSetting(ticketsRoute, 'ticketLayout', v);
+  const setTicketHeaderLayout = (v: any) => setRouteSetting(ticketsRoute, 'ticketHeaderLayout', v);
   const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
   const languageDisplay = displayMode === 'dual'
     ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
