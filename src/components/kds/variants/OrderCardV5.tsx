@@ -82,9 +82,10 @@ function ProductPill({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`v5-pill relative rounded-xl px-2.5 py-2 select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
+      className={`v5-pill relative rounded-xl select-none cursor-pointer transition-opacity bg-muted border border-border/60 shadow-sm ${
         loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-60' : ''
       }`}
+      style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
 
     >
       <div className="flex items-center gap-2">
@@ -94,7 +95,7 @@ function ProductPill({
           style={{
             width: 22,
             height: 22,
-            fontSize: 12,
+            fontSize: 'var(--kds-item-qty)',
             fontWeight: 700,
           }}
         >
@@ -107,7 +108,7 @@ function ProductPill({
             <div
               className="truncate text-foreground"
               style={{
-                fontSize: 13,
+                fontSize: 'var(--kds-item-name)',
                 fontWeight: 700,
                 textDecoration: done ? 'line-through' : 'none',
               }}
@@ -121,7 +122,7 @@ function ProductPill({
                   className="truncate text-muted-foreground"
                   dir={tx.secondaryDir}
                   style={{
-                    fontSize: 11,
+                    fontSize: 'var(--kds-modifier)',
                     fontWeight: 500,
                     textAlign: tx.secondaryDir === 'rtl' ? 'right' : 'left',
                     textDecoration: done ? 'line-through' : 'none',
