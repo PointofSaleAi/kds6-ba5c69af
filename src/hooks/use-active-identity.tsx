@@ -45,6 +45,7 @@ const RESTAURANT_DEFAULT: RestaurantIdentity = {
 
 interface IdentityContextValue {
   identity: ActiveIdentity;
+  restaurant: RestaurantIdentity;
   signInAsRestaurant: () => void;
   signInWithPin: (pin: string) => StaffIdentity | null;
   signOutStaff: () => void;
@@ -109,6 +110,7 @@ export function ActiveIdentityProvider({ children }: { children: ReactNode }) {
 
   const value: IdentityContextValue = {
     identity,
+    restaurant: RESTAURANT_DEFAULT,
     signInAsRestaurant,
     signInWithPin,
     signOutStaff,

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { KeyRound, LogOut } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
 
 interface ProfileSectionProps {
@@ -21,7 +21,7 @@ function formatHours(hours: number): string {
 }
 
 export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
-  const { identity, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
+  const { identity, restaurant, ticketsToday, ticketsTotal, avgTicketTimeSec, hoursWorked } = useActiveIdentity();
   const [tab, setTab] = useState<TabKey>('today');
 
   const isStaff = identity.kind === 'staff';
@@ -56,9 +56,22 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
       )}
 
       <div className="flex flex-col items-center text-center">
-        <div className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-3 font-montserrat"
-             style={{ background: avatarBg }}>
-          {initials}
+        <div className="relative mb-3">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl font-montserrat"
+               style={{ background: avatarBg }}>
+            {initials}
+          </div>
+          <div
+            className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center border-2 font-montserrat font-bold text-[9px] leading-tight text-center"
+            style={{ background: '#1A1A2E', borderColor: 'hsl(var(--surface-card))', color: '#FFFFFF' }}
+            title={restaurant.name}
+          >
+            {restaurant.logoUrl ? (
+              <img src={restaurant.logoUrl} alt={restaurant.name} className="w-full h-full rounded-full object-cover" />
+            ) : (
+              initialsFromName(restaurant.name)
+            )}
+          </div>
         </div>
         <h3 className="text-lg font-bold font-montserrat" style={{ color: 'hsl(var(--text-primary))' }}>{displayName}</h3>
         <p className="text-sm font-montserrat mt-0.5" style={{ color: 'hsl(var(--text-secondary))' }}>{subtitle}</p>
