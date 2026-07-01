@@ -75,15 +75,6 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Navigate to="/kds/default" replace />} />
-              
-              <Route path="/kds/default" element={<Index legacyActions />} />
-              <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
-              <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
-              <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
-              <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
-              <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
-              <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
               <Route path="/" element={<Navigate to={KDS_DEFAULT} replace />} />
               <Route path={KDS_DEFAULT} element={<Index legacyActions />} />
