@@ -22,6 +22,7 @@ import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { getActiveSummaryCategories } from '@/lib/summary-categories';
+import { KDS_ROOT } from '@/lib/routes';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
