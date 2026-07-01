@@ -57,6 +57,7 @@ const App = () => (
       <NotificationsProvider>
       <DockLayoutProvider>
       <ActiveKDSViewProvider>
+      <ActiveIdentityProvider>
       <TooltipProvider>
         <DockDragLayer>
           <NotificationToastStack />
