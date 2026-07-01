@@ -167,16 +167,14 @@ export default function DisplaySettings() {
                     Layout
                   </span>
                   <SegmentedToggle
-                    options={['Default', 'V1', 'V2', 'V3']}
-                    value={
-                      ticketHeaderStyle === 'v1' ? 'V1'
-                      : ticketHeaderStyle === 'v2' ? 'V2'
-                      : ticketHeaderStyle === 'v3' ? 'V3'
-                      : 'Default'
-                    }
+                    options={['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6']}
+                    value={(() => {
+                      const seg = window.location.pathname.split('/')[2] || 'default';
+                      return ['v1','v2','v3','v4','v5','v6'].includes(seg) ? seg : 'Default';
+                    })()}
                     onChange={(v) => {
-                      const map = { Default: 'default', V1: 'v1', V2: 'v2', V3: 'v3' } as const;
-                      setTicketHeaderStyle(map[v as 'Default' | 'V1' | 'V2' | 'V3']);
+                      const route = v === 'Default' ? '/kds/default' : `/kds/${v}`;
+                      window.location.assign(route);
                     }}
                   />
                 </div>
