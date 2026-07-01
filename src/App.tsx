@@ -88,17 +88,6 @@ const App = () => (
                 <Route path="account" element={<AccountSettings />} />
               </Route>
 
-              <Route path="/kds/old/settings" element={<Index legacyActions />}>
-                <Route index element={<Navigate to="display" replace />} />
-                <Route path="display" element={<DisplaySettings />} />
-                <Route path="orders" element={<OrdersSettings />} />
-                <Route path="expo" element={<ExpoSettings />} />
-                <Route path="hardware" element={<HardwareSettings />} />
-                <Route path="system" element={<SystemSettings />} />
-                <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
-                <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
-                <Route path="account" element={<AccountSettings />} />
-              </Route>
 
               <Route path="/kds-reply" element={<KdsReplyPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
