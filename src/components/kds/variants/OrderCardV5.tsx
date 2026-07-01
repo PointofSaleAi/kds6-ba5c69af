@@ -227,7 +227,13 @@ function ModifierRow({
       </span>
       <span
         className={`shrink-0 ${colorClass}`}
-        style={{ fontSize: 'var(--kds-modifier)', width: 10, textAlign: 'center' }}
+        style={{
+          fontSize: 'var(--kds-modifier)',
+          width: 10,
+          textAlign: 'center',
+          lineHeight: 1.25,
+          fontWeight: tone === 'allergen' ? 700 : 500,
+        }}
       >
         {prefix}
       </span>
