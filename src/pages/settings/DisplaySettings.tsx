@@ -175,7 +175,6 @@ export default function DisplaySettings() {
                     }}
                   />
                 </div>
-                </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Spacing
