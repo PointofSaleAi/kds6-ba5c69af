@@ -479,7 +479,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
               className="text-[18px] font-extrabold text-white leading-none tabular-nums"
               style={{ letterSpacing: '0.01em', fontVariantNumeric: 'tabular-nums' }}
             >
-              #{ticket.orderNumber}
+              {ticket.orderNumber}
             </span>
             {isRushed && (
               <span
@@ -1107,7 +1107,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       return next;
     });
     lastSentDemo.current = null;
-    toast.success(`Demo ticket #${ticket.orderNumber} recalled`);
+    toast.success(`Demo ticket ${ticket.orderNumber} recalled`);
   }, []);
 
   // Demo fire next course: promote pending course to active
@@ -1205,7 +1205,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
       }
       return next;
     });
-    toast.success(`Ticket #${ticket.orderNumber} sent out`);
+    toast.success(`Ticket ${ticket.orderNumber} sent out`);
   }, [tickets, sendOutOrder]);
 
   const handleRecallOrder = useCallback((id: string) => {
@@ -1215,7 +1215,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     updateOrderStatus(id, 'in-progress');
     setSentOutOrders(prev => prev.filter(t => t.id !== id));
     setFulfilledTickets(prev => prev.filter(n => n !== ticket.orderNumber));
-    toast.success(`Ticket #${ticket.orderNumber} recalled`);
+    toast.success(`Ticket ${ticket.orderNumber} recalled`);
   }, [sentOutOrders, updateOrderStatus]);
 
   const handleRush = useCallback((id: string) => {
@@ -1225,7 +1225,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     if (!id.startsWith('demo-')) {
       rushOrder(id);
     }
-    toast(`Rush alert sent for Ticket #${ticket.orderNumber}`);
+    toast(`Rush alert sent for Ticket ${ticket.orderNumber}`);
   }, [tickets, demoTickets, rushOrder]);
 
   // Auto-send-out tickets when all items are individually sent

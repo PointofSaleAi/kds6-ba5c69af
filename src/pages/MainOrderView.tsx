@@ -699,7 +699,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     });
 
     setHistoryOrders((prev) => prev.filter(o => o.id !== orderId));
-    toast.success(`Order #${historyOrder.orderNumber} recalled and added to queue`);
+    toast.success(`Order ${historyOrder.orderNumber} recalled and added to queue`);
     setActiveNav('home');
   }, [historyOrders]);
 

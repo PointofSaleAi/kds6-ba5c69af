@@ -1081,7 +1081,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           // eslint-disable-next-line no-console
           console.log('Manual 86 requested:', 'ticket', order.id, eligibleTicketItems.map(i => i.id));
         }}
-        title={`${order.tableName} · Order #${order.orderNumber}`}
+        title={`${order.tableName} · Order ${order.orderNumber}`}
         itemNames={eligibleTicketItems.map(i => `${i.name}`)}
         subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
@@ -1177,7 +1177,7 @@ function DrawerHeader({ order }: { order: Order }) {
       </div>
       <div className="flex items-center justify-center" style={{ flex: 1 }}>
         <span style={{ fontSize: 22, fontWeight: 800, color: '#1A1A2E' }}>
-          #{order.orderNumber}
+          {order.orderNumber}
         </span>
       </div>
       <div className="flex items-center justify-end gap-2" style={{ flex: 1 }}>

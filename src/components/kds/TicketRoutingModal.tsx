@@ -30,7 +30,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
   const handleConfirm = () => {
     if (!selected) return;
     onConfirm(order.id, selected);
-    toast.success(`All items in ticket #${order.orderNumber} moved to ${selected} station`);
+    toast.success(`All items in ticket ${order.orderNumber} moved to ${selected} station`);
     onClose();
   };
 
@@ -61,7 +61,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
               <div>
                 <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route entire ticket</div>
                 <div className="text-[11px] text-text-secondary mt-0.5 font-medium">
-                  Ticket <span className="font-bold text-text-primary">#{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
+                  Ticket <span className="font-bold text-text-primary">{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
                 </div>
               </div>
             </div>

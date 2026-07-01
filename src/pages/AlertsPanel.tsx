@@ -88,10 +88,10 @@ function getAiAction(type: string, message: string): AiAction {
   const lower = message.toLowerCase();
   const ticket = extractTicket(message);
   if (type === 'overtime') {
-    return { label: ticket ? `Bump ticket #${ticket}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
+    return { label: ticket ? `Bump ticket ${ticket.}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
   }
   if (type === 'new-order') {
-    return { label: ticket ? `Fire order #${ticket}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
+    return { label: ticket ? `Fire order ${ticket.}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
   }
   if (type === 'table-transfer') {
     const tables = message.match(/table\s+(\w+)/gi);
@@ -139,11 +139,11 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
     acknowledge(notifId);
     switch (action.kind) {
       case 'bump':
-        toast.success(action.ticketNumber ? `Bumped ticket #${action.ticketNumber}` : 'Bumped ticket');
+        toast.success(action.ticketNumber ? `Bumped ticket ${action.ticketNumber}` : 'Bumped ticket');
         onClose();
         break;
       case 'fire':
-        toast.success(action.ticketNumber ? `Fired order #${action.ticketNumber}` : 'Fired order');
+        toast.success(action.ticketNumber ? `Fired order ${action.ticketNumber}` : 'Fired order');
         onClose();
         break;
       case 'update-table':
