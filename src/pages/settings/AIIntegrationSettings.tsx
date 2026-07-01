@@ -158,32 +158,15 @@ export default function AIIntegrationSettings() {
           border: '1px solid hsl(var(--border))',
         }}
       >
-        {PROVIDERS.map((p, idx) => {
-          const selected = provider === p.id;
-          return (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => handleProviderChange(p.id)}
-              className="w-full flex items-center justify-between px-4 py-3 active:opacity-70 transition-opacity text-left"
-              style={{
-                borderTop: idx === 0 ? 'none' : '1px solid hsl(var(--border))',
-              }}
-            >
-              <span className="text-[15px] font-medium" style={{ color: 'hsl(var(--text-primary))' }}>
-                {p.name}
-              </span>
-              {selected && (
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center"
-                  style={{ background: '#16A085' }}
-                >
-                  <Check size={13} color="#FFFFFF" strokeWidth={3} />
-                </div>
-              )}
-            </button>
-          );
-        })}
+        <div className="w-full flex items-center justify-between px-4 py-3">
+          <span className="text-[15px] font-medium" style={{ color: 'hsl(var(--text-primary))' }}>
+            Maya AI
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full" style={{ background: '#16A085' }} />
+            <span className="text-[13px] font-semibold" style={{ color: '#16A085' }}>Active</span>
+          </div>
+        </div>
       </div>
 
       {/* API Key managed server-side note */}
