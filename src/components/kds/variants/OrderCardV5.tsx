@@ -255,7 +255,7 @@ function ModifierRow({
                 className="break-words text-muted-foreground"
                 dir={secondaryDir}
                 style={{
-                  fontSize: 10,
+                  fontSize: 'var(--kds-modifier)',
                   fontStyle: italic ? 'italic' : 'normal',
                   textDecoration: done ? 'line-through' : 'none',
                   textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
