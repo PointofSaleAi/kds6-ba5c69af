@@ -98,12 +98,12 @@ function ProductRow({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`flex items-start gap-1 px-1.5 py-1 border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
-      style={{ borderLeft: `3px solid ${accent}` }}
+      className={`flex items-start border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 6, paddingRight: 6, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)', gap: 4 }}
     >
       <span
         className="font-bold shrink-0 text-center"
-        style={{ color: accent, fontSize: 11, minWidth: 18, lineHeight: '14.3px' }}
+        style={{ color: accent, fontSize: 'var(--kds-item-qty)', minWidth: 18, lineHeight: '14.3px' }}
       >
         {product.quantity}
       </span>
@@ -111,7 +111,7 @@ function ProductRow({
         <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
           <span
             className="text-foreground"
-            style={{ fontSize: 11, fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
+            style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.3, textDecoration: done ? 'line-through' : 'none' }}
           >
             {product.name}
           </span>
@@ -125,7 +125,7 @@ function ProductRow({
               <div
                 key={i}
                 className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                style={{ fontSize: 10, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
               >
                 {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
               </div>
@@ -135,7 +135,7 @@ function ProductRow({
         {showDetails && product.notes && (
           <div
             className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-            style={{ fontSize: 10 }}
+            style={{ fontSize: 'var(--kds-modifier)' }}
           >
             "{product.notes}"
           </div>
