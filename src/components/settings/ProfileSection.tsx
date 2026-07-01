@@ -104,14 +104,6 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
         Switch staff — enter PIN
       </button>
 
-      <button
-        onClick={onLogOutDevice}
-        className="w-full mt-2 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold font-montserrat text-sm transition-colors"
-        style={{ color: '#E84C3D' }}
-      >
-        <LogOut size={16} />
-        Log out device
-      </button>
     </div>
   );
 }
