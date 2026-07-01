@@ -1,13 +1,22 @@
-## Make Stagger the default view
+## Goal
+Keep `/kds/old` as a single route that only renders the old ticket layout. Remove the duplicated settings and performance sub-routes so `/kds/old/settings/*` no longer exists.
 
-Two independent "stagger" defaults exist and both are currently off:
+## Changes
 
-1. **Footer view mode** (`src/pages/MainOrderView.tsx:88`) — `useState<ViewMode>('grid')` renders Grid on first load.
-2. **Stagger Mode release logic** (`src/hooks/use-kds-settings.tsx:101`) — `staggerMode: false` in the manufacturer defaults.
+### 1. `src/App.tsx`
+- Delete the entire `<Route path="/kds/old/settings" ...>` block and all its nested children (display, orders, expo, hardware, system, system/ai-integration, system/ai-integration/ai-instructions, account).
+- Keep only the single `<Route path="/kds/old" element={<Index legacyActions />} />`.
 
-### Changes
+### 2. `src/pages/Index.tsx`
+- Remove the `basePath` branching. Hardcode settings/home navigation targets back to `/kds/full` so that when a user on `/kds/old` taps the Settings icon in the left rail, it navigates to `/kds/full/settings/display` (the single canonical settings location).
+- Same for the Tickets/Home nav target: always route to `/kds/full`.
+- This means the left rail on `/kds/old` will take the user out of the legacy view when they open Settings, which is the correct behavior since settings are global, not per-variant.
 
-1. `src/pages/MainOrderView.tsx` — change initial state to `useState<ViewMode>('stagger')` so the footer view mode selector lands on Stagger on fresh launch and after "Reset to default".
-2. `src/hooks/use-kds-settings.tsx` — change `staggerMode: false` to `staggerMode: true` in the `defaults` object, and bump `STORAGE_KEY` from `posai-kds-settings-v5` to `posai-kds-settings-v6` (adding `v5` to `LEGACY_STORAGE_KEYS`) so existing devices pick up the new default without losing other tweaks.
+### Result
+- `/kds/old` → old ticket layout (legacy action icons) only.
+- `/kds/old/settings/*`, `/kds/old/performance` → no longer resolve; fall through to `NotFound`.
+- All settings/performance flows continue to work from `/kds/full/settings/*` as the single source of truth.
 
-Nothing else is touched — Settings UI already has no Stagger Mode toggle or Display mode picker, so no settings-screen edits are needed.
+## Not changed
+- `/kds/v1` through `/kds/v5` and `/kds/home-onlineordering` — these already don't have duplicated settings sub-routes, so they're unaffected.
+- The `legacyActions` prop threading through `Index` → `MainOrderView` — still needed for `/kds/old` itself.
