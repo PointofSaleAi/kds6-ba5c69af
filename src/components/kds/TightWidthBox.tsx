@@ -12,8 +12,6 @@ export function TightWidthBox({
   className,
   style,
   constrainSecondary = true,
-  expandSecondaryToContent = false,
-  alignSecondaryEnd = false,
 }: {
   primary: ReactNode;
   secondary?: ReactNode;
@@ -22,16 +20,10 @@ export function TightWidthBox({
   style?: CSSProperties;
   /** When false, secondary wraps to the full available width instead of the primary text's rendered width. */
   constrainSecondary?: boolean;
-  /** When true, secondary content such as inline allergen chips can use the full available line width. */
-  expandSecondaryToContent?: boolean;
-  /** When true, keep the secondary block's right edge aligned to the primary text's right edge. */
-  alignSecondaryEnd?: boolean;
 }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const primaryRef = useRef<HTMLDivElement | null>(null);
-  const secondaryRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState<number | undefined>(undefined);
-  const [secondaryWidth, setSecondaryWidth] = useState<number | undefined>(undefined);
 
   const measure = useCallback(() => {
     if (!constrainSecondary) return;
@@ -55,17 +47,10 @@ export function TightWidthBox({
         node = walker.nextNode();
       }
       if (max > 0) setWidth(Math.ceil(max));
-      if (alignSecondaryEnd && secondaryRef.current) {
-        setSecondaryWidth(Math.ceil(secondaryRef.current.getBoundingClientRect().width));
-      }
     } catch {
       /* noop */
     }
-  }, [alignSecondaryEnd, constrainSecondary]);
-
-  const alignEndOffset = alignSecondaryEnd && width && secondaryWidth && secondaryWidth > width
-    ? width - secondaryWidth
-    : undefined;
+  }, [constrainSecondary]);
 
   useLayoutEffect(() => {
     measure();
@@ -85,11 +70,10 @@ export function TightWidthBox({
       <div ref={primaryRef} style={{ maxWidth: '100%' }}>{primary}</div>
       {secondary && (
         <div
-          ref={secondaryRef}
           style={
-            constrainSecondary && !expandSecondaryToContent
-              ? { minWidth: width, width: 'max-content', maxWidth: '100%', marginLeft: alignEndOffset, '--tight-primary-width': width ? `${width}px` : undefined } as CSSProperties
-              : { maxWidth: '100%', '--tight-primary-width': width ? `${width}px` : undefined } as CSSProperties
+            constrainSecondary
+              ? { minWidth: width, width: 'max-content', maxWidth: '100%' }
+              : { maxWidth: '100%' }
           }
         >
           {secondary}

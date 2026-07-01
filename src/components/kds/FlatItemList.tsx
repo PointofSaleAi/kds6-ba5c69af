@@ -159,7 +159,6 @@ function ItemTapRow({
 
   const isDone = status === 'done';
   const isSeen = status === 'preparing';
-  const hasSecondaryLine = showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled;
   const hasModifiers = item.modifiers.length > 0;
   const isServableMod = (m: typeof item.modifiers[number]) =>
     !!servableModifiersEnabled && !!m.isServable && m.type !== 'remove' && !!m.id;
@@ -243,61 +242,25 @@ function ItemTapRow({
             <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 'var(--kds-child-gap, 1px)' }}>
               <TightWidthBox
                 constrainSecondary={secondaryDir === 'rtl'}
-                alignSecondaryEnd={secondaryDir === 'rtl'}
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir]}
-                expandSecondaryToContent={hasSecondaryLine && showAllergens && item.allergens.length > 0 && secondaryDir !== 'rtl'}
                 primary={
-                  <span className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                    <span
-                      className={`font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
-                      style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
-                    >
-                      {tp(item.name)}
-                    </span>
-                    {!hasSecondaryLine && showDetails && showAllergens && item.allergens.map((a) => (
-                      <AllergenBadge key={a.type} allergen={a} variant="item" />
-                    ))}
+                  <span
+                    className={`block font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+                    style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
+                  >
+                    {tp(item.name)}
                   </span>
                 }
-                secondary={hasSecondaryLine ? (
+                secondary={showDetails && displayMode === 'dual' && showSecondaryMenu && !item.isCancelled ? (
                   <div
                     dir="ltr"
-                    className={`flex flex-wrap items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
-                    style={{ gap: '4px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1', justifyContent: secondaryDir === 'rtl' ? 'flex-end' : 'flex-start' }}
+                    className={`flex items-center font-bold uppercase text-text-muted ${isDone ? 'line-through' : ''}`}
+                    style={{ gap: '4px', marginBottom: '0px', fontSize: 'var(--kds-modifier)', lineHeight: '1', flexDirection: secondaryDir === 'rtl' ? 'row-reverse' : 'row', justifyContent: 'flex-start' }}
                   >
-                    {secondaryDir === 'rtl' ? (
-                      <>
-                        <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
-                          <Languages size={8} className="text-text-secondary" />
-                        </span>
-                        {showAllergens && item.allergens.map((a) => (
-                          <AllergenBadge key={a.type} allergen={a} variant="item" />
-                        ))}
-                        <span
-                          className="min-w-0"
-                          style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: 'right', overflowWrap: 'anywhere' }}
-                          dir="rtl"
-                        >
-                          {tpSecondary(item.name)}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
-                          <Languages size={8} className="text-text-secondary" />
-                        </span>
-                        <span
-                          className="min-w-0"
-                          style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: 'left', overflowWrap: 'anywhere' }}
-                          dir="ltr"
-                        >
-                          {tpSecondary(item.name)}
-                        </span>
-                        {showAllergens && item.allergens.map((a) => (
-                          <AllergenBadge key={a.type} allergen={a} variant="item" />
-                        ))}
-                      </>
-                    )}
+                    <span className="inline-flex items-center justify-center w-3 h-3 rounded bg-muted shrink-0">
+                      <Languages size={8} className="text-text-secondary" />
+                    </span>
+                    <span className="min-w-0 flex-1" style={{ lineHeight: 1, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left', overflowWrap: 'anywhere' }} dir={secondaryDir}>{tpSecondary(item.name)}</span>
                   </div>
                 ) : undefined}
               />
@@ -319,6 +282,18 @@ function ItemTapRow({
             )}
           </div>
 
+          {showDetails && showAllergens && item.allergens.length > 0 && (
+            <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', lineHeight: 1 }}>
+              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
+                0x
+              </span>
+              <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+                {item.allergens.map((a) => (
+                  <AllergenBadge key={a.type} allergen={a} variant="item" />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
         {legacyActions && !item.isCancelled && !is86Active && !show86Pill && (
