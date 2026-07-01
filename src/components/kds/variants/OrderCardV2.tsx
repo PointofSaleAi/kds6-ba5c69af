@@ -252,7 +252,7 @@ export function OrderCardV2({ order, onBump }: Props) {
                 {orderTypeLabel(order.orderType)}
               </span>
             )}
-            <span className="font-bold text-foreground text-[14px] shrink-0">#{order.orderNumber}</span>
+            <span className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
           </div>
           <span
             className="rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums"
