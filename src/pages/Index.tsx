@@ -25,9 +25,10 @@ import { getActiveSummaryCategories } from '@/lib/summary-categories';
 
 import WebSocketSettings from '@/pages/WebSocketSettings';
 
-// Dev-only flow selector: gated to development builds so production users
-// never see the "INTERNAL FLOW SELECTOR" screen or get to pick their auth path.
-const isDevMode = () => import.meta.env.DEV;
+// Prototype flow selector: always enabled so the published preview shows the
+// same "INTERNAL FLOW SELECTOR" entry point as the dev build (including
+// incognito sessions where no prior state is cached).
+const isDevMode = () => true;
 
 type AppScreen =
   | 'dev-selector'
