@@ -1,111 +1,95 @@
-# Fill missing features in KDS Tracker spreadsheet
+# Update existing rows in KDS Tracker with post-29-Jun UI changes
 
-## Context
+## What I did last time vs. what's still missing
 
-The uploaded workbook `POSAI_-_KDS_UI_UX_Ver_1.1_p_29_Jun_26_IN.xlsx` contains one sheet, `KDS Tracker`, with 47 rows tracking KDS modules (columns: #, Old Main/Sub/Sub-Sub, New Main/Sub/Sub-Sub, Change Status, Feature Description, Description, Use Case, Edge Cases, Form Fields, Validations, Test Case, eatOS 5.0 Implemented?, New Requirement, UI Completion %, Lovable Link, Notes).
+Last pass: appended 60 new rows (#48–#108) for net-new features.
+Missing: the original 47 rows still describe the 29 Jun state. Several of those modules have shipped UI changes that belong **in-place** on the existing row (updating Sub-Sub-Module New / Change Status / Description / UI %). Adding another row for the same module would duplicate.
 
-The sheet was frozen on 29 Jun 26. Since then, many features have shipped or been renamed. I'll extend the sheet with new rows (starting at #48) for everything missing, preserving the exact column structure, styling, and formulas of the existing rows.
+## Rows to update in place
 
-## Missing features to append
+For each row I'll edit the columns in brackets. All other columns preserved.
 
-Grouped by module. Each becomes one row with Change Status = NEW / CHANGED / RENAMED, UI Completion %, Lovable route, and full description/use case/edge cases/test case populated.
+**Row 2 — Login** [New Sub-Sub, Description, Notes, %]
+- Post-29-Jun: PIN-first startup; email/password is fallback. Change status → CHANGED.
 
-**Branding & Global Renames (CHANGED)**
-- POSAI → Point of Sale Ai global rename
-- POS → Point of Sale global rename
-- Home → Tickets nav rename
-- Items → Products global rename
-- Date/time standardization (12-hour, "D MMMM YYYY")
-- Order number `#` prefix removed globally
+**Row 4 — Device Activation** [Description, Notes]
+- Set-PIN now integrated into HardwareActivationScreen (single wizard). Status → CHANGED.
 
-**Routing / Ticket layout variants (NEW)**
-- `/kds/default` legacy actions route
-- `/kds/v1` through `/kds/v6` variant routes with per-route Spacing / Text size / Appearance / Identifier overrides
-- `/kds/home-onlineordering` route with customer contact strip
-- Ticket Layout modes: Standard / Compact / Header-only + HeaderOnlyDrawer expansion
+**Row 5 — Ticket card grid** [Description, Notes, %]
+- New: Portrait column rules (2-col Mini/Air, 3-col Pro ≥960px), Stagger forced 2-col, Horizontal 220px. Bump % to 95.
 
-**Maya AI Assistant (NEW)**
-- Right-side Maya panel (440px), animated "e" logo
-- Voice/mic input, contextual chips, self-learning suggestions
-- Supabase edge function `kds-ai-chat` (Gemini)
-- Settings → System → AI Integration (provider, API key persistence)
-- Settings → System → AI Instructions screen
-- Notification panel AI Summary Strip
-- Notification per-item AI Action Chip
+**Row 6 — Ticket card header** [Sub-Sub, Description, Notes]
+- New: order-number `#` prefix removed; "Ticket header allergen summary" toggle; v6 uses product-level style allergen list.
 
-**86 Flow (NEW)**
-- Flag86 button on flagged product rows
-- Flag86 confirmation modal (pending count, POS approval copy)
-- Long-press manual 86 request at ticket / course / product level
-- 86'd pill (non-tappable), navy #1A1A2E treatment
-- `use-flag86` state hook
+**Row 7 — Ticket card item rows** [Description, Notes]
+- "Item" → "Product" terminology; RTL/Arabic alignment via TightWidthBox; allergens moved below product name (v1–v4); long-press recipe modal; Servable Modifiers hardcoded OFF.
 
-**Order card enhancements (CHANGED)**
-- Ticket header allergen summary toggle (Settings → Orders)
-- v6 product-level style allergen summary (bold red `!` prefix)
-- Allergens moved below product name in v1–v4
-- RTL / Arabic tight-width alignment via `TightWidthBox`
-- Long-press recipe modal per variant
-- New-product green border + opacity pulse
-- Servable Modifiers hardcoded OFF
+**Row 8 — Order notes** [Description]
+- Violet POS kitchen-messaging banner variant added alongside notes.
 
-**Account / Identity (NEW)**
-- `use-active-identity` (Restaurant vs Staff PIN)
-- ProfileSection at top of Settings → Account
-- Restaurant logo badge on employee avatar
-- Performance summary — 6 KPI cards, Today/Total tabs, live-queue indicator, Busiest hour swap
-- 3-cards-per-row grid layout
-- Account (device settings) moved above Performance summary
-- Reset to default pill (clears local storage, preserves device-specific keys)
-- Manufacturer defaults on reset (Maya only, Stagger mode default)
+**Row 9 — Primary action (bump)** [Description]
+- Long-press on ticket header now opens Flag86 modal (manual 86 request at ticket level).
 
-**Auth / Startup (CHANGED)**
-- Splash → PinPad primary path
-- Hardware Activation flow (integrated Set-PIN)
-- Personal Device (BYOD) login flow
-- Dev scenario selector gated to DEV builds only
-- `/kds-reply` auth gate (security fix)
-- Mock auth flows gated to DEV
+**Row 10 — Coursing** [Description, %, Notes]
+- Sequential enforcement (Dine-In) shipped; course-level aging shipped; long-press on course header opens Flag86 modal. Bump % to 80.
 
-**Notifications & Messaging (NEW)**
-- NotificationsProvider, 4s auto-dismiss, station filtering
-- NotificationToastStack
-- Kitchen messaging (violet banners)
-- Mobile reply flow via QR → `/kds-reply` (10-min expiry)
-- KitchenReplyDialog
+**Rows 11–14 — Station view** [Notes]
+- Note the persistent-rail + dock-layout wiring now applies here too.
 
-**Layout / Dock (NEW)**
-- DockLayoutProvider — drag-to-dock sidebar, summary panel, status bar
-- Portrait orientation layout rules (Grid 2/3-col, Stagger forced 2-col)
-- Persistent KDS rail + footer across all screens
-- `getOverlayInsets` for full-screen overlays
+**Rows 15–16 — Unseen / Seen** [Notes]
+- Now honour Ticket Layout modes (Standard/Compact/Header-only) and header allergen toggle.
 
-**Settings UX (CHANGED)**
-- Settings header renamed to "Search" only
-- Mic icon in search
-- Rounded pill selections (from squared) matching Mobile POS typography
-- SettingsLayout renders inside KDS shell (rail visible)
-- Language settings — searchable portal dropdown
+**Rows 17–23, 37–46 — Expediter view** [Notes]
+- Add: Maya AI Assistant available from Expo; notification AI summary strip + per-alert action chip apply here; header allergen toggle honoured.
 
-**Coursing / Aging (CHANGED)**
-- Course-level aging (independent status colors per course block)
-- Sequential coursing enforcement for Dine-In
-- Status Aging Engine with builder UI
-- 3-state lifecycle (Unseen → Preparing → Done) with 1.15x tactile scale
+**Rows 24–25 — History** [Description]
+- Date/time standardization ("D MMMM YYYY", 12-hour) applied to history rows.
 
-**Removed / constraint rows**
-- Re-route item / Re-route entire ticket — REMOVED
-- Auto-fire / Fire / Prep terminology — REMOVED from UI
+**Row 26 — Settings root** [Sub-Sub, Description, %, Notes]
+- Header renamed to Search-only + mic; controls changed to rounded pills; Settings renders inside KDS shell (rail visible). Add: /kds/v1/settings/system tree with AI Integration + AI Instructions. Bump % to 90.
+
+**Row 27 — KDS Mode switcher** [Notes]
+- Now scoped per-route (/kds/v1..v6) with per-route Spacing/Text size/Appearance/Identifier overrides.
+
+**Row 28 — Text size** [Notes]
+- Per-route scoping (see row 27).
+
+**Row 29 — Layout / columns** [Sub-Sub, Description]
+- Renamed "layout" → "appearance"; new "layout" mode picker (Standard / Compact / Header-only + HeaderOnlyDrawer).
+
+**Row 30 — Sound** [Notes]
+- Manufacturer defaults documented (part of Reset to default).
+
+**Row 31 — Order type colours** [Description]
+- Default palette updated per new brand spec.
+
+**Row 32 — Station ID (Account)** [Description, %, Notes]
+- Account now shows full ProfileSection (avatar + role + restaurant logo badge), 6 KPI cards (3 per row) with Today/Total tabs, Reset-to-default pill, device settings renamed "Account" and moved above Performance summary. Bump % to 95.
+
+**Row 33 — Language & Region** [Description]
+- Searchable portal dropdown replacing native picker.
+
+**Row 34 — Aging Builder** [Description]
+- Course-level aging option shipped; independent thresholds per course block.
+
+**Row 35 — Offline indicator** [Notes]
+- Notification toast stack now surfaces offline events via NotificationsProvider.
+
+**Row 36 — Real-time sync (WebSocket)** [Notes]
+- Kitchen messaging + `/kds-reply` reply flow (10-min token) piggyback on same channel; security fix applied.
+
+**Row 47 — Seen empty state** [Notes]
+- Consistent with global date/time formatting.
+
+Also global metadata:
+- Row 1 title bump: "Ver 1.0 (p) 29 Jun 26 IN" → "Ver 1.1 (p) 2 Jul 26 IN".
+- Global rename: any residual "Home" label in existing rows → "Tickets"; any "item" → "product"; "POS" → "Point of Sale"; "POSAI" → "Point of Sale Ai" (where it appears in module names or descriptions).
 
 ## Technical approach
 
-1. Load `/tmp/kds.xlsx` with `openpyxl`, keeping formulas and styles.
-2. Detect the last populated row (currently 47) and copy the style of a representative body row.
-3. Append ~55 new rows for the items above, numbering `48.0` upward.
-4. For each row: fill columns 0–19 exactly matching existing conventions (Change Status uppercase, %s as numbers, links like `/kds/v3` or `/settings`).
-5. Preserve column widths and row heights.
-6. Save output as `/mnt/documents/POSAI_KDS_Tracker_Updated_2Jul26.xlsx` and expose the download path.
+1. Load `/mnt/documents/POSAI_KDS_Tracker_Updated_2Jul26.xlsx` with `openpyxl` (preserves the 60 appended rows).
+2. For each row above, update only the listed columns; keep styles intact.
+3. Do a final regex sweep across all cells to apply the four global renames without touching column headers.
+4. Save as `/mnt/documents/POSAI_KDS_Tracker_Updated_v2_2Jul26.xlsx` and expose for download.
 
-## Deliverable
-
-Single updated `.xlsx` file, same sheet name, same columns, ~102 total rows, ready to hand back to the user for review.
+Existing appended rows (48–108) are left as-is.
