@@ -1,71 +1,111 @@
+# Fill missing features in KDS Tracker spreadsheet
 
-## Goal
+## Context
 
-For the versioned Tickets layouts **v2, v3, v4, v5, v6** (rendered by `OrderCardV1`–`OrderCardV5`), make every change in **Settings → Ticket Layout** update the actual card — both in the settings preview and on the live `/kds/v2`…`/kds/v6` (and their Seen / Unseen / History) screens:
+The uploaded workbook `POSAI_-_KDS_UI_UX_Ver_1.1_p_29_Jun_26_IN.xlsx` contains one sheet, `KDS Tracker`, with 47 rows tracking KDS modules (columns: #, Old Main/Sub/Sub-Sub, New Main/Sub/Sub-Sub, Change Status, Feature Description, Description, Use Case, Edge Cases, Form Fields, Validations, Test Case, eatOS 5.0 Implemented?, New Requirement, UI Completion %, Lovable Link, Notes).
 
-- **Spacing** → card padding, row padding, gap between rows/children
-- **Text size** → order number, product name, qty, modifiers, allergen chips
-- **Appearance** → Standard / Compact / **Header** (header-only)
-- **Identifier** → `#orderNumber` vs guest name in the card header
+The sheet was frozen on 29 Jun 26. Since then, many features have shipped or been renamed. I'll extend the sheet with new rows (starting at #48) for everything missing, preserving the exact column structure, styling, and formulas of the existing rows.
 
-The per-route storage (`routeOverrides`) and preview scoping (`KDSSettingsPreviewScope`) are already correct. The gap is that the variant cards use hardcoded inline `fontSize` / `padding` and ignore `ticketHeaderLayout`, and only V5 respects `ticketLayout === 'header'`.
+## Missing features to append
 
-## Changes
+Grouped by module. Each becomes one row with Change Status = NEW / CHANGED / RENAMED, UI Completion %, Lovable route, and full description/use case/edge cases/test case populated.
 
-### 1. Bind variants to the CSS scale tokens (Spacing + Text size)
+**Branding & Global Renames (CHANGED)**
+- POSAI → Point of Sale Ai global rename
+- POS → Point of Sale global rename
+- Home → Tickets nav rename
+- Items → Products global rename
+- Date/time standardization (12-hour, "D MMMM YYYY")
+- Order number `#` prefix removed globally
 
-The Default card already consumes CSS vars defined in `src/index.css` (`--kds-item-name`, `--kds-item-qty`, `--kds-modifier`, `--kds-order-num`, `--kds-card-padding`, `--kds-row-py`, `--kds-item-gap`, `--kds-child-gap`). `text-scale-*` and `ticket-spacing-*` classes are already applied by `MainOrderView`, `SeenOrdersScreen`, `UnseenOrdersScreen`, `OrderHistoryScreen`, and the settings preview wrapper.
+**Routing / Ticket layout variants (NEW)**
+- `/kds/default` legacy actions route
+- `/kds/v1` through `/kds/v6` variant routes with per-route Spacing / Text size / Appearance / Identifier overrides
+- `/kds/home-onlineordering` route with customer contact strip
+- Ticket Layout modes: Standard / Compact / Header-only + HeaderOnlyDrawer expansion
 
-Refactor these files to swap hardcoded `style={{ fontSize: N, padding: '…' }}` for the tokens (with the current numbers kept as `Standard` defaults via existing CSS):
+**Maya AI Assistant (NEW)**
+- Right-side Maya panel (440px), animated "e" logo
+- Voice/mic input, contextual chips, self-learning suggestions
+- Supabase edge function `kds-ai-chat` (Gemini)
+- Settings → System → AI Integration (provider, API key persistence)
+- Settings → System → AI Instructions screen
+- Notification panel AI Summary Strip
+- Notification per-item AI Action Chip
 
-- `src/components/kds/variants/OrderCardV1.tsx`
-- `src/components/kds/variants/OrderCardV2.tsx`
-- `src/components/kds/variants/OrderCardV3.tsx`
-- `src/components/kds/variants/OrderCardV4.tsx`
-- `src/components/kds/variants/OrderCardV5.tsx`
+**86 Flow (NEW)**
+- Flag86 button on flagged product rows
+- Flag86 confirmation modal (pending count, POS approval copy)
+- Long-press manual 86 request at ticket / course / product level
+- 86'd pill (non-tappable), navy #1A1A2E treatment
+- `use-flag86` state hook
 
-Mapping:
-- product name → `var(--kds-item-name)`
-- qty → `var(--kds-item-qty)`
-- modifier / note → `var(--kds-modifier)`
-- order-number pill in header → `var(--kds-order-num)` (scaled) or keep header-specific size but scale via same class
-- card padding / row py → `var(--kds-card-padding)`, `var(--kds-row-py)`
-- inter-row gap → `var(--kds-item-gap)`
+**Order card enhancements (CHANGED)**
+- Ticket header allergen summary toggle (Settings → Orders)
+- v6 product-level style allergen summary (bold red `!` prefix)
+- Allergens moved below product name in v1–v4
+- RTL / Arabic tight-width alignment via `TightWidthBox`
+- Long-press recipe modal per variant
+- New-product green border + opacity pulse
+- Servable Modifiers hardcoded OFF
 
-Leave decorative/monospace timer sizes alone.
+**Account / Identity (NEW)**
+- `use-active-identity` (Restaurant vs Staff PIN)
+- ProfileSection at top of Settings → Account
+- Restaurant logo badge on employee avatar
+- Performance summary — 6 KPI cards, Today/Total tabs, live-queue indicator, Busiest hour swap
+- 3-cards-per-row grid layout
+- Account (device settings) moved above Performance summary
+- Reset to default pill (clears local storage, preserves device-specific keys)
+- Manufacturer defaults on reset (Maya only, Stagger mode default)
 
-### 2. Wire Identifier (`ticketHeaderLayout`)
+**Auth / Startup (CHANGED)**
+- Splash → PinPad primary path
+- Hardware Activation flow (integrated Set-PIN)
+- Personal Device (BYOD) login flow
+- Dev scenario selector gated to DEV builds only
+- `/kds-reply` auth gate (security fix)
+- Mock auth flows gated to DEV
 
-Currently each variant hardcodes `#{order.orderNumber}` in its header. Update each card so it reads `ticketHeaderLayout` from `useKDSSettings()` and renders:
+**Notifications & Messaging (NEW)**
+- NotificationsProvider, 4s auto-dismiss, station filtering
+- NotificationToastStack
+- Kitchen messaging (violet banners)
+- Mobile reply flow via QR → `/kds-reply` (10-min expiry)
+- KitchenReplyDialog
 
-- `'kitchen'` → `#{order.orderNumber}` (current behavior)
-- `'guest'` → `order.guestName || order.customerName || order.serverName || 'Guest'`
+**Layout / Dock (NEW)**
+- DockLayoutProvider — drag-to-dock sidebar, summary panel, status bar
+- Portrait orientation layout rules (Grid 2/3-col, Stagger forced 2-col)
+- Persistent KDS rail + footer across all screens
+- `getOverlayInsets` for full-screen overlays
 
-Apply to the header component of V1, V2, V3, V4, V5 (including V2/V3's `V2Header` / `V3Header` files as needed).
+**Settings UX (CHANGED)**
+- Settings header renamed to "Search" only
+- Mic icon in search
+- Rounded pill selections (from squared) matching Mobile POS typography
+- SettingsLayout renders inside KDS shell (rail visible)
+- Language settings — searchable portal dropdown
 
-### 3. Wire Appearance = **Header**
+**Coursing / Aging (CHANGED)**
+- Course-level aging (independent status colors per course block)
+- Sequential coursing enforcement for Dine-In
+- Status Aging Engine with builder UI
+- 3-state lifecycle (Unseen → Preparing → Done) with 1.15x tactile scale
 
-V5 already handles `ticketLayout === 'header'` (header-only + drawer). Add the same behavior to V1–V4:
+**Removed / constraint rows**
+- Re-route item / Re-route entire ticket — REMOVED
+- Auto-fire / Fire / Prep terminology — REMOVED from UI
 
-- When `ticketLayout === 'header'`, render only the header row(s); do not render product list, notes, allergens, or footer.
-- Keep tap-to-bump behavior on the header itself so cards remain actionable.
-- Preview already receives the same override via `KDSSettingsPreviewScope`.
+## Technical approach
 
-Standard and Compact keep their current behavior.
+1. Load `/tmp/kds.xlsx` with `openpyxl`, keeping formulas and styles.
+2. Detect the last populated row (currently 47) and copy the style of a representative body row.
+3. Append ~55 new rows for the items above, numbering `48.0` upward.
+4. For each row: fill columns 0–19 exactly matching existing conventions (Change Status uppercase, %s as numbers, links like `/kds/v3` or `/settings`).
+5. Preserve column widths and row heights.
+6. Save output as `/mnt/documents/POSAI_KDS_Tracker_Updated_2Jul26.xlsx` and expose the download path.
 
-### 4. No changes needed to routing/state
+## Deliverable
 
-- `use-kds-settings.tsx` already exposes route-effective values based on `pathname` and via `KDSSettingsPreviewScope` for the preview, so cards on `/kds/v2`…`/kds/v6` and inside the preview both pick up the correct per-route override automatically once the variants stop hardcoding sizes/labels.
-- Seen / Unseen / History screens already apply `getKdsScaleClasses`, so once variants consume the tokens they will scale there too.
-
-## Technical notes
-
-- Use inline `style={{ fontSize: 'var(--kds-item-name)' }}` etc. instead of new Tailwind classes to keep the diff minimal and match the Default card's approach.
-- Keep line-heights and `fontWeight` unchanged; only size/padding move to tokens.
-- For `ticketHeaderLayout === 'guest'` where a variant header has both order # and guest name, swap the primary slot and drop the redundant one.
-- No changes to `DisplaySettings.tsx`, `use-kds-settings.tsx`, or `index.css`.
-
-## Out of scope
-
-- The Default card (`/kds/default`) already works and won't be touched.
-- Order-type colors, status color thresholds, allergen visibility toggles.
+Single updated `.xlsx` file, same sheet name, same columns, ~102 total rows, ready to hand back to the user for review.
