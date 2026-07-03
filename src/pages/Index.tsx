@@ -130,6 +130,16 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
     if (inSettings && screen !== 'main') setScreen('main');
   }, [inSettings, screen]);
 
+  // If the user lands directly on a main-screen route (e.g. /kds/default),
+  // the login flow is skipped — trigger the first-login walkthrough here so
+  // the sample ticket appears for brand-new users.
+  useEffect(() => {
+    if (screen === 'main') {
+      const t = setTimeout(() => startIfFirstLogin(), 300);
+      return () => clearTimeout(t);
+    }
+  }, [screen, startIfFirstLogin]);
+
   const handleOpenSub = useCallback((sub: string) => {
     switch (sub) {
       case 'language-settings': setLanguageOpen(true); break;
