@@ -11,10 +11,9 @@ export function TrainingModeBar() {
   // Push the rest of the UI down while the bar is visible.
   useEffect(() => {
     if (!active) return;
-    const prev = document.body.style.paddingTop;
-    document.body.style.paddingTop = '44px';
+    document.documentElement.style.setProperty('--training-bar-h', '44px');
     return () => {
-      document.body.style.paddingTop = prev;
+      document.documentElement.style.removeProperty('--training-bar-h');
     };
   }, [active]);
 
