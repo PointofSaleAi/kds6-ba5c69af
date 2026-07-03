@@ -89,9 +89,9 @@ function useAnchorRect(selector: string | null, dep: unknown): Rect | null {
 }
 
 function TooltipCard({
-  rect, step, index, total, onNext, onSkip,
+  rect, step, index, total, onNext, onPrev, onSkip,
 }: {
-  rect: Rect | null; step: Step; index: number; total: number; onNext: () => void; onSkip: () => void;
+  rect: Rect | null; step: Step; index: number; total: number; onNext: () => void; onPrev: () => void; onSkip: () => void;
 }) {
   const Icon = step.icon;
   const cardRef = useRef<HTMLDivElement>(null);
