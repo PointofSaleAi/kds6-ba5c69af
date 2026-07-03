@@ -268,7 +268,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
         <div className="flex-1 overflow-y-auto">
           {/* Overtime section - styled like a category section */}
           {overtimeItems.length > 0 && (
-            <div>
+            <div data-onboarding="summary-overtime">
               <div
                 className="flex items-center border-b border-border min-h-[36px]"
                 style={{ borderLeft: '2px solid hsl(var(--destructive))' }}
