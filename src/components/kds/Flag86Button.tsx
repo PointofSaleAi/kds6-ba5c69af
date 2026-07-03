@@ -168,9 +168,13 @@ export function Flag86Modal({
           </ul>
         )}
 
-        <div style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.4, marginBottom: 20 }}>
+        <div style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.4, marginBottom: showQuantityAdjuster === 'below-subtext' ? 0 : 20 }}>
           {subtext}
         </div>
+
+        {showQuantityAdjuster === 'below-subtext' && (
+          <QuantityAdjuster value={qty} onChange={setQty} />
+        )}
 
         <div style={{ display: 'flex', gap: 10, width: '100%' }}>
           <button
