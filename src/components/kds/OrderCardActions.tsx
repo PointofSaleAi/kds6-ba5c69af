@@ -62,6 +62,7 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
         </button>
       )}
       <button
+        data-onboarding="ticket-footer-btn"
         onClick={() => onTicketAdvance?.(orderId)}
         className={`flex-1 py-2.5 ${buttonColorClass} text-primary-foreground rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px]`}
         style={{ fontSize: '16px', fontWeight: 700, ...(legacyActions ? { backgroundColor: legacyBg } : defaultBgInline) }}

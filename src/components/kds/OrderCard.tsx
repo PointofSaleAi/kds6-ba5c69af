@@ -811,6 +811,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   return (
     <>
       <div
+        data-order-id={order.id}
         className={`${bare ? '' : 'rounded-lg overflow-hidden bg-surface-card shadow-sm'} ${statusBodyMap[order.status] || ''} transition-all duration-300`}
         style={{
           minWidth: bare ? undefined : 'min(220px, 100%)',
