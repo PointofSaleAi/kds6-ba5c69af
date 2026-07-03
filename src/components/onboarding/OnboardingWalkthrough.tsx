@@ -74,10 +74,11 @@ function TooltipCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardSize, setCardSize] = useState({ w: 340, h: 180 });
   useLayoutEffect(() => {
-    if (cardRef.current) {
-      setCardSize({ w: cardRef.current.offsetWidth, h: cardRef.current.offsetHeight });
-    }
-  });
+    if (!cardRef.current) return;
+    const w = cardRef.current.offsetWidth;
+    const h = cardRef.current.offsetHeight;
+    setCardSize(prev => (prev.w === w && prev.h === h ? prev : { w, h }));
+  }, [step.title, step.body]);
 
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
