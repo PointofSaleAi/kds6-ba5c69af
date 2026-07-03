@@ -73,7 +73,17 @@ export function TightWidthBox({
   }, [measure, ...deps]);
 
   return (
-    <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
+    <div
+      ref={wrapperRef}
+      className={className}
+      style={{
+        minWidth: 0,
+        width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        ...style,
+      }}
+    >
       <div
         ref={primaryRef}
         style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content', maxWidth: '100%' }}
