@@ -104,6 +104,7 @@ const App = () => (
           </BrowserRouter>
         </DockDragLayer>
       </TooltipProvider>
+      </TrainingModeProvider>
       </OnboardingProvider>
       </ActiveIdentityProvider>
       </ActiveKDSViewProvider>
