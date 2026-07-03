@@ -44,6 +44,7 @@ import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 import { OnboardingWalkthrough } from '@/components/onboarding/OnboardingWalkthrough';
 import { ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
+import { useOnboarding } from '@/hooks/use-onboarding';
 
 
 interface MainOrderViewProps {
@@ -86,6 +87,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
+  const { active: onboardingActive } = useOnboarding();
   const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
   const [viewMode, setViewMode] = useState<ViewMode>('stagger');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -1093,7 +1095,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         isAcknowledgmentPending={isAcknowledgmentPending}
         onBumpBlocked={handleBumpBlocked}
         compactRows={opts?.compactRows}
-        legacyActions={legacyActions}
+        legacyActions={legacyActions || onboardingActive}
       />
     );
   };
