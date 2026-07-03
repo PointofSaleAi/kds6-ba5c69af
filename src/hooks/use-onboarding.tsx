@@ -64,6 +64,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     });
   }, [markSeen]);
 
+  const prev = useCallback(() => {
+    setStepIndex(i => Math.max(0, i - 1));
+  }, []);
+
   const dismissCompletion = useCallback((choice: 'training' | 'done') => {
     setShowCompletion(false);
     if (choice === 'training') {
