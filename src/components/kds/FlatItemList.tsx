@@ -305,16 +305,22 @@ function ItemTapRow({
         {legacyActions && !item.isCancelled && !is86Active && !show86Pill && (
           <div className="shrink-0 ml-1 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
             {!isSeen && !isDone && (
-              <LegacyActionPill variant="seen" onClick={() => onAdvanceItem(item.id)} title="Mark Seen / In Progress" />
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-eye' } : {})}>
+                <LegacyActionPill variant="seen" onClick={() => onAdvanceItem(item.id)} title="Mark Seen / In Progress" />
+              </span>
             )}
             {(isSeen || isDone) && (
               <LegacyActionPill variant="undo" onClick={() => onUndoItem(item.id)} title="Undo" />
             )}
             {isSeen && !isDone && (
-              <LegacyActionPill variant="bell" onClick={() => onAdvanceItem(item.id)} title="Mark Done" />
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-bell' } : {})}>
+                <LegacyActionPill variant="bell" onClick={() => onAdvanceItem(item.id)} title="Mark Done" />
+              </span>
             )}
             {isDone && (
-              <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-check' } : {})}>
+                <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
+              </span>
             )}
           </div>
         )}
@@ -327,6 +333,7 @@ function ItemTapRow({
           <>
             {nonServable.length > 0 && (
               <div
+                {...(item.id === 'onb-i-2' ? { 'data-onboarding': 'item-modifier' } : {})}
                 className={isDone ? 'line-through' : ''}
                 style={{
                   marginTop: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
