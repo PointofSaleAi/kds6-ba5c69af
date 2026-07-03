@@ -28,19 +28,7 @@ export function TightWidthBox({
   const measure = useCallback(() => {
     const el = primaryRef.current;
     if (!el) return;
-    const wrapper = wrapperRef.current;
-    const previousWrapperWidth = wrapper?.style.width;
-    const previousWrapperMaxWidth = wrapper?.style.maxWidth;
-    const previousWidth = el.style.width;
-    const previousMaxWidth = el.style.maxWidth;
     try {
-      if (wrapper) {
-        wrapper.style.width = 'max-content';
-        wrapper.style.maxWidth = '100%';
-      }
-      el.style.width = 'max-content';
-      el.style.maxWidth = '100%';
-
       let max = 0;
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
       let node = walker.nextNode();
@@ -60,13 +48,6 @@ export function TightWidthBox({
       setPrimaryLineWidth(max > 0 ? Math.ceil(max) : undefined);
     } catch {
       /* noop */
-    } finally {
-      el.style.width = previousWidth;
-      el.style.maxWidth = previousMaxWidth;
-      if (wrapper) {
-        wrapper.style.width = previousWrapperWidth ?? '';
-        wrapper.style.maxWidth = previousWrapperMaxWidth ?? '';
-      }
     }
   }, []);
 
