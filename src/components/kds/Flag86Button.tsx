@@ -1,7 +1,52 @@
-import { useState, useMemo, type ReactNode } from 'react';
+import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Clock } from 'lucide-react';
+import { Clock, Minus, Plus } from 'lucide-react';
 import { useOrderStore } from '@/hooks/use-order-store';
+
+interface QuantityAdjusterProps {
+  value: number;
+  onChange: (n: number) => void;
+}
+
+function QuantityAdjuster({ value, onChange }: QuantityAdjusterProps) {
+  const dec = (e: React.MouseEvent) => { e.stopPropagation(); onChange(Math.max(0, value - 1)); };
+  const inc = (e: React.MouseEvent) => { e.stopPropagation(); onChange(value + 1); };
+  const btn: React.CSSProperties = {
+    width: 34, height: 34, borderRadius: 8,
+    backgroundColor: '#252838', border: '1px solid #374151',
+    color: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: 'pointer',
+  };
+  return (
+    <div
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 10, padding: '10px 12px', marginTop: 10, marginBottom: 10,
+        backgroundColor: '#171923', border: '1px solid #2A2F3F', borderRadius: 10,
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.6px', color: '#9CA3AF', textTransform: 'uppercase' }}>
+          Available quantity
+        </span>
+        <span style={{ fontSize: 10, color: '#6B7280', marginTop: 2 }}>
+          {value === 0 ? 'None left, 86 immediately' : `${value} left before 86`}
+        </span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <button type="button" onClick={dec} style={btn} aria-label="Decrease quantity">
+          <Minus size={16} />
+        </button>
+        <span style={{ minWidth: 24, textAlign: 'center', fontSize: 16, fontWeight: 700, color: '#FFFFFF' }}>
+          {value}
+        </span>
+        <button type="button" onClick={inc} style={btn} aria-label="Increase quantity">
+          <Plus size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
 import { useFlag86 } from '@/hooks/use-flag86';
 
 export type Flag86Scope = 'item' | 'course' | 'ticket';
@@ -18,6 +63,8 @@ interface Flag86ModalProps {
   /** Subtext under the title. */
   subtext: string;
   primaryLabel: string;
+  /** Show a quantity adjuster; controls placement relative to the modal content. */
+  showQuantityAdjuster?: 'below-title' | 'below-subtext';
 }
 
 export function Flag86Modal({
@@ -29,7 +76,10 @@ export function Flag86Modal({
   pendingCount,
   subtext,
   primaryLabel,
+  showQuantityAdjuster,
 }: Flag86ModalProps) {
+  const [qty, setQty] = useState(0);
+  useEffect(() => { if (open) setQty(0); }, [open]);
   if (!open) return null;
   return createPortal(
     <div
@@ -68,6 +118,10 @@ export function Flag86Modal({
         <div style={{ fontSize: 22, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15, marginBottom: 6 }}>
           {title}
         </div>
+
+        {showQuantityAdjuster === 'below-title' && (
+          <QuantityAdjuster value={qty} onChange={setQty} />
+        )}
 
         {typeof pendingCount === 'number' && (
           <div
@@ -114,9 +168,13 @@ export function Flag86Modal({
           </ul>
         )}
 
-        <div style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.4, marginBottom: 20 }}>
+        <div style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.4, marginBottom: showQuantityAdjuster === 'below-subtext' ? 0 : 20 }}>
           {subtext}
         </div>
+
+        {showQuantityAdjuster === 'below-subtext' && (
+          <QuantityAdjuster value={qty} onChange={setQty} />
+        )}
 
         <div style={{ display: 'flex', gap: 10, width: '100%' }}>
           <button
@@ -263,6 +321,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
         pendingCount={pendingCount}
         subtext="FOH notified. Manager will handle pending orders."
         primaryLabel="86 it"
+        showQuantityAdjuster="below-subtext"
       />
     </>
   );

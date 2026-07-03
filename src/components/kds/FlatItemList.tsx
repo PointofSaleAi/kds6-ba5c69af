@@ -398,6 +398,7 @@ function ItemTapRow({
         title={item.name}
         subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
         primaryLabel="Request 86"
+        showQuantityAdjuster="below-title"
       />
     </div>
   );
