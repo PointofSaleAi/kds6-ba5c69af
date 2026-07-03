@@ -781,6 +781,7 @@ function CourseItemTapRow({
                   flexDirection: 'column',
                   gap: '0px',
                   paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                  ...(dimStyle || {}),
                 }}
               >
                 {servable.map((mod, idx) => (
