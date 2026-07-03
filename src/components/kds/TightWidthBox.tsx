@@ -23,34 +23,33 @@ export function TightWidthBox({
 }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const primaryRef = useRef<HTMLDivElement | null>(null);
-  const [width, setWidth] = useState<number | undefined>(undefined);
+  const [primaryLineWidth, setPrimaryLineWidth] = useState<number | undefined>(undefined);
 
   const measure = useCallback(() => {
-    if (!constrainSecondary) return;
     const el = primaryRef.current;
     if (!el) return;
+    const previousWidth = el.style.width;
+    const previousMaxWidth = el.style.maxWidth;
     try {
+      el.style.width = 'max-content';
+      el.style.maxWidth = '100%';
+
       let max = 0;
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      let node = walker.nextNode();
-      while (node) {
-        const text = (node as Text).nodeValue ?? '';
-        if (text.trim().length > 0) {
-          const range = document.createRange();
-          range.selectNodeContents(node);
-          const rects = range.getClientRects();
-          for (let i = 0; i < rects.length; i++) {
-            if (rects[i].width > max) max = rects[i].width;
-          }
-          range.detach?.();
-        }
-        node = walker.nextNode();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const rects = range.getClientRects();
+      for (let i = 0; i < rects.length; i++) {
+        if (rects[i].width > max) max = rects[i].width;
       }
-      if (max > 0) setWidth(Math.ceil(max));
+      range.detach?.();
+      setPrimaryLineWidth(max > 0 ? Math.ceil(max) : undefined);
     } catch {
       /* noop */
+    } finally {
+      el.style.width = previousWidth;
+      el.style.maxWidth = previousMaxWidth;
     }
-  }, [constrainSecondary]);
+  }, []);
 
   useLayoutEffect(() => {
     measure();
@@ -67,12 +66,17 @@ export function TightWidthBox({
 
   return (
     <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
-      <div ref={primaryRef} style={{ width: 'max-content', maxWidth: '100%' }}>{primary}</div>
+      <div
+        ref={primaryRef}
+        style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content', maxWidth: '100%' }}
+      >
+        {primary}
+      </div>
       {secondary && (
         <div
           style={
             constrainSecondary
-              ? { minWidth: width, width: 'max-content', maxWidth: '100%' }
+              ? { minWidth: primaryLineWidth, width: 'max-content', maxWidth: '100%' }
               : { maxWidth: '100%' }
           }
         >
