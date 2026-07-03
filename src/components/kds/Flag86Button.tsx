@@ -63,6 +63,8 @@ interface Flag86ModalProps {
   /** Subtext under the title. */
   subtext: string;
   primaryLabel: string;
+  /** Show a quantity adjuster; controls placement relative to the modal content. */
+  showQuantityAdjuster?: 'below-title' | 'below-subtext';
 }
 
 export function Flag86Modal({
@@ -74,7 +76,10 @@ export function Flag86Modal({
   pendingCount,
   subtext,
   primaryLabel,
+  showQuantityAdjuster,
 }: Flag86ModalProps) {
+  const [qty, setQty] = useState(0);
+  useEffect(() => { if (open) setQty(0); }, [open]);
   if (!open) return null;
   return createPortal(
     <div
