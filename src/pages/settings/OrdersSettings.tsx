@@ -1,4 +1,4 @@
-import { ShoppingBag, Sparkles, AlertTriangle } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, GraduationCap } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
@@ -51,6 +51,14 @@ export default function OrdersSettings() {
         helper="Show a combined allergen strip at the top of each ticket card."
         right={<SwitchToggle checked={showHeaderAllergens} onChange={setShowHeaderAllergens} />}
         highlighted={hash === 'header-allergen-summary'}
+      />
+
+      <SettingsPill
+        icon={GraduationCap}
+        iconColor="#F59E0B"
+        label="Show me how this works"
+        helper="Replay the new-staff onboarding walkthrough on the KDS ticket screen."
+        onClick={() => window.dispatchEvent(new CustomEvent('kds:start-onboarding'))}
       />
     </>
   );

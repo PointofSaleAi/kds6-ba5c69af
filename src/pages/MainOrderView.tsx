@@ -42,6 +42,7 @@ import { useDockLayout } from '@/hooks/use-dock-layout';
 import { useActiveKDSView } from '@/hooks/use-active-kds-view';
 import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
+import { OnboardingWalkthrough } from '@/components/onboarding/OnboardingWalkthrough';
 
 
 interface MainOrderViewProps {
@@ -1471,6 +1472,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       </AnimatePresence>
 
       <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} />
+      <OnboardingWalkthrough />
     </div>
   );
 }

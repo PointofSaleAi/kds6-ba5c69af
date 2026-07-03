@@ -33,6 +33,7 @@ function SoundToggle() {
 
   return (
     <button
+      data-onboarding="sound"
       onClick={toggleMute}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
@@ -45,6 +46,7 @@ function SoundToggle() {
 function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   return (
     <button
+      data-onboarding="language"
       onClick={onOpen}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label="Change language"
@@ -101,7 +103,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           className="text-primary-foreground"
           showLock={false}
         />
-        <span className="text-primary-foreground font-bold">
+        <span data-onboarding="queue-count" className="text-primary-foreground font-bold">
           <span className="text-lg">{orderCount}</span>{' '}
           <span className="text-sm">{t.ordersInQueue}</span>
         </span>
@@ -121,6 +123,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                data-onboarding="filter"
                 onClick={onOpenCategoryFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
                 aria-label="Category filter"
@@ -137,6 +140,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                data-onboarding="revenue"
                 onClick={onOpenRevenueFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
                 aria-label="Revenue center filter"
@@ -154,6 +158,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
+                  data-onboarding="sort"
                   onClick={() => setSortOpen(!sortOpen)}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
                     sortMode !== 'newest'
@@ -193,6 +198,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           {viewModes.map(({ mode, icon: Icon, label }) => (
             <button
               key={mode}
+              data-onboarding={`view-${mode}`}
               onClick={() => onViewModeChange(mode)}
               className={`flex items-center justify-center ${isPortrait ? 'w-9 h-9' : 'gap-1.5 px-3'} py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
                 viewMode === mode
@@ -211,6 +217,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         <LanguageToggle onOpen={onOpenLanguageSettings} />
         <SoundToggle />
         <button
+          data-onboarding="theme"
           onClick={onToggleTheme}
           className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -218,6 +225,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
         <button
+          data-onboarding="ai"
           onClick={onToggleAiAssistant}
           aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
           aria-pressed={aiAssistantOpen}
@@ -234,7 +242,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       )}
 
       <div className="flex items-center gap-3">
-        <span className="text-primary-foreground/80 text-sm">
+        <span data-onboarding="datetime" className="text-primary-foreground/80 text-sm">
           {timeStr} &middot; {dateStr}
         </span>
       </div>

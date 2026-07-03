@@ -20,6 +20,7 @@ import CategoryFilterPanel from '@/pages/CategoryFilterPanel';
 import RevenueCenterFilter from '@/pages/RevenueCenterFilter';
 import StaggerModeSettings from '@/pages/StaggerModeSettings';
 import { usePrinterAssignments } from '@/hooks/use-printer-assignments';
+import { useOnboarding } from '@/hooks/use-onboarding';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { getActiveSummaryCategories } from '@/lib/summary-categories';
 
@@ -80,10 +81,15 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
   // Track where to return for fallback flows
   const [returnToSelector, setReturnToSelector] = useState(false);
 
+  const { startIfFirstLogin } = useOnboarding();
+
   const handleSplashReady = useCallback(() => setScreen('hardware-existing'), []);
 
   // Hardware activation now handles set-pin internally, so onSuccess goes straight to main
-  const handleFirstTimeLoginSuccess = useCallback(() => setScreen('main'), []);
+  const handleFirstTimeLoginSuccess = useCallback(() => {
+    setScreen('main');
+    setTimeout(() => startIfFirstLogin(), 300);
+  }, [startIfFirstLogin]);
 
   // After PIN is set (legacy, kept for other flows)
   const handlePinSet = useCallback(() => setScreen('device-activated'), []);
@@ -92,7 +98,10 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
   const handleActivated = useCallback(() => setScreen('main'), []);
 
   // Existing user PIN success goes straight to KDS
-  const handlePinLoginSuccess = useCallback(() => setScreen('main'), []);
+  const handlePinLoginSuccess = useCallback(() => {
+    setScreen('main');
+    setTimeout(() => startIfFirstLogin(), 300);
+  }, [startIfFirstLogin]);
 
   // Fallback from PIN screen to email/OTP login
   const handlePinFallback = useCallback(() => setScreen('byod-new'), []);
