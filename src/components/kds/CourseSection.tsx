@@ -642,7 +642,7 @@ function CourseItemTapRow({
           )
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1, ...(dimStyle || {}) }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))', lineHeight: 1.1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', textAlign: 'right', display: 'inline-block' }}
