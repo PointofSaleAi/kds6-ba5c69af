@@ -20,8 +20,8 @@ export function makeOnboardingSampleOrder(): Order {
     courses: [
       {
         course: 'ENTREE',
-        isFired: true,
-        firedAt: new Date(now - 60_000),
+        isFired: false,
+        firedAt: undefined,
         items: [
           {
             id: ONBOARDING_SAMPLE_FIRST_ITEM_ID,
