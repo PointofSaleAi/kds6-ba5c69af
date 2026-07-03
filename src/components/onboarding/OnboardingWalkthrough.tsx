@@ -243,9 +243,6 @@ export function OnboardingWalkthrough() {
     return () => window.clearTimeout(t);
   }, [active, step, stepIndex, next]);
 
-  // Sample badge overlay on the sample card
-  const sampleRect = useAnchorRect(active || showCompletion ? SAMPLE : null, active ? stepIndex : 0);
-
   const spotlightPadding = 6;
   const spotlight = useMemo(() => {
     if (!rect) return null;
@@ -257,21 +254,6 @@ export function OnboardingWalkthrough() {
 
   return (
     <>
-      {/* Sample badge */}
-      {sampleRect && (
-        <div
-          className="fixed z-[10000] pointer-events-none"
-          style={{ top: sampleRect.top + 6, left: sampleRect.left + 6 }}
-        >
-          <span
-            className="px-2 py-0.5 rounded-md text-[10px] font-black tracking-wider"
-            style={{ background: '#F59E0B', color: '#1a1a1a' }}
-          >
-            SAMPLE
-          </span>
-        </div>
-      )}
-
       {active && (
         <>
           {/* Overlay with a cut-out via 4 rectangles so spotlight stays interactive-visual */}
