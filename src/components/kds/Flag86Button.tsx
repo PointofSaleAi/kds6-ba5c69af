@@ -119,6 +119,10 @@ export function Flag86Modal({
           {title}
         </div>
 
+        {showQuantityAdjuster === 'below-title' && (
+          <QuantityAdjuster value={qty} onChange={setQty} />
+        )}
+
         {typeof pendingCount === 'number' && (
           <div
             style={{
