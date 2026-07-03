@@ -52,6 +52,7 @@ export function TightWidthBox({
   }, []);
 
   useLayoutEffect(() => {
+    setPrimaryLineWidth(undefined);
     measure();
     let ro: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined' && wrapperRef.current?.parentElement) {
