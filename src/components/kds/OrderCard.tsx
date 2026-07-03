@@ -837,7 +837,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             <V3Header order={order} />
           ) : (
             <>
-              <div data-onboarding="ticket-header">
+              <div data-onboarding="ticket-header" className="block">
               <OrderTypeBadge
                 type={order.orderType}
                 time={formatStaticTime(order.timeReceived)}

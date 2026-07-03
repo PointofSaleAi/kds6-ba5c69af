@@ -158,19 +158,13 @@ function TooltipCard({
         </div>
       </div>
       <p className="text-[13px] text-white/75 leading-relaxed mb-4">{step.body}</p>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          {Array.from({ length: total }).map((_, i) => (
-            <div
-              key={i}
-              className="h-1.5 rounded-full transition-all"
-              style={{
-                width: i === index ? 18 : 6,
-                background: i === index ? '#F59E0B' : 'rgba(255,255,255,0.2)',
-              }}
-            />
-          ))}
-        </div>
+      <div className="flex items-center justify-end gap-2">
+        <button
+          onClick={onSkip}
+          className="px-4 py-2 rounded-full text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10"
+        >
+          Skip
+        </button>
         <button
           onClick={onNext}
           className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold"
@@ -249,9 +243,6 @@ export function OnboardingWalkthrough() {
     return () => window.clearTimeout(t);
   }, [active, step, stepIndex, next]);
 
-  // Sample badge overlay on the sample card
-  const sampleRect = useAnchorRect(active || showCompletion ? SAMPLE : null, active ? stepIndex : 0);
-
   const spotlightPadding = 6;
   const spotlight = useMemo(() => {
     if (!rect) return null;
@@ -263,21 +254,6 @@ export function OnboardingWalkthrough() {
 
   return (
     <>
-      {/* Sample badge */}
-      {sampleRect && (
-        <div
-          className="fixed z-[10000] pointer-events-none"
-          style={{ top: sampleRect.top + 6, left: sampleRect.left + 6 }}
-        >
-          <span
-            className="px-2 py-0.5 rounded-md text-[10px] font-black tracking-wider"
-            style={{ background: '#F59E0B', color: '#1a1a1a' }}
-          >
-            SAMPLE
-          </span>
-        </div>
-      )}
-
       {active && (
         <>
           {/* Overlay with a cut-out via 4 rectangles so spotlight stays interactive-visual */}
