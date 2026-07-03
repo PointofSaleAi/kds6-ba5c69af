@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { GraduationCap } from 'lucide-react';
 import { useTrainingMode } from '@/hooks/use-training-mode';
 
