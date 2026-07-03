@@ -361,10 +361,21 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               {firedTimerLabel}
             </span>
           )}
-          {/* Pending: static "Preparing at X:XX PM" label */}
+          {/* Pending: amber "preparing at X:XX pm" badge */}
           {coursingStatus === 'pending' && firingAtLabel && (
-            <span className="inline-flex items-center px-1.5 rounded text-[10px] font-semibold text-text-primary leading-none">
-              {t.preparingAt} {firingAtLabel}
+            <span
+              className="inline-flex items-center rounded-full leading-none"
+              style={{
+                backgroundColor: '#FAEEDA',
+                color: '#633806',
+                fontSize: '11px',
+                fontWeight: 500,
+                padding: '3px 10px',
+                gap: '4px',
+              }}
+            >
+              <Clock size={12} style={{ color: '#633806' }} />
+              <span>{(t.preparingAt as string).toLowerCase()} {firingAtLabel.toLowerCase()}</span>
             </span>
           )}
         </div>
