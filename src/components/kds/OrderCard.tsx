@@ -845,7 +845,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             <V3Header order={order} />
           ) : (
             <>
-              <div data-onboarding="ticket-header" className="block">
+              <div data-onboarding="ticket-header" className="block relative">
               <OrderTypeBadge
                 type={order.orderType}
                 time={formatStaticTime(order.timeReceived)}
@@ -853,6 +853,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 stationBadge={undefined}
                 
               />
+              {(order.id.startsWith('training-sample-') || order.id === 'onboarding-sample') && (
+                <span
+                  className="absolute top-1 right-1 px-1.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wider uppercase"
+                  style={{ background: '#F59E0B', color: '#1a1a1a' }}
+                >
+                  Sample
+                </span>
+              )}
               </div>
 
 
