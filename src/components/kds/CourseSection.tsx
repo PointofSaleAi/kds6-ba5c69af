@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Languages, Eye, Check, ConciergeBell, ChevronRight } from 'lucide-react';
+import { Languages, Eye, Check, ConciergeBell, ChevronRight, Clock } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
@@ -361,10 +361,21 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               {firedTimerLabel}
             </span>
           )}
-          {/* Pending: static "Preparing at X:XX PM" label */}
+          {/* Pending: amber "preparing at X:XX pm" badge */}
           {coursingStatus === 'pending' && firingAtLabel && (
-            <span className="inline-flex items-center px-1.5 rounded text-[10px] font-semibold text-text-primary leading-none">
-              {t.preparingAt} {firingAtLabel}
+            <span
+              className="inline-flex items-center rounded-full leading-none"
+              style={{
+                backgroundColor: '#FAEEDA',
+                color: '#633806',
+                fontSize: '11px',
+                fontWeight: 500,
+                padding: '3px 10px',
+                gap: '4px',
+              }}
+            >
+              <Clock size={12} style={{ color: '#633806' }} />
+              <span>{(t.preparingAt as string).toLowerCase()} {firingAtLabel.toLowerCase()}</span>
             </span>
           )}
         </div>
@@ -565,6 +576,11 @@ function CourseItemTapRow({
       ? 'hsl(var(--destructive) / 0.12)'
       : stateBg || undefined;
   const stateOpacity = itemOpacity;
+  // Pending course items dim to 0.55, but allergens must remain crisp — so we
+  // apply the dim to individual sections (name row, modifiers, notes) rather
+  // than the whole card, and skip the allergen row.
+  const pendingDim = isPending && !item.isCancelled ? 0.55 : undefined;
+  const dimStyle = pendingDim !== undefined ? { opacity: pendingDim } : undefined;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
   const headerPad = compactRows ? '0px 0 0 0px' : '0px 0 0 0px';
@@ -626,7 +642,7 @@ function CourseItemTapRow({
           )
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+          <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1, ...(dimStyle || {}) }}>
             <span
               className={`font-normal shrink-0 ${isDone ? 'line-through' : ''}`}
               style={{ fontSize: 'var(--kds-item-qty)', color: 'hsl(var(--text-secondary))', lineHeight: 1.1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', textAlign: 'right', display: 'inline-block' }}
@@ -743,6 +759,7 @@ function CourseItemTapRow({
                   paddingRight: isolateModifierRows ? '8px' : '0px',
                   ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
                   ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
+                  ...(dimStyle || {}),
                 }}
               >
                 {nonServable.map((mod, idx) => (
@@ -764,6 +781,7 @@ function CourseItemTapRow({
                   flexDirection: 'column',
                   gap: '0px',
                   paddingLeft: ticketLayoutCompact ? '16px' : '0px',
+                  ...(dimStyle || {}),
                 }}
               >
                 {servable.map((mod, idx) => (
@@ -786,7 +804,7 @@ function CourseItemTapRow({
       })()}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px', ...(dimStyle || {}) }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
             0x
           </span>
