@@ -54,6 +54,7 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
     <div className="p-1.5 border-t border-border flex gap-1.5">
       {showUndo && (
         <button
+          data-onboarding="ticket-footer-undo"
           onClick={() => onTicketRecall?.(orderId)}
           className="w-[44px] min-h-[44px] bg-muted rounded flex items-center justify-center hover:opacity-80 transition-colors shrink-0"
           title="Go back"
