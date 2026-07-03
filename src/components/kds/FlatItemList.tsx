@@ -289,7 +289,11 @@ function ItemTapRow({
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
                 0x
               </span>
-              <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+              <div
+                {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-allergen' } : {})}
+                className="flex flex-wrap items-start"
+                style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}
+              >
                 {item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
