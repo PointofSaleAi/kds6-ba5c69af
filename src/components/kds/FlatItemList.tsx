@@ -182,8 +182,10 @@ function ItemTapRow({
     setManual86Open(true);
   }, { stopPropagation: true });
 
+  const onbAttr = item.id === 'onb-i-1' ? { 'data-onboarding': 'item-row' } : {};
   return (
     <div
+      {...onbAttr}
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''}`}
       style={{ 
         ...(!isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
@@ -287,7 +289,11 @@ function ItemTapRow({
               <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
                 0x
               </span>
-              <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
+              <div
+                {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-allergen' } : {})}
+                className="flex flex-wrap items-start"
+                style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}
+              >
                 {item.allergens.map((a) => (
                   <AllergenBadge key={a.type} allergen={a} variant="item" />
                 ))}
@@ -299,16 +305,22 @@ function ItemTapRow({
         {legacyActions && !item.isCancelled && !is86Active && !show86Pill && (
           <div className="shrink-0 ml-1 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
             {!isSeen && !isDone && (
-              <LegacyActionPill variant="seen" onClick={() => onAdvanceItem(item.id)} title="Mark Seen / In Progress" />
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-eye' } : {})}>
+                <LegacyActionPill variant="seen" onClick={() => onAdvanceItem(item.id)} title="Mark Seen / In Progress" />
+              </span>
             )}
             {(isSeen || isDone) && (
               <LegacyActionPill variant="undo" onClick={() => onUndoItem(item.id)} title="Undo" />
             )}
             {isSeen && !isDone && (
-              <LegacyActionPill variant="bell" onClick={() => onAdvanceItem(item.id)} title="Mark Done" />
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-bell' } : {})}>
+                <LegacyActionPill variant="bell" onClick={() => onAdvanceItem(item.id)} title="Mark Done" />
+              </span>
             )}
             {isDone && (
-              <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-check' } : {})}>
+                <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
+              </span>
             )}
           </div>
         )}
@@ -321,6 +333,7 @@ function ItemTapRow({
           <>
             {nonServable.length > 0 && (
               <div
+                {...(item.id === 'onb-i-2' ? { 'data-onboarding': 'item-modifier' } : {})}
                 className={isDone ? 'line-through' : ''}
                 style={{
                   marginTop: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',

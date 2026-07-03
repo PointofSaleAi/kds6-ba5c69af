@@ -227,7 +227,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   return (
     <div data-onboarding="summary" className="w-[180px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
+      <div data-onboarding="summary-header" className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5 min-w-0">
           <DockDragHandle
             panel="summaryPanel"
@@ -268,7 +268,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
         <div className="flex-1 overflow-y-auto">
           {/* Overtime section - styled like a category section */}
           {overtimeItems.length > 0 && (
-            <div>
+            <div data-onboarding="summary-overtime">
               <div
                 className="flex items-center border-b border-border min-h-[36px]"
                 style={{ borderLeft: '2px solid hsl(var(--destructive))' }}
@@ -341,7 +341,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
               <p className="text-[12px] text-text-muted">{t.allItemsCompleted}</p>
             </div>
           )}
-          {summary.map((cat) => {
+          {summary.map((cat, catIdx) => {
             const isUncategorized = cat.category === ('Uncategorized' as ProductCategory);
             const isStation = !!stationCourse && cat.category === stationCourse;
             const isMuted = false;
@@ -356,7 +356,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             if (isUncategorized && displayItems.length === 0) return null;
 
             return (
-              <div key={cat.category}>
+              <div key={cat.category} {...(catIdx === 0 ? { 'data-onboarding': 'summary-category' } : {})}>
                 {/* Section header */}
                 <div className="flex items-center border-b border-border min-h-[36px]" style={isStation ? { borderLeft: '2px solid #4F46E5' } : undefined}>
                   {/* Chevron toggle */}
@@ -404,7 +404,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 {/* Items */}
                 {isExpanded && (
                   <div className="pl-1.5 pr-2 py-0.5">
-                    {displayItems.map((item) => {
+                    {displayItems.map((item, itemIdx) => {
                       // Highlight only when actually overtime, never by quantity.
                       const tierClass = item.isOvertime
                         ? 'bg-destructive/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-destructive animate-pulse'
@@ -412,9 +412,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const countColor = item.isOvertime ? 'text-destructive' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
+                      const isFirstProduct = catIdx === 0 && itemIdx === 0;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? '-ml-1.5 -mr-2 pl-1.5 pr-2' : ''}`}>
+                        <div key={item.name} {...(isFirstProduct ? { 'data-onboarding': 'summary-product' } : {})} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? '-ml-1.5 -mr-2 pl-1.5 pr-2' : ''}`}>
                           <div
                             className={`flex items-center justify-between ${isPortrait ? 'py-[1px] gap-1' : 'py-[2px]'} cursor-pointer`}
                             onClick={(e) => {

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { X, ArrowRight, Eye, Bell, CheckCircle2, ListChecks, LayoutGrid, GraduationCap } from 'lucide-react';
+import { X, ArrowRight, Eye, Bell, CheckCircle2, ListChecks, LayoutGrid, GraduationCap, AlertTriangle, Tag, Clock, Hash, MessageSquare, Utensils } from 'lucide-react';
 import { useOnboarding } from '@/hooks/use-onboarding';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { makeOnboardingSampleOrder, ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
@@ -19,12 +19,25 @@ interface Step {
 const SAMPLE = `[data-order-id="${ONBOARDING_SAMPLE_ORDER_ID}"]`;
 
 const STEPS: Step[] = [
-  { anchor: SAMPLE, title: 'Mark an item seen', body: 'Tap the eye icon on an item to mark just that item as seen.', icon: Eye, preferSide: 'right' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Or seen for the whole ticket', body: 'Tap the ticket button once to mark every item on this order as seen.', icon: Eye, preferSide: 'top' },
-  { anchor: SAMPLE, title: 'Cooking', body: 'A bell icon on a product means it is in-progress at the station.', icon: Bell, preferSide: 'right' },
-  { anchor: SAMPLE, title: 'Mark an item done', body: 'Tap the bell to mark that product done. It turns to a checkmark and is struck through.', icon: CheckCircle2, preferSide: 'right' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'All done?', body: 'Once every item is done, tap the ticket button to remove the ticket from the queue.', icon: CheckCircle2, preferSide: 'top' },
-  { anchor: '[data-onboarding="summary"]', title: 'Summary panel', body: 'Tap a category or product to filter the queue to just those tickets.', icon: ListChecks, preferSide: 'left' },
+  // Ticket card cues
+  { anchor: `${SAMPLE} [data-onboarding="ticket-header"]`, title: 'Order type', body: 'Color tells you Dine-in, Take-out, Delivery, or Banquet at a glance.', icon: Tag, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-orderno"]`, title: 'Order or table number', body: 'Big and centered so you can read it across the kitchen.', icon: Hash, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-timer"]`, title: 'Ticket timer', body: 'Counts how long this order has been open. Turns amber, then red as it gets older.', icon: Clock, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="item-row"]`, title: 'Item row', body: 'Each row is one item on the order.', icon: Utensils, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="item-allergen"]`, title: 'Allergen', body: 'Allergens always show as a red chip. Never miss one.', icon: AlertTriangle, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="item-modifier"]`, title: 'Modifiers', body: 'Extras show in blue. Removals show in red with a strikethrough.', icon: MessageSquare, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="item-eye"]`, title: 'Mark item seen', body: 'Tap the eye to mark just this item as seen.', icon: Eye, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="item-bell"]`, title: 'Mark item cooking', body: 'Tap the bell when the item is on the pass.', icon: Bell, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="item-check"]`, title: 'Mark item done', body: 'Tap the check when the item is out and served.', icon: CheckCircle2, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Advance the whole ticket', body: 'One tap moves every item together: seen, then cooking, then remove from the queue.', icon: CheckCircle2, preferSide: 'top' },
+
+  // Summary panel cues
+  { anchor: '[data-onboarding="summary-header"]', title: 'Summary panel', body: 'A running list of everything still to cook, grouped by category.', icon: ListChecks, preferSide: 'left' },
+  { anchor: '[data-onboarding="summary-overtime"]', title: 'Overtime', body: 'Items open too long land here. Fire these first.', icon: AlertTriangle, preferSide: 'left' },
+  { anchor: '[data-onboarding="summary-category"]', title: 'Category', body: 'Items are grouped by category. Tap a category to filter the queue.', icon: ListChecks, preferSide: 'left' },
+  { anchor: '[data-onboarding="summary-product"]', title: 'Product', body: 'Tap a product to filter the queue to only tickets with that product. Tap again to clear.', icon: ListChecks, preferSide: 'left' },
+
+  // Footer cues
   { anchor: '[data-onboarding="queue-count"]', title: 'Orders in queue', body: 'This is the number of active orders across your queue.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="filter"]', title: 'Filter', body: 'Filter the queue by category.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="revenue"]', title: 'Revenue center', body: 'Filter by revenue center or route printing.', icon: LayoutGrid, preferSide: 'top' },
@@ -45,19 +58,27 @@ function useAnchorRect(selector: string | null, dep: unknown): Rect | null {
   const [rect, setRect] = useState<Rect | null>(null);
   useLayoutEffect(() => {
     if (!selector) { setRect(null); return; }
-    let raf = 0;
+    let cancelled = false;
     const measure = () => {
+      if (cancelled) return;
       const el = document.querySelector(selector) as HTMLElement | null;
       if (!el) { setRect(null); return; }
       const r = el.getBoundingClientRect();
-      setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
+      setRect(prev => {
+        if (prev && prev.top === r.top && prev.left === r.left && prev.width === r.width && prev.height === r.height) return prev;
+        return { top: r.top, left: r.left, width: r.width, height: r.height };
+      });
     };
-    const tick = () => { measure(); raf = window.requestAnimationFrame(tick); };
-    tick();
+    measure();
+    // Re-measure a few times to catch late layout (fonts, images) without a hot RAF loop.
+    const t1 = window.setTimeout(measure, 60);
+    const t2 = window.setTimeout(measure, 250);
+    const t3 = window.setTimeout(measure, 700);
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
     return () => {
-      cancelAnimationFrame(raf);
+      cancelled = true;
+      window.clearTimeout(t1); window.clearTimeout(t2); window.clearTimeout(t3);
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', measure, true);
     };
@@ -200,31 +221,33 @@ export function OnboardingWalkthrough() {
   const { orders, setOrders } = useOrderStore();
 
   // Inject / remove sample ticket while walkthrough is running.
-  const injectedRef = useRef(false);
+  // Note: no unmount cleanup effect — React StrictMode's double-mount would
+  // then remove the just-injected sample and leave it stripped forever.
   useEffect(() => {
     const shouldInject = active || showCompletion; // keep sample until completion prompt dismissed
     const has = orders.some(o => o.id === ONBOARDING_SAMPLE_ORDER_ID);
-    if (shouldInject && !has && !injectedRef.current) {
-      injectedRef.current = true;
-      setOrders(prev => [makeOnboardingSampleOrder(), ...prev]);
+    if (shouldInject && !has) {
+      setOrders(prev => (prev.some(o => o.id === ONBOARDING_SAMPLE_ORDER_ID) ? prev : [makeOnboardingSampleOrder(), ...prev]));
     }
     if (!shouldInject && has) {
-      injectedRef.current = false;
       setOrders(prev => prev.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, showCompletion]);
-
-  useEffect(() => {
-    return () => {
-      // Cleanup on unmount
-      setOrders(prev => prev.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [active, showCompletion, orders]);
 
   const step = active ? STEPS[Math.min(stepIndex, STEPS.length - 1)] : null;
   const rect = useAnchorRect(step ? step.anchor : null, stepIndex);
+
+  // Auto-skip a step if its anchor never appears (e.g. Overtime with no items).
+  useEffect(() => {
+    if (!active || !step) return;
+    const t = window.setTimeout(() => {
+      if (!document.querySelector(step.anchor)) {
+        next();
+      }
+    }, 600);
+    return () => window.clearTimeout(t);
+  }, [active, step, stepIndex, next]);
 
   // Sample badge overlay on the sample card
   const sampleRect = useAnchorRect(active || showCompletion ? SAMPLE : null, active ? stepIndex : 0);

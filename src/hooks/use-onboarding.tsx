@@ -19,7 +19,7 @@ interface OnboardingContextValue {
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
-export const ONBOARDING_TOTAL_STEPS = 18;
+export const ONBOARDING_TOTAL_STEPS = 27;
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [active, setActive] = useState(false);
