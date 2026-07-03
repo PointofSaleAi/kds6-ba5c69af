@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Languages, Eye, Check, ConciergeBell, ChevronRight } from 'lucide-react';
+import { Languages, Eye, Check, ConciergeBell, ChevronRight, Clock } from 'lucide-react';
 import type { CourseGroup, OrderItem } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
