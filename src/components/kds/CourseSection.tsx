@@ -576,6 +576,11 @@ function CourseItemTapRow({
       ? 'hsl(var(--destructive) / 0.12)'
       : stateBg || undefined;
   const stateOpacity = itemOpacity;
+  // Pending course items dim to 0.55, but allergens must remain crisp — so we
+  // apply the dim to individual sections (name row, modifiers, notes) rather
+  // than the whole card, and skip the allergen row.
+  const pendingDim = isPending && !item.isCancelled ? 0.55 : undefined;
+  const dimStyle = pendingDim !== undefined ? { opacity: pendingDim } : undefined;
 
   // Tightened spacing for Standard view: minimize gaps between name / allergens / modifiers / notes.
   const headerPad = compactRows ? '0px 0 0 0px' : '0px 0 0 0px';
