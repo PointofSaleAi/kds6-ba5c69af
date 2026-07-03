@@ -239,6 +239,17 @@ export function OnboardingWalkthrough() {
   const step = active ? STEPS[Math.min(stepIndex, STEPS.length - 1)] : null;
   const rect = useAnchorRect(step ? step.anchor : null, stepIndex);
 
+  // Auto-skip a step if its anchor never appears (e.g. Overtime with no items).
+  useEffect(() => {
+    if (!active || !step) return;
+    const t = window.setTimeout(() => {
+      if (!document.querySelector(step.anchor)) {
+        next();
+      }
+    }, 600);
+    return () => window.clearTimeout(t);
+  }, [active, step, stepIndex, next]);
+
   // Sample badge overlay on the sample card
   const sampleRect = useAnchorRect(active || showCompletion ? SAMPLE : null, active ? stepIndex : 0);
 
