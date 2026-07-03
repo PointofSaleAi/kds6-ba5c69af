@@ -219,6 +219,35 @@ export function OnboardingWalkthrough() {
   const { active, stepIndex, totalSteps, next, prev, skip, showCompletion, dismissCompletion } = useOnboarding();
   const { orders, setOrders } = useOrderStore();
 
+  // Step indices that map to the 3-tap ticket footer button progression.
+  // Kept in sync with STEPS above (Mark ticket seen / in progress / done).
+  const TICKET_SEEN_STEP = 9;
+  const TICKET_IN_PROGRESS_STEP = 10;
+  const TICKET_DONE_STEP = 11;
+
+  const clickSample = (sel: string) => {
+    const el = document.querySelector(`${SAMPLE} ${sel}`) as HTMLElement | null;
+    el?.click();
+  };
+
+  const handleNext = () => {
+    // Advancing OUT of the "seen" or "in progress" cue should visibly tick the
+    // sample ticket forward so the footer button label/color updates.
+    if (stepIndex === TICKET_SEEN_STEP || stepIndex === TICKET_IN_PROGRESS_STEP) {
+      clickSample('[data-onboarding="ticket-footer-btn"]');
+    }
+    next();
+  };
+
+  const handlePrev = () => {
+    // Going back INTO the "seen" or "in progress" cue should rewind the sample
+    // ticket via the undo button so the state matches the cue being shown.
+    if (stepIndex === TICKET_IN_PROGRESS_STEP || stepIndex === TICKET_DONE_STEP) {
+      clickSample('[data-onboarding="ticket-footer-undo"]');
+    }
+    prev();
+  };
+
   // Inject / remove sample ticket while walkthrough is running.
   // Note: no unmount cleanup effect — React StrictMode's double-mount would
   // then remove the just-injected sample and leave it stripped forever.
