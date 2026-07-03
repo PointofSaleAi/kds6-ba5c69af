@@ -158,6 +158,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
+                  data-onboarding="sort"
                   onClick={() => setSortOpen(!sortOpen)}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
                     sortMode !== 'newest'
@@ -197,6 +198,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           {viewModes.map(({ mode, icon: Icon, label }) => (
             <button
               key={mode}
+              data-onboarding={`view-${mode}`}
               onClick={() => onViewModeChange(mode)}
               className={`flex items-center justify-center ${isPortrait ? 'w-9 h-9' : 'gap-1.5 px-3'} py-1.5 rounded-full text-xs font-bold transition-colors min-h-[36px] ${
                 viewMode === mode
@@ -215,6 +217,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         <LanguageToggle onOpen={onOpenLanguageSettings} />
         <SoundToggle />
         <button
+          data-onboarding="theme"
           onClick={onToggleTheme}
           className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -222,6 +225,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
         <button
+          data-onboarding="ai"
           onClick={onToggleAiAssistant}
           aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
           aria-pressed={aiAssistantOpen}
@@ -238,7 +242,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       )}
 
       <div className="flex items-center gap-3">
-        <span className="text-primary-foreground/80 text-sm">
+        <span data-onboarding="datetime" className="text-primary-foreground/80 text-sm">
           {timeStr} &middot; {dateStr}
         </span>
       </div>
