@@ -454,6 +454,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       return [...matching.map(m => m.order), ...nonMatching];
     }
 
+    // Keep the onboarding training ticket in the first visible slot so its app cues
+    // always point at the correct sample card, regardless of live-ticket sorting.
+    const sample = sorted.filter(o => o.id === ONBOARDING_SAMPLE_ORDER_ID);
+    const withoutSample = sorted.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID);
+    if (sample.length > 0) return [...sample, ...withoutSample];
+
     // Rush override: rushed orders jump to position 1
     const rushed = sorted.filter(o => o.isRushed);
     const nonRushed = sorted.filter(o => !o.isRushed);
