@@ -971,7 +971,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
-    const highlightItemNames = selectedSummaryItems.size > 0 ? selectedSummaryItems : undefined;
     if (displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID) {
       return (
         <OrderCard
