@@ -369,7 +369,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 backgroundColor: '#FAEEDA',
                 color: '#633806',
                 fontSize: '11px',
-                fontWeight: 500,
+                fontWeight: 700,
                 padding: '3.5px',
                 gap: '4px',
                 border: '1.5px solid #BA7517',
