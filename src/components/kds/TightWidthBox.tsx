@@ -67,7 +67,7 @@ export function TightWidthBox({
 
   return (
     <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
-      <div ref={primaryRef} style={{ maxWidth: '100%' }}>{primary}</div>
+      <div ref={primaryRef} style={{ width: 'max-content', maxWidth: '100%' }}>{primary}</div>
       {secondary && (
         <div
           style={
