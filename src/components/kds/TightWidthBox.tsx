@@ -35,13 +35,21 @@ export function TightWidthBox({
       el.style.maxWidth = '100%';
 
       let max = 0;
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      const rects = range.getClientRects();
-      for (let i = 0; i < rects.length; i++) {
-        if (rects[i].width > max) max = rects[i].width;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        const text = (node as Text).nodeValue ?? '';
+        if (text.trim().length > 0) {
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const rects = range.getClientRects();
+          for (let i = 0; i < rects.length; i++) {
+            if (rects[i].width > max) max = rects[i].width;
+          }
+          range.detach?.();
+        }
+        node = walker.nextNode();
       }
-      range.detach?.();
       setPrimaryLineWidth(max > 0 ? Math.ceil(max) : undefined);
     } catch {
       /* noop */
