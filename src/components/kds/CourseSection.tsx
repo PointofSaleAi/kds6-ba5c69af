@@ -13,6 +13,7 @@ import { useRowTap } from '@/hooks/use-row-tap';
 import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
+import { ONBOARDING_SAMPLE_FIRST_ITEM_ID } from '@/data/onboarding-sample-order';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -592,7 +593,9 @@ function CourseItemTapRow({
     setManual86Open(true);
   }, { enabled: tappable, stopPropagation: true });
 
-  const onbAttr = item.id === 'onb-i-1' ? { 'data-onboarding': 'item-row' } : {};
+  const isOnboardingFirstItem = item.id === ONBOARDING_SAMPLE_FIRST_ITEM_ID;
+  const showOnboardingActionSet = legacyActions && isOnboardingFirstItem;
+  const onbAttr = isOnboardingFirstItem ? { 'data-onboarding': 'item-row' } : {};
   return (
     <div
       {...onbAttr}
@@ -719,7 +722,7 @@ function CourseItemTapRow({
                 0x
               </span>
               <div
-                {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-allergen' } : {})}
+                {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-allergen' } : {})}
                 className="flex flex-wrap items-start"
                 style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}
               >
@@ -733,21 +736,21 @@ function CourseItemTapRow({
         {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
         {legacyActions && tappable && !is86Active && !show86Pill && (
           <div className="shrink-0 ml-1 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-            {!isSeen && !isDone && (
-              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-eye' } : {})}>
+            {(showOnboardingActionSet || (!isSeen && !isDone)) && (
+              <span {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-eye' } : {})}>
                 <LegacyActionPill variant="seen" onClick={() => onAdvanceItem?.(item.id)} title="Mark Seen / In Progress" />
               </span>
             )}
-            {(isSeen || isDone) && (
+            {!showOnboardingActionSet && (isSeen || isDone) && (
               <LegacyActionPill variant="undo" onClick={() => onUndoItem?.(item.id)} title="Undo" />
             )}
-            {isSeen && !isDone && (
-              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-bell' } : {})}>
+            {(showOnboardingActionSet || (isSeen && !isDone)) && (
+              <span {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-bell' } : {})}>
                 <LegacyActionPill variant="bell" onClick={() => onAdvanceItem?.(item.id)} title="Mark Done" />
               </span>
             )}
-            {isDone && (
-              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-check' } : {})}>
+            {(showOnboardingActionSet || isDone) && (
+              <span {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-check' } : {})}>
                 <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
               </span>
             )}

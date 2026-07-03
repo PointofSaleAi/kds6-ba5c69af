@@ -43,6 +43,7 @@ import { useActiveKDSView } from '@/hooks/use-active-kds-view';
 import SeenOrdersScreen from '@/pages/SeenOrdersScreen';
 import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 import { OnboardingWalkthrough } from '@/components/onboarding/OnboardingWalkthrough';
+import { ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
 
 
 interface MainOrderViewProps {
@@ -452,6 +453,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       matching.sort((a, b) => b.matchCount - a.matchCount);
       return [...matching.map(m => m.order), ...nonMatching];
     }
+
+    // Keep the onboarding training ticket in the first visible slot so its app cues
+    // always point at the correct sample card, regardless of live-ticket sorting.
+    const sample = sorted.filter(o => o.id === ONBOARDING_SAMPLE_ORDER_ID);
+    const withoutSample = sorted.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID);
+    if (sample.length > 0) return [...sample, ...withoutSample];
 
     // Rush override: rushed orders jump to position 1
     const rushed = sorted.filter(o => o.isRushed);
@@ -970,6 +977,28 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
+    if (displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID) {
+      return (
+        <OrderCard
+          order={displayOrder}
+          onBump={handleBump}
+          onRecall={handleStepBack}
+          onFireCourse={handleFireCourse}
+          onItemStatusChange={handleItemStatusChange}
+          showAllergens={showAllergens}
+          highlightItemNames={highlightItemNames}
+          onMarkSeen={toggleOrderSeen}
+          onItemDismiss={handleItemDismiss}
+          onAcknowledgeNotes={acknowledgeOrderNotes}
+          onUnacknowledgeNotes={unacknowledgeOrderNotes}
+          isAcknowledgmentPending={isAcknowledgmentPending}
+          onBumpBlocked={handleBumpBlocked}
+          compactRows={false}
+          layoutOverride="standard"
+          legacyActions
+        />
+      );
+    }
     if (cardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];

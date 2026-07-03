@@ -5,6 +5,7 @@ export const ONBOARDING_SAMPLE_FIRST_ITEM_ID = 'onb-i-1';
 
 export function makeOnboardingSampleOrder(): Order {
   const now = Date.now();
+  const receivedAt = new Date(now - 23 * 60_000);
   return {
     id: ONBOARDING_SAMPLE_ORDER_ID,
     orderNumber: 101,
@@ -13,8 +14,8 @@ export function makeOnboardingSampleOrder(): Order {
     tableName: 'TABLE 1',
     serverName: 'Trainer',
     guestName: 'Sample Guest',
-    timeReceived: new Date(now - 60_000),
-    elapsedSeconds: 60,
+    timeReceived: receivedAt,
+    elapsedSeconds: 23 * 60,
     targetSeconds: 900,
     itemCount: 4,
     courses: [
@@ -22,6 +23,7 @@ export function makeOnboardingSampleOrder(): Order {
         course: 'ENTREE',
         isFired: false,
         firedAt: undefined,
+        _startedAt: receivedAt,
         items: [
           {
             id: ONBOARDING_SAMPLE_FIRST_ITEM_ID,
