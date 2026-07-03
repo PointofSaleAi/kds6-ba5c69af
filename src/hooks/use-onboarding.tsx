@@ -9,6 +9,7 @@ interface OnboardingContextValue {
   showCompletion: boolean;
   start: () => void;
   next: () => void;
+  prev: () => void;
   skip: () => void;
   finish: () => void;
   dismissCompletion: (choice: 'training' | 'done') => void;
@@ -63,6 +64,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     });
   }, [markSeen]);
 
+  const prev = useCallback(() => {
+    setStepIndex(i => Math.max(0, i - 1));
+  }, []);
+
   const dismissCompletion = useCallback((choice: 'training' | 'done') => {
     setShowCompletion(false);
     if (choice === 'training') {
@@ -84,13 +89,14 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     showCompletion,
     start,
     next,
+    prev,
     skip,
     finish,
     dismissCompletion,
     startIfFirstLogin,
     markSeen,
     hasBeenSeen,
-  }), [active, stepIndex, showCompletion, start, next, skip, finish, dismissCompletion, startIfFirstLogin, markSeen, hasBeenSeen]);
+  }), [active, stepIndex, showCompletion, start, next, prev, skip, finish, dismissCompletion, startIfFirstLogin, markSeen, hasBeenSeen]);
 
   return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
 }
