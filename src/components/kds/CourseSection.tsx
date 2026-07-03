@@ -370,8 +370,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 color: '#633806',
                 fontSize: '11px',
                 fontWeight: 500,
-                padding: '3px 10px',
+                padding: '3.5px 10px',
                 gap: '4px',
+                border: '1.5px solid #BA7517',
               }}
             >
               <Clock size={12} style={{ color: '#633806' }} />
