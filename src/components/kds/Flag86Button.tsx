@@ -321,6 +321,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
         pendingCount={pendingCount}
         subtext="FOH notified. Manager will handle pending orders."
         primaryLabel="86 it"
+        showQuantityAdjuster="below-subtext"
       />
     </>
   );
