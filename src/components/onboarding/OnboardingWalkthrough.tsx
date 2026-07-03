@@ -153,20 +153,29 @@ function TooltipCard({
         </div>
       </div>
       <p className="text-[13px] text-white/75 leading-relaxed mb-4">{step.body}</p>
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-between gap-2">
         <button
-          onClick={onSkip}
-          className="px-4 py-2 rounded-full text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10"
+          onClick={onPrev}
+          disabled={index === 0}
+          className="flex items-center gap-1 px-3 py-2 rounded-full text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none"
         >
-          Skip
+          <ArrowLeft size={14} /> Back
         </button>
-        <button
-          onClick={onNext}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold"
-          style={{ background: '#F59E0B', color: '#1a1a1a' }}
-        >
-          {isLast ? 'Finish' : 'Next'} <ArrowRight size={14} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onSkip}
+            className="px-4 py-2 rounded-full text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10"
+          >
+            Skip
+          </button>
+          <button
+            onClick={onNext}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold"
+            style={{ background: '#F59E0B', color: '#1a1a:1a' }}
+          >
+            {isLast ? 'Finish' : 'Next'} <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
