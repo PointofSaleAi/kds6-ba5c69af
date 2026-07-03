@@ -302,6 +302,7 @@ export function OnboardingWalkthrough() {
               index={stepIndex}
               total={totalSteps}
               onNext={next}
+              onPrev={prev}
               onSkip={skip}
             />
           )}
