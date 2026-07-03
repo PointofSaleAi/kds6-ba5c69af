@@ -29,11 +29,11 @@ export function makeOnboardingSampleOrder(): Order {
             category: 'Seafood',
             quantity: 1,
             modifiers: [
-              { type: 'add', text: 'Extra lemon' },
+              { type: 'extra', text: 'Extra lemon' },
             ],
             allergens: [
-              { type: 'FISH' as unknown as never, severity: 'severe' as unknown as never },
-            ] as never,
+              { type: 'shellfish', label: 'FISH', icon: '🐟' },
+            ],
             station: 'Grill',
           },
           {
