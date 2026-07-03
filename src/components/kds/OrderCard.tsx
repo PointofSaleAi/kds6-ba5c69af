@@ -911,7 +911,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   </>
                 ) : ticketHeaderLayout === 'kitchen' ? (
                   <>
-                    <div className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
+                    <div data-onboarding="ticket-orderno" className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
                       {order.orderNumber}
                     </div>
                     <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
@@ -925,7 +925,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                           {displayGuestName ? tperson(displayGuestName) : '\u00A0'}
                         </span>
                       </span>
-                      <div className="flex items-center gap-1.5 leading-none">
+                      <div data-onboarding="ticket-timer" className="flex items-center gap-1.5 leading-none">
                         {order.isRushed && (
                           <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
                         )}
