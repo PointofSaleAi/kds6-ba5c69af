@@ -89,13 +89,15 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     showCompletion,
     start,
     next,
+    prev,
     skip,
     finish,
     dismissCompletion,
     startIfFirstLogin,
     markSeen,
     hasBeenSeen,
-  }), [active, stepIndex, showCompletion, start, next, skip, finish, dismissCompletion, startIfFirstLogin, markSeen, hasBeenSeen]);
+   ,
+  }), [active, stepIndex, showCompletion, start, next, prev, skip, finish, dismissCompletion, startIfFirstLogin, markSeen, hasBeenSeen]);
 
   return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
 }
