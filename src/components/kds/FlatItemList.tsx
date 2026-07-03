@@ -245,7 +245,7 @@ function ItemTapRow({
                 deps={[item.name, displayMode, showSecondaryMenu, secondaryDir]}
                 primary={
                   <span
-                    className={`block font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
+                    className={`inline font-bold uppercase break-words ${item.isCancelled ? 'line-through text-text-muted' : isDone ? 'line-through text-text-primary' : 'text-text-primary'}`}
                     style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
                   >
                     {tp(item.name)}

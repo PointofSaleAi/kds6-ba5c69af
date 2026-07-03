@@ -23,34 +23,67 @@ export function TightWidthBox({
 }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const primaryRef = useRef<HTMLDivElement | null>(null);
-  const [width, setWidth] = useState<number | undefined>(undefined);
+  const [primaryLineWidth, setPrimaryLineWidth] = useState<number | undefined>(undefined);
 
   const measure = useCallback(() => {
-    if (!constrainSecondary) return;
     const el = primaryRef.current;
+    const wrapper = wrapperRef.current;
     if (!el) return;
+    const availableWidth = wrapper?.parentElement?.getBoundingClientRect().width ?? 0;
+    const previousWrapperWidth = wrapper?.style.width;
+    const previousWrapperMaxWidth = wrapper?.style.maxWidth;
+    const previousPrimaryWidth = el.style.width;
+    const previousPrimaryMaxWidth = el.style.maxWidth;
     try {
-      let max = 0;
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      let node = walker.nextNode();
-      while (node) {
-        const text = (node as Text).nodeValue ?? '';
-        if (text.trim().length > 0) {
-          const range = document.createRange();
-          range.selectNodeContents(node);
-          const rects = range.getClientRects();
-          for (let i = 0; i < rects.length; i++) {
-            if (rects[i].width > max) max = rects[i].width;
-          }
-          range.detach?.();
-        }
-        node = walker.nextNode();
+      if (wrapper) {
+        wrapper.style.width = 'max-content';
+        wrapper.style.maxWidth = 'none';
       }
-      if (max > 0) setWidth(Math.ceil(max));
+      el.style.width = 'max-content';
+      el.style.maxWidth = 'none';
+
+      const naturalWidth = Math.ceil(el.getBoundingClientRect().width);
+      const targetWidth = availableWidth > 0 && naturalWidth > availableWidth
+        ? (() => {
+          if (wrapper) {
+            wrapper.style.width = `${availableWidth}px`;
+            wrapper.style.maxWidth = '100%';
+          }
+          el.style.width = `${availableWidth}px`;
+          el.style.maxWidth = '100%';
+
+          let max = 0;
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+          let node = walker.nextNode();
+          while (node) {
+            const text = (node as Text).nodeValue ?? '';
+            if (text.trim().length > 0) {
+              const range = document.createRange();
+              range.selectNodeContents(node);
+              const rects = range.getClientRects();
+              for (let i = 0; i < rects.length; i++) {
+                if (rects[i].width > max) max = rects[i].width;
+              }
+              range.detach?.();
+            }
+            node = walker.nextNode();
+          }
+          return max > 0 ? Math.ceil(max) : naturalWidth;
+        })()
+        : naturalWidth;
+
+      setPrimaryLineWidth(targetWidth > 0 ? targetWidth : undefined);
     } catch {
       /* noop */
+    } finally {
+      if (wrapper) {
+        wrapper.style.width = previousWrapperWidth ?? '';
+        wrapper.style.maxWidth = previousWrapperMaxWidth ?? '';
+      }
+      el.style.width = previousPrimaryWidth;
+      el.style.maxWidth = previousPrimaryMaxWidth;
     }
-  }, [constrainSecondary]);
+  }, []);
 
   useLayoutEffect(() => {
     measure();
@@ -66,13 +99,28 @@ export function TightWidthBox({
   }, [measure, ...deps]);
 
   return (
-    <div ref={wrapperRef} className={className} style={{ minWidth: 0, ...style }}>
-      <div ref={primaryRef} style={{ width: 'max-content', maxWidth: '100%' }}>{primary}</div>
+    <div
+      ref={wrapperRef}
+      className={className}
+      style={{
+        minWidth: 0,
+        width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        ...style,
+      }}
+    >
+      <div
+        ref={primaryRef}
+        style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content', maxWidth: '100%' }}
+      >
+        {primary}
+      </div>
       {secondary && (
         <div
           style={
             constrainSecondary
-              ? { minWidth: width, width: 'max-content', maxWidth: '100%' }
+              ? { minWidth: primaryLineWidth, width: 'max-content', maxWidth: '100%' }
               : { maxWidth: '100%' }
           }
         >
