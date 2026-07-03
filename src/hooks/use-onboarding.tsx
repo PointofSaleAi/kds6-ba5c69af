@@ -9,6 +9,7 @@ interface OnboardingContextValue {
   showCompletion: boolean;
   start: () => void;
   next: () => void;
+  prev: () => void;
   skip: () => void;
   finish: () => void;
   dismissCompletion: (choice: 'training' | 'done') => void;
