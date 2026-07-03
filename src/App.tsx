@@ -62,8 +62,10 @@ const App = () => (
       <ActiveKDSViewProvider>
       <ActiveIdentityProvider>
       <OnboardingProvider>
+      <TrainingModeProvider>
       <TooltipProvider>
         <DockDragLayer>
+          <TrainingModeBar />
           <NotificationToastStack />
           <NotificationStationSync />
           <Toaster />
