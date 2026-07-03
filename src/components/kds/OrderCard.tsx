@@ -927,9 +927,19 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   </>
                 ) : ticketHeaderLayout === 'kitchen' ? (
                   <>
-                    <div data-onboarding="ticket-orderno" className="text-white font-black shrink-0" style={{ fontSize: 'var(--kds-order-num)', lineHeight: '0.75' }}>
-                      {order.orderNumber}
-                    </div>
+                    {(() => {
+                      const digits = String(order.orderNumber).length;
+                      const scale = digits >= 5 ? 0.5 : digits === 4 ? 0.62 : digits === 3 ? 0.75 : 1;
+                      return (
+                        <div
+                          data-onboarding="ticket-orderno"
+                          className="text-white font-black shrink-0"
+                          style={{ fontSize: `calc(var(--kds-order-num) * ${scale})`, lineHeight: '0.75' }}
+                        >
+                          {order.orderNumber}
+                        </div>
+                      );
+                    })()}
                     <div className="flex flex-col items-end justify-center min-w-0 ml-2" style={{ gap: '6px' }}>
                   <span className="flex items-center gap-1 text-[16px] leading-none font-medium text-white max-w-full">
                     <img src={PersonSimpleRunBold} alt="" width={14} height={14} className="invert opacity-90 shrink-0" />

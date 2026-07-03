@@ -1101,7 +1101,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   };
 
   return (
-    <div className={`fixed inset-0 flex bg-surface-bg ${cardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}>
+    <div
+      className={`fixed inset-0 flex bg-surface-bg ${cardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
+      style={{ top: 'var(--training-bar-h, 0px)' }}
+    >
       {/* Kitchen message flash notification */}
       <AnimatePresence>
         {messageFlash && (
