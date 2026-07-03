@@ -759,6 +759,7 @@ function CourseItemTapRow({
                   paddingRight: isolateModifierRows ? '8px' : '0px',
                   ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
                   ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
+                  ...(dimStyle || {}),
                 }}
               >
                 {nonServable.map((mod, idx) => (
