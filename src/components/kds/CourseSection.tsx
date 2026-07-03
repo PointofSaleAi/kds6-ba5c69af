@@ -592,8 +592,10 @@ function CourseItemTapRow({
     setManual86Open(true);
   }, { enabled: tappable, stopPropagation: true });
 
+  const onbAttr = item.id === 'onb-i-1' ? { 'data-onboarding': 'item-row' } : {};
   return (
     <div
+      {...onbAttr}
       className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
