@@ -33,6 +33,7 @@ function SoundToggle() {
 
   return (
     <button
+      data-onboarding="sound"
       onClick={toggleMute}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
@@ -45,6 +46,7 @@ function SoundToggle() {
 function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   return (
     <button
+      data-onboarding="language"
       onClick={onOpen}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
       aria-label="Change language"
@@ -101,7 +103,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           className="text-primary-foreground"
           showLock={false}
         />
-        <span className="text-primary-foreground font-bold">
+        <span data-onboarding="queue-count" className="text-primary-foreground font-bold">
           <span className="text-lg">{orderCount}</span>{' '}
           <span className="text-sm">{t.ordersInQueue}</span>
         </span>
@@ -121,6 +123,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                data-onboarding="filter"
                 onClick={onOpenCategoryFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
                 aria-label="Category filter"
@@ -137,6 +140,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                data-onboarding="revenue"
                 onClick={onOpenRevenueFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
                 aria-label="Revenue center filter"
