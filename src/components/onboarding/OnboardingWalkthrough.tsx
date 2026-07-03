@@ -141,14 +141,7 @@ function TooltipCard({
       className="fixed z-[10001] w-[340px] rounded-2xl shadow-2xl p-5"
       style={{ top, left, background: '#1F1F24', color: '#fff', border: '1px solid rgba(255,255,255,0.08)' }}
     >
-      <button
-        onClick={onSkip}
-        aria-label="Skip walkthrough"
-        className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10"
-      >
-        <X size={16} />
-      </button>
-      <div className="flex items-start gap-3 mb-2 pr-6">
+      <div className="flex items-start gap-3 mb-2">
         <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(245,158,11,0.15)' }}>
           <Icon size={18} className="text-amber-400" />
         </div>
