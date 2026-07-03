@@ -594,7 +594,8 @@ function CourseItemTapRow({
   }, { enabled: tappable, stopPropagation: true });
 
   const isOnboardingFirstItem = item.id === ONBOARDING_SAMPLE_FIRST_ITEM_ID;
-  const showOnboardingActionSet = legacyActions && isOnboardingFirstItem;
+  const isOnboardingSampleItem = typeof item.id === 'string' && item.id.startsWith('onb-i-');
+  const showOnboardingActionSet = legacyActions && isOnboardingSampleItem;
   const onbAttr = isOnboardingFirstItem ? { 'data-onboarding': 'item-row' } : {};
   return (
     <div
@@ -737,7 +738,7 @@ function CourseItemTapRow({
         {legacyActions && tappable && !is86Active && !show86Pill && (
           <div className="shrink-0 ml-1 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
             {(showOnboardingActionSet || (!isSeen && !isDone)) && (
-              <span {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-eye' } : {})}>
+              <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-eye' } : {})}>
                 <LegacyActionPill variant="seen" onClick={() => onAdvanceItem?.(item.id)} title="Mark Seen / In Progress" />
               </span>
             )}
@@ -745,12 +746,12 @@ function CourseItemTapRow({
               <LegacyActionPill variant="undo" onClick={() => onUndoItem?.(item.id)} title="Undo" />
             )}
             {(showOnboardingActionSet || (isSeen && !isDone)) && (
-              <span {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-bell' } : {})}>
+              <span {...(item.id === 'onb-i-2' ? { 'data-onboarding': 'item-bell' } : {})}>
                 <LegacyActionPill variant="bell" onClick={() => onAdvanceItem?.(item.id)} title="Mark Done" />
               </span>
             )}
             {(showOnboardingActionSet || isDone) && (
-              <span {...(isOnboardingFirstItem ? { 'data-onboarding': 'item-check' } : {})}>
+              <span {...(item.id === 'onb-i-3' ? { 'data-onboarding': 'item-check' } : {})}>
                 <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
               </span>
             )}
