@@ -27,32 +27,65 @@ export function TightWidthBox({
 
   const measure = useCallback(() => {
     const el = primaryRef.current;
+    const wrapper = wrapperRef.current;
     if (!el) return;
+    const availableWidth = wrapper?.parentElement?.getBoundingClientRect().width ?? 0;
+    const previousWrapperWidth = wrapper?.style.width;
+    const previousWrapperMaxWidth = wrapper?.style.maxWidth;
+    const previousPrimaryWidth = el.style.width;
+    const previousPrimaryMaxWidth = el.style.maxWidth;
     try {
-      let max = 0;
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      let node = walker.nextNode();
-      while (node) {
-        const text = (node as Text).nodeValue ?? '';
-        if (text.trim().length > 0) {
-          const range = document.createRange();
-          range.selectNodeContents(node);
-          const rects = range.getClientRects();
-          for (let i = 0; i < rects.length; i++) {
-            if (rects[i].width > max) max = rects[i].width;
-          }
-          range.detach?.();
-        }
-        node = walker.nextNode();
+      if (wrapper) {
+        wrapper.style.width = 'max-content';
+        wrapper.style.maxWidth = 'none';
       }
-      setPrimaryLineWidth(max > 0 ? Math.ceil(max) : undefined);
+      el.style.width = 'max-content';
+      el.style.maxWidth = 'none';
+
+      const naturalWidth = Math.ceil(el.getBoundingClientRect().width);
+      const targetWidth = availableWidth > 0 && naturalWidth > availableWidth
+        ? (() => {
+          if (wrapper) {
+            wrapper.style.width = `${availableWidth}px`;
+            wrapper.style.maxWidth = '100%';
+          }
+          el.style.width = `${availableWidth}px`;
+          el.style.maxWidth = '100%';
+
+          let max = 0;
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+          let node = walker.nextNode();
+          while (node) {
+            const text = (node as Text).nodeValue ?? '';
+            if (text.trim().length > 0) {
+              const range = document.createRange();
+              range.selectNodeContents(node);
+              const rects = range.getClientRects();
+              for (let i = 0; i < rects.length; i++) {
+                if (rects[i].width > max) max = rects[i].width;
+              }
+              range.detach?.();
+            }
+            node = walker.nextNode();
+          }
+          return max > 0 ? Math.ceil(max) : naturalWidth;
+        })()
+        : naturalWidth;
+
+      setPrimaryLineWidth(targetWidth > 0 ? targetWidth : undefined);
     } catch {
       /* noop */
+    } finally {
+      if (wrapper) {
+        wrapper.style.width = previousWrapperWidth ?? '';
+        wrapper.style.maxWidth = previousWrapperMaxWidth ?? '';
+      }
+      el.style.width = previousPrimaryWidth;
+      el.style.maxWidth = previousPrimaryMaxWidth;
     }
   }, []);
 
   useLayoutEffect(() => {
-    setPrimaryLineWidth(undefined);
     measure();
     let ro: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined' && wrapperRef.current?.parentElement) {
