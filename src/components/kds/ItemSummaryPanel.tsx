@@ -227,7 +227,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   return (
     <div data-onboarding="summary" className="w-[180px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
+      <div data-onboarding="summary-header" className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5 min-w-0">
           <DockDragHandle
             panel="summaryPanel"
