@@ -215,7 +215,7 @@ function CompletionCard({ onChoose }: { onChoose: (c: 'training' | 'done') => vo
 }
 
 export function OnboardingWalkthrough() {
-  const { active, stepIndex, totalSteps, next, skip, showCompletion, dismissCompletion } = useOnboarding();
+  const { active, stepIndex, totalSteps, next, prev, skip, showCompletion, dismissCompletion } = useOnboarding();
   const { orders, setOrders } = useOrderStore();
 
   // Inject / remove sample ticket while walkthrough is running.
