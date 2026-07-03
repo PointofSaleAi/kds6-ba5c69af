@@ -49,7 +49,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     markSeen();
   }, [markSeen]);
 
-  const skip = useCallback(() => { finish('skip'); }, [finish]);
+  const skip = useCallback(() => { finish(); }, [finish]);
 
   const next = useCallback(() => {
     setStepIndex(prev => {
