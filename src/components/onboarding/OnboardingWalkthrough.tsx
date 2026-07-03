@@ -29,7 +29,9 @@ const STEPS: Step[] = [
   { anchor: `${SAMPLE} [data-onboarding="item-eye"]`, title: 'Mark item seen', body: 'Tap the eye to mark just this item as seen.', icon: Eye, preferSide: 'left' },
   { anchor: `${SAMPLE} [data-onboarding="item-bell"]`, title: 'Mark item cooking', body: 'Tap the bell when the item is on the pass.', icon: Bell, preferSide: 'left' },
   { anchor: `${SAMPLE} [data-onboarding="item-check"]`, title: 'Mark item done', body: 'Tap the check when the item is out and served.', icon: CheckCircle2, preferSide: 'left' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Advance the whole ticket', body: 'One tap moves every item together: seen, then cooking, then remove from the queue.', icon: CheckCircle2, preferSide: 'top' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark ticket seen', body: 'First tap marks every item on the ticket as seen so the line knows it is acknowledged.', icon: Eye, preferSide: 'top' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark ticket in progress', body: 'Second tap moves the whole ticket to in progress, letting the team know cooking has started.', icon: Bell, preferSide: 'top' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark ticket done', body: 'Third tap marks the ticket done and removes it from the active queue.', icon: CheckCircle2, preferSide: 'top' },
 
   // Summary panel cues
   { anchor: '[data-onboarding="summary-header"]', title: 'Summary panel', body: 'A running list of everything still to cook, grouped by category.', icon: ListChecks, preferSide: 'left' },
