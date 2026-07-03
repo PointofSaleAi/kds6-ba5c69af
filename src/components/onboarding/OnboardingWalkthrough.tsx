@@ -58,19 +58,27 @@ function useAnchorRect(selector: string | null, dep: unknown): Rect | null {
   const [rect, setRect] = useState<Rect | null>(null);
   useLayoutEffect(() => {
     if (!selector) { setRect(null); return; }
-    let raf = 0;
+    let cancelled = false;
     const measure = () => {
+      if (cancelled) return;
       const el = document.querySelector(selector) as HTMLElement | null;
       if (!el) { setRect(null); return; }
       const r = el.getBoundingClientRect();
-      setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
+      setRect(prev => {
+        if (prev && prev.top === r.top && prev.left === r.left && prev.width === r.width && prev.height === r.height) return prev;
+        return { top: r.top, left: r.left, width: r.width, height: r.height };
+      });
     };
-    const tick = () => { measure(); raf = window.requestAnimationFrame(tick); };
-    tick();
+    measure();
+    // Re-measure a few times to catch late layout (fonts, images) without a hot RAF loop.
+    const t1 = window.setTimeout(measure, 60);
+    const t2 = window.setTimeout(measure, 250);
+    const t3 = window.setTimeout(measure, 700);
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
     return () => {
-      cancelAnimationFrame(raf);
+      cancelled = true;
+      window.clearTimeout(t1); window.clearTimeout(t2); window.clearTimeout(t3);
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', measure, true);
     };
