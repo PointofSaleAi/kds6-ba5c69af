@@ -341,7 +341,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
               <p className="text-[12px] text-text-muted">{t.allItemsCompleted}</p>
             </div>
           )}
-          {summary.map((cat) => {
+          {summary.map((cat, catIdx) => {
             const isUncategorized = cat.category === ('Uncategorized' as ProductCategory);
             const isStation = !!stationCourse && cat.category === stationCourse;
             const isMuted = false;
