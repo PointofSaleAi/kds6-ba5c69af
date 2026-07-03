@@ -404,7 +404,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 {/* Items */}
                 {isExpanded && (
                   <div className="pl-1.5 pr-2 py-0.5">
-                    {displayItems.map((item) => {
+                    {displayItems.map((item, itemIdx) => {
                       // Highlight only when actually overtime, never by quantity.
                       const tierClass = item.isOvertime
                         ? 'bg-destructive/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-destructive animate-pulse'
@@ -412,9 +412,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                       const countColor = item.isOvertime ? 'text-destructive' : 'text-text-primary';
                       const isAssigning = assigningItem === item.name;
                       const isSelected = selectedItems?.has(item.name) ?? false;
+                      const isFirstProduct = catIdx === 0 && itemIdx === 0;
 
                       return (
-                        <div key={item.name} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? '-ml-1.5 -mr-2 pl-1.5 pr-2' : ''}`}>
+                        <div key={item.name} {...(isFirstProduct ? { 'data-onboarding': 'summary-product' } : {})} className={`relative border-b border-border/30 last:border-b-0 ${isSelected ? '' : tierClass} ${item.hasNew ? '-ml-1.5 -mr-2 pl-1.5 pr-2' : ''}`}>
                           <div
                             className={`flex items-center justify-between ${isPortrait ? 'py-[1px] gap-1' : 'py-[2px]'} cursor-pointer`}
                             onClick={(e) => {
