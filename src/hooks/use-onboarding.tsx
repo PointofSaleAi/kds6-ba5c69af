@@ -10,7 +10,7 @@ interface OnboardingContextValue {
   start: () => void;
   next: () => void;
   skip: () => void;
-  finish: (mode?: 'complete' | 'skip') => void;
+  finish: () => void;
   dismissCompletion: (choice: 'training' | 'done') => void;
   startIfFirstLogin: () => void;
   markSeen: () => void;
