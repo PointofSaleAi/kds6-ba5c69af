@@ -1079,6 +1079,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return <OrderCardV5 order={v5Order} onBump={handleBump} />;
     }
+    const isTrainingSample = displayOrder.id.startsWith('training-sample-');
     return (
       <OrderCard
         order={displayOrder}
@@ -1095,10 +1096,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         isAcknowledgmentPending={isAcknowledgmentPending}
         onBumpBlocked={handleBumpBlocked}
         compactRows={opts?.compactRows}
-        legacyActions={legacyActions || onboardingActive}
+        layoutOverride={isTrainingSample ? 'standard' : undefined}
+        legacyActions={legacyActions || onboardingActive || isTrainingSample}
       />
     );
   };
+
 
   return (
     <div
