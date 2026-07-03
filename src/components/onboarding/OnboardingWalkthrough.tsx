@@ -250,7 +250,7 @@ export function OnboardingWalkthrough() {
       {active && (
         <>
           {/* Overlay with a cut-out via 4 rectangles so spotlight stays interactive-visual */}
-          <div className="fixed inset-0 z-[9998] pointer-events-auto" onClick={skip} aria-hidden="true">
+          <div className="fixed inset-0 z-[9998] pointer-events-auto" aria-hidden="true">
             {spotlight ? (
               <svg width="100%" height="100%" style={{ display: 'block' }}>
                 <defs>
