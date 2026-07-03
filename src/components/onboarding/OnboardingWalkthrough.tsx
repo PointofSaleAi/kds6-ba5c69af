@@ -6,11 +6,13 @@ import { makeOnboardingSampleOrder, ONBOARDING_SAMPLE_ORDER_ID } from '@/data/on
 
 type ArrowSide = 'top' | 'bottom' | 'left' | 'right';
 
+type IconType = React.ComponentType<{ size?: number | string; className?: string }>;
+
 interface Step {
   anchor: string; // css selector
   title: string;
   body: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: IconType;
   preferSide?: ArrowSide;
 }
 
