@@ -1,4 +1,4 @@
-import { ShoppingBag, Sparkles, AlertTriangle } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, GraduationCap } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
