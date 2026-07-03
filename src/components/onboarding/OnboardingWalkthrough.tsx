@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Eye, Bell, CheckCircle2, ListChecks, LayoutGrid, GraduationCap, AlertTriangle, Tag, Clock, Hash, MessageSquare, Utensils } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Eye, Bell, CheckCircle2, ListChecks, LayoutGrid, GraduationCap, AlertTriangle, Tag, Clock, Hash, MessageSquare, Utensils } from 'lucide-react';
 import { useOnboarding } from '@/hooks/use-onboarding';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { makeOnboardingSampleOrder, ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
