@@ -935,7 +935,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                   </>
                 ) : (
                   <>
-                    <div className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1 truncate">
+                    <div data-onboarding="ticket-orderno" className="text-[28px] font-black text-white leading-tight flex items-center min-w-0 flex-1 truncate">
                       {displayGuestName ? tperson(displayGuestName) : order.orderNumber}
                     </div>
                     <div className="flex flex-col items-end justify-between self-stretch gap-1.5 shrink-0 min-w-0 max-w-[55%]">
@@ -946,7 +946,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                       <span className="text-[16px] font-semibold text-white truncate max-w-full">
                         {order.orderNumber}
                       </span>
-                      <div className="flex items-center gap-1.5 mb-0.5">
+                      <div data-onboarding="ticket-timer" className="flex items-center gap-1.5 mb-0.5">
                         {order.isRushed && (
                           <span className="text-[10px] font-medium text-destructive bg-white rounded-full px-2 py-0.5">{tl('RUSH')}</span>
                         )}
