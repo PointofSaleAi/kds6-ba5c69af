@@ -49,7 +49,7 @@ export function TrainingModeProvider({ children }: { children: ReactNode }) {
     if (!active) return;
     setOrders((current) => {
       const kept = current.filter((o) => !isTrainingSampleOrder(o));
-      return [...makeTrainingSampleOrders(), ...kept.filter(() => false)];
+      return [...makeTrainingSampleOrders(), ...kept];
     });
   }, [active, setOrders]);
 
