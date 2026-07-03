@@ -20,6 +20,8 @@ import { DockLayoutProvider } from "@/hooks/use-dock-layout";
 import { ActiveKDSViewProvider } from "@/hooks/use-active-kds-view";
 import { ActiveIdentityProvider } from "@/hooks/use-active-identity";
 import { OnboardingProvider } from "@/hooks/use-onboarding";
+import { TrainingModeProvider } from "@/hooks/use-training-mode";
+import { TrainingModeBar } from "@/components/kds/TrainingModeBar";
 import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
