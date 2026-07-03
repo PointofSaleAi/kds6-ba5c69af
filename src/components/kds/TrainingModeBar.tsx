@@ -7,6 +7,17 @@ const DARK_TEAL = '#06302D';
 
 export function TrainingModeBar() {
   const { active, exit, reload } = useTrainingMode();
+
+  // Push the rest of the UI down while the bar is visible.
+  useEffect(() => {
+    if (!active) return;
+    const prev = document.body.style.paddingTop;
+    document.body.style.paddingTop = '44px';
+    return () => {
+      document.body.style.paddingTop = prev;
+    };
+  }, [active]);
+
   if (!active) return null;
 
   return (
