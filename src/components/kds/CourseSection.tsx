@@ -376,7 +376,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
               }}
             >
               <Clock size={12} style={{ color: '#633806' }} />
-              <span>{(t.preparingAt as string).toLowerCase()} {firingAtLabel.toLowerCase()}</span>
+              <span>{firingAtLabel.toLowerCase()}</span>
             </span>
           )}
         </div>
