@@ -184,8 +184,7 @@ function ItemTapRow({
   }, { stopPropagation: true });
 
   const isOnboardingFirstItem = item.id === ONBOARDING_SAMPLE_FIRST_ITEM_ID;
-  const isOnboardingSampleItem = typeof item.id === 'string' && item.id.startsWith('onb-i-');
-  const showOnboardingActionSet = legacyActions && isOnboardingSampleItem;
+  const showOnboardingActionSet = false;
   const onbAttr = isOnboardingFirstItem ? { 'data-onboarding': 'item-row' } : {};
   return (
     <div

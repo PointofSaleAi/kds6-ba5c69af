@@ -106,7 +106,15 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const isCompactLayout = resolvedTicketLayout === 'compact';
   const innerLayoutMode: 'standard' | 'compact' = resolvedTicketLayout === 'compact' ? 'compact' : 'standard';
   const statusColor = getStatusForElapsed(liveElapsed);
-  const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(new Map());
+  const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(() => {
+    if (order.id === 'onboarding-sample') {
+      return new Map<string, ItemStatus>([
+        ['onb-i-2', 'preparing'],
+        ['onb-i-3', 'done'],
+      ]);
+    }
+    return new Map();
+  });
   const [headerOnlyModalOpen, setHeaderOnlyModalOpen] = useState(false);
   const effectiveHeaderOnly = isHeaderOnly;
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());
