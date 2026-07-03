@@ -213,28 +213,19 @@ export function OnboardingWalkthrough() {
   const { orders, setOrders } = useOrderStore();
 
   // Inject / remove sample ticket while walkthrough is running.
-  const injectedRef = useRef(false);
+  // Note: no unmount cleanup effect — React StrictMode's double-mount would
+  // then remove the just-injected sample and leave it stripped forever.
   useEffect(() => {
     const shouldInject = active || showCompletion; // keep sample until completion prompt dismissed
     const has = orders.some(o => o.id === ONBOARDING_SAMPLE_ORDER_ID);
-    if (shouldInject && !has && !injectedRef.current) {
-      injectedRef.current = true;
-      setOrders(prev => [makeOnboardingSampleOrder(), ...prev]);
+    if (shouldInject && !has) {
+      setOrders(prev => (prev.some(o => o.id === ONBOARDING_SAMPLE_ORDER_ID) ? prev : [makeOnboardingSampleOrder(), ...prev]));
     }
     if (!shouldInject && has) {
-      injectedRef.current = false;
       setOrders(prev => prev.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, showCompletion]);
-
-  useEffect(() => {
-    return () => {
-      // Cleanup on unmount
-      setOrders(prev => prev.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [active, showCompletion, orders]);
 
   const step = active ? STEPS[Math.min(stepIndex, STEPS.length - 1)] : null;
   const rect = useAnchorRect(step ? step.anchor : null, stepIndex);
