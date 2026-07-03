@@ -171,7 +171,7 @@ function TooltipCard({
           <button
             onClick={onNext}
             className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold"
-            style={{ background: '#F59E0B', color: '#1a1a:1a' }}
+            style={{ background: '#F59E0B', color: '#1a1a1a' }}
           >
             {isLast ? 'Finish' : 'Next'} <ArrowRight size={14} />
           </button>
