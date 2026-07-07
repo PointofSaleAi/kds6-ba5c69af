@@ -21,7 +21,7 @@ export interface RefRecipe {
   video?: { url: string; duration: string };
 }
 
-const DEFAULT: RefRecipe = {
+export const DEFAULT: RefRecipe = {
   yields: ['1 plate', '2 plates'],
   ingredients: [
     { name: 'Main protein', qty: '1 portion', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=120&h=120&fit=crop' },
