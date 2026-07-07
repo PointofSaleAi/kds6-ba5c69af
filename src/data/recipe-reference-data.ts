@@ -41,7 +41,7 @@ const DEFAULT: RefRecipe = {
   video: { url: '', duration: '1:30' },
 };
 
-const RECIPES: Record<string, RefRecipe> = {
+export const RECIPES: Record<string, RefRecipe> = {
   burger: {
     yields: ['1 burger', '2 burgers', '4 burgers'],
     ingredients: [
