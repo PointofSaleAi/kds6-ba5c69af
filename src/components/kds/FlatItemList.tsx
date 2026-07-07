@@ -419,6 +419,13 @@ function ItemTapRow({
         primaryLabel="Request 86"
         showQuantityAdjuster="below-title"
       />
+      {legacyActions && (
+        <RecipeReferenceModal
+          product={recipeOpen ? item : null}
+          onClose={() => setRecipeOpen(false)}
+          variant="default"
+        />
+      )}
     </div>
   );
 }
