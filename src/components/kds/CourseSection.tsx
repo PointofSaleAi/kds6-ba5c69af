@@ -856,6 +856,7 @@ function CourseItemTapRow({
       {legacyActions && (
         <RecipeReferenceModal
           product={recipeOpen ? item : null}
+          order={order}
           onClose={() => setRecipeOpen(false)}
           variant="default"
         />
