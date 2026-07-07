@@ -86,6 +86,13 @@ export function TightWidthBox({
   }, []);
 
   useLayoutEffect(() => {
+    if (!secondary) {
+      // No secondary block: don't tighten primary — let it flow to the
+      // available width so product names use the full row instead of
+      // wrapping character-by-character.
+      setPrimaryLineWidth(undefined);
+      return;
+    }
     measure();
     let ro: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined' && wrapperRef.current?.parentElement) {
@@ -96,7 +103,8 @@ export function TightWidthBox({
     fonts?.ready?.then(() => measure());
     return () => ro?.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [measure, ...deps]);
+  }, [measure, secondary, ...deps]);
+
 
   return (
     <div
@@ -104,7 +112,7 @@ export function TightWidthBox({
       className={className}
       style={{
         minWidth: 0,
-        width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content',
+        width: primaryLineWidth ? `${primaryLineWidth}px` : (secondary ? 'max-content' : '100%'),
         maxWidth: '100%',
         alignSelf: 'flex-start',
         ...style,
@@ -112,7 +120,7 @@ export function TightWidthBox({
     >
       <div
         ref={primaryRef}
-        style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content', maxWidth: '100%' }}
+        style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : (secondary ? 'max-content' : '100%'), maxWidth: '100%' }}
       >
         {primary}
       </div>
@@ -127,6 +135,7 @@ export function TightWidthBox({
           {secondary}
         </div>
       )}
+
     </div>
   );
 }
