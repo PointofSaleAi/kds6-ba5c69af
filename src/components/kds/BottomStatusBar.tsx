@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2 } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Ban } from 'lucide-react';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
@@ -8,6 +8,9 @@ import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { DockDragHandle } from './DockDragHandle';
+import { EightySixSheet, type EightySixedItem } from './EightySixSheet';
+import { useToast } from '@/hooks/use-toast';
+
 
 
 export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
@@ -60,8 +63,62 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const { isPortrait } = usePortrait();
+  const { toast } = useToast();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+
+  // 86 Items state
+  const [eightySixOpen, setEightySixOpen] = useState(false);
+  const [eightySixedItems, setEightySixedItems] = useState<EightySixedItem[]>([]);
+
+  const handleEightySixItem = useCallback(
+    (item: { name: string; category: string; snoozeDuration: string }) => {
+      const durations: Record<string, number | null> = {
+        '15min': 15 * 60 * 1000,
+        '1hr': 60 * 60 * 1000,
+        'end_of_shift': 8 * 60 * 60 * 1000,
+        'indefinite': null,
+      };
+      const ms = durations[item.snoozeDuration];
+      const newItem: EightySixedItem = {
+        id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
+        name: item.name,
+        category: item.category,
+        reason: 'Out of Stock',
+        snoozedAt: new Date(),
+        snoozeEndTime: ms ? new Date(Date.now() + ms) : null,
+      };
+      setEightySixedItems(prev => [...prev, newItem]);
+      toast({ title: "Item 86'd", description: `${item.name} marked as unavailable` });
+    },
+    [toast],
+  );
+
+  const handleRestoreItem = useCallback((itemId: string) => {
+    setEightySixedItems(prev => prev.filter(i => i.id !== itemId));
+    toast({ title: 'Item Restored', description: 'Item is now available again' });
+  }, [toast]);
+
+  const handleScheduleRestore = useCallback((itemId: string, restoreTime: Date) => {
+    setEightySixedItems(prev => prev.map(i => i.id === itemId ? { ...i, scheduledRestoreTime: restoreTime } : i));
+    toast({
+      title: 'Restore Scheduled',
+      description: `Item will be restored at ${restoreTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`,
+    });
+  }, [toast]);
+
+  // Auto-restore when scheduled time reached
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setEightySixedItems(prev => {
+        const stillActive = prev.filter(i => !(i.scheduledRestoreTime && i.scheduledRestoreTime <= now));
+        return stillActive.length === prev.length ? prev : stillActive;
+      });
+    }, 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
 
   const now = new Date();
   const timeStr = formatTimeForKDS(now, tfmt);
@@ -94,7 +151,9 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   ];
 
   return (
+    <>
     <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10 gap-2">
+
       <div className="flex items-center gap-2 shrink-0">
         <DockDragHandle
           panel="bottomBar"
@@ -151,6 +210,34 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue center filter'}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        {/* 86 Items */}
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                data-onboarding="eighty-six"
+                onClick={() => setEightySixOpen(true)}
+                className={`relative flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
+                  eightySixedItems.length > 0
+                    ? 'bg-[hsl(0,84%,60%)]/30 hover:bg-[hsl(0,84%,60%)]/45 text-[hsl(0,84%,75%)]'
+                    : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
+                }`}
+                aria-label="86 items"
+              >
+                <Ban size={15} />
+                {eightySixedItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[hsl(0,84%,60%)] text-white text-[10px] font-bold flex items-center justify-center">
+                    {eightySixedItems.length}
+                  </span>
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top"><p>86 Items</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+
 
         {/* Sort control */}
         <div className="relative" ref={sortRef}>
@@ -247,5 +334,15 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         </span>
       </div>
     </div>
+    <EightySixSheet
+      open={eightySixOpen}
+      onOpenChange={setEightySixOpen}
+      eightySixedItems={eightySixedItems}
+      onRestoreItem={handleRestoreItem}
+      onScheduleRestore={handleScheduleRestore}
+      onEightySixItem={handleEightySixItem}
+    />
+    </>
   );
 }
+
