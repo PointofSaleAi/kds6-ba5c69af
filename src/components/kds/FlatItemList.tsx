@@ -346,7 +346,7 @@ function ItemTapRow({
                 {...(item.id === 'onb-i-2' ? { 'data-onboarding': 'item-modifier' } : {})}
                 className={isDone ? 'line-through' : ''}
                 style={{
-                  marginTop: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
+                  marginTop: '-2px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
