@@ -774,7 +774,7 @@ function CourseItemTapRow({
                 {...(item.id === 'onb-i-2' ? { 'data-onboarding': 'item-modifier' } : {})}
                 className={isDone ? 'line-through' : ''}
                 style={{
-                  marginTop: '-2px',
+                  marginTop: legacyActions ? '-8px' : '-2px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
