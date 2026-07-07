@@ -103,7 +103,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode, legacyActions }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode, legacyActions, order }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang, tl } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
