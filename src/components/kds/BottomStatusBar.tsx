@@ -334,5 +334,15 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         </span>
       </div>
     </div>
+    <EightySixSheet
+      open={eightySixOpen}
+      onOpenChange={setEightySixOpen}
+      eightySixedItems={eightySixedItems}
+      onRestoreItem={handleRestoreItem}
+      onScheduleRestore={handleScheduleRestore}
+      onEightySixItem={handleEightySixItem}
+    />
+    </>
   );
 }
+
