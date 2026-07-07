@@ -80,8 +80,14 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   useEffect(() => {
     if (!product) return;
     setVideoMode(false);
-    setYieldIdx(0);
     setYieldOpen(false);
+    // Default yield to the option whose leading quantity matches the ticket quantity.
+    const targetQty = product.quantity;
+    const idx = getRecipeReference(product.name).yields.findIndex((y) => {
+      const match = y.match(/^(\d+)/);
+      return match ? parseInt(match[1], 10) === targetQty : false;
+    });
+    setYieldIdx(idx >= 0 ? idx : 0);
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
