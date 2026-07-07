@@ -126,6 +126,7 @@ function ItemTapRow({
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
   const [manual86Open, setManual86Open] = useState(false);
+  const [recipeOpen, setRecipeOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
