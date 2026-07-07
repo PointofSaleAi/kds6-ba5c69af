@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CourseGroup, OrderItem } from '@/types/kds';
+import type { CourseGroup, OrderItem, Order } from '@/types/kds';
 import { Languages, ChevronRight } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
