@@ -76,11 +76,20 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   const [videoMode, setVideoMode] = useState(false);
   const [yieldIdx, setYieldIdx] = useState(0);
   const [yieldOpen, setYieldOpen] = useState(false);
+  const closeRef = useRef(onClose);
+
+  useEffect(() => {
+    closeRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!product) return;
     setVideoMode(false);
     setYieldOpen(false);
+  }, [product?.id]);
+
+  useEffect(() => {
+    if (!product) return;
     const base = getRecipeReference(product.name);
     const first = base.yields[0] ?? '1 plate';
     const m0 = first.match(/^\d+\s+(.+)$/);
@@ -95,10 +104,13 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
       return m ? parseInt(m[1], 10) === product.quantity : false;
     });
     setYieldIdx(idx >= 0 ? idx : 0);
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+  }, [product?.id, product?.name, product?.quantity]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeRef.current(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [product, onClose]);
+  }, []);
 
   if (!product) return null;
 
