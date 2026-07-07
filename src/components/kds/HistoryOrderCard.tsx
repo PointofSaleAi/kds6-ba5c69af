@@ -176,7 +176,7 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
             </span>
             <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
               {item.allergens.map((a) => (
-                <AllergenBadge key={a.type} allergen={a} variant="item" />
+                <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
               ))}
             </div>
           </div>

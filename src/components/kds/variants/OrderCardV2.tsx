@@ -87,7 +87,7 @@ function V2ProductRow({
           {showDetails && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-0.5">
               {product.allergens.map((a) => (
-                <AllergenBadge key={a.type} allergen={a} variant="item" />
+                <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
               ))}
             </div>
           )}
