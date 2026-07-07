@@ -1,0 +1,42 @@
+[
+  {
+    "product": "default",
+    "path": "/dev-server/remotion/output/default.mp4",
+    "duration": "1:30"
+  },
+  {
+    "product": "burger",
+    "path": "/dev-server/remotion/output/burger.mp4",
+    "duration": "1:24"
+  },
+  {
+    "product": "steak",
+    "path": "/dev-server/remotion/output/steak.mp4",
+    "duration": "2:10"
+  },
+  {
+    "product": "salad",
+    "path": "/dev-server/remotion/output/salad.mp4",
+    "duration": "1:05"
+  },
+  {
+    "product": "pasta",
+    "path": "/dev-server/remotion/output/pasta.mp4",
+    "duration": "1:48"
+  },
+  {
+    "product": "pizza",
+    "path": "/dev-server/remotion/output/pizza.mp4",
+    "duration": "1:35"
+  },
+  {
+    "product": "fish",
+    "path": "/dev-server/remotion/output/fish.mp4",
+    "duration": "1:40"
+  },
+  {
+    "product": "chicken",
+    "path": "/dev-server/remotion/output/chicken.mp4",
+    "duration": "2:00"
+  }
+]
