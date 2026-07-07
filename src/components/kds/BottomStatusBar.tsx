@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Ban } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Package } from 'lucide-react';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
