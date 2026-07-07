@@ -35,6 +35,7 @@ const DEFAULT: RefRecipe = {
     { title: 'Rest and slice', instruction: 'Rest **one minute** before slicing on the bias.', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=260&fit=crop' },
     { title: 'Plate and finish', instruction: 'Drizzle **sauce**, add garnish, wipe rim.', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=260&fit=crop' },
   ],
+  video: { url: '', duration: '1:30' },
 };
 
 const RECIPES: Record<string, RefRecipe> = {
