@@ -83,7 +83,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
     setYieldOpen(false);
     // Default yield to the option whose leading quantity matches the ticket quantity.
     const targetQty = product.quantity;
-    const idx = recipe.yields.findIndex((y) => {
+    const idx = getRecipeReference(product.name).yields.findIndex((y) => {
       const match = y.match(/^(\d+)/);
       return match ? parseInt(match[1], 10) === targetQty : false;
     });
@@ -91,7 +91,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [product, onClose, recipe.yields]);
+  }, [product, onClose]);
 
   if (!product) return null;
 
