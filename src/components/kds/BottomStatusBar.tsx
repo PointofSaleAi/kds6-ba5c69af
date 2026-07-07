@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2 } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Ban } from 'lucide-react';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
@@ -8,6 +8,9 @@ import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { DockDragHandle } from './DockDragHandle';
+import { EightySixSheet, type EightySixedItem } from './EightySixSheet';
+import { useToast } from '@/hooks/use-toast';
+
 
 
 export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
