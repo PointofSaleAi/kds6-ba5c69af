@@ -1058,6 +1058,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                       seenOrderIndex={seenOrderIndex}
                       ticketLayoutMode={innerLayoutMode}
                       legacyActions={legacyActions}
+                      order={order}
                     />
                   );
                 })
@@ -1079,6 +1080,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 onDismissItem={handleDismissItem}
                 ticketLayoutMode={innerLayoutMode}
                 legacyActions={legacyActions}
+                order={order}
               />
             )}
           </div>
