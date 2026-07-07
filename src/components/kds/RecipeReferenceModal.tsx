@@ -269,7 +269,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
 
         {/* MODIFIER NOTE STRIP */}
         {modifierNote && (
-          <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px ${S.pad - 8}px` }}>
+          <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px 4px` }}>
             <span
               className="inline-flex items-center rounded-full"
               style={{ padding: '3px 10px', background: C.brandRed, color: '#FFFFFF', fontSize: 12, fontWeight: 600 }}
