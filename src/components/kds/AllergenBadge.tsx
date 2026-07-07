@@ -23,9 +23,11 @@ interface AllergenBadgeProps {
   allergen: Allergen;
   /** 'order' = prominent warning at top; 'item' = subtle inline; 'expo-item' = smaller inline for expo */
   variant?: 'order' | 'item' | 'expo-item';
+  /** Optional suffix added after the translated allergen label (e.g. "allergy") */
+  suffix?: string;
 }
 
-export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps) {
+export function AllergenBadge({ allergen, variant = 'item', suffix }: AllergenBadgeProps) {
   const { ta } = useLanguage();
   const color = getColor(allergen.type);
 
@@ -41,6 +43,7 @@ export function AllergenBadge({ allergen, variant = 'item' }: AllergenBadgeProps
       style={sizeStyle}
     >
       {ta(allergen.label)}
+      {suffix && ` ${suffix}`}
     </span>
   );
 }
