@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Play, ChevronDown, ArrowLeft, Rewind, Volume2, Maximize2 } from 'lucide-react';
+import { X, Play, Pause, ChevronDown, ArrowLeft, Rewind, Volume2, VolumeX, Maximize2 } from 'lucide-react';
 import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
