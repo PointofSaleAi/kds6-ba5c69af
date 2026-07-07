@@ -38,7 +38,7 @@ export const DEFAULT: RefRecipe = {
     { title: 'Rest and slice', instruction: 'Rest **one minute** before slicing on the bias.', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=260&fit=crop' },
     { title: 'Plate and finish', instruction: 'Drizzle **sauce**, add garnish, wipe rim.', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=260&fit=crop' },
   ],
-  video: { url: '', duration: '1:30' },
+  video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/default.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL2RlZmF1bHQubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MzQzNDE2NywiZXhwIjoyMDk4Nzk0MTY3fQ.aa_wSAT_1Jeuy41Y1CaU0xb967UsWctw-VF2qUI2Wm0', duration: '1:30' },
 };
 
 export const RECIPES: Record<string, RefRecipe> = {
@@ -62,7 +62,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Build burger', instruction: 'Bottom bun, **sauce**, lettuce, tomato, patty, top bun.', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=260&fit=crop' },
       { title: 'Pass to expo', instruction: 'Skewer through crown, plate with **fries and pickle**, call to expo.', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '1:24' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/burger.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL2J1cmdlci5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzgzNDM0MTY4LCJleHAiOjIwOTg3OTQxNjh9.1NASD7FJuS1C0cq52RZGB4WBz1Wb8d03WE2X8SiUWqw', duration: '1:24' },
   },
   steak: {
     yields: ['1 plate', '2 plates'],
@@ -82,7 +82,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Check temp', instruction: 'Probe center: **52C rare, 55C med-rare, 60C medium**. Pull 2C below target.', image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=260&fit=crop' },
       { title: 'Rest and slice', instruction: 'Rest **5 min** on rack, then slice against the grain and finishing salt.', image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '2:10' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/steak.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL3N0ZWFrLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODM0MzQxNjksImV4cCI6MjA5ODc5NDE2OX0.BmNvZb5AKAO89QOmnn5y7frX2VPYu85-8VFn-bkgFO8', duration: '2:10' },
   },
   salad: {
     yields: ['1 bowl', '2 bowls', 'family style'],
@@ -103,7 +103,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Plate high', instruction: 'Pile into chilled bowl **tall and airy**, do not press down.', image: 'https://images.unsplash.com/photo-1622205313162-be1d5712a43f?w=400&h=260&fit=crop' },
       { title: 'Finish', instruction: 'Shave **parmesan** over the top table-side or at pass, crack pepper.', image: 'https://images.unsplash.com/photo-1552767059-ce182ead6c1b?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '1:05' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/salad.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL3NhbGFkLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODM0MzQxNzAsImV4cCI6MjA5ODc5NDE3MH0._dDUNI_kC7_0flFXv3R9rGKgWcEmOo_9yxj3_lKGhOg', duration: '1:05' },
   },
   pasta: {
     yields: ['1 plate', '2 plates', '4 plates'],
@@ -124,7 +124,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Mount off heat', instruction: 'Pull from heat, add **butter and parmigiano**, toss to emulsify glossy.', image: 'https://images.unsplash.com/photo-1552767059-ce182ead6c1b?w=400&h=260&fit=crop' },
       { title: 'Plate and finish', instruction: 'Twist into **nest** with tongs, top with more parmigiano, drizzle EVOO.', image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '1:48' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/pasta.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL3Bhc3RhLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODM0MzQxNzEsImV4cCI6MjA5ODc5NDE3MX0.6vXp4cInDySujsdnNptzpX5DROiJGji3UtTtwxigrGI', duration: '1:48' },
   },
   pizza: {
     yields: ['1 pizza', '2 pizzas'],
@@ -145,7 +145,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Finish out of oven', instruction: 'Top with **fresh basil** and drizzle EVOO immediately.', image: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&h=260&fit=crop' },
       { title: 'Slice and serve', instruction: 'Cut into **8 slices** on wooden board, serve within 60 seconds.', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '1:35' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/pizza.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL3BpenphLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODM0MzQxNzIsImV4cCI6MjA5ODc5NDE3Mn0.Qb0xfMU9l5CuYxhoE8kXSQ0T3IP7c4GrmpeJ1wKt8W0', duration: '1:35' },
   },
   fish: {
     yields: ['1 plate', '2 plates'],
@@ -165,7 +165,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Rest briefly', instruction: 'Rest **60 seconds** on warm plate, do not stack.', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=260&fit=crop' },
       { title: 'Plate skin-up', instruction: 'Plate **skin-side up** over puree, muslin-wrapped lemon to the side.', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '1:40' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/fish.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL2Zpc2gubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MzQzNDE3MiwiZXhwIjoyMDk4Nzk0MTcyfQ.KDsA5UnnBw4EhDvScp2mOlDPiNlfoa8xcufMZZN8C_c', duration: '1:40' },
   },
   chicken: {
     yields: ['1 plate', '2 plates'],
@@ -185,7 +185,7 @@ export const RECIPES: Record<string, RefRecipe> = {
       { title: 'Rest', instruction: 'Rest on rack **3 min** so juices redistribute.', image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=260&fit=crop' },
       { title: 'Slice and plate', instruction: 'Slice on the **bias**, fan over starch, spoon pan jus around plate.', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=260&fit=crop' },
     ],
-    video: { url: '', duration: '2:00' },
+    video: { url: 'https://fqfophupmpeopmfmgkkv.supabase.co/storage/v1/object/sign/recipe-videos/chicken.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYmY1MzZjZi05OTU3LTQ0YzgtYjViZS05OGEwNDMwNWMxYTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNpcGUtdmlkZW9zL2NoaWNrZW4ubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MzQzNDE3MywiZXhwIjoyMDk4Nzk0MTczfQ.mSrO7P9maaFVRQmesEV3p6gm1dq9D1rmhroTNk68pgw', duration: '2:00' },
   },
 };
 
