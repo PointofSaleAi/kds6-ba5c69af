@@ -17,7 +17,7 @@ export function OrderAllergenStrip({ order, compact }: OrderAllergenStripProps) 
       className={`flex flex-wrap items-center border-t border-border/40 ${compact ? 'px-2 py-0.5 gap-0.5' : 'px-2 py-1 gap-1'}`}
     >
       {unique.map(a => (
-        <AllergenBadge key={a.type} allergen={a} variant={compact ? 'item' : 'order'} />
+        <AllergenBadge key={a.type} allergen={a} variant={compact ? 'item' : 'order'} suffix="allergy" />
       ))}
     </div>
   );

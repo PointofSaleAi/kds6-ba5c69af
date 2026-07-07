@@ -80,7 +80,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
               {product.name}
             </span>
             {showDetails && product.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} variant="item" />
+              <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
             ))}
           </div>
           {showDetails && product.modifiers.length > 0 && (

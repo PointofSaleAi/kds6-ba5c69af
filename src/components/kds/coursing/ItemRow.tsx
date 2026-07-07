@@ -29,7 +29,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
                 {tp(item.name)}
               </span>
               {item.allergens.map((a) => (
-                <AllergenBadge key={a.type} allergen={a} variant="item" />
+                <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
               ))}
             </div>
             {displayMode === 'dual' && showSecondaryMenu && (
