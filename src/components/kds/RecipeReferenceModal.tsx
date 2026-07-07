@@ -213,7 +213,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
         {(product.allergens.length > 0 || modifierNote) && (
           <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px ${S.pad - 8}px` }}>
             {product.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} variant="item" />
+              <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
             ))}
             {modifierNote && (
               <span
