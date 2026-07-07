@@ -4,6 +4,7 @@ import { X, Play, ChevronDown, ArrowLeft, Rewind, Volume2, Maximize2 } from 'luc
 import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
+import { useTheme } from '@/hooks/use-theme';
 
 interface Props {
   product: OrderItem | null;
@@ -14,11 +15,64 @@ interface Props {
   variant?: 'default' | 'v3';
 }
 
+interface Palette {
+  surface: string;
+  surfaceSubtle: string;
+  surfaceRaised: string;
+  border: string;
+  textPrimary: string;
+  textSecondary: string;
+  textMuted: string;
+  iconBtnBg: string;
+  outlineBtnBorder: string;
+  videoBg: string;
+  progressTrack: string;
+  yieldMenuBg: string;
+  yieldMenuBorder: string;
+  brandRed: string;
+}
+
+const DARK: Palette = {
+  surface: '#1A1A2E',
+  surfaceSubtle: 'rgba(255,255,255,0.04)',
+  surfaceRaised: 'rgba(255,255,255,0.06)',
+  border: 'rgba(255,255,255,0.08)',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#D1D5DB',
+  textMuted: '#9CA3AF',
+  iconBtnBg: 'rgba(255,255,255,0.08)',
+  outlineBtnBorder: 'rgba(255,255,255,0.18)',
+  videoBg: '#0B0B18',
+  progressTrack: 'rgba(255,255,255,0.12)',
+  yieldMenuBg: '#22223a',
+  yieldMenuBorder: 'rgba(255,255,255,0.1)',
+  brandRed: '#E84C3D',
+};
+
+const LIGHT: Palette = {
+  surface: '#FFFFFF',
+  surfaceSubtle: '#F8FAFC',
+  surfaceRaised: '#F1F5F9',
+  border: '#E5E7EB',
+  textPrimary: '#111827',
+  textSecondary: '#374151',
+  textMuted: '#6B7280',
+  iconBtnBg: '#F1F5F9',
+  outlineBtnBorder: '#D1D5DB',
+  videoBg: '#0F172A',
+  progressTrack: '#E5E7EB',
+  yieldMenuBg: '#FFFFFF',
+  yieldMenuBorder: '#E5E7EB',
+  brandRed: '#E84C3D',
+};
+
 /**
  * Recipe / prep reference modal. Front-end only, mock data.
- * Structure: header, allergen strip, ingredients scroller, prep step grid, optional video state.
+ * Adapts to light and dark themes via useTheme.
  */
 export function RecipeReferenceModal({ product, order, courseLabel, onClose, variant = 'default' }: Props) {
+  const { theme } = useTheme();
+  const C = theme === 'dark' ? DARK : LIGHT;
   const [videoMode, setVideoMode] = useState(false);
   const [yieldIdx, setYieldIdx] = useState(0);
   const [yieldOpen, setYieldOpen] = useState(false);
@@ -38,7 +92,6 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   const recipe = getRecipeReference(product.name);
   const isV3 = variant === 'v3';
 
-  // Spacing scale
   const S = {
     pad: isV3 ? 16 : 20,
     gap: isV3 ? 12 : 16,
@@ -57,7 +110,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   const renderBold = (s: string) =>
     s.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
       part.startsWith('**') && part.endsWith('**') ? (
-        <span key={i} style={{ fontWeight: 700, color: '#FFFFFF' }}>{part.slice(2, -2)}</span>
+        <span key={i} style={{ fontWeight: 700, color: C.textPrimary }}>{part.slice(2, -2)}</span>
       ) : (
         <span key={i}>{part}</span>
       )
@@ -66,14 +119,14 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   return createPortal(
     <div
       className="fixed inset-0 z-[1000] flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.6)', fontFamily: 'Inter, system-ui, sans-serif' }}
+      style={{ background: 'rgba(0,0,0,0.55)', fontFamily: 'Inter, system-ui, sans-serif' }}
       onClick={onClose}
       onPointerDown={(e) => e.stopPropagation()}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-[900px] max-h-[92vh] overflow-hidden flex flex-col"
-        style={{ background: '#1A1A2E', borderRadius: S.radius, color: '#E5E7EB' }}
+        style={{ background: C.surface, borderRadius: S.radius, color: C.textSecondary, border: `1px solid ${C.border}` }}
         role="dialog"
         aria-modal="true"
         aria-label={`Recipe reference for ${product.name}`}
@@ -87,16 +140,16 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                 aria-label="Back to recipe"
                 onClick={() => setVideoMode(false)}
                 className="shrink-0 inline-flex items-center justify-center rounded-full"
-                style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.08)', color: '#FFFFFF' }}
+                style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}
               >
                 <ArrowLeft size={16} />
               </button>
             )}
             <div className="min-w-0 flex-1">
-              <div style={{ fontSize: S.context, color: '#9CA3AF', letterSpacing: 0.2, marginBottom: 4 }}>
+              <div style={{ fontSize: S.context, color: C.textMuted, letterSpacing: 0.2, marginBottom: 4 }}>
                 {videoMode ? `Recipe video · ${product.name}` : context}
               </div>
-              <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: '#FFFFFF', lineHeight: 1.15 }}>
+              <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: C.textPrimary, lineHeight: 1.15 }}>
                 {product.name}
               </div>
             </div>
@@ -109,14 +162,14 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                 className="inline-flex items-center gap-2 rounded-full"
                 style={{
                   padding: '6px 12px',
-                  border: '1px solid rgba(255,255,255,0.18)',
+                  border: `1px solid ${C.outlineBtnBorder}`,
                   background: 'transparent',
-                  color: '#FFFFFF',
+                  color: C.textPrimary,
                   fontSize: 13,
                   fontWeight: 500,
                 }}
               >
-                <Play size={14} color="#E84C3D" fill="#E84C3D" />
+                <Play size={14} color={C.brandRed} fill={C.brandRed} />
                 Watch video · {recipe.video!.duration}
               </button>
             )}
@@ -125,14 +178,14 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
               onClick={onClose}
               aria-label="Close"
               className="inline-flex items-center justify-center rounded-full"
-              style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.08)', color: '#FFFFFF' }}
+              style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}
             >
               <X size={16} />
             </button>
           </div>
         </div>
 
-        {/* ALLERGEN STRIP (always visible, full opacity) */}
+        {/* ALLERGEN STRIP */}
         {(product.allergens.length > 0 || modifierNote) && (
           <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px ${S.pad - 8}px` }}>
             {product.allergens.map((a) => (
@@ -141,7 +194,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             {modifierNote && (
               <span
                 className="inline-flex items-center rounded-full"
-                style={{ padding: '3px 10px', background: '#E84C3D', color: '#FFFFFF', fontSize: 12, fontWeight: 600 }}
+                style={{ padding: '3px 10px', background: C.brandRed, color: '#FFFFFF', fontSize: 12, fontWeight: 600 }}
               >
                 + {modifierNote.text}
               </span>
@@ -156,6 +209,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
               stepTitles={recipe.steps.map((s) => s.title)}
               duration={recipe.video?.duration ?? '0:00'}
               tight={isV3}
+              C={C}
             />
           ) : (
             <>
@@ -163,9 +217,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
               {recipe.ingredients.length > 0 && (
                 <section style={{ marginBottom: S.gap + 4 }}>
                   <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
-                    <div
-                      style={{ fontSize: S.sectionLabel, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}
-                    >
+                    <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
                     </div>
                     {recipe.yields.length > 0 && (
@@ -176,8 +228,8 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                           className="inline-flex items-center gap-1.5 rounded-md"
                           style={{
                             padding: '4px 10px',
-                            background: 'rgba(255,255,255,0.06)',
-                            color: '#FFFFFF',
+                            background: C.surfaceRaised,
+                            color: C.textPrimary,
                             fontSize: 12,
                             fontWeight: 500,
                           }}
@@ -188,7 +240,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                         {yieldOpen && (
                           <div
                             className="absolute right-0 mt-1 rounded-md overflow-hidden z-10"
-                            style={{ background: '#22223a', border: '1px solid rgba(255,255,255,0.1)', minWidth: 140 }}
+                            style={{ background: C.yieldMenuBg, border: `1px solid ${C.yieldMenuBorder}`, minWidth: 140 }}
                           >
                             {recipe.yields.map((y, i) => (
                               <button
@@ -196,7 +248,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                                 type="button"
                                 onClick={() => { setYieldIdx(i); setYieldOpen(false); }}
                                 className="block w-full text-left"
-                                style={{ padding: '6px 10px', fontSize: 12, color: i === yieldIdx ? '#FFFFFF' : '#D1D5DB', background: i === yieldIdx ? 'rgba(232,76,61,0.15)' : 'transparent' }}
+                                style={{ padding: '6px 10px', fontSize: 12, color: i === yieldIdx ? C.textPrimary : C.textSecondary, background: i === yieldIdx ? 'rgba(232,76,61,0.15)' : 'transparent' }}
                               >
                                 {y}
                               </button>
@@ -207,15 +259,12 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     )}
                   </div>
 
-                  <div
-                    className="flex overflow-x-auto"
-                    style={{ gap: 8, paddingBottom: 4, scrollbarWidth: 'thin' }}
-                  >
+                  <div className="flex overflow-x-auto" style={{ gap: 8, paddingBottom: 4, scrollbarWidth: 'thin' }}>
                     {recipe.ingredients.map((ing, i) => (
                       <div
                         key={i}
                         className="flex items-center shrink-0 rounded-lg"
-                        style={{ padding: 8, gap: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', minWidth: 200 }}
+                        style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, minWidth: 200 }}
                       >
                         {ing.image ? (
                           <img
@@ -224,13 +273,13 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                             style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}
                           />
                         ) : (
-                          <div style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, background: 'rgba(255,255,255,0.06)', flexShrink: 0 }} />
+                          <div style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, background: C.surfaceRaised, flexShrink: 0 }} />
                         )}
                         <div className="min-w-0">
-                          <div className="truncate" style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 500 }}>{ing.name}</div>
-                          <div style={{ fontSize: 12, color: '#9CA3AF' }}>{ing.qty}</div>
+                          <div className="truncate" style={{ fontSize: 14, color: C.textPrimary, fontWeight: 500 }}>{ing.name}</div>
+                          <div style={{ fontSize: 12, color: C.textMuted }}>{ing.qty}</div>
                           {ing.allergen && (
-                            <div style={{ fontSize: 11, color: '#E84C3D', marginTop: 2, fontWeight: 500 }}>
+                            <div style={{ fontSize: 11, color: C.brandRed, marginTop: 2, fontWeight: 500 }}>
                               Contains: {ing.allergen}
                             </div>
                           )}
@@ -244,7 +293,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
               {/* PREP STEPS */}
               {recipe.steps.length > 0 && (
                 <section>
-                  <div style={{ fontSize: S.sectionLabel, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, marginBottom: 8 }}>
+                  <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, marginBottom: 8 }}>
                     Prep steps
                   </div>
                   <div className="grid grid-cols-2" style={{ gap: S.gap }}>
@@ -252,7 +301,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                       <div
                         key={i}
                         className="rounded-lg overflow-hidden"
-                        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                        style={{ background: C.surfaceSubtle, border: `1px solid ${C.border}` }}
                       >
                         {step.image && (
                           <img
@@ -265,13 +314,13 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                           <div className="flex items-center" style={{ gap: 8, marginBottom: 4 }}>
                             <span
                               className="inline-flex items-center justify-center rounded-full"
-                              style={{ width: 22, height: 22, background: '#E84C3D', color: '#FFFFFF', fontSize: 12, fontWeight: 700 }}
+                              style={{ width: 22, height: 22, background: C.brandRed, color: '#FFFFFF', fontSize: 12, fontWeight: 700 }}
                             >
                               {i + 1}
                             </span>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: '#FFFFFF' }}>{step.title}</div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: C.textPrimary }}>{step.title}</div>
                           </div>
-                          <div style={{ fontSize: 13, color: '#D1D5DB', lineHeight: 1.4 }}>
+                          <div style={{ fontSize: 13, color: C.textSecondary, lineHeight: 1.4 }}>
                             {renderBold(step.instruction)}
                           </div>
                         </div>
@@ -289,44 +338,42 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   );
 }
 
-function VideoView({ stepTitles, duration, tight }: { stepTitles: string[]; duration: string; tight: boolean }) {
+function VideoView({ stepTitles, duration, tight, C }: { stepTitles: string[]; duration: string; tight: boolean; C: Palette }) {
   return (
     <div>
       <div
         className="w-full flex items-center justify-center rounded-lg"
-        style={{ aspectRatio: '16 / 9', background: '#0B0B18', border: '1px solid rgba(255,255,255,0.08)' }}
+        style={{ aspectRatio: '16 / 9', background: C.videoBg, border: `1px solid ${C.border}` }}
       >
         <button
           type="button"
           aria-label="Play video"
           className="inline-flex items-center justify-center rounded-full"
-          style={{ width: 64, height: 64, background: '#E84C3D', color: '#FFFFFF' }}
+          style={{ width: 64, height: 64, background: C.brandRed, color: '#FFFFFF' }}
         >
           <Play size={26} fill="#FFFFFF" />
         </button>
       </div>
 
-      {/* Controls */}
       <div className="flex items-center" style={{ gap: 10, marginTop: 12 }}>
-        <button type="button" aria-label="Rewind 10s" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.08)', color: '#FFFFFF' }}>
+        <button type="button" aria-label="Rewind 10s" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           <Rewind size={14} />
         </button>
-        <div className="flex-1 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.12)', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '18%', background: '#E84C3D', borderRadius: 999 }} />
+        <div className="flex-1 h-1 rounded-full" style={{ background: C.progressTrack, position: 'relative' }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '18%', background: C.brandRed, borderRadius: 999 }} />
         </div>
-        <div style={{ fontSize: 12, color: '#9CA3AF', fontVariantNumeric: 'tabular-nums' }}>0:00 / {duration}</div>
-        <button type="button" aria-label="Volume" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.08)', color: '#FFFFFF' }}>
+        <div style={{ fontSize: 12, color: C.textMuted, fontVariantNumeric: 'tabular-nums' }}>0:00 / {duration}</div>
+        <button type="button" aria-label="Volume" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           <Volume2 size={14} />
         </button>
-        <button type="button" aria-label="Fullscreen" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.08)', color: '#FFFFFF' }}>
+        <button type="button" aria-label="Fullscreen" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           <Maximize2 size={14} />
         </button>
       </div>
 
-      {/* Jump to step chips (visual only) */}
       {stepTitles.length > 0 && (
         <div style={{ marginTop: tight ? 12 : 16 }}>
-          <div style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, marginBottom: 6 }}>
+          <div style={{ fontSize: 11, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, marginBottom: 6 }}>
             Jump to step
           </div>
           <div className="flex flex-wrap" style={{ gap: 6 }}>
@@ -334,7 +381,7 @@ function VideoView({ stepTitles, duration, tight }: { stepTitles: string[]; dura
               <span
                 key={i}
                 className="inline-flex items-center rounded-full"
-                style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', color: '#D1D5DB', fontSize: 12 }}
+                style={{ padding: '4px 10px', background: C.surfaceRaised, border: `1px solid ${C.border}`, color: C.textSecondary, fontSize: 12 }}
               >
                 {i + 1}. {t}
               </span>
