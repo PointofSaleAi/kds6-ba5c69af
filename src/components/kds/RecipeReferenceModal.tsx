@@ -168,7 +168,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
         aria-label={`Recipe reference for ${product.name}`}
       >
         {/* HEADER */}
-        <div className="flex items-start justify-between" style={{ padding: `${S.pad}px ${S.pad}px ${S.pad - 4}px` }}>
+        <div className="flex items-start justify-between" style={{ padding: `${S.pad}px ${S.pad}px 4px` }}>
           <div className="flex items-start gap-3 min-w-0 flex-1">
             {videoMode && (
               <button
