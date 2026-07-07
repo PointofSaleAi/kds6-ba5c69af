@@ -1,3 +1,4 @@
+import React from 'react';
 import { Composition } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Montserrat';
 import { MainVideo } from './MainVideo';
