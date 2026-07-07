@@ -24,6 +24,7 @@ async function main() {
   const recipes = [['default', DEFAULT], ...Object.entries(RECIPES)] as [string, typeof DEFAULT][];
   const outputDir = path.resolve(__dirname, '../output');
   fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(outputDir, { recursive: true });
 
   const results: { product: string; path: string; duration: string }[] = [];
 
