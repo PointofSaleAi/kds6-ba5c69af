@@ -81,6 +81,20 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
     if (!product) return;
     setVideoMode(false);
     setYieldOpen(false);
+    const base = getRecipeReference(product.name);
+    const first = base.yields[0] ?? '1 plate';
+    const m0 = first.match(/^\d+\s+(.+)$/);
+    const u = m0 ? m0[1] : 'portion';
+    const has = base.yields.some((y) => {
+      const m = y.match(/^(\d+)/);
+      return m ? parseInt(m[1], 10) === product.quantity : false;
+    });
+    const list = has ? base.yields : [`${product.quantity} ${u}`, ...base.yields];
+    const idx = list.findIndex((y) => {
+      const m = y.match(/^(\d+)/);
+      return m ? parseInt(m[1], 10) === product.quantity : false;
+    });
+    setYieldIdx(idx >= 0 ? idx : 0);
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -89,7 +103,6 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   if (!product) return null;
 
   const baseRecipe = getRecipeReference(product.name);
-  // Ensure the current ticket quantity is always represented as a yield option.
   const unit = (() => {
     const first = baseRecipe.yields[0] ?? '1 plate';
     const m = first.match(/^\d+\s+(.+)$/);
@@ -100,15 +113,6 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
     return m ? parseInt(m[1], 10) === product.quantity : false;
   });
   const yields = hasMatch ? baseRecipe.yields : [`${product.quantity} ${unit}`, ...baseRecipe.yields];
-  const defaultIdx = yields.findIndex((y) => {
-    const m = y.match(/^(\d+)/);
-    return m ? parseInt(m[1], 10) === product.quantity : false;
-  });
-  // Sync yieldIdx to product quantity when product changes.
-  useEffect(() => {
-    setYieldIdx(defaultIdx >= 0 ? defaultIdx : 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product]);
   const recipe = { ...baseRecipe, yields };
   const isV3 = variant === 'v3';
 
