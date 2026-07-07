@@ -168,7 +168,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
         aria-label={`Recipe reference for ${product.name}`}
       >
         {/* HEADER */}
-        <div className="flex items-start justify-between" style={{ padding: `${S.pad}px ${S.pad}px ${S.pad - 4}px` }}>
+        <div className="flex items-start justify-between" style={{ padding: `${S.pad}px ${S.pad}px 4px` }}>
           <div className="flex items-start gap-3 min-w-0 flex-1">
             {videoMode && (
               <button
@@ -269,7 +269,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
 
         {/* MODIFIER NOTE STRIP */}
         {modifierNote && (
-          <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px ${S.pad - 8}px` }}>
+          <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px 4px` }}>
             <span
               className="inline-flex items-center rounded-full"
               style={{ padding: '3px 10px', background: C.brandRed, color: '#FFFFFF', fontSize: 12, fontWeight: 600 }}
@@ -280,7 +280,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
         )}
 
         {/* BODY */}
-        <div className="overflow-y-auto" style={{ padding: `${S.gap}px ${S.pad}px ${S.pad}px` }}>
+        <div className="overflow-y-auto" style={{ padding: `4px ${S.pad}px ${S.pad}px` }}>
           {videoMode ? (
             <VideoView
               stepTitles={recipe.steps.map((s) => s.title)}
