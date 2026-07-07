@@ -35,6 +35,8 @@ interface FlatItemListProps {
   ticketLayoutMode?: 'standard' | 'compact';
   /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
   legacyActions?: boolean;
+  /** Optional parent order for contextual metadata (e.g. recipe modal). */
+  order?: Order;
 }
 
 export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode, legacyActions }: FlatItemListProps) {
