@@ -8,6 +8,7 @@ import { LegacyActionPill } from './LegacyActionPill';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
+import { RecipeReferenceModal } from './RecipeReferenceModal';
 import { TightWidthBox } from './TightWidthBox';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useLongPress } from '@/hooks/use-long-press';
@@ -512,6 +513,7 @@ function CourseItemTapRow({
   const show86Pill = is86Confirmed;
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [recipeOpen, setRecipeOpen] = useState(false);
   
 
   const hasDetails =
@@ -615,9 +617,9 @@ function CourseItemTapRow({
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
-        onClick={tappable && !legacyActions ? handleTap : undefined}
+        onClick={legacyActions ? (tappable ? () => setRecipeOpen(true) : undefined) : (tappable ? handleTap : undefined)}
         {...longPressRow}
-        title={tappable ? (legacyActions ? 'Hold to 86' : (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')) : undefined}
+        title={tappable ? (legacyActions ? 'Tap for recipe · Hold to 86' : (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')) : undefined}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
@@ -847,6 +849,13 @@ function CourseItemTapRow({
         primaryLabel="Request 86"
         showQuantityAdjuster="below-title"
       />
+      {legacyActions && (
+        <RecipeReferenceModal
+          product={recipeOpen ? item : null}
+          onClose={() => setRecipeOpen(false)}
+          variant="default"
+        />
+      )}
     </div>
   );
 }
