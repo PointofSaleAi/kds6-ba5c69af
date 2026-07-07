@@ -289,30 +289,22 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
         {/* 86 Items */}
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                data-onboarding="eighty-six"
-                onClick={() => setEightySixOpen(true)}
-                className={`relative flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
-                  eightySixedItems.length > 0
-                    ? 'bg-[hsl(0,84%,60%)]/30 hover:bg-[hsl(0,84%,60%)]/45 text-[hsl(0,84%,75%)]'
-                    : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
-                }`}
-                aria-label="86 items"
-              >
-                <Package size={15} />
-                {eightySixedItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[hsl(0,84%,60%)] text-white text-[10px] font-bold flex items-center justify-center">
-                    {eightySixedItems.length}
-                  </span>
-                )}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top"><p>86 Items</p></TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <button
+          data-onboarding="eighty-six"
+          onClick={() => setEightySixOpen(true)}
+          className="flex items-center gap-2 px-3 py-1 rounded-xl hover:opacity-80 transition-opacity shrink-0 h-[36px]"
+          style={{ background: eightySixedItems.length > 0 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(100, 100, 100, 0.4)' }}
+          aria-label="86 items"
+        >
+          <div className="flex flex-col items-center leading-tight">
+            <span className={`text-[10px] font-semibold ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-primary-foreground/50'}`}>86</span>
+            <span className={`text-[10px] font-semibold ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-primary-foreground/50'}`}>Items</span>
+          </div>
+          <Package className={`w-4 h-4 ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-primary-foreground/50'}`} />
+          {eightySixedItems.length > 0 && (
+            <span className="text-[#FF6B6B] text-sm font-bold">({eightySixedItems.length})</span>
+          )}
+        </button>
         <button
           data-onboarding="ai"
           onClick={onToggleAiAssistant}
