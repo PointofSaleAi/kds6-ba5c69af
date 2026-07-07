@@ -280,7 +280,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
         )}
 
         {/* BODY */}
-        <div className="overflow-y-auto" style={{ padding: `${S.gap}px ${S.pad}px ${S.pad}px` }}>
+        <div className="overflow-y-auto" style={{ padding: `4px ${S.pad}px ${S.pad}px` }}>
           {videoMode ? (
             <VideoView
               stepTitles={recipe.steps.map((s) => s.title)}
