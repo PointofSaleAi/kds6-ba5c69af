@@ -799,7 +799,7 @@ function CourseItemTapRow({
             {servable.length > 0 && (
               <div
                 style={{
-                  marginTop: '0px',
+                  marginTop: legacyActions ? '-6px' : '0px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0px',
