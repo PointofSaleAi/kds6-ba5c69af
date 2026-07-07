@@ -37,14 +37,8 @@ export const MainVideo: React.FC<RecipeVideoProps> = ({
             </TransitionSeries.Sequence>
             {i < steps.length - 1 && (
               <TransitionSeries.Transition
-                durationInFrames={transitionFrames}
-                presentation={{
-                  type: 'fade',
-                }}
-                timing={{
-                  type: 'linear',
-                  durationInFrames: transitionFrames,
-                }}
+                presentation={fade()}
+                timing={linearTiming({ durationInFrames: transitionFrames })}
               />
             )}
           </React.Fragment>
