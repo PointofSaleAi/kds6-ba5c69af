@@ -118,6 +118,7 @@ interface ItemTapRowProps {
   onDismissItem?: (itemId: string) => void;
   ticketLayoutCompact?: boolean;
   legacyActions?: boolean;
+  order?: Order;
 }
 
 function ItemTapRow({
