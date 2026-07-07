@@ -443,6 +443,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 seenIdx={seenOrderIndex?.get(item.id)}
                 ticketLayoutCompact={ticketLayoutCompact}
                 legacyActions={legacyActions}
+                order={order}
               />
             );
           });
