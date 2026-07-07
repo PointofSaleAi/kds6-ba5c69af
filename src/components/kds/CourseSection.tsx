@@ -827,7 +827,7 @@ function CourseItemTapRow({
       })()}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px', ...(dimStyle || {}) }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: legacyActions ? '-6px' : 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px', ...(dimStyle || {}) }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
             0x
           </span>
