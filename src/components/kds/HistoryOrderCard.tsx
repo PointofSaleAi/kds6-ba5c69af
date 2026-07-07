@@ -188,7 +188,7 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
               opacity: 0.5,
               display: 'flex',
               flexDirection: 'column',
-              marginTop: 'var(--kds-child-gap, 1px)',
+              marginTop: '-2px',
               gap: 'var(--kds-child-gap, 1px)',
               paddingLeft: detailIndent,
             }}
