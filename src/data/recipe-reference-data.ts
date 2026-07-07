@@ -88,6 +88,7 @@ const RECIPES: Record<string, RefRecipe> = {
       { title: 'Add garnish', instruction: 'Add **tomatoes and croutons**; toss lightly.', image: 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=400&h=260&fit=crop' },
       { title: 'Finish', instruction: 'Top with **shaved parmesan**.', image: 'https://images.unsplash.com/photo-1552767059-ce182ead6c1b?w=400&h=260&fit=crop' },
     ],
+    video: { url: '', duration: '1:05' },
   },
   pasta: {
     yields: ['1 plate', '2 plates', '4 plates'],
