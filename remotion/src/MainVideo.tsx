@@ -1,7 +1,7 @@
 import React from 'react';
-import { AbsoluteFill, useVideoConfig, TransitionSeries } from 'remotion';
+import { AbsoluteFill, useVideoConfig } from 'remotion';
+import { TransitionSeries, linearTiming } from '@remotion/transitions';
 import { fade } from '@remotion/transitions/fade';
-import { linearTiming } from '@remotion/transitions';
 import { RecipeHeader } from './components/RecipeHeader';
 import { RecipeStepScene } from './scenes/RecipeStepScene';
 import type { RecipeVideoProps } from './types';
