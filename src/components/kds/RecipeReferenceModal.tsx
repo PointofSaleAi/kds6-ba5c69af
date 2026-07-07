@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Play, ChevronDown, ArrowLeft, Rewind, Volume2, Maximize2 } from 'lucide-react';
+import { X, Play, Pause, ChevronDown, ArrowLeft, Rewind, Volume2, VolumeX, Maximize2 } from 'lucide-react';
 import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
@@ -272,6 +272,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
           {videoMode ? (
             <VideoView
               stepTitles={recipe.steps.map((s) => s.title)}
+              videoUrl={recipe.video?.url || ''}
               duration={recipe.video?.duration ?? '0:00'}
               tight={isV3}
               C={C}
@@ -366,35 +367,111 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   );
 }
 
-function VideoView({ stepTitles, duration, tight, C }: { stepTitles: string[]; duration: string; tight: boolean; C: Palette }) {
+function VideoView({ stepTitles, videoUrl, duration, tight, C }: { stepTitles: string[]; videoUrl: string; duration: string; tight: boolean; C: Palette }) {
+  const DEMO_URL = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  const src = videoUrl || DEMO_URL;
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  const fmt = (s: number) => {
+    if (!isFinite(s) || s < 0) s = 0;
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) v.play().catch(() => {}); else v.pause();
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  };
+
+  const rewind = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = Math.max(0, v.currentTime - 10);
+  };
+
+  const goFullscreen = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else el.requestFullscreen?.().catch(() => {});
+  };
+
+  const seek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const v = videoRef.current;
+    if (!v || !total) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+    v.currentTime = ratio * total;
+  };
+
+  const progress = total > 0 ? (current / total) * 100 : 0;
+
   return (
     <div>
       <div
-        className="w-full flex items-center justify-center rounded-lg"
+        ref={containerRef}
+        className="w-full relative rounded-lg overflow-hidden"
         style={{ aspectRatio: '16 / 9', background: C.videoBg, border: `1px solid ${C.border}` }}
       >
-        <button
-          type="button"
-          aria-label="Play video"
-          className="inline-flex items-center justify-center rounded-full"
-          style={{ width: 64, height: 64, background: C.brandRed, color: '#FFFFFF' }}
-        >
-          <Play size={26} fill="#FFFFFF" />
-        </button>
+        <video
+          ref={videoRef}
+          src={src}
+          playsInline
+          preload="metadata"
+          className="w-full h-full"
+          style={{ objectFit: 'contain', background: C.videoBg }}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
+          onLoadedMetadata={(e) => setTotal(e.currentTarget.duration || 0)}
+          onClick={togglePlay}
+        />
+        {!playing && (
+          <button
+            type="button"
+            aria-label="Play video"
+            onClick={togglePlay}
+            className="absolute inset-0 m-auto inline-flex items-center justify-center rounded-full"
+            style={{ width: 64, height: 64, background: C.brandRed, color: '#FFFFFF' }}
+          >
+            <Play size={26} fill="#FFFFFF" />
+          </button>
+        )}
       </div>
 
       <div className="flex items-center" style={{ gap: 10, marginTop: 12 }}>
-        <button type="button" aria-label="Rewind 10s" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
+        <button type="button" aria-label={playing ? 'Pause' : 'Play'} onClick={togglePlay} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
+          {playing ? <Pause size={14} /> : <Play size={14} />}
+        </button>
+        <button type="button" aria-label="Rewind 10s" onClick={rewind} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           <Rewind size={14} />
         </button>
-        <div className="flex-1 h-1 rounded-full" style={{ background: C.progressTrack, position: 'relative' }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '18%', background: C.brandRed, borderRadius: 999 }} />
+        <div
+          className="flex-1 h-1 rounded-full cursor-pointer"
+          style={{ background: C.progressTrack, position: 'relative' }}
+          onClick={seek}
+        >
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progress}%`, background: C.brandRed, borderRadius: 999 }} />
         </div>
-        <div style={{ fontSize: 12, color: C.textMuted, fontVariantNumeric: 'tabular-nums' }}>0:00 / {duration}</div>
-        <button type="button" aria-label="Volume" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
-          <Volume2 size={14} />
+        <div style={{ fontSize: 12, color: C.textMuted, fontVariantNumeric: 'tabular-nums' }}>{fmt(current)} / {total > 0 ? fmt(total) : duration}</div>
+        <button type="button" aria-label={muted ? 'Unmute' : 'Mute'} onClick={toggleMute} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
+          {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
         </button>
-        <button type="button" aria-label="Fullscreen" className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
+        <button type="button" aria-label="Fullscreen" onClick={goFullscreen} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           <Maximize2 size={14} />
         </button>
       </div>
@@ -420,3 +497,4 @@ function VideoView({ stepTitles, duration, tight, C }: { stepTitles: string[]; d
     </div>
   );
 }
+
