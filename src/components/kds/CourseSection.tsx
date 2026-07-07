@@ -48,6 +48,8 @@ interface CourseSectionProps {
   ticketLayoutMode?: 'standard' | 'compact';
   /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
   legacyActions?: boolean;
+  /** Optional parent order for contextual metadata (e.g. recipe modal). */
+  order?: Order;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
