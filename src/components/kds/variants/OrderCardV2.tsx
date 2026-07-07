@@ -315,7 +315,7 @@ export function OrderCardV2({ order, onBump }: Props) {
       </div>
       )}
 
-      <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
+      <RecipeReferenceModal product={recipeProduct} order={order} onClose={() => setRecipeProduct(null)} variant="v3" />
 
       {/* FOOTER */}
       {!isCompact && !isHeaderOnly && (
