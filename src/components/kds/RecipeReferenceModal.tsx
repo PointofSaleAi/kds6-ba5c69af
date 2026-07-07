@@ -183,7 +183,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                       <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
                     ))}
                   </>
-                ))}
+                )}
               </div>
             </div>
           </div>
