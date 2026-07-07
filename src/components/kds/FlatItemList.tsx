@@ -125,7 +125,7 @@ function ItemTapRow({
   item, status, timestamps, seenIdx, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
-  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact, legacyActions,
+  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact, legacyActions, order,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
