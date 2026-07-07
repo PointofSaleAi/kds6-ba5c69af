@@ -293,7 +293,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             <>
               {/* INGREDIENTS */}
               {recipe.ingredients.length > 0 && (
-                <section style={{ marginBottom: S.gap + 4 }}>
+                <section style={{ marginBottom: 8 }}>
                   <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
                     <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
