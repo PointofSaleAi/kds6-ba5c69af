@@ -3,7 +3,7 @@ import { renderMedia, selectComposition, openBrowser } from '@remotion/renderer'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { RECIPES } from '../../src/data/recipe-reference-data';
+import { RECIPES, DEFAULT } from '../../src/data/recipe-reference-data';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
