@@ -81,13 +81,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
     if (!product) return;
     setVideoMode(false);
     setYieldOpen(false);
-    // Default yield to the option whose leading quantity matches the ticket quantity.
-    const targetQty = product.quantity;
-    const idx = getRecipeReference(product.name).yields.findIndex((y) => {
-      const match = y.match(/^(\d+)/);
-      return match ? parseInt(match[1], 10) === targetQty : false;
-    });
-    setYieldIdx(idx >= 0 ? idx : 0);
+    setYieldIdx(0);
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -95,7 +89,29 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
 
   if (!product) return null;
 
-  const recipe = getRecipeReference(product.name);
+  const baseRecipe = getRecipeReference(product.name);
+  // Ensure the current ticket quantity is always represented as a yield option,
+  // and default the selection to it. Unit is inferred from the first existing yield.
+  const unit = (() => {
+    const first = baseRecipe.yields[0] ?? '1 plate';
+    const m = first.match(/^\d+\s+(.+)$/);
+    return m ? m[1] : 'portion';
+  })();
+  const qtyYield = `${product.quantity} ${unit}`;
+  const yields = baseRecipe.yields.some((y) => {
+    const m = y.match(/^(\d+)/);
+    return m ? parseInt(m[1], 10) === product.quantity : false;
+  })
+    ? baseRecipe.yields
+    : [qtyYield, ...baseRecipe.yields];
+  const activeYieldIdx = (() => {
+    const i = yields.findIndex((y) => {
+      const m = y.match(/^(\d+)/);
+      return m ? parseInt(m[1], 10) === product.quantity : false;
+    });
+    return i >= 0 ? i : yieldIdx;
+  })();
+  const recipe = { ...baseRecipe, yields };
   const isV3 = variant === 'v3';
 
   const S = {
