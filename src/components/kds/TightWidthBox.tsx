@@ -112,7 +112,7 @@ export function TightWidthBox({
       className={className}
       style={{
         minWidth: 0,
-        width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content',
+        width: primaryLineWidth ? `${primaryLineWidth}px` : (secondary ? 'max-content' : '100%'),
         maxWidth: '100%',
         alignSelf: 'flex-start',
         ...style,
@@ -120,7 +120,7 @@ export function TightWidthBox({
     >
       <div
         ref={primaryRef}
-        style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : 'max-content', maxWidth: '100%' }}
+        style={{ width: primaryLineWidth ? `${primaryLineWidth}px` : (secondary ? 'max-content' : '100%'), maxWidth: '100%' }}
       >
         {primary}
       </div>
@@ -135,6 +135,7 @@ export function TightWidthBox({
           {secondary}
         </div>
       )}
+
     </div>
   );
 }
