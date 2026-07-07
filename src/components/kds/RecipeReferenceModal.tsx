@@ -185,17 +185,8 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
               <div style={{ fontSize: S.context, color: C.textMuted, letterSpacing: 0.2, marginBottom: 4 }}>
                 {videoMode ? `Recipe video · ${product.name}` : context}
               </div>
-              <div className="flex items-center flex-wrap gap-1" style={{ rowGap: 2 }}>
-                <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: C.textPrimary, lineHeight: 1.15 }}>
-                  {product.name}
-                </div>
-                {product.allergens.length > 0 && (
-                  <>
-                    {product.allergens.map((a) => (
-                      <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
-                    ))}
-                  </>
-                )}
+              <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: C.textPrimary, lineHeight: 1.15 }}>
+                {product.name}
               </div>
             </div>
           </div>
