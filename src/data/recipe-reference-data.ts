@@ -150,19 +150,19 @@ export const RECIPES: Record<string, RefRecipe> = {
   fish: {
     yields: ['1 plate', '2 plates'],
     ingredients: [
-      { name: 'White fish fillet', qty: '180g', image: 'https://images.unsplash.com/photo-1535596083220-f2dd6cd08f68?w=120&h=120&fit=crop', allergen: 'fish' },
+      { name: 'White fish fillet', qty: '180g', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=120&h=120&fit=crop', allergen: 'fish' },
       { name: 'Grapeseed oil', qty: '1 tbsp', image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=120&h=120&fit=crop' },
       { name: 'Butter', qty: '1 tbsp', image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=120&h=120&fit=crop', allergen: 'dairy' },
       { name: 'Lemon wedge', qty: '1', image: 'https://images.unsplash.com/photo-1590502593747-42a996133562?w=120&h=120&fit=crop' },
     ],
     steps: [
-      { title: 'Check quality', instruction: 'Confirm **fillet** smells fresh, no gaping flesh; reject if in doubt.', image: 'https://images.unsplash.com/photo-1535596083220-f2dd6cd08f68?w=400&h=260&fit=crop' },
-      { title: 'Score and dry', instruction: 'Score **skin** shallowly, pat both sides completely dry with towel.', image: 'https://images.unsplash.com/photo-1535596083220-f2dd6cd08f68?w=400&h=260&fit=crop' },
+      { title: 'Check quality', instruction: 'Confirm **fillet** smells fresh, no gaping flesh; reject if in doubt.', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=260&fit=crop' },
+      { title: 'Score and dry', instruction: 'Score **skin** shallowly, pat both sides completely dry with towel.', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=260&fit=crop' },
       { title: 'Season', instruction: 'Season with **salt and white pepper** both sides right before pan.', image: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&h=260&fit=crop' },
       { title: 'Heat pan', instruction: 'Bring nonstick pan to **medium-high** with grapeseed oil until shimmering.', image: 'https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=400&h=260&fit=crop' },
       { title: 'Sear skin-side', instruction: 'Lay fillet **skin down**, press with fish weight for 4 min until crisp.', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=260&fit=crop' },
       { title: 'Flip and baste', instruction: 'Flip, add **butter**, baste 60 sec until flesh is just opaque.', image: 'https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=400&h=260&fit=crop' },
-      { title: 'Rest briefly', instruction: 'Rest **60 seconds** on warm plate, do not stack.', image: 'https://images.unsplash.com/photo-1535596083220-f2dd6cd08f68?w=400&h=260&fit=crop' },
+      { title: 'Rest briefly', instruction: 'Rest **60 seconds** on warm plate, do not stack.', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=260&fit=crop' },
       { title: 'Plate skin-up', instruction: 'Plate **skin-side up** over puree, muslin-wrapped lemon to the side.', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=260&fit=crop' },
     ],
     video: { url: '', duration: '1:40' },
