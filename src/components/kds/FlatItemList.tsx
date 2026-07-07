@@ -86,6 +86,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             onDismissItem={onDismissItem}
             ticketLayoutCompact={ticketLayoutCompact}
             legacyActions={legacyActions}
+            order={order}
           />
         );
       });
