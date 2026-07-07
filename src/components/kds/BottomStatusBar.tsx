@@ -63,8 +63,62 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const { isPortrait } = usePortrait();
+  const { toast } = useToast();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+
+  // 86 Items state
+  const [eightySixOpen, setEightySixOpen] = useState(false);
+  const [eightySixedItems, setEightySixedItems] = useState<EightySixedItem[]>([]);
+
+  const handleEightySixItem = useCallback(
+    (item: { name: string; category: string; snoozeDuration: string }) => {
+      const durations: Record<string, number | null> = {
+        '15min': 15 * 60 * 1000,
+        '1hr': 60 * 60 * 1000,
+        'end_of_shift': 8 * 60 * 60 * 1000,
+        'indefinite': null,
+      };
+      const ms = durations[item.snoozeDuration];
+      const newItem: EightySixedItem = {
+        id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
+        name: item.name,
+        category: item.category,
+        reason: 'Out of Stock',
+        snoozedAt: new Date(),
+        snoozeEndTime: ms ? new Date(Date.now() + ms) : null,
+      };
+      setEightySixedItems(prev => [...prev, newItem]);
+      toast({ title: "Item 86'd", description: `${item.name} marked as unavailable` });
+    },
+    [toast],
+  );
+
+  const handleRestoreItem = useCallback((itemId: string) => {
+    setEightySixedItems(prev => prev.filter(i => i.id !== itemId));
+    toast({ title: 'Item Restored', description: 'Item is now available again' });
+  }, [toast]);
+
+  const handleScheduleRestore = useCallback((itemId: string, restoreTime: Date) => {
+    setEightySixedItems(prev => prev.map(i => i.id === itemId ? { ...i, scheduledRestoreTime: restoreTime } : i));
+    toast({
+      title: 'Restore Scheduled',
+      description: `Item will be restored at ${restoreTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`,
+    });
+  }, [toast]);
+
+  // Auto-restore when scheduled time reached
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setEightySixedItems(prev => {
+        const stillActive = prev.filter(i => !(i.scheduledRestoreTime && i.scheduledRestoreTime <= now));
+        return stillActive.length === prev.length ? prev : stillActive;
+      });
+    }, 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
 
   const now = new Date();
   const timeStr = formatTimeForKDS(now, tfmt);
