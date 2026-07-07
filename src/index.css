@@ -436,3 +436,59 @@
 
 
 
+
+/* === 86 Items (unavailable menu items) === */
+.eighty-six-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: hsl(0, 84%, 60%);
+  color: white;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  line-height: 1;
+}
+.eighty-six-badge-sm { padding: 1px 6px; font-size: 9px; }
+.eighty-six-badge-lg { padding: 3px 10px; font-size: 12px; }
+
+.eighty-six-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(0, 84%, 60%);
+  color: white;
+  border-radius: 9999px;
+  width: 20px;
+  height: 20px;
+}
+
+.eighty-six-card {
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 12px;
+}
+
+.eighty-six-row {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.eighty-six-text {
+  color: hsl(0, 84%, 60%);
+  font-weight: 600;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+@keyframes eighty-six-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.eighty-six-pulse { animation: eighty-six-pulse 1.6s ease-in-out infinite; }
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
