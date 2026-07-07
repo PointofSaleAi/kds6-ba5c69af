@@ -267,7 +267,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                 ))}
               </div>
             )}
-            {product.modifiers.length > 0 && (
+            {(product.modifiers.length > 0 || product.notes) && (
               <div className="flex flex-wrap items-center" style={{ gap: 8, rowGap: 2 }}>
                 {product.modifiers.map((mod, idx) => (
                   <span
@@ -284,11 +284,11 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     {mod.text}
                   </span>
                 ))}
-              </div>
-            )}
-            {product.notes && (
-              <div className="italic leading-snug min-w-0" style={{ fontSize: 13, color: C.textMuted }}>
-                "{product.notes}"
+                {product.notes && (
+                  <span className="italic leading-snug min-w-0" style={{ fontSize: 13, color: C.textMuted }}>
+                    "{product.notes}"
+                  </span>
+                )}
               </div>
             )}
           </div>
