@@ -272,6 +272,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
           {videoMode ? (
             <VideoView
               stepTitles={recipe.steps.map((s) => s.title)}
+              videoUrl={recipe.video?.url || ''}
               duration={recipe.video?.duration ?? '0:00'}
               tight={isV3}
               C={C}
