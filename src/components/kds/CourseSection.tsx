@@ -497,6 +497,7 @@ interface CourseItemTapRowProps {
   seenIdx?: number;
   ticketLayoutCompact?: boolean;
   legacyActions?: boolean;
+  order?: Order;
 }
 
 function CourseItemTapRow({
