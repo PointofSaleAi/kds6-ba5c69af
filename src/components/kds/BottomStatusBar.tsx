@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Ban } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Package } from 'lucide-react';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
@@ -211,31 +211,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           </Tooltip>
         </TooltipProvider>
 
-        {/* 86 Items */}
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                data-onboarding="eighty-six"
-                onClick={() => setEightySixOpen(true)}
-                className={`relative flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
-                  eightySixedItems.length > 0
-                    ? 'bg-[hsl(0,84%,60%)]/30 hover:bg-[hsl(0,84%,60%)]/45 text-[hsl(0,84%,75%)]'
-                    : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
-                }`}
-                aria-label="86 items"
-              >
-                <Ban size={15} />
-                {eightySixedItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[hsl(0,84%,60%)] text-white text-[10px] font-bold flex items-center justify-center">
-                    {eightySixedItems.length}
-                  </span>
-                )}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top"><p>86 Items</p></TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+
+
 
 
 
@@ -311,6 +288,31 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         >
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
+        {/* 86 Items */}
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                data-onboarding="eighty-six"
+                onClick={() => setEightySixOpen(true)}
+                className={`relative flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
+                  eightySixedItems.length > 0
+                    ? 'bg-[hsl(0,84%,60%)]/30 hover:bg-[hsl(0,84%,60%)]/45 text-[hsl(0,84%,75%)]'
+                    : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
+                }`}
+                aria-label="86 items"
+              >
+                <Package size={15} />
+                {eightySixedItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[hsl(0,84%,60%)] text-white text-[10px] font-bold flex items-center justify-center">
+                    {eightySixedItems.length}
+                  </span>
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top"><p>86 Items</p></TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <button
           data-onboarding="ai"
           onClick={onToggleAiAssistant}
