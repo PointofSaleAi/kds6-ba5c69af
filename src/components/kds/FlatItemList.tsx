@@ -346,7 +346,7 @@ function ItemTapRow({
                 {...(item.id === 'onb-i-2' ? { 'data-onboarding': 'item-modifier' } : {})}
                 className={isDone ? 'line-through' : ''}
                 style={{
-                  marginTop: legacyActions ? '-8px' : '-2px',
+                  marginTop: '-2px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: isolateModifierRows ? '0px' : 'var(--kds-child-gap, 1px)',
@@ -370,7 +370,7 @@ function ItemTapRow({
             {servable.length > 0 && (
               <div
                 style={{
-                  marginTop: legacyActions ? '-6px' : '0px',
+                  marginTop: '0px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0px',
@@ -397,7 +397,7 @@ function ItemTapRow({
       })()}
 
       {showDetails && item.notes && !item.isCancelled && (
-        <div className="flex items-start" style={{ gap: '4px', marginTop: legacyActions ? '-6px' : 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
+        <div className="flex items-start" style={{ gap: '4px', marginTop: 'var(--kds-child-gap, 1px)', paddingLeft: ticketLayoutCompact ? '16px' : '0px' }}>
           <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', width: ticketLayoutCompact ? '1.5ch' : '2.25ch', display: 'inline-block' }}>
             0x
           </span>
