@@ -513,6 +513,7 @@ function CourseItemTapRow({
   const show86Pill = is86Confirmed;
   const tappable = isActive && !isPending && !isCourseCompleted && !item.isCancelled;
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [recipeOpen, setRecipeOpen] = useState(false);
   
 
   const hasDetails =
