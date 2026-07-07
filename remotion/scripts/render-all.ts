@@ -21,7 +21,7 @@ async function main() {
     chromeMode: 'chrome-for-testing',
   });
 
-  const recipes = Object.entries(RECIPES);
+  const recipes = [['default', DEFAULT], ...Object.entries(RECIPES)] as [string, typeof DEFAULT][];
   const outputDir = path.resolve(__dirname, '../output');
   fs.mkdirSync(outputDir, { recursive: true });
 
