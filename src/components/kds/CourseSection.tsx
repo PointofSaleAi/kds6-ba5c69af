@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Languages, Eye, Check, ConciergeBell, ChevronRight, Clock } from 'lucide-react';
-import type { CourseGroup, OrderItem } from '@/types/kds';
+import type { CourseGroup, OrderItem, Order } from '@/types/kds';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { KdsActionIcon } from './KdsActionIcon';
@@ -48,6 +48,8 @@ interface CourseSectionProps {
   ticketLayoutMode?: 'standard' | 'compact';
   /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
   legacyActions?: boolean;
+  /** Optional parent order for contextual metadata (e.g. recipe modal). */
+  order?: Order;
 }
 
 function getStationStatus(courseGroup: CourseGroup, stationCourse: string): StationStatus {
@@ -101,7 +103,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
   return null;
 }
 
-export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode, legacyActions }: CourseSectionProps) {
+export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode, legacyActions, order }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang, tl } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
@@ -441,6 +443,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
                 seenIdx={seenOrderIndex?.get(item.id)}
                 ticketLayoutCompact={ticketLayoutCompact}
                 legacyActions={legacyActions}
+                order={order}
               />
             );
           });
@@ -494,6 +497,7 @@ interface CourseItemTapRowProps {
   seenIdx?: number;
   ticketLayoutCompact?: boolean;
   legacyActions?: boolean;
+  order?: Order;
 }
 
 function CourseItemTapRow({
@@ -503,7 +507,7 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
-  compactRows, seenIdx, ticketLayoutCompact, legacyActions,
+  compactRows, seenIdx, ticketLayoutCompact, legacyActions, order,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn, confirm: confirm86 } = useFlag86();
@@ -852,6 +856,7 @@ function CourseItemTapRow({
       {legacyActions && (
         <RecipeReferenceModal
           product={recipeOpen ? item : null}
+          order={order}
           onClose={() => setRecipeOpen(false)}
           variant="default"
         />

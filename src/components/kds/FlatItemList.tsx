@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CourseGroup, OrderItem } from '@/types/kds';
+import type { CourseGroup, OrderItem, Order } from '@/types/kds';
 import { Languages, ChevronRight } from 'lucide-react';
 import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
@@ -35,9 +35,11 @@ interface FlatItemListProps {
   ticketLayoutMode?: 'standard' | 'compact';
   /** When true, render per-product KdsActionIcon (legacy mode) and disable row-tap cycle. */
   legacyActions?: boolean;
+  /** Optional parent order for contextual metadata (e.g. recipe modal). */
+  order?: Order;
 }
 
-export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode, legacyActions }: FlatItemListProps) {
+export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onReRouteItem, showAllergens = true, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, dismissedItemIds, onDismissItem, ticketLayoutMode, legacyActions, order }: FlatItemListProps) {
   const { tp, displayMode, tpSecondary, t, showSecondaryMenu, secondaryLang } = useLanguage();
   const { ticketLayout } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
@@ -84,6 +86,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
             onDismissItem={onDismissItem}
             ticketLayoutCompact={ticketLayoutCompact}
             legacyActions={legacyActions}
+            order={order}
           />
         );
       });
@@ -115,13 +118,14 @@ interface ItemTapRowProps {
   onDismissItem?: (itemId: string) => void;
   ticketLayoutCompact?: boolean;
   legacyActions?: boolean;
+  order?: Order;
 }
 
 function ItemTapRow({
   item, status, timestamps, seenIdx, isLastVisible, showAllergens,
   displayMode, showSecondaryMenu, secondaryDir, tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
-  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact, legacyActions,
+  onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact, legacyActions, order,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
@@ -422,6 +426,7 @@ function ItemTapRow({
       {legacyActions && (
         <RecipeReferenceModal
           product={recipeOpen ? item : null}
+          order={order}
           onClose={() => setRecipeOpen(false)}
           variant="default"
         />

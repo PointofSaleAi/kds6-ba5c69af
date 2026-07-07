@@ -103,7 +103,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
     radius: 12,
   };
 
-  const context = `${courseLabel ?? product.category ?? 'item'} · ${product.quantity}x on ticket #${order?.orderNumber ?? '—'}`;
+  const context = `${courseLabel ?? product.category ?? 'item'} · ${order?.orderNumber ?? '—'} · ${product.quantity}x`;
   const modifierNote = product.modifiers.find((m) => m.type === 'extra');
   const hasVideo = !!recipe.video;
 
