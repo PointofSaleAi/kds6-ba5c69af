@@ -1,81 +1,62 @@
-## Goal
+Create a programmatic recipe-video pipeline for all products in the Point of Sale Ai KDS using Remotion, then wire the generated MP4s into the existing recipe modal.
 
-Make the first-login walkthrough teach the ticket card and the Summary panel piece by piece, the same way it already walks the footer. Each cue gets its own spotlight and short caption instead of highlighting the whole ticket or the whole panel.
+## What we will build
 
-## Sample data
+1. A self-contained `remotion/` project inside the repo that renders a short MP4 for each product using the existing recipe data (product name, ingredients, step titles, step images, duration).
+2. A batch render script that generates one MP4 per recipe in `src/data/recipe-reference-data.ts` (default, burger, steak, salad, pasta, pizza, fish, chicken) and saves them locally.
+3. A Lovable Cloud Storage bucket (e.g., `recipe-videos`) and an upload step that pushes each MP4 to the bucket and returns a public URL.
+4. Update the recipe mock data so each recipe’s `video.url` points to its stored MP4.
+5. No changes to the `RecipeReferenceModal` player logic are required; it already reads `recipe.video.url` and falls back to a demo only when the URL is empty.
 
-Enrich `src/data/onboarding-sample-order.ts` so every cue we teach is visibly present on the one sample ticket:
+## Visual direction
 
-- 1 dine-in ticket, TABLE 1, "Trainer" server
-- 1 course (ENTREE), fired
-- 3 items so the panel has enough to teach:
-  - Grilled Salmon x1, allergen: FISH, modifier: "+ Extra lemon" (blue extra)
-  - Caesar Salad x1, modifier: "No croutons" (red strike removal)
-  - Truffle Fries x2 (higher qty so Summary shows a count > 1, and one item shows as overtime by giving it an older `firedAt` / large `elapsedSeconds` so it lands in the Summary Overtime section)
+- Format: 16:9, 1080x1920px vertical is also an option; default 1920x1080 at 30fps.
+- Duration: 15-20 seconds per recipe, matching the mock `duration` labels (1:05, 1:24, 1:35, etc.) if desired.
+- Look: clean, kitchen-readable text; Montserrat headings; step cards that fade/slide through the existing recipe step images; a persistent bottom bar showing the product name and step progress.
+- Animation style: subtle slide/fade transitions between steps, no complex effects so rendering stays fast and stable in the sandbox.
 
-## Anchors to add
+## Technical steps
 
-Add stable `data-onboarding` attributes on:
+### 1. Remotion scaffold
+- Create `remotion/` directory with `bun init -y`.
+- Install: `remotion`, `@remotion/cli`, `@remotion/renderer`, `@remotion/bundler`, `@remotion/compositor-linux-x64-musl`, `@remotion/transitions`, `react`, `react-dom`, `typescript`, `@types/react`.
+- Apply the sandbox fix: overwrite the gnu compositor binary with the musl one and symlink system `ffmpeg`/`ffprobe`.
+- Add `tsconfig.json` with `jsx: "react-jsx"`, `module: "Preserve"`, `moduleResolution: "bundler"`.
 
-- `OrderCard` header (order type strip)
-- Order/table number block
-- Order timer
-- First item row (whole row)
-- Allergen chip on the salmon row
-- Modifier line on the salad row
-- Item eye button (seen)
-- Item bell button (cooking)
-- Item check button (done)
-- `OrderCardActions` ticket footer button (already tagged)
+### 2. Composition and scenes
+- `src/index.ts`: `registerRoot(RemotionRoot)`.
+- `src/Root.tsx`: register a single composition (`id: "recipe"`) that accepts `productName`, `steps`, `ingredients`, `durationSeconds`, and `imageUrl` as props.
+- `src/MainVideo.tsx`: persistent background + `<TransitionSeries>` sequencing one scene per recipe step.
+- `src/scenes/RecipeStepScene.tsx`: full-screen step image with overlaid step number, title, and one-line instruction, fading in/out with frame-based `interpolate()`.
+- `src/components/RecipeHeader.tsx`: top-left product name and bottom progress bar.
 
-In `ItemSummaryPanel`:
+### 3. Batch render + upload
+- `remotion/scripts/render-all.mjs`: iterate over every recipe from `src/data/recipe-reference-data.ts`, call `renderMedia()` for each, and write to `remotion/output/<product>.mp4`.
+- Create a Lovable Cloud Storage bucket `recipe-videos` via the storage tool (public).
+- `remotion/scripts/upload-to-cloud.mjs` (or a small Node script using the Supabase client): upload each MP4 and update a JSON map of product -> public URL.
+- Back-fill the `video.url` field in `src/data/recipe-reference-data.ts` for each recipe.
 
-- Overtime section container
-- One category header row
-- One product row inside the category
-- Filter status bar area (shown after tapping a product)
+### 4. Validation
+- Open the recipe modal in the KDS preview and tap "Watch video" for a product; confirm the generated MP4 loads instead of the demo.
+- Spot-check a few frames with `bunx remotion still` before the full render.
 
-Only one instance per attribute so the walkthrough selector is unambiguous.
+## Cost / credit impact
 
-## Walkthrough steps
+- No AI generation credits are consumed because the video is built from existing images and text in code (Remotion).
+- Remotion rendering uses sandbox compute/build time during the render step, which falls under normal build-mode usage.
+- Lovable Cloud Storage charges for stored data and outbound transfer separately from subscription credits. Each ~15-second MP4 at 1080p is roughly 2-5 MB, so total storage for 8 recipes is small (under 50 MB).
+- If you prefer to avoid storage costs entirely, the MP4s can be kept locally in the repo under `public/videos/` and served as static assets, but this bloats the bundle and is not recommended for production.
 
-Replace the current 18-step list in `src/components/onboarding/OnboardingWalkthrough.tsx` with a grouped sequence. Sample ticket must render before ticket steps run (already handled by the injection effect).
+## Out of scope
 
-Ticket card group (spotlight + caption for each):
-1. Order type header — "Order type. Color tells you Dine-in, Take-out, Delivery, Banquet at a glance."
-2. Order/table number — "Order or table number. Big and centered so you can read it across the kitchen."
-3. Order timer — "Ticket timer. Turns amber, then red as it gets older."
-4. Item row — "Each row is one item on the order."
-5. Allergen chip — "Allergens always show as a red chip. Never miss one."
-6. Modifier line — "Extras show in blue, removals in red with a strikethrough."
-7. Item eye — "Tap the eye to mark just this item as seen."
-8. Item bell — "Tap the bell to mark it cooking."
-9. Item check — "Tap the check when the item is done."
-10. Ticket footer button — "Or tap the ticket button to move every item at once: seen, then cooking, then remove from the queue."
+- AI-generated video from prompts (e.g., a model generating a real cooking video) is intentionally excluded; that would consume AI credits and is a different feature.
+- Real-time video generation from user-uploaded recipes is not included; this plan covers the existing mock catalog only.
 
-Summary panel group:
-11. Panel header — "Summary panel shows what's still to cook."
-12. Overtime section — "Overtime lists items that have been open too long. Fire these first."
-13. Category header — "Items grouped by category."
-14. Product row — "Tap a product to filter the queue to only tickets with that product. Tap again to clear."
+## Deliverables
 
-Footer group: keep the existing footer steps (queue count, filter, revenue, sort, view modes, language, sound, theme, AI, datetime) unchanged.
+- `remotion/` project with source files, scenes, and components.
+- `remotion/scripts/render-all.mjs` and `remotion/scripts/upload-to-cloud.mjs`.
+- Updated `src/data/recipe-reference-data.ts` with working video URLs.
+- A generated MP4 for each product in the mock catalog.
 
-Total ~28 steps. Progress dots and Skip stay as-is.
-
-## Behavior details
-
-- Preferred tooltip side: `right` for ticket-card cues, `left` for Summary panel cues, `top` for footer cues (already correct).
-- Spotlight padding stays 6px; small chips (allergen, eye, bell, check) render fine at that size.
-- If an anchor is not found for a step (e.g. no overtime item present), auto-advance to the next step instead of showing an empty tooltip.
-- Sample ticket stays injected for the whole ticket + summary portion and is removed on finish/skip (already handled).
-
-## Files touched
-
-- `src/data/onboarding-sample-order.ts` — enrich sample items with allergen, modifiers, quantities, and an overtime item.
-- `src/components/onboarding/OnboardingWalkthrough.tsx` — new step list, auto-skip when anchor missing.
-- `src/components/kds/OrderCard.tsx` — anchors on header, order/table number, timer.
-- `src/components/kds/FlatItemList.tsx` and/or `src/components/kds/CourseSection.tsx` — anchors on item row, allergen chip, modifier line, and the eye/bell/check buttons for the first item of the sample ticket only (guard by `data-order-id`).
-- `src/components/kds/ItemSummaryPanel.tsx` — anchors on panel header, overtime section, first category, first product row.
-
-No changes to real ticket behavior, Summary filtering, or footer controls — the walkthrough only points at them.
+Approve this plan and I will implement it in build mode.
