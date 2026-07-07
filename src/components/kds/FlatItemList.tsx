@@ -6,6 +6,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
+import { RecipeReferenceModal } from './RecipeReferenceModal';
 import { TightWidthBox } from './TightWidthBox';
 import { KdsActionIcon, type KdsIconType } from './KdsActionIcon';
 import { LegacyActionPill } from './LegacyActionPill';
@@ -125,6 +126,7 @@ function ItemTapRow({
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
   const [manual86Open, setManual86Open] = useState(false);
+  const [recipeOpen, setRecipeOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const hasDetails =
     (showAllergens && item.allergens.length > 0) ||
@@ -204,9 +206,9 @@ function ItemTapRow({
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         }}
-        onClick={legacyActions ? undefined : handleTap}
+        onClick={legacyActions ? () => { if (!item.isCancelled) setRecipeOpen(true); } : handleTap}
         {...longPress}
-        title={item.isCancelled ? undefined : (legacyActions ? 'Hold to 86' : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86'))}
+        title={item.isCancelled ? undefined : (legacyActions ? 'Tap for recipe · Hold to 86' : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86'))}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
@@ -417,6 +419,13 @@ function ItemTapRow({
         primaryLabel="Request 86"
         showQuantityAdjuster="below-title"
       />
+      {legacyActions && (
+        <RecipeReferenceModal
+          product={recipeOpen ? item : null}
+          onClose={() => setRecipeOpen(false)}
+          variant="default"
+        />
+      )}
     </div>
   );
 }
