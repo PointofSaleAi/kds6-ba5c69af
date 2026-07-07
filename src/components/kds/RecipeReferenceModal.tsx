@@ -255,20 +255,15 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
           </div>
         </div>
 
-        {/* ALLERGEN STRIP */}
-        {(product.allergens.length > 0 || modifierNote) && (
+        {/* MODIFIER NOTE STRIP */}
+        {modifierNote && (
           <div className="flex flex-wrap items-center" style={{ gap: 6, padding: `0 ${S.pad}px ${S.pad - 8}px` }}>
-            {product.allergens.map((a) => (
-              <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
-            ))}
-            {modifierNote && (
-              <span
-                className="inline-flex items-center rounded-full"
-                style={{ padding: '3px 10px', background: C.brandRed, color: '#FFFFFF', fontSize: 12, fontWeight: 600 }}
-              >
-                + {modifierNote.text}
-              </span>
-            )}
+            <span
+              className="inline-flex items-center rounded-full"
+              style={{ padding: '3px 10px', background: C.brandRed, color: '#FFFFFF', fontSize: 12, fontWeight: 600 }}
+            >
+              + {modifierNote.text}
+            </span>
           </div>
         )}
 
