@@ -140,7 +140,6 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   };
 
   const context = `${courseLabel ?? product.category ?? 'item'} · ${order?.orderNumber ?? '—'} · ${product.quantity}x`;
-  const modifierNote = product.modifiers.length > 0 ? product.modifiers : null;
   const hasVideo = !!recipe.video;
 
   const renderBold = (s: string) =>
