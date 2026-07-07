@@ -140,7 +140,6 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
   };
 
   const context = `${courseLabel ?? product.category ?? 'item'} · ${order?.orderNumber ?? '—'} · ${product.quantity}x`;
-  const modifierNote = product.modifiers.length > 0 ? product.modifiers : null;
   const hasVideo = !!recipe.video;
 
   const renderBold = (s: string) =>
@@ -185,17 +184,8 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
               <div style={{ fontSize: S.context, color: C.textMuted, letterSpacing: 0.2, marginBottom: 4 }}>
                 {videoMode ? `Recipe video · ${product.name}` : context}
               </div>
-              <div className="flex items-center flex-wrap gap-1" style={{ rowGap: 2 }}>
-                <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: C.textPrimary, lineHeight: 1.15 }}>
-                  {product.name}
-                </div>
-                {product.allergens.length > 0 && (
-                  <>
-                    {product.allergens.map((a) => (
-                      <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
-                    ))}
-                  </>
-                )}
+              <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: C.textPrimary, lineHeight: 1.15 }}>
+                {product.name}
               </div>
             </div>
           </div>
@@ -267,25 +257,40 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
           </div>
         </div>
 
-        {/* MODIFIER NOTE STRIP */}
-        {modifierNote && modifierNote.length > 0 && (
-          <div className="flex flex-col" style={{ gap: 2, padding: `0 ${S.pad}px 4px` }}>
-            {modifierNote.map((mod, idx) => (
-              <div key={mod.id || `mod-${idx}`} className="flex items-start" style={{ gap: 4, lineHeight: 1 }}>
-                <span
-                  className={`min-w-0 font-semibold ${
-                    mod.type === 'extra'
-                      ? 'text-modifier-extra'
-                      : mod.type === 'remove'
-                        ? 'text-modifier-remove line-through'
-                        : 'text-modifier-neutral'
-                  }`}
-                  style={{ fontSize: 13, lineHeight: 1.2 }}
-                >
-                  {mod.text}
-                </span>
+        {/* PRODUCT DETAILS: allergens, modifiers, notes */}
+        {(product.allergens.length > 0 || product.modifiers.length > 0 || product.notes) && (
+          <div className="flex flex-col" style={{ gap: 4, padding: `0 ${S.pad}px 8px` }}>
+            {product.allergens.length > 0 && (
+              <div className="flex flex-wrap items-center" style={{ gap: 4, rowGap: 2 }}>
+                {product.allergens.map((a) => (
+                  <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
+                ))}
               </div>
-            ))}
+            )}
+            {product.modifiers.length > 0 && (
+              <div className="flex flex-wrap items-center" style={{ gap: 8, rowGap: 2 }}>
+                {product.modifiers.map((mod, idx) => (
+                  <span
+                    key={mod.id || `mod-${idx}`}
+                    className={`font-semibold ${
+                      mod.type === 'extra'
+                        ? 'text-modifier-extra'
+                        : mod.type === 'remove'
+                          ? 'text-modifier-remove line-through'
+                          : 'text-modifier-neutral'
+                    }`}
+                    style={{ fontSize: 13, lineHeight: 1.2 }}
+                  >
+                    {mod.text}
+                  </span>
+                ))}
+              </div>
+            )}
+            {product.notes && (
+              <div className="italic leading-snug min-w-0" style={{ fontSize: 13, color: C.textMuted }}>
+                "{product.notes}"
+              </div>
+            )}
           </div>
         )}
 
