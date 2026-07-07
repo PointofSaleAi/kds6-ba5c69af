@@ -507,7 +507,7 @@ function CourseItemTapRow({
   tp, tpSecondary, t,
   servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier,
   onAdvanceItem, onUndoItem, onDismissItem,
-  compactRows, seenIdx, ticketLayoutCompact, legacyActions,
+  compactRows, seenIdx, ticketLayoutCompact, legacyActions, order,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
   const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn, confirm: confirm86 } = useFlag86();
