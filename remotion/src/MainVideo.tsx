@@ -46,7 +46,7 @@ export const MainVideo: React.FC<RecipeVideoProps> = ({
       </TransitionSeries>
 
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <RecipeHeader productName={productName} progress={1} />
+        <RecipeHeader productName={productName} />
       </div>
     </AbsoluteFill>
   );
