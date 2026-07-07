@@ -179,6 +179,43 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 ml-3">
+            {!videoMode && recipe.yields.length > 0 && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setYieldOpen((o) => !o)}
+                  className="inline-flex items-center gap-1.5 rounded-md"
+                  style={{
+                    padding: '4px 10px',
+                    background: C.surfaceRaised,
+                    color: C.textPrimary,
+                    fontSize: 12,
+                    fontWeight: 500,
+                  }}
+                >
+                  Yield: {recipe.yields[yieldIdx]}
+                  <ChevronDown size={12} />
+                </button>
+                {yieldOpen && (
+                  <div
+                    className="absolute right-0 mt-1 rounded-md overflow-hidden z-10"
+                    style={{ background: C.yieldMenuBg, border: `1px solid ${C.yieldMenuBorder}`, minWidth: 140 }}
+                  >
+                    {recipe.yields.map((y, i) => (
+                      <button
+                        key={y}
+                        type="button"
+                        onClick={() => { setYieldIdx(i); setYieldOpen(false); }}
+                        className="block w-full text-left"
+                        style={{ padding: '6px 10px', fontSize: 12, color: i === yieldIdx ? C.textPrimary : C.textSecondary, background: i === yieldIdx ? 'rgba(232,76,61,0.15)' : 'transparent' }}
+                      >
+                        {y}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             {!videoMode && hasVideo && (
               <button
                 type="button"
@@ -244,43 +281,6 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
                     </div>
-                    {recipe.yields.length > 0 && (
-                      <div className="relative">
-                        <button
-                          type="button"
-                          onClick={() => setYieldOpen((o) => !o)}
-                          className="inline-flex items-center gap-1.5 rounded-md"
-                          style={{
-                            padding: '4px 10px',
-                            background: C.surfaceRaised,
-                            color: C.textPrimary,
-                            fontSize: 12,
-                            fontWeight: 500,
-                          }}
-                        >
-                          Yield: {recipe.yields[yieldIdx]}
-                          <ChevronDown size={12} />
-                        </button>
-                        {yieldOpen && (
-                          <div
-                            className="absolute right-0 mt-1 rounded-md overflow-hidden z-10"
-                            style={{ background: C.yieldMenuBg, border: `1px solid ${C.yieldMenuBorder}`, minWidth: 140 }}
-                          >
-                            {recipe.yields.map((y, i) => (
-                              <button
-                                key={y}
-                                type="button"
-                                onClick={() => { setYieldIdx(i); setYieldOpen(false); }}
-                                className="block w-full text-left"
-                                style={{ padding: '6px 10px', fontSize: 12, color: i === yieldIdx ? C.textPrimary : C.textSecondary, background: i === yieldIdx ? 'rgba(232,76,61,0.15)' : 'transparent' }}
-                              >
-                                {y}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
 
                   <div className="flex overflow-x-auto" style={{ gap: 8, paddingBottom: 4, scrollbarWidth: 'thin' }}>
