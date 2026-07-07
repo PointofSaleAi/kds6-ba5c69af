@@ -6,6 +6,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
+import { RecipeReferenceModal } from './RecipeReferenceModal';
 import { TightWidthBox } from './TightWidthBox';
 import { KdsActionIcon, type KdsIconType } from './KdsActionIcon';
 import { LegacyActionPill } from './LegacyActionPill';
