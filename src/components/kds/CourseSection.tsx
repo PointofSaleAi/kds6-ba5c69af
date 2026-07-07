@@ -8,6 +8,7 @@ import { LegacyActionPill } from './LegacyActionPill';
 import { StationBadge } from './StationBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
 import { Flag86Button, Flag86Modal } from './Flag86Button';
+import { RecipeReferenceModal } from './RecipeReferenceModal';
 import { TightWidthBox } from './TightWidthBox';
 import { useRowTap } from '@/hooks/use-row-tap';
 import { useLongPress } from '@/hooks/use-long-press';
