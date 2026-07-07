@@ -337,7 +337,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                   <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, marginBottom: 8 }}>
                     Prep steps
                   </div>
-                  <div className="grid grid-cols-2" style={{ gap: S.gap }}>
+                  <div className="grid grid-cols-3" style={{ gap: S.gap }}>
                     {recipe.steps.map((step, i) => (
                       <div
                         key={i}
