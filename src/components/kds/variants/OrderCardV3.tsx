@@ -60,6 +60,7 @@ function ProductRow({
   state,
   onToggle,
   onReset,
+  onRemove,
   onLongPress,
   compact = false,
 }: {
@@ -68,6 +69,7 @@ function ProductRow({
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }) {
@@ -81,7 +83,7 @@ function ProductRow({
   const handleClick = () => {
     if (loading) return;
     if (done) {
-      if (canExpand) setExpanded((v) => !v);
+      onRemove();
       return;
     }
     onToggle();
@@ -206,6 +208,7 @@ export function OrderCardV3({ order, onBump }: Props) {
   const agingStatus = getStatusForElapsed(elapsed);
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
@@ -217,8 +220,14 @@ export function OrderCardV3({ order, onBump }: Props) {
     const t = window.setTimeout(() => setRow(id, 'done'), 600);
     timersRef.current.push(t);
   };
+  const removeRow = (id: string) => setRemovedIds((prev) => {
+    const next = new Set(prev);
+    next.add(id);
+    return next;
+  });
 
-  const allItems = order.courses.flatMap((c) => c.items);
+  const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
+
 
   const handleBump = () => {
     if (bumping) return;
@@ -313,7 +322,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                   <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
                 </div>
                 <div>
-                  {course.items.map((product) => (
+                  {course.items.filter((p) => !removedIds.has(p.id)).map((product) => (
                     <ProductRow
                       key={product.id}
                       product={product}
@@ -321,6 +330,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                       state={rowStates[product.id] ?? 'idle'}
                       onToggle={() => toggleRow(product.id)}
                       onReset={() => setRow(product.id, 'idle')}
+                      onRemove={() => removeRow(product.id)}
                       onLongPress={setRecipeProduct}
                     />
                   ))}
@@ -338,6 +348,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                 state={rowStates[product.id] ?? 'idle'}
                 onToggle={() => toggleRow(product.id)}
                 onReset={() => setRow(product.id, 'idle')}
+                onRemove={() => removeRow(product.id)}
                 onLongPress={setRecipeProduct}
                 compact={isCompact}
               />
