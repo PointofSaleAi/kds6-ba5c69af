@@ -580,7 +580,8 @@ export function EightySixSheet({
                                   </div>
                                 )}
                                 <span
-                                  className={`text-sm ${is86ed ? "eighty-six-text" : "text-foreground/80"}`}
+                                  className={`text-sm ${is86ed ? "eighty-six-text" : ""}`}
+                                  style={{ color: is86ed ? undefined : categoryColor }}
                                 >
                                   {item}
                                 </span>
