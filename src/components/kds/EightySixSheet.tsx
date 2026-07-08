@@ -558,7 +558,7 @@ export function EightySixSheet({
                       </div>
                     </button>
 
-                    {expandedCategories.has(category.name) && (
+                    {isExpanded && (
                       <div className="border-t border-border">
                         {category.items.map((item) => {
                           const is86ed = isItemEightySixed(item);
