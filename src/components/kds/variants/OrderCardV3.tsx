@@ -310,6 +310,8 @@ export function OrderCardV3({ order, onBump }: Props) {
         {showCourses ? (
           order.courses.map((course, idx) => {
             const p = paletteFor(course.course);
+            const visibleItems = course.items.filter((it) => !removedIds.has(it.id));
+            if (visibleItems.length === 0) return null;
             return (
               <div key={`${course.course}-${idx}`}>
                 <div
@@ -317,10 +319,10 @@ export function OrderCardV3({ order, onBump }: Props) {
                   style={{ background: p.bg, color: p.text }}
                 >
                   <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
-                  <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
+                  <span className="text-[10px] font-semibold">Products: {visibleItems.length}</span>
                 </div>
                 <div>
-                  {course.items.map((product) => (
+                  {visibleItems.map((product) => (
                     <ProductRow
                       key={product.id}
                       product={product}
