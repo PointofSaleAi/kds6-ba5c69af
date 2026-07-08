@@ -494,7 +494,7 @@ export function EightySixSheet({
               </div>
             </div>
 
-            <div className="px-4 py-2 border-b border-border">
+            <div className="px-4 pt-1 pb-2 border-b border-border">
               <p className="text-muted-foreground text-xs mb-2">Mark as unavailable for:</p>
               <div className="flex gap-1">
                 {snoozeDurations.map((duration) => (
