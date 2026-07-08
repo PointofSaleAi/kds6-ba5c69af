@@ -164,7 +164,7 @@ function V2ProductRow({
             style={{ width: 22, height: 22, color: '#6C7A89' }}
             aria-label="Start cooking"
           >
-            <SquareCheck size={18} strokeWidth={2} />
+            <Eye size={18} strokeWidth={2} />
           </button>
         )}
       </div>

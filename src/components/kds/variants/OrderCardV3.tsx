@@ -169,7 +169,7 @@ function ProductRow({
           style={{ background: '#27AE60', width: 16, height: 16 }}
           aria-label="Product done"
         >
-          <Eye size={10} color="#fff" strokeWidth={3} />
+          <Check size={10} color="#fff" strokeWidth={3} />
         </span>
       )}
     </div>
