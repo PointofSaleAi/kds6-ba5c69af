@@ -211,9 +211,13 @@ function ItemTapRow({
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && rowBg ? { backgroundColor: rowBg } : {}),
         }}
-        onClick={legacyActions ? () => { if (!item.isCancelled) setRecipeOpen(true); } : handleTap}
+        onClick={legacyActions ? () => {
+          if (item.isCancelled) return;
+          if (isDone) { if (allServableModsDone) onDismissItem?.(item.id); return; }
+          setRecipeOpen(true);
+        } : handleTap}
         {...longPress}
-        title={item.isCancelled ? undefined : (legacyActions ? 'Tap for recipe · Hold to 86' : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86'))}
+        title={item.isCancelled ? undefined : (legacyActions ? (isDone ? 'Tap to remove · Hold to 86' : 'Tap for recipe · Hold to 86') : (isDone ? 'Tap to remove · Double-tap to undo · Hold to 86' : isSeen ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86'))}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
