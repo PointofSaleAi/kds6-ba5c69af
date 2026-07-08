@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense, type ReactNode } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
@@ -319,14 +319,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     // 2 cols on iPad Mini/Air, 3 cols on iPad Pro (viewport >= 960px).
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
-    if (cardVariant === 'v1' || cardVariant === 'v4') {
+    if (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') {
       // V1/V4: 4 / 5 / 6 by viewport width
       if (boardContentWidth < 480) return 3;
       if (boardContentWidth < 1100) return 4;
       if (boardContentWidth < 1400) return 5;
       return 6;
     }
-    if (cardVariant === 'v5') {
+    if (effectiveCardVariant === 'v5') {
       // V5: 4 on small screens, 5 on wide screens
       if (boardContentWidth < 1100) return 4;
       return 5;
@@ -336,7 +336,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
     return 5;
-  }, [boardContentWidth, isPortrait, viewportWidth, cardVariant]);
+  }, [boardContentWidth, isPortrait, viewportWidth, effectiveCardVariant]);
 
 
   // Move served orders to history immediately
@@ -1032,7 +1032,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         />
       );
     }
-    const withSelectedTicketSettings = (node: React.ReactNode) => (
+    const withSelectedTicketSettings = (node: ReactNode) => (
       <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
     );
     if (effectiveCardVariant === 'v1') {
