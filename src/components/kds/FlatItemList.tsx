@@ -5,7 +5,7 @@ import type { ItemStatus } from './CourseSection';
 import { useLanguage } from '@/hooks/use-language';
 import { AllergenBadge } from './AllergenBadge';
 import { ModifierLine, type ModifierStatus } from './ModifierLine';
-import { Flag86Button, Flag86Modal, Item86Modal } from './Flag86Button';
+import { Flag86Button, Item86Modal } from './Flag86Button';
 import { RecipeReferenceModal } from './RecipeReferenceModal';
 import { TightWidthBox } from './TightWidthBox';
 import { KdsActionIcon, type KdsIconType } from './KdsActionIcon';
