@@ -29,6 +29,7 @@ import StatusSettings from '@/pages/StatusSettings';
 import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { getCardVariantForTicketsRoute, readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
 
 export default function DisplaySettings() {
   const {
@@ -36,8 +37,9 @@ export default function DisplaySettings() {
     getRouteSetting, setRouteSetting,
   } = useKDSSettings();
   const [ticketsRoute, setTicketsRoute] = useState<import('@/hooks/use-kds-settings').TicketsRouteKey>(
-    () => (localStorage.getItem('kds-tickets-route') as any) || 'Default',
+    () => readStoredTicketsRoute('Default'),
   );
+  const selectedCardVariant = getCardVariantForTicketsRoute(ticketsRoute);
   // Read values scoped to the currently-selected preview route
   const textSize = getRouteSetting(ticketsRoute, 'textSize');
   const ticketSpacing = getRouteSetting(ticketsRoute, 'ticketSpacing');
@@ -184,8 +186,9 @@ export default function DisplaySettings() {
                     options={['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6']}
                     value={ticketsRoute}
                     onChange={(v) => {
-                      setTicketsRoute(v as any);
-                      localStorage.setItem('kds-tickets-route', v);
+                      const nextRoute = v as import('@/hooks/use-kds-settings').TicketsRouteKey;
+                      setTicketsRoute(nextRoute);
+                      writeStoredTicketsRoute(nextRoute);
                     }}
                   />
                 </div>
@@ -242,18 +245,18 @@ export default function DisplaySettings() {
               </p>
               <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
                 <div
-                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass} ${ticketsRoute === 'v6' ? 'v5-route' : ''}`}
+                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass} ${selectedCardVariant === 'v5' ? 'v5-route' : ''}`}
                 >
                   <KDSSettingsPreviewScope route={ticketsRoute}>
-                    {ticketsRoute === 'v2' ? (
+                    {selectedCardVariant === 'v1' ? (
                       <OrderCardV1 order={previewTicket} />
-                    ) : ticketsRoute === 'v3' ? (
+                    ) : selectedCardVariant === 'v2' ? (
                       <OrderCardV2 order={previewTicket} />
-                    ) : ticketsRoute === 'v4' ? (
+                    ) : selectedCardVariant === 'v3' ? (
                       <OrderCardV3 order={previewTicket} />
-                    ) : ticketsRoute === 'v5' ? (
+                    ) : selectedCardVariant === 'v4' ? (
                       <OrderCardV4 order={previewTicket} />
-                    ) : ticketsRoute === 'v6' ? (
+                    ) : selectedCardVariant === 'v5' ? (
                       <OrderCardV5 order={previewTicket} />
                     ) : (
                       <OrderCard order={previewTicket} layoutOverride={ticketLayout} legacyActions={ticketsRoute === 'Default'} />
