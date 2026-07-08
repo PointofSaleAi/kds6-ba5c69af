@@ -57,28 +57,8 @@ interface EightySixSheetProps {
   onEightySixItem: (item: { name: string; category: string; snoozeDuration: string }) => void;
 }
 
-const menuCategories = [
-  {
-    name: "Entrees",
-    items: ["Grilled Salmon", "Ribeye Steak", "Chicken Parmesan", "Lamb Chops", "Lobster Roll"],
-  },
-  {
-    name: "Appetizers",
-    items: ["Caesar Salad", "Buffalo Wings", "Garlic Bread", "Clam Chowder", "Guacamole"],
-  },
-  {
-    name: "Sides",
-    items: ["Mashed Potatoes", "Roasted Vegetables", "Asparagus", "French Fries", "Rice Pilaf"],
-  },
-  {
-    name: "Drinks",
-    items: ["Sparkling Water", "Iced Tea", "Margarita", "Glass of Wine", "Cappuccino"],
-  },
-  {
-    name: "Desserts",
-    items: ["Tiramisu", "Churros", "Chocolate Cake", "Fresh Fruit Bowl", "Ice Cream"],
-  },
-];
+const UNCATEGORIZED = "Uncategorized";
+
 
 const snoozeDurations = [
   { id: "15min", label: "15 min", ms: 15 * 60 * 1000 },
