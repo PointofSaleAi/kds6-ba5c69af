@@ -418,20 +418,14 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
 
 
-      {/* FOOTER */}
+      {/* FOOTER: SEEN → IN PROGRESS → DONE (matches /default) */}
       {!isCompact && !isHeaderOnly && (
-        <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
-          <button
-            type="button"
-            onClick={handleBump}
-            disabled={bumping}
-            className="rounded px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
-            style={{ background: accentColor, color: accentText }}
-          >
-            {bumping && <Loader2 size={12} className="animate-spin" />}
-            {bumping ? 'Bumping...' : 'Bump all'}
-          </button>
-        </div>
+        <OrderCardActions
+          orderId={order.id}
+          ticketState={ticketState}
+          onTicketAdvance={handleTicketAdvance}
+          onTicketRecall={handleTicketRecall}
+        />
       )}
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
