@@ -844,20 +844,19 @@ function CourseItemTapRow({
           )}
         </div>
       )}
-      <Flag86Modal
+      <Item86Modal
         open={manual86Open}
         onClose={() => setManual86Open(false)}
-        onConfirm={() => {
+        onConfirm={(qty) => {
           setManual86Open(false);
           confirm86(item.id);
           // eslint-disable-next-line no-console
-          console.log('Manual 86 requested:', 'item', [item.id]);
+          console.log('Manual 86 confirmed:', 'item', [item.id], 'qty', qty);
         }}
-        title={item.name}
-        subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
-        primaryLabel="Request 86"
-        showQuantityAdjuster="below-title"
+        productName={item.name}
+        currentQuantity={item.quantity ?? 1}
       />
+
       {legacyActions && (
         <RecipeReferenceModal
           product={recipeOpen ? item : null}
