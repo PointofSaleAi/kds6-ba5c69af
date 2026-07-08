@@ -276,7 +276,7 @@ export function EightySixSheet({
                 </Button>
               </div>
             ) : (
-              <div className="p-4 space-y-3">
+              <div className="px-4 pt-2 pb-4 space-y-3">
                 {eightySixedItems.map((item) => (
                   <div key={item.id} className="eighty-six-card flex items-center justify-between">
                     <div className="flex items-start gap-3 flex-1">
