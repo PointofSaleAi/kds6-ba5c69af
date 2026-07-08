@@ -219,7 +219,7 @@ export function EightySixSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
       >
         <SheetHeader className="p-4 border-b border-destructive/30">
           <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
