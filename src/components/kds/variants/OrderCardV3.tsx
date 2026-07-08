@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
@@ -10,6 +10,7 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
+import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import { formatTime } from '@/lib/datetime';
 import dineInIcon from '@/assets/icons/order-types/dine-in.svg';
