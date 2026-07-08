@@ -533,9 +533,12 @@ export function EightySixSheet({
 
             <ScrollArea className="flex-1">
               <div className="px-4 pt-2 pb-4 space-y-2">
-                {filteredCategories.map((category) => (
-                  <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
-                    <button
+                {filteredCategories.map((category) => {
+                  const isExpanded = expandedCategories.has(category.name);
+                  const categoryColor = getCategoryColor(category.name);
+                  return (
+                    <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
+                      <button
                       onClick={() => toggleCategory(category.name)}
                       className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
