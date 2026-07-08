@@ -220,6 +220,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
+  const getRowState = (product: OrderItem): RowState => product.isCompleted ? 'done' : (rowStates[product.id] ?? 'idle');
   const toggleRow = (id: string) => {
     notifySeen();
     setRow(id, 'loading');
@@ -230,6 +231,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     timersRef.current.push(t);
   };
   const removeRow = (id: string) => {
+    if (order.status === 'served') return;
     const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
     if (item && onItemDismiss) onItemDismiss(order.id, item);
     setRemovedIds((prev) => {
@@ -341,7 +343,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       key={product.id}
                       product={product}
                       accent={p.accent}
-                      state={rowStates[product.id] ?? 'idle'}
+                        state={getRowState(product)}
                       onToggle={() => toggleRow(product.id)}
                       onReset={() => setRow(product.id, 'idle')}
                       onRemove={() => removeRow(product.id)}
@@ -359,7 +361,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 key={product.id}
                 product={product}
                 accent={accentColor}
-                state={rowStates[product.id] ?? 'idle'}
+                  state={getRowState(product)}
                 onToggle={() => toggleRow(product.id)}
                 onReset={() => setRow(product.id, 'idle')}
                 onRemove={() => removeRow(product.id)}

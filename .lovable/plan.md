@@ -1,72 +1,47 @@
-## Goal
-Every ticket layout (Default and v1–v6) must react to the shared order store the same way. Marking a product done should push it into History; acknowledging a ticket should move it to Seen; bumping should archive it. Layout selection in Settings should apply instantly to Home, Seen, Unseen and History.
+I understand: every selected ticket layout must use the same shared ticket lifecycle as `/default`, not local-only behavior.
 
-## Why it's broken today
-`OrderCardV1…V5` only accept `onBump`. All other lifecycle events (item-done, mark-seen, item-dismiss, step-back) are handled with local component state. Since `MainOrderView` never passes those callbacks to the variants, the shared `useOrderStore` never learns about the action:
-- Product marked "done" inside a v-card → stays local, never appears in History.
-- Ticket viewed on Unseen → tap does not call `toggleOrderSeen`, so it never moves to Seen.
-- Bump animation calls `onBump` correctly, but only for the whole ticket.
+Plan:
 
-Layout selection wiring already exists (`readStoredTicketsRoute` + `TICKETS_ROUTE_CHANGE_EVENT` + `renderOrderCard`), so the remaining work is behavioural parity, not routing.
+1. Create one shared lifecycle contract for all ticket cards
+   - Home, Seen, Unseen, and History will all render through the same `renderOrderCard` path.
+   - The selected layout, Default, v1, v2, v3, v4, v5, will only change appearance.
+   - Actions will always update the shared order state.
 
-## Plan
+2. Match Default behavior for Seen and Unseen
+   - Tapping or advancing an unseen ticket in any layout marks that order as seen.
+   - The ticket immediately leaves Unseen and appears in Seen.
+   - The same seen state applies everywhere instantly.
 
-1. **Extend variant card props (shared shape)**
-   Add optional callbacks to `OrderCardV1…V5` matching the Default card:
-   ```ts
-   onBump?: (orderId: string) => void;
-   onMarkSeen?: (orderId: string) => void;
-   onItemDone?: (orderId: string, itemId: string) => void;      // per-product done
-   onItemDismiss?: (orderId: string, item: OrderItem) => void;  // per-product remove
-   onStepBack?: (orderId: string) => void;
-   isSeen?: boolean;
-   ```
+3. Match Default behavior for done products
+   - Product lifecycle will use the shared state, not only local row state.
+   - When a product reaches done, it becomes completed in the shared order.
+   - When a done product is tapped again, it is removed from the active ticket and added to History, matching Default behavior.
+   - Apply this to v1, v2, v3, v4, and v5.
 
-2. **Route local interactions through the store**
-   Inside each variant:
-   - The 3-step product tap (Unseen → Preparing → Done) calls `onItemDone(order.id, product.id)` on the final tap instead of only updating local state.
-   - The tap-again "remove" on a done product calls `onItemDismiss(order.id, item)`.
-   - First tap on the ticket header/body (or the existing "mark seen" affordance) calls `onMarkSeen(order.id)`; visual seen state derives from the `isSeen` prop.
-   - Keep the existing bump animation, but ensure it fires `onBump(order.id)` when every product is done (already true; verify).
+4. Keep History as the served/completed destination
+   - Bumping a whole ticket in any layout marks the full ticket served and sends it to History.
+   - Dismissing a done product in any layout sends that product to History.
+   - History cards should show completed data consistently and not break Seen or Unseen counts.
 
-3. **Wire callbacks from `MainOrderView.renderOrderCard`**
-   In every `withSelectedTicketSettings(<OrderCardV# … />)` branch, pass:
-   ```tsx
-   onBump={handleBump}
-   onMarkSeen={toggleOrderSeen}
-   onItemDone={markItemDone}
-   onItemDismiss={handleItemDismiss}
-   onStepBack={handleStepBack}
-   isSeen={seenOrderIds.has(displayOrder.id)}
-   ```
-   Use the original `displayOrder.id` (not the derived `v#Order`) so store lookups match.
+5. Fix local state mismatch in variant cards
+   - Initialize each variant row from shared item completion state.
+   - If an item was completed in one screen, it appears completed in all screens.
+   - If an item was removed in one screen, it disappears from all active ticket screens.
 
-4. **History rendering in variants**
-   `MainOrderView` already routes History through `renderOrderCard`, and `useOrderStore` moves served orders into `historyOrders`. Once `onBump` and `onItemDismiss` are wired, served tickets and dismissed items will appear in History automatically. Verify the History branch (`isHistory`) still calls `renderOrderCard(order)` for the selected variant — no code change expected, only confirmation.
+6. Verify real-time flow across layouts
+   - Test Default, v1, v2, v3, v4, and v5.
+   - For each layout:
+     - ticket starts in Unseen
+     - tap/advance moves it to Seen
+     - mark product done
+     - tap done product again removes it from ticket and adds it to History
+     - bump full ticket moves it to History
+     - switching layouts updates all screens instantly
 
-5. **Seen / Unseen parity**
-   `SeenOrdersScreen` / `UnseenOrdersScreen` already receive `renderCard={renderOrderCard}` and derive lists from `seenOrderIds`. After step 3, tapping a variant card in Unseen calls `toggleOrderSeen`, which moves it into Seen on the next render. No prop-shape change needed in these screens.
+Technical details:
 
-6. **Live layout switching**
-   Already implemented via `TICKETS_ROUTE_CHANGE_EVENT` + `storage` listener in `MainOrderView`. Confirm during QA that changing the layout in Settings re-renders all four screens without a refresh.
-
-7. **QA (Playwright)**
-   Reproduce end-to-end on `/kds/v3`:
-   - Tap a product 3× → verify it appears in History.
-   - Tap the ticket to seen → verify it moves from Unseen to Seen.
-   - Bump full ticket → verify it disappears from Home and appears in History.
-   - Change layout in Settings to v5 → verify Home, Seen, Unseen and History all switch immediately.
-   Repeat for one other variant to confirm parity. Run `bunx tsgo --noEmit`.
-
-## Files to touch
-- `src/components/kds/variants/OrderCardV1.tsx`
-- `src/components/kds/variants/OrderCardV2.tsx`
-- `src/components/kds/variants/OrderCardV3.tsx`
-- `src/components/kds/variants/OrderCardV4.tsx`
-- `src/components/kds/variants/OrderCardV5.tsx`
-- `src/pages/MainOrderView.tsx` (only the variant branches inside `renderOrderCard`)
-
-## Out of scope
-- Visual redesign of any variant.
-- Changing the Default card behaviour.
-- Changing the layout-picker UI in Settings.
+- Update `OrderCardV1` through `OrderCardV5` so they support the same callback surface as `OrderCard`.
+- Add `onItemDismiss` support to layouts currently missing it, especially v1, v4, and v5.
+- Stop relying on variant-only `rowStates` as the source of truth. Use shared `order.courses[].items[].isCompleted` to derive done rows.
+- Keep `MainOrderView.renderOrderCard` as the single adapter that passes `toggleOrderSeen`, `markItemDone`, `handleItemDismiss`, and `handleBump` into every layout.
+- Avoid changing visual design or ticket layout picker behavior.
