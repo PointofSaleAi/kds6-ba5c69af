@@ -60,6 +60,7 @@ function ProductRow({
   state,
   onToggle,
   onReset,
+  onRemove,
   onLongPress,
   compact = false,
 }: {
