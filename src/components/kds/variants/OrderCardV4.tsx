@@ -22,6 +22,9 @@ const MODIFIER_CLASS = {
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  isSeen?: boolean;
 }
 
 type RowState = 'idle' | 'loading' | 'done';
