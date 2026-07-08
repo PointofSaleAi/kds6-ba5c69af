@@ -11,6 +11,9 @@ import { useLanguage } from '@/hooks/use-language';
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  isSeen?: boolean;
 }
 
 type Translators = {
