@@ -542,10 +542,7 @@ export function EightySixSheet({
                       onClick={() => toggleCategory(category.name)}
                       className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
-                      <span
-                        className={`font-medium text-sm ${isExpanded ? "text-foreground/80" : ""}`}
-                        style={{ color: isExpanded ? undefined : categoryColor }}
-                      >
+                      <span className="font-medium text-sm text-foreground/80">
                         {category.name}
                       </span>
                       <div className="flex items-center gap-2">
