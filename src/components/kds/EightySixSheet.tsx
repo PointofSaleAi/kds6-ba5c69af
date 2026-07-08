@@ -219,9 +219,9 @@ export function EightySixSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
       >
-        <SheetHeader className="p-4 border-b border-destructive/30">
+        <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
           <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
             <div className="eighty-six-icon w-7 h-7">
               <Ban size={16} strokeWidth={2.5} />
@@ -239,7 +239,7 @@ export function EightySixSheet({
         </SheetHeader>
 
         {/* View Toggle */}
-        <div className="flex items-center gap-2 p-4 border-b border-border">
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-border">
           <button
             onClick={() => setView("manage")}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -276,7 +276,7 @@ export function EightySixSheet({
                 </Button>
               </div>
             ) : (
-              <div className="p-4 space-y-3">
+              <div className="px-4 pt-2 pb-4 space-y-3">
                 {eightySixedItems.map((item) => (
                   <div key={item.id} className="eighty-six-card flex items-center justify-between">
                     <div className="flex items-start gap-3 flex-1">
@@ -482,7 +482,7 @@ export function EightySixSheet({
           </ScrollArea>
         ) : (
           <>
-            <div className="p-4 border-b border-border">
+            <div className="px-4 py-2 border-b border-border">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -494,7 +494,7 @@ export function EightySixSheet({
               </div>
             </div>
 
-            <div className="px-4 py-2 border-b border-border">
+            <div className="px-4 pt-1 pb-2 border-b border-border">
               <p className="text-muted-foreground text-xs mb-2">Mark as unavailable for:</p>
               <div className="flex gap-1">
                 {snoozeDurations.map((duration) => (
@@ -514,7 +514,7 @@ export function EightySixSheet({
             </div>
 
             <ScrollArea className="flex-1">
-              <div className="p-4 space-y-2">
+              <div className="px-4 pt-2 pb-4 space-y-2">
                 {filteredCategories.map((category) => (
                   <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
                     <button
