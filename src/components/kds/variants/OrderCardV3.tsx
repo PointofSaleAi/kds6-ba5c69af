@@ -68,6 +68,7 @@ function ProductRow({
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }) {
