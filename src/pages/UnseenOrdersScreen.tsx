@@ -21,6 +21,7 @@ interface UnseenOrdersScreenProps {
   onItemStatusChange: (itemId: string, status: ItemStatus | undefined) => void;
   onMarkSeen?: (orderId: string) => void;
   onItemDismiss?: (orderId: string, item: import("@/types/kds").OrderItem) => void;
+  renderCard?: (order: import('@/types/kds').Order) => ReactNode;
 }
 
 const cardVariants = {
