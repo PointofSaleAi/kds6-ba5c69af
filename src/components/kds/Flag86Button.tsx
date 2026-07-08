@@ -401,17 +401,15 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
   const { clear, confirm, isConfirmed } = useFlag86();
   const confirmed = isConfirmed(itemId);
 
-  const pendingCount = useMemo(() => {
-    let count = 0;
+  const currentQuantity = useMemo(() => {
     for (const o of orders) {
-      if (o.status === 'served') continue;
-      const hasItem = o.courses.some(c =>
-        c.items.some(i => i.name === productName && !i.isCompleted && !i.isCancelled)
-      );
-      if (hasItem) count += 1;
+      for (const c of o.courses) {
+        const found = c.items.find(i => i.id === itemId);
+        if (found) return found.quantity ?? 1;
+      }
     }
-    return count;
-  }, [orders, productName]);
+    return 1;
+  }, [orders, itemId]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -424,11 +422,11 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
     clear(itemId);
   };
 
-  const handle86 = () => {
+  const handle86 = (qty: number) => {
     setOpen(false);
     confirm(itemId);
     // eslint-disable-next-line no-console
-    console.log(`86 confirmed: ${productName}`);
+    console.log(`86 confirmed: ${productName} · qty ${qty}`);
   };
 
   if (confirmed) {
@@ -485,16 +483,14 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
 
       </button>
 
-      <Flag86Modal
+      <Item86Modal
         open={open}
         onClose={handleNotNow}
         onConfirm={handle86}
-        title={productName}
-        pendingCount={pendingCount}
-        subtext="FOH notified. Manager will handle pending orders."
-        primaryLabel="86 it"
-        showQuantityAdjuster="below-subtext"
+        productName={productName}
+        currentQuantity={currentQuantity}
       />
     </>
   );
 }
+
