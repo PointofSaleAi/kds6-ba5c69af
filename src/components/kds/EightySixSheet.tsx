@@ -535,14 +535,13 @@ export function EightySixSheet({
               <div className="px-4 pt-2 pb-4 space-y-2">
                 {filteredCategories.map((category) => {
                   const isExpanded = expandedCategories.has(category.name);
-                  const categoryColor = getCategoryColor(category.name);
                   return (
                     <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
                       <button
                       onClick={() => toggleCategory(category.name)}
                       className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
-                      <span className="font-medium text-sm text-foreground/80">
+                      <span className={`font-medium text-sm ${isExpanded ? "text-muted-foreground" : "text-foreground"}`}>
                         {category.name}
                       </span>
                       <div className="flex items-center gap-2">
@@ -576,10 +575,7 @@ export function EightySixSheet({
                                     <X size={10} strokeWidth={3} />
                                   </div>
                                 )}
-                                <span
-                                  className={`text-sm ${is86ed ? "eighty-six-text" : ""}`}
-                                  style={{ color: is86ed ? undefined : categoryColor }}
-                                >
+                                <span className={`text-sm text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
                                   {item}
                                 </span>
                               </div>
