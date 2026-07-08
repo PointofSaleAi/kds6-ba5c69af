@@ -188,12 +188,32 @@ export function EightySixSheet({
   const isItemEightySixed = (itemName: string) =>
     eightySixedItems.some((item) => item.name === itemName);
 
+  const { orders } = useOrderStore();
+
+  // Build category → unique product list from all live KDS orders.
+  const menuCategories = useMemo(() => {
+    const byCategory = new Map<string, Set<string>>();
+    for (const order of orders) {
+      for (const course of order.courses) {
+        for (const it of course.items) {
+          const cat = (it.category ?? UNCATEGORIZED) as string;
+          if (!byCategory.has(cat)) byCategory.set(cat, new Set());
+          byCategory.get(cat)!.add(it.name);
+        }
+      }
+    }
+    return Array.from(byCategory.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, set]) => ({ name, items: Array.from(set).sort((a, b) => a.localeCompare(b)) }));
+  }, [orders]);
+
   const filteredCategories = menuCategories
     .map((cat) => ({
       ...cat,
       items: cat.items.filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase())),
     }))
     .filter((cat) => cat.items.length > 0);
+
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
