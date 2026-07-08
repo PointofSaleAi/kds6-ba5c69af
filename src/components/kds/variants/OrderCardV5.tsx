@@ -11,6 +11,9 @@ import { useLanguage } from '@/hooks/use-language';
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  isSeen?: boolean;
 }
 
 type Translators = {
@@ -346,7 +349,7 @@ function TightWidthBox({
   );
 }
 
-export function OrderCardV5({ order, onBump }: Props) {
+export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, isSeen }: Props) {
   const { ticketLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
   const tx: Translators = {
@@ -362,12 +365,17 @@ export function OrderCardV5({ order, onBump }: Props) {
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
+  const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) =>
     setRowStates((p) => ({ ...p, [id]: s }));
 
   const toggleRow = (id: string) => {
+    notifySeen();
     setRow(id, 'loading');
-    const t = window.setTimeout(() => setRow(id, 'done'), 600);
+    const t = window.setTimeout(() => {
+      setRow(id, 'done');
+      onItemDone?.(order.id, id);
+    }, 600);
     timersRef.current.push(t);
   };
 
@@ -375,6 +383,7 @@ export function OrderCardV5({ order, onBump }: Props) {
 
   const handleBump = () => {
     if (bumping) return;
+    notifySeen();
     setBumping(true);
     setRowStates((prev) => {
       const next = { ...prev };

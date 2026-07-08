@@ -22,6 +22,9 @@ const MODIFIER_CLASS = {
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  isSeen?: boolean;
 }
 
 type RowState = 'idle' | 'loading' | 'done';
@@ -146,7 +149,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 
 
-export function OrderCardV4({ order, onBump }: Props) {
+export function OrderCardV4({ order, onBump, onMarkSeen, onItemDone, isSeen }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
@@ -172,9 +175,15 @@ export function OrderCardV4({ order, onBump }: Props) {
 
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
 
+  const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
+
   const toggleRow = (id: string) => {
+    notifySeen();
     setRow(id, 'loading');
-    const t = window.setTimeout(() => setRow(id, 'done'), 600);
+    const t = window.setTimeout(() => {
+      setRow(id, 'done');
+      onItemDone?.(order.id, id);
+    }, 600);
     timersRef.current.push(t);
   };
 
@@ -182,6 +191,7 @@ export function OrderCardV4({ order, onBump }: Props) {
 
   const handleBump = () => {
     if (bumping) return;
+    notifySeen();
     setBumping(true);
     setRowStates((prev) => {
       const next = { ...prev };

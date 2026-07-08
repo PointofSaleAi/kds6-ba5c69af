@@ -1037,6 +1037,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const withSelectedTicketSettings = (node: ReactNode) => (
       <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
     );
+    const sharedVariantProps = {
+      onBump: handleBump,
+      onMarkSeen: toggleOrderSeen,
+      onItemDone: markItemDone,
+      onItemDismiss: handleItemDismiss,
+      isSeen: seenOrderIds.has(displayOrder.id),
+    };
     if (effectiveCardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
@@ -1054,7 +1061,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV1 order={v1Order} onBump={handleBump} />);
+      return withSelectedTicketSettings(<OrderCardV1 order={v1Order} {...sharedVariantProps} />);
     }
     if (effectiveCardVariant === 'v2') {
       let flatIdx2 = 0;
@@ -1069,7 +1076,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV2 order={v2Order} onBump={handleBump} />);
+      return withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} />);
     }
     if (effectiveCardVariant === 'v3') {
       let flatIdx3 = 0;
@@ -1084,7 +1091,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV3 order={v3Order} onBump={handleBump} />);
+      return withSelectedTicketSettings(<OrderCardV3 order={v3Order} {...sharedVariantProps} />);
     }
     if (effectiveCardVariant === 'v4') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
@@ -1103,7 +1110,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV4 order={v4Order} onBump={handleBump} />);
+      return withSelectedTicketSettings(<OrderCardV4 order={v4Order} {...sharedVariantProps} />);
     }
     if (effectiveCardVariant === 'v5') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
@@ -1113,7 +1120,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         timeReceived: new Date(Date.now() - mins * 60_000),
         elapsedSeconds: mins * 60,
       };
-      return withSelectedTicketSettings(<OrderCardV5 order={v5Order} onBump={handleBump} />);
+      return withSelectedTicketSettings(<OrderCardV5 order={v5Order} {...sharedVariantProps} />);
     }
     const isTrainingSample = displayOrder.id.startsWith('training-sample-');
     return withSelectedTicketSettings(

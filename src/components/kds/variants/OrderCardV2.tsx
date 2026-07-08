@@ -25,6 +25,10 @@ type RowState = 'idle' | 'cooking' | 'loading' | 'done';
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  onItemDismiss?: (orderId: string, item: OrderItem) => void;
+  isSeen?: boolean;
 }
 
 function V2ProductRow({
@@ -174,7 +178,7 @@ function V2ProductRow({
   );
 }
 
-export function OrderCardV2({ order, onBump }: Props) {
+export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
@@ -191,20 +195,29 @@ export function OrderCardV2({ order, onBump }: Props) {
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
+  const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const toggleRow = (id: string) => {
+    notifySeen();
     setRowStates((p) => {
       const current = p[id] ?? 'idle';
       if (current === 'idle') return { ...p, [id]: 'cooking' };
-      if (current === 'cooking') return { ...p, [id]: 'done' };
+      if (current === 'cooking') {
+        onItemDone?.(order.id, id);
+        return { ...p, [id]: 'done' };
+      }
       return p;
     });
   };
-  const removeRow = (id: string) => setRemovedIds((prev) => {
-    const next = new Set(prev);
-    next.add(id);
-    return next;
-  });
+  const removeRow = (id: string) => {
+    const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
+    if (item && onItemDismiss) onItemDismiss(order.id, item);
+    setRemovedIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
 
   const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
@@ -218,6 +231,7 @@ export function OrderCardV2({ order, onBump }: Props) {
 
   const handleBump = () => {
     if (bumping) return;
+    notifySeen();
     setBumping(true);
     setRowStates((prev) => {
       const next = { ...prev };
