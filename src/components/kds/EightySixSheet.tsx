@@ -59,6 +59,24 @@ interface EightySixSheetProps {
 
 const UNCATEGORIZED = "Uncategorized";
 
+const CATEGORY_COLORS = [
+  "#E84C3D", "#2980B9", "#16A085", "#F39C12",
+  "#8E44AD", "#D35400", "#27AE60", "#C0392B",
+  "#2C3E50", "#E67E22", "#1ABC9C", "#F1C40F",
+  "#34495E", "#7F8C8D", "#BDC3C7", "#2471A3",
+  "#6C3483", "#117A65", "#CA6F1E", "#A93226",
+];
+
+function getCategoryColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % CATEGORY_COLORS.length;
+  return CATEGORY_COLORS[index];
+}
+
+
 
 const snoozeDurations = [
   { id: "15min", label: "15 min", ms: 15 * 60 * 1000 },
@@ -515,16 +533,24 @@ export function EightySixSheet({
 
             <ScrollArea className="flex-1">
               <div className="px-4 pt-2 pb-4 space-y-2">
-                {filteredCategories.map((category) => (
-                  <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
-                    <button
+                {filteredCategories.map((category) => {
+                  const isExpanded = expandedCategories.has(category.name);
+                  const categoryColor = getCategoryColor(category.name);
+                  return (
+                    <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
+                      <button
                       onClick={() => toggleCategory(category.name)}
                       className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
-                      <span className="text-foreground font-medium">{category.name}</span>
+                      <span
+                        className={`font-medium text-sm ${isExpanded ? "text-foreground/80" : ""}`}
+                        style={{ color: isExpanded ? undefined : categoryColor }}
+                      >
+                        {category.name}
+                      </span>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground text-sm">{category.items.length}</span>
-                        {expandedCategories.has(category.name) ? (
+                        {isExpanded ? (
                           <ChevronDown className="w-4 h-4 text-muted-foreground" />
                         ) : (
                           <ChevronRight className="w-4 h-4 text-muted-foreground" />
@@ -532,7 +558,7 @@ export function EightySixSheet({
                       </div>
                     </button>
 
-                    {expandedCategories.has(category.name) && (
+                    {isExpanded && (
                       <div className="border-t border-border">
                         {category.items.map((item) => {
                           const is86ed = isItemEightySixed(item);
@@ -554,7 +580,8 @@ export function EightySixSheet({
                                   </div>
                                 )}
                                 <span
-                                  className={`text-sm ${is86ed ? "eighty-six-text" : "text-foreground/80"}`}
+                                  className={`text-sm ${is86ed ? "eighty-six-text" : ""}`}
+                                  style={{ color: is86ed ? undefined : categoryColor }}
                                 >
                                   {item}
                                 </span>
@@ -570,7 +597,8 @@ export function EightySixSheet({
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </ScrollArea>
           </>
