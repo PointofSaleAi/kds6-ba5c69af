@@ -59,22 +59,6 @@ interface EightySixSheetProps {
 
 const UNCATEGORIZED = "Uncategorized";
 
-const CATEGORY_COLORS = [
-  "#E84C3D", "#2980B9", "#16A085", "#F39C12",
-  "#8E44AD", "#D35400", "#27AE60", "#C0392B",
-  "#2C3E50", "#E67E22", "#1ABC9C", "#F1C40F",
-  "#34495E", "#7F8C8D", "#BDC3C7", "#2471A3",
-  "#6C3483", "#117A65", "#CA6F1E", "#A93226",
-];
-
-function getCategoryColor(name: string): string {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % CATEGORY_COLORS.length;
-  return CATEGORY_COLORS[index];
-}
 
 
 
@@ -535,14 +519,13 @@ export function EightySixSheet({
               <div className="px-4 pt-2 pb-4 space-y-2">
                 {filteredCategories.map((category) => {
                   const isExpanded = expandedCategories.has(category.name);
-                  const categoryColor = getCategoryColor(category.name);
                   return (
                     <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
                       <button
                       onClick={() => toggleCategory(category.name)}
                       className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
-                      <span className="font-medium text-sm text-foreground/80">
+                      <span className={`font-medium text-sm ${isExpanded ? "text-muted-foreground" : "text-foreground"}`}>
                         {category.name}
                       </span>
                       <div className="flex items-center gap-2">
@@ -576,10 +559,7 @@ export function EightySixSheet({
                                     <X size={10} strokeWidth={3} />
                                   </div>
                                 )}
-                                <span
-                                  className={`text-sm ${is86ed ? "eighty-six-text" : ""}`}
-                                  style={{ color: is86ed ? undefined : categoryColor }}
-                                >
+                                <span className={`text-sm text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
                                   {item}
                                 </span>
                               </div>
