@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { CheckCircle, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OrderCard } from '@/components/kds/OrderCard';
