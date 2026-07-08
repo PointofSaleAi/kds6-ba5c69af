@@ -82,7 +82,7 @@ function ProductRow({
   const handleClick = () => {
     if (loading) return;
     if (done) {
-      if (canExpand) setExpanded((v) => !v);
+      onRemove();
       return;
     }
     onToggle();
