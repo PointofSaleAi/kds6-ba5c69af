@@ -294,7 +294,7 @@ export function EightySixSheet({
                           </span>
                         </div>
                         {item.scheduledRestoreTime ? (
-                          <div className="flex items-center gap-1.5 mt-2 text-amber-500 bg-amber-500/10 px-2 py-1 rounded-md w-fit">
+                          <div className="flex items-center gap-1.5 mt-2 text-amber-500 dark:text-amber-400 bg-amber-500/10 px-2 py-1 rounded-md w-fit">
                             <RotateCcw className="w-3 h-3" />
                             <span className="text-xs font-medium">
                               Restores at {formatScheduledRestoreTime(item.scheduledRestoreTime)}
