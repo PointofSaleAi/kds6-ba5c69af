@@ -591,7 +591,8 @@ export function EightySixSheet({
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </ScrollArea>
           </>
