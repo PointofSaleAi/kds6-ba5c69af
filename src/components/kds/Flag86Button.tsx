@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Clock, Minus, Plus } from 'lucide-react';
+import { Clock, Minus, Plus, Bell } from 'lucide-react';
+
 import { useOrderStore } from '@/hooks/use-order-store';
 
 interface QuantityAdjusterProps {
