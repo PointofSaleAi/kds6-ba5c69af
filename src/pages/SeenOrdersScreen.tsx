@@ -30,7 +30,7 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
-export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
+export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard }: SeenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const orders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
