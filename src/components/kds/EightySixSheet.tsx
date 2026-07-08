@@ -239,7 +239,7 @@ export function EightySixSheet({
         </SheetHeader>
 
         {/* View Toggle */}
-        <div className="flex items-center gap-2 p-4 border-b border-border">
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-border">
           <button
             onClick={() => setView("manage")}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
