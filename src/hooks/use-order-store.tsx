@@ -210,7 +210,7 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const markItemDone = useCallback((orderId: string, itemId: string) => {
     setOrders(prev => prev.map(o => {
       if (o.id !== orderId) return o;
-      const updated = {
+      return {
         ...o,
         courses: o.courses.map(c => ({
           ...c,
@@ -219,10 +219,6 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
           ),
         })),
       };
-      // Auto-calculate order readiness
-      const allDone = updated.courses.every(c => c.items.every(i => i.isCompleted || i.isCancelled));
-      if (allDone) updated.status = 'served';
-      return updated;
     }));
   }, []);
 

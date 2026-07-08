@@ -266,6 +266,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     setSelectedSummaryCategories(new Set());
   }, []);
 
+  const markOrderSeen = useCallback((orderId: string) => {
+    if (!seenOrderIds.has(orderId)) toggleOrderSeen(orderId);
+  }, [seenOrderIds, toggleOrderSeen]);
+
   const handleItemStatusChange = useCallback((itemId: string, status: ItemStatus | undefined) => {
     setGlobalItemStatuses(prev => {
       const next = new Map(prev);
@@ -1022,7 +1026,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           onItemStatusChange={handleItemStatusChange}
           showAllergens={showAllergens}
           highlightItemNames={highlightItemNames}
-          onMarkSeen={toggleOrderSeen}
+          onMarkSeen={markOrderSeen}
           onItemDismiss={handleItemDismiss}
           onAcknowledgeNotes={acknowledgeOrderNotes}
           onUnacknowledgeNotes={unacknowledgeOrderNotes}
@@ -1039,7 +1043,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     );
     const sharedVariantProps = {
       onBump: handleBump,
-      onMarkSeen: toggleOrderSeen,
+      onMarkSeen: markOrderSeen,
       onItemDone: markItemDone,
       onItemDismiss: handleItemDismiss,
       isSeen: seenOrderIds.has(displayOrder.id),
@@ -1132,7 +1136,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         onItemStatusChange={handleItemStatusChange}
         showAllergens={showAllergens}
         highlightItemNames={highlightItemNames}
-        onMarkSeen={toggleOrderSeen}
+        onMarkSeen={markOrderSeen}
         onItemDismiss={handleItemDismiss}
         onAcknowledgeNotes={acknowledgeOrderNotes}
         onUnacknowledgeNotes={unacknowledgeOrderNotes}
@@ -1431,13 +1435,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             kdsMode === 'Expo' ? (
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="ready" hideTopControls />
             ) : (
-              <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
+              <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
             )
           ) : isUnseenScreen ? (
             kdsMode === 'Expo' ? (
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="recalled" hideTopControls />
             ) : (
-              <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
+              <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
             )
           ) : (
             <>

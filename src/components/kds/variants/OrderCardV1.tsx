@@ -24,6 +24,7 @@ interface Props {
   onBump?: (orderId: string) => void;
   onMarkSeen?: (orderId: string) => void;
   onItemDone?: (orderId: string, itemId: string) => void;
+  onItemDismiss?: (orderId: string, item: OrderItem) => void;
   isSeen?: boolean;
 }
 
@@ -34,11 +35,12 @@ interface V1ProductRowProps {
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }
 
-function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact = false }: V1ProductRowProps) {
+function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress, compact = false }: V1ProductRowProps) {
 
   const done = state === 'done';
   const loading = state === 'loading';
@@ -50,7 +52,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
   const handleRowClick = () => {
     if (loading) return;
     if (done) {
-      if (canExpand) setExpanded((v) => !v);
+      onRemove();
       return;
     }
     onToggle();
@@ -149,7 +151,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onLongPress, compact 
 
 
 
-export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, isSeen }: Props) {
+export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
@@ -166,6 +168,7 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
     : `${order.orderNumber}`;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
@@ -174,6 +177,7 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
+  const getRowState = (product: OrderItem): RowState => product.isCompleted ? 'done' : (rowStates[product.id] ?? 'idle');
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
 
@@ -186,8 +190,18 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
     }, 600);
     timersRef.current.push(t);
   };
+  const removeRow = (id: string) => {
+    if (order.status === 'served') return;
+    const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
+    if (item && onItemDismiss) onItemDismiss(order.id, item);
+    setRemovedIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
 
-  const allItems = order.courses.flatMap((c) => c.items);
+  const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
 
   const handleBump = () => {
     if (bumping) return;
@@ -261,13 +275,14 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
                 {courseLabel(course.course)}
               </div>
               <div className="bg-card">
-                {course.items.map((product) => (
+                {course.items.filter((p) => !removedIds.has(p.id)).map((product) => (
                   <V1ProductRow
                     key={product.id}
                     product={product}
-                    state={rowStates[product.id] ?? 'idle'}
+                    state={getRowState(product)}
                     onToggle={() => toggleRow(product.id)}
                     onReset={() => setRow(product.id, 'idle')}
+                    onRemove={() => removeRow(product.id)}
                     onLongPress={setRecipeProduct}
                   />
                 ))}
@@ -280,9 +295,10 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
               <V1ProductRow
                 key={product.id}
                 product={product}
-                state={rowStates[product.id] ?? 'idle'}
+                state={getRowState(product)}
                 onToggle={() => toggleRow(product.id)}
                 onReset={() => setRow(product.id, 'idle')}
+                onRemove={() => removeRow(product.id)}
                 onLongPress={setRecipeProduct}
                 compact={isCompact}
               />

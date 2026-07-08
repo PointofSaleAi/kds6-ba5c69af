@@ -13,6 +13,7 @@ interface Props {
   onBump?: (orderId: string) => void;
   onMarkSeen?: (orderId: string) => void;
   onItemDone?: (orderId: string, itemId: string) => void;
+  onItemDismiss?: (orderId: string, item: OrderItem) => void;
   isSeen?: boolean;
 }
 
@@ -43,6 +44,7 @@ function ProductPill({
   state,
   onToggle,
   onReset,
+  onRemove,
   onLongPress,
   tx,
 }: {
@@ -50,6 +52,7 @@ function ProductPill({
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   tx: Translators;
 }) {
@@ -59,7 +62,10 @@ function ProductPill({
 
   const handleClick = () => {
     if (loading) return;
-    if (done) return;
+    if (done) {
+      onRemove();
+      return;
+    }
     onToggle();
   };
 
@@ -349,7 +355,7 @@ function TightWidthBox({
   );
 }
 
-export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, isSeen }: Props) {
+export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
   const { ticketLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, ta, showSecondaryMenu, displayMode, secondaryLang } = useLanguage();
   const tx: Translators = {
@@ -360,6 +366,7 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
   const isHeaderOnly = ticketLayout === 'header';
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
@@ -368,6 +375,7 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) =>
     setRowStates((p) => ({ ...p, [id]: s }));
+  const getRowState = (product: OrderItem): RowState => product.isCompleted ? 'done' : (rowStates[product.id] ?? 'idle');
 
   const toggleRow = (id: string) => {
     notifySeen();
@@ -378,8 +386,18 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
     }, 600);
     timersRef.current.push(t);
   };
+  const removeRow = (id: string) => {
+    if (order.status === 'served') return;
+    const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
+    if (item && onItemDismiss) onItemDismiss(order.id, item);
+    setRemovedIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
 
-  const allItems = order.courses.flatMap((c) => c.items);
+  const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
 
   const handleBump = () => {
     if (bumping) return;
@@ -483,9 +501,10 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, isSeen }: P
             <ProductPill
               key={product.id}
               product={product}
-              state={rowStates[product.id] ?? 'idle'}
+              state={getRowState(product)}
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
+              onRemove={() => removeRow(product.id)}
               onLongPress={setRecipeProduct}
               tx={tx}
             />
