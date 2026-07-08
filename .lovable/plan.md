@@ -1,30 +1,72 @@
-**Core issue**
-- The ticket card design is driven by the route prop, `cardVariant`, but the Settings screen saves the chosen layout separately in `localStorage` as `kds-tickets-route`.
-- History, Seen, and Unseen are not separate routes. They are internal tabs inside the already-mounted `MainOrderView`, so they keep using the old `cardVariant` from the current URL instead of the layout selected in Settings.
-- There is also a naming mismatch: the Settings preview and route mapping are offset, for example `v3` maps to `OrderCardV2`, while `/kds/v3` also maps to `cardVariant="v2"`. This makes it easy for different screens to render different cards.
+## Goal
+Every ticket layout (Default and v1–v6) must react to the shared order store the same way. Marking a product done should push it into History; acknowledging a ticket should move it to Seen; bumping should archive it. Layout selection in Settings should apply instantly to Home, Seen, Unseen and History.
 
-**Plan**
-1. Add one central helper for ticket layout mapping.
-   - Convert the saved Settings route key, `Default`, `v1`, `v2`, `v3`, `v4`, `v5`, `v6`, into the actual card variant used by the app.
-   - Use this same helper everywhere instead of duplicating the offset mapping.
+## Why it's broken today
+`OrderCardV1…V5` only accept `onBump`. All other lifecycle events (item-done, mark-seen, item-dismiss, step-back) are handled with local component state. Since `MainOrderView` never passes those callbacks to the variants, the shared `useOrderStore` never learns about the action:
+- Product marked "done" inside a v-card → stays local, never appears in History.
+- Ticket viewed on Unseen → tap does not call `toggleOrderSeen`, so it never moves to Seen.
+- Bump animation calls `onBump` correctly, but only for the whole ticket.
 
-2. Make `MainOrderView` resolve the effective card variant from the saved Settings choice.
-   - If the user selected a ticket layout in Settings, `MainOrderView` will use that selected layout for Home, History, Seen, and Unseen.
-   - This removes the dependency on the initial URL prop after the app is already mounted.
+Layout selection wiring already exists (`readStoredTicketsRoute` + `TICKETS_ROUTE_CHANGE_EVENT` + `renderOrderCard`), so the remaining work is behavioural parity, not routing.
 
-3. Update `renderOrderCard` to use the effective variant.
-   - Replace checks against `cardVariant` with the resolved effective variant.
-   - This ensures History, Seen, Unseen, and Home all render the same ticket card component.
+## Plan
 
-4. Update all grid width rules to use the same effective variant.
-   - History and Home currently adjust columns for certain variants. Those rules should use the resolved selected layout too.
-   - Seen and Unseen will keep their screen-specific wrappers, but their actual ticket card will match the selected layout.
+1. **Extend variant card props (shared shape)**
+   Add optional callbacks to `OrderCardV1…V5` matching the Default card:
+   ```ts
+   onBump?: (orderId: string) => void;
+   onMarkSeen?: (orderId: string) => void;
+   onItemDone?: (orderId: string, itemId: string) => void;      // per-product done
+   onItemDismiss?: (orderId: string, item: OrderItem) => void;  // per-product remove
+   onStepBack?: (orderId: string) => void;
+   isSeen?: boolean;
+   ```
 
-5. Fix Settings preview to use the same central mapping.
-   - The preview card shown in Settings will render the exact same component that Home, History, Seen, and Unseen will render.
-   - This prevents the preview from showing one layout while the board renders another.
+2. **Route local interactions through the store**
+   Inside each variant:
+   - The 3-step product tap (Unseen → Preparing → Done) calls `onItemDone(order.id, product.id)` on the final tap instead of only updating local state.
+   - The tap-again "remove" on a done product calls `onItemDismiss(order.id, item)`.
+   - First tap on the ticket header/body (or the existing "mark seen" affordance) calls `onMarkSeen(order.id)`; visual seen state derives from the `isSeen` prop.
+   - Keep the existing bump animation, but ensure it fires `onBump(order.id)` when every product is done (already true; verify).
 
-6. Validate the fix.
-   - Select a non-default layout in Settings.
-   - Check Home, History, Seen, and Unseen render the same ticket design.
-   - Verify layout-specific grid sizing still behaves correctly.
+3. **Wire callbacks from `MainOrderView.renderOrderCard`**
+   In every `withSelectedTicketSettings(<OrderCardV# … />)` branch, pass:
+   ```tsx
+   onBump={handleBump}
+   onMarkSeen={toggleOrderSeen}
+   onItemDone={markItemDone}
+   onItemDismiss={handleItemDismiss}
+   onStepBack={handleStepBack}
+   isSeen={seenOrderIds.has(displayOrder.id)}
+   ```
+   Use the original `displayOrder.id` (not the derived `v#Order`) so store lookups match.
+
+4. **History rendering in variants**
+   `MainOrderView` already routes History through `renderOrderCard`, and `useOrderStore` moves served orders into `historyOrders`. Once `onBump` and `onItemDismiss` are wired, served tickets and dismissed items will appear in History automatically. Verify the History branch (`isHistory`) still calls `renderOrderCard(order)` for the selected variant — no code change expected, only confirmation.
+
+5. **Seen / Unseen parity**
+   `SeenOrdersScreen` / `UnseenOrdersScreen` already receive `renderCard={renderOrderCard}` and derive lists from `seenOrderIds`. After step 3, tapping a variant card in Unseen calls `toggleOrderSeen`, which moves it into Seen on the next render. No prop-shape change needed in these screens.
+
+6. **Live layout switching**
+   Already implemented via `TICKETS_ROUTE_CHANGE_EVENT` + `storage` listener in `MainOrderView`. Confirm during QA that changing the layout in Settings re-renders all four screens without a refresh.
+
+7. **QA (Playwright)**
+   Reproduce end-to-end on `/kds/v3`:
+   - Tap a product 3× → verify it appears in History.
+   - Tap the ticket to seen → verify it moves from Unseen to Seen.
+   - Bump full ticket → verify it disappears from Home and appears in History.
+   - Change layout in Settings to v5 → verify Home, Seen, Unseen and History all switch immediately.
+   Repeat for one other variant to confirm parity. Run `bunx tsgo --noEmit`.
+
+## Files to touch
+- `src/components/kds/variants/OrderCardV1.tsx`
+- `src/components/kds/variants/OrderCardV2.tsx`
+- `src/components/kds/variants/OrderCardV3.tsx`
+- `src/components/kds/variants/OrderCardV4.tsx`
+- `src/components/kds/variants/OrderCardV5.tsx`
+- `src/pages/MainOrderView.tsx` (only the variant branches inside `renderOrderCard`)
+
+## Out of scope
+- Visual redesign of any variant.
+- Changing the Default card behaviour.
+- Changing the layout-picker UI in Settings.
