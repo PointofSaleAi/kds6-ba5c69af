@@ -32,6 +32,7 @@ function V2ProductRow({
   state,
   onToggle,
   onReset,
+  onRemove,
   onLongPress,
   compact = false,
 }: {
@@ -39,6 +40,7 @@ function V2ProductRow({
   state: RowState;
   onToggle: () => void;
   onReset: () => void;
+  onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }) {
@@ -52,7 +54,7 @@ function V2ProductRow({
   const handleClick = () => {
     if (loading) return;
     if (done) {
-      if (canExpand) setExpanded((v) => !v);
+      onRemove();
       return;
     }
     onToggle();
@@ -184,6 +186,7 @@ export function OrderCardV2({ order, onBump }: Props) {
   const showTableInstead = isDineIn && !!order.tableName;
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
@@ -197,6 +200,11 @@ export function OrderCardV2({ order, onBump }: Props) {
       return p;
     });
   };
+  const removeRow = (id: string) => setRemovedIds((prev) => {
+    const next = new Set(prev);
+    next.add(id);
+    return next;
+  });
 
   const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
@@ -205,7 +213,7 @@ export function OrderCardV2({ order, onBump }: Props) {
     ? (order.guestName || order.customerName || order.serverName || 'Guest')
     : `${order.orderNumber}`;
 
-  const allItems = order.courses.flatMap((c) => c.items);
+  const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
 
   const handleBump = () => {
@@ -279,26 +287,31 @@ export function OrderCardV2({ order, onBump }: Props) {
       {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
-          order.courses.map((course, idx) => (
-            <div key={`${course.course}-${idx}`}>
-              <div
-                className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
-                style={{ background: '#F3F4F6', color: '#4B5563' }}
-              >
-                {courseLabel(course.course)}
+          order.courses.map((course, idx) => {
+            const visibleItems = course.items.filter((p) => !removedIds.has(p.id));
+            if (visibleItems.length === 0) return null;
+            return (
+              <div key={`${course.course}-${idx}`}>
+                <div
+                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
+                  style={{ background: '#F3F4F6', color: '#4B5563' }}
+                >
+                  {courseLabel(course.course)}
+                </div>
+                {visibleItems.map((product) => (
+                  <V2ProductRow
+                    key={product.id}
+                    product={product}
+                    state={rowStates[product.id] ?? 'idle'}
+                    onToggle={() => toggleRow(product.id)}
+                    onReset={() => setRow(product.id, 'idle')}
+                    onRemove={() => removeRow(product.id)}
+                    onLongPress={setRecipeProduct}
+                  />
+                ))}
               </div>
-              {course.items.map((product) => (
-                <V2ProductRow
-                  key={product.id}
-                  product={product}
-                  state={rowStates[product.id] ?? 'idle'}
-                  onToggle={() => toggleRow(product.id)}
-                  onReset={() => setRow(product.id, 'idle')}
-                  onLongPress={setRecipeProduct}
-                />
-              ))}
-            </div>
-          ))
+            );
+          })
         ) : (
           allItems.map((product) => (
             <V2ProductRow
@@ -307,6 +320,7 @@ export function OrderCardV2({ order, onBump }: Props) {
               state={rowStates[product.id] ?? 'idle'}
               onToggle={() => toggleRow(product.id)}
               onReset={() => setRow(product.id, 'idle')}
+              onRemove={() => removeRow(product.id)}
               onLongPress={setRecipeProduct}
               compact={isCompact}
             />
