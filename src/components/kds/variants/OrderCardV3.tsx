@@ -322,7 +322,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                   <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
                 </div>
                 <div>
-                  {course.items.map((product) => (
+                  {course.items.filter((p) => !removedIds.has(p.id)).map((product) => (
                     <ProductRow
                       key={product.id}
                       product={product}
@@ -330,6 +330,7 @@ export function OrderCardV3({ order, onBump }: Props) {
                       state={rowStates[product.id] ?? 'idle'}
                       onToggle={() => toggleRow(product.id)}
                       onReset={() => setRow(product.id, 'idle')}
+                      onRemove={() => removeRow(product.id)}
                       onLongPress={setRecipeProduct}
                     />
                   ))}
