@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
-import { Hash, User, Eye, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2, ChevronRight } from 'lucide-react';
+import { Hash, User, Check, Utensils, ShoppingBag, Bike, PartyPopper, Phone, Loader2, ChevronRight } from 'lucide-react';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';

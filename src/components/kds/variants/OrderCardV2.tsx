@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { ArrowUp, Check, ChevronRight, Loader2, SquareCheck } from 'lucide-react';
+import { ArrowUp, Check, ChevronRight, Loader2, Eye } from 'lucide-react';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
