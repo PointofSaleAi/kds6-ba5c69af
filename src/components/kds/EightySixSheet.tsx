@@ -90,7 +90,7 @@ export function EightySixSheet({
   onEightySixItem,
 }: EightySixSheetProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(["Entrees"]));
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [selectedDuration, setSelectedDuration] = useState<string>("1hr");
   const [view, setView] = useState<"add" | "manage">("manage");
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
