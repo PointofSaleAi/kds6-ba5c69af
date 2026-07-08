@@ -39,7 +39,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: UnseenOrdersScreenProps) {
+export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard }: UnseenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const sourceOrders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
