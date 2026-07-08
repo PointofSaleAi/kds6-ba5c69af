@@ -577,7 +577,7 @@ export function EightySixSheet({
         <div className="p-4 border-t border-white/10">
           <Button
             onClick={() => onOpenChange(false)}
-            className="w-full bg-[hsl(220,90%,20%)] hover:bg-[hsl(220,90%,25%)] text-white"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Done
           </Button>
