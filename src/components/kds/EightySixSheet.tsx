@@ -217,10 +217,10 @@ export function EightySixSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-neutral-900 border-neutral-800 p-0 flex flex-col"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col"
       >
-        <SheetHeader className="p-4 border-b border-[hsl(0,84%,60%)]/30">
-          <SheetTitle className="text-white text-lg font-semibold flex items-center gap-3">
+        <SheetHeader className="p-4 border-b border-destructive/30">
+          <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
             <div className="eighty-six-icon w-7 h-7">
               <Ban size={16} strokeWidth={2.5} />
             </div>
@@ -237,13 +237,13 @@ export function EightySixSheet({
         </SheetHeader>
 
         {/* View Toggle */}
-        <div className="flex items-center gap-2 p-4 border-b border-white/10">
+        <div className="flex items-center gap-2 p-4 border-b border-border">
           <button
             onClick={() => setView("manage")}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
               view === "manage"
-                ? "bg-white text-black"
-                : "bg-neutral-800 text-white hover:bg-neutral-700"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-foreground hover:bg-muted/80"
             }`}
           >
             Currently 86'd ({eightySixedItems.length})
@@ -252,8 +252,8 @@ export function EightySixSheet({
             onClick={() => setView("add")}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
               view === "add"
-                ? "bg-white text-black"
-                : "bg-neutral-800 text-white hover:bg-neutral-700"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-foreground hover:bg-muted/80"
             }`}
           >
             Add Items
@@ -264,11 +264,11 @@ export function EightySixSheet({
           <ScrollArea className="flex-1">
             {eightySixedItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4">
-                <Package className="w-12 h-12 text-white/20 mb-4" />
-                <p className="text-white/40 text-center">No items are currently 86'd</p>
+                <Package className="w-12 h-12 text-muted-foreground/20 mb-4" />
+                <p className="text-muted-foreground text-center">No items are currently 86'd</p>
                 <Button
                   onClick={() => setView("add")}
-                  className="mt-4 bg-white text-black hover:bg-white/90"
+                  className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Add Items
                 </Button>
@@ -283,25 +283,25 @@ export function EightySixSheet({
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-[hsl(0,84%,60%)] font-semibold truncate">{item.name}</p>
+                          <p className="text-destructive font-semibold truncate">{item.name}</p>
                           <EightySixBadge size="sm" variant="subtle" />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-white/50">{item.category}</span>
-                          <span className="text-xs text-white/20">&middot;</span>
-                          <span className="text-xs text-[hsl(0,84%,60%)] font-medium">
+                          <span className="text-xs text-muted-foreground">{item.category}</span>
+                          <span className="text-xs text-muted-foreground/50">&middot;</span>
+                          <span className="text-xs text-destructive font-medium">
                             {item.reason}
                           </span>
                         </div>
                         {item.scheduledRestoreTime ? (
-                          <div className="flex items-center gap-1.5 mt-2 text-amber-400 bg-amber-500/10 px-2 py-1 rounded-md w-fit">
+                          <div className="flex items-center gap-1.5 mt-2 text-amber-500 bg-amber-500/10 px-2 py-1 rounded-md w-fit">
                             <RotateCcw className="w-3 h-3" />
                             <span className="text-xs font-medium">
                               Restores at {formatScheduledRestoreTime(item.scheduledRestoreTime)}
                             </span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1.5 mt-2 text-white/60">
+                          <div className="flex items-center gap-1.5 mt-2 text-muted-foreground">
                             <Clock className="w-3 h-3" />
                             <span className="text-xs">{formatTimeRemaining(item.snoozeEndTime)}</span>
                           </div>
@@ -319,14 +319,14 @@ export function EightySixSheet({
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-white/20 text-white hover:bg-white/10 gap-1"
+                          className="gap-1"
                         >
                           <RotateCcw className="w-3 h-3" />
                           Restore
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-[220px] p-0 bg-neutral-900 border-white/10 rounded-xl overflow-hidden"
+                        className="w-[220px] p-0 bg-popover border-border rounded-xl overflow-hidden"
                         align="end"
                         sideOffset={8}
                       >
@@ -335,11 +335,11 @@ export function EightySixSheet({
                             <div className="flex items-center gap-2 mb-3">
                               <button
                                 onClick={() => setShowCustomTimePicker(false)}
-                                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                                className="p-1 rounded-full hover:bg-muted transition-colors"
                               >
-                                <ChevronLeft className="w-4 h-4 text-white/60" />
+                                <ChevronLeft className="w-4 h-4 text-muted-foreground" />
                               </button>
-                              <p className="text-white text-sm font-medium">Custom time</p>
+                              <p className="text-foreground text-sm font-medium">Custom time</p>
                             </div>
 
                             <div className="flex items-center justify-center gap-2 mb-3">
@@ -353,8 +353,8 @@ export function EightySixSheet({
                                   style={{
                                     top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
                                     height: ITEM_HEIGHT,
-                                    background: "rgba(255, 255, 255, 0.1)",
-                                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                                    background: "hsl(var(--foreground) / 0.1)",
+                                    border: "1px solid hsl(var(--foreground) / 0.15)",
                                   }}
                                 />
                                 <div
@@ -385,7 +385,7 @@ export function EightySixSheet({
                                         }}
                                       >
                                         <span
-                                          className={`text-sm font-semibold ${isSelected ? "text-white" : "text-white/40"}`}
+                                          className={`text-sm font-semibold ${isSelected ? "text-foreground" : "text-muted-foreground"}`}
                                         >
                                           {hour}h
                                         </span>
@@ -405,8 +405,8 @@ export function EightySixSheet({
                                   style={{
                                     top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
                                     height: ITEM_HEIGHT,
-                                    background: "rgba(255, 255, 255, 0.1)",
-                                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                                    background: "hsl(var(--foreground) / 0.1)",
+                                    border: "1px solid hsl(var(--foreground) / 0.15)",
                                   }}
                                 />
                                 <div
@@ -437,7 +437,7 @@ export function EightySixSheet({
                                         }}
                                       >
                                         <span
-                                          className={`text-sm font-semibold ${isSelected ? "text-white" : "text-white/40"}`}
+                                          className={`text-sm font-semibold ${isSelected ? "text-foreground" : "text-muted-foreground"}`}
                                         >
                                           {minute}m
                                         </span>
@@ -452,19 +452,19 @@ export function EightySixSheet({
                             <Button
                               onClick={() => handleCustomTimeConfirm(item.id)}
                               disabled={customHours === 0 && customMinutes === 0}
-                              className="w-full py-2 bg-white text-black hover:bg-white/90 rounded-lg text-sm font-semibold disabled:opacity-50"
+                              className="w-full py-2 rounded-lg text-sm font-semibold"
                             >
                               Confirm
                             </Button>
                           </div>
                         ) : (
                           <div className="py-2">
-                            <p className="text-white/40 text-xs px-3 py-1.5">Restore after</p>
+                            <p className="text-muted-foreground text-xs px-3 py-1.5">Restore after</p>
                             {restoreDurations.map((duration) => (
                               <button
                                 key={duration.id}
                                 onClick={() => handleRestoreWithDuration(item.id, duration.id)}
-                                className="w-full py-2.5 px-3 hover:bg-white/10 text-white text-sm text-left transition-colors"
+                                className="w-full py-2.5 px-3 hover:bg-muted text-foreground text-sm text-left transition-colors"
                               >
                                 {duration.label}
                               </button>
@@ -480,20 +480,20 @@ export function EightySixSheet({
           </ScrollArea>
         ) : (
           <>
-            <div className="p-4 border-b border-white/10">
+            <div className="p-4 border-b border-border">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search menu items..."
-                  className="pl-9 bg-neutral-800 border-neutral-700 text-white placeholder:text-white/40"
+                  className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
                 />
               </div>
             </div>
 
-            <div className="px-4 py-2 border-b border-white/10">
-              <p className="text-white/60 text-xs mb-2">Mark as unavailable for:</p>
+            <div className="px-4 py-2 border-b border-border">
+              <p className="text-muted-foreground text-xs mb-2">Mark as unavailable for:</p>
               <div className="flex gap-1">
                 {snoozeDurations.map((duration) => (
                   <button
@@ -501,8 +501,8 @@ export function EightySixSheet({
                     onClick={() => setSelectedDuration(duration.id)}
                     className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       selectedDuration === duration.id
-                        ? "bg-white text-black"
-                        : "bg-neutral-800 text-white/60 hover:bg-neutral-700"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
                     }`}
                   >
                     {duration.label}
@@ -514,24 +514,24 @@ export function EightySixSheet({
             <ScrollArea className="flex-1">
               <div className="p-4 space-y-2">
                 {filteredCategories.map((category) => (
-                  <div key={category.name} className="bg-neutral-800 rounded-xl overflow-hidden">
+                  <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
                     <button
                       onClick={() => toggleCategory(category.name)}
-                      className="w-full flex items-center justify-between p-3 hover:bg-neutral-700 transition-colors"
+                      className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
-                      <span className="text-white font-medium">{category.name}</span>
+                      <span className="text-foreground font-medium">{category.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-white/40 text-sm">{category.items.length}</span>
+                        <span className="text-muted-foreground text-sm">{category.items.length}</span>
                         {expandedCategories.has(category.name) ? (
-                          <ChevronDown className="w-4 h-4 text-white/40" />
+                          <ChevronDown className="w-4 h-4 text-muted-foreground" />
                         ) : (
-                          <ChevronRight className="w-4 h-4 text-white/40" />
+                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
                         )}
                       </div>
                     </button>
 
                     {expandedCategories.has(category.name) && (
-                      <div className="border-t border-white/10">
+                      <div className="border-t border-border">
                         {category.items.map((item) => {
                           const is86ed = isItemEightySixed(item);
                           return (
@@ -539,10 +539,10 @@ export function EightySixSheet({
                               key={item}
                               onClick={() => !is86ed && handleEightySix(item, category.name)}
                               disabled={is86ed}
-                              className={`w-full flex items-center justify-between p-3 border-t border-white/5 first:border-t-0 transition-colors ${
+                              className={`w-full flex items-center justify-between p-3 border-t border-border/50 first:border-t-0 transition-colors ${
                                 is86ed
                                   ? "cursor-not-allowed eighty-six-row"
-                                  : "hover:bg-neutral-700"
+                                  : "hover:bg-muted/80"
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -552,7 +552,7 @@ export function EightySixSheet({
                                   </div>
                                 )}
                                 <span
-                                  className={`text-sm ${is86ed ? "eighty-six-text" : "text-white/80"}`}
+                                  className={`text-sm ${is86ed ? "eighty-six-text" : "text-foreground/80"}`}
                                 >
                                   {item}
                                 </span>
@@ -560,7 +560,7 @@ export function EightySixSheet({
                               {is86ed ? (
                                 <EightySixBadge size="sm" variant="subtle" />
                               ) : (
-                                <span className="text-xs text-white/40">Tap to 86</span>
+                                <span className="text-xs text-muted-foreground">Tap to 86</span>
                               )}
                             </button>
                           );
@@ -574,7 +574,7 @@ export function EightySixSheet({
           </>
         )}
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-border">
           <Button
             onClick={() => onOpenChange(false)}
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
