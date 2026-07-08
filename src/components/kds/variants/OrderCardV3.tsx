@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import type { Order, OrderItem, CourseType, OrderType } from '@/types/kds';
@@ -10,6 +10,7 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
+import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
 import { formatTime } from '@/lib/datetime';
 import dineInIcon from '@/assets/icons/order-types/dine-in.svg';
@@ -244,10 +245,17 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
 
 
-  const handleBump = () => {
-    if (bumping) return;
-    notifySeen();
-    setBumping(true);
+  const allDone = allItems.length > 0 && allItems.every((p) => getRowState(p) === 'done');
+  const anyStarted = allItems.some((p) => getRowState(p) !== 'idle');
+  const [phaseOverride, setPhaseOverride] = useState<TicketState | null>(null);
+  const ticketState: TicketState = useMemo(() => {
+    if (phaseOverride) return phaseOverride;
+    if (allDone) return 'done';
+    if (isSeen || anyStarted) return 'in-progress';
+    return 'seen';
+  }, [phaseOverride, allDone, isSeen, anyStarted]);
+
+  const runBumpAnimation = (onComplete?: () => void) => {
     setRowStates((prev) => {
       const next = { ...prev };
       allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
@@ -258,9 +266,42 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       timersRef.current.push(t);
     });
     const total = 250 + allItems.length * 120 + 350;
-    const finish = window.setTimeout(() => onBump?.(order.id), total);
+    const finish = window.setTimeout(() => { onComplete?.(); }, total);
     timersRef.current.push(finish);
   };
+
+  const handleTicketAdvance = () => {
+    if (bumping) return;
+    if (ticketState === 'seen') {
+      notifySeen();
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      notifySeen();
+      setBumping(true);
+      runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
+      return;
+    }
+    // done
+    onBump?.(order.id);
+  };
+
+  const handleTicketRecall = () => {
+    if (ticketState === 'done') {
+      // Reset all rows back to idle (in-progress phase)
+      setRowStates({});
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      setRowStates({});
+      setPhaseOverride('seen');
+    }
+  };
+
+  // Backwards-compat alias for the compact header strip advance.
+  const handleBump = handleTicketAdvance;
 
   const showCourses = !isCompact && order.orderType === 'dine-in';
 
@@ -377,20 +418,14 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
 
 
-      {/* FOOTER */}
+      {/* FOOTER: SEEN → IN PROGRESS → DONE (matches /default) */}
       {!isCompact && !isHeaderOnly && (
-        <div className="flex justify-end items-center px-2 py-1.5" style={{ background: '#F3F4F6' }}>
-          <button
-            type="button"
-            onClick={handleBump}
-            disabled={bumping}
-            className="rounded px-3 py-1 text-[12px] font-semibold flex items-center gap-1.5 disabled:opacity-70"
-            style={{ background: accentColor, color: accentText }}
-          >
-            {bumping && <Loader2 size={12} className="animate-spin" />}
-            {bumping ? 'Bumping...' : 'Bump all'}
-          </button>
-        </div>
+        <OrderCardActions
+          orderId={order.id}
+          ticketState={ticketState}
+          onTicketAdvance={handleTicketAdvance}
+          onTicketRecall={handleTicketRecall}
+        />
       )}
 
       <RecipeModalV1 product={recipeProduct} onClose={() => setRecipeProduct(null)} />
