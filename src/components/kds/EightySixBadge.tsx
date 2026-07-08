@@ -33,9 +33,9 @@ export function EightySixBadge({
   const variantClasses: Record<BadgeVariant, string> = {
     default: "eighty-six-badge",
     subtle:
-      "px-2 py-0.5 bg-[hsl(0,84%,60%)]/20 border border-[hsl(0,84%,60%)]/40 rounded-full text-[hsl(0,84%,60%)] text-[10px] font-bold uppercase",
+      "px-2 py-0.5 bg-destructive/20 border border-destructive/40 rounded-full text-destructive text-[10px] font-bold uppercase",
     outline:
-      "px-2 py-0.5 border-2 border-[hsl(0,84%,60%)] rounded-full text-[hsl(0,84%,60%)] text-[10px] font-bold uppercase bg-transparent",
+      "px-2 py-0.5 border-2 border-destructive rounded-full text-destructive text-[10px] font-bold uppercase bg-transparent",
   };
 
   const iconSizes: Record<BadgeSize, number> = { sm: 8, default: 10, lg: 12 };
