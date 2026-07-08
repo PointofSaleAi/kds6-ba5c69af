@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Clock, Minus, Plus } from 'lucide-react';
+import { Clock, Minus, Plus, Bell } from 'lucide-react';
+
 import { useOrderStore } from '@/hooks/use-order-store';
 
 interface QuantityAdjusterProps {
@@ -218,16 +219,24 @@ export function Flag86Modal({
   );
 }
 
-interface Flag86ButtonProps {
-  itemId: string;
+/* ─────────────────────────────────────────────────────────────
+ * Item86Modal — unified item-level 86 popup
+ * Used everywhere an item-level 86 action is triggered
+ * (AI-suggested badge tap, manual long-press on any item row).
+ * ────────────────────────────────────────────────────────────*/
+
+interface Item86ModalProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: (quantity: number) => void;
   productName: string;
+  currentQuantity: number;
 }
 
-export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
-  const [open, setOpen] = useState(false);
+export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity }: Item86ModalProps) {
   const { orders } = useOrderStore();
-  const { clear, confirm, isConfirmed } = useFlag86();
-  const confirmed = isConfirmed(itemId);
+  const [qty, setQty] = useState(currentQuantity);
+  useEffect(() => { if (open) setQty(Math.max(1, currentQuantity || 1)); }, [open, currentQuantity]);
 
   const pendingCount = useMemo(() => {
     let count = 0;
@@ -241,6 +250,167 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
     return count;
   }, [orders, productName]);
 
+  if (!open) return null;
+
+  const dec = (e: React.MouseEvent) => { e.stopPropagation(); setQty(q => Math.max(0, q - 1)); };
+  const inc = (e: React.MouseEvent) => { e.stopPropagation(); setQty(q => q + 1); };
+
+  const stepBtn: React.CSSProperties = {
+    width: 36, height: 36, borderRadius: 8,
+    backgroundColor: '#252838', border: '1px solid #374151',
+    color: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: 'pointer',
+  };
+
+  return createPortal(
+    <div
+      onClick={(e) => { e.stopPropagation(); onClose(); }}
+      style={{
+        position: 'fixed', inset: 0,
+        backgroundColor: 'rgba(0,0,0,0.75)',
+        zIndex: 9999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 16,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`86 ${productName}`}
+        style={{
+          backgroundColor: '#1E2130',
+          border: '1px solid #374151',
+          borderRadius: 14,
+          padding: '20px 20px 18px',
+          width: '100%',
+          maxWidth: 400,
+          boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+        }}
+      >
+        {/* Header row: name + chip group */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
+          <div style={{ fontSize: 20, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2, flex: '1 1 auto', minWidth: 0 }}>
+            {productName}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, flexShrink: 0 }}>
+            {pendingCount > 0 && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                color: '#F59E0B',
+                padding: '4px 9px', borderRadius: 999,
+                fontSize: 11, fontWeight: 700,
+              }}>
+                <Clock size={12} />
+                {pendingCount} pending
+              </span>
+            )}
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              backgroundColor: 'rgba(148, 163, 184, 0.15)',
+              color: '#94A3B8',
+              padding: '4px 9px', borderRadius: 999,
+              fontSize: 11, fontWeight: 600,
+            }}>
+              <Bell size={12} />
+              FOH notified
+            </span>
+          </div>
+        </div>
+
+        {/* Quantity card */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 12, padding: '12px 14px', marginBottom: 16,
+          backgroundColor: '#171728',
+          border: '1px solid #EF9F27',
+          borderRadius: 10,
+        }}>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.6px', color: '#F3F4F6', textTransform: 'uppercase' }}>
+            Quantity to 86
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button type="button" onClick={dec} style={stepBtn} aria-label="Decrease quantity">
+              <Minus size={16} />
+            </button>
+            <span style={{ minWidth: 28, textAlign: 'center', fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>
+              {qty}
+            </span>
+            <button type="button" onClick={inc} style={stepBtn} aria-label="Increase quantity">
+              <Plus size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            style={{
+              flex: 1,
+              backgroundColor: '#252838',
+              border: '1px solid #374151',
+              borderRadius: 8,
+              padding: 13,
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#E5E7EB',
+              cursor: 'pointer',
+            }}
+          >
+            Not now
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onConfirm(qty); }}
+            style={{
+              flex: 1,
+              backgroundColor: '#E84C3D',
+              border: 'none',
+              borderRadius: 8,
+              padding: 13,
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+            }}
+          >
+            86 it
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+
+
+interface Flag86ButtonProps {
+  itemId: string;
+  productName: string;
+}
+
+export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
+  const [open, setOpen] = useState(false);
+  const { orders } = useOrderStore();
+  const { clear, confirm, isConfirmed } = useFlag86();
+  const confirmed = isConfirmed(itemId);
+
+  const currentQuantity = useMemo(() => {
+    for (const o of orders) {
+      for (const c of o.courses) {
+        const found = c.items.find(i => i.id === itemId);
+        if (found) return found.quantity ?? 1;
+      }
+    }
+    return 1;
+  }, [orders, itemId]);
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirmed) return;
@@ -252,11 +422,11 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
     clear(itemId);
   };
 
-  const handle86 = () => {
+  const handle86 = (qty: number) => {
     setOpen(false);
     confirm(itemId);
     // eslint-disable-next-line no-console
-    console.log(`86 confirmed: ${productName}`);
+    console.log(`86 confirmed: ${productName} · qty ${qty}`);
   };
 
   if (confirmed) {
@@ -313,16 +483,14 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
 
       </button>
 
-      <Flag86Modal
+      <Item86Modal
         open={open}
         onClose={handleNotNow}
         onConfirm={handle86}
-        title={productName}
-        pendingCount={pendingCount}
-        subtext="FOH notified. Manager will handle pending orders."
-        primaryLabel="86 it"
-        showQuantityAdjuster="below-subtext"
+        productName={productName}
+        currentQuantity={currentQuantity}
       />
     </>
   );
 }
+
