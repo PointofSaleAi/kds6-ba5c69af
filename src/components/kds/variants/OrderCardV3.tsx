@@ -33,6 +33,10 @@ type RowState = 'idle' | 'loading' | 'done';
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  onItemDismiss?: (orderId: string, item: OrderItem) => void;
+  isSeen?: boolean;
 }
 
 interface CoursePalette {
