@@ -98,48 +98,54 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
         )}
       </div>
       <div className="flex-1 overflow-auto p-1.5">
-        {viewMode === 'grid' ? (
-          <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
-            <AnimatePresence mode="popLayout">
-              {unseenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : viewMode === 'horizontal' ? (
-          <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-            <AnimatePresence mode="popLayout">
-              {unseenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : (
-          (() => {
-            const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
-            const columnCount = isPortrait ? (vw >= 960 ? 3 : 2) : 4;
-            const columns = distributeIntoColumns(unseenOrders, columnCount);
-            return (
-              <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
-                {columns.map((col, colIdx) => (
-                  <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
-                    <AnimatePresence mode="popLayout">
-                      {col.map(order => (
-                        <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                          <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                ))}
-              </div>
+        {(() => {
+          const renderOne = (order: import('@/types/kds').Order) =>
+            renderCard ? renderCard(order) : (
+              <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
             );
-          })()
-        )}
+          return viewMode === 'grid' ? (
+            <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+              <AnimatePresence mode="popLayout">
+                {unseenOrders.map(order => (
+                  <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
+                    {renderOne(order)}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : viewMode === 'horizontal' ? (
+            <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+              <AnimatePresence mode="popLayout">
+                {unseenOrders.map(order => (
+                  <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
+                    {renderOne(order)}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : (
+            (() => {
+              const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
+              const columnCount = isPortrait ? (vw >= 960 ? 3 : 2) : 4;
+              const columns = distributeIntoColumns(unseenOrders, columnCount);
+              return (
+                <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
+                  {columns.map((col, colIdx) => (
+                    <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                      <AnimatePresence mode="popLayout">
+                        {col.map(order => (
+                          <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
+                            {renderOne(order)}
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()
+          );
+        })()}
       </div>
     </div>
   );
