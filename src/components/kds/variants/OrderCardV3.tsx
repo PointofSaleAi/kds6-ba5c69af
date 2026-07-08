@@ -206,19 +206,26 @@ export function OrderCardV3({ order, onBump }: Props) {
   const agingStatus = getStatusForElapsed(elapsed);
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
+  const removeRow = (id: string) => setRemovedIds((prev) => {
+    const next = new Set(prev);
+    next.add(id);
+    return next;
+  });
   const toggleRow = (id: string) => {
     setRow(id, 'loading');
-    const t = window.setTimeout(() => setRow(id, 'done'), 600);
-    timersRef.current.push(t);
+    const t1 = window.setTimeout(() => setRow(id, 'done'), 600);
+    const t2 = window.setTimeout(() => removeRow(id), 900);
+    timersRef.current.push(t1, t2);
   };
 
-  const allItems = order.courses.flatMap((c) => c.items);
+  const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
 
   const handleBump = () => {
     if (bumping) return;
