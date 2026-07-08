@@ -525,7 +525,7 @@ export function EightySixSheet({
                       onClick={() => toggleCategory(category.name)}
                       className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
                     >
-                      <span className={`font-medium text-sm ${isExpanded ? "text-muted-foreground" : "text-foreground"}`}>
+                      <span className={`text-sm ${isExpanded ? "font-semibold text-muted-foreground" : "font-medium text-foreground"}`}>
                         {category.name}
                       </span>
                       <div className="flex items-center gap-2">
@@ -539,7 +539,7 @@ export function EightySixSheet({
                     </button>
 
                     {isExpanded && (
-                      <div className="border-t border-border">
+                      <div className="border-t border-border bg-muted/40">
                         {category.items.map((item) => {
                           const is86ed = isItemEightySixed(item);
                           return (
@@ -547,7 +547,7 @@ export function EightySixSheet({
                               key={item}
                               onClick={() => !is86ed && handleEightySix(item, category.name)}
                               disabled={is86ed}
-                              className={`w-full flex items-center justify-between p-3 border-t border-border/50 first:border-t-0 transition-colors ${
+                              className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
                                 is86ed
                                   ? "cursor-not-allowed eighty-six-row"
                                   : "hover:bg-muted/80"
@@ -559,7 +559,7 @@ export function EightySixSheet({
                                     <X size={10} strokeWidth={3} />
                                   </div>
                                 )}
-                                <span className={`text-sm text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
+                                <span className={`text-sm font-normal text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
                                   {item}
                                 </span>
                               </div>
