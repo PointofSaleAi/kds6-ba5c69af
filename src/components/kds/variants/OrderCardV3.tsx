@@ -245,10 +245,17 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
 
 
-  const handleBump = () => {
-    if (bumping) return;
-    notifySeen();
-    setBumping(true);
+  const allDone = allItems.length > 0 && allItems.every((p) => getRowState(p) === 'done');
+  const anyStarted = allItems.some((p) => getRowState(p) !== 'idle');
+  const [phaseOverride, setPhaseOverride] = useState<TicketState | null>(null);
+  const ticketState: TicketState = useMemo(() => {
+    if (phaseOverride) return phaseOverride;
+    if (allDone) return 'done';
+    if (isSeen || anyStarted) return 'in-progress';
+    return 'seen';
+  }, [phaseOverride, allDone, isSeen, anyStarted]);
+
+  const runBumpAnimation = (onComplete?: () => void) => {
     setRowStates((prev) => {
       const next = { ...prev };
       allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
@@ -259,9 +266,42 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       timersRef.current.push(t);
     });
     const total = 250 + allItems.length * 120 + 350;
-    const finish = window.setTimeout(() => onBump?.(order.id), total);
+    const finish = window.setTimeout(() => { onComplete?.(); }, total);
     timersRef.current.push(finish);
   };
+
+  const handleTicketAdvance = () => {
+    if (bumping) return;
+    if (ticketState === 'seen') {
+      notifySeen();
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      notifySeen();
+      setBumping(true);
+      runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
+      return;
+    }
+    // done
+    onBump?.(order.id);
+  };
+
+  const handleTicketRecall = () => {
+    if (ticketState === 'done') {
+      // Reset all rows back to idle (in-progress phase)
+      setRowStates({});
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      setRowStates({});
+      setPhaseOverride('seen');
+    }
+  };
+
+  // Backwards-compat alias for the compact header strip advance.
+  const handleBump = handleTicketAdvance;
 
   const showCourses = !isCompact && order.orderType === 'dine-in';
 
