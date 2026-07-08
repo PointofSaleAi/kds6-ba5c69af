@@ -605,12 +605,13 @@ function CourseItemTapRow({
   return (
     <div
       {...onbAttr}
-      className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
+      className={`-mx-2 px-2 relative ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
         ...(!isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         paddingTop: 'var(--kds-row-py, 4px)',
         paddingBottom: hasServableModifiers ? '0px' : 'var(--kds-row-py, 4px)',
+        paddingRight: legacyActions && tappable ? '56px' : undefined,
       }}
     >
       <div
@@ -739,9 +740,13 @@ function CourseItemTapRow({
             </div>
           )}
         </div>
-        {(is86Active || show86Pill) && <Flag86Button itemId={item.id} productName={item.name} />}
+        {(is86Active || show86Pill) && (
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10" onClick={(e) => e.stopPropagation()}>
+            <Flag86Button itemId={item.id} productName={item.name} />
+          </div>
+        )}
         {legacyActions && tappable && !is86Active && !show86Pill && (
-          <div className="shrink-0 ml-1 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
             {(showOnboardingActionSet || (!isSeen && !isDone)) && (
               <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-eye' } : {})}>
                 <LegacyActionPill variant="seen" onClick={() => onAdvanceItem?.(item.id)} title="Mark Seen / In Progress" />
