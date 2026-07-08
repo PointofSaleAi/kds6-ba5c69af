@@ -297,10 +297,10 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           aria-label="86 items"
         >
           <div className="flex flex-col items-center leading-tight">
-            <span className={`text-[10px] font-semibold ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-primary-foreground/50'}`}>86</span>
-            <span className={`text-[10px] font-semibold ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-primary-foreground/50'}`}>Items</span>
+            <span className={`text-[10px] ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-white/50'}`}>86</span>
+            <span className={`text-[10px] ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-white/50'}`}>Items</span>
           </div>
-          <Package className={`w-4 h-4 ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-primary-foreground/50'}`} />
+          <Package className={`w-4 h-4 ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-white/50'}`} />
           {eightySixedItems.length > 0 && (
             <span className="text-[#FF6B6B] text-sm font-bold">({eightySixedItems.length})</span>
           )}
