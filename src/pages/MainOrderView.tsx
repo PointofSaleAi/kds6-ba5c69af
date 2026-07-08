@@ -89,7 +89,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -121,6 +121,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(() => readStoredTicketsRoute(fallbackTicketsRoute));
   const effectiveCardVariant = getCardVariantForTicketsRoute(selectedTicketsRoute);
   const effectiveLegacyActions = selectedTicketsRoute === 'Default';
+  const effectiveTextSize = getRouteSetting(selectedTicketsRoute, 'textSize') || textSize;
+  const effectiveTicketSpacing = getRouteSetting(selectedTicketsRoute, 'ticketSpacing') || ticketSpacing;
 
   useEffect(() => {
     setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
@@ -1199,7 +1201,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(effectiveTextSize, effectiveTicketSpacing)}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
