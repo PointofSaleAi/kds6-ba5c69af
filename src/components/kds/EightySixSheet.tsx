@@ -1,4 +1,6 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { useOrderStore } from "@/hooks/use-order-store";
+
 import {
   Sheet,
   SheetContent,
@@ -55,28 +57,8 @@ interface EightySixSheetProps {
   onEightySixItem: (item: { name: string; category: string; snoozeDuration: string }) => void;
 }
 
-const menuCategories = [
-  {
-    name: "Entrees",
-    items: ["Grilled Salmon", "Ribeye Steak", "Chicken Parmesan", "Lamb Chops", "Lobster Roll"],
-  },
-  {
-    name: "Appetizers",
-    items: ["Caesar Salad", "Buffalo Wings", "Garlic Bread", "Clam Chowder", "Guacamole"],
-  },
-  {
-    name: "Sides",
-    items: ["Mashed Potatoes", "Roasted Vegetables", "Asparagus", "French Fries", "Rice Pilaf"],
-  },
-  {
-    name: "Drinks",
-    items: ["Sparkling Water", "Iced Tea", "Margarita", "Glass of Wine", "Cappuccino"],
-  },
-  {
-    name: "Desserts",
-    items: ["Tiramisu", "Churros", "Chocolate Cake", "Fresh Fruit Bowl", "Ice Cream"],
-  },
-];
+const UNCATEGORIZED = "Uncategorized";
+
 
 const snoozeDurations = [
   { id: "15min", label: "15 min", ms: 15 * 60 * 1000 },
@@ -108,7 +90,7 @@ export function EightySixSheet({
   onEightySixItem,
 }: EightySixSheetProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(["Entrees"]));
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [selectedDuration, setSelectedDuration] = useState<string>("1hr");
   const [view, setView] = useState<"add" | "manage">("manage");
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
@@ -206,12 +188,32 @@ export function EightySixSheet({
   const isItemEightySixed = (itemName: string) =>
     eightySixedItems.some((item) => item.name === itemName);
 
+  const { orders } = useOrderStore();
+
+  // Build category → unique product list from all live KDS orders.
+  const menuCategories = useMemo(() => {
+    const byCategory = new Map<string, Set<string>>();
+    for (const order of orders) {
+      for (const course of order.courses) {
+        for (const it of course.items) {
+          const cat = (it.category ?? UNCATEGORIZED) as string;
+          if (!byCategory.has(cat)) byCategory.set(cat, new Set());
+          byCategory.get(cat)!.add(it.name);
+        }
+      }
+    }
+    return Array.from(byCategory.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, set]) => ({ name, items: Array.from(set).sort((a, b) => a.localeCompare(b)) }));
+  }, [orders]);
+
   const filteredCategories = menuCategories
     .map((cat) => ({
       ...cat,
       items: cat.items.filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase())),
     }))
     .filter((cat) => cat.items.length > 0);
+
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
