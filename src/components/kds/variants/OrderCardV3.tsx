@@ -206,26 +206,19 @@ export function OrderCardV3({ order, onBump }: Props) {
   const agingStatus = getStatusForElapsed(elapsed);
 
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
-  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
-  const removeRow = (id: string) => setRemovedIds((prev) => {
-    const next = new Set(prev);
-    next.add(id);
-    return next;
-  });
   const toggleRow = (id: string) => {
     setRow(id, 'loading');
-    const t1 = window.setTimeout(() => setRow(id, 'done'), 600);
-    const t2 = window.setTimeout(() => removeRow(id), 900);
-    timersRef.current.push(t1, t2);
+    const t = window.setTimeout(() => setRow(id, 'done'), 600);
+    timersRef.current.push(t);
   };
 
-  const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
+  const allItems = order.courses.flatMap((c) => c.items);
 
   const handleBump = () => {
     if (bumping) return;
@@ -310,8 +303,6 @@ export function OrderCardV3({ order, onBump }: Props) {
         {showCourses ? (
           order.courses.map((course, idx) => {
             const p = paletteFor(course.course);
-            const visibleItems = course.items.filter((it) => !removedIds.has(it.id));
-            if (visibleItems.length === 0) return null;
             return (
               <div key={`${course.course}-${idx}`}>
                 <div
@@ -319,10 +310,10 @@ export function OrderCardV3({ order, onBump }: Props) {
                   style={{ background: p.bg, color: p.text }}
                 >
                   <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
-                  <span className="text-[10px] font-semibold">Products: {visibleItems.length}</span>
+                  <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
                 </div>
                 <div>
-                  {visibleItems.map((product) => (
+                  {course.items.map((product) => (
                     <ProductRow
                       key={product.id}
                       product={product}

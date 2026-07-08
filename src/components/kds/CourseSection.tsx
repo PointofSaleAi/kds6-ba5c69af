@@ -622,12 +622,9 @@ function CourseItemTapRow({
           ...(isolateModifierRows ? { marginLeft: '-8px', marginRight: '-8px' } : {}),
           ...(isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         }}
-        onClick={legacyActions ? (tappable ? () => {
-          if (status === 'done') { if (allServableModsDone) onDismissItem?.(item.id); return; }
-          setRecipeOpen(true);
-        } : undefined) : (tappable ? handleTap : undefined)}
+        onClick={legacyActions ? (tappable ? () => setRecipeOpen(true) : undefined) : (tappable ? handleTap : undefined)}
         {...longPressRow}
-        title={tappable ? (legacyActions ? (status === 'done' ? 'Tap to remove · Hold to 86' : 'Tap for recipe · Hold to 86') : (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')) : undefined}
+        title={tappable ? (legacyActions ? 'Tap for recipe · Hold to 86' : (status === 'done' ? 'Tap to remove · Double-tap to undo · Hold to 86' : status === 'preparing' ? 'Tap to mark DONE · Double-tap to undo · Hold to 86' : 'Tap to mark SEEN · Hold to 86')) : undefined}
       >
         {ticketLayoutCompact && (
           hasDetails ? (
