@@ -267,9 +267,8 @@ export function EightySixSheet({
                 <Package className="w-12 h-12 text-white/20 mb-4" />
                 <p className="text-white/40 text-center">No items are currently 86'd</p>
                 <Button
-                  variant="outline"
                   onClick={() => setView("add")}
-                  className="mt-4 border-white/20 text-white hover:bg-white/10"
+                  className="mt-4 bg-white text-black hover:bg-white/90"
                 >
                   Add Items
                 </Button>
