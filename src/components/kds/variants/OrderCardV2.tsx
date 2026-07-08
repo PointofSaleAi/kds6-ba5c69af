@@ -25,6 +25,10 @@ type RowState = 'idle' | 'cooking' | 'loading' | 'done';
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
+  onMarkSeen?: (orderId: string) => void;
+  onItemDone?: (orderId: string, itemId: string) => void;
+  onItemDismiss?: (orderId: string, item: OrderItem) => void;
+  isSeen?: boolean;
 }
 
 function V2ProductRow({
