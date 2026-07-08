@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { Eye, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OrderCard } from '@/components/kds/OrderCard';
@@ -21,6 +21,7 @@ interface SeenOrdersScreenProps {
   onItemStatusChange: (itemId: string, status: ItemStatus | undefined) => void;
   onMarkSeen?: (orderId: string) => void;
   onItemDismiss?: (orderId: string, item: import("@/types/kds").OrderItem) => void;
+  renderCard?: (order: import('@/types/kds').Order) => ReactNode;
 }
 
 const cardVariants = {
@@ -29,7 +30,7 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
-export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss }: SeenOrdersScreenProps) {
+export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard }: SeenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const orders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
@@ -90,37 +91,43 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
         )}
       </div>
       <div className="flex-1 overflow-auto p-1.5">
-        {viewMode === 'grid' ? (
-          <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
-            <AnimatePresence mode="popLayout">
-              {seenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : viewMode === 'horizontal' ? (
-          <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
-            <AnimatePresence mode="popLayout">
-              {seenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : (
-          <div className="flex flex-row flex-wrap gap-3 items-start">
-            <AnimatePresence mode="popLayout">
-              {seenOrders.map(order => (
-                <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                  <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        )}
+        {(() => {
+          const renderOne = (order: import('@/types/kds').Order) =>
+            renderCard ? renderCard(order) : (
+              <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
+            );
+          return viewMode === 'grid' ? (
+            <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+              <AnimatePresence mode="popLayout">
+                {seenOrders.map(order => (
+                  <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
+                    {renderOne(order)}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : viewMode === 'horizontal' ? (
+            <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+              <AnimatePresence mode="popLayout">
+                {seenOrders.map(order => (
+                  <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
+                    {renderOne(order)}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="flex flex-row flex-wrap gap-3 items-start">
+              <AnimatePresence mode="popLayout">
+                {seenOrders.map(order => (
+                  <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
+                    {renderOne(order)}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
