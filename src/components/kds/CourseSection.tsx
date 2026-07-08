@@ -605,12 +605,13 @@ function CourseItemTapRow({
   return (
     <div
       {...onbAttr}
-      className={`-mx-2 px-2 ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
+      className={`-mx-2 px-2 relative ${isLastVisible ? '' : 'border-b border-border/50'} ${item.isCancelled ? 'opacity-50' : ''} ${item.isNew && !item.isCancelled ? 'animate-new-item' : ''} ${isHighlightActive ? 'animate-pulse' : ''}`}
       style={{
         ...(stateOpacity !== undefined ? { opacity: stateOpacity } : {}),
         ...(!isolateModifierRows && productRowBg ? { backgroundColor: productRowBg } : {}),
         paddingTop: 'var(--kds-row-py, 4px)',
         paddingBottom: hasServableModifiers ? '0px' : 'var(--kds-row-py, 4px)',
+        paddingRight: legacyActions && tappable ? '56px' : undefined,
       }}
     >
       <div
