@@ -514,7 +514,7 @@ export function EightySixSheet({
             </div>
 
             <ScrollArea className="flex-1">
-              <div className="p-4 space-y-2">
+              <div className="px-4 pt-2 pb-4 space-y-2">
                 {filteredCategories.map((category) => (
                   <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
                     <button
