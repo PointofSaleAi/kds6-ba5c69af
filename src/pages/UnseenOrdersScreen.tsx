@@ -10,6 +10,7 @@ import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import type { ViewMode } from '@/types/kds';
 import type { ItemStatus } from '@/components/kds/CourseSection';
+import type { CardVariant } from '@/lib/ticket-card-variant';
 
 interface UnseenOrdersScreenProps {
   orders?: import('@/types/kds').Order[];
@@ -22,6 +23,7 @@ interface UnseenOrdersScreenProps {
   onMarkSeen?: (orderId: string) => void;
   onItemDismiss?: (orderId: string, item: import("@/types/kds").OrderItem) => void;
   renderCard?: (order: import('@/types/kds').Order) => ReactNode;
+  cardVariant?: CardVariant;
 }
 
 const cardVariants = {
@@ -39,7 +41,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard }: UnseenOrdersScreenProps) {
+export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default' }: UnseenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const sourceOrders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
@@ -104,7 +106,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
               <OrderCard order={order} onBump={onBump} onRecall={onStepBack} onFireCourse={onFireCourse} onItemStatusChange={onItemStatusChange} showAllergens={showAllergens} highlightItemNames={new Set()} onMarkSeen={onMarkSeen} onItemDismiss={onItemDismiss} />
             );
           return viewMode === 'grid' ? (
-            <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+            <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (cardVariant === 'v1' || cardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
               <AnimatePresence mode="popLayout">
                 {unseenOrders.map(order => (
                   <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">

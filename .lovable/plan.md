@@ -1,24 +1,30 @@
-Problem
---------
-In /kds/default ticket cards, the legacy action icons (eye / bell / check / undo) are currently vertically centered only against the first product-name row. When an item has modifiers, add-ons, notes or allergen chips below the name, the icon sits too high, aligned with the name instead of the full content block.
+**Core issue**
+- The ticket card design is driven by the route prop, `cardVariant`, but the Settings screen saves the chosen layout separately in `localStorage` as `kds-tickets-route`.
+- History, Seen, and Unseen are not separate routes. They are internal tabs inside the already-mounted `MainOrderView`, so they keep using the old `cardVariant` from the current URL instead of the layout selected in Settings.
+- There is also a naming mismatch: the Settings preview and route mapping are offset, for example `v3` maps to `OrderCardV2`, while `/kds/v3` also maps to `cardVariant="v2"`. This makes it easy for different screens to render different cards.
 
-Root cause
-----------
-In `src/components/kds/CourseSection.tsx`, the action-icon container is nested inside the inner flex row that wraps the quantity, name and timestamp badges. It uses `absolute right-2 top-1/2 -translate-y-1/2`, so its `top-1/2` refers to the height of that inner row, not the full outer item container that also includes the allergens, modifiers and notes rendered afterwards.
+**Plan**
+1. Add one central helper for ticket layout mapping.
+   - Convert the saved Settings route key, `Default`, `v1`, `v2`, `v3`, `v4`, `v5`, `v6`, into the actual card variant used by the app.
+   - Use this same helper everywhere instead of duplicating the offset mapping.
 
-Solution
---------
-1. Move the legacy action icon block (and the 86 button block) so it is rendered as the last child of the outer item container, which already has `relative` positioning and `paddingRight: 56px` reserved for actions.
-2. Keep the same `absolute right-2 top-1/2 -translate-y-1/2 z-10` positioning; now `top-1/2` will be the midpoint of the full row height (name + modifiers + allergens + notes).
-3. Preserve the existing click handlers, stop-propagation wrapper, onboarding `data-onboarding` attributes, and the mutual exclusivity with the 86 button.
-4. Keep the inner flex row free of the absolute icons to avoid layout drift and make the vertical centering reliable.
+2. Make `MainOrderView` resolve the effective card variant from the saved Settings choice.
+   - If the user selected a ticket layout in Settings, `MainOrderView` will use that selected layout for Home, History, Seen, and Unseen.
+   - This removes the dependency on the initial URL prop after the app is already mounted.
 
-Files to edit
--------------
-- `src/components/kds/CourseSection.tsx`
+3. Update `renderOrderCard` to use the effective variant.
+   - Replace checks against `cardVariant` with the resolved effective variant.
+   - This ensures History, Seen, Unseen, and Home all render the same ticket card component.
 
-Validation
-----------
-- Type-check the project with `tsgo --noEmit`.
-- Verify in the preview at `/kds/default` that items with modifiers (e.g., "FRIES · Seasoned") show the eye icon centered against the full row height, not just the name.
-- Confirm the icon remains clickable and the recipe tooltip/flow still works.
+4. Update all grid width rules to use the same effective variant.
+   - History and Home currently adjust columns for certain variants. Those rules should use the resolved selected layout too.
+   - Seen and Unseen will keep their screen-specific wrappers, but their actual ticket card will match the selected layout.
+
+5. Fix Settings preview to use the same central mapping.
+   - The preview card shown in Settings will render the exact same component that Home, History, Seen, and Unseen will render.
+   - This prevents the preview from showing one layout while the board renders another.
+
+6. Validate the fix.
+   - Select a non-default layout in Settings.
+   - Check Home, History, Seen, and Unseen render the same ticket design.
+   - Verify layout-specific grid sizing still behaves correctly.

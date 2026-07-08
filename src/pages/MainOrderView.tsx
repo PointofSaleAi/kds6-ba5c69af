@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense, type ReactNode } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
@@ -16,7 +16,6 @@ import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
-import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
@@ -32,7 +31,7 @@ import type { ViewMode, Order, OrderItem } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
-import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { KDSSettingsPreviewScope, useKDSSettings } from '@/hooks/use-kds-settings';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { toast } from 'sonner';
 import { usePortrait } from '@/hooks/use-portrait';
@@ -45,6 +44,13 @@ import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 import { OnboardingWalkthrough } from '@/components/onboarding/OnboardingWalkthrough';
 import { ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
 import { useOnboarding } from '@/hooks/use-onboarding';
+import {
+  getCardVariantForTicketsRoute,
+  getTicketsRouteForCardVariant,
+  readStoredTicketsRoute,
+  TICKETS_ROUTE_CHANGE_EVENT,
+  type CardVariant,
+} from '@/lib/ticket-card-variant';
 
 
 interface MainOrderViewProps {
@@ -62,8 +68,8 @@ interface MainOrderViewProps {
   onClearHistoryCenters?: () => void;
   onSetHistoryCategories?: (cats: string[]) => void;
   onSetHistoryCenters?: (cs: string[]) => void;
-  /** Selects an alternate ticket card layout for the home board only. */
-  cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5';
+  /** Selects an alternate ticket card layout. */
+  cardVariant?: CardVariant;
   /** When true, restore legacy per-product icon actions on product rows. */
   legacyActions?: boolean;
 }
@@ -83,7 +89,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -111,6 +117,33 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryItems, setSelectedSummaryItems] = useState<Set<string>>(new Set());
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+  const fallbackTicketsRoute = useMemo(() => getTicketsRouteForCardVariant(cardVariant, legacyActions), [cardVariant, legacyActions]);
+  const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(() => readStoredTicketsRoute(fallbackTicketsRoute));
+  const effectiveCardVariant = getCardVariantForTicketsRoute(selectedTicketsRoute);
+  const effectiveLegacyActions = selectedTicketsRoute === 'Default';
+  const effectiveTextSize = getRouteSetting(selectedTicketsRoute, 'textSize') || textSize;
+  const effectiveTicketSpacing = getRouteSetting(selectedTicketsRoute, 'ticketSpacing') || ticketSpacing;
+
+  useEffect(() => {
+    setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
+  }, [fallbackTicketsRoute]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const syncTicketsRoute = (event?: Event) => {
+      if (event instanceof CustomEvent && typeof event.detail === 'string') {
+        setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
+        return;
+      }
+      setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
+    };
+    window.addEventListener(TICKETS_ROUTE_CHANGE_EVENT, syncTicketsRoute);
+    window.addEventListener('storage', syncTicketsRoute);
+    return () => {
+      window.removeEventListener(TICKETS_ROUTE_CHANGE_EVENT, syncTicketsRoute);
+      window.removeEventListener('storage', syncTicketsRoute);
+    };
+  }, [fallbackTicketsRoute]);
 
   useEffect(() => {
     const handler = () => setAiAssistantOpen(true);
@@ -288,14 +321,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     // 2 cols on iPad Mini/Air, 3 cols on iPad Pro (viewport >= 960px).
     if (isPortrait) return viewportWidth >= 960 ? 3 : 2;
     if (boardContentWidth <= 0) return 4;
-    if (cardVariant === 'v1' || cardVariant === 'v4') {
+    if (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') {
       // V1/V4: 4 / 5 / 6 by viewport width
       if (boardContentWidth < 480) return 3;
       if (boardContentWidth < 1100) return 4;
       if (boardContentWidth < 1400) return 5;
       return 6;
     }
-    if (cardVariant === 'v5') {
+    if (effectiveCardVariant === 'v5') {
       // V5: 4 on small screens, 5 on wide screens
       if (boardContentWidth < 1100) return 4;
       return 5;
@@ -305,7 +338,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     if (boardContentWidth < 760) return 3;
     if (boardContentWidth < 1100) return 4;
     return 5;
-  }, [boardContentWidth, isPortrait, viewportWidth, cardVariant]);
+  }, [boardContentWidth, isPortrait, viewportWidth, effectiveCardVariant]);
 
 
   // Move served orders to history immediately
@@ -1001,7 +1034,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         />
       );
     }
-    if (cardVariant === 'v1') {
+    const withSelectedTicketSettings = (node: ReactNode) => (
+      <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
+    );
+    if (effectiveCardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
       let flatIdx = 0;
@@ -1018,9 +1054,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return <OrderCardV1 order={v1Order} onBump={handleBump} />;
+      return withSelectedTicketSettings(<OrderCardV1 order={v1Order} onBump={handleBump} />);
     }
-    if (cardVariant === 'v2') {
+    if (effectiveCardVariant === 'v2') {
       let flatIdx2 = 0;
       const v2Order: Order = {
         ...displayOrder,
@@ -1033,9 +1069,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return <OrderCardV2 order={v2Order} onBump={handleBump} />;
+      return withSelectedTicketSettings(<OrderCardV2 order={v2Order} onBump={handleBump} />);
     }
-    if (cardVariant === 'v3') {
+    if (effectiveCardVariant === 'v3') {
       let flatIdx3 = 0;
       const v3Order: Order = {
         ...displayOrder,
@@ -1048,9 +1084,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return <OrderCardV3 order={v3Order} onBump={handleBump} />;
+      return withSelectedTicketSettings(<OrderCardV3 order={v3Order} onBump={handleBump} />);
     }
-    if (cardVariant === 'v4') {
+    if (effectiveCardVariant === 'v4') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
       let flatIdx4 = 0;
@@ -1067,9 +1103,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return <OrderCardV4 order={v4Order} onBump={handleBump} />;
+      return withSelectedTicketSettings(<OrderCardV4 order={v4Order} onBump={handleBump} />);
     }
-    if (cardVariant === 'v5') {
+    if (effectiveCardVariant === 'v5') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
       const v5Order: Order = {
@@ -1077,10 +1113,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         timeReceived: new Date(Date.now() - mins * 60_000),
         elapsedSeconds: mins * 60,
       };
-      return <OrderCardV5 order={v5Order} onBump={handleBump} />;
+      return withSelectedTicketSettings(<OrderCardV5 order={v5Order} onBump={handleBump} />);
     }
     const isTrainingSample = displayOrder.id.startsWith('training-sample-');
-    return (
+    return withSelectedTicketSettings(
       <OrderCard
         order={displayOrder}
         onBump={handleBump}
@@ -1097,7 +1133,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         onBumpBlocked={handleBumpBlocked}
         compactRows={opts?.compactRows}
         layoutOverride={isTrainingSample ? 'standard' : undefined}
-        legacyActions={legacyActions || onboardingActive || isTrainingSample}
+        legacyActions={effectiveLegacyActions || onboardingActive || isTrainingSample}
       />
     );
   };
@@ -1105,7 +1141,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   return (
     <div
-      className={`fixed inset-0 flex bg-surface-bg ${cardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
+      className={`fixed inset-0 flex bg-surface-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
       style={{ top: 'var(--training-bar-h, 0px)' }}
     >
       {/* Kitchen message flash notification */}
@@ -1165,7 +1201,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(effectiveTextSize, effectiveTicketSpacing)}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
@@ -1351,7 +1387,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
                   {viewMode === 'grid' && (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (cardVariant === 'v1' || cardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : effectiveCardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           {renderOrderCard(order)}
@@ -1388,13 +1424,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             kdsMode === 'Expo' ? (
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="ready" hideTopControls />
             ) : (
-              <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} />
+              <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
             )
           ) : isUnseenScreen ? (
             kdsMode === 'Expo' ? (
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="recalled" hideTopControls />
             ) : (
-              <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} />
+              <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={toggleOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
             )
           ) : (
             <>
@@ -1451,7 +1487,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   ) : viewMode === 'grid' ? (
-                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : cardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (cardVariant === 'v1' || cardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
+                    <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : effectiveCardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
