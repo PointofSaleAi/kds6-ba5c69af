@@ -195,7 +195,7 @@ const ORDER_TYPE_META: Record<OrderType, { color: string; icon: string }> = {
   'custom': { color: '#6B7280', icon: customIcon },
 };
 
-export function OrderCardV3({ order, onBump }: Props) {
+export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const typeIcon = typeMeta.icon;
@@ -218,23 +218,33 @@ export function OrderCardV3({ order, onBump }: Props) {
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
+  const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const toggleRow = (id: string) => {
+    notifySeen();
     setRow(id, 'loading');
-    const t = window.setTimeout(() => setRow(id, 'done'), 600);
+    const t = window.setTimeout(() => {
+      setRow(id, 'done');
+      onItemDone?.(order.id, id);
+    }, 600);
     timersRef.current.push(t);
   };
-  const removeRow = (id: string) => setRemovedIds((prev) => {
-    const next = new Set(prev);
-    next.add(id);
-    return next;
-  });
+  const removeRow = (id: string) => {
+    const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
+    if (item && onItemDismiss) onItemDismiss(order.id, item);
+    setRemovedIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
 
   const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
 
 
   const handleBump = () => {
     if (bumping) return;
+    notifySeen();
     setBumping(true);
     setRowStates((prev) => {
       const next = { ...prev };
