@@ -9,10 +9,13 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { formatTime } from '@/lib/datetime';
 import { useLongPress } from '@/hooks/use-long-press';
+import { useRowTap } from '@/hooks/use-row-tap';
 import { RecipeReferenceModal } from '@/components/kds/RecipeReferenceModal';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
+import { Item86Modal } from '@/components/kds/Flag86Button';
+import { useFlag86 } from '@/hooks/use-flag86';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
@@ -34,17 +37,17 @@ interface Props {
 function V2ProductRow({
   product,
   state,
-  onToggle,
-  onReset,
-  onRemove,
+  onAdvance,
+  onUndo,
+  onOpenRecipe,
   onLongPress,
   compact = false,
 }: {
   product: OrderItem;
   state: RowState;
-  onToggle: () => void;
-  onReset: () => void;
-  onRemove: () => void;
+  onAdvance: () => void;
+  onUndo: () => void;
+  onOpenRecipe: (p: OrderItem) => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }) {
@@ -55,24 +58,19 @@ function V2ProductRow({
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
 
-  const handleClick = () => {
-    if (loading) return;
-    if (done) {
-      onRemove();
-      return;
-    }
-    onToggle();
-  };
-
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
+  const dispatchTap = useRowTap(
+    () => { if (!loading) onOpenRecipe(product); },
+    () => { if (!loading) onUndo(); },
+    250,
+  );
 
   return (
     <div
       role="button"
       tabIndex={loading ? -1 : 0}
-      onClick={handleClick}
-      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
-      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      onClick={dispatchTap}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpenRecipe(product); } }}
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
@@ -152,7 +150,7 @@ function V2ProductRow({
         {!loading && !done && state === 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            onClick={(e) => { e.stopPropagation(); onAdvance(); }}
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
             aria-label="Mark product done"
@@ -165,7 +163,7 @@ function V2ProductRow({
         {!loading && !done && state !== 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            onClick={(e) => { e.stopPropagation(); onAdvance(); }}
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
             aria-label="Start cooking"
@@ -213,6 +211,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return next;
     });
   };
+  const undoRow = (id: string) => {
+    setRowStates((p) => {
+      const current = p[id] ?? 'idle';
+      if (current === 'done') return { ...p, [id]: 'cooking' };
+      if (current === 'cooking') return { ...p, [id]: 'idle' };
+      return p;
+    });
+  };
   const removeRow = (id: string) => {
     if (order.status === 'served') return;
     const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
@@ -233,6 +239,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
+  const [flagProduct, setFlagProduct] = useState<OrderItem | null>(null);
+  const { clear: clear86, confirm: confirm86 } = useFlag86();
 
   const handleBump = () => {
     if (bumping) return;
@@ -322,10 +330,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                     key={product.id}
                     product={product}
                     state={getRowState(product)}
-                    onToggle={() => toggleRow(product.id)}
-                    onReset={() => setRow(product.id, 'idle')}
-                    onRemove={() => removeRow(product.id)}
-                    onLongPress={setRecipeProduct}
+                    onAdvance={() => toggleRow(product.id)}
+                    onUndo={() => undoRow(product.id)}
+                    onOpenRecipe={setRecipeProduct}
+                    onLongPress={setFlagProduct}
                   />
                 ))}
               </div>
@@ -336,11 +344,11 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             <V2ProductRow
               key={product.id}
               product={product}
-                state={getRowState(product)}
-              onToggle={() => toggleRow(product.id)}
-              onReset={() => setRow(product.id, 'idle')}
-              onRemove={() => removeRow(product.id)}
-              onLongPress={setRecipeProduct}
+              state={getRowState(product)}
+              onAdvance={() => toggleRow(product.id)}
+              onUndo={() => undoRow(product.id)}
+              onOpenRecipe={setRecipeProduct}
+              onLongPress={setFlagProduct}
               compact={isCompact}
             />
           ))
@@ -349,6 +357,13 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       )}
 
       <RecipeReferenceModal product={recipeProduct} order={order} onClose={() => setRecipeProduct(null)} variant="v3" />
+      <Item86Modal
+        open={!!flagProduct}
+        onClose={() => { if (flagProduct) clear86(flagProduct.id); setFlagProduct(null); }}
+        onConfirm={() => { if (flagProduct) confirm86(flagProduct.id); setFlagProduct(null); }}
+        productName={flagProduct?.name ?? ''}
+        currentQuantity={flagProduct?.quantity ?? 1}
+      />
 
       {/* FOOTER */}
       {!isCompact && !isHeaderOnly && (
