@@ -447,15 +447,18 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                   {courseLabel(course.course)}
                 </div>
                 {visibleItems.map((product) => (
-                  <V2ProductRow
+                <V2ProductRow
                     key={product.id}
                     product={product}
                     state={getRowState(product)}
                     onAdvance={() => toggleRow(product.id)}
                     onUndo={() => undoRow(product.id)}
+                    onItemRecall={() => recallRow(product.id)}
                     onOpenRecipe={setRecipeProduct}
                     onLongPress={setFlagProduct}
+                    isHistory={isHistory}
                   />
+
                 ))}
               </div>
             );
