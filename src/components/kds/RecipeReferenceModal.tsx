@@ -416,7 +416,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
 
                     <div
                       className="flex items-center justify-center rounded-lg"
-                      style={{ width: 110, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
+                      style={{ width: 140, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
                     >
                       <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
                     </div>
