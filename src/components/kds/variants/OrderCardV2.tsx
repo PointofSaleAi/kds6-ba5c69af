@@ -9,10 +9,13 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { formatTime } from '@/lib/datetime';
 import { useLongPress } from '@/hooks/use-long-press';
+import { useRowTap } from '@/hooks/use-row-tap';
 import { RecipeReferenceModal } from '@/components/kds/RecipeReferenceModal';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
+import { Item86Modal } from '@/components/kds/Flag86Button';
+import { useFlag86 } from '@/hooks/use-flag86';
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
