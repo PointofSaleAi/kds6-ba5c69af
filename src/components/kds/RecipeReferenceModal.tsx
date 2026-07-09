@@ -411,6 +411,15 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                         </div>
                       </div>
                     ))}
+
+                    <div
+                      className="flex flex-col items-center justify-center shrink-0 rounded-lg"
+                      style={{ width: 110, padding: 8, background: C.surfaceSubtle, border: `1px solid ${C.border}` }}
+                    >
+                      <div className="flex-1 w-full" style={{ minHeight: S.ingCard }}>
+                        <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
+                      </div>
+                    </div>
                   </div>
                 </section>
               )}
