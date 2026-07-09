@@ -258,9 +258,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         onItemDone?.(order.id, id);
         next = { ...p, [id]: 'done' };
       }
-      // Mark ticket seen only when every item has been touched (viewed)
-      const allTouched = allItems.every(pr => pr.isCompleted || (next[pr.id] ?? 'idle') !== 'idle');
-      if (allTouched && !isSeen) onMarkSeen?.(order.id);
+      // Mark ticket seen as soon as any product is interacted with
+      if (!isSeen) onMarkSeen?.(order.id);
       return next;
     });
   };
