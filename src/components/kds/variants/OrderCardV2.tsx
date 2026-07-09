@@ -186,6 +186,12 @@ function V2ProductRow({
   );
 }
 
+const FOOTER_STATE_CONFIG = {
+  seen: { label: 'Seen', Icon: Eye, color: '#6C7A89' },
+  'in-progress': { label: 'In Progress', Icon: ClocheIcon, color: '#374151' },
+  done: { label: 'Done', Icon: Check, color: '#27AE60' },
+} as const;
+
 function FooterBumpButton({
   ticketState,
   bumping,
@@ -199,7 +205,8 @@ function FooterBumpButton({
   onAdvance: () => void;
   onUndo: () => void;
 }) {
-  const label = ticketState === 'seen' ? 'Seen' : ticketState === 'in-progress' ? 'In Progress' : 'Done';
+  const config = FOOTER_STATE_CONFIG[ticketState];
+  const { label, Icon, color } = config;
   const tap = useRowTap(onAdvance, onUndo, 250);
   return (
     <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
@@ -209,11 +216,11 @@ function FooterBumpButton({
         onClick={tap}
         disabled={bumping}
         className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
-        style={{ color: '#2563EB' }}
+        style={{ color }}
         title="Tap to advance. Double-tap to undo."
         aria-label={`${label} (double-tap to undo)`}
       >
-        {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
+        {bumping ? <Loader2 size={12} className="animate-spin" /> : <Icon size={12} strokeWidth={2.5} color={color} />}
         {bumping ? 'Processing...' : label}
       </button>
     </div>
