@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { ArrowUp, Check, ChevronRight, Loader2, Eye } from 'lucide-react';
+import { Check, ChevronRight, Loader2, Eye } from 'lucide-react';
+import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
 import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
@@ -252,10 +253,20 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const [flagProduct, setFlagProduct] = useState<OrderItem | null>(null);
   const { clear: clear86, confirm: confirm86 } = useFlag86();
 
-  const handleBump = () => {
-    if (bumping) return;
-    notifySeen();
-    setBumping(true);
+  const allDone = allItems.length > 0 && allItems.every((p) => getRowState(p) === 'done');
+  const anyStarted = allItems.some((p) => {
+    const s = getRowState(p);
+    return s !== 'idle';
+  });
+  const [phaseOverride, setPhaseOverride] = useState<TicketState | null>(null);
+  const ticketState: TicketState = useMemo(() => {
+    if (phaseOverride) return phaseOverride;
+    if (allDone) return 'done';
+    if (isSeen || anyStarted) return 'in-progress';
+    return 'seen';
+  }, [phaseOverride, allDone, isSeen, anyStarted]);
+
+  const runBumpAnimation = (onComplete?: () => void) => {
     setRowStates((prev) => {
       const next = { ...prev };
       allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
@@ -266,9 +277,39 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       timersRef.current.push(t);
     });
     const total = 250 + allItems.length * 120 + 350;
-    const finish = window.setTimeout(() => onBump?.(order.id), total);
+    const finish = window.setTimeout(() => { onComplete?.(); }, total);
     timersRef.current.push(finish);
   };
+
+  const handleTicketAdvance = () => {
+    if (bumping) return;
+    if (ticketState === 'seen') {
+      notifySeen();
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      notifySeen();
+      setBumping(true);
+      runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
+      return;
+    }
+    onBump?.(order.id);
+  };
+
+  const handleTicketRecall = () => {
+    if (ticketState === 'done') {
+      setRowStates({});
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      setRowStates({});
+      setPhaseOverride('seen');
+    }
+  };
+
+  const handleBump = handleTicketAdvance;
 
   return (
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
@@ -377,19 +418,12 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
       {/* FOOTER */}
       {!isCompact && !isHeaderOnly && (
-        <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
-          <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
-          <button
-            type="button"
-            onClick={handleBump}
-            disabled={bumping}
-            className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
-            style={{ color: '#2563EB' }}
-          >
-            {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
-            {bumping ? 'Bumping...' : 'Bump'}
-          </button>
-        </div>
+        <OrderCardActions
+          orderId={order.id}
+          ticketState={ticketState}
+          onTicketAdvance={handleTicketAdvance}
+          onTicketRecall={handleTicketRecall}
+        />
       )}
     </div>
   );
