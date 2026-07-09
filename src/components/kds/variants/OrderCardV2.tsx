@@ -150,7 +150,7 @@ function V2ProductRow({
         {!loading && !done && state === 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            onClick={(e) => { e.stopPropagation(); onAdvance(); }}
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
             aria-label="Mark product done"
