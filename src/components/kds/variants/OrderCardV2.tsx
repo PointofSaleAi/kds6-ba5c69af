@@ -471,11 +471,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               state={getRowState(product)}
               onAdvance={() => toggleRow(product.id)}
               onUndo={() => undoRow(product.id)}
+              onItemRecall={() => recallRow(product.id)}
               onOpenRecipe={setRecipeProduct}
               onLongPress={setFlagProduct}
               compact={isCompact}
+              isHistory={isHistory}
             />
           ))
+
         )}
       </div>
       )}
