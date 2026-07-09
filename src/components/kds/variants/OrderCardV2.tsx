@@ -239,6 +239,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const allItems = order.courses.flatMap((c) => c.items).filter((p) => !removedIds.has(p.id));
   const [recipeProduct, setRecipeProduct] = useState<OrderItem | null>(null);
+  const [flagProduct, setFlagProduct] = useState<OrderItem | null>(null);
+  const { clear: clear86, confirm: confirm86 } = useFlag86();
 
   const handleBump = () => {
     if (bumping) return;
