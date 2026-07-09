@@ -384,41 +384,41 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     </div>
                   </div>
 
-                  <div className="flex overflow-x-auto" style={{ gap: 8, paddingBottom: 4, scrollbarWidth: 'thin' }}>
-                    {recipe.ingredients.map((ing, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center shrink-0 rounded-lg"
-                        style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, minWidth: 200 }}
-                      >
-                        {ing.image ? (
-                          <img
-                            src={ing.image}
-                            alt=""
-                            style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}
-                          />
-                        ) : (
-                          <div style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, background: C.surfaceRaised, flexShrink: 0 }} />
-                        )}
-                        <div className="min-w-0">
-                          <div className="truncate" style={{ fontSize: 14, color: C.textPrimary, fontWeight: 500 }}>{ing.name}</div>
-                          <div style={{ fontSize: 12, color: C.textMuted }}>{ing.qty}</div>
-                          {ing.allergen && (
-                            <div style={{ fontSize: 11, color: C.brandRed, marginTop: 2, fontWeight: 500 }}>
-                              Contains: {ing.allergen}
-                            </div>
+                  <div className="flex" style={{ gap: 8 }}>
+                    <div className="flex flex-wrap content-start" style={{ gap: 8, flex: 1 }}>
+                      {recipe.ingredients.map((ing, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center rounded-lg"
+                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, flex: '1 1 200px', height: 60 }}
+                        >
+                          {ing.image ? (
+                            <img
+                              src={ing.image}
+                              alt=""
+                              style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}
+                            />
+                          ) : (
+                            <div style={{ width: S.ingCard, height: S.ingCard, borderRadius: 6, background: C.surfaceRaised, flexShrink: 0 }} />
                           )}
+                          <div className="min-w-0">
+                            <div className="truncate" style={{ fontSize: 14, color: C.textPrimary, fontWeight: 500 }}>{ing.name}</div>
+                            <div style={{ fontSize: 12, color: C.textMuted }}>{ing.qty}</div>
+                            {ing.allergen && (
+                              <div style={{ fontSize: 11, color: C.brandRed, marginTop: 2, fontWeight: 500 }}>
+                                Contains: {ing.allergen}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
 
                     <div
-                      className="flex flex-col items-center justify-center shrink-0 rounded-lg"
-                      style={{ width: 110, padding: 8, background: C.surfaceSubtle, border: `1px solid ${C.border}` }}
+                      className="flex items-center justify-center rounded-lg"
+                      style={{ width: 110, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
                     >
-                      <div className="flex-1 w-full" style={{ minHeight: S.ingCard }}>
-                        <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
-                      </div>
+                      <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
                     </div>
                   </div>
                 </section>
