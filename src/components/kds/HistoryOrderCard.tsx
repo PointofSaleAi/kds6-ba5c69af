@@ -135,8 +135,10 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
         ...selectedStyle,
       }}
     >
+      <div className="flex items-center gap-2">
       <div className="flex-1 min-w-0">
         <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+
           <span
             className="font-normal shrink-0 line-through"
             style={{
