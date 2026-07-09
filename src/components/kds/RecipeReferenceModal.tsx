@@ -379,7 +379,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
                     </div>
-                    <div style={{ fontSize: S.sectionLabel, color: C.textMuted, letterSpacing: 1.2, fontWeight: 600 }}>
+                    <div style={{ width: 140, fontSize: S.sectionLabel, color: C.textMuted, letterSpacing: 1.2, fontWeight: 600, textAlign: 'right' }}>
                       Full recipe & video
                     </div>
                   </div>
