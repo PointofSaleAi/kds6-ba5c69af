@@ -1017,7 +1017,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
-    if (isHistory) {
+    if (isHistory && effectiveCardVariant === 'default') {
       return (
         <KDSSettingsPreviewScope route={selectedTicketsRoute}>
           <HistoryOrderCard
@@ -1054,12 +1054,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
     );
     const sharedVariantProps = {
-      onBump: handleBump,
+      onBump: isHistory ? handleRecall : handleBump,
       onMarkSeen: markOrderSeen,
       onItemDone: markItemDone,
-      onItemDismiss: handleItemDismiss,
+      onItemDismiss: isHistory ? handleRecallItem : handleItemDismiss,
       isSeen: seenOrderIds.has(displayOrder.id),
     };
+
     if (effectiveCardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
