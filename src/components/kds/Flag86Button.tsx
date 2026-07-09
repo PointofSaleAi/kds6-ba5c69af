@@ -335,8 +335,9 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
           borderRadius: 10,
         }}>
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.6px', color: '#F3F4F6', textTransform: 'uppercase' }}>
-            Quantity to 86
+            {quantityLabel}
           </span>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <button type="button" onClick={dec} style={stepBtn} aria-label="Decrease quantity">
               <Minus size={16} />
