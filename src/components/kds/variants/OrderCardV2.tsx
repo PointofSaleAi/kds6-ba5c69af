@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { Check, ChevronRight, Loader2, Eye } from 'lucide-react';
+import { Check, ChevronRight, Loader2, Eye, Undo } from 'lucide-react';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -18,6 +18,7 @@ import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 import { Item86Modal } from '@/components/kds/Flag86Button';
 import { useFlag86 } from '@/hooks/use-flag86';
 
+
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
   remove: 'text-modifier-remove',
@@ -33,25 +34,32 @@ interface Props {
   onItemDone?: (orderId: string, itemId: string) => void;
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
   isSeen?: boolean;
+  isHistory?: boolean;
 }
+
 
 function V2ProductRow({
   product,
   state,
   onAdvance,
   onUndo,
+  onItemRecall,
   onOpenRecipe,
   onLongPress,
   compact = false,
+  isHistory = false,
 }: {
   product: OrderItem;
   state: RowState;
   onAdvance: () => void;
   onUndo: () => void;
+  onItemRecall?: () => void;
   onOpenRecipe: (p: OrderItem) => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
+  isHistory?: boolean;
 }) {
+
   const done = state === 'done';
   const loading = state === 'loading';
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
@@ -148,13 +156,24 @@ function V2ProductRow({
         {done && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isHistory) {
+                onItemRecall?.();
+                return;
+              }
+              iconTap();
+            }}
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
-            style={{ background: '#27AE60', width: 22, height: 22 }}
-            aria-label="Product done (double-tap to undo)"
-            title="Double-tap to undo"
+            style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
+            aria-label={isHistory ? 'Recall product' : 'Product done (double-tap to undo)'}
+            title={isHistory ? 'Tap to recall product' : 'Double-tap to undo'}
           >
-            <Check size={14} color="#fff" strokeWidth={3} />
+            {isHistory ? (
+              <Undo size={14} color="#fff" strokeWidth={2.5} />
+            ) : (
+              <Check size={14} color="#fff" strokeWidth={3} />
+            )}
           </button>
         )}
         {!loading && !done && state === 'cooking' && (
@@ -181,6 +200,7 @@ function V2ProductRow({
             <Eye size={18} strokeWidth={2} />
           </button>
         )}
+
       </div>
     </div>
   );
@@ -198,14 +218,20 @@ function FooterBumpButton({
   elapsed,
   onAdvance,
   onUndo,
+  isHistory = false,
 }: {
   ticketState: TicketState;
   bumping: boolean;
   elapsed: number;
   onAdvance: () => void;
   onUndo: () => void;
+  isHistory?: boolean;
 }) {
-  const config = FOOTER_STATE_CONFIG[ticketState];
+  const baseConfig = FOOTER_STATE_CONFIG[ticketState];
+  const isRecall = isHistory && ticketState === 'done';
+  const config = isRecall
+    ? { label: 'Recall', Icon: Undo, color: '#E84C3D' }
+    : baseConfig;
   const { label, Icon, color } = config;
   const tap = useRowTap(onAdvance, onUndo, 250);
   return (
@@ -217,7 +243,7 @@ function FooterBumpButton({
         disabled={bumping}
         className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
         style={{ color }}
-        title="Tap to advance. Double-tap to undo."
+        title={isRecall ? 'Tap to recall ticket' : 'Tap to advance. Double-tap to undo.'}
         aria-label={`${label} (double-tap to undo)`}
       >
         {bumping ? <Loader2 size={12} className="animate-spin" /> : <Icon size={12} strokeWidth={2.5} color={color} />}
@@ -229,7 +255,8 @@ function FooterBumpButton({
 
 
 
-export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
+
+export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen, isHistory = false }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
@@ -272,7 +299,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return p;
     });
   };
-  const removeRow = (id: string) => {
+  const recallRow = (id: string) => {
     if (order.status === 'served') return;
     const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
     if (item && onItemDismiss) onItemDismiss(order.id, item);
@@ -282,6 +309,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return next;
     });
   };
+
 
   const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
@@ -419,15 +447,18 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                   {courseLabel(course.course)}
                 </div>
                 {visibleItems.map((product) => (
-                  <V2ProductRow
+                <V2ProductRow
                     key={product.id}
                     product={product}
                     state={getRowState(product)}
                     onAdvance={() => toggleRow(product.id)}
                     onUndo={() => undoRow(product.id)}
+                    onItemRecall={() => recallRow(product.id)}
                     onOpenRecipe={setRecipeProduct}
                     onLongPress={setFlagProduct}
+                    isHistory={isHistory}
                   />
+
                 ))}
               </div>
             );
@@ -440,11 +471,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               state={getRowState(product)}
               onAdvance={() => toggleRow(product.id)}
               onUndo={() => undoRow(product.id)}
+              onItemRecall={() => recallRow(product.id)}
               onOpenRecipe={setRecipeProduct}
               onLongPress={setFlagProduct}
               compact={isCompact}
+              isHistory={isHistory}
             />
           ))
+
         )}
       </div>
       )}
@@ -466,7 +500,9 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           elapsed={elapsed}
           onAdvance={handleTicketAdvance}
           onUndo={handleTicketRecall}
+          isHistory={isHistory}
         />
+
       )}
     </div>
   );

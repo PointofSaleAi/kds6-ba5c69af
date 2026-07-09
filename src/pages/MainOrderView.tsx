@@ -1093,7 +1093,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} />);
+      return withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} isHistory={isHistory} />);
     }
     if (effectiveCardVariant === 'v3') {
       let flatIdx3 = 0;
