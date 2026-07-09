@@ -64,6 +64,12 @@ function V2ProductRow({
     () => { if (!loading) onUndo(); },
     250,
   );
+  const iconTap = useRowTap(
+    () => { if (!loading) onAdvance(); },
+    () => { if (!loading) onUndo(); },
+    250,
+  );
+
 
   return (
     <div
