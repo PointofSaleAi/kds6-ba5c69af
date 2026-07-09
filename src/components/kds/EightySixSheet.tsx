@@ -547,7 +547,7 @@ export function EightySixSheet({
                           return (
                             <button
                               key={item}
-                              onClick={() => !is86ed && handleEightySix(item, category.name)}
+                              onClick={() => !is86ed && setConfirmItem({ name: item, category: category.name })}
                               disabled={is86ed}
                               className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
                                 is86ed
