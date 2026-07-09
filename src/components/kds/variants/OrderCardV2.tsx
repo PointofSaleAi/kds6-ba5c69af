@@ -300,7 +300,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     });
   };
   const recallRow = (id: string) => {
-    if (order.status === 'served') return;
+    if (!isHistory && order.status === 'served') return;
     const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
     if (item && onItemDismiss) onItemDismiss(order.id, item);
     setRemovedIds((prev) => {
