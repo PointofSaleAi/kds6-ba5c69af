@@ -216,14 +216,20 @@ function FooterBumpButton({
   elapsed,
   onAdvance,
   onUndo,
+  isHistory = false,
 }: {
   ticketState: TicketState;
   bumping: boolean;
   elapsed: number;
   onAdvance: () => void;
   onUndo: () => void;
+  isHistory?: boolean;
 }) {
-  const config = FOOTER_STATE_CONFIG[ticketState];
+  const baseConfig = FOOTER_STATE_CONFIG[ticketState];
+  const isRecall = isHistory && ticketState === 'done';
+  const config = isRecall
+    ? { label: 'Recall', Icon: Undo, color: '#E84C3D' }
+    : baseConfig;
   const { label, Icon, color } = config;
   const tap = useRowTap(onAdvance, onUndo, 250);
   return (
@@ -235,7 +241,7 @@ function FooterBumpButton({
         disabled={bumping}
         className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
         style={{ color }}
-        title="Tap to advance. Double-tap to undo."
+        title={isRecall ? 'Tap to recall ticket' : 'Tap to advance. Double-tap to undo.'}
         aria-label={`${label} (double-tap to undo)`}
       >
         {bumping ? <Loader2 size={12} className="animate-spin" /> : <Icon size={12} strokeWidth={2.5} color={color} />}
@@ -244,6 +250,7 @@ function FooterBumpButton({
     </div>
   );
 }
+
 
 
 
