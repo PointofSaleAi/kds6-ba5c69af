@@ -182,11 +182,16 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
 
   const toggleRow = (id: string) => {
-    notifySeen();
     setRow(id, 'loading');
     const t = window.setTimeout(() => {
       setRow(id, 'done');
       onItemDone?.(order.id, id);
+      // Mark ticket seen only when every item has been touched (viewed)
+      setRowStates((current) => {
+        const allTouched = allItems.every(p => p.isCompleted || (current[p.id] ?? 'idle') !== 'idle');
+        if (allTouched && !isSeen) onMarkSeen?.(order.id);
+        return current;
+      });
     }, 600);
     timersRef.current.push(t);
   };
