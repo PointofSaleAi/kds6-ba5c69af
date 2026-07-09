@@ -385,12 +385,12 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                   </div>
 
                   <div className="flex" style={{ gap: 8 }}>
-                    <div className="flex flex-wrap content-start" style={{ gap: 8, flex: 1 }}>
+                    <div className="grid grid-cols-3 content-start" style={{ gap: 8, flex: 1 }}>
                       {recipe.ingredients.map((ing, i) => (
                         <div
                           key={i}
-                          className="flex items-center rounded-lg"
-                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, flex: '0 0 200px', height: 60 }}
+                          className="flex items-center rounded-lg min-w-0"
+                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, height: 60 }}
                         >
                           {ing.image ? (
                             <img
