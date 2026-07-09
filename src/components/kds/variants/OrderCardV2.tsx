@@ -34,7 +34,9 @@ interface Props {
   onItemDone?: (orderId: string, itemId: string) => void;
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
   isSeen?: boolean;
+  isHistory?: boolean;
 }
+
 
 function V2ProductRow({
   product,
