@@ -101,11 +101,23 @@ export function EightySixSheet({
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(30);
   const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
+  const modalDismissedAtRef = useRef(0);
 
   const hoursScrollRef = useRef<HTMLDivElement>(null);
   const minutesScrollRef = useRef<HTMLDivElement>(null);
   const hoursTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const minutesTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const closeConfirmItem = useCallback(() => {
+    modalDismissedAtRef.current = Date.now();
+    setConfirmItem(null);
+  }, []);
+
+  const openConfirmItem = useCallback((item: { name: string; category: string }) => {
+    if (confirmItem) return;
+    if (Date.now() - modalDismissedAtRef.current < 400) return;
+    setConfirmItem(item);
+  }, [confirmItem]);
 
   const hoursOptions = Array.from({ length: 13 }, (_, i) => i);
   const minutesOptions = Array.from({ length: 60 }, (_, i) => i);
@@ -117,6 +129,14 @@ export function EightySixSheet({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCustomTimePicker]);
+
+  useEffect(() => {
+    if (!open) {
+      setConfirmItem(null);
+      setOpenPopoverId(null);
+      setShowCustomTimePicker(false);
+    }
+  }, [open]);
 
   const snapToNearest = useCallback(
     (scrollRef: React.RefObject<HTMLDivElement>, maxValue: number, setValue: (v: number) => void) => {
@@ -223,7 +243,7 @@ export function EightySixSheet({
     <Sheet
       open={open}
       onOpenChange={(next) => {
-        if (!next) setConfirmItem(null);
+        if (!next) closeConfirmItem();
         onOpenChange(next);
       }}
     >
@@ -557,7 +577,10 @@ export function EightySixSheet({
                           return (
                             <button
                               key={item}
-                              onClick={() => !is86ed && setConfirmItem({ name: item, category: category.name })}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                if (!is86ed) openConfirmItem({ name: item, category: category.name });
+                              }}
                               disabled={is86ed}
                               className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
                                 is86ed
@@ -595,11 +618,11 @@ export function EightySixSheet({
 
         <Item86Modal
           open={!!confirmItem}
-          onClose={() => setConfirmItem(null)}
+          onClose={closeConfirmItem}
           onConfirm={() => {
             if (confirmItem) {
               handleEightySix(confirmItem.name, confirmItem.category);
-              setConfirmItem(null);
+              closeConfirmItem();
             }
           }}
           productName={confirmItem?.name ?? ''}
