@@ -211,6 +211,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return next;
     });
   };
+  const undoRow = (id: string) => {
+    setRowStates((p) => {
+      const current = p[id] ?? 'idle';
+      if (current === 'done') return { ...p, [id]: 'cooking' };
+      if (current === 'cooking') return { ...p, [id]: 'idle' };
+      return p;
+    });
+  };
   const removeRow = (id: string) => {
     if (order.status === 'served') return;
     const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
