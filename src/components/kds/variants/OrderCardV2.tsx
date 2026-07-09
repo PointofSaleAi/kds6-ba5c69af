@@ -418,19 +418,12 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
       {/* FOOTER */}
       {!isCompact && !isHeaderOnly && (
-        <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
-          <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
-          <button
-            type="button"
-            onClick={handleBump}
-            disabled={bumping}
-            className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
-            style={{ color: '#2563EB' }}
-          >
-            {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
-            {bumping ? 'Bumping...' : 'Bump'}
-          </button>
-        </div>
+        <OrderCardActions
+          orderId={order.id}
+          ticketState={ticketState}
+          onTicketAdvance={handleTicketAdvance}
+          onTicketRecall={handleTicketRecall}
+        />
       )}
     </div>
   );
