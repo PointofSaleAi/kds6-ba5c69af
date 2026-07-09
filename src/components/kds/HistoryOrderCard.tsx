@@ -604,6 +604,25 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
         )}
       </div>
 
+      {!selectionMode && (
+        <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
+          <span className="text-[11px] text-[#9CA3AF]">Served</span>
+          <button
+            type="button"
+            onClick={() => onRecall?.(order.id)}
+            className="flex items-center gap-1 text-[12px] font-semibold"
+            style={{ color: '#E84C3D' }}
+            title="Tap to recall ticket"
+            aria-label="Recall ticket"
+          >
+            <Undo size={12} strokeWidth={2.5} color="#E84C3D" />
+            Recall
+          </button>
+        </div>
+      )}
+
+
+
       {selectionMode && (
         <div className="border-t border-border bg-muted/40 p-2 flex items-center gap-2">
           <button
