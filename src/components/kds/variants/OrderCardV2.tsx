@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { Check, ChevronRight, Loader2, Eye } from 'lucide-react';
+import { Check, ChevronRight, Loader2, Eye, Undo } from 'lucide-react';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -17,6 +17,7 @@ import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 import { Item86Modal } from '@/components/kds/Flag86Button';
 import { useFlag86 } from '@/hooks/use-flag86';
+
 
 const MODIFIER_CLASS = {
   extra: 'text-modifier-extra',
