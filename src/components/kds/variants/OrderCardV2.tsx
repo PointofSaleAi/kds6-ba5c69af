@@ -37,17 +37,17 @@ interface Props {
 function V2ProductRow({
   product,
   state,
-  onToggle,
-  onReset,
-  onRemove,
+  onAdvance,
+  onUndo,
+  onOpenRecipe,
   onLongPress,
   compact = false,
 }: {
   product: OrderItem;
   state: RowState;
-  onToggle: () => void;
-  onReset: () => void;
-  onRemove: () => void;
+  onAdvance: () => void;
+  onUndo: () => void;
+  onOpenRecipe: (p: OrderItem) => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
 }) {
@@ -58,24 +58,19 @@ function V2ProductRow({
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
 
-  const handleClick = () => {
-    if (loading) return;
-    if (done) {
-      onRemove();
-      return;
-    }
-    onToggle();
-  };
-
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
+  const dispatchTap = useRowTap(
+    () => { if (!loading) onOpenRecipe(product); },
+    () => { if (!loading) onUndo(); },
+    250,
+  );
 
   return (
     <div
       role="button"
       tabIndex={loading ? -1 : 0}
-      onClick={handleClick}
-      onDoubleClick={(e) => { if (done) { e.stopPropagation(); setExpanded(false); onReset(); } }}
-      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleClick(); } }}
+      onClick={dispatchTap}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpenRecipe(product); } }}
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
