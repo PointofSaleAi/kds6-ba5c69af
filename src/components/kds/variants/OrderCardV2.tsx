@@ -253,10 +253,20 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const [flagProduct, setFlagProduct] = useState<OrderItem | null>(null);
   const { clear: clear86, confirm: confirm86 } = useFlag86();
 
-  const handleBump = () => {
-    if (bumping) return;
-    notifySeen();
-    setBumping(true);
+  const allDone = allItems.length > 0 && allItems.every((p) => getRowState(p) === 'done');
+  const anyStarted = allItems.some((p) => {
+    const s = getRowState(p);
+    return s !== 'idle';
+  });
+  const [phaseOverride, setPhaseOverride] = useState<TicketState | null>(null);
+  const ticketState: TicketState = useMemo(() => {
+    if (phaseOverride) return phaseOverride;
+    if (allDone) return 'done';
+    if (isSeen || anyStarted) return 'in-progress';
+    return 'seen';
+  }, [phaseOverride, allDone, isSeen, anyStarted]);
+
+  const runBumpAnimation = (onComplete?: () => void) => {
     setRowStates((prev) => {
       const next = { ...prev };
       allItems.forEach((p) => { if (next[p.id] !== 'done') next[p.id] = 'loading'; });
@@ -267,9 +277,39 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       timersRef.current.push(t);
     });
     const total = 250 + allItems.length * 120 + 350;
-    const finish = window.setTimeout(() => onBump?.(order.id), total);
+    const finish = window.setTimeout(() => { onComplete?.(); }, total);
     timersRef.current.push(finish);
   };
+
+  const handleTicketAdvance = () => {
+    if (bumping) return;
+    if (ticketState === 'seen') {
+      notifySeen();
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      notifySeen();
+      setBumping(true);
+      runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
+      return;
+    }
+    onBump?.(order.id);
+  };
+
+  const handleTicketRecall = () => {
+    if (ticketState === 'done') {
+      setRowStates({});
+      setPhaseOverride('in-progress');
+      return;
+    }
+    if (ticketState === 'in-progress') {
+      setRowStates({});
+      setPhaseOverride('seen');
+    }
+  };
+
+  const handleBump = handleTicketAdvance;
 
   return (
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
