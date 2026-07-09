@@ -256,7 +256,7 @@ function FooterBumpButton({
 
 
 
-export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
+export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen, isHistory = false }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
@@ -299,7 +299,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return p;
     });
   };
-  const removeRow = (id: string) => {
+  const recallRow = (id: string) => {
     if (order.status === 'served') return;
     const item = order.courses.flatMap((c) => c.items).find((i) => i.id === id);
     if (item && onItemDismiss) onItemDismiss(order.id, item);
@@ -309,6 +309,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return next;
     });
   };
+
 
   const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
