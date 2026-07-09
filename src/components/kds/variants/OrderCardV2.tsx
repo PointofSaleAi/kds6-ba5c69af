@@ -60,8 +60,8 @@ function V2ProductRow({
 
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
   const dispatchTap = useRowTap(
-    () => { if (!loading) onOpenRecipe(product); },
-    () => { if (!loading) onUndo(); },
+    () => { console.log('[V2 tap] single, loading=', loading); if (!loading) onOpenRecipe(product); },
+    () => { console.log('[V2 tap] DOUBLE, loading=', loading); if (!loading) onUndo(); },
     250,
   );
 
