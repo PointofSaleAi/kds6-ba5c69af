@@ -456,6 +456,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         <FooterBumpButton
           ticketState={ticketState}
           bumping={bumping}
+          elapsed={elapsed}
           onAdvance={handleTicketAdvance}
           onUndo={handleTicketRecall}
         />
