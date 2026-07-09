@@ -235,9 +235,11 @@ interface Item86ModalProps {
   quantityLabel?: string;
   /** Initial quantity when the modal opens. Defaults to max(1, currentQuantity). */
   initialQuantity?: number;
+  /** Render inline instead of portaling to body. Use this inside nested dialogs/drawers. */
+  renderInPlace?: boolean;
 }
 
-export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel = 'Quantity to 86', initialQuantity }: Item86ModalProps) {
+export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel = 'Quantity to 86', initialQuantity, renderInPlace = false }: Item86ModalProps) {
   const { orders } = useOrderStore();
   const [qty, setQty] = useState(initialQuantity ?? currentQuantity);
   const backdropPointerDownRef = useRef(false);
@@ -290,7 +292,7 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
     cursor: 'pointer',
   };
 
-  return createPortal(
+  const modal = (
     <div
       onPointerDown={handleBackdropPointerDown}
       onPointerUp={handleBackdropPointerUp}
@@ -304,6 +306,8 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
       }}
     >
       <div
+        onPointerDown={(e) => e.stopPropagation()}
+        onPointerUp={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -414,9 +418,10 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
           </button>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
+
+  return renderInPlace ? modal : createPortal(modal, document.body);
 }
 
 
