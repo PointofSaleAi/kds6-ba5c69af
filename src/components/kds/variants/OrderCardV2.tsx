@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { Check, ChevronRight, Loader2, Eye } from 'lucide-react';
+import { ArrowUp, Check, ChevronRight, Loader2, Eye } from 'lucide-react';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -189,30 +189,32 @@ function V2ProductRow({
 function FooterBumpButton({
   ticketState,
   bumping,
+  elapsed,
   onAdvance,
   onUndo,
 }: {
   ticketState: TicketState;
   bumping: boolean;
+  elapsed: number;
   onAdvance: () => void;
   onUndo: () => void;
 }) {
-  const label = ticketState === 'seen' ? 'SEEN' : ticketState === 'in-progress' ? 'IN PROGRESS' : 'DONE';
-  const bg = ticketState === 'seen' ? '#1E293B' : ticketState === 'in-progress' ? '#E67E22' : '#7D3C98';
+  const label = ticketState === 'seen' ? 'Seen' : ticketState === 'in-progress' ? 'In Progress' : 'Done';
   const tap = useRowTap(onAdvance, onUndo, 250);
   return (
-    <div className="p-1.5 border-t border-border">
+    <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
+      <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
       <button
         type="button"
         onClick={tap}
         disabled={bumping}
-        className="w-full py-2.5 rounded flex items-center justify-center gap-2 uppercase text-white hover:opacity-90 transition-opacity min-h-[44px] disabled:opacity-70"
-        style={{ background: bg, fontSize: '16px', fontWeight: 700 }}
+        className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
+        style={{ color: '#2563EB' }}
         title="Tap to advance. Double-tap to undo."
         aria-label={`${label} (double-tap to undo)`}
       >
-        {bumping && <Loader2 size={16} className="animate-spin" />}
-        {label}
+        {bumping ? <Loader2 size={12} className="animate-spin" /> : <ArrowUp size={12} strokeWidth={2.5} />}
+        {bumping ? 'Processing...' : label}
       </button>
     </div>
   );
@@ -454,6 +456,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         <FooterBumpButton
           ticketState={ticketState}
           bumping={bumping}
+          elapsed={elapsed}
           onAdvance={handleTicketAdvance}
           onUndo={handleTicketRecall}
         />
