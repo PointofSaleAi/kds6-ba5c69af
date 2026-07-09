@@ -154,13 +154,24 @@ function V2ProductRow({
         {done && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isHistory) {
+                onItemRecall?.();
+                return;
+              }
+              iconTap();
+            }}
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
-            style={{ background: '#27AE60', width: 22, height: 22 }}
-            aria-label="Product done (double-tap to undo)"
-            title="Double-tap to undo"
+            style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
+            aria-label={isHistory ? 'Recall product' : 'Product done (double-tap to undo)'}
+            title={isHistory ? 'Tap to recall product' : 'Double-tap to undo'}
           >
-            <Check size={14} color="#fff" strokeWidth={3} />
+            {isHistory ? (
+              <Undo size={14} color="#fff" strokeWidth={2.5} />
+            ) : (
+              <Check size={14} color="#fff" strokeWidth={3} />
+            )}
           </button>
         )}
         {!loading && !done && state === 'cooking' && (
@@ -187,6 +198,7 @@ function V2ProductRow({
             <Eye size={18} strokeWidth={2} />
           </button>
         )}
+
       </div>
     </div>
   );
