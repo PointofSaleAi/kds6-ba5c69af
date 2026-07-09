@@ -23,7 +23,7 @@ import {
   Ban,
 } from "lucide-react";
 import { EightySixBadge } from "./EightySixBadge";
-import { Flag86Modal } from "./Flag86Button";
+import { Flag86Modal, Item86Modal } from "./Flag86Button";
 
 const ITEM_HEIGHT = 44;
 const VISIBLE_ITEMS = 5;
