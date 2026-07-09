@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, type ReactNode } from 'react';
+import { useState, useMemo, useEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Clock, Minus, Plus, Bell } from 'lucide-react';
 
@@ -235,11 +235,14 @@ interface Item86ModalProps {
   quantityLabel?: string;
   /** Initial quantity when the modal opens. Defaults to max(1, currentQuantity). */
   initialQuantity?: number;
+  /** Render inline instead of portaling to body. Use this inside nested dialogs/drawers. */
+  renderInPlace?: boolean;
 }
 
-export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel = 'Quantity to 86', initialQuantity }: Item86ModalProps) {
+export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel = 'Quantity to 86', initialQuantity, renderInPlace = false }: Item86ModalProps) {
   const { orders } = useOrderStore();
   const [qty, setQty] = useState(initialQuantity ?? currentQuantity);
+  const backdropPointerDownRef = useRef(false);
   useEffect(() => {
     if (open) setQty(initialQuantity ?? Math.max(1, currentQuantity || 1));
   }, [open, currentQuantity, initialQuantity]);
@@ -262,6 +265,26 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
   const dec = (e: React.MouseEvent) => { e.stopPropagation(); setQty(q => Math.max(0, q - 1)); };
   const inc = (e: React.MouseEvent) => { e.stopPropagation(); setQty(q => q + 1); };
 
+  const handleBackdropPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (e.target !== e.currentTarget) return;
+    e.preventDefault();
+    backdropPointerDownRef.current = true;
+  };
+
+  const handleBackdropPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (e.target !== e.currentTarget || !backdropPointerDownRef.current) return;
+    e.preventDefault();
+    backdropPointerDownRef.current = false;
+    onClose();
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const stepBtn: React.CSSProperties = {
     width: 36, height: 36, borderRadius: 8,
     backgroundColor: '#252838', border: '1px solid #374151',
@@ -269,9 +292,11 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
     cursor: 'pointer',
   };
 
-  return createPortal(
+  const modal = (
     <div
-      onClick={(e) => { e.stopPropagation(); onClose(); }}
+      onPointerDown={handleBackdropPointerDown}
+      onPointerUp={handleBackdropPointerUp}
+      onClick={handleBackdropClick}
       style={{
         position: 'fixed', inset: 0,
         backgroundColor: 'rgba(0,0,0,0.75)',
@@ -281,6 +306,8 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
       }}
     >
       <div
+        onPointerDown={(e) => e.stopPropagation()}
+        onPointerUp={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -391,9 +418,10 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
           </button>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
+
+  return renderInPlace ? modal : createPortal(modal, document.body);
 }
 
 

@@ -101,11 +101,32 @@ export function EightySixSheet({
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(30);
   const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
+  const modalDismissedAtRef = useRef(0);
 
   const hoursScrollRef = useRef<HTMLDivElement>(null);
   const minutesScrollRef = useRef<HTMLDivElement>(null);
   const hoursTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const minutesTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const closeConfirmItem = useCallback(() => {
+    modalDismissedAtRef.current = Date.now();
+    setConfirmItem(null);
+  }, []);
+
+  const handleSheetOpenChange = useCallback((next: boolean) => {
+    if (confirmItem) {
+      if (!next) closeConfirmItem();
+      return;
+    }
+    if (!next) closeConfirmItem();
+    onOpenChange(next);
+  }, [closeConfirmItem, confirmItem, onOpenChange]);
+
+  const openConfirmItem = useCallback((item: { name: string; category: string }) => {
+    if (confirmItem) return;
+    if (Date.now() - modalDismissedAtRef.current < 400) return;
+    setConfirmItem(item);
+  }, [confirmItem]);
 
   const hoursOptions = Array.from({ length: 13 }, (_, i) => i);
   const minutesOptions = Array.from({ length: 60 }, (_, i) => i);
@@ -117,6 +138,14 @@ export function EightySixSheet({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCustomTimePicker]);
+
+  useEffect(() => {
+    if (!open) {
+      setConfirmItem(null);
+      setOpenPopoverId(null);
+      setShowCustomTimePicker(false);
+    }
+  }, [open]);
 
   const snapToNearest = useCallback(
     (scrollRef: React.RefObject<HTMLDivElement>, maxValue: number, setValue: (v: number) => void) => {
@@ -220,19 +249,13 @@ export function EightySixSheet({
 
 
   return (
-    <Sheet
-      open={open}
-      onOpenChange={(next) => {
-        if (!next) setConfirmItem(null);
-        onOpenChange(next);
-      }}
-    >
+    <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetContent
         side="right"
         className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
         onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
-        onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); setConfirmItem(null); } }}
+        onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); closeConfirmItem(); } }}
       >
 
         <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
@@ -557,7 +580,10 @@ export function EightySixSheet({
                           return (
                             <button
                               key={item}
-                              onClick={() => !is86ed && setConfirmItem({ name: item, category: category.name })}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                if (!is86ed) openConfirmItem({ name: item, category: category.name });
+                              }}
                               disabled={is86ed}
                               className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
                                 is86ed
@@ -595,17 +621,18 @@ export function EightySixSheet({
 
         <Item86Modal
           open={!!confirmItem}
-          onClose={() => setConfirmItem(null)}
+          onClose={closeConfirmItem}
           onConfirm={() => {
             if (confirmItem) {
               handleEightySix(confirmItem.name, confirmItem.category);
-              setConfirmItem(null);
+              closeConfirmItem();
             }
           }}
           productName={confirmItem?.name ?? ''}
           currentQuantity={0}
           initialQuantity={0}
           quantityLabel="Available stock"
+          renderInPlace
         />
 
 
