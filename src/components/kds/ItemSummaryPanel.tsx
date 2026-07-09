@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { usePortrait } from '@/hooks/use-portrait';
 import { useStatusRules } from '@/hooks/use-status-rules';
@@ -174,7 +174,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const summary = useMemo(() => buildSummary(activeRecords), [activeRecords]);
   const overtimeItems = useMemo(() => mode === 'active' ? buildOvertimeItems(activeRecords) : [], [activeRecords, mode]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
-  const [overtimeCollapsed, setOvertimeCollapsed] = useState(false);
+  const [overtimeCollapsed, setOvertimeCollapsed] = useState(true);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
   const categoryCount = selectedCategories?.size ?? 0;
   const itemCount = selectedItems?.size ?? 0;
@@ -192,6 +192,16 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   }, [selectionCount, categoryCount, itemCount, selectedCategories]);
 
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+  const hasSeededDefaults = useRef(false);
+
+  useEffect(() => {
+    if (hasSeededDefaults.current) return;
+    if (summary.length === 0 && overtimeItems.length === 0) return;
+    hasSeededDefaults.current = true;
+    setCollapsedSections(new Set(summary.map(c => c.category)));
+    if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+  }, [summary, overtimeItems]);
+
   const toggleSection = (cat: string) => {
     setCollapsedSections(prev => {
       const next = new Set(prev);
