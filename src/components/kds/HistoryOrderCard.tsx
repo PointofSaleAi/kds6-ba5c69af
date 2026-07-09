@@ -1,4 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
+import { Undo } from 'lucide-react';
+
+
 
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import type { Order, OrderItem } from '@/types/kds';
@@ -132,8 +135,10 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
         ...selectedStyle,
       }}
     >
+      <div className="flex items-center gap-2">
       <div className="flex-1 min-w-0">
         <div className="flex items-center flex-nowrap min-w-0" style={{ gap: '4px', lineHeight: 1.1 }}>
+
           <span
             className="font-normal shrink-0 line-through"
             style={{
@@ -221,9 +226,21 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
           </div>
         )}
       </div>
+      {interactive && (
+        <span
+          className="shrink-0 flex items-center justify-center rounded-full"
+          style={{ background: '#E84C3D', width: 22, height: 22 }}
+          aria-hidden="true"
+          title="Tap to recall product"
+        >
+          <Undo size={14} color="#fff" strokeWidth={2.5} />
+        </span>
+      )}
+      </div>
     </div>
   );
 }
+
 
 export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoHeader }: HistoryOrderCardProps) {
   const { tp, tperson, tl, timeFormat } = useLanguage();
@@ -586,6 +603,25 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
           </div>
         )}
       </div>
+
+      {!selectionMode && (
+        <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
+          <span className="text-[11px] text-[#9CA3AF]">Served</span>
+          <button
+            type="button"
+            onClick={() => onRecall?.(order.id)}
+            className="flex items-center gap-1 text-[12px] font-semibold"
+            style={{ color: '#E84C3D' }}
+            title="Tap to recall ticket"
+            aria-label="Recall ticket"
+          >
+            <Undo size={12} strokeWidth={2.5} color="#E84C3D" />
+            Recall
+          </button>
+        </div>
+      )}
+
+
 
       {selectionMode && (
         <div className="border-t border-border bg-muted/40 p-2 flex items-center gap-2">
