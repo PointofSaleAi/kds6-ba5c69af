@@ -1017,6 +1017,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
+    if (isHistory) {
+      return (
+        <KDSSettingsPreviewScope route={selectedTicketsRoute}>
+          <HistoryOrderCard
+            order={displayOrder}
+            onRecall={handleRecall}
+            onRecallItem={handleRecallItem}
+          />
+        </KDSSettingsPreviewScope>
+      );
+    }
     if (displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID) {
       return (
         <OrderCard
