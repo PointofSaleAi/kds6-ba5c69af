@@ -231,12 +231,19 @@ interface Item86ModalProps {
   onConfirm: (quantity: number) => void;
   productName: string;
   currentQuantity: number;
+  /** Label above the stepper. Defaults to "Quantity to 86". */
+  quantityLabel?: string;
+  /** Initial quantity when the modal opens. Defaults to max(1, currentQuantity). */
+  initialQuantity?: number;
 }
 
-export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity }: Item86ModalProps) {
+export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel = 'Quantity to 86', initialQuantity }: Item86ModalProps) {
   const { orders } = useOrderStore();
-  const [qty, setQty] = useState(currentQuantity);
-  useEffect(() => { if (open) setQty(Math.max(1, currentQuantity || 1)); }, [open, currentQuantity]);
+  const [qty, setQty] = useState(initialQuantity ?? currentQuantity);
+  useEffect(() => {
+    if (open) setQty(initialQuantity ?? Math.max(1, currentQuantity || 1));
+  }, [open, currentQuantity, initialQuantity]);
+
 
   const pendingCount = useMemo(() => {
     let count = 0;
@@ -328,8 +335,9 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
           borderRadius: 10,
         }}>
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.6px', color: '#F3F4F6', textTransform: 'uppercase' }}>
-            Quantity to 86
+            {quantityLabel}
           </span>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <button type="button" onClick={dec} style={stepBtn} aria-label="Decrease quantity">
               <Minus size={16} />
