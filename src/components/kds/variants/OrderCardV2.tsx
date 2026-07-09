@@ -500,7 +500,9 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           elapsed={elapsed}
           onAdvance={handleTicketAdvance}
           onUndo={handleTicketRecall}
+          isHistory={isHistory}
         />
+
       )}
     </div>
   );
