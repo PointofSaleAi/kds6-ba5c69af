@@ -145,22 +145,25 @@ function V2ProductRow({
           </span>
         )}
         {done && (
-          <span
-            className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); iconTap(e); }}
+            className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
             style={{ background: '#27AE60', width: 22, height: 22 }}
-            aria-label="Product done"
+            aria-label="Product done (double-tap to undo)"
+            title="Double-tap to undo"
           >
             <Check size={14} color="#fff" strokeWidth={3} />
-          </span>
+          </button>
         )}
         {!loading && !done && state === 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onAdvance(); }}
+            onClick={(e) => { e.stopPropagation(); iconTap(e); }}
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
-            aria-label="Mark product done"
-            title="Tap when ready"
+            aria-label="Mark product done (double-tap to undo)"
+            title="Tap when ready. Double-tap to undo."
           >
             <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
           </button>
@@ -169,10 +172,10 @@ function V2ProductRow({
         {!loading && !done && state !== 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onAdvance(); }}
+            onClick={(e) => { e.stopPropagation(); iconTap(e); }}
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
-            aria-label="Start cooking"
+            aria-label="Start cooking (double-tap to undo)"
           >
             <Eye size={18} strokeWidth={2} />
           </button>
@@ -181,6 +184,7 @@ function V2ProductRow({
     </div>
   );
 }
+
 
 export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
