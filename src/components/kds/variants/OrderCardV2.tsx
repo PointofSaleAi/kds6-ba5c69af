@@ -41,18 +41,23 @@ function V2ProductRow({
   state,
   onAdvance,
   onUndo,
+  onItemRecall,
   onOpenRecipe,
   onLongPress,
   compact = false,
+  isHistory = false,
 }: {
   product: OrderItem;
   state: RowState;
   onAdvance: () => void;
   onUndo: () => void;
+  onItemRecall?: () => void;
   onOpenRecipe: (p: OrderItem) => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
+  isHistory?: boolean;
 }) {
+
   const done = state === 'done';
   const loading = state === 'loading';
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
