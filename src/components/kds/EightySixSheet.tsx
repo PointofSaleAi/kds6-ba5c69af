@@ -23,6 +23,7 @@ import {
   Ban,
 } from "lucide-react";
 import { EightySixBadge } from "./EightySixBadge";
+import { Flag86Modal } from "./Flag86Button";
 
 const ITEM_HEIGHT = 44;
 const VISIBLE_ITEMS = 5;
@@ -99,6 +100,7 @@ export function EightySixSheet({
   const [showCustomTimePicker, setShowCustomTimePicker] = useState(false);
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(30);
+  const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
 
   const hoursScrollRef = useRef<HTMLDivElement>(null);
   const minutesScrollRef = useRef<HTMLDivElement>(null);
@@ -545,7 +547,7 @@ export function EightySixSheet({
                           return (
                             <button
                               key={item}
-                              onClick={() => !is86ed && handleEightySix(item, category.name)}
+                              onClick={() => !is86ed && setConfirmItem({ name: item, category: category.name })}
                               disabled={is86ed}
                               className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
                                 is86ed
@@ -580,6 +582,20 @@ export function EightySixSheet({
             </ScrollArea>
           </>
         )}
+
+        <Flag86Modal
+          open={!!confirmItem}
+          onClose={() => setConfirmItem(null)}
+          onConfirm={() => {
+            if (confirmItem) {
+              handleEightySix(confirmItem.name, confirmItem.category);
+              setConfirmItem(null);
+            }
+          }}
+          title={confirmItem?.name ?? ""}
+          subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
+          primaryLabel="Request 86"
+        />
 
         <div className="p-4 border-t border-border">
           <Button
