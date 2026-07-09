@@ -195,7 +195,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
-  const getRowState = (product: OrderItem): RowState => product.isCompleted ? 'done' : (rowStates[product.id] ?? 'idle');
+  const getRowState = (product: OrderItem): RowState => rowStates[product.id] ?? (product.isCompleted ? 'done' : 'idle');
   const toggleRow = (id: string) => {
     setRowStates((p) => {
       const current = p[id] ?? 'idle';
