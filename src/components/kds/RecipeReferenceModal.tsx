@@ -379,7 +379,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
                     </div>
-                    <div style={{ width: 140, fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, textAlign: 'left' }}>
+                    <div style={{ width: 220, fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600, textAlign: 'left' }}>
                       Full recipe & video
                     </div>
                   </div>
@@ -416,7 +416,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
 
                     <div
                       className="flex items-center justify-center rounded-lg"
-                      style={{ width: 140, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
+                      style={{ width: 220, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
                     >
                       <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
                     </div>
