@@ -390,7 +390,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                         <div
                           key={i}
                           className="flex items-center rounded-lg"
-                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, flex: '1 1 200px', height: 60 }}
+                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, flex: '0 0 200px', height: 60 }}
                         >
                           {ing.image ? (
                             <img
