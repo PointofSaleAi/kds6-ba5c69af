@@ -67,6 +67,72 @@ const LIGHT: Palette = {
 };
 
 /**
+ * Deterministic placeholder QR graphic. Static only — no scan destination or interaction.
+ */
+function PlaceholderQR({ fill, bg }: { fill: string; bg: string }) {
+  const size = 25;
+  const unit = 100 / size;
+  const grid = Array.from({ length: size }, () => Array.from({ length: size }, () => false));
+
+  const fillFinder = (cx: number, cy: number) => {
+    for (let x = cx; x < cx + 7; x++) {
+      for (let y = cy; y < cy + 7; y++) {
+        grid[y][x] = true;
+      }
+    }
+    for (let x = cx + 1; x < cx + 6; x++) {
+      for (let y = cy + 1; y < cy + 6; y++) {
+        grid[y][x] = false;
+      }
+    }
+    for (let x = cx + 2; x < cx + 5; x++) {
+      for (let y = cy + 2; y < cy + 5; y++) {
+        grid[y][x] = true;
+      }
+    }
+  };
+
+  fillFinder(0, 0);
+  fillFinder(size - 7, 0);
+  fillFinder(0, size - 7);
+
+  for (let i = 8; i < size - 8; i += 2) {
+    grid[6][i] = true;
+    grid[i][6] = true;
+  }
+
+  let seed = 12345;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      if ((x < 8 && y < 8) || (x >= size - 8 && y < 8) || (x < 8 && y >= size - 8)) continue;
+      if (x === 6 || y === 6) continue;
+      if (rand() > 0.5) grid[y][x] = true;
+    }
+  }
+
+  const cells: { x: number; y: number }[] = [];
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      if (grid[y][x]) cells.push({ x, y });
+    }
+  }
+
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ background: bg }}>
+      {cells.map((c, i) => (
+        <rect key={i} x={c.x * unit} y={c.y * unit} width={unit} height={unit} fill={fill} />
+      ))}
+    </svg>
+  );
+}
+
+
+/**
  * Recipe / prep reference modal. Front-end only, mock data.
  * Adapts to light and dark themes via useTheme.
  */
@@ -313,6 +379,9 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
                     </div>
+                    <div style={{ fontSize: S.sectionLabel, color: C.textMuted, letterSpacing: 1.2, fontWeight: 600 }}>
+                      Full recipe & video
+                    </div>
                   </div>
 
                   <div className="flex overflow-x-auto" style={{ gap: 8, paddingBottom: 4, scrollbarWidth: 'thin' }}>
@@ -342,6 +411,15 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                         </div>
                       </div>
                     ))}
+
+                    <div
+                      className="flex flex-col items-center justify-center shrink-0 rounded-lg"
+                      style={{ width: 110, padding: 8, background: C.surfaceSubtle, border: `1px solid ${C.border}` }}
+                    >
+                      <div className="flex-1 w-full" style={{ minHeight: S.ingCard }}>
+                        <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
+                      </div>
+                    </div>
                   </div>
                 </section>
               )}
