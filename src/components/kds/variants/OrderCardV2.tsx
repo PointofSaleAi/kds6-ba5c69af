@@ -199,15 +199,18 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const getRowState = (product: OrderItem): RowState => product.isCompleted ? 'done' : (rowStates[product.id] ?? 'idle');
   const toggleRow = (id: string) => {
-    notifySeen();
     setRowStates((p) => {
       const current = p[id] ?? 'idle';
-      if (current === 'idle') return { ...p, [id]: 'cooking' };
-      if (current === 'cooking') {
+      let next = p;
+      if (current === 'idle') next = { ...p, [id]: 'cooking' };
+      else if (current === 'cooking') {
         onItemDone?.(order.id, id);
-        return { ...p, [id]: 'done' };
+        next = { ...p, [id]: 'done' };
       }
-      return p;
+      // Mark ticket seen only when every item has been touched (viewed)
+      const allTouched = allItems.every(pr => pr.isCompleted || (next[pr.id] ?? 'idle') !== 'idle');
+      if (allTouched && !isSeen) onMarkSeen?.(order.id);
+      return next;
     });
   };
   const removeRow = (id: string) => {

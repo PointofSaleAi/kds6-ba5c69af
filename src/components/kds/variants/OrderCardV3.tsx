@@ -223,11 +223,15 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const getRowState = (product: OrderItem): RowState => product.isCompleted ? 'done' : (rowStates[product.id] ?? 'idle');
   const toggleRow = (id: string) => {
-    notifySeen();
     setRow(id, 'loading');
     const t = window.setTimeout(() => {
       setRow(id, 'done');
       onItemDone?.(order.id, id);
+      setRowStates((current) => {
+        const allTouched = allItems.every(p => p.isCompleted || (current[p.id] ?? 'idle') !== 'idle');
+        if (allTouched && !isSeen) onMarkSeen?.(order.id);
+        return current;
+      });
     }, 600);
     timersRef.current.push(t);
   };
