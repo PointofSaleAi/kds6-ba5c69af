@@ -255,7 +255,7 @@ export function EightySixSheet({
         className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
         onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
-        onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); setConfirmItem(null); } }}
+        onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); closeConfirmItem(); } }}
       >
 
         <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
