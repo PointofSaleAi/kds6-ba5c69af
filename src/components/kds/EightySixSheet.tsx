@@ -220,11 +220,21 @@ export function EightySixSheet({
 
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) setConfirmItem(null);
+        onOpenChange(next);
+      }}
+    >
       <SheetContent
         side="right"
         className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
+        onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
+        onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
+        onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); setConfirmItem(null); } }}
       >
+
         <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
           <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
             <div className="eighty-six-icon w-7 h-7">
