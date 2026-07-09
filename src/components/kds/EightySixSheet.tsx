@@ -583,6 +583,21 @@ export function EightySixSheet({
           </>
         )}
 
+        <Flag86Modal
+          open={!!confirmItem}
+          onClose={() => setConfirmItem(null)}
+          onConfirm={() => {
+            if (confirmItem) {
+              handleEightySix(confirmItem.name, confirmItem.category);
+              setConfirmItem(null);
+            }
+          }}
+          title={confirmItem?.name ?? ""}
+          itemNames={confirmItem ? [confirmItem.name] : []}
+          subtext="Asks the manager to confirm this from the Point of Sale. Once they approve, the item is taken off the menu and no new orders can be sent to the kitchen. Open tickets are not affected."
+          primaryLabel="Request 86"
+        />
+
         <div className="p-4 border-t border-border">
           <Button
             onClick={() => onOpenChange(false)}
