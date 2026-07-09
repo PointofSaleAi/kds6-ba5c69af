@@ -226,9 +226,21 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
           </div>
         )}
       </div>
+      {interactive && (
+        <span
+          className="shrink-0 flex items-center justify-center rounded-full"
+          style={{ background: '#E84C3D', width: 22, height: 22 }}
+          aria-hidden="true"
+          title="Tap to recall product"
+        >
+          <Undo size={14} color="#fff" strokeWidth={2.5} />
+        </span>
+      )}
+      </div>
     </div>
   );
 }
+
 
 export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoHeader }: HistoryOrderCardProps) {
   const { tp, tperson, tl, timeFormat } = useLanguage();
