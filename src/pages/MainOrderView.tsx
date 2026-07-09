@@ -8,6 +8,7 @@ import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { OrderCard } from '@/components/kds/OrderCard';
+import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
 import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
