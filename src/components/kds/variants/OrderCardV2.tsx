@@ -328,10 +328,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                     key={product.id}
                     product={product}
                     state={getRowState(product)}
-                    onToggle={() => toggleRow(product.id)}
-                    onReset={() => setRow(product.id, 'idle')}
-                    onRemove={() => removeRow(product.id)}
-                    onLongPress={setRecipeProduct}
+                    onAdvance={() => toggleRow(product.id)}
+                    onUndo={() => undoRow(product.id)}
+                    onOpenRecipe={setRecipeProduct}
+                    onLongPress={setFlagProduct}
                   />
                 ))}
               </div>
@@ -342,11 +342,11 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             <V2ProductRow
               key={product.id}
               product={product}
-                state={getRowState(product)}
-              onToggle={() => toggleRow(product.id)}
-              onReset={() => setRow(product.id, 'idle')}
-              onRemove={() => removeRow(product.id)}
-              onLongPress={setRecipeProduct}
+              state={getRowState(product)}
+              onAdvance={() => toggleRow(product.id)}
+              onUndo={() => undoRow(product.id)}
+              onOpenRecipe={setRecipeProduct}
+              onLongPress={setFlagProduct}
               compact={isCompact}
             />
           ))
@@ -355,6 +355,13 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       )}
 
       <RecipeReferenceModal product={recipeProduct} order={order} onClose={() => setRecipeProduct(null)} variant="v3" />
+      <Item86Modal
+        open={!!flagProduct}
+        onClose={() => { if (flagProduct) clear86(flagProduct.id); setFlagProduct(null); }}
+        onConfirm={() => { if (flagProduct) confirm86(flagProduct.id); setFlagProduct(null); }}
+        productName={flagProduct?.name ?? ''}
+        currentQuantity={flagProduct?.quantity ?? 1}
+      />
 
       {/* FOOTER */}
       {!isCompact && !isHeaderOnly && (
