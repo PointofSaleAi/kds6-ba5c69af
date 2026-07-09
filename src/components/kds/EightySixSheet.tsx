@@ -100,6 +100,7 @@ export function EightySixSheet({
   const [showCustomTimePicker, setShowCustomTimePicker] = useState(false);
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(30);
+  const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
 
   const hoursScrollRef = useRef<HTMLDivElement>(null);
   const minutesScrollRef = useRef<HTMLDivElement>(null);
