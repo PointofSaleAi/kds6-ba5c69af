@@ -163,7 +163,7 @@ function V2ProductRow({
         {!loading && !done && state !== 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            onClick={(e) => { e.stopPropagation(); onAdvance(); }}
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
             aria-label="Start cooking"
