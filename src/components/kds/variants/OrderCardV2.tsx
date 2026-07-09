@@ -147,7 +147,7 @@ function V2ProductRow({
         {done && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); iconTap(e); }}
+            onClick={(e) => { e.stopPropagation(); iconTap(); }}
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
             style={{ background: '#27AE60', width: 22, height: 22 }}
             aria-label="Product done (double-tap to undo)"
@@ -159,7 +159,7 @@ function V2ProductRow({
         {!loading && !done && state === 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); iconTap(e); }}
+            onClick={(e) => { e.stopPropagation(); iconTap(); }}
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
             aria-label="Mark product done (double-tap to undo)"
@@ -172,7 +172,7 @@ function V2ProductRow({
         {!loading && !done && state !== 'cooking' && (
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); iconTap(e); }}
+            onClick={(e) => { e.stopPropagation(); iconTap(); }}
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
             aria-label="Start cooking (double-tap to undo)"
