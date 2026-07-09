@@ -379,7 +379,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     <div style={{ fontSize: S.sectionLabel, color: C.textMuted, textTransform: 'uppercase', letterSpacing: 1.2, fontWeight: 600 }}>
                       Ingredients
                     </div>
-                    <div style={{ fontSize: S.sectionLabel, color: C.textMuted, letterSpacing: 1.2, fontWeight: 600 }}>
+                    <div style={{ width: 140, fontSize: S.sectionLabel, color: C.textMuted, letterSpacing: 1.2, fontWeight: 600, textAlign: 'right' }}>
                       Full recipe & video
                     </div>
                   </div>
@@ -390,7 +390,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                         <div
                           key={i}
                           className="flex items-center rounded-lg"
-                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, flex: '1 1 200px', height: 60 }}
+                          style={{ padding: 8, gap: 10, background: C.surfaceSubtle, border: `1px solid ${C.border}`, flex: '0 0 200px', height: 60 }}
                         >
                           {ing.image ? (
                             <img
@@ -416,7 +416,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
 
                     <div
                       className="flex items-center justify-center rounded-lg"
-                      style={{ width: 110, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
+                      style={{ width: 140, background: C.surfaceSubtle, border: `1px solid ${C.border}`, alignSelf: 'stretch' }}
                     >
                       <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
                     </div>
