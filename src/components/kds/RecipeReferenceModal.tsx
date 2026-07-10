@@ -5,6 +5,7 @@ import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
 import { useTheme } from '@/hooks/use-theme';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface Props {
   product: OrderItem | null;
