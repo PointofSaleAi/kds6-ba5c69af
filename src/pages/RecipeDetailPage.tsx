@@ -146,7 +146,7 @@ export default function RecipeDetailPage() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 pb-24 pt-5 space-y-6">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 pb-28 pt-5 space-y-6">
         {/* Dish name + tags */}
         <section>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 leading-tight">{nameParam}</h1>
