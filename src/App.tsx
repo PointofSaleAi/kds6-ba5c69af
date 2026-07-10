@@ -40,6 +40,7 @@ import AIInstructionsSettings from "./pages/settings/AIInstructionsSettings.tsx"
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
+import RecipeDetailPage from "./pages/RecipeDetailPage.tsx";
 
 const queryClient = new QueryClient();
 
