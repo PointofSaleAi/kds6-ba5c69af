@@ -1,47 +1,40 @@
-I understand: every selected ticket layout must use the same shared ticket lifecycle as `/default`, not local-only behavior.
+## Goal
+Replace the placeholder "Watch video" content with a real recipe video fetched from YouTube based on the dish name.
 
-Plan:
+## Approach
+Use YouTube Data API v3 `search.list` server-side (edge function) with query `"<dish name> recipe"`, then embed the top result in an iframe in the KDS recipe modal and the `/recipe/:name` page.
 
-1. Create one shared lifecycle contract for all ticket cards
-   - Home, Seen, Unseen, and History will all render through the same `renderOrderCard` path.
-   - The selected layout, Default, v1, v2, v3, v4, v5, will only change appearance.
-   - Actions will always update the shared order state.
+## Steps
 
-2. Match Default behavior for Seen and Unseen
-   - Tapping or advancing an unseen ticket in any layout marks that order as seen.
-   - The ticket immediately leaves Unseen and appears in Seen.
-   - The same seen state applies everywhere instantly.
+1. **Secret**
+   - Request `YOUTUBE_API_KEY` via `add_secret` (user obtains from Google Cloud Console → APIs & Services → YouTube Data API v3).
 
-3. Match Default behavior for done products
-   - Product lifecycle will use the shared state, not only local row state.
-   - When a product reaches done, it becomes completed in the shared order.
-   - When a done product is tapped again, it is removed from the active ticket and added to History, matching Default behavior.
-   - Apply this to v1, v2, v3, v4, and v5.
+2. **Edge function** `supabase/functions/youtube-recipe-search/index.ts`
+   - Input: `{ query: string }` (validated with Zod, max 200 chars).
+   - Call: `GET https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=1&safeSearch=strict&q=<query>%20recipe&key=<KEY>`.
+   - Return: `{ videoId, title, channelTitle, thumbnail }` or `{ error, status, details }`.
+   - Standard CORS headers, surface provider errors with status + body.
 
-4. Keep History as the served/completed destination
-   - Bumping a whole ticket in any layout marks the full ticket served and sends it to History.
-   - Dismissing a done product in any layout sends that product to History.
-   - History cards should show completed data consistently and not break Seen or Unseen counts.
+3. **Client hook** `src/hooks/useRecipeVideo.ts`
+   - `useRecipeVideo(dishName)` calls `supabase.functions.invoke('youtube-recipe-search', { body: { query: dishName } })`.
+   - Simple in-memory cache keyed by dish name to avoid repeat calls in a session.
+   - Returns `{ videoId, loading, error }`.
 
-5. Fix local state mismatch in variant cards
-   - Initialize each variant row from shared item completion state.
-   - If an item was completed in one screen, it appears completed in all screens.
-   - If an item was removed in one screen, it disappears from all active ticket screens.
+4. **KDS recipe modal** `src/components/kds/RecipeReferenceModal.tsx`
+   - When "Watch video" is opened, call the hook with the current dish name.
+   - Render `<iframe src="https://www.youtube.com/embed/{videoId}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>` in the existing video slot.
+   - Loading: spinner. Error / no result: fallback message "No video found for this dish."
 
-6. Verify real-time flow across layouts
-   - Test Default, v1, v2, v3, v4, and v5.
-   - For each layout:
-     - ticket starts in Unseen
-     - tap/advance moves it to Seen
-     - mark product done
-     - tap done product again removes it from ticket and adds it to History
-     - bump full ticket moves it to History
-     - switching layouts updates all screens instantly
+5. **Recipe detail page** `src/pages/RecipeDetailPage.tsx`
+   - Same hook + iframe swap in the existing video player region.
+   - Keep current poster/play button; on click, render the iframe.
 
-Technical details:
+## Technical details
+- YouTube Data API free quota: 10,000 units/day; `search.list` costs 100 units → ~100 lookups/day. The per-dish cache keeps usage low.
+- No frontend exposure of the API key. Only the edge function reads `YOUTUBE_API_KEY`.
+- `videoEmbeddable=true` prevents picking videos that block iframes.
+- No schema changes, no changes to the KDS ticket UI or lifecycle logic.
 
-- Update `OrderCardV1` through `OrderCardV5` so they support the same callback surface as `OrderCard`.
-- Add `onItemDismiss` support to layouts currently missing it, especially v1, v4, and v5.
-- Stop relying on variant-only `rowStates` as the source of truth. Use shared `order.courses[].items[].isCompleted` to derive done rows.
-- Keep `MainOrderView.renderOrderCard` as the single adapter that passes `toggleOrderSeen`, `markItemDone`, `handleItemDismiss`, and `handleBump` into every layout.
-- Avoid changing visual design or ticket layout picker behavior.
+## Out of scope
+- Persisting picked videos per dish (can be added later with a `recipes.video_id` column).
+- Manual override / curation UI.
