@@ -5,6 +5,7 @@ import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
 import { useTheme } from '@/hooks/use-theme';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface Props {
   product: OrderItem | null;
@@ -414,18 +415,24 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                       ))}
                     </div>
 
-                    <a
-                      href={`/recipe/${encodeURIComponent(product.name)}?course=${encodeURIComponent(courseLabel ?? product.category ?? 'Appetizers')}&station=${encodeURIComponent((product.station ?? 'Grill') + ' station')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Open full recipe for ${product.name} in a new tab`}
-                      title="Tap to open full recipe (demo shortcut for QR scan)"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center justify-center rounded-lg cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
-                      style={{ width: 128, height: 128, background: C.surfaceSubtle, border: `1px solid ${C.border}` }}
-                    >
-                      <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
-                    </a>
+                    {(() => {
+                      const recipePath = `/recipe/${encodeURIComponent(product.name)}?course=${encodeURIComponent(courseLabel ?? product.category ?? 'Appetizers')}&station=${encodeURIComponent((product.station ?? 'Grill') + ' station')}`;
+                      const recipeUrl = typeof window !== 'undefined' ? new URL(recipePath, window.location.origin).toString() : recipePath;
+                      return (
+                        <a
+                          href={recipePath}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Open full recipe for ${product.name} in a new tab`}
+                          title="Scan with your phone or tap to open full recipe"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center justify-center rounded-lg cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                          style={{ width: 128, height: 128, background: '#FFFFFF', border: `1px solid ${C.border}`, padding: 6 }}
+                        >
+                          <QRCodeSVG value={recipeUrl} size={116} level="M" bgColor="#FFFFFF" fgColor={C.textPrimary} />
+                        </a>
+                      );
+                    })()}
                   </div>
                 </section>
               )}
