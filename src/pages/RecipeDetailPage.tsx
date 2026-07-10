@@ -333,9 +333,9 @@ export default function RecipeDetailPage() {
 
       {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-center gap-3">
-          <span className="text-[13px] leading-none text-slate-500">Powered by</span>
-          <img src={posaiLogo} alt="pointofsaleai" className="h-10 object-contain" />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-1.5 flex items-center justify-center gap-3">
+          <span className="text-[14px] leading-none text-slate-500">Powered by</span>
+          <img src={posaiLogo} alt="pointofsaleai" className="h-12 object-contain" />
         </div>
       </footer>
     </div>
