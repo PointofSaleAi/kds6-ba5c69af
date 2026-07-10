@@ -40,6 +40,7 @@ import AIInstructionsSettings from "./pages/settings/AIInstructionsSettings.tsx"
 
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
+import RecipeDetailPage from "./pages/RecipeDetailPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -98,6 +99,8 @@ const App = () => (
 
 
               <Route path="/kds-reply" element={<KdsReplyPage />} />
+              <Route path="/recipe/:name" element={<RecipeDetailPage />} />
+              <Route path="/recipe" element={<RecipeDetailPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

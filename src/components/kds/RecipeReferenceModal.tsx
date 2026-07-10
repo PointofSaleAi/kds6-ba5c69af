@@ -414,12 +414,18 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                       ))}
                     </div>
 
-                    <div
-                      className="flex items-center justify-center rounded-lg"
+                    <a
+                      href={`/recipe/${encodeURIComponent(product.name)}?course=${encodeURIComponent(courseLabel ?? product.category ?? 'Appetizers')}&station=${encodeURIComponent((product.station ?? 'Grill') + ' station')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Open full recipe for ${product.name} in a new tab`}
+                      title="Tap to open full recipe (demo shortcut for QR scan)"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center justify-center rounded-lg cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
                       style={{ width: 128, height: 128, background: C.surfaceSubtle, border: `1px solid ${C.border}` }}
                     >
                       <PlaceholderQR fill={C.textPrimary} bg={C.surfaceSubtle} />
-                    </div>
+                    </a>
                   </div>
                 </section>
               )}
