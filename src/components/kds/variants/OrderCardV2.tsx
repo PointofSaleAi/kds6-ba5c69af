@@ -324,17 +324,17 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const { clear: clear86, confirm: confirm86 } = useFlag86();
 
   const allDone = allItems.length > 0 && allItems.every((p) => getRowState(p) === 'done');
-  const anyStarted = allItems.some((p) => {
+  const allStarted = allItems.length > 0 && allItems.every((p) => {
     const s = getRowState(p);
-    return s !== 'idle';
+    return s === 'cooking' || s === 'done';
   });
   const [phaseOverride, setPhaseOverride] = useState<TicketState | null>(null);
   const ticketState: TicketState = useMemo(() => {
     if (phaseOverride) return phaseOverride;
     if (allDone) return 'done';
-    if (isSeen || anyStarted) return 'in-progress';
+    if (allStarted) return 'in-progress';
     return 'seen';
-  }, [phaseOverride, allDone, isSeen, anyStarted]);
+  }, [phaseOverride, allDone, allStarted]);
 
   const runBumpAnimation = (onComplete?: () => void) => {
     setRowStates((prev) => {
