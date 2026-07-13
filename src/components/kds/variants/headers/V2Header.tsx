@@ -31,6 +31,7 @@ export function V2Header({ order }: Props) {
         <div className="flex items-center gap-1.5 min-w-0">
           {showTableInstead ? (
             <span
+              data-onboarding="ticket-header"
               className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
               style={{ background: '#1A1A2E', color: '#FFFFFF' }}
             >
@@ -38,6 +39,7 @@ export function V2Header({ order }: Props) {
             </span>
           ) : (
             <span
+              data-onboarding="ticket-header"
               className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
               style={{ background: colorSet.headerBg, color: colorSet.headerText }}
             >
