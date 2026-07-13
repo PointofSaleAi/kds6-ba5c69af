@@ -6,7 +6,7 @@ export const TICKETS_ROUTE_STORAGE_KEY = 'kds-tickets-route';
 export const TICKETS_ROUTE_CHANGE_EVENT = 'kds:tickets-route-change';
 
 const ROUTE_TO_CARD_VARIANT: Record<TicketsRouteKey, CardVariant> = {
-  Default: 'v2',
+  Default: 'default',
   v1: 'default',
   v2: 'v1',
   v3: 'v2',
@@ -16,7 +16,7 @@ const ROUTE_TO_CARD_VARIANT: Record<TicketsRouteKey, CardVariant> = {
 };
 
 const CARD_VARIANT_TO_ROUTE: Record<CardVariant, TicketsRouteKey> = {
-  default: 'v3',
+  default: 'v1',
   v1: 'v2',
   v2: 'v3',
   v3: 'v4',
