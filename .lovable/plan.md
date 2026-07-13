@@ -1,40 +1,49 @@
-## Goal
-Replace the placeholder "Watch video" content with a real recipe video fetched from YouTube based on the dish name.
+# Dynamic ticket layout for onboarding app cues
 
-## Approach
-Use YouTube Data API v3 `search.list` server-side (edge function) with query `"<dish name> recipe"`, then embed the top result in an iframe in the KDS recipe modal and the `/recipe/:name` page.
+## Problem
+The onboarding walkthrough sample ticket is currently hard-forced to the legacy `/default` (`OrderCard`) layout, because:
+- `MainOrderView.renderOrderCard` renders any order with `id === ONBOARDING_SAMPLE_ORDER_ID` via `<OrderCard ... legacyActions />` regardless of the selected layout.
+- `legacyActions` prop is also forced true whenever `onboardingActive` is true.
+- Only `OrderCard` and its children (`CourseSection`, `FlatItemList`, `OrderCardActions`) have the `data-onboarding="..."` anchor attributes the walkthrough targets.
 
-## Steps
+New user goal: the sample ticket used for app cues should follow the user's selected Ticket Layout (v1..v6). Default is v3 for first-time users (already the case system-wide).
 
-1. **Secret**
-   - Request `YOUTUBE_API_KEY` via `add_secret` (user obtains from Google Cloud Console → APIs & Services → YouTube Data API v3).
+## Changes
 
-2. **Edge function** `supabase/functions/youtube-recipe-search/index.ts`
-   - Input: `{ query: string }` (validated with Zod, max 200 chars).
-   - Call: `GET https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=1&safeSearch=strict&q=<query>%20recipe&key=<KEY>`.
-   - Return: `{ videoId, title, channelTitle, thumbnail }` or `{ error, status, details }`.
-   - Standard CORS headers, surface provider errors with status + body.
+### 1. Stop forcing legacy layout for the onboarding sample
+`src/pages/MainOrderView.tsx`
+- Remove the special-case `if (displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID) { render OrderCard ... }` block so the sample flows through the normal variant renderer and picks up `effectiveCardVariant` (v3 by default, or whatever the user selected).
+- Remove `onboardingActive` from the `legacyActions` OR expression on the fallback `<OrderCard />` (line 1160). It should only be legacy when `effectiveLegacyActions` (route === Default) or a training sample.
 
-3. **Client hook** `src/hooks/useRecipeVideo.ts`
-   - `useRecipeVideo(dishName)` calls `supabase.functions.invoke('youtube-recipe-search', { body: { query: dishName } })`.
-   - Simple in-memory cache keyed by dish name to avoid repeat calls in a session.
-   - Returns `{ videoId, loading, error }`.
+### 2. Add walkthrough anchors to every card variant
+Anchors the walkthrough targets on the sample ticket:
+- `ticket-header`, `ticket-orderno`, `ticket-timer`
+- `item-row`, `item-allergen`, `item-modifier`
+- `item-eye`, `item-bell`, `item-check`
+- `ticket-footer-btn`, `ticket-footer-undo`
 
-4. **KDS recipe modal** `src/components/kds/RecipeReferenceModal.tsx`
-   - When "Watch video" is opened, call the hook with the current dish name.
-   - Render `<iframe src="https://www.youtube.com/embed/{videoId}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen>` in the existing video slot.
-   - Loading: spinner. Error / no result: fallback message "No video found for this dish."
+Add matching `data-onboarding` attributes in each variant file, mapped to the closest existing element:
+- `src/components/kds/variants/OrderCardV1.tsx`
+- `src/components/kds/variants/OrderCardV2.tsx` (v3 route, the new default)
+- `src/components/kds/variants/OrderCardV3.tsx`
+- `src/components/kds/variants/OrderCardV4.tsx`
+- `src/components/kds/variants/OrderCardV5.tsx`
+- Shared subcomponents that render item rows/action icons within variants: `src/components/kds/variants/headers/V1Header.tsx`, `V2Header.tsx`, `V3Header.tsx`, and any per-variant item row component used inside them.
 
-5. **Recipe detail page** `src/pages/RecipeDetailPage.tsx`
-   - Same hook + iframe swap in the existing video player region.
-   - Keep current poster/play button; on click, render the iframe.
+For variants where an anchor has no equivalent element (e.g. v5 header-less styles, or a variant that hides individual eye/bell/check icons), fall back to attaching the anchor to the nearest logical element (e.g., the whole item row) so the walkthrough tooltip still positions sensibly.
 
-## Technical details
-- YouTube Data API free quota: 10,000 units/day; `search.list` costs 100 units → ~100 lookups/day. The per-dish cache keeps usage low.
-- No frontend exposure of the API key. Only the edge function reads `YOUTUBE_API_KEY`.
-- `videoEmbeddable=true` prevents picking videos that block iframes.
-- No schema changes, no changes to the KDS ticket UI or lifecycle logic.
+### 3. Walkthrough robustness across variants
+`src/components/onboarding/OnboardingWalkthrough.tsx`
+- Keep existing anchor selectors, but the current per-step skip logic (line 273 `if (!document.querySelector(step.anchor))`) already handles missing anchors, so nothing else changes structurally.
+- Verify the "footer button" click helper (`clickSample('[data-onboarding="ticket-footer-btn"]')`) still triggers the seen/in-progress/done phase on the active variant. If a variant uses a different footer control, add the same `data-onboarding="ticket-footer-btn"` marker on its equivalent tappable footer element so the auto-advance keeps working.
 
-## Out of scope
-- Persisting picked videos per dish (can be added later with a `recipes.video_id` column).
-- Manual override / curation UI.
+### 4. Verify
+- Reset onboarding flag, load `/` -> lands on `/kds/v3` -> walkthrough runs against the v3 sample ticket with tooltips anchored on the v3 card.
+- Change Ticket Layout in Settings to v1, restart walkthrough, tooltips anchor on the v1 card.
+- Repeat spot-check for v2, v4, v5, v6, and legacy Default.
+- Run Playwright to confirm no anchors are missing (walkthrough advances past every step without silently skipping the ticket-level steps on v3).
+
+## Technical notes
+- No changes to data flow or business logic. Presentation-only: add DOM attributes and remove one override branch.
+- `selectedTicketsRoute` already drives `effectiveCardVariant` via `getCardVariantForTicketsRoute`, so once the override branch is removed the sample ticket automatically matches the active layout.
+- Training-mode sample tickets (`training-sample-*`) keep their existing forced-legacy behavior; only the onboarding sample changes.

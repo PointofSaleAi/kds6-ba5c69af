@@ -89,6 +89,7 @@ function V2ProductRow({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
+      data-onboarding="item-row"
       className={`border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
       style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
@@ -104,14 +105,14 @@ function V2ProductRow({
             {product.name}
           </div>
           {showDetails && product.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-0.5">
+            <div className="flex flex-wrap gap-1 mt-0.5" data-onboarding="item-allergen">
               {product.allergens.map((a) => (
                 <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
               ))}
             </div>
           )}
           {showDetails && product.modifiers.length > 0 && (
-            <div className="mt-0">
+            <div className="mt-0" data-onboarding="item-modifier">
               {product.modifiers.map((m, i) => (
                 <div
                   key={i}
@@ -164,6 +165,7 @@ function V2ProductRow({
               }
               iconTap();
             }}
+            data-onboarding="item-check"
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
             style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
             aria-label={isHistory ? 'Recall product' : 'Product done (double-tap to undo)'}
@@ -180,6 +182,7 @@ function V2ProductRow({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            data-onboarding="item-bell"
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
             aria-label="Mark product done (double-tap to undo)"
@@ -193,6 +196,7 @@ function V2ProductRow({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            data-onboarding="item-eye"
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
             aria-label="Start cooking (double-tap to undo)"
@@ -241,6 +245,7 @@ function FooterBumpButton({
         type="button"
         onClick={tap}
         disabled={bumping}
+        data-onboarding="ticket-footer-btn"
         className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
         style={{ color }}
         title={isRecall ? 'Tap to recall ticket' : 'Tap to advance. Double-tap to undo.'}
@@ -390,6 +395,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         onClick={isCompact ? handleBump : undefined}
         role={isCompact ? 'button' : undefined}
         aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
+        data-onboarding="ticket-header"
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
@@ -409,12 +415,13 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 {orderTypeLabel(order.orderType)}
               </span>
             )}
-            <span className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
+            <span data-onboarding="ticket-orderno" className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
           </div>
           <span
             className="rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums"
             style={{ background: timerStatus.color, color: timerStatus.textColor }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${timerStatus.label}`}
+            data-onboarding="ticket-timer"
           >
             {fmtElapsed(elapsed)}
           </span>
