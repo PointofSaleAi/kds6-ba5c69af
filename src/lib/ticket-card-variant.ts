@@ -24,7 +24,7 @@ const CARD_VARIANT_TO_ROUTE: Record<CardVariant, TicketsRouteKey> = {
   v5: 'v6',
 };
 
-export function normalizeTicketsRoute(value: string | null | undefined, fallback: TicketsRouteKey = 'Default'): TicketsRouteKey {
+export function normalizeTicketsRoute(value: string | null | undefined, fallback: TicketsRouteKey = 'v3'): TicketsRouteKey {
   if (value === 'Default' || value === 'v1' || value === 'v2' || value === 'v3' || value === 'v4' || value === 'v5' || value === 'v6') {
     return value;
   }
@@ -44,7 +44,7 @@ export function getTicketsRoutePath(route: TicketsRouteKey): string {
   return route === 'Default' ? '/kds/default' : `/kds/${route}`;
 }
 
-export function readStoredTicketsRoute(fallback: TicketsRouteKey = 'Default'): TicketsRouteKey {
+export function readStoredTicketsRoute(fallback: TicketsRouteKey = 'v3'): TicketsRouteKey {
   if (typeof window === 'undefined') return fallback;
   return normalizeTicketsRoute(window.localStorage.getItem(TICKETS_ROUTE_STORAGE_KEY), fallback);
 }
