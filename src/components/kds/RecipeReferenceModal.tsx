@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Play, Pause, ChevronDown, ArrowLeft, Rewind, Volume2, VolumeX, Maximize2 } from 'lucide-react';
+import { X, Play, Pause, ChevronDown, ArrowLeft, Rewind, Volume2, VolumeX, Maximize2, Clock, List, BarChart3 } from 'lucide-react';
 import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
@@ -360,6 +360,33 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             )}
           </div>
         )}
+
+        {/* QUICK STATS CHIPS */}
+        {!videoMode && (() => {
+          const ingCount = recipe.ingredients.length;
+          const prepMin = Math.max(5, Math.min(45, recipe.steps.length * 2));
+          const difficulty = recipe.steps.length <= 4 ? 'Easy' : recipe.steps.length <= 7 ? 'Medium' : 'Hard';
+          const chipStyle: React.CSSProperties = {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '6px 12px',
+            borderRadius: 999,
+            background: C.surfaceSubtle,
+            border: `1px solid ${C.border}`,
+            color: C.textPrimary,
+            fontSize: 13,
+            fontWeight: 500,
+            lineHeight: 1,
+          };
+          return (
+            <div className="flex flex-wrap items-center" style={{ gap: 8, padding: `0 ${S.pad}px 8px` }}>
+              <span style={chipStyle}><Clock size={14} />{prepMin} min prep</span>
+              <span style={chipStyle}><List size={14} />{ingCount} ingredient{ingCount === 1 ? '' : 's'}</span>
+              <span style={chipStyle}><BarChart3 size={14} />{difficulty}</span>
+            </div>
+          );
+        })()}
 
         {/* BODY */}
         <div className="overflow-y-auto" style={{ padding: `4px ${S.pad}px ${S.pad}px` }}>
