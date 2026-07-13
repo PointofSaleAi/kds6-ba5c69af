@@ -32,6 +32,7 @@ export function V1Header({ order, emphasized = false }: Props) {
       >
         <span className="inline-flex items-center gap-3 min-w-0">
           <span
+            data-onboarding="ticket-header"
             className="truncate uppercase tracking-wide"
             style={{ fontSize: 20, fontWeight: 800, letterSpacing: '0.04em' }}
           >
