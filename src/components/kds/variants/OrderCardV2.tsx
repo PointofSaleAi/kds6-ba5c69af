@@ -165,6 +165,7 @@ function V2ProductRow({
               }
               iconTap();
             }}
+            data-onboarding="item-check"
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
             style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
             aria-label={isHistory ? 'Recall product' : 'Product done (double-tap to undo)'}
@@ -181,6 +182,7 @@ function V2ProductRow({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            data-onboarding="item-bell"
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
             aria-label="Mark product done (double-tap to undo)"
@@ -194,6 +196,7 @@ function V2ProductRow({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            data-onboarding="item-eye"
             className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
             style={{ width: 22, height: 22, color: '#6C7A89' }}
             aria-label="Start cooking (double-tap to undo)"
