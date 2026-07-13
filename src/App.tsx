@@ -75,7 +75,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Navigate to="/kds/v3" replace />} />
               <Route path="/kds/v1" element={<Index />} />
-              <Route path="/kds/default" element={<Index cardVariant="v2" />} />
+              <Route path="/kds/default" element={<Index />} />
               <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
               <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
               <Route path="/kds/v4" element={<Index cardVariant="v3" />} />

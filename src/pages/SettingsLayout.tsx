@@ -16,7 +16,7 @@ export default function SettingsLayout() {
   const { isPortrait } = usePortrait();
 
   const resolveTicketsRoute = () => {
-    return getTicketsRoutePath(readStoredTicketsRoute('Default'));
+    return getTicketsRoutePath(readStoredTicketsRoute('v3'));
   };
 
   const handleKdsNavigate = (target: string) => {

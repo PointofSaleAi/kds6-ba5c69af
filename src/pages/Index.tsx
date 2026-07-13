@@ -114,7 +114,7 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
       case 'home': {
-        navigate(getTicketsRoutePath(readStoredTicketsRoute('Default')));
+        navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')));
         setScreen('main');
         break;
       }

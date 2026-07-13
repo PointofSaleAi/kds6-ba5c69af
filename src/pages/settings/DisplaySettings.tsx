@@ -37,7 +37,7 @@ export default function DisplaySettings() {
     getRouteSetting, setRouteSetting,
   } = useKDSSettings();
   const [ticketsRoute, setTicketsRoute] = useState<import('@/hooks/use-kds-settings').TicketsRouteKey>(
-    () => readStoredTicketsRoute('Default'),
+    () => readStoredTicketsRoute('v3'),
   );
   const selectedCardVariant = getCardVariantForTicketsRoute(ticketsRoute);
   // Read values scoped to the currently-selected preview route
