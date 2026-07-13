@@ -4,6 +4,7 @@ import type { Order, OrderItem } from '@/types/kds';
 import { useLongPress } from '@/hooks/use-long-press';
 import { RecipeModalV1 } from './RecipeModalV1';
 import { V2Header } from './headers/V2Header';
+import { sortDoneLast } from './variant-utils';
 
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useLanguage } from '@/hooks/use-language';
@@ -501,7 +502,7 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       {/* PRODUCTS */}
       {!isHeaderOnly && (
         <div className="flex flex-col" style={{ padding: 'var(--kds-card-padding)', gap: 'var(--kds-item-gap)' }}>
-          {allItems.map((product) => (
+          {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
             <ProductPill
               key={product.id}
               product={product}

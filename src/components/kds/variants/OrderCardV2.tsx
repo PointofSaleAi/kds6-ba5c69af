@@ -4,7 +4,7 @@ import { Check, ChevronRight, Loader2, Eye, Undo } from 'lucide-react';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
-import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
+import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel, sortDoneLast } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
@@ -478,7 +478,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => {
-            const visibleItems = course.items.filter((p) => !removedIds.has(p.id));
+            const visibleItems = sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done');
             if (visibleItems.length === 0) return null;
             return (
               <div key={`${course.course}-${idx}`}>
@@ -506,7 +506,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             );
           })
         ) : (
-          allItems.map((product) => (
+          sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
             <V2ProductRow
               key={product.id}
               product={product}

@@ -396,10 +396,18 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
         >
         <div className="px-1">
           {(() => {
-          const visibleItems = courseGroup.items.filter((item) => {
-            if (dismissedItemIds?.has(item.id)) return false;
-            return true;
-          });
+          const visibleItems = courseGroup.items
+            .filter((item) => {
+              if (dismissedItemIds?.has(item.id)) return false;
+              return true;
+            })
+            .map((item, idx) => ({ item, idx }))
+            .sort((a, b) => {
+              const aDone = itemStatuses?.get(a.item.id) === 'done' ? 1 : 0;
+              const bDone = itemStatuses?.get(b.item.id) === 'done' ? 1 : 0;
+              return aDone - bDone || a.idx - b.idx;
+            })
+            .map((x) => x.item);
           return visibleItems.map((item, visibleIdx) => {
             const isLastVisible = visibleIdx === visibleItems.length - 1;
             const status = itemStatuses?.get(item.id);

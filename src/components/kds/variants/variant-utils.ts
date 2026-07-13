@@ -44,3 +44,11 @@ export function courseFireTime(order: Order, courseIndex: number): string | unde
   }
   return undefined;
 }
+
+/** Stable sort placing "done" items at the bottom. */
+export function sortDoneLast<T>(items: T[], isDone: (item: T) => boolean): T[] {
+  return items
+    .map((item, idx) => ({ item, idx }))
+    .sort((a, b) => (isDone(a.item) ? 1 : 0) - (isDone(b.item) ? 1 : 0) || a.idx - b.idx)
+    .map((x) => x.item);
+}

@@ -50,10 +50,18 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
   return (
     <div className="px-1">
       {(() => {
-        const visibleItems = allItems.filter((item) => {
-          if (dismissedItemIds?.has(item.id)) return false;
-          return true;
-        });
+        const visibleItems = allItems
+          .filter((item) => {
+            if (dismissedItemIds?.has(item.id)) return false;
+            return true;
+          })
+          .map((item, idx) => ({ item, idx }))
+          .sort((a, b) => {
+            const aDone = itemStatuses?.get(a.item.id) === 'done' ? 1 : 0;
+            const bDone = itemStatuses?.get(b.item.id) === 'done' ? 1 : 0;
+            return aDone - bDone || a.idx - b.idx;
+          })
+          .map((x) => x.item);
         let seenIdx = 0;
         return visibleItems.map((item, visibleIdx) => {
         const isLastVisible = visibleIdx === visibleItems.length - 1;

@@ -7,7 +7,7 @@ import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
-import { fmtElapsed, orderTypeLabel, courseLabel } from './variant-utils';
+import { fmtElapsed, orderTypeLabel, courseLabel, sortDoneLast } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
@@ -278,7 +278,7 @@ export function OrderCardV4({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 {courseLabel(course.course)}
               </div>
               <div className="bg-card">
-                {course.items.filter((p) => !removedIds.has(p.id)).map((product) => (
+                {sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done').map((product) => (
                   <V1ProductRow
                     key={product.id}
                     product={product}
@@ -294,7 +294,7 @@ export function OrderCardV4({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           ))
         ) : (
           <div className="bg-card">
-            {allItems.map((product) => (
+            {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
               <V1ProductRow
                 key={product.id}
                 product={product}
