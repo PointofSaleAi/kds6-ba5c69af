@@ -67,6 +67,7 @@ export function V1Header({ order, emphasized = false }: Props) {
   return (
     <div>
       <div
+        data-onboarding="ticket-header"
         className="text-center"
         style={{
           fontSize: 16,
