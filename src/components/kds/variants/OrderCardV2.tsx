@@ -245,6 +245,7 @@ function FooterBumpButton({
         type="button"
         onClick={tap}
         disabled={bumping}
+        data-onboarding="ticket-footer-btn"
         className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
         style={{ color }}
         title={isRecall ? 'Tap to recall ticket' : 'Tap to advance. Double-tap to undo.'}
