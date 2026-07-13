@@ -89,6 +89,7 @@ function V2ProductRow({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
+      data-onboarding="item-row"
       className={`border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
       style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
