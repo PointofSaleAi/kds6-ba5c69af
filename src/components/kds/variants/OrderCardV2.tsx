@@ -478,7 +478,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
           order.courses.map((course, idx) => {
-            const visibleItems = course.items.filter((p) => !removedIds.has(p.id));
+            const visibleItems = sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done');
             if (visibleItems.length === 0) return null;
             return (
               <div key={`${course.course}-${idx}`}>
