@@ -281,7 +281,7 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 {courseLabel(course.course)}
               </div>
               <div className="bg-card">
-                {course.items.filter((p) => !removedIds.has(p.id)).map((product) => (
+                {sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done').map((product) => (
                   <V1ProductRow
                     key={product.id}
                     product={product}
