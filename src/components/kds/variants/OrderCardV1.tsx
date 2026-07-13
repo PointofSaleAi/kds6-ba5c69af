@@ -272,29 +272,48 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       <div className="flex-1">
 
         {order.orderType === 'dine-in' && !isCompact ? (
-          order.courses.map((course, idx) => (
-            <div key={`${course.course}-${idx}`}>
-              <div
-                className="px-2 py-1 text-[11px] font-bold uppercase tracking-wide"
-                style={{ background: '#F3F4F6', color: '#374151' }}
-              >
-                {courseLabel(course.course)}
-              </div>
-              <div className="bg-card">
-                {sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done').map((product) => (
-                  <V1ProductRow
-                    key={product.id}
-                    product={product}
-                    state={getRowState(product)}
-                    onToggle={() => toggleRow(product.id)}
-                    onReset={() => setRow(product.id, 'idle')}
-                    onRemove={() => removeRow(product.id)}
-                    onLongPress={setRecipeProduct}
-                  />
-                ))}
-              </div>
+          <>
+            {order.courses.map((course, idx) => {
+              const visibleItems = course.items.filter((p) => !removedIds.has(p.id) && getRowState(p) !== 'done');
+              if (visibleItems.length === 0) return null;
+              return (
+                <div key={`${course.course}-${idx}`}>
+                  <div
+                    className="px-2 py-1 text-[11px] font-bold uppercase tracking-wide"
+                    style={{ background: '#F3F4F6', color: '#374151' }}
+                  >
+                    {courseLabel(course.course)}
+                  </div>
+                  <div className="bg-card">
+                    {visibleItems.map((product) => (
+                      <V1ProductRow
+                        key={product.id}
+                        product={product}
+                        state={getRowState(product)}
+                        onToggle={() => toggleRow(product.id)}
+                        onReset={() => setRow(product.id, 'idle')}
+                        onRemove={() => removeRow(product.id)}
+                        onLongPress={setRecipeProduct}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+            <div className="bg-card">
+              {allItems.filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done').map((product) => (
+                <V1ProductRow
+                  key={product.id}
+                  product={product}
+                  state={getRowState(product)}
+                  onToggle={() => toggleRow(product.id)}
+                  onReset={() => setRow(product.id, 'idle')}
+                  onRemove={() => removeRow(product.id)}
+                  onLongPress={setRecipeProduct}
+                />
+              ))}
             </div>
-          ))
+          </>
         ) : (
           <div className="bg-card">
             {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (

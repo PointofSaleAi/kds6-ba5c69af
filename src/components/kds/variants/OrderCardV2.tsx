@@ -476,33 +476,45 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {isDineIn && !isCompact ? (
-          order.courses.map((course, idx) => {
-            const visibleItems = sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done');
-            if (visibleItems.length === 0) return null;
-            return (
-              <div key={`${course.course}-${idx}`}>
-                <div
-                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground"
-                >
-                  {courseLabel(course.course)}
+          <>
+            {order.courses.map((course, idx) => {
+              const visibleItems = course.items.filter((p) => !removedIds.has(p.id) && getRowState(p) !== 'done');
+              if (visibleItems.length === 0) return null;
+              return (
+                <div key={`${course.course}-${idx}`}>
+                  <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground">
+                    {courseLabel(course.course)}
+                  </div>
+                  {visibleItems.map((product) => (
+                    <V2ProductRow
+                      key={product.id}
+                      product={product}
+                      state={getRowState(product)}
+                      onAdvance={() => toggleRow(product.id)}
+                      onUndo={() => undoRow(product.id)}
+                      onItemRecall={() => recallRow(product.id)}
+                      onOpenRecipe={setRecipeProduct}
+                      onLongPress={setFlagProduct}
+                      isHistory={isHistory}
+                    />
+                  ))}
                 </div>
-                {visibleItems.map((product) => (
-                <V2ProductRow
-                    key={product.id}
-                    product={product}
-                    state={getRowState(product)}
-                    onAdvance={() => toggleRow(product.id)}
-                    onUndo={() => undoRow(product.id)}
-                    onItemRecall={() => recallRow(product.id)}
-                    onOpenRecipe={setRecipeProduct}
-                    onLongPress={setFlagProduct}
-                    isHistory={isHistory}
-                  />
-
-                ))}
-              </div>
-            );
-          })
+              );
+            })}
+            {allItems.filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done').map((product) => (
+              <V2ProductRow
+                key={product.id}
+                product={product}
+                state={getRowState(product)}
+                onAdvance={() => toggleRow(product.id)}
+                onUndo={() => undoRow(product.id)}
+                onItemRecall={() => recallRow(product.id)}
+                onOpenRecipe={setRecipeProduct}
+                onLongPress={setFlagProduct}
+                isHistory={isHistory}
+              />
+            ))}
+          </>
         ) : (
           sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
             <V2ProductRow
