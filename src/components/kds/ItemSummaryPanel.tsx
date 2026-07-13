@@ -250,7 +250,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   return (
     <div data-onboarding="summary" className="w-[180px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div data-onboarding="summary-header" className="flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
+      <div data-onboarding="summary-header" className="relative z-20 flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5 min-w-0">
           <DockDragHandle
             panel="summaryPanel"
@@ -265,6 +265,23 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
         <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
           <ChevronRight size={16} strokeWidth={3} />
         </button>
+
+        {/* Seam tab: global expand/collapse-all toggle */}
+        {(summary.length > 0 || overtimeItems.length > 0) && (
+          <button
+            type="button"
+            onClick={toggleAllSections}
+            aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
+            aria-expanded={allExpanded}
+            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-surface-card border border-border/60 shadow-sm flex items-center justify-center hover:bg-muted transition-colors"
+          >
+            <ChevronDown
+              size={9}
+              strokeWidth={2.5}
+              className={`text-text-muted transition-transform duration-150 ${allExpanded ? 'rotate-180' : ''}`}
+            />
+          </button>
+        )}
       </div>
 
       {/* Filter status bar */}
@@ -288,22 +305,6 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
       {/* Categories section */}
       <div className="relative flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
-        {/* Seam tab: global expand/collapse-all toggle */}
-        {(summary.length > 0 || overtimeItems.length > 0) && (
-          <button
-            type="button"
-            onClick={toggleAllSections}
-            aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
-            aria-expanded={allExpanded}
-            className="absolute left-1/2 -translate-x-1/2 -top-[6px] z-10 w-[18px] h-[12px] rounded-[5px] bg-surface-card border border-border/60 shadow-sm flex items-center justify-center hover:bg-muted transition-colors"
-          >
-            <ChevronDown
-              size={9}
-              strokeWidth={2.5}
-              className={`text-text-muted transition-transform duration-150 ${allExpanded ? 'rotate-180' : ''}`}
-            />
-          </button>
-        )}
         <div className="flex-1 overflow-y-auto">
           {/* Overtime section - styled like a category section */}
           {overtimeItems.length > 0 && (
