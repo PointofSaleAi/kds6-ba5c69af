@@ -395,13 +395,13 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         onClick={isCompact ? handleBump : undefined}
         role={isCompact ? 'button' : undefined}
         aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
-        data-onboarding="ticket-header"
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
             {isCompact && bumping && <Loader2 size={12} className="animate-spin shrink-0" />}
             {showTableInstead ? (
               <span
+                data-onboarding="ticket-header"
                 className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
                 style={{ background: '#1A1A2E', color: '#FFFFFF' }}
               >
@@ -409,6 +409,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               </span>
             ) : (
               <span
+                data-onboarding="ticket-header"
                 className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
                 style={{ background: colorSet.headerBg, color: colorSet.headerText }}
               >
