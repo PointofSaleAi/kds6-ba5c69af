@@ -144,13 +144,15 @@ export function ItemPrepTimerChip({
   const color = isDone ? '#166534' : '#78350F';
   return (
     <span
-      className="shrink-0 inline-flex items-center rounded-full font-mono-timer tabular-nums font-semibold"
+      className="shrink-0 inline-flex items-center justify-center rounded-full font-mono-timer tabular-nums font-semibold"
       style={{
         background: bg,
         color,
         fontSize: '10px',
         lineHeight: 1,
-        padding: '2px 6px',
+        padding: '0 6px',
+        height: 22,
+        boxSizing: 'border-box',
       }}
       aria-label={`Prep timer ${label}${isDone ? ' (finished)' : ''}`}
       title={isDone ? `Finished in ${label}` : `Cooking for ${label}`}
@@ -159,6 +161,5 @@ export function ItemPrepTimerChip({
     >
       {label}
     </span>
-
   );
 }
