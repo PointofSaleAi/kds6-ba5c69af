@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { Check, ChevronRight, Loader2, Eye, Undo } from 'lucide-react';
+import { Check, ChevronRight, Loader2, Eye, Undo, Clock } from 'lucide-react';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
