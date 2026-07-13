@@ -297,7 +297,7 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           ))
         ) : (
           <div className="bg-card">
-            {allItems.map((product) => (
+            {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
               <V1ProductRow
                 key={product.id}
                 product={product}
