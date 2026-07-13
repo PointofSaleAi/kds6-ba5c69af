@@ -301,17 +301,25 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               );
             })}
             <div className="bg-card">
-              {allItems.filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done').map((product) => (
-                <V1ProductRow
-                  key={product.id}
-                  product={product}
-                  state={getRowState(product)}
-                  onToggle={() => toggleRow(product.id)}
-                  onReset={() => setRow(product.id, 'idle')}
-                  onRemove={() => removeRow(product.id)}
-                  onLongPress={setRecipeProduct}
-                />
-              ))}
+              {order.courses.flatMap((course) =>
+                course.items
+                  .filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done')
+                  .map((product) => (
+                    <div key={product.id}>
+                      <div className="px-2 pt-1 pb-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground/70">
+                        {courseLabel(course.course)}
+                      </div>
+                      <V1ProductRow
+                        product={product}
+                        state={getRowState(product)}
+                        onToggle={() => toggleRow(product.id)}
+                        onReset={() => setRow(product.id, 'idle')}
+                        onRemove={() => removeRow(product.id)}
+                        onLongPress={setRecipeProduct}
+                      />
+                    </div>
+                  ))
+              )}
             </div>
           </>
         ) : (
