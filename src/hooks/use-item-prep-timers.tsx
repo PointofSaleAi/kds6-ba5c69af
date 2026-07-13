@@ -154,8 +154,11 @@ export function ItemPrepTimerChip({
       }}
       aria-label={`Prep timer ${label}${isDone ? ' (finished)' : ''}`}
       title={isDone ? `Finished in ${label}` : `Cooking for ${label}`}
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
     >
       {label}
     </span>
+
   );
 }
