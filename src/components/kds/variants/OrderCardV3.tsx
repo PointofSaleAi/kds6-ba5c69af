@@ -372,34 +372,52 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       {!isHeaderOnly && (
       <div className="flex-1 bg-card">
         {showCourses ? (
-          order.courses.map((course, idx) => {
-            const p = paletteFor(course.course);
-            return (
-              <div key={`${course.course}-${idx}`}>
-                <div
-                  className="flex items-center justify-between px-2 py-1"
-                  style={{ background: p.bg, color: p.text }}
-                >
-                  <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
-                  <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
-                </div>
-                <div>
-                  {sortDoneLast(course.items.filter((p) => !removedIds.has(p.id)), (p) => getRowState(p) === 'done').map((product) => (
-                    <ProductRow
-                      key={product.id}
-                      product={product}
-                      accent={p.accent}
+          <>
+            {order.courses.map((course, idx) => {
+              const p = paletteFor(course.course);
+              const visibleItems = course.items.filter((pr) => !removedIds.has(pr.id) && getRowState(pr) !== 'done');
+              if (visibleItems.length === 0) return null;
+              return (
+                <div key={`${course.course}-${idx}`}>
+                  <div
+                    className="flex items-center justify-between px-2 py-1"
+                    style={{ background: p.bg, color: p.text }}
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-wide">{courseLabel(course.course)}</span>
+                    <span className="text-[10px] font-semibold">Products: {course.items.length}</span>
+                  </div>
+                  <div>
+                    {visibleItems.map((product) => (
+                      <ProductRow
+                        key={product.id}
+                        product={product}
+                        accent={p.accent}
                         state={getRowState(product)}
-                      onToggle={() => toggleRow(product.id)}
-                      onReset={() => setRow(product.id, 'idle')}
-                      onRemove={() => removeRow(product.id)}
-                      onLongPress={setRecipeProduct}
-                    />
-                  ))}
+                        onToggle={() => toggleRow(product.id)}
+                        onReset={() => setRow(product.id, 'idle')}
+                        onRemove={() => removeRow(product.id)}
+                        onLongPress={setRecipeProduct}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })}
+            <div>
+              {allItems.filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done').map((product) => (
+                <ProductRow
+                  key={product.id}
+                  product={product}
+                  accent={accentColor}
+                  state={getRowState(product)}
+                  onToggle={() => toggleRow(product.id)}
+                  onReset={() => setRow(product.id, 'idle')}
+                  onRemove={() => removeRow(product.id)}
+                  onLongPress={setRecipeProduct}
+                />
+              ))}
+            </div>
+          </>
         ) : (
           <div>
             {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
