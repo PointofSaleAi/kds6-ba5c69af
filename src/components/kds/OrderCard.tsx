@@ -1003,7 +1003,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
             />
           )}
 
-          {!effectiveHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} />}
+          {!effectiveHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompactLayout} showBottomRule={!order.orderNotes} />}
         </div>
         )}
 
