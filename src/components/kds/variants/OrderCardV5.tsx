@@ -502,7 +502,7 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       {/* PRODUCTS */}
       {!isHeaderOnly && (
         <div className="flex flex-col" style={{ padding: 'var(--kds-card-padding)', gap: 'var(--kds-item-gap)' }}>
-          {allItems.map((product) => (
+          {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
             <ProductPill
               key={product.id}
               product={product}
