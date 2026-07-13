@@ -152,6 +152,11 @@ function V2ProductRow({
             />
           </button>
         )}
+        <ItemPrepTimerChip
+          itemId={product.id}
+          state={state === 'done' ? 'done' : (state === 'cooking' || state === 'loading') ? 'cooking' : 'idle'}
+          enabled={productTimersEnabled}
+        />
         {loading && (
           <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking product done">
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
