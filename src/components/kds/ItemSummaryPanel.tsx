@@ -259,7 +259,15 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             className="text-sidebar-foreground shrink-0"
             showLock={false}
           />
-          <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">{t.summaryHeader}</span>
+          <button
+            type="button"
+            onClick={toggleAllSections}
+            aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
+            aria-expanded={allExpanded}
+            className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            {t.summaryHeader}
+          </button>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
@@ -273,7 +281,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             onClick={toggleAllSections}
             aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
             aria-expanded={allExpanded}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-sidebar-foreground/80 border border-sidebar-foreground/80 shadow-[0_2px_5px_rgba(0,0,0,0.35)] flex items-center justify-center hover:bg-sidebar-foreground transition-colors"
+            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-sidebar-foreground border border-sidebar-foreground shadow-[0_2px_5px_rgba(0,0,0,0.35)] flex items-center justify-center hover:opacity-80 transition-opacity"
           >
             <ChevronDown
               size={9}
