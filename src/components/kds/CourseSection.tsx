@@ -15,6 +15,7 @@ import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
 import { ONBOARDING_SAMPLE_FIRST_ITEM_ID } from '@/data/onboarding-sample-order';
+import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
 
 export type ItemStatus = 'preparing' | 'ready' | 'done';
 export type StationStatus = 'fired' | 'active' | 'pending';
@@ -105,7 +106,7 @@ function computeFiringAtTime(courseGroup: CourseGroup, timeFormat: 0 | 1): strin
 
 export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTimestamps, onAdvanceItem, onUndoItem, onBulkAdvanceCourse, stationCourse, forcedStationStatus, onReRouteItem, showAllergens = true, highlightItemNames, lifecycleStatus, courseDoneAt, servableModifiersEnabled, modifierStatuses, modifierTimestamps, onAdvanceModifier, onUndoModifier, courseAgingColor, dismissedItemIds, onDismissItem, compactRows, seenOrderIndex, ticketLayoutMode, legacyActions, order }: CourseSectionProps) {
   const { tp, tc, displayMode, tpSecondary, timeFormat, t, showSecondaryMenu, secondaryLang, tl } = useLanguage();
-  const { ticketLayout } = useKDSSettings();
+  const { ticketLayout, productTimers } = useKDSSettings();
   const ticketLayoutCompact = (ticketLayoutMode ?? ticketLayout) === 'compact';
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const isFired = courseGroup.isFired;
