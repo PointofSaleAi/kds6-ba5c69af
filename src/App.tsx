@@ -56,6 +56,7 @@ const App = () => (
       <StatusRulesProvider>
       <OrderStoreProvider>
       <Flag86Provider>
+      <ItemPrepTimersProvider>
       <PrinterAssignmentsProvider>
       <PortraitProvider>
       <KitchenMessagesProvider>
@@ -117,6 +118,7 @@ const App = () => (
       </KitchenMessagesProvider>
       </PortraitProvider>
       </PrinterAssignmentsProvider>
+      </ItemPrepTimersProvider>
       </Flag86Provider>
       </OrderStoreProvider>
       </StatusRulesProvider>
