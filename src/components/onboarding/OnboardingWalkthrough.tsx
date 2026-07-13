@@ -230,7 +230,10 @@ export function OnboardingWalkthrough() {
     el?.click();
   };
 
+  const lastDirectionRef = useRef<'next' | 'prev' | 'init'>('init');
+
   const handleNext = () => {
+    lastDirectionRef.current = 'next';
     // Advancing OUT of the "seen" or "in progress" cue should visibly tick the
     // sample ticket forward so the footer button label/color updates.
     if (stepIndex === TICKET_SEEN_STEP || stepIndex === TICKET_IN_PROGRESS_STEP) {
@@ -240,9 +243,14 @@ export function OnboardingWalkthrough() {
   };
 
   const handlePrev = () => {
-    // Going back INTO the "seen" or "in progress" cue should rewind the sample
-    // ticket via the undo button so the state matches the cue being shown.
-    if (stepIndex === TICKET_IN_PROGRESS_STEP || stepIndex === TICKET_DONE_STEP) {
+    lastDirectionRef.current = 'prev';
+    // Going back INTO the "seen", "in progress", or leaving the "seen" cue itself
+    // should rewind the sample ticket via undo so the state matches the cue shown.
+    if (
+      stepIndex === TICKET_SEEN_STEP ||
+      stepIndex === TICKET_IN_PROGRESS_STEP ||
+      stepIndex === TICKET_DONE_STEP
+    ) {
       clickSample('[data-onboarding="ticket-footer-undo"]');
     }
     prev();
@@ -266,9 +274,12 @@ export function OnboardingWalkthrough() {
   const step = active ? STEPS[Math.min(stepIndex, STEPS.length - 1)] : null;
   const rect = useAnchorRect(step ? step.anchor : null, stepIndex);
 
-  // Auto-skip a step if its anchor never appears (e.g. Overtime with no items).
+  // Auto-skip a step if its anchor never appears (e.g. Overtime with no items),
+  // but only when moving forward. Auto-skipping while the user is pressing Back
+  // would immediately snap them forward again.
   useEffect(() => {
     if (!active || !step) return;
+    if (lastDirectionRef.current === 'prev') return;
     const t = window.setTimeout(() => {
       if (!document.querySelector(step.anchor)) {
         next();
