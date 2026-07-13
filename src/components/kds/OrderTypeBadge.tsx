@@ -57,7 +57,7 @@ export function OrderTypeBadge({ type, time, tableInfo, stationBadge, hasRecalle
       style={{ backgroundColor: bgColor }}
     >
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-badge-type text-primary-foreground uppercase tracking-wider whitespace-nowrap">
+        <span data-onboarding="ticket-header" className="text-badge-type text-primary-foreground uppercase tracking-wider whitespace-nowrap">
           {titleText}
         </span>
         {stationBadge && (
