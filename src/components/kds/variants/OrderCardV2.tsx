@@ -49,6 +49,7 @@ function V2ProductRow({
   onLongPress,
   compact = false,
   isHistory = false,
+  productTimersEnabled = false,
 }: {
   product: OrderItem;
   state: RowState;
@@ -59,6 +60,7 @@ function V2ProductRow({
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
   isHistory?: boolean;
+  productTimersEnabled?: boolean;
 }) {
 
   const done = state === 'done';
