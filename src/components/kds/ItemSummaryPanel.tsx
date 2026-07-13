@@ -250,7 +250,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   return (
     <div data-onboarding="summary" className="w-[180px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
-      <div data-onboarding="summary-header" className="relative z-20 flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
+      <div data-onboarding="summary-header" className="group/header relative z-20 flex items-center justify-between px-2 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-1.5 min-w-0">
           <DockDragHandle
             panel="summaryPanel"
@@ -264,7 +264,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             onClick={toggleAllSections}
             aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
             aria-expanded={allExpanded}
-            className="bg-transparent p-0 text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            className="bg-transparent p-0 text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0 cursor-pointer transition-opacity group-hover/header:opacity-80"
           >
             {t.summaryHeader}
           </button>
@@ -281,7 +281,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             onClick={toggleAllSections}
             aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
             aria-expanded={allExpanded}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-sidebar-foreground border border-sidebar-foreground shadow-[0_2px_5px_rgba(0,0,0,0.35)] flex items-center justify-center hover:opacity-80 transition-opacity"
+            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-sidebar-foreground border border-sidebar-foreground shadow-[0_2px_5px_rgba(0,0,0,0.35)] flex items-center justify-center transition-opacity group-hover/header:opacity-80"
           >
             <ChevronDown
               size={9}
