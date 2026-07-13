@@ -506,7 +506,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             );
           })
         ) : (
-          allItems.map((product) => (
+          sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
             <V2ProductRow
               key={product.id}
               product={product}
