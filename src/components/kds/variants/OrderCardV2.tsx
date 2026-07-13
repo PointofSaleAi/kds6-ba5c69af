@@ -462,7 +462,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         </div>
         <div className="flex items-center justify-between gap-2 mt-0.5">
           <span className="text-[12px] font-medium text-foreground truncate">{headerName}</span>
-          <span className="text-[11px] text-[#6B7280] shrink-0 truncate">
+          <span className="text-[11px] text-muted-foreground shrink-0 truncate">
             {order.serverName}{firedTime ? ` · ${firedTime}` : ''}
           </span>
         </div>
