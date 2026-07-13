@@ -1,4 +1,4 @@
-import { ShoppingBag, Sparkles, AlertTriangle, GraduationCap } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, GraduationCap, Timer } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
@@ -11,6 +11,7 @@ export default function OrdersSettings() {
     showAllergens, setShowAllergens,
     showHeaderAllergens, setShowHeaderAllergens,
     servableModifiers, setServableModifiers,
+    productTimers, setProductTimers,
   } = useKDSSettings();
   const hash = useHashHighlight();
 
@@ -33,6 +34,15 @@ export default function OrdersSettings() {
         helper="Track Queued, Preparing, and Done state on each modifier individually."
         right={<SwitchToggle checked={servableModifiers} onChange={setServableModifiers} />}
         highlighted={hash === 'servable-modifiers'}
+      />
+
+      <SettingsPill
+        icon={Timer}
+        iconColor="#F59E0B"
+        label="Product timers"
+        helper="Show a per-product prep timer that starts when marked Seen and freezes when marked Done."
+        right={<SwitchToggle checked={productTimers} onChange={setProductTimers} />}
+        highlighted={hash === 'product-timers'}
       />
 
       <SettingsPill
