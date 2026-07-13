@@ -364,7 +364,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         );
       })()}
 
-      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}

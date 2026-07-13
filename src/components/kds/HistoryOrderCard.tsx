@@ -520,7 +520,7 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
       </>
       )}
 
-      <OrderAllergenStrip order={order} compact={isCompactLayout} />
+      <OrderAllergenStrip order={order} compact={isCompactLayout} showBottomRule={!order.orderNotes} />
 
       {order.orderNotes && (
         <OrderNotesSection notes={order.orderNotes} orderId={order.id} />

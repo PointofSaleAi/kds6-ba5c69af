@@ -264,7 +264,7 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         </span>
       </div>
 
-      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} />}
+      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}
