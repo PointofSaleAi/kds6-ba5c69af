@@ -17,6 +17,7 @@ import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 import { Item86Modal } from '@/components/kds/Flag86Button';
 import { useFlag86 } from '@/hooks/use-flag86';
+import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
 
 
 const MODIFIER_CLASS = {
