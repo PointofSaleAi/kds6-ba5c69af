@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Order, OrderItem } from '@/types/kds';
-import { Check, ChevronRight, Loader2, Eye, Undo } from 'lucide-react';
+import { Check, ChevronRight, Loader2, Eye, Undo, Clock } from 'lucide-react';
+import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
@@ -280,6 +281,7 @@ function FooterBumpButton({
 
 export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen, isHistory = false }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
+  const { timeFormat } = useLanguage();
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
   const { orderTypeDetailedColors } = useKDSSettings();
@@ -488,10 +490,40 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             {order.courses.map((course, idx) => {
               const visibleItems = course.items.filter((p) => !removedIds.has(p.id) && getRowState(p) !== 'done');
               if (visibleItems.length === 0) return null;
+              let firingAt: string | null = null;
+              if (!course.isFired) {
+                if (course.autoFireTargetSeconds !== undefined && course._startedAt) {
+                  const t = new Date(course._startedAt.getTime() + course.autoFireTargetSeconds * 1000);
+                  firingAt = formatTimeForKDS(t, timeFormat as 0 | 1);
+                } else if (course.autoFireLabel) {
+                  const m = course.autoFireLabel.match(/(\d+):(\d+)/) || course.autoFireLabel.match(/~(\d+)\s*min/);
+                  if (m) {
+                    const totalSec = m[2] !== undefined ? parseInt(m[1]) * 60 + parseInt(m[2]) : parseInt(m[1]) * 60;
+                    firingAt = formatTimeForKDS(new Date(Date.now() + totalSec * 1000), timeFormat as 0 | 1);
+                  }
+                }
+              }
               return (
                 <div key={`${course.course}-${idx}`}>
-                  <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground">
-                    {courseLabel(course.course)}
+                  <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2">
+                    <span>{courseLabel(course.course)}</span>
+                    {firingAt && (
+                      <span
+                        className="inline-flex items-center rounded-full leading-none normal-case"
+                        style={{
+                          backgroundColor: '#FAEEDA',
+                          color: '#633806',
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          padding: '3.5px 6px',
+                          gap: '4px',
+                          border: '1.5px solid #BA7517',
+                        }}
+                      >
+                        <Clock size={12} style={{ color: '#633806' }} />
+                        <span>{firingAt.toLowerCase()}</span>
+                      </span>
+                    )}
                   </div>
                   {visibleItems.map((product) => (
                     <V2ProductRow
