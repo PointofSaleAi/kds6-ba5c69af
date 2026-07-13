@@ -254,6 +254,15 @@ function FooterBumpButton({
         {bumping ? <Loader2 size={12} className="animate-spin" /> : <Icon size={12} strokeWidth={2.5} color={color} />}
         {bumping ? 'Processing...' : label}
       </button>
+      {/* Hidden anchor used by the onboarding walkthrough to rewind ticket state. */}
+      <button
+        type="button"
+        onClick={onUndo}
+        data-onboarding="ticket-footer-undo"
+        aria-hidden="true"
+        tabIndex={-1}
+        style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0 0 0 0)', border: 0 }}
+      />
     </div>
   );
 }
