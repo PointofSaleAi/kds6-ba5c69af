@@ -634,6 +634,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     }));
   }, [orders, globalItemStatuses]);
 
+  const ordersWithItemStatusesById = useMemo(() => {
+    return new Map(ordersWithItemStatuses.map(order => [order.id, order]));
+  }, [ordersWithItemStatuses]);
+
   const handleBump = useCallback((orderId: string) => {
     const order = orders.find(o => o.id === orderId);
     if (!order) return;
@@ -929,7 +933,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [ordersWithItemStatuses, seenOrderIds, isStationView, resolvedStationCourse]);
 
   const unseenScreenOrders = useMemo(() => {
-    let list = filteredOrders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
+    let list = filteredOrders
+      .map(o => ordersWithItemStatusesById.get(o.id) ?? o)
+      .filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
     if (isStationView && resolvedStationCourse) {
       list = list
         .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
@@ -941,7 +947,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         }));
     }
     return list;
-  }, [filteredOrders, seenOrderIds, isStationView, resolvedStationCourse]);
+  }, [filteredOrders, ordersWithItemStatusesById, seenOrderIds, isStationView, resolvedStationCourse]);
 
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {

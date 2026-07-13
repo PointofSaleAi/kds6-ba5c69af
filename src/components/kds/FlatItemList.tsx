@@ -57,8 +57,8 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
           })
           .map((item, idx) => ({ item, idx }))
           .sort((a, b) => {
-            const aDone = itemStatuses?.get(a.item.id) === 'done' ? 1 : 0;
-            const bDone = itemStatuses?.get(b.item.id) === 'done' ? 1 : 0;
+            const aDone = a.item.isCompleted || itemStatuses?.get(a.item.id) === 'done' ? 1 : 0;
+            const bDone = b.item.isCompleted || itemStatuses?.get(b.item.id) === 'done' ? 1 : 0;
             return aDone - bDone || a.idx - b.idx;
           })
           .map((x) => x.item);
