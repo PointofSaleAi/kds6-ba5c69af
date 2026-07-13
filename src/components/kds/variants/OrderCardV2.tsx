@@ -254,6 +254,15 @@ function FooterBumpButton({
         {bumping ? <Loader2 size={12} className="animate-spin" /> : <Icon size={12} strokeWidth={2.5} color={color} />}
         {bumping ? 'Processing...' : label}
       </button>
+      {/* Hidden anchor used by the onboarding walkthrough to rewind ticket state. */}
+      <button
+        type="button"
+        onClick={onUndo}
+        data-onboarding="ticket-footer-undo"
+        aria-hidden="true"
+        tabIndex={-1}
+        style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0 0 0 0)', border: 0 }}
+      />
     </div>
   );
 }
@@ -277,6 +286,31 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const [bumping, setBumping] = useState(false);
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
+
+  // Onboarding walkthrough hook: advance/undo the first sample item on cue.
+  useEffect(() => {
+    if (order.id !== 'onboarding-sample') return;
+    const firstId = order.courses[0]?.items[0]?.id;
+    if (!firstId) return;
+    const onAdvance = () => setRowStates((p) => {
+      const cur = p[firstId] ?? 'idle';
+      if (cur === 'idle') return { ...p, [firstId]: 'cooking' };
+      if (cur === 'cooking') return { ...p, [firstId]: 'done' };
+      return p;
+    });
+    const onUndo = () => setRowStates((p) => {
+      const cur = p[firstId] ?? 'idle';
+      if (cur === 'done') return { ...p, [firstId]: 'cooking' };
+      if (cur === 'cooking') return { ...p, [firstId]: 'idle' };
+      return p;
+    });
+    window.addEventListener('kds:onboarding-item-advance', onAdvance);
+    window.addEventListener('kds:onboarding-item-undo', onUndo);
+    return () => {
+      window.removeEventListener('kds:onboarding-item-advance', onAdvance);
+      window.removeEventListener('kds:onboarding-item-undo', onUndo);
+    };
+  }, [order.id, order.courses]);
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
