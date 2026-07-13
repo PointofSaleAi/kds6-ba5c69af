@@ -508,19 +508,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                   <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2">
                     <span>{courseLabel(course.course)}</span>
                     {firingAt && (
-                      <span
-                        className="inline-flex items-center rounded-full leading-none normal-case"
-                        style={{
-                          backgroundColor: '#FAEEDA',
-                          color: '#633806',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          padding: '3.5px 6px',
-                          gap: '4px',
-                          border: '1.5px solid #BA7517',
-                        }}
-                      >
-                        <Clock size={12} style={{ color: '#633806' }} />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold normal-case text-muted-foreground">
+                        <Clock size={12} />
                         <span>{firingAt.toLowerCase()}</span>
                       </span>
                     )}
