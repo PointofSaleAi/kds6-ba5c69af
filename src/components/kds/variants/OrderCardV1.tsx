@@ -235,6 +235,7 @@ export function OrderCardV1({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         onClick={handleBump}
         role="button"
         aria-label={`Bump order ${order.orderNumber}`}
+        data-onboarding="ticket-header"
         className={`text-center cursor-pointer select-none active:opacity-80 flex items-center justify-center gap-1.5 ${bumping ? 'opacity-70' : ''}`}
         style={{ fontSize: 16, fontWeight: 600, padding: '6px 8px', background: headerBg, color: headerText }}
       >
