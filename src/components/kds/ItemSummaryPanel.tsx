@@ -264,7 +264,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             onClick={toggleAllSections}
             aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
             aria-expanded={allExpanded}
-            className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            className="bg-transparent p-0 text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
           >
             {t.summaryHeader}
           </button>
