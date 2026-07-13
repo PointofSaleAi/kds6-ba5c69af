@@ -424,8 +424,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
       {/* HEADER */}
       <div
-        className={`px-2.5 py-2 ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
-        style={{ background: '#F3F4F6' }}
+        className={`px-2.5 py-2 bg-muted ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
         onClick={isCompact ? handleBump : undefined}
         role={isCompact ? 'button' : undefined}
         aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
@@ -463,7 +462,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         </div>
         <div className="flex items-center justify-between gap-2 mt-0.5">
           <span className="text-[12px] font-medium text-foreground truncate">{headerName}</span>
-          <span className="text-[11px] text-[#6B7280] shrink-0 truncate">
+          <span className="text-[11px] text-muted-foreground shrink-0 truncate">
             {order.serverName}{firedTime ? ` · ${firedTime}` : ''}
           </span>
         </div>
@@ -483,8 +482,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             return (
               <div key={`${course.course}-${idx}`}>
                 <div
-                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
-                  style={{ background: '#F3F4F6', color: '#4B5563' }}
+                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground"
                 >
                   {courseLabel(course.course)}
                 </div>
