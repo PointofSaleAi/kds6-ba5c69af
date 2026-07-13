@@ -51,6 +51,7 @@ export function V3Header({ order }: Props) {
     <div>
       <div style={{ height: 4, background: accentColor }} />
       <div
+        data-onboarding="ticket-header"
         className="relative flex items-center justify-start gap-1.5 px-2 py-1 pr-16 text-[13px] font-bold uppercase tracking-wide"
         style={{ background: accentColor, color: accentText }}
       >
