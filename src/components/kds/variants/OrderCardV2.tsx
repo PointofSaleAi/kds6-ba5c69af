@@ -4,7 +4,7 @@ import { Check, ChevronRight, Loader2, Eye, Undo } from 'lucide-react';
 import { OrderCardActions, type TicketState } from '@/components/kds/OrderCardActions';
 import { ClocheIcon } from '../icons/ClocheIcon';
 import { useElapsedSeconds } from '@/hooks/use-elapsed';
-import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel } from './variant-utils';
+import { fmtElapsed, fmtElapsedAgo, orderTypeLabel, courseLabel, sortDoneLast } from './variant-utils';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
