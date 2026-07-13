@@ -65,7 +65,7 @@ export function FlatItemList({ courses, itemStatuses, itemTimestamps, onAdvanceI
         let seenIdx = 0;
         return visibleItems.map((item, visibleIdx) => {
         const isLastVisible = visibleIdx === visibleItems.length - 1;
-        const status = itemStatuses?.get(item.id);
+        const status = item.isCompleted ? 'done' : itemStatuses?.get(item.id);
         const timestamps = itemTimestamps?.get(item.id);
         const currentSeenIdx = status === 'preparing' ? seenIdx++ : 0;
 

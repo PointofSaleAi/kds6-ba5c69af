@@ -151,8 +151,9 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
       .filter(item => !item.isCancelled)
       .every(item => item.isCompleted || itemStatuses?.get(item.id) === 'done');
     if (allDone) return 'done';
-    const allSeen = activeItemIds.every(id => {
-      const s = itemStatuses?.get(id);
+    const allSeen = courseGroup.items.filter(item => !item.isCancelled).every(item => {
+      if (item.isCompleted) return true;
+      const s = itemStatuses?.get(item.id);
       return s === 'preparing' || s === 'done';
     });
     if (allSeen) return 'preparing';
@@ -412,7 +413,7 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             .map((x) => x.item);
           return visibleItems.map((item, visibleIdx) => {
             const isLastVisible = visibleIdx === visibleItems.length - 1;
-            const status = itemStatuses?.get(item.id);
+            const status = item.isCompleted ? 'done' : itemStatuses?.get(item.id);
             const timestamps = itemTimestamps?.get(item.id);
             const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
 
