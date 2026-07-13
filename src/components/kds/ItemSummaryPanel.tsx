@@ -273,12 +273,12 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             onClick={toggleAllSections}
             aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
             aria-expanded={allExpanded}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-surface-card border border-border/60 shadow-sm flex items-center justify-center hover:bg-muted transition-colors"
+            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-sidebar-foreground/50 border border-sidebar-foreground/70 shadow-[0_2px_5px_rgba(0,0,0,0.35)] flex items-center justify-center hover:bg-sidebar-foreground/65 transition-colors"
           >
             <ChevronDown
               size={9}
               strokeWidth={2.5}
-              className={`text-text-muted transition-transform duration-150 ${allExpanded ? 'rotate-180' : ''}`}
+            className={`text-background transition-transform duration-150 ${allExpanded ? 'rotate-180' : ''}`}
             />
           </button>
         )}
