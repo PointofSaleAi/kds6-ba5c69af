@@ -358,7 +358,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   };
 
 
-  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
@@ -504,6 +504,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onOpenRecipe={setRecipeProduct}
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
+                      productTimersEnabled={productTimers}
                     />
                   ))}
                 </div>
@@ -526,6 +527,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onOpenRecipe={setRecipeProduct}
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
+                      productTimersEnabled={productTimers}
                     />
                   </div>
                 ))
@@ -544,6 +546,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               onLongPress={setFlagProduct}
               compact={isCompact}
               isHistory={isHistory}
+              productTimersEnabled={productTimers}
             />
           ))
 
