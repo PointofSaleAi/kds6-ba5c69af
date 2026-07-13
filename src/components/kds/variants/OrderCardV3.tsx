@@ -404,18 +404,26 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               );
             })}
             <div>
-              {allItems.filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done').map((product) => (
-                <ProductRow
-                  key={product.id}
-                  product={product}
-                  accent={accentColor}
-                  state={getRowState(product)}
-                  onToggle={() => toggleRow(product.id)}
-                  onReset={() => setRow(product.id, 'idle')}
-                  onRemove={() => removeRow(product.id)}
-                  onLongPress={setRecipeProduct}
-                />
-              ))}
+              {order.courses.flatMap((course) =>
+                course.items
+                  .filter((p) => !removedIds.has(p.id) && getRowState(p) === 'done')
+                  .map((product) => (
+                    <div key={product.id}>
+                      <div className="px-2 pt-1 pb-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground/70">
+                        {courseLabel(course.course)}
+                      </div>
+                      <ProductRow
+                        product={product}
+                        accent={accentColor}
+                        state={getRowState(product)}
+                        onToggle={() => toggleRow(product.id)}
+                        onReset={() => setRow(product.id, 'idle')}
+                        onRemove={() => removeRow(product.id)}
+                        onLongPress={setRecipeProduct}
+                      />
+                    </div>
+                  ))
+              )}
             </div>
           </>
         ) : (
