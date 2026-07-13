@@ -107,14 +107,35 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const innerLayoutMode: 'standard' | 'compact' = resolvedTicketLayout === 'compact' ? 'compact' : 'standard';
   const statusColor = getStatusForElapsed(liveElapsed);
   const [itemStatuses, setItemStatuses] = useState<Map<string, ItemStatus>>(() => {
+    const initialStatuses = new Map<string, ItemStatus>();
+    order.courses.forEach(course => {
+      course.items.forEach(item => {
+        if (item.isCompleted) initialStatuses.set(item.id, 'done');
+      });
+    });
     if (order.id === 'onboarding-sample') {
-      return new Map<string, ItemStatus>([
-        ['onb-i-2', 'preparing'],
-        ['onb-i-3', 'done'],
-      ]);
+      initialStatuses.set('onb-i-2', 'preparing');
+      initialStatuses.set('onb-i-3', 'done');
     }
-    return new Map();
+    return initialStatuses;
   });
+  useEffect(() => {
+    const completedIds = order.courses.flatMap(course =>
+      course.items.filter(item => item.isCompleted).map(item => item.id),
+    );
+    if (completedIds.length === 0) return;
+    setItemStatuses(prev => {
+      const next = new Map(prev);
+      let changed = false;
+      completedIds.forEach(id => {
+        if (next.get(id) !== 'done') {
+          next.set(id, 'done');
+          changed = true;
+        }
+      });
+      return changed ? next : prev;
+    });
+  }, [order.courses]);
   const [headerOnlyModalOpen, setHeaderOnlyModalOpen] = useState(false);
   const effectiveHeaderOnly = isHeaderOnly;
   const [itemTimestamps, setItemTimestamps] = useState<Map<string, { seenAt?: string; doneAt?: string }>>(new Map());

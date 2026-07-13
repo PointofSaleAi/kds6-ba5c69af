@@ -147,15 +147,18 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
   // Determine collective state for course-level icon
   const collectiveState = useMemo(() => {
     if (!isActive || activeItemIds.length === 0) return 'unseen';
-    const allDone = activeItemIds.every(id => itemStatuses?.get(id) === 'done');
+    const allDone = courseGroup.items
+      .filter(item => !item.isCancelled)
+      .every(item => item.isCompleted || itemStatuses?.get(item.id) === 'done');
     if (allDone) return 'done';
-    const allSeen = activeItemIds.every(id => {
-      const s = itemStatuses?.get(id);
+    const allSeen = courseGroup.items.filter(item => !item.isCancelled).every(item => {
+      if (item.isCompleted) return true;
+      const s = itemStatuses?.get(item.id);
       return s === 'preparing' || s === 'done';
     });
     if (allSeen) return 'preparing';
     return 'unseen';
-  }, [isActive, activeItemIds, itemStatuses]);
+  }, [isActive, activeItemIds, itemStatuses, courseGroup.items]);
 
   // Auto-collapse only when course is explicitly confirmed served (via ticket button).
   // Marking the last product as done should NOT collapse the course; the user must
@@ -403,14 +406,14 @@ export function CourseSection({ courseGroup, onFireCourse, itemStatuses, itemTim
             })
             .map((item, idx) => ({ item, idx }))
             .sort((a, b) => {
-              const aDone = itemStatuses?.get(a.item.id) === 'done' ? 1 : 0;
-              const bDone = itemStatuses?.get(b.item.id) === 'done' ? 1 : 0;
+              const aDone = a.item.isCompleted || itemStatuses?.get(a.item.id) === 'done' ? 1 : 0;
+              const bDone = b.item.isCompleted || itemStatuses?.get(b.item.id) === 'done' ? 1 : 0;
               return aDone - bDone || a.idx - b.idx;
             })
             .map((x) => x.item);
           return visibleItems.map((item, visibleIdx) => {
             const isLastVisible = visibleIdx === visibleItems.length - 1;
-            const status = itemStatuses?.get(item.id);
+            const status = item.isCompleted ? 'done' : itemStatuses?.get(item.id);
             const timestamps = itemTimestamps?.get(item.id);
             const isHighlighted = !!highlightItemNames && highlightItemNames.size > 0 && highlightItemNames.has(item.name);
 
