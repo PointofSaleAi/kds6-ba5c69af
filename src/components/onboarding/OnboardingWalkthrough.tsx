@@ -221,6 +221,9 @@ export function OnboardingWalkthrough() {
 
   // Step indices that map to the 3-tap ticket footer button progression.
   // Kept in sync with STEPS above (Mark ticket seen / in progress / done).
+  const ITEM_EYE_STEP = 6;
+  const ITEM_BELL_STEP = 7;
+  const ITEM_CHECK_STEP = 8;
   const TICKET_SEEN_STEP = 9;
   const TICKET_IN_PROGRESS_STEP = 10;
   const TICKET_DONE_STEP = 11;
@@ -229,11 +232,18 @@ export function OnboardingWalkthrough() {
     const el = document.querySelector(`${SAMPLE} ${sel}`) as HTMLElement | null;
     el?.click();
   };
+  const dispatchItem = (type: 'advance' | 'undo') => {
+    window.dispatchEvent(new CustomEvent(`kds:onboarding-item-${type}`));
+  };
 
   const lastDirectionRef = useRef<'next' | 'prev' | 'init'>('init');
 
   const handleNext = () => {
     lastDirectionRef.current = 'next';
+    // Progress the sample item state so the correct icon is visible for the next cue.
+    if (stepIndex === ITEM_EYE_STEP || stepIndex === ITEM_BELL_STEP) {
+      dispatchItem('advance');
+    }
     // Advancing OUT of the "seen" or "in progress" cue should visibly tick the
     // sample ticket forward so the footer button label/color updates.
     if (stepIndex === TICKET_SEEN_STEP || stepIndex === TICKET_IN_PROGRESS_STEP) {
@@ -244,6 +254,10 @@ export function OnboardingWalkthrough() {
 
   const handlePrev = () => {
     lastDirectionRef.current = 'prev';
+    // Rewind sample item state when stepping back through item cues.
+    if (stepIndex === ITEM_BELL_STEP || stepIndex === ITEM_CHECK_STEP) {
+      dispatchItem('undo');
+    }
     // Going back INTO the "seen", "in progress", or leaving the "seen" cue itself
     // should rewind the sample ticket via undo so the state matches the cue shown.
     if (
