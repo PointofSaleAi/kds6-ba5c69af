@@ -522,6 +522,7 @@ function CourseItemTapRow({
   compactRows, seenIdx, ticketLayoutCompact, legacyActions, order,
 }: CourseItemTapRowProps) {
   const { tn } = useLanguage();
+  const { productTimers } = useKDSSettings();
   const { clearedIds: flag86Cleared, isConfirmed: is86ConfirmedFn, confirm: confirm86 } = useFlag86();
   const is86Confirmed = is86ConfirmedFn(item.id);
   const [manual86Open, setManual86Open] = useState(false);
@@ -716,6 +717,13 @@ function CourseItemTapRow({
               <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded shrink-0">
                 CANCELLED
               </span>
+            )}
+            {!item.isCancelled && (
+              <ItemPrepTimerChip
+                itemId={item.id}
+                state={isDone ? 'done' : isSeen ? 'cooking' : 'idle'}
+                enabled={productTimers}
+              />
             )}
             {!legacyActions && tappable && isSeen && timestamps?.seenAt && (
               <span
