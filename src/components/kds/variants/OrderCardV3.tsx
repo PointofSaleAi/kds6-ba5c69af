@@ -402,7 +402,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           })
         ) : (
           <div>
-            {allItems.map((product) => (
+            {sortDoneLast(allItems, (p) => getRowState(p) === 'done').map((product) => (
               <ProductRow
                 key={product.id}
                 product={product}
