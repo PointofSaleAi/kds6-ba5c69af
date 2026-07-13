@@ -211,6 +211,19 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     });
   };
 
+  // Global expand/collapse all: expanded when nothing is collapsed
+  const allExpanded =
+    collapsedSections.size === 0 && (overtimeItems.length === 0 || !overtimeCollapsed);
+  const toggleAllSections = () => {
+    if (allExpanded) {
+      setCollapsedSections(new Set(summary.map(c => c.category)));
+      if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+    } else {
+      setCollapsedSections(new Set());
+      if (overtimeItems.length > 0) setOvertimeCollapsed(false);
+    }
+  };
+
   const [assigningItem, setAssigningItem] = useState<string | null>(null);
   const [assignedStations, setAssignedStations] = useState<Map<string, StationName>>(new Map());
 
@@ -274,7 +287,23 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
       )}
 
       {/* Categories section */}
-      <div className="flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
+      <div className="relative flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
+        {/* Seam tab: global expand/collapse-all toggle */}
+        {(summary.length > 0 || overtimeItems.length > 0) && (
+          <button
+            type="button"
+            onClick={toggleAllSections}
+            aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
+            aria-expanded={allExpanded}
+            className="absolute left-1/2 -translate-x-1/2 -top-[6px] z-10 w-[18px] h-[12px] rounded-[5px] bg-surface-card border border-border/60 shadow-sm flex items-center justify-center hover:bg-muted transition-colors"
+          >
+            <ChevronDown
+              size={9}
+              strokeWidth={2.5}
+              className={`text-text-muted transition-transform duration-150 ${allExpanded ? 'rotate-180' : ''}`}
+            />
+          </button>
+        )}
         <div className="flex-1 overflow-y-auto">
           {/* Overtime section - styled like a category section */}
           {overtimeItems.length > 0 && (
