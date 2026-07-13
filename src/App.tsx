@@ -12,6 +12,7 @@ import { LanguageProvider } from "@/hooks/use-language";
 import { KDSSettingsProvider } from "@/hooks/use-kds-settings";
 import { OrderStoreProvider } from "@/hooks/use-order-store";
 import { Flag86Provider } from "@/hooks/use-flag86";
+import { ItemPrepTimersProvider } from "@/hooks/use-item-prep-timers";
 import { PrinterAssignmentsProvider } from "@/hooks/use-printer-assignments";
 import { PortraitProvider } from "@/hooks/use-portrait";
 import { KitchenMessagesProvider } from "@/hooks/use-kitchen-messages";
