@@ -482,8 +482,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             return (
               <div key={`${course.course}-${idx}`}>
                 <div
-                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
-                  style={{ background: '#F3F4F6', color: '#4B5563' }}
+                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground"
                 >
                   {courseLabel(course.course)}
                 </div>
