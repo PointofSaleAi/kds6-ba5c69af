@@ -211,6 +211,19 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     });
   };
 
+  // Global expand/collapse all: expanded when nothing is collapsed
+  const allExpanded =
+    collapsedSections.size === 0 && (overtimeItems.length === 0 || !overtimeCollapsed);
+  const toggleAllSections = () => {
+    if (allExpanded) {
+      setCollapsedSections(new Set(summary.map(c => c.category)));
+      if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+    } else {
+      setCollapsedSections(new Set());
+      if (overtimeItems.length > 0) setOvertimeCollapsed(false);
+    }
+  };
+
   const [assigningItem, setAssigningItem] = useState<string | null>(null);
   const [assignedStations, setAssignedStations] = useState<Map<string, StationName>>(new Map());
 
