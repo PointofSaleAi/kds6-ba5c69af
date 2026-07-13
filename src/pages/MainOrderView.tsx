@@ -1017,8 +1017,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
+    const isSample = displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID;
+    const wrap = (node: ReactNode) =>
+      isSample ? <div data-order-id={displayOrder.id} className="contents">{node}</div> : node;
+
     if (isHistory && effectiveCardVariant === 'default') {
-      return (
+      return wrap(
         <KDSSettingsPreviewScope route={selectedTicketsRoute}>
           <HistoryOrderCard
             order={displayOrder}
@@ -1026,28 +1030,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             onRecallItem={handleRecallItem}
           />
         </KDSSettingsPreviewScope>
-      );
-    }
-    if (displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID) {
-      return (
-        <OrderCard
-          order={displayOrder}
-          onBump={handleBump}
-          onRecall={handleStepBack}
-          onFireCourse={handleFireCourse}
-          onItemStatusChange={handleItemStatusChange}
-          showAllergens={showAllergens}
-          highlightItemNames={highlightItemNames}
-          onMarkSeen={markOrderSeen}
-          onItemDismiss={handleItemDismiss}
-          onAcknowledgeNotes={acknowledgeOrderNotes}
-          onUnacknowledgeNotes={unacknowledgeOrderNotes}
-          isAcknowledgmentPending={isAcknowledgmentPending}
-          onBumpBlocked={handleBumpBlocked}
-          compactRows={false}
-          layoutOverride="standard"
-          legacyActions
-        />
       );
     }
     const withSelectedTicketSettings = (node: ReactNode) => (
@@ -1078,7 +1060,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV1 order={v1Order} {...sharedVariantProps} />);
+      return wrap(withSelectedTicketSettings(<OrderCardV1 order={v1Order} {...sharedVariantProps} />));
     }
     if (effectiveCardVariant === 'v2') {
       let flatIdx2 = 0;
@@ -1093,7 +1075,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} isHistory={isHistory} />);
+      return wrap(withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} isHistory={isHistory} />));
     }
     if (effectiveCardVariant === 'v3') {
       let flatIdx3 = 0;
@@ -1108,7 +1090,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV3 order={v3Order} {...sharedVariantProps} />);
+      return wrap(withSelectedTicketSettings(<OrderCardV3 order={v3Order} {...sharedVariantProps} />));
     }
     if (effectiveCardVariant === 'v4') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
@@ -1127,7 +1109,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return withSelectedTicketSettings(<OrderCardV4 order={v4Order} {...sharedVariantProps} />);
+      return wrap(withSelectedTicketSettings(<OrderCardV4 order={v4Order} {...sharedVariantProps} />));
     }
     if (effectiveCardVariant === 'v5') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
@@ -1137,10 +1119,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         timeReceived: new Date(Date.now() - mins * 60_000),
         elapsedSeconds: mins * 60,
       };
-      return withSelectedTicketSettings(<OrderCardV5 order={v5Order} {...sharedVariantProps} />);
+      return wrap(withSelectedTicketSettings(<OrderCardV5 order={v5Order} {...sharedVariantProps} />));
     }
     const isTrainingSample = displayOrder.id.startsWith('training-sample-');
-    return withSelectedTicketSettings(
+    return wrap(withSelectedTicketSettings(
       <OrderCard
         order={displayOrder}
         onBump={handleBump}
@@ -1157,9 +1139,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         onBumpBlocked={handleBumpBlocked}
         compactRows={opts?.compactRows}
         layoutOverride={isTrainingSample ? 'standard' : undefined}
-        legacyActions={effectiveLegacyActions || onboardingActive || isTrainingSample}
+        legacyActions={effectiveLegacyActions || isTrainingSample}
       />
-    );
+    ));
   };
 
 
