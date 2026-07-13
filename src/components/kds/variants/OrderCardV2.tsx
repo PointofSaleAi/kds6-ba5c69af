@@ -17,6 +17,7 @@ import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 import { Item86Modal } from '@/components/kds/Flag86Button';
 import { useFlag86 } from '@/hooks/use-flag86';
+import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
 
 
 const MODIFIER_CLASS = {
@@ -48,6 +49,7 @@ function V2ProductRow({
   onLongPress,
   compact = false,
   isHistory = false,
+  productTimersEnabled = false,
 }: {
   product: OrderItem;
   state: RowState;
@@ -58,6 +60,7 @@ function V2ProductRow({
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
   isHistory?: boolean;
+  productTimersEnabled?: boolean;
 }) {
 
   const done = state === 'done';
@@ -149,6 +152,11 @@ function V2ProductRow({
             />
           </button>
         )}
+        <ItemPrepTimerChip
+          itemId={product.id}
+          state={state === 'done' ? 'done' : (state === 'cooking' || state === 'loading') ? 'cooking' : 'idle'}
+          enabled={productTimersEnabled}
+        />
         {loading && (
           <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking product done">
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
@@ -350,7 +358,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   };
 
 
-  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
@@ -496,6 +504,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onOpenRecipe={setRecipeProduct}
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
+                      productTimersEnabled={productTimers}
                     />
                   ))}
                 </div>
@@ -518,6 +527,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onOpenRecipe={setRecipeProduct}
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
+                      productTimersEnabled={productTimers}
                     />
                   </div>
                 ))
@@ -536,6 +546,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               onLongPress={setFlagProduct}
               compact={isCompact}
               isHistory={isHistory}
+              productTimersEnabled={productTimers}
             />
           ))
 

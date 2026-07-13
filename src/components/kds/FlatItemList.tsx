@@ -15,6 +15,7 @@ import { useLongPress } from '@/hooks/use-long-press';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useFlag86 } from '@/hooks/use-flag86';
 import { ONBOARDING_SAMPLE_FIRST_ITEM_ID } from '@/data/onboarding-sample-order';
+import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
 
 interface FlatItemListProps {
   courses: CourseGroup[];
@@ -136,6 +137,7 @@ function ItemTapRow({
   onAdvanceItem, onUndoItem, onDismissItem, ticketLayoutCompact, legacyActions, order,
 }: ItemTapRowProps) {
   const { tn } = useLanguage();
+  const { productTimers } = useKDSSettings();
   const { clearedIds: flag86Cleared, isConfirmed: is86Confirmed, confirm: confirm86 } = useFlag86();
   const [manual86Open, setManual86Open] = useState(false);
   const [recipeOpen, setRecipeOpen] = useState(false);
@@ -290,6 +292,13 @@ function ItemTapRow({
               <span className="text-[9px] font-bold text-destructive bg-destructive/10 px-1 py-px rounded shrink-0">
                 CANCELLED
               </span>
+            )}
+            {!item.isCancelled && (
+              <ItemPrepTimerChip
+                itemId={item.id}
+                state={isDone ? 'done' : isSeen ? 'cooking' : 'idle'}
+                enabled={productTimers}
+              />
             )}
             {!legacyActions && isSeen && timestamps?.seenAt && (
               <span style={{ fontSize: '10px', color: useTeal ? seenTextTeal : seenTextGreen, fontWeight: 600, paddingTop: '3px', alignSelf: 'flex-start' }} className="ml-1 shrink-0 whitespace-nowrap">
