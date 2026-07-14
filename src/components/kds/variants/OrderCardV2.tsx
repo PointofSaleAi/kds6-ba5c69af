@@ -345,7 +345,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       const current = p[id] ?? 'idle';
       let next = p;
       if (current === 'idle') next = { ...p, [id]: 'cooking' };
-      else if (current === 'cooking') {
+      else if (current === 'cooking') next = { ...p, [id]: 'ready' };
+      else if (current === 'ready') {
         onItemDone?.(order.id, id);
         next = { ...p, [id]: 'done' };
       }
@@ -358,7 +359,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const undoRow = (id: string) => {
     setRowStates((p) => {
       const current = p[id] ?? 'idle';
-      if (current === 'done') return { ...p, [id]: 'cooking' };
+      if (current === 'done') return { ...p, [id]: 'ready' };
+      if (current === 'ready') return { ...p, [id]: 'cooking' };
       if (current === 'cooking') return { ...p, [id]: 'idle' };
       return p;
     });
