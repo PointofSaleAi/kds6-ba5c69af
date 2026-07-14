@@ -43,6 +43,8 @@ export default function QrStickersPage() {
             courseName: String(c.course),
             itemName: it.name,
             modifiers: (it.modifiers ?? []).map(m => m.text).filter(Boolean),
+            allergens: it.allergens ?? [],
+            notes: it.notes,
             qrValue: encodeScanValue(o.id, it.id),
             done: !!it.isCompleted || localDone.has(key),
           });
