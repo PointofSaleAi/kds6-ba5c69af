@@ -390,17 +390,22 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const { clear: clear86, confirm: confirm86 } = useFlag86();
 
   const allDone = allItems.length > 0 && allItems.every((p) => getRowState(p) === 'done');
+  const allReady = allItems.length > 0 && allItems.every((p) => {
+    const s = getRowState(p);
+    return s === 'ready' || s === 'done';
+  });
   const allStarted = allItems.length > 0 && allItems.every((p) => {
     const s = getRowState(p);
-    return s === 'cooking' || s === 'done';
+    return s === 'cooking' || s === 'ready' || s === 'done';
   });
   const [phaseOverride, setPhaseOverride] = useState<TicketState | null>(null);
   const ticketState: TicketState = useMemo(() => {
     if (phaseOverride) return phaseOverride;
     if (allDone) return 'done';
+    if (allReady) return 'ready';
     if (allStarted) return 'preparing';
     return 'seen';
-  }, [phaseOverride, allDone, allStarted]);
+  }, [phaseOverride, allDone, allReady, allStarted]);
 
   const runBumpAnimation = (onComplete?: () => void) => {
     setRowStates((prev) => {
@@ -426,6 +431,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     }
     if (ticketState === 'preparing') {
       notifySeen();
+      setPhaseOverride('ready');
+      return;
+    }
+    if (ticketState === 'ready') {
       setBumping(true);
       runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
       return;
@@ -435,6 +444,11 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const handleTicketRecall = () => {
     if (ticketState === 'done') {
+      setRowStates({});
+      setPhaseOverride('ready');
+      return;
+    }
+    if (ticketState === 'ready') {
       setRowStates({});
       setPhaseOverride('preparing');
       return;
