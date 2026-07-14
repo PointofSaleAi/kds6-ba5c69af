@@ -71,10 +71,12 @@ function V2ProductRow({
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
 
+  const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7');
+
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
   const dispatchTap = useRowTap(
     () => { if (!loading) onOpenRecipe(product); },
-    () => { if (!loading) onUndo(); },
+    () => { if (!loading && !readOnly) onUndo(); },
     250,
   );
   const iconTap = useRowTap(
@@ -82,6 +84,7 @@ function V2ProductRow({
     () => { if (!loading) onUndo(); },
     250,
   );
+
 
 
   return (
