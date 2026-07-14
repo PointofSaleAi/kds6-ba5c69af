@@ -22,7 +22,7 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
   const buttonLabel = ticketState === 'seen'
     ? t.seen
     : ticketState === 'preparing'
-      ? t.inProgress.toUpperCase()
+      ? t.preparing.toUpperCase()
       : t.done;
 
   const legacyBg =
