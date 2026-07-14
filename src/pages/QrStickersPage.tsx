@@ -128,6 +128,18 @@ export default function QrStickersPage() {
                     ))}
                   </ul>
                 )}
+                {s.allergens.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                    {s.allergens.map(a => (
+                      <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
+                    ))}
+                  </div>
+                )}
+                {s.notes && (
+                  <div className="mt-1.5 text-[11px] text-foreground leading-tight break-words">
+                    <span className="font-semibold text-muted-foreground">Note:</span> {s.notes}
+                  </div>
+                )}
               </div>
             </article>
           );
