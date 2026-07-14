@@ -40,7 +40,7 @@ export default function OrdersSettings() {
         icon={Timer}
         iconColor="#F59E0B"
         label="Coursing timer"
-        helper="Show a per-product prep timer that starts when marked Seen and freezes when marked Done."
+        helper="Shows how long each product takes to prepare, so kitchens running multiple chefs can track each other's progress without checking in person. For example, if one chef is on entrees and another on desserts, each can see exactly how long the other's dish has been cooking."
         right={<SwitchToggle checked={productTimers} onChange={setProductTimers} />}
         highlighted={hash === 'product-timers'}
       />
