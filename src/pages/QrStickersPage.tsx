@@ -170,7 +170,12 @@ export default function QrStickersPage() {
         {stickers.map(s => (
           <article
             key={s.key}
-            className="sticker rounded-xl border border-border bg-card p-3 flex gap-3 items-start print:rounded-none print:border-black print:break-after-page"
+            onClick={() => fireScan(s.qrValue)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fireScan(s.qrValue); } }}
+            title="Tap to mark this product as Ready on the tickets screen"
+            className="sticker cursor-pointer select-none rounded-xl border border-border bg-card p-3 flex gap-3 items-start hover:border-primary/60 hover:shadow-md active:scale-[0.99] transition print:cursor-auto print:rounded-none print:border-black print:break-after-page"
           >
             <div className="shrink-0 bg-white p-1.5 rounded-md border border-border">
               <QRCodeSVG value={s.qrValue} size={96} level="M" />
