@@ -155,11 +155,11 @@ function V2ProductRow({
         )}
         <ItemPrepTimerChip
           itemId={product.id}
-          state={state === 'done' ? 'done' : (state === 'cooking' || state === 'loading') ? 'cooking' : 'idle'}
+          state={state === 'done' || state === 'ready' ? 'done' : (state === 'cooking' || state === 'loading') ? 'cooking' : 'idle'}
           enabled={productTimersEnabled}
         />
         {loading && (
-          <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking product done">
+          <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking product served">
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
           </span>
         )}
@@ -177,14 +177,27 @@ function V2ProductRow({
             data-onboarding="item-check"
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
             style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
-            aria-label={isHistory ? 'Recall product' : 'Product done (double-tap to undo)'}
-            title={isHistory ? 'Tap to recall product' : 'Double-tap to undo'}
+            aria-label={isHistory ? 'Recall product' : 'Product served (double-tap to undo)'}
+            title={isHistory ? 'Tap to recall product' : 'Served. Double-tap to undo'}
           >
             {isHistory ? (
               <Undo size={14} color="#fff" strokeWidth={2.5} />
             ) : (
               <Check size={14} color="#fff" strokeWidth={3} />
             )}
+          </button>
+        )}
+        {!loading && !done && state === 'ready' && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); iconTap(); }}
+            data-onboarding="item-ready"
+            className="shrink-0 flex items-center justify-center rounded-full active:scale-95 transition animate-scale-in"
+            style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }}
+            aria-label="Mark product served (double-tap to undo)"
+            title="Ready. Tap to mark served. Double-tap to undo."
+          >
+            <Check size={14} strokeWidth={3} />
           </button>
         )}
         {!loading && !done && state === 'cooking' && (
@@ -194,14 +207,14 @@ function V2ProductRow({
             data-onboarding="item-bell"
             className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
             style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
-            aria-label="Mark product done (double-tap to undo)"
+            aria-label="Mark product ready (double-tap to undo)"
             title="Tap when ready. Double-tap to undo."
           >
             <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
           </button>
 
         )}
-        {!loading && !done && state !== 'cooking' && (
+        {!loading && !done && state !== 'cooking' && state !== 'ready' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -213,6 +226,7 @@ function V2ProductRow({
             <Eye size={18} strokeWidth={2} />
           </button>
         )}
+
 
       </div>
     </div>
