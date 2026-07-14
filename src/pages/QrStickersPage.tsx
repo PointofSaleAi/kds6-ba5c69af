@@ -26,6 +26,7 @@ export default function QrStickersPage() {
   const [scannerOn, setScannerOn] = useState(false);
   const [manual, setManual] = useState('');
   const [lastScan, setLastScan] = useState<string | null>(null);
+  const [localDone, setLocalDone] = useState<Set<string>>(new Set());
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const scannerElId = 'qr-camera-region';
 
@@ -34,8 +35,9 @@ export default function QrStickersPage() {
     for (const o of orders) {
       for (const c of o.courses) {
         for (const it of c.items) {
+          const key = `${o.id}-${it.id}`;
           list.push({
-            key: `${o.id}-${it.id}`,
+            key,
             orderId: o.id,
             itemId: it.id,
             orderNumber: String(o.orderNumber),
@@ -45,13 +47,13 @@ export default function QrStickersPage() {
             itemName: it.name,
             modifiers: (it.modifiers ?? []).map(m => m.text).filter(Boolean),
             qrValue: encodeScanValue(o.id, it.id),
-            done: !!it.isCompleted,
+            done: !!it.isCompleted || localDone.has(key),
           });
         }
       }
     }
     return list;
-  }, [orders]);
+  }, [orders, localDone]);
 
   const fireScan = (raw: string) => {
     const decoded = decodeScanValue(raw);
@@ -60,9 +62,15 @@ export default function QrStickersPage() {
       return;
     }
     publishScan(decoded.orderId, decoded.itemId);
+    setLocalDone(prev => {
+      const next = new Set(prev);
+      next.add(`${decoded.orderId}-${decoded.itemId}`);
+      return next;
+    });
     setLastScan(raw);
     toast({ title: 'Scan sent', description: 'Product marked as Served on the tickets screen.' });
   };
+
 
   // Camera scanner lifecycle
   useEffect(() => {
