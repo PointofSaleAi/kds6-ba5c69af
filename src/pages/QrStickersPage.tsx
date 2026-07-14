@@ -17,6 +17,8 @@ interface Sticker {
   courseName: string;
   itemName: string;
   modifiers: string[];
+  allergens: Allergen[];
+  notes?: string;
   qrValue: string;
   done: boolean;
 }
