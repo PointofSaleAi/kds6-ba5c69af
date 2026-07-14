@@ -5,10 +5,11 @@ import { toast } from '@/hooks/use-toast';
 
 /**
  * Listens for QR scans broadcast from the /kds/qr-stickers page and marks
- * the matching product as Served on the active tickets.
+ * the matching product as Ready on the active tickets (OrderCardV2 handles
+ * the row state transition).
  */
 export function useQrScanSync() {
-  const { orders, markItemDone } = useOrderStore();
+  const { orders } = useOrderStore();
 
   useEffect(() => {
     const unsub = subscribeScan(({ orderId, itemId }) => {
@@ -35,9 +36,11 @@ export function useQrScanSync() {
         toast({ title: 'Already served', description: `${match.name} on #${order.orderNumber}.` });
         return;
       }
-      markItemDone(orderId, itemId);
-      toast({ title: 'Marked as Served', description: `${match.name} on #${order.orderNumber}.` });
+      window.dispatchEvent(
+        new CustomEvent('kds:qr-mark-ready', { detail: { orderId, itemId } }),
+      );
+      toast({ title: 'Marked as Ready', description: `${match.name} on #${order.orderNumber}.` });
     });
     return unsub;
-  }, [orders, markItemDone]);
+  }, [orders]);
 }

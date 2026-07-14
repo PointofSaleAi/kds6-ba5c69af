@@ -361,6 +361,24 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     };
   }, [order.id, order.courses]);
 
+  // QR sticker scan → mark the matching row as READY (never past ready via scan).
+  useEffect(() => {
+    const onQr = (e: Event) => {
+      const detail = (e as CustomEvent<{ orderId: string; itemId: string }>).detail;
+      if (!detail || detail.orderId !== order.id) return;
+      const exists = order.courses.some(c => c.items.some(i => i.id === detail.itemId));
+      if (!exists) return;
+      setRowStates((p) => {
+        const cur = p[detail.itemId] ?? 'idle';
+        if (cur === 'done') return p; // don't downgrade
+        return { ...p, [detail.itemId]: 'ready' };
+      });
+      if (!isSeen) onMarkSeen?.(order.id);
+    };
+    window.addEventListener('kds:qr-mark-ready', onQr);
+    return () => window.removeEventListener('kds:qr-mark-ready', onQr);
+  }, [order.id, order.courses, isSeen, onMarkSeen]);
+
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
   const getRowState = (product: OrderItem): RowState => rowStates[product.id] ?? (product.isCompleted ? 'done' : isSeen ? 'cooking' : 'idle');
