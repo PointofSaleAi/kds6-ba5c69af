@@ -42,6 +42,7 @@ import AIInstructionsSettings from "./pages/settings/AIInstructionsSettings.tsx"
 
 import KdsReplyPage from "./pages/KdsReplyPage.tsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.tsx";
+import { FloatingQrScanBar } from "./components/kds/FloatingQrScanBar.tsx";
 
 const queryClient = new QueryClient();
 
@@ -83,6 +84,15 @@ const App = () => (
               <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
               <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
               <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
+              <Route
+                path="/kds/v7"
+                element={
+                  <>
+                    <Index cardVariant="v1" />
+                    <FloatingQrScanBar />
+                  </>
+                }
+              />
               <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
               {/* Settings render inside the main KDS shell so the left rail
