@@ -376,7 +376,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     };
   }, [order.id, order.courses]);
 
-  // QR sticker scan → mark the matching row as READY (never past ready via scan).
+  // QR sticker scan → mark the matching row as SERVED (done).
   useEffect(() => {
     const onQr = (e: Event) => {
       const detail = (e as CustomEvent<{ orderId: string; itemId: string }>).detail;
@@ -385,14 +385,16 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       if (!exists) return;
       setRowStates((p) => {
         const cur = p[detail.itemId] ?? 'idle';
-        if (cur === 'done') return p; // don't downgrade
-        return { ...p, [detail.itemId]: 'ready' };
+        if (cur === 'done') return p;
+        return { ...p, [detail.itemId]: 'done' };
       });
+      onItemDone?.(order.id, detail.itemId);
       if (!isSeen) onMarkSeen?.(order.id);
     };
     window.addEventListener('kds:qr-mark-ready', onQr);
     return () => window.removeEventListener('kds:qr-mark-ready', onQr);
-  }, [order.id, order.courses, isSeen, onMarkSeen]);
+  }, [order.id, order.courses, isSeen, onMarkSeen, onItemDone]);
+
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
