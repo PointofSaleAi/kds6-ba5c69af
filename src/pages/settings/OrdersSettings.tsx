@@ -39,7 +39,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Timer}
         iconColor="#F59E0B"
-        label="Product timers"
+        label="Coursing timer"
         helper="Show a per-product prep timer that starts when marked Seen and freezes when marked Done."
         right={<SwitchToggle checked={productTimers} onChange={setProductTimers} />}
         highlighted={hash === 'product-timers'}
