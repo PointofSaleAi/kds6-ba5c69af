@@ -348,6 +348,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const [rowStates, setRowStates] = useState<Record<string, RowState>>({});
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
   const [bumping, setBumping] = useState(false);
+  const [expandedCourses, setExpandedCourses] = useState<Set<number>>(new Set());
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
