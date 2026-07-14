@@ -675,7 +675,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       />
 
       {/* FOOTER — single bump-style button; double-tap to undo */}
-      {!isCompact && !isHeaderOnly && (
+      {!isCompact && !isHeaderOnly && !(typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7')) && (
         <FooterBumpButton
           ticketState={ticketState}
           bumping={bumping}
