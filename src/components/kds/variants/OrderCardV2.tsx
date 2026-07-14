@@ -167,30 +167,41 @@ function V2ProductRow({
           </span>
         )}
         {done && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isHistory) {
-                onItemRecall?.();
-                return;
-              }
-              iconTap();
-            }}
-            data-onboarding="item-check"
-            className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
-            style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
-            aria-label={isHistory ? 'Recall product' : 'Product served (double-tap to undo)'}
-            title={isHistory ? 'Tap to recall product' : 'Served. Double-tap to undo'}
-          >
-            {isHistory ? (
-              <Undo size={14} color="#fff" strokeWidth={2.5} />
-            ) : (
+          readOnly ? (
+            <span
+              className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
+              style={{ background: '#27AE60', width: 22, height: 22 }}
+              aria-label="Product served"
+              title="Served"
+            >
               <Check size={14} color="#fff" strokeWidth={3} />
-            )}
-          </button>
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isHistory) {
+                  onItemRecall?.();
+                  return;
+                }
+                iconTap();
+              }}
+              data-onboarding="item-check"
+              className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
+              style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
+              aria-label={isHistory ? 'Recall product' : 'Product served (double-tap to undo)'}
+              title={isHistory ? 'Tap to recall product' : 'Served. Double-tap to undo'}
+            >
+              {isHistory ? (
+                <Undo size={14} color="#fff" strokeWidth={2.5} />
+              ) : (
+                <Check size={14} color="#fff" strokeWidth={3} />
+              )}
+            </button>
+          )
         )}
-        {!loading && !done && state === 'ready' && (
+        {!readOnly && !loading && !done && state === 'ready' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -203,7 +214,7 @@ function V2ProductRow({
             <Check size={14} strokeWidth={3} />
           </button>
         )}
-        {!loading && !done && state === 'cooking' && (
+        {!readOnly && !loading && !done && state === 'cooking' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -217,7 +228,7 @@ function V2ProductRow({
           </button>
 
         )}
-        {!loading && !done && state !== 'cooking' && state !== 'ready' && (
+        {!readOnly && !loading && !done && state !== 'cooking' && state !== 'ready' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -229,6 +240,7 @@ function V2ProductRow({
             <Eye size={18} strokeWidth={2} />
           </button>
         )}
+
 
 
       </div>
