@@ -335,7 +335,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 style={{ borderLeft: '2px solid hsl(var(--destructive))' }}
               >
                 <button
-                  onClick={() => setOvertimeCollapsed(v => !v)}
+                  onClick={handleOvertimeToggle}
                   className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
                   aria-label={overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime'}
                 >
