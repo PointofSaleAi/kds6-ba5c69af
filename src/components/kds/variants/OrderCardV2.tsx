@@ -71,10 +71,12 @@ function V2ProductRow({
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
 
+  const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7');
+
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
   const dispatchTap = useRowTap(
     () => { if (!loading) onOpenRecipe(product); },
-    () => { if (!loading) onUndo(); },
+    () => { if (!loading && !readOnly) onUndo(); },
     250,
   );
   const iconTap = useRowTap(
@@ -82,6 +84,7 @@ function V2ProductRow({
     () => { if (!loading) onUndo(); },
     250,
   );
+
 
 
   return (
@@ -164,30 +167,41 @@ function V2ProductRow({
           </span>
         )}
         {done && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isHistory) {
-                onItemRecall?.();
-                return;
-              }
-              iconTap();
-            }}
-            data-onboarding="item-check"
-            className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
-            style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
-            aria-label={isHistory ? 'Recall product' : 'Product served (double-tap to undo)'}
-            title={isHistory ? 'Tap to recall product' : 'Served. Double-tap to undo'}
-          >
-            {isHistory ? (
-              <Undo size={14} color="#fff" strokeWidth={2.5} />
-            ) : (
+          readOnly ? (
+            <span
+              className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
+              style={{ background: '#27AE60', width: 22, height: 22 }}
+              aria-label="Product served"
+              title="Served"
+            >
               <Check size={14} color="#fff" strokeWidth={3} />
-            )}
-          </button>
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isHistory) {
+                  onItemRecall?.();
+                  return;
+                }
+                iconTap();
+              }}
+              data-onboarding="item-check"
+              className="shrink-0 flex items-center justify-center rounded-full animate-scale-in active:scale-95 transition"
+              style={{ background: isHistory ? '#E84C3D' : '#27AE60', width: 22, height: 22 }}
+              aria-label={isHistory ? 'Recall product' : 'Product served (double-tap to undo)'}
+              title={isHistory ? 'Tap to recall product' : 'Served. Double-tap to undo'}
+            >
+              {isHistory ? (
+                <Undo size={14} color="#fff" strokeWidth={2.5} />
+              ) : (
+                <Check size={14} color="#fff" strokeWidth={3} />
+              )}
+            </button>
+          )
         )}
-        {!loading && !done && state === 'ready' && (
+        {!readOnly && !loading && !done && state === 'ready' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -200,7 +214,7 @@ function V2ProductRow({
             <Check size={14} strokeWidth={3} />
           </button>
         )}
-        {!loading && !done && state === 'cooking' && (
+        {!readOnly && !loading && !done && state === 'cooking' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -214,7 +228,7 @@ function V2ProductRow({
           </button>
 
         )}
-        {!loading && !done && state !== 'cooking' && state !== 'ready' && (
+        {!readOnly && !loading && !done && state !== 'cooking' && state !== 'ready' && (
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); iconTap(); }}
@@ -226,6 +240,7 @@ function V2ProductRow({
             <Eye size={18} strokeWidth={2} />
           </button>
         )}
+
 
 
       </div>
@@ -361,7 +376,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     };
   }, [order.id, order.courses]);
 
-  // QR sticker scan → mark the matching row as READY (never past ready via scan).
+  // QR sticker scan → mark the matching row as SERVED (done).
   useEffect(() => {
     const onQr = (e: Event) => {
       const detail = (e as CustomEvent<{ orderId: string; itemId: string }>).detail;
@@ -370,14 +385,16 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       if (!exists) return;
       setRowStates((p) => {
         const cur = p[detail.itemId] ?? 'idle';
-        if (cur === 'done') return p; // don't downgrade
-        return { ...p, [detail.itemId]: 'ready' };
+        if (cur === 'done') return p;
+        return { ...p, [detail.itemId]: 'done' };
       });
+      onItemDone?.(order.id, detail.itemId);
       if (!isSeen) onMarkSeen?.(order.id);
     };
     window.addEventListener('kds:qr-mark-ready', onQr);
     return () => window.removeEventListener('kds:qr-mark-ready', onQr);
-  }, [order.id, order.courses, isSeen, onMarkSeen]);
+  }, [order.id, order.courses, isSeen, onMarkSeen, onItemDone]);
+
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
@@ -658,7 +675,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       />
 
       {/* FOOTER — single bump-style button; double-tap to undo */}
-      {!isCompact && !isHeaderOnly && (
+      {!isCompact && !isHeaderOnly && !(typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7')) && (
         <FooterBumpButton
           ticketState={ticketState}
           bumping={bumping}
