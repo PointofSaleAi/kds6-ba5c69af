@@ -617,18 +617,43 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                   }
                 }
               }
+              const isExpanded = expandedCourses.has(idx);
               return (
                 <div key={`${course.course}-${idx}`}>
-                  <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2">
-                    <span>{courseLabel(course.course)}</span>
-                    {firingAt && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold normal-case text-muted-foreground">
-                        <Clock size={12} />
-                        <span>{firingAt.toLowerCase()}</span>
-                      </span>
-                    )}
-                  </div>
-                  {visibleItems.map((product) => (
+                  <button
+                    type="button"
+                    onClick={() => setExpandedCourses((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(idx)) next.delete(idx);
+                      else next.add(idx);
+                      return next;
+                    })}
+                    className="w-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2 select-none active:opacity-80"
+                    aria-expanded={isExpanded}
+                    aria-label={`${courseLabel(course.course)} (${visibleItems.length} items)`}
+                  >
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <ChevronRight
+                        size={12}
+                        strokeWidth={2.5}
+                        className="shrink-0 transition-transform duration-200"
+                        style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                      />
+                      <span className="truncate">{courseLabel(course.course)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {!isExpanded && visibleItems.length > 0 && (
+                        <span className="text-[10px] font-semibold tabular-nums">{visibleItems.length}</span>
+                      )}
+                      {firingAt && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold normal-case text-muted-foreground">
+                          <Clock size={12} />
+                          <span>{firingAt.toLowerCase()}</span>
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                  {isExpanded && visibleItems.map((product) => (
                     <V2ProductRow
                       key={product.id}
                       product={product}
