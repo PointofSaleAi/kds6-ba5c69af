@@ -615,11 +615,17 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                     const totalSec = m[2] !== undefined ? parseInt(m[1]) * 60 + parseInt(m[2]) : parseInt(m[1]) * 60;
                     firingAt = formatTimeForKDS(new Date(Date.now() + totalSec * 1000), timeFormat as 0 | 1);
                   }
+                } else if ((course as any).prepTimerLabel) {
+                  const m = String((course as any).prepTimerLabel).match(/(\d+):(\d+)/) || String((course as any).prepTimerLabel).match(/(\d+)\s*min/);
+                  if (m) {
+                    const totalSec = m[2] !== undefined ? parseInt(m[1]) * 60 + parseInt(m[2]) : parseInt(m[1]) * 60;
+                    firingAt = formatTimeForKDS(new Date(Date.now() + totalSec * 1000), timeFormat as 0 | 1);
+                  }
                 }
               }
               const isExpanded = expandedCourses.has(idx);
               return (
-                <div key={`${course.course}-${idx}`}>
+                <div key={`${course.course}-${idx}`} className={idx > 0 ? 'border-t border-border' : ''}>
                   <button
                     type="button"
                     onClick={() => setExpandedCourses((prev) => {
@@ -653,6 +659,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       )}
                     </div>
                   </button>
+
                   {isExpanded && visibleItems.map((product) => (
                     <V2ProductRow
                       key={product.id}
