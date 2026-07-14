@@ -436,6 +436,29 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     });
   };
 
+  // For dine-in table tickets: determine the active course (first course with
+  // remaining items) and keep it expanded by default while collapsing upcoming courses.
+  const activeCourseIndex = useMemo(() => {
+    if (!isDineIn) return -1;
+    for (let i = 0; i < order.courses.length; i++) {
+      const hasVisible = order.courses[i].items.some(
+        (p) => !removedIds.has(p.id) && getRowState(p) !== 'done'
+      );
+      if (hasVisible) return i;
+    }
+    return -1;
+  }, [isDineIn, order.courses, removedIds, rowStates]);
+
+  useEffect(() => {
+    if (activeCourseIndex < 0) return;
+    setExpandedCourses((prev) => {
+      if (prev.has(activeCourseIndex)) return prev;
+      const next = new Set(prev);
+      next.add(activeCourseIndex);
+      return next;
+    });
+  }, [activeCourseIndex]);
+
 
   const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
