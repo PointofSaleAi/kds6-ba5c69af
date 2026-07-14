@@ -262,6 +262,30 @@ function FooterBumpButton({
     : baseConfig;
   const { label, Icon, color } = config;
   const tap = useRowTap(onAdvance, onUndo, 250);
+  const renderIcon = () => {
+    if (bumping) return <Loader2 size={12} className="animate-spin" />;
+    if (!isRecall && ticketState === 'ready') {
+      return (
+        <span
+          className="inline-flex items-center justify-center rounded-full"
+          style={{ width: 18, height: 18, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }}
+        >
+          <Check size={11} strokeWidth={3} />
+        </span>
+      );
+    }
+    if (!isRecall && ticketState === 'done') {
+      return (
+        <span
+          className="inline-flex items-center justify-center rounded-full"
+          style={{ width: 18, height: 18, background: '#27AE60' }}
+        >
+          <Check size={11} strokeWidth={3} color="#fff" />
+        </span>
+      );
+    }
+    return <Icon size={12} strokeWidth={2.5} color={color} />;
+  };
   return (
     <div className="flex items-center justify-between px-2.5 py-1.5 bg-card border-t border-border">
       <span className="text-[11px] text-[#9CA3AF]">{fmtElapsedAgo(elapsed)}</span>
@@ -270,12 +294,12 @@ function FooterBumpButton({
         onClick={tap}
         disabled={bumping}
         data-onboarding="ticket-footer-btn"
-        className="flex items-center gap-1 text-[12px] font-semibold disabled:opacity-70"
+        className="flex items-center gap-1.5 text-[12px] font-semibold disabled:opacity-70"
         style={{ color }}
         title={isRecall ? 'Tap to recall ticket' : 'Tap to advance. Double-tap to undo.'}
         aria-label={`${label} (double-tap to undo)`}
       >
-        {bumping ? <Loader2 size={12} className="animate-spin" /> : <Icon size={12} strokeWidth={2.5} color={color} />}
+        {renderIcon()}
         {bumping ? 'Processing...' : label}
       </button>
       {/* Hidden anchor used by the onboarding walkthrough to rewind ticket state. */}
