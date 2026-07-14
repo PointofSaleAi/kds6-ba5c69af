@@ -326,7 +326,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
                   aria-label={overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime'}
                 >
-                  <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                     <ChevronDown
                       size={16}
                       className={`text-text-primary dark:text-sidebar-foreground transition-transform duration-150 ${overtimeCollapsed ? '-rotate-90' : ''}`}
@@ -415,7 +415,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
                     aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
                   >
-                    <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                       <ChevronDown
                         size={16}
                         className={`text-text-primary dark:text-sidebar-foreground transition-transform duration-150 ${isExpanded ? '' : '-rotate-90'}`}
