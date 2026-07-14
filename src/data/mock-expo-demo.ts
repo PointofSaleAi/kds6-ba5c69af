@@ -37,7 +37,7 @@ export function createDemoTickets(): DemoExpoTicket[] {
         { name: 'Dessert', status: 'queued' as const, itemIds: ['demo-1-3'], statusLabel: 'Queued' },
       ],
     },
-    // DEMO 2: Kitchen In Progress
+    // DEMO 2: Kitchen Preparing
     {
       id: 'demo-102',
       isDemo: true,

@@ -413,7 +413,7 @@ function ItemTapRow({
         <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
           {(showOnboardingActionSet || (!isSeen && !isDone)) && (
             <span {...(item.id === 'onb-i-1' ? { 'data-onboarding': 'item-eye' } : {})}>
-              <LegacyActionPill variant="seen" onClick={() => onAdvanceItem(item.id)} title="Mark Seen / In Progress" />
+              <LegacyActionPill variant="seen" onClick={() => onAdvanceItem(item.id)} title="Mark Seen / Preparing" />
             </span>
           )}
           {!showOnboardingActionSet && (isSeen || isDone) && (

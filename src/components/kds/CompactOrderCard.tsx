@@ -14,7 +14,7 @@ function getLocationLabel(orderType: OrderType, tableName?: string): string | un
 
 const statusBodyMap: Record<string, string> = {
   new: '',
-  'in-progress': '',
+  'preparing': '',
   seen: '',
   served: 'opacity-60 grayscale',
   overtime: 'bg-status-overtime/5',

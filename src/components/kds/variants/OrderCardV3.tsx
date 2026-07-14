@@ -255,7 +255,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const ticketState: TicketState = useMemo(() => {
     if (phaseOverride) return phaseOverride;
     if (allDone) return 'done';
-    if (isSeen || anyStarted) return 'in-progress';
+    if (isSeen || anyStarted) return 'preparing';
     return 'seen';
   }, [phaseOverride, allDone, isSeen, anyStarted]);
 
@@ -278,10 +278,10 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     if (bumping) return;
     if (ticketState === 'seen') {
       notifySeen();
-      setPhaseOverride('in-progress');
+      setPhaseOverride('preparing');
       return;
     }
-    if (ticketState === 'in-progress') {
+    if (ticketState === 'preparing') {
       notifySeen();
       setBumping(true);
       runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
@@ -293,12 +293,12 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const handleTicketRecall = () => {
     if (ticketState === 'done') {
-      // Reset all rows back to idle (in-progress phase)
+      // Reset all rows back to idle (preparing phase)
       setRowStates({});
-      setPhaseOverride('in-progress');
+      setPhaseOverride('preparing');
       return;
     }
-    if (ticketState === 'in-progress') {
+    if (ticketState === 'preparing') {
       setRowStates({});
       setPhaseOverride('seen');
     }
@@ -449,7 +449,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
 
 
-      {/* FOOTER: SEEN → IN PROGRESS → DONE (matches /default) */}
+      {/* FOOTER: SEEN → PREPARING → DONE (matches /default) */}
       {!isCompact && !isHeaderOnly && (
         <OrderCardActions
           orderId={order.id}

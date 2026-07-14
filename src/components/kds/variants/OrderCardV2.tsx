@@ -221,7 +221,7 @@ function V2ProductRow({
 
 const FOOTER_STATE_CONFIG = {
   seen: { label: 'Seen', Icon: Eye, color: '#6C7A89' },
-  'in-progress': { label: 'In Progress', Icon: ClocheIcon, color: '#374151' },
+  'preparing': { label: 'Preparing', Icon: ClocheIcon, color: '#374151' },
   done: { label: 'Done', Icon: Check, color: '#27AE60' },
 } as const;
 
@@ -381,7 +381,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const ticketState: TicketState = useMemo(() => {
     if (phaseOverride) return phaseOverride;
     if (allDone) return 'done';
-    if (allStarted) return 'in-progress';
+    if (allStarted) return 'preparing';
     return 'seen';
   }, [phaseOverride, allDone, allStarted]);
 
@@ -404,10 +404,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     if (bumping) return;
     if (ticketState === 'seen') {
       notifySeen();
-      setPhaseOverride('in-progress');
+      setPhaseOverride('preparing');
       return;
     }
-    if (ticketState === 'in-progress') {
+    if (ticketState === 'preparing') {
       notifySeen();
       setBumping(true);
       runBumpAnimation(() => { setBumping(false); setPhaseOverride('done'); });
@@ -419,10 +419,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const handleTicketRecall = () => {
     if (ticketState === 'done') {
       setRowStates({});
-      setPhaseOverride('in-progress');
+      setPhaseOverride('preparing');
       return;
     }
-    if (ticketState === 'in-progress') {
+    if (ticketState === 'preparing') {
       setRowStates({});
       setPhaseOverride('seen');
     }

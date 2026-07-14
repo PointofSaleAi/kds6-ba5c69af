@@ -5,7 +5,7 @@ import { OrderCardActions } from '../OrderCardActions';
 // Mock the language hook
 vi.mock('@/hooks/use-language', () => ({
   useLanguage: () => ({
-    t: { seen: 'SEEN', inProgress: 'IN PROGRESS', done: 'DONE' },
+    t: { seen: 'SEEN', preparing: 'PREPARING', done: 'DONE' },
   }),
 }));
 
@@ -15,9 +15,9 @@ describe('OrderCardActions', () => {
     expect(screen.getByText('SEEN')).toBeInTheDocument();
   });
 
-  it('shows IN PROGRESS button for in-progress ticket state', () => {
-    render(<OrderCardActions orderId="o1" ticketState="in-progress" />);
-    expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
+  it('shows PREPARING button for preparing ticket state', () => {
+    render(<OrderCardActions orderId="o1" ticketState="preparing" />);
+    expect(screen.getByText('PREPARING')).toBeInTheDocument();
   });
 
   it('shows DONE button for done ticket state', () => {
@@ -30,8 +30,8 @@ describe('OrderCardActions', () => {
     expect(screen.queryByTitle('Go back')).not.toBeInTheDocument();
   });
 
-  it('shows undo button for in-progress state', () => {
-    render(<OrderCardActions orderId="o1" ticketState="in-progress" onTicketRecall={vi.fn()} />);
+  it('shows undo button for preparing state', () => {
+    render(<OrderCardActions orderId="o1" ticketState="preparing" onTicketRecall={vi.fn()} />);
     expect(screen.getByTitle('Go back')).toBeInTheDocument();
   });
 
@@ -44,7 +44,7 @@ describe('OrderCardActions', () => {
 
   it('calls onTicketRecall when undo button clicked', () => {
     const onRecall = vi.fn();
-    render(<OrderCardActions orderId="o1" ticketState="in-progress" onTicketRecall={onRecall} />);
+    render(<OrderCardActions orderId="o1" ticketState="preparing" onTicketRecall={onRecall} />);
     fireEvent.click(screen.getByTitle('Go back'));
     expect(onRecall).toHaveBeenCalledWith('o1');
   });

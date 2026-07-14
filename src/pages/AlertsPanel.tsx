@@ -25,14 +25,14 @@ function useTimeAgo() {
 }
 
 const notifIcons: Record<NotificationType, { icon: React.ElementType; color: string }> = {
-  'table-transfer': { icon: ArrowRightLeft, color: 'text-status-in-progress' },
+  'table-transfer': { icon: ArrowRightLeft, color: 'text-status-preparing' },
   'item-moved': { icon: Utensils, color: 'text-order-take-out' },
   'new-item-added': { icon: Plus, color: 'text-success' },
   'course-fired': { icon: Flame, color: 'text-warning' },
   'general-alert': { icon: Megaphone, color: 'text-[#7C3AED]' },
   'overtime': { icon: AlertTriangle, color: 'text-destructive' },
   'new-order': { icon: Bell, color: 'text-warning' },
-  'recalled': { icon: Info, color: 'text-status-in-progress' },
+  'recalled': { icon: Info, color: 'text-status-preparing' },
   'system': { icon: Info, color: 'text-order-take-out' },
 };
 

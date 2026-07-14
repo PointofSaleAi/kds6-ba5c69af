@@ -95,7 +95,7 @@ interface ItemSummaryPanelProps {
   onCategoryToggle?: (category: string) => void;
   onClearAll?: () => void;
   matchingTicketCount?: number;
-  /** 'active' = show in-progress items (default). 'completed' = show served/done items (used in History). */
+  /** 'active' = show preparing items (default). 'completed' = show served/done items (used in History). */
   mode?: 'active' | 'completed';
 }
 
