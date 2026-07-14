@@ -1,11 +1,11 @@
-import { Eye, ConciergeBell, CheckCircle } from 'lucide-react';
+import { Eye, ConciergeBell, Check, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import undoIcon from '@/assets/undo-icon.svg';
 import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import itemReadyIcon from '@/assets/item-ready-icon.svg';
 
-export type TicketState = 'seen' | 'preparing' | 'done';
+export type TicketState = 'seen' | 'preparing' | 'ready' | 'done';
 
 interface OrderCardActionsProps {
   orderId: string;
@@ -19,18 +19,22 @@ interface OrderCardActionsProps {
 export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTicketRecall, legacyActions }: OrderCardActionsProps) {
   const { t } = useLanguage();
 
-  const buttonLabel = ticketState === 'seen'
-    ? t.seen
-    : ticketState === 'preparing'
-      ? t.preparing.toUpperCase()
-      : t.done;
+  const buttonLabel =
+    ticketState === 'seen' ? t.seen
+    : ticketState === 'preparing' ? t.preparing.toUpperCase()
+    : ticketState === 'ready' ? 'READY'
+    : t.done;
 
   const legacyBg =
     ticketState === 'seen' ? '#3F6FD8'
     : ticketState === 'preparing' ? '#E74C3C'
+    : ticketState === 'ready' ? '#16A34A'
     : '#7D3C98';
 
-  const defaultBgInline = ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {};
+  const defaultBgInline =
+    ticketState === 'seen' ? { backgroundColor: '#1E293B' }
+    : ticketState === 'ready' ? { backgroundColor: '#16A34A' }
+    : {};
   const buttonColorClass = !legacyActions && ticketState === 'preparing'
     ? 'bg-btn-preparing'
     : !legacyActions && ticketState === 'done'
@@ -39,11 +43,11 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
 
   const showUndo = ticketState !== 'seen';
 
-  const IconComponent = ticketState === 'seen'
-    ? Eye
-    : ticketState === 'preparing'
-      ? ConciergeBell
-      : CheckCircle;
+  const IconComponent =
+    ticketState === 'seen' ? Eye
+    : ticketState === 'preparing' ? ConciergeBell
+    : ticketState === 'ready' ? Check
+    : CheckCircle;
 
   const legacyIconSrc =
     ticketState === 'seen' ? seenIcon
