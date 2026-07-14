@@ -236,7 +236,8 @@ function V2ProductRow({
 const FOOTER_STATE_CONFIG = {
   seen: { label: 'Seen', Icon: Eye, color: '#6C7A89' },
   'preparing': { label: 'Preparing', Icon: ClocheIcon, color: '#374151' },
-  done: { label: 'Done', Icon: Check, color: '#27AE60' },
+  ready: { label: 'Ready', Icon: Check, color: '#16A34A' },
+  done: { label: 'Served', Icon: Check, color: '#27AE60' },
 } as const;
 
 function FooterBumpButton({
