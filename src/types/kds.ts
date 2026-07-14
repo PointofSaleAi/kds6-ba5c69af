@@ -1,5 +1,5 @@
 export type OrderType = 'dine-in' | 'take-out' | 'delivery' | 'banquet' | 'drive-thru' | 'curb-side' | 'scheduled' | 'phone-in' | 'custom';
-export type OrderStatus = 'new' | 'in-progress' | 'seen' | 'served' | 'overtime' | 'cancelled' | 'recalled';
+export type OrderStatus = 'new' | 'preparing' | 'seen' | 'served' | 'overtime' | 'cancelled' | 'recalled';
 export type CourseType = 'APPETIZER' | 'SALAD' | 'ENTREE' | 'DESSERT' | 'BEVERAGE';
 export type TimerUrgency = 'ok' | 'warning' | 'critical' | 'overtime';
 export type AllergenType = 'peanut' | 'gluten' | 'dairy' | 'shellfish' | 'soy' | 'egg' | 'tree-nut' | 'sesame';
@@ -103,7 +103,7 @@ export type SortMode = 'newest' | 'oldest' | 'table' | 'type';
 export interface KDSFilter {
   categories: string[];
   revenueCenters: string[];
-  statusFilter: 'all' | 'new' | 'in-progress' | 'completed';
+  statusFilter: 'all' | 'new' | 'preparing' | 'completed';
 }
 
 /* ── Coursing types ── */
@@ -127,6 +127,6 @@ export interface KDSOrder {
   tableOrLocation: string;
   elapsedTimer: string;
   waiterName: string;
-  statusBadge: 'In Progress' | 'Overtime' | 'Done';
+  statusBadge: 'Preparing' | 'Overtime' | 'Done';
   courses: CourseBlock[];
 }

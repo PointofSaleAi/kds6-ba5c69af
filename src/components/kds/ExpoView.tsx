@@ -584,9 +584,9 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
                   ? 'READY'
                   : courseOvertime
                     ? 'OVERTIME'
-                    : 'IN PROGRESS';
+                    : 'PREPARING';
             // Color rules driven by the course's own status:
-            // Queued = muted grey, In Progress = warning amber,
+            // Queued = muted grey, Preparing = warning amber,
             // Ready/Prepared = success green, Overtime = destructive red.
             const courseColorClass = isQueued
               ? 'text-text-muted'
@@ -1211,8 +1211,8 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   const handleRecallOrder = useCallback((id: string) => {
     const ticket = sentOutOrders.find(t => t.id === id);
     if (!ticket) return;
-    // Restore order status to in-progress
-    updateOrderStatus(id, 'in-progress');
+    // Restore order status to preparing
+    updateOrderStatus(id, 'preparing');
     setSentOutOrders(prev => prev.filter(t => t.id !== id));
     setFulfilledTickets(prev => prev.filter(n => n !== ticket.orderNumber));
     toast.success(`Ticket ${ticket.orderNumber} recalled`);

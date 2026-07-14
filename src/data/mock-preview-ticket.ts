@@ -8,7 +8,7 @@ export const previewTicket: Order = {
   id: 'preview-001',
   orderNumber: 42,
   orderType: 'dine-in',
-  status: 'in-progress',
+  status: 'preparing',
   tableName: 'TABLE 7',
   serverName: 'Alex M.',
   guestName: 'Sarah Chen',

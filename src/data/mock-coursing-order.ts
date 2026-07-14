@@ -7,7 +7,7 @@ export const mockCoursingOrder: KDSOrder = {
   tableOrLocation: 'Banquet B \u00B7 Table 6',
   elapsedTimer: '13:08',
   waiterName: 'Rachel G.',
-  statusBadge: 'In Progress',
+  statusBadge: 'Preparing',
   courses: [
     {
       id: 'course-salad-32',
@@ -86,7 +86,7 @@ export const mockCoursingOrder22: KDSOrder = {
   tableOrLocation: 'Table 12',
   elapsedTimer: '09:34',
   waiterName: 'Marcus T.',
-  statusBadge: 'In Progress',
+  statusBadge: 'Preparing',
   courses: [
     {
       id: 'course-salad-22',
@@ -160,7 +160,7 @@ export const mockCoursingOrder24: KDSOrder = {
   tableOrLocation: 'Pickup',
   elapsedTimer: '07:12',
   waiterName: 'Sarah L.',
-  statusBadge: 'In Progress',
+  statusBadge: 'Preparing',
   courses: [
     {
       id: 'course-salad-24',

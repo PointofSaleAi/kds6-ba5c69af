@@ -75,7 +75,7 @@ interface OrderCardProps {
 
 const statusBodyMap: Record<string, string> = {
   new: '',
-  'in-progress': '',
+  'preparing': '',
   seen: '',
   served: 'opacity-60 grayscale',
   overtime: 'bg-status-overtime/5',
@@ -520,7 +520,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       if (allDone) return 'done';
       const anyUnseen = activeCourseItemIds.some(id => !itemStatuses.get(id));
       if (anyUnseen) return 'seen';
-      return 'in-progress';
+      return 'preparing';
     }
     // Non-coursed: use all items
     if (allItemIds.length === 0) return 'seen';
@@ -528,7 +528,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     if (allDone) return 'done';
     const anyUnseen = allItemIds.some(id => !itemStatuses.get(id));
     if (anyUnseen) return 'seen';
-    return 'in-progress';
+    return 'preparing';
   }, [isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
 
   // Ticket-level advance: operates on active course only for dine-in
@@ -655,7 +655,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     const targetIds = isDineIn ? activeCourseItemIds : allItemIds;
     const modIds = collectServableModIds(targetIds);
     if (ticketState === 'done') {
-      // Back to in-progress: active course items to preparing
+      // Back to preparing: active course items to preparing
       const now = formatStaticTime(new Date());
       setItemStatuses(prev => {
         const next = new Map(prev);
@@ -879,7 +879,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
                 role="button"
                 tabIndex={0}
                 aria-label={`Advance ticket (currently ${ticketState})`}
-                title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → IN PROGRESS' : ticketState === 'in-progress' ? 'IN PROGRESS → DONE' : 'DONE'}`}
+                title={`Tap to advance: ${ticketState === 'seen' ? 'SEEN → PREPARING' : ticketState === 'preparing' ? 'PREPARING → DONE' : 'DONE'}`}
                 onClick={(e) => {
                   if (isHeaderOnly) { e.stopPropagation(); setHeaderOnlyModalOpen(true); return; }
                   handleTicketAdvance(order.id);

@@ -72,7 +72,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
       let statusLabel: string | undefined;
       if (item.isCompleted) {
         status = 'done';
-      } else if (course.isFired || order.status === 'in-progress' || order.status === 'seen') {
+      } else if (course.isFired || order.status === 'preparing' || order.status === 'seen') {
         status = 'firing';
         statusLabel = item.station ? `At ${item.station}...` : undefined;
       }

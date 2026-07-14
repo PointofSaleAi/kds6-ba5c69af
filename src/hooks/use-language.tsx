@@ -21,7 +21,7 @@ interface Translations {
   alerts: string;
   settings: string;
   newOrders: string;
-  inProgress: string;
+  preparing: string;
   hideCompleted: string;
   switchToPOS: string;
 
@@ -199,7 +199,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'Alerts',
     settings: 'Settings',
     newOrders: 'Seen',
-    inProgress: 'In Progress',
+    preparing: 'Preparing',
     hideCompleted: 'Unseen',
     switchToPOS: 'Switch to Point of Sale',
     products: 'products',
@@ -353,7 +353,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'Alerts',
     settings: 'Settings',
     newOrders: 'Seen',
-    inProgress: 'In Progress',
+    preparing: 'Preparing',
     hideCompleted: 'Unseen',
     switchToPOS: 'Switch to Point of Sale',
     products: 'products',
@@ -507,7 +507,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'التنبيهات',
     settings: 'الإعدادات',
     newOrders: 'تم الاطلاع',
-    inProgress: 'قيد التحضير',
+    preparing: 'قيد التحضير',
     hideCompleted: 'غير مرئي',
     switchToPOS: 'التبديل إلى نقطة البيع',
     products: 'منتجات',
@@ -661,7 +661,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'Alertas',
     settings: 'Ajustes',
     newOrders: 'Visto',
-    inProgress: 'En progreso',
+    preparing: 'En progreso',
     hideCompleted: 'No visto',
     switchToPOS: 'Cambiar a Punto de Venta',
     products: 'productos',
@@ -815,7 +815,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: '提醒',
     settings: '设置',
     newOrders: '已查看',
-    inProgress: '进行中',
+    preparing: '进行中',
     hideCompleted: '未查看',
     switchToPOS: '切换到POS',
     products: '产品',
@@ -969,7 +969,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'Thong bao',
     settings: 'Cai dat',
     newOrders: 'Da xem',
-    inProgress: 'Dang lam',
+    preparing: 'Dang lam',
     hideCompleted: 'Chua xem',
     switchToPOS: 'Chuyen sang Diem ban hang',
     products: 'san pham',
@@ -1123,7 +1123,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'Alerts',
     settings: 'Settings',
     newOrders: 'Seen',
-    inProgress: 'In Progress',
+    preparing: 'Preparing',
     hideCompleted: 'Unseen',
     switchToPOS: 'Switch to Point of Sale',
     products: 'products',
@@ -1277,7 +1277,7 @@ const translations: Record<LanguageCode, Translations> = {
     alerts: 'Alerts',
     settings: 'Settings',
     newOrders: 'Seen',
-    inProgress: 'In Progress',
+    preparing: 'Preparing',
     hideCompleted: 'Unseen',
     switchToPOS: 'Switch to Point of Sale',
     products: 'products',

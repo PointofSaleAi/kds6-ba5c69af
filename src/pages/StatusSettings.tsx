@@ -181,7 +181,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     description: 'Tight thresholds for high-volume kitchens',
     rules: [
       { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
-      { id: 'medium', label: 'Medium (In Progress)', color: '#EAB308', textColor: 'white', minMinutes: 4, maxMinutes: 6 },
+      { id: 'medium', label: 'Medium (Preparing)', color: '#EAB308', textColor: 'white', minMinutes: 4, maxMinutes: 6 },
       { id: 'delay', label: 'Delay (Warning)', color: '#F97316', textColor: 'white', minMinutes: 7, maxMinutes: 12 },
       { id: 'overtime', label: 'Overtime (Critical)', color: '#EF4444', textColor: 'white', minMinutes: 13, maxMinutes: null },
     ],
@@ -191,7 +191,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     description: 'Balanced timing for most restaurants',
     rules: [
       { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
-      { id: 'medium', label: 'Medium (In Progress)', color: '#EAB308', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
+      { id: 'medium', label: 'Medium (Preparing)', color: '#EAB308', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
       { id: 'delay', label: 'Delay (Warning)', color: '#F97316', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
       { id: 'overtime', label: 'Overtime (Critical)', color: '#EF4444', textColor: 'white', minMinutes: 21, maxMinutes: null },
     ],
@@ -201,7 +201,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     description: 'Relaxed thresholds for fine dining or complex menus',
     rules: [
       { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 10 },
-      { id: 'medium', label: 'Medium (In Progress)', color: '#EAB308', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
+      { id: 'medium', label: 'Medium (Preparing)', color: '#EAB308', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
       { id: 'delay', label: 'Delay (Warning)', color: '#F97316', textColor: 'white', minMinutes: 21, maxMinutes: 35 },
       { id: 'overtime', label: 'Overtime (Critical)', color: '#EF4444', textColor: 'white', minMinutes: 36, maxMinutes: null },
     ],

@@ -61,7 +61,7 @@ export default {
         },
         btn: {
           seen: "hsl(var(--btn-seen))",
-          "in-progress": "hsl(var(--btn-in-progress))",
+          "preparing": "hsl(var(--btn-preparing))",
           done: "hsl(var(--btn-done))",
         },
         order: {
@@ -72,7 +72,7 @@ export default {
         },
         status: {
           new: "hsl(var(--status-new))",
-          "in-progress": "hsl(var(--status-in-progress))",
+          "preparing": "hsl(var(--status-preparing))",
           seen: "hsl(var(--status-seen))",
           served: "hsl(var(--status-served))",
           overtime: "hsl(var(--status-overtime))",

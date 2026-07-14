@@ -437,7 +437,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
     let filtered = orders.filter((o) => {
       if (activeFilter === 'new') { if (o.status !== 'new') return false; }
-      else if (activeFilter === 'in-progress') { if (!(o.status === 'in-progress' || o.status === 'seen')) return false; }
+      else if (activeFilter === 'preparing') { if (!(o.status === 'preparing' || o.status === 'seen')) return false; }
       else if (activeFilter === 'completed') { if (o.status === 'served') return false; }
 
       if (catSet.size > 0) {
@@ -644,7 +644,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     // OrderCard only calls onBump after the user has fully advanced the ticket
     // through DONE locally. Always mark the order served so the served-orders
     // effect moves it to History on the next render. Previously we stepped the
-    // global status one step at a time (new → seen → in-progress → served),
+    // global status one step at a time (new → seen → preparing → served),
     // which required up to 3 taps to actually remove a card whose local state
     // was already "done" - the source of the "needs multiple taps" glitch.
     markAllItemsDone(orderId);
@@ -655,7 +655,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       prev.map((o) => {
         if (o.id !== orderId) return o;
         const prevStatus =
-          o.status === 'in-progress' ? 'seen' as const :
+          o.status === 'preparing' ? 'seen' as const :
           o.status === 'seen' ? 'new' as const : o.status;
         return { ...o, status: prevStatus };
       })
@@ -956,7 +956,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       id: t.id,
       orderNumber: t.orderNumber,
       orderType: t.orderType as Order['orderType'],
-      status: 'in-progress' as const,
+      status: 'preparing' as const,
       tableName: t.tableName,
       serverName: '',
       timeReceived: new Date(Date.now() - t.timerSeconds * 1000),

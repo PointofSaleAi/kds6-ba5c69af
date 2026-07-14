@@ -12,7 +12,7 @@
 
     /* Action button colors */
     --btn-seen: 217 71% 53%;
-    --btn-in-progress: 201 80% 24%;
+    --btn-preparing: 201 80% 24%;
     --btn-done: 143 64% 24%;
 
     /* Order type headers */
@@ -23,7 +23,7 @@
 
     /* Status */
     --status-new: 4 76% 57%;
-    --status-in-progress: 24 80% 52%;
+    --status-preparing: 24 80% 52%;
     --status-seen: 210 5% 53%;
     --status-served: 210 10% 62%;
     --status-overtime: 4 57% 35%;
@@ -96,7 +96,7 @@
 
     /* Action button colors */
     --btn-seen: 217 71% 58%;
-    --btn-in-progress: 201 80% 24%;
+    --btn-preparing: 201 80% 24%;
     --btn-done: 143 64% 29%;
 
     /* Order type headers - slightly brighter for dark bg contrast */
@@ -107,7 +107,7 @@
 
     /* Status */
     --status-new: 4 76% 57%;
-    --status-in-progress: 24 80% 55%;
+    --status-preparing: 24 80% 55%;
     --status-seen: 210 5% 50%;
     --status-served: 210 8% 45%;
     --status-overtime: 4 57% 40%;

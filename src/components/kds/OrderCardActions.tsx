@@ -5,7 +5,7 @@ import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import itemReadyIcon from '@/assets/item-ready-icon.svg';
 
-export type TicketState = 'seen' | 'in-progress' | 'done';
+export type TicketState = 'seen' | 'preparing' | 'done';
 
 interface OrderCardActionsProps {
   orderId: string;
@@ -21,18 +21,18 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
 
   const buttonLabel = ticketState === 'seen'
     ? t.seen
-    : ticketState === 'in-progress'
+    : ticketState === 'preparing'
       ? t.inProgress.toUpperCase()
       : t.done;
 
   const legacyBg =
     ticketState === 'seen' ? '#3F6FD8'
-    : ticketState === 'in-progress' ? '#E74C3C'
+    : ticketState === 'preparing' ? '#E74C3C'
     : '#7D3C98';
 
   const defaultBgInline = ticketState === 'seen' ? { backgroundColor: '#1E293B' } : {};
-  const buttonColorClass = !legacyActions && ticketState === 'in-progress'
-    ? 'bg-btn-in-progress'
+  const buttonColorClass = !legacyActions && ticketState === 'preparing'
+    ? 'bg-btn-preparing'
     : !legacyActions && ticketState === 'done'
       ? 'bg-btn-done'
       : '';
@@ -41,13 +41,13 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
 
   const IconComponent = ticketState === 'seen'
     ? Eye
-    : ticketState === 'in-progress'
+    : ticketState === 'preparing'
       ? ConciergeBell
       : CheckCircle;
 
   const legacyIconSrc =
     ticketState === 'seen' ? seenIcon
-    : ticketState === 'in-progress' ? preparingIcon
+    : ticketState === 'preparing' ? preparingIcon
     : itemReadyIcon;
 
   return (

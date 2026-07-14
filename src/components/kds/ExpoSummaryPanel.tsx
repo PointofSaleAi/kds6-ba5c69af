@@ -4,13 +4,13 @@ import { DockDragHandle } from './DockDragHandle';
 import cookingSummaryIcon from '@/assets/cooking-summary-icon.svg';
 import type { ExpoTicket } from '@/data/mock-expo-orders';
 
-type TicketReadiness = 'ready' | 'in-progress' | 'pending';
+type TicketReadiness = 'ready' | 'preparing' | 'pending';
 
 function getTicketReadiness(ticket: ExpoTicket): TicketReadiness {
   const allDone = ticket.items.every(i => i.status === 'done');
   const anyFiring = ticket.items.some(i => i.status === 'firing');
   if (allDone) return 'ready';
-  if (anyFiring) return 'in-progress';
+  if (anyFiring) return 'preparing';
   return 'pending';
 }
 
@@ -46,7 +46,7 @@ export function ExpoSummaryPanel({
     for (const t of tickets) {
       const r = getTicketReadiness(t);
       if (r === 'ready') ready++;
-      else if (r === 'in-progress') inProgress++;
+      else if (r === 'preparing') inProgress++;
       else pending++;
     }
     return { ready, inProgress, pending };
@@ -123,7 +123,7 @@ export function ExpoSummaryPanel({
         {/* Status counters */}
         <div className="px-3 py-3 border-b border-border space-y-2">
           <CounterRow label="Ready to send" count={ready} colorClass="text-success" />
-          <CounterRow label="In progress" count={inProgress} colorClass="text-warning" />
+          <CounterRow label="Preparing" count={inProgress} colorClass="text-warning" />
           <CounterRow label="Pending" count={pending} colorClass="text-text-muted" />
         </div>
 
