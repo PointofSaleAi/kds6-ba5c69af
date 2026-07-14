@@ -167,41 +167,53 @@ export default function QrStickersPage() {
             No active orders to print.
           </div>
         )}
-        {stickers.map(s => (
-          <article
-            key={s.key}
-            onClick={() => fireScan(s.qrValue)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fireScan(s.qrValue); } }}
-            title="Tap to mark this product as Ready on the tickets screen"
-            className="sticker cursor-pointer select-none rounded-xl border border-border bg-card p-3 flex gap-3 items-start hover:border-primary/60 hover:shadow-md active:scale-[0.99] transition print:cursor-auto print:rounded-none print:border-black print:break-after-page"
-          >
-            <div className="shrink-0 bg-white p-1.5 rounded-md border border-border">
-              <QRCodeSVG value={s.qrValue} size={96} level="M" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                  #{s.orderNumber} · {s.table}
+        {stickers.map(s => {
+          const disabled = s.done;
+          return (
+            <article
+              key={s.key}
+              onClick={disabled ? undefined : () => fireScan(s.qrValue)}
+              role={disabled ? undefined : 'button'}
+              tabIndex={disabled ? -1 : 0}
+              aria-disabled={disabled}
+              onKeyDown={disabled ? undefined : (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fireScan(s.qrValue); } }}
+              title={disabled ? 'This product is already served' : 'Tap to mark this product as Ready on the tickets screen'}
+              className={[
+                'sticker select-none rounded-xl border border-border bg-card p-3 flex gap-3 items-start transition',
+                disabled
+                  ? 'opacity-60 grayscale cursor-not-allowed'
+                  : 'cursor-pointer hover:border-primary/60 hover:shadow-md active:scale-[0.99]',
+                'print:cursor-auto print:rounded-none print:border-black print:break-after-page',
+              ].join(' ')}
+            >
+              <div className="shrink-0 bg-white p-1.5 rounded-md border border-border">
+                <QRCodeSVG value={s.qrValue} size={96} level="M" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    #{s.orderNumber} · {s.table}
+                  </div>
+                  {s.done && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase text-emerald-600">
+                      <Check className="w-3 h-3" /> Served
+                    </span>
+                  )}
                 </div>
-                {s.done && (
-                  <span className="text-[10px] font-bold uppercase text-emerald-600">Served</span>
+                {s.guest && <div className="text-[11px] text-muted-foreground truncate">{s.guest}</div>}
+                <div className="mt-0.5 text-[10px] font-semibold uppercase text-muted-foreground">{s.courseName}</div>
+                <div className="text-sm font-bold leading-snug break-words">{s.itemName}</div>
+                {s.modifiers.length > 0 && (
+                  <ul className="mt-1 space-y-0.5">
+                    {s.modifiers.slice(0, 4).map((m, i) => (
+                      <li key={i} className="text-[11px] text-muted-foreground leading-tight">· {m}</li>
+                    ))}
+                  </ul>
                 )}
               </div>
-              {s.guest && <div className="text-[11px] text-muted-foreground truncate">{s.guest}</div>}
-              <div className="mt-0.5 text-[10px] font-semibold uppercase text-muted-foreground">{s.courseName}</div>
-              <div className="text-sm font-bold leading-snug break-words">{s.itemName}</div>
-              {s.modifiers.length > 0 && (
-                <ul className="mt-1 space-y-0.5">
-                  {s.modifiers.slice(0, 4).map((m, i) => (
-                    <li key={i} className="text-[11px] text-muted-foreground leading-tight">· {m}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
 
       <style>{`
