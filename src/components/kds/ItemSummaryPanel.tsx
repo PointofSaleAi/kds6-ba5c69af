@@ -408,17 +408,19 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             return (
               <div key={cat.category} {...(catIdx === 0 ? { 'data-onboarding': 'summary-category' } : {})}>
                 {/* Section header */}
-                <div className="flex items-center border-b border-border min-h-[36px]" style={isStation ? { borderLeft: '2px solid #4F46E5' } : undefined}>
+                <div className="flex items-center border-b border-border min-h-[36px] ring-1 ring-inset ring-border/50" style={isStation ? { borderLeft: '2px solid #4F46E5' } : undefined}>
                   {/* Chevron toggle */}
                   <button
                     onClick={() => toggleSection(cat.category)}
-                    className="flex items-center justify-center px-1.5 py-2 shrink-0 min-w-[28px] min-h-[36px]"
+                    className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
                     aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
                   >
-                    <ChevronDown
-                      size={12}
-                      className={`text-text-muted transition-transform duration-150 ${isExpanded ? '' : '-rotate-90'}`}
-                    />
+                    <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center">
+                      <ChevronDown
+                        size={16}
+                        className={`text-text-primary dark:text-sidebar-foreground transition-transform duration-150 ${isExpanded ? '' : '-rotate-90'}`}
+                      />
+                    </div>
                   </button>
                   {/* Category label - tappable for filtering */}
                   <button
