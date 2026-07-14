@@ -39,7 +39,8 @@ export function useQrScanSync() {
       window.dispatchEvent(
         new CustomEvent('kds:qr-mark-ready', { detail: { orderId, itemId } }),
       );
-      toast({ title: 'Marked as Ready', description: `${match.name} on #${order.orderNumber}.` });
+      toast({ title: 'Marked as Served', description: `${match.name} on #${order.orderNumber}.` });
+
     });
     return unsub;
   }, [orders]);
