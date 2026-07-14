@@ -288,7 +288,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           className="flex items-center justify-between gap-2 px-2 py-2 bg-sidebar border-l border-b border-sidebar-border text-left"
         >
           <span className="text-[12px] font-medium text-sidebar-foreground truncate">
-            {expandAllOn ? 'Collapse all categories' : 'Expand all categories'}
+            {expandAllOn ? 'Collapse all' : 'Expand all'}
           </span>
           <span
             className={`relative inline-flex items-center h-5 w-9 rounded-full transition-colors shrink-0 ${
