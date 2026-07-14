@@ -4,6 +4,8 @@ import { Check } from 'lucide-react';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { encodeScanValue, decodeScanValue, publishScan } from '@/lib/qr-scan-bus';
 import { toast } from '@/hooks/use-toast';
+import { AllergenBadge } from '@/components/kds/AllergenBadge';
+import type { Allergen } from '@/types/kds';
 
 interface Sticker {
   key: string;
