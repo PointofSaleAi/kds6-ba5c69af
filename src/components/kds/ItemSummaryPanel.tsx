@@ -202,7 +202,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     if (overtimeItems.length > 0) setOvertimeCollapsed(true);
   }, [summary, overtimeItems]);
 
+  const [expandAllOn, setExpandAllOn] = useState(false);
+
   const toggleSection = (cat: string) => {
+    setExpandAllOn(false);
     setCollapsedSections(prev => {
       const next = new Set(prev);
       if (next.has(cat)) next.delete(cat);
@@ -211,18 +214,23 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     });
   };
 
-  // Global expand/collapse all: expanded when nothing is collapsed
-  const allExpanded =
-    collapsedSections.size === 0 && (overtimeItems.length === 0 || !overtimeCollapsed);
+  const handleOvertimeToggle = () => {
+    setExpandAllOn(false);
+    setOvertimeCollapsed(v => !v);
+  };
+
   const toggleAllSections = () => {
-    if (allExpanded) {
+    if (expandAllOn) {
       setCollapsedSections(new Set(summary.map(c => c.category)));
       if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+      setExpandAllOn(false);
     } else {
       setCollapsedSections(new Set());
       if (overtimeItems.length > 0) setOvertimeCollapsed(false);
+      setExpandAllOn(true);
     }
   };
+
 
   const [assigningItem, setAssigningItem] = useState<string | null>(null);
   const [assignedStations, setAssignedStations] = useState<Map<string, StationName>>(new Map());
@@ -259,38 +267,43 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             className="text-sidebar-foreground shrink-0"
             showLock={false}
           />
-          <button
-            type="button"
-            onClick={toggleAllSections}
-            aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
-            aria-expanded={allExpanded}
-            className="bg-transparent p-0 text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0 cursor-pointer transition-opacity group-hover/header:opacity-80"
+          <span
+            className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0"
           >
             {t.summaryHeader}
-          </button>
+          </span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
         <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
           <ChevronRight size={16} strokeWidth={3} />
         </button>
-
-        {/* Seam tab: global expand/collapse-all toggle */}
-        {(summary.length > 0 || overtimeItems.length > 0) && (
-          <button
-            type="button"
-            onClick={toggleAllSections}
-            aria-label={allExpanded ? 'Collapse all sections' : 'Expand all sections'}
-            aria-expanded={allExpanded}
-            className="absolute left-1/2 -translate-x-1/2 bottom-[-6px] z-30 w-[18px] h-[12px] rounded-[5px] bg-sidebar-foreground border border-sidebar-foreground shadow-[0_2px_5px_rgba(0,0,0,0.35)] flex items-center justify-center transition-opacity group-hover/header:opacity-80"
-          >
-            <ChevronDown
-              size={9}
-              strokeWidth={2.5}
-              className={`text-sidebar-bg transition-transform duration-150 ${allExpanded ? 'rotate-180' : ''}`}
-            />
-          </button>
-        )}
       </div>
+
+      {/* Expand-all toggle row */}
+      {(summary.length > 0 || overtimeItems.length > 0) && (
+        <button
+          type="button"
+          onClick={toggleAllSections}
+          aria-pressed={expandAllOn}
+          className="flex items-center justify-between gap-2 px-2 py-2 bg-sidebar border-l border-b border-sidebar-border text-left"
+        >
+          <span className="text-[12px] font-medium text-sidebar-foreground truncate">
+            {expandAllOn ? 'Collapse all categories' : 'Expand all categories'}
+          </span>
+          <span
+            className={`relative inline-flex items-center h-5 w-9 rounded-full transition-colors shrink-0 ${
+              expandAllOn ? 'bg-success' : 'bg-sidebar-foreground/25'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform ${
+                expandAllOn ? 'translate-x-[18px]' : 'translate-x-0.5'
+              }`}
+            />
+          </span>
+        </button>
+      )}
+
 
       {/* Filter status bar */}
       {selectionCount > 0 && (
@@ -322,7 +335,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 style={{ borderLeft: '2px solid hsl(var(--destructive))' }}
               >
                 <button
-                  onClick={() => setOvertimeCollapsed(v => !v)}
+                  onClick={handleOvertimeToggle}
                   className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
                   aria-label={overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime'}
                 >
