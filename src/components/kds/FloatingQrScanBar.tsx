@@ -26,7 +26,7 @@ export function FloatingQrScanBar() {
             id: it.id,
             name: it.name,
             orderId: o.id,
-            orderNumber: o.orderNumber,
+            orderNumber: String(o.orderNumber),
             done: !!it.isCompleted,
           });
         }
