@@ -202,7 +202,10 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     if (overtimeItems.length > 0) setOvertimeCollapsed(true);
   }, [summary, overtimeItems]);
 
+  const [expandAllOn, setExpandAllOn] = useState(false);
+
   const toggleSection = (cat: string) => {
+    setExpandAllOn(false);
     setCollapsedSections(prev => {
       const next = new Set(prev);
       if (next.has(cat)) next.delete(cat);
@@ -211,18 +214,23 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     });
   };
 
-  // Global expand/collapse all: expanded when nothing is collapsed
-  const allExpanded =
-    collapsedSections.size === 0 && (overtimeItems.length === 0 || !overtimeCollapsed);
+  const handleOvertimeToggle = () => {
+    setExpandAllOn(false);
+    setOvertimeCollapsed(v => !v);
+  };
+
   const toggleAllSections = () => {
-    if (allExpanded) {
+    if (expandAllOn) {
       setCollapsedSections(new Set(summary.map(c => c.category)));
       if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+      setExpandAllOn(false);
     } else {
       setCollapsedSections(new Set());
       if (overtimeItems.length > 0) setOvertimeCollapsed(false);
+      setExpandAllOn(true);
     }
   };
+
 
   const [assigningItem, setAssigningItem] = useState<string | null>(null);
   const [assignedStations, setAssignedStations] = useState<Map<string, StationName>>(new Map());
