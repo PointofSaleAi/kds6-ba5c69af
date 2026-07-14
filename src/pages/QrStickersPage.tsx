@@ -4,6 +4,8 @@ import { Check } from 'lucide-react';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { encodeScanValue, decodeScanValue, publishScan } from '@/lib/qr-scan-bus';
 import { toast } from '@/hooks/use-toast';
+import { AllergenBadge } from '@/components/kds/AllergenBadge';
+import type { Allergen } from '@/types/kds';
 
 interface Sticker {
   key: string;
@@ -15,6 +17,8 @@ interface Sticker {
   courseName: string;
   itemName: string;
   modifiers: string[];
+  allergens: Allergen[];
+  notes?: string;
   qrValue: string;
   done: boolean;
 }
@@ -39,6 +43,8 @@ export default function QrStickersPage() {
             courseName: String(c.course),
             itemName: it.name,
             modifiers: (it.modifiers ?? []).map(m => m.text).filter(Boolean),
+            allergens: it.allergens ?? [],
+            notes: it.notes,
             qrValue: encodeScanValue(o.id, it.id),
             done: !!it.isCompleted || localDone.has(key),
           });
@@ -121,6 +127,18 @@ export default function QrStickersPage() {
                       <li key={i} className="text-[11px] text-muted-foreground leading-tight">· {m}</li>
                     ))}
                   </ul>
+                )}
+                {s.allergens.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                    {s.allergens.map(a => (
+                      <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
+                    ))}
+                  </div>
+                )}
+                {s.notes && (
+                  <div className="mt-1.5 text-[11px] text-foreground leading-tight break-words">
+                    <span className="font-semibold text-muted-foreground">Note:</span> {s.notes}
+                  </div>
                 )}
               </div>
             </article>
