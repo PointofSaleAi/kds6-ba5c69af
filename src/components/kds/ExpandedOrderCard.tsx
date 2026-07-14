@@ -64,7 +64,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
   }, []);
 
   const buttonLabel = order.status === 'new' ? t.seen :
-    order.status === 'seen' ? t.inProgress.toUpperCase() : t.done;
+    order.status === 'seen' ? t.preparing.toUpperCase() : t.done;
 
   return (
     <motion.div
