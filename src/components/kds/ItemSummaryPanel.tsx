@@ -318,18 +318,20 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           {overtimeItems.length > 0 && (
             <div data-onboarding="summary-overtime">
               <div
-                className="flex items-center border-b border-border min-h-[36px]"
+                className="flex items-center border-b border-border min-h-[36px] ring-1 ring-inset ring-border/50"
                 style={{ borderLeft: '2px solid hsl(var(--destructive))' }}
               >
                 <button
                   onClick={() => setOvertimeCollapsed(v => !v)}
-                  className="flex items-center justify-center px-1.5 py-2 shrink-0 min-w-[28px] min-h-[36px]"
+                  className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
                   aria-label={overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime'}
                 >
-                  <ChevronDown
-                    size={12}
-                    className={`text-text-muted transition-transform duration-150 ${overtimeCollapsed ? '-rotate-90' : ''}`}
-                  />
+                  <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center">
+                    <ChevronDown
+                      size={16}
+                      className={`text-text-primary dark:text-sidebar-foreground transition-transform duration-150 ${overtimeCollapsed ? '-rotate-90' : ''}`}
+                    />
+                  </div>
                 </button>
                 <div className="flex-1 flex items-center gap-1.5 py-2 pr-1">
                   
