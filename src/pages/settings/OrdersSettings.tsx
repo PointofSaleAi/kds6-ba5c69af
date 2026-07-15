@@ -156,6 +156,12 @@ export default function OrdersSettings() {
                 </PopoverContent>
               </Popover>
             </div>
+            <p
+              className="mt-1.5 text-[13px] leading-snug"
+              style={{ color: 'hsl(var(--text-secondary))' }}
+            >
+              Sets how long new orders wait before the kitchen sees them..
+            </p>
           </div>
         </div>
       )}
