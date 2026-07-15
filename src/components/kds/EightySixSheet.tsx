@@ -550,14 +550,27 @@ export function EightySixSheet({
         ) : (
           <>
             <div className="px-4 py-2 border-b border-border">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search menu items..."
-                  className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
-                />
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1 min-w-0">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search menu items..."
+                    className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  variant={selectMode ? "default" : "outline"}
+                  onClick={() => {
+                    if (selectMode) exitSelectMode();
+                    else setSelectMode(true);
+                  }}
+                  className="h-9 px-3 shrink-0"
+                >
+                  {selectMode ? "Cancel" : "Select"}
+                </Button>
               </div>
             </div>
 
