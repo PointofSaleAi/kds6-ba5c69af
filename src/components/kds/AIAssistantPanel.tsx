@@ -84,6 +84,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
   '/kds/v1/settings/orders': {
     contextKey: 'settings-orders',
     chips: [
+      'Set up Order Hold',
       'Allergen badges',
       'Servable modifiers',
       'Ticket aging rules',
