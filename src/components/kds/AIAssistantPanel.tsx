@@ -10,7 +10,7 @@ import { useAIIntegration, AI_PROVIDER_LABELS, AI_PROVIDER_SHORT_LABELS, AI_PROV
 import { AIProviderSwitcher } from './AIProviderSwitcher';
 import { cn } from '@/lib/utils';
 import { useActiveKDSView } from '@/hooks/use-active-kds-view';
-import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useKDSSettings, type TextSize, type TicketLayout, type TicketSpacing, type SortDefault } from '@/hooks/use-kds-settings';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { RESTAURANT_PRESETS, buildPresetMessage, type RestaurantPreset, type RestaurantPresetId } from '@/data/restaurant-presets';
 import { useTheme } from '@/hooks/use-theme';
