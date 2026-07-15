@@ -125,6 +125,7 @@ function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
           <Plus className="w-3 h-3" />
         </button>
       </div>
+      <span className="text-[10px] text-muted-foreground">Available Stock</span>
     </div>
   );
 }
