@@ -77,7 +77,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Clock}
         iconColor="#3B82F6"
-        label="Order Hold"
+        label="Order hold"
         helper="Holds new orders for a set time before the kitchen sees them."
         right={<SwitchToggle checked={orderHold} onChange={setOrderHold} />}
         highlighted={hash === 'order-hold'}
