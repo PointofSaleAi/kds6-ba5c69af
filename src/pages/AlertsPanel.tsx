@@ -33,6 +33,8 @@ const notifIcons: Record<NotificationType, { icon: React.ElementType; color: str
   'overtime': { icon: AlertTriangle, color: 'text-destructive' },
   'new-order': { icon: Bell, color: 'text-warning' },
   'recalled': { icon: Info, color: 'text-status-preparing' },
+  'low-stock': { icon: PackageX, color: 'text-warning' },
+  'pos-86d': { icon: Ban, color: 'text-destructive' },
   'system': { icon: Info, color: 'text-order-take-out' },
 };
 
