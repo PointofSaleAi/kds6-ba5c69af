@@ -142,7 +142,7 @@ export function EightySixSheet({
     selectedItems.forEach((k) => {
       const [category, name] = k.split("::");
       if (!eightySixedItems.some((i) => i.name === name)) {
-        onEightySixItem({ name, category, snoozeDuration: selectedDuration });
+        onEightySixItem({ name, category, snoozeDuration: selectedDuration, quantity: selectedQuantities[k] ?? 1 });
       }
     });
     exitSelectMode();
