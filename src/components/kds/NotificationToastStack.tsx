@@ -1,7 +1,18 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bell, Info, PackageX, Ban } from 'lucide-react';
+import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bell, Info, PackageX } from 'lucide-react';
 import { useNotifications } from '@/hooks/use-notifications';
 import type { NotificationType } from '@/types/notification';
+
+function EightySixToastIcon({ className, size }: { className?: string; size?: number }) {
+  return (
+    <span
+      className={`font-bold ${className || ''}`}
+      style={{ fontSize: size ?? 14, lineHeight: 1 }}
+    >
+      86
+    </span>
+  );
+}
 
 const typeIcons: Record<NotificationType, React.ElementType> = {
   'table-transfer': ArrowRightLeft,
@@ -13,7 +24,7 @@ const typeIcons: Record<NotificationType, React.ElementType> = {
   'new-order': Bell,
   'recalled': Info,
   'low-stock': PackageX,
-  'pos-86d': Ban,
+  'pos-86d': EightySixToastIcon,
   'system': Info,
 };
 
