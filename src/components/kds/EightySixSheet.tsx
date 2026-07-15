@@ -103,23 +103,39 @@ export function EightySixSheet({
   const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectedQuantities, setSelectedQuantities] = useState<Record<string, number>>({});
   const modalDismissedAtRef = useRef(0);
 
   const itemKey = (name: string, category: string) => `${category}::${name}`;
 
   const toggleSelectItem = (name: string, category: string) => {
+    const k = itemKey(name, category);
     setSelectedItems((prev) => {
       const next = new Set(prev);
-      const k = itemKey(name, category);
-      if (next.has(k)) next.delete(k);
-      else next.add(k);
+      if (next.has(k)) {
+        next.delete(k);
+        setSelectedQuantities((q) => {
+          const nextQ = { ...q };
+          delete nextQ[k];
+          return nextQ;
+        });
+      } else {
+        next.add(k);
+        setSelectedQuantities((q) => ({ ...q, [k]: 1 }));
+      }
       return next;
     });
+  };
+
+  const setItemQuantity = (name: string, category: string, quantity: number) => {
+    const k = itemKey(name, category);
+    setSelectedQuantities((prev) => ({ ...prev, [k]: Math.max(1, quantity) }));
   };
 
   const exitSelectMode = () => {
     setSelectMode(false);
     setSelectedItems(new Set());
+    setSelectedQuantities({});
   };
 
   const bulk86Selected = () => {
