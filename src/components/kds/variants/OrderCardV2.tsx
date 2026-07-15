@@ -282,21 +282,23 @@ function V2ProductRow({
                 const raw = m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text;
                 return (
                   <div key={i}>
-                    <div
-                      className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                      style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
-                    >
-                      {tm(raw)}
-                    </div>
-                    {showSecondary && (
+                    <div style={{ display: 'inline-block', maxWidth: '100%' }}>
                       <div
-                        className={`font-medium ${MODIFIER_CLASS[m.type]} opacity-70`}
-                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
-                        dir={secondaryDir}
+                        className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
+                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                       >
-                        {tmSecondary(raw)}
+                        {tm(raw)}
                       </div>
-                    )}
+                      {showSecondary && (
+                        <div
+                          className={`font-medium ${MODIFIER_CLASS[m.type]} opacity-70`}
+                          style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                          dir={secondaryDir}
+                        >
+                          {tmSecondary(raw)}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -304,21 +306,23 @@ function V2ProductRow({
           )}
           {showDetails && product.notes && (
             <>
-              <div
-                className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-                style={{ fontSize: 'var(--kds-modifier)' }}
-              >
-                "{tn(product.notes)}"
-              </div>
-              {showSecondary && (
+              <div style={{ display: 'inline-block', maxWidth: '100%' }}>
                 <div
-                  className={`italic leading-snug text-text-muted font-medium opacity-70 ${done ? 'line-through' : ''}`}
-                  style={{ fontSize: 'var(--kds-modifier)', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
-                  dir={secondaryDir}
+                  className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
+                  style={{ fontSize: 'var(--kds-modifier)' }}
                 >
-                  "{tnSecondary(product.notes)}"
+                  "{tn(product.notes)}"
                 </div>
-              )}
+                {showSecondary && (
+                  <div
+                    className={`italic leading-snug text-text-muted font-medium opacity-70 ${done ? 'line-through' : ''}`}
+                    style={{ fontSize: 'var(--kds-modifier)', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                    dir={secondaryDir}
+                  >
+                    "{tnSecondary(product.notes)}"
+                  </div>
+                )}
+              </div>
             </>
           )}
 
