@@ -245,28 +245,27 @@ function V2ProductRow({
         </span>
         <div className="flex-1 min-w-0">
           <div
-            className="text-foreground flex items-baseline gap-2"
+            className="text-foreground"
             style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
-            <span className="min-w-0 flex-1">{tp(product.name)}</span>
-            {showSecondary && secondaryDir === 'rtl' && (
-              <span
-                className="text-text-muted shrink-0"
-                style={{ fontSize: 'var(--kds-modifier)', fontWeight: 500, unicodeBidi: 'plaintext', textAlign: 'right' }}
-                dir="rtl"
-              >
-                {tpSecondary(product.name)}
-              </span>
-            )}
+            {tp(product.name)}
           </div>
-          {showSecondary && secondaryDir !== 'rtl' && (
+          {showSecondary && (
             <div
               className="text-text-muted"
-              style={{ fontSize: 'var(--kds-modifier)', fontWeight: 500, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: 'left' }}
-              dir="ltr"
+              style={{
+                fontSize: 'var(--kds-item-name)',
+                fontWeight: 700,
+                lineHeight: 1.2,
+                textDecoration: done ? 'line-through' : 'none',
+                unicodeBidi: 'plaintext',
+                textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+              }}
+              dir={secondaryDir}
             >
               {tpSecondary(product.name)}
             </div>
+
 
           )}
           {showDetails && product.allergens.length > 0 && (
