@@ -698,12 +698,22 @@ export function EightySixSheet({
 
 
         <div className="p-4 border-t border-border">
-          <Button
-            onClick={() => onOpenChange(false)}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            Done
-          </Button>
+          {view === "add" && selectMode ? (
+            <Button
+              onClick={bulk86Selected}
+              disabled={selectedItems.size === 0}
+              className="w-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
+            </Button>
+          ) : (
+            <Button
+              onClick={() => onOpenChange(false)}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Done
+            </Button>
+          )}
         </div>
       </SheetContent>
     </Sheet>
