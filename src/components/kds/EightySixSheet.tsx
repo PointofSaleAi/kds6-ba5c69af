@@ -724,7 +724,15 @@ export function EightySixSheet({
                               </div>
                               {is86ed ? (
                                 <EightySixBadge size="sm" variant="subtle" />
-                              ) : selectMode ? null : (
+                              ) : selectMode ? (
+                                <InlineQtyAdjuster
+                                  value={selectedQuantities[itemKey(item, category.name)] ?? 1}
+                                  onChange={(qty) => {
+                                    if (!isSelected) toggleSelectItem(item, category.name);
+                                    setItemQuantity(item, category.name, qty);
+                                  }}
+                                />
+                              ) : (
                                 <span className="text-xs text-muted-foreground">Tap to 86</span>
                               )}
                             </button>
