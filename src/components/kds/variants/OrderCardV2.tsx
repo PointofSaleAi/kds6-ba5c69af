@@ -30,6 +30,114 @@ const MODIFIER_CLASS = {
 
 type RowState = 'idle' | 'cooking' | 'ready' | 'loading' | 'done';
 
+function ProductCuePopover({
+  anchorRef,
+  onClose,
+  on86,
+  onRecipe,
+}: {
+  anchorRef: React.RefObject<HTMLDivElement>;
+  onClose: () => void;
+  on86: () => void;
+  onRecipe: () => void;
+}) {
+  const [rect, setRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardH, setCardH] = useState(96);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = anchorRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', measure, true);
+    return () => {
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', measure, true);
+    };
+  }, [anchorRef]);
+
+  useLayoutEffect(() => {
+    if (cardRef.current) setCardH(cardRef.current.offsetHeight);
+  }, [rect]);
+
+  if (!rect) return null;
+  const pad = 6;
+  const spot = { top: rect.top - pad, left: rect.left - pad, width: rect.width + pad * 2, height: rect.height + pad * 2 };
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const GAP = 12;
+  const cardW = Math.min(280, vw - 24);
+  const spaceBelow = vh - (spot.top + spot.height);
+  const placeBelow = spaceBelow >= cardH + GAP + 12;
+  let top = placeBelow ? spot.top + spot.height + GAP : spot.top - cardH - GAP;
+  let left = rect.left + rect.width / 2 - cardW / 2;
+  left = Math.max(12, Math.min(left, vw - cardW - 12));
+  top = Math.max(12, Math.min(top, vh - cardH - 12));
+
+  return createPortal(
+    <>
+      <div
+        className="fixed inset-0 z-[9998]"
+        aria-hidden="true"
+        onMouseDown={onClose}
+        onTouchStart={onClose}
+      >
+        <svg width="100%" height="100%" style={{ display: 'block' }}>
+          <defs>
+            <mask id="product-cue-mask">
+              <rect width="100%" height="100%" fill="white" />
+              <rect x={spot.left} y={spot.top} width={spot.width} height={spot.height} rx={10} ry={10} fill="black" />
+            </mask>
+          </defs>
+          <rect width="100%" height="100%" fill="rgba(0,0,0,0.72)" mask="url(#product-cue-mask)" />
+        </svg>
+      </div>
+      <div
+        className="fixed z-[9999] pointer-events-none rounded-[10px]"
+        style={{
+          top: spot.top,
+          left: spot.left,
+          width: spot.width,
+          height: spot.height,
+          boxShadow: '0 0 0 2px #F59E0B, 0 0 24px 4px rgba(245,158,11,0.35)',
+        }}
+      />
+      <div
+        ref={cardRef}
+        role="menu"
+        className="fixed z-[10001] rounded-2xl shadow-2xl p-2"
+        style={{ top, left, width: cardW, background: '#1F1F24', color: '#fff', border: '1px solid rgba(255,255,255,0.08)' }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          role="menuitem"
+          onClick={on86}
+          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-white/90 hover:bg-white/10 transition-colors"
+        >
+          86 it
+        </button>
+        <button
+          type="button"
+          role="menuitem"
+          onClick={onRecipe}
+          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-white/90 hover:bg-white/10 transition-colors"
+        >
+          View Recipe
+        </button>
+      </div>
+    </>,
+    document.body,
+  );
+}
+
+
 interface Props {
   order: Order;
   onBump?: (orderId: string) => void;
