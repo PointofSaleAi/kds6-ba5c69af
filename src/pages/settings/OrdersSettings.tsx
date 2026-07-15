@@ -93,12 +93,24 @@ export default function OrdersSettings() {
             }}
           >
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-              <span
-                className="text-[15px] font-semibold"
-                style={{ color: 'hsl(var(--text-primary))' }}
-              >
-                Hold time
-              </span>
+              <div className="flex items-center gap-2.5">
+                <div
+                  className="flex items-center justify-center rounded-full"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    background: 'hsl(var(--muted))',
+                  }}
+                >
+                  <Hourglass size={16} style={{ color: 'hsl(var(--brand-primary))' }} />
+                </div>
+                <span
+                  className="text-[15px] font-semibold"
+                  style={{ color: 'hsl(var(--text-primary))' }}
+                >
+                  Hold time
+                </span>
+              </div>
               <Popover>
                 <PopoverTrigger asChild>
                   <button
