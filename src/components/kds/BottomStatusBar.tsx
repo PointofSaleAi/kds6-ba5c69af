@@ -72,7 +72,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const [eightySixedItems, setEightySixedItems] = useState<EightySixedItem[]>([]);
 
   const handleEightySixItem = useCallback(
-    (item: { name: string; category: string; snoozeDuration: string }) => {
+    (item: { name: string; category: string; snoozeDuration: string; quantity?: number }) => {
       const durations: Record<string, number | null> = {
         '15min': 15 * 60 * 1000,
         '1hr': 60 * 60 * 1000,
@@ -80,16 +80,20 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         'indefinite': null,
       };
       const ms = durations[item.snoozeDuration];
-      const newItem: EightySixedItem = {
+      const newItems: EightySixedItem[] = Array.from({ length: item.quantity ?? 1 }, () => ({
         id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
         name: item.name,
         category: item.category,
         reason: 'Out of Stock',
         snoozedAt: new Date(),
         snoozeEndTime: ms ? new Date(Date.now() + ms) : null,
-      };
-      setEightySixedItems(prev => [...prev, newItem]);
-      toast({ title: "Item 86'd", description: `${item.name} marked as unavailable` });
+        quantity: item.quantity,
+      }));
+      setEightySixedItems(prev => [...prev, ...newItems]);
+      toast({
+        title: "Item 86'd",
+        description: `${item.quantity && item.quantity > 1 ? `${item.quantity} x ` : ''}${item.name} marked as unavailable`,
+      });
     },
     [toast],
   );
