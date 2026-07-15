@@ -35,9 +35,11 @@ export function SelectedVariantPreview({
     const sync = () => setRoute(readStoredTicketsRoute('v3'));
     window.addEventListener('storage', sync);
     window.addEventListener('focus', sync);
+    window.addEventListener(TICKETS_ROUTE_CHANGE_EVENT, sync);
     return () => {
       window.removeEventListener('storage', sync);
       window.removeEventListener('focus', sync);
+      window.removeEventListener(TICKETS_ROUTE_CHANGE_EVENT, sync);
     };
   }, []);
 
