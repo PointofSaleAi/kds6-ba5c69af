@@ -223,6 +223,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const { view: activeKDSView } = useActiveKDSView();
   const kdsSettings = useKDSSettings();
   const statusRules = useStatusRules();
+  const { theme, setTheme } = useTheme();
   const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
   const isSettingsRoute = location.pathname.startsWith('/kds/v1/settings');
   const routeContent = getRouteContent(location.pathname, activeKDSView);
