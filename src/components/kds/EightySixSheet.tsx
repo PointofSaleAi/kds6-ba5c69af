@@ -100,7 +100,36 @@ export function EightySixSheet({
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(30);
   const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const modalDismissedAtRef = useRef(0);
+
+  const itemKey = (name: string, category: string) => `${category}::${name}`;
+
+  const toggleSelectItem = (name: string, category: string) => {
+    setSelectedItems((prev) => {
+      const next = new Set(prev);
+      const k = itemKey(name, category);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
+      return next;
+    });
+  };
+
+  const exitSelectMode = () => {
+    setSelectMode(false);
+    setSelectedItems(new Set());
+  };
+
+  const bulk86Selected = () => {
+    selectedItems.forEach((k) => {
+      const [category, name] = k.split("::");
+      if (!eightySixedItems.some((i) => i.name === name)) {
+        onEightySixItem({ name, category, snoozeDuration: selectedDuration });
+      }
+    });
+    exitSelectMode();
+  };
 
   const hoursScrollRef = useRef<HTMLDivElement>(null);
   const minutesScrollRef = useRef<HTMLDivElement>(null);
@@ -143,8 +172,13 @@ export function EightySixSheet({
       setConfirmItem(null);
       setOpenPopoverId(null);
       setShowCustomTimePicker(false);
+      exitSelectMode();
     }
   }, [open]);
+
+  useEffect(() => {
+    if (view !== "add") exitSelectMode();
+  }, [view]);
 
   const snapToNearest = useCallback(
     (scrollRef: React.RefObject<HTMLDivElement>, maxValue: number, setValue: (v: number) => void) => {
@@ -516,14 +550,27 @@ export function EightySixSheet({
         ) : (
           <>
             <div className="px-4 py-2 border-b border-border">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search menu items..."
-                  className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
-                />
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1 min-w-0">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search menu items..."
+                    className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  variant={selectMode ? "default" : "outline"}
+                  onClick={() => {
+                    if (selectMode) exitSelectMode();
+                    else setSelectMode(true);
+                  }}
+                  className="h-9 px-3 shrink-0"
+                >
+                  {selectMode ? "Cancel" : "Select"}
+                </Button>
               </div>
             </div>
 
@@ -573,12 +620,15 @@ export function EightySixSheet({
                       <div className="border-t border-border bg-muted/40">
                         {category.items.map((item) => {
                           const is86ed = isItemEightySixed(item);
+                          const isSelected = selectedItems.has(itemKey(item, category.name));
                           return (
                             <button
                               key={item}
                               onClick={(event) => {
                                 event.stopPropagation();
-                                if (!is86ed) openConfirmItem({ name: item, category: category.name });
+                                if (is86ed) return;
+                                if (selectMode) toggleSelectItem(item, category.name);
+                                else openConfirmItem({ name: item, category: category.name });
                               }}
                               disabled={is86ed}
                               className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
@@ -588,6 +638,21 @@ export function EightySixSheet({
                               }`}
                             >
                               <div className="flex items-center gap-2">
+                                {selectMode && !is86ed && (
+                                  <div
+                                    className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                                      isSelected
+                                        ? "bg-primary border-primary text-primary-foreground"
+                                        : "border-muted-foreground/50 bg-background"
+                                    }`}
+                                  >
+                                    {isSelected && (
+                                      <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <path d="M2 6.5 L5 9.5 L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                )}
                                 {is86ed && (
                                   <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
                                     <X size={10} strokeWidth={3} />
@@ -599,7 +664,7 @@ export function EightySixSheet({
                               </div>
                               {is86ed ? (
                                 <EightySixBadge size="sm" variant="subtle" />
-                              ) : (
+                              ) : selectMode ? null : (
                                 <span className="text-xs text-muted-foreground">Tap to 86</span>
                               )}
                             </button>
@@ -633,12 +698,22 @@ export function EightySixSheet({
 
 
         <div className="p-4 border-t border-border">
-          <Button
-            onClick={() => onOpenChange(false)}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            Done
-          </Button>
+          {view === "add" && selectMode ? (
+            <Button
+              onClick={bulk86Selected}
+              disabled={selectedItems.size === 0}
+              className="w-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
+            </Button>
+          ) : (
+            <Button
+              onClick={() => onOpenChange(false)}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Done
+            </Button>
+          )}
         </div>
       </SheetContent>
     </Sheet>
