@@ -6,13 +6,13 @@ import { OrderCardV3 } from './variants/OrderCardV3';
 import { OrderCardV4 } from './variants/OrderCardV4';
 import { OrderCardV5 } from './variants/OrderCardV5';
 import { previewTicket } from '@/data/mock-preview-ticket';
-import { KDSSettingsPreviewScope } from '@/hooks/use-kds-settings';
+import { KDSSettingsPreviewScope, type TicketsRouteKey } from '@/hooks/use-kds-settings';
 import {
   getCardVariantForTicketsRoute,
   readStoredTicketsRoute,
-  type TicketsRouteKey,
+  TICKETS_ROUTE_CHANGE_EVENT,
 } from '@/lib/ticket-card-variant';
-import type { Order } from '@/types/order';
+import type { Order } from '@/types/kds';
 
 interface SelectedVariantPreviewProps {
   order?: Order;
