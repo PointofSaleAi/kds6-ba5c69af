@@ -267,29 +267,12 @@ function V2ProductRow({
 
       </div>
       {menuOpen && !loading && (
-        <div
-          role="menu"
-          onClick={(e) => e.stopPropagation()}
-          className="absolute left-2 right-2 top-full z-50 mt-1 rounded-md border border-border bg-popover text-popover-foreground shadow-lg overflow-hidden animate-scale-in"
-        >
-          <button
-            type="button"
-            role="menuitem"
-            onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onLongPress(product); }}
-            className="w-full text-left px-3 py-2 text-sm font-semibold hover:bg-muted transition-colors"
-          >
-            86 it
-          </button>
-          <div className="h-px bg-border" />
-          <button
-            type="button"
-            role="menuitem"
-            onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onOpenRecipe(product); }}
-            className="w-full text-left px-3 py-2 text-sm font-semibold hover:bg-muted transition-colors"
-          >
-            View Recipe
-          </button>
-        </div>
+        <ProductCuePopover
+          anchorRef={rowRef}
+          onClose={() => setMenuOpen(false)}
+          on86={() => { setMenuOpen(false); onLongPress(product); }}
+          onRecipe={() => { setMenuOpen(false); onOpenRecipe(product); }}
+        />
       )}
     </div>
   );
