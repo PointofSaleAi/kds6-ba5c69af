@@ -382,23 +382,6 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
         <div style={{ display: 'flex', gap: 10, width: '100%' }}>
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-            style={{
-              flex: 1,
-              backgroundColor: '#252838',
-              border: '1px solid #374151',
-              borderRadius: 8,
-              padding: 13,
-              fontSize: 13,
-              fontWeight: 600,
-              color: '#E5E7EB',
-              cursor: 'pointer',
-            }}
-          >
-            Not now
-          </button>
-          <button
-            type="button"
             onClick={(e) => { e.stopPropagation(); onConfirm(qty); }}
             style={{
               flex: 1,
