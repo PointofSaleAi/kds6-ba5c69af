@@ -166,7 +166,7 @@ export function EightySixSheet({
         });
       } else {
         next.add(k);
-        setSelectedQuantities((q) => ({ ...q, [k]: 1 }));
+        setSelectedQuantities((q) => ({ ...q, [k]: 0 }));
       }
       return next;
     });
@@ -174,7 +174,7 @@ export function EightySixSheet({
 
   const setItemQuantity = (name: string, category: string, quantity: number) => {
     const k = itemKey(name, category);
-    setSelectedQuantities((prev) => ({ ...prev, [k]: Math.max(1, quantity) }));
+    setSelectedQuantities((prev) => ({ ...prev, [k]: Math.max(0, quantity) }));
   };
 
   const exitSelectMode = () => {
@@ -187,7 +187,7 @@ export function EightySixSheet({
     selectedItems.forEach((k) => {
       const [category, name] = k.split("::");
       if (!eightySixedItems.some((i) => i.name === name)) {
-        onEightySixItem({ name, category, snoozeDuration: selectedDuration, quantity: selectedQuantities[k] ?? 1 });
+        onEightySixItem({ name, category, snoozeDuration: selectedDuration, quantity: selectedQuantities[k] ?? 0 });
       }
     });
     exitSelectMode();
