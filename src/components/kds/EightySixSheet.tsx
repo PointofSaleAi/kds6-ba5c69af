@@ -46,6 +46,7 @@ export interface EightySixedItem {
   snoozedAt: Date;
   snoozeEndTime: Date | null;
   scheduledRestoreTime?: Date | null;
+  quantity?: number;
 }
 
 interface EightySixSheetProps {
@@ -54,7 +55,7 @@ interface EightySixSheetProps {
   eightySixedItems: EightySixedItem[];
   onRestoreItem: (itemId: string) => void;
   onScheduleRestore: (itemId: string, restoreTime: Date) => void;
-  onEightySixItem: (item: { name: string; category: string; snoozeDuration: string }) => void;
+  onEightySixItem: (item: { name: string; category: string; snoozeDuration: string; quantity?: number }) => void;
 }
 
 const UNCATEGORIZED = "Uncategorized";
