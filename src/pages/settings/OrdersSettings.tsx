@@ -1,10 +1,12 @@
-import { ShoppingBag, Sparkles, AlertTriangle, Timer } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
-import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { SwitchToggle, SegmentedToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
+
+const HOLD_TIME_OPTIONS = ['1m', '2m', '5m', '10m', '15m', '30m'];
 
 export default function OrdersSettings() {
   const {
@@ -12,8 +14,16 @@ export default function OrdersSettings() {
     showHeaderAllergens, setShowHeaderAllergens,
     servableModifiers, setServableModifiers,
     productTimers, setProductTimers,
+    orderHold, setOrderHold,
+    orderHoldMinutes, setOrderHoldMinutes,
   } = useKDSSettings();
   const hash = useHashHighlight();
+
+  const holdTimeValue = `${orderHoldMinutes}m`;
+  const handleHoldTimeChange = (value: string) => {
+    const minutes = parseInt(value.replace('m', ''), 10);
+    if (!Number.isNaN(minutes)) setOrderHoldMinutes(minutes);
+  };
 
   return (
     <>
