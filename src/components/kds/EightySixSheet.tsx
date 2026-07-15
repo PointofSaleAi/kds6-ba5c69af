@@ -413,6 +413,11 @@ export function EightySixSheet({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="text-destructive font-semibold truncate">{item.name}</p>
+                          {(item.quantity ?? 1) > 1 && (
+                            <span className="text-xs font-semibold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
+                              x{item.quantity}
+                            </span>
+                          )}
                           <EightySixBadge size="sm" variant="subtle" />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
