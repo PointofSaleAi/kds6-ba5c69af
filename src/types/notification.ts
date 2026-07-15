@@ -7,6 +7,8 @@ export type NotificationType =
   | 'overtime'
   | 'new-order'
   | 'recalled'
+  | 'low-stock'
+  | 'pos-86d'
   | 'system';
 
 export type StationTag =
