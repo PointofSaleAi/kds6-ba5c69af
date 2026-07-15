@@ -248,8 +248,17 @@ function V2ProductRow({
             className="text-foreground"
             style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
           >
-            {product.name}
+            {tp(product.name)}
           </div>
+          {showSecondary && (
+            <div
+              className="text-text-muted"
+              style={{ fontSize: 'var(--kds-modifier)', fontWeight: 500, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+              dir={secondaryDir}
+            >
+              {tpSecondary(product.name)}
+            </div>
+          )}
           {showDetails && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-0.5" data-onboarding="item-allergen">
               {product.allergens.map((a) => (
@@ -259,25 +268,50 @@ function V2ProductRow({
           )}
           {showDetails && product.modifiers.length > 0 && (
             <div className="mt-0" data-onboarding="item-modifier">
-              {product.modifiers.map((m, i) => (
-                <div
-                  key={i}
-                  className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                  style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
-                >
-                  {m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text}
-                </div>
-              ))}
+              {product.modifiers.map((m, i) => {
+                const raw = m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text;
+                return (
+                  <div key={i}>
+                    <div
+                      className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
+                      style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                    >
+                      {tm(raw)}
+                    </div>
+                    {showSecondary && (
+                      <div
+                        className={`font-medium ${MODIFIER_CLASS[m.type]} opacity-70`}
+                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                        dir={secondaryDir}
+                      >
+                        {tmSecondary(raw)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
           {showDetails && product.notes && (
-            <div
-              className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-              style={{ fontSize: 'var(--kds-modifier)' }}
-            >
-              "{product.notes}"
-            </div>
+            <>
+              <div
+                className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
+                style={{ fontSize: 'var(--kds-modifier)' }}
+              >
+                "{tn(product.notes)}"
+              </div>
+              {showSecondary && (
+                <div
+                  className={`italic leading-snug text-text-muted font-medium opacity-70 ${done ? 'line-through' : ''}`}
+                  style={{ fontSize: 'var(--kds-modifier)', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                  dir={secondaryDir}
+                >
+                  "{tnSecondary(product.notes)}"
+                </div>
+              )}
+            </>
           )}
+
         </div>
         {canExpand && !done && (
           <button
