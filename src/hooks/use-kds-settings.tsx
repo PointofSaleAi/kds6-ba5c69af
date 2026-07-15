@@ -122,6 +122,8 @@ const defaults: KDSSettings = {
   staggerMode: true,
   servableModifiers: false,
   productTimers: false,
+  orderHold: false,
+  orderHoldMinutes: 5,
   timezone: 'auto',
   currency: 'USD',
   tempUnit: 'F',
