@@ -73,6 +73,43 @@ export default function OrdersSettings() {
         highlighted={hash === 'header-allergen-summary'}
       />
 
+      <SettingsPill
+        icon={Clock}
+        iconColor="#3B82F6"
+        label="Order Hold"
+        helper="Holds new orders for a set time before the kitchen sees them."
+        right={<SwitchToggle checked={orderHold} onChange={setOrderHold} />}
+        highlighted={hash === 'order-hold'}
+      />
+
+      {orderHold && (
+        <div className="mb-1 @container/pill">
+          <div
+            className="rounded-[28px] px-4 py-2.5"
+            style={{
+              background: 'hsl(var(--surface-card))',
+              border: '1px solid hsl(var(--border))',
+            }}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <span
+                className="text-[15px] font-semibold"
+                style={{ color: 'hsl(var(--text-primary))' }}
+              >
+                Hold time
+              </span>
+              <div className="w-full @[340px]/pill:w-auto @[340px]/pill:shrink-0">
+                <SegmentedToggle
+                  options={HOLD_TIME_OPTIONS}
+                  value={HOLD_TIME_OPTIONS.includes(holdTimeValue) ? holdTimeValue : '5m'}
+                  onChange={handleHoldTimeChange}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 }
