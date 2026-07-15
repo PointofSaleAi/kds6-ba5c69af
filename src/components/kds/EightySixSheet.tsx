@@ -749,8 +749,7 @@ export function EightySixSheet({
                                 <EightySixBadge size="sm" variant="subtle" />
                               ) : selectMode ? (
                                 <InlineQtyAdjuster
-                                  value={selectedQuantities[itemKey(item, category.name)] ?? 1}
-                                  stock={getAvailableStock(item)}
+                                  value={selectedQuantities[itemKey(item, category.name)] ?? 0}
                                   onChange={(qty) => {
                                     if (!isSelected) toggleSelectItem(item, category.name);
                                     setItemQuantity(item, category.name, qty);
