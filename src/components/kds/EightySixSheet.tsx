@@ -620,12 +620,15 @@ export function EightySixSheet({
                       <div className="border-t border-border bg-muted/40">
                         {category.items.map((item) => {
                           const is86ed = isItemEightySixed(item);
+                          const isSelected = selectedItems.has(itemKey(item, category.name));
                           return (
                             <button
                               key={item}
                               onClick={(event) => {
                                 event.stopPropagation();
-                                if (!is86ed) openConfirmItem({ name: item, category: category.name });
+                                if (is86ed) return;
+                                if (selectMode) toggleSelectItem(item, category.name);
+                                else openConfirmItem({ name: item, category: category.name });
                               }}
                               disabled={is86ed}
                               className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
@@ -635,6 +638,21 @@ export function EightySixSheet({
                               }`}
                             >
                               <div className="flex items-center gap-2">
+                                {selectMode && !is86ed && (
+                                  <div
+                                    className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                                      isSelected
+                                        ? "bg-primary border-primary text-primary-foreground"
+                                        : "border-muted-foreground/50 bg-background"
+                                    }`}
+                                  >
+                                    {isSelected && (
+                                      <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <path d="M2 6.5 L5 9.5 L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                )}
                                 {is86ed && (
                                   <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
                                     <X size={10} strokeWidth={3} />
@@ -646,7 +664,7 @@ export function EightySixSheet({
                               </div>
                               {is86ed ? (
                                 <EightySixBadge size="sm" variant="subtle" />
-                              ) : (
+                              ) : selectMode ? null : (
                                 <span className="text-xs text-muted-foreground">Tap to 86</span>
                               )}
                             </button>
