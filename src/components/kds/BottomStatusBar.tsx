@@ -80,19 +80,19 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         'indefinite': null,
       };
       const ms = durations[item.snoozeDuration];
-      const newItems: EightySixedItem[] = Array.from({ length: item.quantity ?? 1 }, () => ({
+      const newItem: EightySixedItem = {
         id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
         name: item.name,
         category: item.category,
         reason: 'Out of Stock',
         snoozedAt: new Date(),
         snoozeEndTime: ms ? new Date(Date.now() + ms) : null,
-        quantity: item.quantity,
-      }));
-      setEightySixedItems(prev => [...prev, ...newItems]);
+        quantity: item.quantity ?? 1,
+      };
+      setEightySixedItems(prev => [...prev, newItem]);
       toast({
         title: "Item 86'd",
-        description: `${item.quantity && item.quantity > 1 ? `${item.quantity} x ` : ''}${item.name} marked as unavailable`,
+        description: `${newItem.quantity > 1 ? `${newItem.quantity} x ` : ''}${item.name} marked as unavailable`,
       });
     },
     [toast],
