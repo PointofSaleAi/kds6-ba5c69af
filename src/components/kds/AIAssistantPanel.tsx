@@ -196,12 +196,16 @@ function saveLearned(map: LearnedMap) {
   } catch { /* ignore */ }
 }
 
+type ChipOption = { label: string; value: string };
+
 type ChatMessage = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
   presetId?: RestaurantPresetId;
   presetApplied?: boolean;
+  chips?: ChipOption[];
+  chipsUsed?: boolean;
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/kds-ai-chat`;
