@@ -260,8 +260,8 @@ export function EightySixSheet({
 
         <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
           <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
-            <div className="eighty-six-icon w-7 h-7">
-              <Ban size={16} strokeWidth={2.5} />
+            <div className="eighty-six-icon w-7 h-7 text-sm font-bold">
+              86
             </div>
             <span>86 Items</span>
             {eightySixedItems.length > 0 && (
