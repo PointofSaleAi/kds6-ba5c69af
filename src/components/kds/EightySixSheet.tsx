@@ -118,7 +118,7 @@ function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
           e.stopPropagation();
           onChange(value + 1);
         }}
-        className="w-6 h-6 rounded-md bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        className="w-6 h-6 rounded-md bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
         aria-label="Increase quantity"
       >
         <Plus className="w-3 h-3" />
