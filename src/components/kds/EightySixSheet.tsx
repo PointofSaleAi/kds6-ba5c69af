@@ -89,20 +89,9 @@ const formatScheduledRestoreTime = (restoreTime: Date) =>
 interface InlineQtyAdjusterProps {
   value: number;
   onChange: (value: number) => void;
-  stock?: number;
 }
 
-// TODO: replace with real stock lookup from backend inventory API.
-function getAvailableStock(itemName: string): number {
-  let hash = 0;
-  for (let i = 0; i < itemName.length; i++) {
-    hash = (hash << 5) - hash + itemName.charCodeAt(i);
-    hash |= 0;
-  }
-  return 5 + (Math.abs(hash) % 46);
-}
-
-function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
+function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
   return (
     <div
       className="flex flex-col items-end gap-0.5"
@@ -114,7 +103,7 @@ function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            onChange(Math.max(1, value - 1));
+            onChange(Math.max(0, value - 1));
           }}
           className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
           aria-label="Decrease quantity"
@@ -136,11 +125,6 @@ function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
           <Plus className="w-3 h-3" />
         </button>
       </div>
-      {typeof stock === "number" && (
-        <span className="text-[10px] text-muted-foreground leading-none">
-          Available Stock: {stock}
-        </span>
-      )}
     </div>
   );
 }
@@ -182,7 +166,7 @@ export function EightySixSheet({
         });
       } else {
         next.add(k);
-        setSelectedQuantities((q) => ({ ...q, [k]: 1 }));
+        setSelectedQuantities((q) => ({ ...q, [k]: 0 }));
       }
       return next;
     });
@@ -190,7 +174,7 @@ export function EightySixSheet({
 
   const setItemQuantity = (name: string, category: string, quantity: number) => {
     const k = itemKey(name, category);
-    setSelectedQuantities((prev) => ({ ...prev, [k]: Math.max(1, quantity) }));
+    setSelectedQuantities((prev) => ({ ...prev, [k]: Math.max(0, quantity) }));
   };
 
   const exitSelectMode = () => {
@@ -203,7 +187,7 @@ export function EightySixSheet({
     selectedItems.forEach((k) => {
       const [category, name] = k.split("::");
       if (!eightySixedItems.some((i) => i.name === name)) {
-        onEightySixItem({ name, category, snoozeDuration: selectedDuration, quantity: selectedQuantities[k] ?? 1 });
+        onEightySixItem({ name, category, snoozeDuration: selectedDuration, quantity: selectedQuantities[k] ?? 0 });
       }
     });
     exitSelectMode();
@@ -765,8 +749,7 @@ export function EightySixSheet({
                                 <EightySixBadge size="sm" variant="subtle" />
                               ) : selectMode ? (
                                 <InlineQtyAdjuster
-                                  value={selectedQuantities[itemKey(item, category.name)] ?? 1}
-                                  stock={getAvailableStock(item)}
+                                  value={selectedQuantities[itemKey(item, category.name)] ?? 0}
                                   onChange={(qty) => {
                                     if (!isSelected) toggleSelectItem(item, category.name);
                                     setItemQuantity(item, category.name, qty);
