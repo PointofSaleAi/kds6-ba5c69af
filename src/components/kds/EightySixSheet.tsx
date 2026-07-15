@@ -91,7 +91,7 @@ interface InlineQtyAdjusterProps {
   onChange: (value: number) => void;
 }
 
-function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
+function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
   return (
     <div
       className="flex flex-col items-end gap-0.5"
@@ -103,7 +103,7 @@ function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            onChange(Math.max(1, value - 1));
+            onChange(Math.max(0, value - 1));
           }}
           className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
           aria-label="Decrease quantity"
@@ -125,11 +125,6 @@ function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
           <Plus className="w-3 h-3" />
         </button>
       </div>
-      {typeof stock === "number" && (
-        <span className="text-[10px] text-muted-foreground leading-none">
-          Available Stock: {stock}
-        </span>
-      )}
     </div>
   );
 }
