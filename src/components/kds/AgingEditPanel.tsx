@@ -221,6 +221,19 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
   const contrast = getContrastRatio(rule.color, rule.textColor);
   const textColor = resolveTextColor(rule.textColor);
 
+  // Build a preview ticket whose age lands inside the current rule so every
+  // ticket variant applies this rule's color/text swatch automatically.
+  const previewOrder = useMemo<Order>(() => {
+    const ageMinutes = Math.max(0, rule.minMinutes) + 1;
+    const timeReceived = new Date(Date.now() - ageMinutes * 60_000);
+    return {
+      ...previewTicket,
+      orderType: previewType as OrderType,
+      timeReceived,
+      elapsedSeconds: ageMinutes * 60,
+    };
+  }, [rule.minMinutes, previewType]);
+
   return (
     <div className="space-y-4">
       {/* Errors */}
