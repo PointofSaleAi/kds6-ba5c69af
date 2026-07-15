@@ -86,6 +86,47 @@ const formatTimeRemaining = (endTime: Date | null) => {
 const formatScheduledRestoreTime = (restoreTime: Date) =>
   restoreTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
+interface InlineQtyAdjusterProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
+  return (
+    <div
+      className="flex items-center gap-1"
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(Math.max(1, value - 1));
+        }}
+        className="w-6 h-6 rounded-md bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        aria-label="Decrease quantity"
+      >
+        <Minus className="w-3 h-3" />
+      </button>
+      <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
+        {value}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(value + 1);
+        }}
+        className="w-6 h-6 rounded-md bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        aria-label="Increase quantity"
+      >
+        <Plus className="w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
 export function EightySixSheet({
   open,
   onOpenChange,
