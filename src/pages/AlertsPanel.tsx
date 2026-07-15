@@ -48,6 +48,8 @@ type TabFilter = 'notifications' | 'messages';
 const PRIORITY: Record<string, number> = {
   overtime: 0,
   system: 1,
+  'pos-86d': 1,
+  'low-stock': 1,
   'table-transfer': 2,
   'item-moved': 2,
   'general-alert': 3,
