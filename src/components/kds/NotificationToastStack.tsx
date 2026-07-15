@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bell, Info, PackageX, Ban } from 'lucide-react';
+import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bell, Info, PackageX } from 'lucide-react';
 import { useNotifications } from '@/hooks/use-notifications';
 import type { NotificationType } from '@/types/notification';
 
