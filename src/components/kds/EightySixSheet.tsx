@@ -89,40 +89,58 @@ const formatScheduledRestoreTime = (restoreTime: Date) =>
 interface InlineQtyAdjusterProps {
   value: number;
   onChange: (value: number) => void;
+  stock?: number;
 }
 
-function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
+// TODO: replace with real stock lookup from backend inventory API.
+function getAvailableStock(itemName: string): number {
+  let hash = 0;
+  for (let i = 0; i < itemName.length; i++) {
+    hash = (hash << 5) - hash + itemName.charCodeAt(i);
+    hash |= 0;
+  }
+  return 5 + (Math.abs(hash) % 46);
+}
+
+function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
   return (
     <div
-      className="flex items-center gap-1"
+      className="flex flex-col items-end gap-0.5"
       onClick={(e) => e.stopPropagation()}
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onChange(Math.max(1, value - 1));
-        }}
-        className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
-        aria-label="Decrease quantity"
-      >
-        <Minus className="w-3 h-3" />
-      </button>
-      <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
-        {value}
-      </span>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onChange(value + 1);
-        }}
-        className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
-        aria-label="Increase quantity"
-      >
-        <Plus className="w-3 h-3" />
-      </button>
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(Math.max(1, value - 1));
+          }}
+          className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+          aria-label="Decrease quantity"
+        >
+          <Minus className="w-3 h-3" />
+        </button>
+        <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
+          {value}
+        </span>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(value + 1);
+          }}
+          className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
+          aria-label="Increase quantity"
+        >
+          <Plus className="w-3 h-3" />
+        </button>
+      </div>
+      {typeof stock === "number" && (
+        <span className="text-[10px] text-muted-foreground leading-none">
+          Available Stock: {stock}
+        </span>
+      )}
     </div>
   );
 }
@@ -748,6 +766,7 @@ export function EightySixSheet({
                               ) : selectMode ? (
                                 <InlineQtyAdjuster
                                   value={selectedQuantities[itemKey(item, category.name)] ?? 1}
+                                  stock={getAvailableStock(item)}
                                   onChange={(qty) => {
                                     if (!isSelected) toggleSelectItem(item, category.name);
                                     setItemQuantity(item, category.name, qty);
