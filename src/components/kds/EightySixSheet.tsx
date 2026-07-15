@@ -357,7 +357,7 @@ export function EightySixSheet({
             {eightySixedItems.length > 0 && (
               <EightySixBadge
                 size="lg"
-                label={eightySixedItems.length.toString()}
+                label={eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0).toString()}
                 showIcon={false}
                 pulse
               />
