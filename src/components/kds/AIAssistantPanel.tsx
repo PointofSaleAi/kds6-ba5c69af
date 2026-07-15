@@ -804,6 +804,20 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                               </button>
                             </div>
                           )}
+                          {m.role === 'assistant' && m.chips && !m.chipsUsed && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {m.chips.map(c => (
+                                <button
+                                  key={c.value}
+                                  onClick={() => handleChip(c, m.id)}
+                                  className="flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-800/60 text-xs text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-violet-400/30"
+                                >
+                                  <Bot className="w-3 h-3 text-violet-300 flex-shrink-0" />
+                                  <span>{c.label}</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
