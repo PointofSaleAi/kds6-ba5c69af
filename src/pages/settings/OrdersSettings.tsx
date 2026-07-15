@@ -7,7 +7,15 @@ import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 
-const HOLD_TIME_OPTIONS = ['1m', '2m', '5m', '10m', '15m', '30m'];
+const HOLD_TIME_OPTIONS = [
+  { value: 1, label: '1 minute' },
+  { value: 2, label: '2 minutes' },
+  { value: 5, label: '5 minutes' },
+  { value: 10, label: '10 minutes' },
+  { value: 15, label: '15 minutes' },
+  { value: 20, label: '20 minutes' },
+  { value: 30, label: '30 minutes' },
+];
 
 export default function OrdersSettings() {
   const {
@@ -20,10 +28,10 @@ export default function OrdersSettings() {
   } = useKDSSettings();
   const hash = useHashHighlight();
 
-  const holdTimeValue = `${orderHoldMinutes}m`;
-  const handleHoldTimeChange = (value: string) => {
-    const minutes = parseInt(value.replace('m', ''), 10);
-    if (!Number.isNaN(minutes)) setOrderHoldMinutes(minutes);
+  const holdTimeValue = orderHoldMinutes;
+  const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || '5 minutes';
+  const handleHoldTimeChange = (value: number) => {
+    setOrderHoldMinutes(value);
   };
 
   return (
@@ -122,23 +130,23 @@ export default function OrdersSettings() {
                       minHeight: 32,
                     }}
                   >
-                    {HOLD_TIME_OPTIONS.includes(holdTimeValue) ? holdTimeValue : '5m'}
+                    {selectedLabel}
                     <ChevronDown size={14} />
                   </button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-32 p-1 rounded-xl border border-border bg-popover shadow-md"
+                  className="w-40 p-1 rounded-xl border border-border bg-popover shadow-md"
                   align="end"
                   sideOffset={6}
                 >
                   <div className="flex flex-col">
                     {HOLD_TIME_OPTIONS.map((opt) => {
-                      const active = holdTimeValue === opt;
+                      const active = holdTimeValue === opt.value;
                       return (
                         <button
-                          key={opt}
+                          key={opt.value}
                           type="button"
-                          onClick={() => handleHoldTimeChange(opt)}
+                          onClick={() => handleHoldTimeChange(opt.value)}
                           className="flex items-center justify-between w-full rounded-lg px-2.5 py-2 text-sm font-medium transition-colors"
                           style={{
                             color: active
@@ -147,7 +155,7 @@ export default function OrdersSettings() {
                             background: active ? 'hsl(var(--muted))' : 'transparent',
                           }}
                         >
-                          {opt}
+                          {opt.label}
                           {active && <Check size={14} style={{ color: 'hsl(var(--brand-primary))' }} />}
                         </button>
                       );
