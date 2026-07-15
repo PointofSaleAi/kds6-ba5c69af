@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Cog, Sparkles } from 'lucide-react';
+import { Cog, Sparkles, GraduationCap } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { useHashHighlight } from '@/components/settings/SettingsControls';
@@ -29,6 +29,14 @@ export default function SystemSettings() {
         helper="Configure external AI providers, manage API keys, and control AI-powered features."
         onClick={() => navigate('/kds/v1/settings/system/ai-integration')}
         highlighted={hash === 'ai-integration'}
+      />
+
+      <SettingsPill
+        icon={GraduationCap}
+        iconColor="#F59E0B"
+        label="Show me how this KDS works"
+        helper="Replay the new-staff onboarding walkthrough on the KDS ticket screen."
+        onClick={() => window.dispatchEvent(new CustomEvent('kds:start-onboarding'))}
       />
     </>
   );

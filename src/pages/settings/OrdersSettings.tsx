@@ -1,4 +1,4 @@
-import { ShoppingBag, Sparkles, AlertTriangle, GraduationCap, Timer } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
@@ -63,13 +63,6 @@ export default function OrdersSettings() {
         highlighted={hash === 'header-allergen-summary'}
       />
 
-      <SettingsPill
-        icon={GraduationCap}
-        iconColor="#F59E0B"
-        label="Show me how this works"
-        helper="Replay the new-staff onboarding walkthrough on the KDS ticket screen."
-        onClick={() => window.dispatchEvent(new CustomEvent('kds:start-onboarding'))}
-      />
     </>
   );
 }
