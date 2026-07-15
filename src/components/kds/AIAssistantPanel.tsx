@@ -10,9 +10,10 @@ import { useAIIntegration, AI_PROVIDER_LABELS, AI_PROVIDER_SHORT_LABELS, AI_PROV
 import { AIProviderSwitcher } from './AIProviderSwitcher';
 import { cn } from '@/lib/utils';
 import { useActiveKDSView } from '@/hooks/use-active-kds-view';
-import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useKDSSettings, type TextSize, type TicketLayout, type TicketSpacing, type SortDefault } from '@/hooks/use-kds-settings';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { RESTAURANT_PRESETS, buildPresetMessage, type RestaurantPreset, type RestaurantPresetId } from '@/data/restaurant-presets';
+import { useTheme } from '@/hooks/use-theme';
 
 interface AIAssistantPanelProps {
   open: boolean;
@@ -195,12 +196,16 @@ function saveLearned(map: LearnedMap) {
   } catch { /* ignore */ }
 }
 
+type ChipOption = { label: string; value: string };
+
 type ChatMessage = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
   presetId?: RestaurantPresetId;
   presetApplied?: boolean;
+  chips?: ChipOption[];
+  chipsUsed?: boolean;
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/kds-ai-chat`;
@@ -218,6 +223,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
   const { view: activeKDSView } = useActiveKDSView();
   const kdsSettings = useKDSSettings();
   const statusRules = useStatusRules();
+  const { theme, setTheme } = useTheme();
   const [selectedPresetId, setSelectedPresetId] = useState<RestaurantPresetId | null>(null);
   const isSettingsRoute = location.pathname.startsWith('/kds/v1/settings');
   const routeContent = getRouteContent(location.pathname, activeKDSView);
@@ -306,18 +312,174 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     navigate('/kds/v1/settings/system/ai-integration');
   };
 
-  const CANNED_RESPONSES: Record<string, string> = {
-    'set up order hold': [
-      "**Order Hold** delays new tickets from hitting the kitchen for a set time, so servers can add or edit items before prep starts.",
-      '',
-      '**Next steps:**',
-      '1. Open **Settings → Tickets**.',
-      '2. Toggle **Order Hold** on.',
-      '3. Tap the **Hold time** pill and pick a delay (1m to 30m).',
-      '4. New tickets from the POS will now wait for that duration before appearing on the KDS.',
-      '',
-      'Want me to walk you through anything else, like turning it off or picking the right hold time for your service?',
-    ].join('\n'),
+  // Interactive intent flows: user prompt → clarifying question + suggestion chips.
+  // Chip value protocol: "apply:<key>:<value>" auto-executes an action.
+  type IntentReply = { text: string; chips?: ChipOption[] };
+  const INTENT_FLOWS: Record<string, () => IntentReply> = {
+    'set up order hold': () => ({
+      text: "**Order Hold** delays new tickets so servers can adjust orders before the kitchen sees them. How long should new tickets wait?",
+      chips: [
+        { label: '1 minute', value: 'apply:orderhold:1' },
+        { label: '5 minutes', value: 'apply:orderhold:5' },
+        { label: '10 minutes', value: 'apply:orderhold:10' },
+        { label: '15 minutes', value: 'apply:orderhold:15' },
+        { label: '30 minutes', value: 'apply:orderhold:30' },
+        { label: 'Turn it off', value: 'apply:orderhold:off' },
+      ],
+    }),
+    'dark mode': () => ({
+      text: "Sure — do you want dark mode on or off?",
+      chips: [
+        { label: 'Turn on', value: 'apply:theme:dark' },
+        { label: 'Turn off', value: 'apply:theme:light' },
+      ],
+    }),
+    'text size': () => ({
+      text: "Pick a text size and I'll apply it right away.",
+      chips: [
+        { label: 'Compact', value: 'apply:textsize:Compact' },
+        { label: 'Standard', value: 'apply:textsize:Standard' },
+        { label: 'Large', value: 'apply:textsize:Large' },
+      ],
+    }),
+    'ticket layout': () => ({
+      text: "Which ticket layout do you want to use?",
+      chips: [
+        { label: 'Standard', value: 'apply:layout:standard' },
+        { label: 'Compact', value: 'apply:layout:compact' },
+        { label: 'Header only', value: 'apply:layout:header' },
+      ],
+    }),
+    'ticket spacing': () => ({
+      text: "Pick a ticket spacing:",
+      chips: [
+        { label: 'Compact', value: 'apply:spacing:Compact' },
+        { label: 'Standard', value: 'apply:spacing:Standard' },
+        { label: 'Spacious', value: 'apply:spacing:Spacious' },
+      ],
+    }),
+    'allergen badges': () => ({
+      text: "Allergen badges highlight allergy info on each product. On or off?",
+      chips: [
+        { label: 'Turn on', value: 'apply:allergens:on' },
+        { label: 'Turn off', value: 'apply:allergens:off' },
+      ],
+    }),
+    'header allergen summary': () => ({
+      text: "Show the allergen summary on the ticket header?",
+      chips: [
+        { label: 'Show', value: 'apply:headerallergens:on' },
+        { label: 'Hide', value: 'apply:headerallergens:off' },
+      ],
+    }),
+    'servable modifiers': () => ({
+      text: "Servable modifiers move specific modifiers through the 3-step lifecycle. On or off?",
+      chips: [
+        { label: 'Turn on', value: 'apply:servmods:on' },
+        { label: 'Turn off', value: 'apply:servmods:off' },
+      ],
+    }),
+    'course aging': () => ({
+      text: "Apply status aging colours per course block instead of the whole ticket?",
+      chips: [
+        { label: 'Turn on', value: 'apply:courseaging:on' },
+        { label: 'Turn off', value: 'apply:courseaging:off' },
+      ],
+    }),
+    'stagger mode': () => ({
+      text: "Stagger mode releases tickets in batches. On or off?",
+      chips: [
+        { label: 'Turn on', value: 'apply:stagger:on' },
+        { label: 'Turn off', value: 'apply:stagger:off' },
+      ],
+    }),
+    'sort default': () => ({
+      text: "How should tickets be sorted by default?",
+      chips: [
+        { label: 'By time', value: 'apply:sort:By time' },
+        { label: 'By table', value: 'apply:sort:By table' },
+        { label: 'By type', value: 'apply:sort:By type' },
+      ],
+    }),
+    'language': () => ({
+      text: "Want to open the language settings?",
+      chips: [
+        { label: 'Open language settings', value: 'apply:nav:/kds/v1/settings/display/language' },
+        { label: 'Not now', value: 'apply:noop:cancel' },
+      ],
+    }),
+    'ai integration': () => ({
+      text: "I can take you to the AI integration settings.",
+      chips: [
+        { label: 'Open AI Integration', value: 'apply:nav:/kds/v1/settings/system/ai-integration' },
+        { label: 'Not now', value: 'apply:noop:cancel' },
+      ],
+    }),
+  };
+
+  const runAction = (key: string, val: string): string => {
+    switch (key) {
+      case 'orderhold': {
+        if (val === 'off') { kdsSettings.setOrderHold(false); return '✓ Order Hold is now **off**.'; }
+        const mins = parseInt(val, 10);
+        kdsSettings.setOrderHold(true);
+        kdsSettings.setOrderHoldMinutes(mins);
+        return `✓ Order Hold is **on** with a **${mins} minute** delay. New tickets will wait ${mins}m before appearing on the KDS.`;
+      }
+      case 'theme':
+        setTheme(val === 'dark' ? 'dark' : 'light');
+        return `✓ Switched to **${val}** theme.`;
+      case 'textsize':
+        kdsSettings.setTextSize(val as TextSize);
+        return `✓ Text size set to **${val}**.`;
+      case 'layout':
+        kdsSettings.setTicketLayout(val as TicketLayout);
+        return `✓ Ticket layout switched to **${val}**.`;
+      case 'spacing':
+        kdsSettings.setTicketSpacing(val as TicketSpacing);
+        return `✓ Ticket spacing set to **${val}**.`;
+      case 'allergens':
+        kdsSettings.setShowAllergens(val === 'on');
+        return `✓ Allergen badges ${val === 'on' ? 'shown' : 'hidden'}.`;
+      case 'headerallergens':
+        kdsSettings.setShowHeaderAllergens(val === 'on');
+        return `✓ Header allergen summary ${val === 'on' ? 'shown' : 'hidden'}.`;
+      case 'servmods':
+        kdsSettings.setServableModifiers(val === 'on');
+        return `✓ Servable modifiers ${val === 'on' ? 'enabled' : 'disabled'}.`;
+      case 'courseaging':
+        statusRules.setCourseLevelAging(val === 'on');
+        return `✓ Course-level aging ${val === 'on' ? 'enabled' : 'disabled'}.`;
+      case 'stagger':
+        kdsSettings.setStaggerMode(val === 'on');
+        return `✓ Stagger mode ${val === 'on' ? 'enabled' : 'disabled'}.`;
+      case 'sort':
+        kdsSettings.setSortDefault(val as SortDefault);
+        return `✓ Default sort set to **${val}**.`;
+      case 'nav':
+        onClose();
+        setTimeout(() => navigate(val), 50);
+        return `✓ Opening ${val}…`;
+      case 'noop':
+        return 'No changes made.';
+      default:
+        return '';
+    }
+  };
+
+  const handleChip = (chip: ChipOption, sourceMessageId: string) => {
+    // Mark source chips as used
+    setMessages(prev => prev.map(m => m.id === sourceMessageId ? { ...m, chipsUsed: true } : m));
+    if (chip.value.startsWith('apply:')) {
+      const [, key, ...rest] = chip.value.split(':');
+      const val = rest.join(':');
+      const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text: chip.label };
+      const result = runAction(key, val);
+      const assistantMsg: ChatMessage = { id: `a-${Date.now()}`, role: 'assistant', text: result };
+      setMessages(prev => [...prev, userMsg, assistantMsg]);
+      return;
+    }
+    submitPrompt(chip.label);
   };
 
   const submitPrompt = async (prompt: string) => {
@@ -327,12 +489,18 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     const assistantId = `a-${Date.now()}`;
     const nextHistory = [...messages, userMsg];
 
-    const canned = CANNED_RESPONSES[trimmed.toLowerCase()];
-    if (canned) {
-      setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: canned }]);
+    // Check for an interactive intent flow first.
+    const intent = INTENT_FLOWS[trimmed.toLowerCase()];
+    if (intent) {
+      const reply = intent();
+      setMessages([...nextHistory, {
+        id: assistantId, role: 'assistant', text: reply.text, chips: reply.chips,
+      }]);
       setInput('');
       return;
     }
+
+
 
 
     if (!providerReady) {
@@ -634,6 +802,20 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                               >
                                 Cancel
                               </button>
+                            </div>
+                          )}
+                          {m.role === 'assistant' && m.chips && !m.chipsUsed && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {m.chips.map(c => (
+                                <button
+                                  key={c.value}
+                                  onClick={() => handleChip(c, m.id)}
+                                  className="flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-800/60 text-xs text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-violet-400/30"
+                                >
+                                  <Bot className="w-3 h-3 text-violet-300 flex-shrink-0" />
+                                  <span>{c.label}</span>
+                                </button>
+                              ))}
                             </div>
                           )}
                         </div>
