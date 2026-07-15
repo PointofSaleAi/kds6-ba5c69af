@@ -79,15 +79,21 @@ function ProductCuePopover({
   left = Math.max(12, Math.min(left, vw - cardW - 12));
   top = Math.max(12, Math.min(top, vh - cardH - 12));
 
+  const firedRef = useRef(false);
+  const handleAction = (fn: () => void) => (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    if ('preventDefault' in e) e.preventDefault();
+    if (firedRef.current) return;
+    firedRef.current = true;
+    fn();
+  };
+
   return createPortal(
     <>
       <div
         className="fixed inset-0 z-[9998]"
         aria-hidden="true"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
-        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
-        onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
       >
         <svg width="100%" height="100%" style={{ display: 'block', pointerEvents: 'none' }}>
           <defs>
@@ -122,16 +128,18 @@ function ProductCuePopover({
         <button
           type="button"
           role="menuitem"
-          onClick={on86}
-          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors"
+          onPointerUp={handleAction(on86)}
+          onClick={handleAction(on86)}
+          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors touch-manipulation"
         >
           86 it
         </button>
         <button
           type="button"
           role="menuitem"
-          onClick={onRecipe}
-          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors"
+          onPointerUp={handleAction(onRecipe)}
+          onClick={handleAction(onRecipe)}
+          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors touch-manipulation"
         >
           View Recipe
         </button>
