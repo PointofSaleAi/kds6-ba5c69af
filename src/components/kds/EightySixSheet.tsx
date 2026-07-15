@@ -264,8 +264,8 @@ export function EightySixSheet({
     });
   };
 
-  const handleEightySix = (itemName: string, category: string) => {
-    onEightySixItem({ name: itemName, category, snoozeDuration: selectedDuration });
+  const handleEightySix = (itemName: string, category: string, quantity = 1) => {
+    onEightySixItem({ name: itemName, category, snoozeDuration: selectedDuration, quantity });
   };
 
   const isItemEightySixed = (itemName: string) =>
