@@ -202,16 +202,9 @@ function V2ProductRow({
 
   useEffect(() => {
     if (!menuOpen) return;
-    const onDoc = (e: MouseEvent | TouchEvent) => {
-      if (rowRef.current && !rowRef.current.contains(e.target as Node)) setMenuOpen(false);
-    };
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false); };
-    document.addEventListener('mousedown', onDoc);
-    document.addEventListener('touchstart', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
-      document.removeEventListener('mousedown', onDoc);
-      document.removeEventListener('touchstart', onDoc);
       document.removeEventListener('keydown', onKey);
     };
   }, [menuOpen]);
