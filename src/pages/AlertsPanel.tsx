@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2, Sparkles } from 'lucide-react';
+import { X, Bell, AlertTriangle, Info, CheckCircle, Megaphone, Check, MessageSquare, ArrowRightLeft, Utensils, Plus, Flame, Trash2, Sparkles, PackageX, Ban } from 'lucide-react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
@@ -33,6 +33,8 @@ const notifIcons: Record<NotificationType, { icon: React.ElementType; color: str
   'overtime': { icon: AlertTriangle, color: 'text-destructive' },
   'new-order': { icon: Bell, color: 'text-warning' },
   'recalled': { icon: Info, color: 'text-status-preparing' },
+  'low-stock': { icon: PackageX, color: 'text-warning' },
+  'pos-86d': { icon: Ban, color: 'text-destructive' },
   'system': { icon: Info, color: 'text-order-take-out' },
 };
 
@@ -46,6 +48,8 @@ type TabFilter = 'notifications' | 'messages';
 const PRIORITY: Record<string, number> = {
   overtime: 0,
   system: 1,
+  'pos-86d': 1,
+  'low-stock': 1,
   'table-transfer': 2,
   'item-moved': 2,
   'general-alert': 3,
@@ -109,6 +113,12 @@ function getAiAction(type: string, message: string): AiAction {
   }
   if (type === 'course-fired') {
     return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+  }
+  if (type === 'low-stock') {
+    return { label: "86 it", color: 'red', kind: 'view' };
+  }
+  if (type === 'pos-86d') {
+    return { label: 'View 86 list', color: 'red', kind: 'view' };
   }
   return { label: 'View', color: 'navy', kind: 'view' };
 }

@@ -12,6 +12,10 @@ const mockNotifications: KDSNotification[] = [
   { id: 'n5', type: 'new-item-added', message: 'New product added to Table 4: 1x Caesar Salad', station: 'Salad', timestamp: new Date(Date.now() - 900000), acknowledged: true, acknowledged_at: new Date(Date.now() - 800000), acknowledged_by: 'cook-2' },
   { id: 'n6', type: 'general-alert', message: 'VIP guest arriving in 15 minutes', station: 'All', timestamp: new Date(Date.now() - 1500000), acknowledged: true, acknowledged_at: new Date(Date.now() - 1400000), acknowledged_by: 'cook-1' },
   { id: 'n7', type: 'overtime', message: 'Order #22 is 10+ minutes overtime', station: 'Grill', timestamp: new Date(Date.now() - 1800000), acknowledged: false },
+  { id: 'n9', type: 'low-stock', message: 'Low stock: Atlantic Salmon (Seafood) — 3 portions left', station: 'Grill', timestamp: new Date(Date.now() - 240000), acknowledged: false },
+  { id: 'n10', type: 'low-stock', message: 'Low stock: Truffle Oil (Pantry) — 1 bottle left', station: 'All', timestamp: new Date(Date.now() - 720000), acknowledged: false },
+  { id: 'n11', type: 'pos-86d', message: "POS: Ribeye Steak (Mains) marked 86'd by Sarah M.", station: 'Grill', timestamp: new Date(Date.now() - 360000), acknowledged: false },
+  { id: 'n12', type: 'pos-86d', message: "POS: Tiramisu (Desserts) marked 86'd by Alex P.", station: 'Dessert', timestamp: new Date(Date.now() - 1200000), acknowledged: true, acknowledged_at: new Date(Date.now() - 1100000), acknowledged_by: 'cook-2' },
   { id: 'n8', type: 'system', message: 'Printer "Kitchen HP" is offline', station: 'All', timestamp: new Date(Date.now() - 2100000), acknowledged: true, acknowledged_at: new Date(Date.now() - 2000000), acknowledged_by: 'cook-1' },
 ];
 
