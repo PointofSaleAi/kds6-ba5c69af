@@ -1,7 +1,8 @@
-import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock, ChevronDown, Check } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
-import { SwitchToggle, SegmentedToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
@@ -98,13 +99,50 @@ export default function OrdersSettings() {
               >
                 Hold time
               </span>
-              <div className="w-full @[340px]/pill:w-auto @[340px]/pill:shrink-0">
-                <SegmentedToggle
-                  options={HOLD_TIME_OPTIONS}
-                  value={HOLD_TIME_OPTIONS.includes(holdTimeValue) ? holdTimeValue : '5m'}
-                  onChange={handleHoldTimeChange}
-                />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors"
+                    style={{
+                      background: 'hsl(var(--brand-primary))',
+                      color: 'hsl(var(--brand-primary-foreground))',
+                      minHeight: 32,
+                    }}
+                  >
+                    {HOLD_TIME_OPTIONS.includes(holdTimeValue) ? holdTimeValue : '5m'}
+                    <ChevronDown size={14} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-32 p-1 rounded-xl border border-border bg-popover shadow-md"
+                  align="end"
+                  sideOffset={6}
+                >
+                  <div className="flex flex-col">
+                    {HOLD_TIME_OPTIONS.map((opt) => {
+                      const active = holdTimeValue === opt;
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => handleHoldTimeChange(opt)}
+                          className="flex items-center justify-between w-full rounded-lg px-2.5 py-2 text-sm font-medium transition-colors"
+                          style={{
+                            color: active
+                              ? 'hsl(var(--brand-primary))'
+                              : 'hsl(var(--text-primary))',
+                            background: active ? 'hsl(var(--muted))' : 'transparent',
+                          }}
+                        >
+                          {opt}
+                          {active && <Check size={14} style={{ color: 'hsl(var(--brand-primary))' }} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
