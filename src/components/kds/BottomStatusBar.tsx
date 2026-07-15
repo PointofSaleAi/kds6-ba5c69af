@@ -91,7 +91,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       };
       setEightySixedItems(prev => [...prev, newItem]);
       toast({
-        title: "Item 86'd",
+        title: "Product 86'd",
         description: `${newItem.quantity > 1 ? `${newItem.quantity} x ` : ''}${item.name} marked as unavailable`,
       });
     },
@@ -100,14 +100,14 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
 
   const handleRestoreItem = useCallback((itemId: string) => {
     setEightySixedItems(prev => prev.filter(i => i.id !== itemId));
-    toast({ title: 'Item Restored', description: 'Item is now available again' });
+    toast({ title: 'Product Restored', description: 'Product is now available again' });
   }, [toast]);
 
   const handleScheduleRestore = useCallback((itemId: string, restoreTime: Date) => {
     setEightySixedItems(prev => prev.map(i => i.id === itemId ? { ...i, scheduledRestoreTime: restoreTime } : i));
     toast({
       title: 'Restore Scheduled',
-      description: `Item will be restored at ${restoreTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`,
+      description: `Product will be restored at ${restoreTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`,
     });
   }, [toast]);
 
@@ -298,11 +298,11 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           onClick={() => setEightySixOpen(true)}
           className="flex items-center gap-2 px-3 py-1 rounded-xl hover:opacity-80 transition-opacity shrink-0 h-[36px]"
           style={{ background: eightySixedItems.length > 0 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(100, 100, 100, 0.4)' }}
-          aria-label="86 items"
+          aria-label="86 products"
         >
           <div className="flex flex-col items-center leading-tight">
             <span className="text-[10px] text-white">86</span>
-            <span className="text-[10px] text-white">Items</span>
+            <span className="text-[10px] text-white">Products</span>
           </div>
           <Package className={`w-4 h-4 ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-white/50'}`} />
           {eightySixedItems.length > 0 && (

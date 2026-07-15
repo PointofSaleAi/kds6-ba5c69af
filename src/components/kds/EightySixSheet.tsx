@@ -372,7 +372,7 @@ export function EightySixSheet({
 
         <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
           <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
-            <span>86 Items</span>
+            <span>86 Products</span>
             {eightySixedItems.length > 0 && (
               <EightySixBadge
                 size="lg"
@@ -404,7 +404,7 @@ export function EightySixSheet({
                 : "bg-muted text-foreground hover:bg-muted/80"
             }`}
           >
-            Add Items
+            Add Products
           </button>
         </div>
 
@@ -413,12 +413,12 @@ export function EightySixSheet({
             {eightySixedItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4">
                 <Package className="w-12 h-12 text-muted-foreground/20 mb-4" />
-                <p className="text-muted-foreground text-center">No items are currently 86'd</p>
+                <p className="text-muted-foreground text-center">No products are currently 86'd</p>
                 <Button
                   onClick={() => setView("add")}
                   className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
-                  Add Items
+                  Add Products
                 </Button>
               </div>
             ) : (
@@ -640,7 +640,7 @@ export function EightySixSheet({
                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search menu items..."
+                    placeholder="Search menu products..."
                     className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
