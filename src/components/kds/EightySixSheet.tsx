@@ -89,17 +89,6 @@ const formatScheduledRestoreTime = (restoreTime: Date) =>
 interface InlineQtyAdjusterProps {
   value: number;
   onChange: (value: number) => void;
-  stock?: number;
-}
-
-// TODO: replace with real stock lookup from backend inventory API.
-function getAvailableStock(itemName: string): number {
-  let hash = 0;
-  for (let i = 0; i < itemName.length; i++) {
-    hash = (hash << 5) - hash + itemName.charCodeAt(i);
-    hash |= 0;
-  }
-  return 5 + (Math.abs(hash) % 46);
 }
 
 function InlineQtyAdjuster({ value, onChange, stock }: InlineQtyAdjusterProps) {
