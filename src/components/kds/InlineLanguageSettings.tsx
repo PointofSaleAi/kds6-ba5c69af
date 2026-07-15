@@ -4,7 +4,7 @@ import { Search, Check, ArrowLeftRight, Languages, ChevronDown } from 'lucide-re
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
-import { OrderCard } from './OrderCard';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
 import { previewTicket } from '@/data/mock-preview-ticket';
 
 interface Language {
