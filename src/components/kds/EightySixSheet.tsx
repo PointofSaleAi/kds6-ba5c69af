@@ -375,7 +375,7 @@ export function EightySixSheet({
                 : "bg-muted text-foreground hover:bg-muted/80"
             }`}
           >
-            Currently 86'd ({eightySixedItems.length})
+            Currently 86'd ({eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0)})
           </button>
           <button
             onClick={() => setView("add")}
