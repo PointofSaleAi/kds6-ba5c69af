@@ -100,7 +100,36 @@ export function EightySixSheet({
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(30);
   const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const modalDismissedAtRef = useRef(0);
+
+  const itemKey = (name: string, category: string) => `${category}::${name}`;
+
+  const toggleSelectItem = (name: string, category: string) => {
+    setSelectedItems((prev) => {
+      const next = new Set(prev);
+      const k = itemKey(name, category);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
+      return next;
+    });
+  };
+
+  const exitSelectMode = () => {
+    setSelectMode(false);
+    setSelectedItems(new Set());
+  };
+
+  const bulk86Selected = () => {
+    selectedItems.forEach((k) => {
+      const [category, name] = k.split("::");
+      if (!eightySixedItems.some((i) => i.name === name)) {
+        onEightySixItem({ name, category, snoozeDuration: selectedDuration });
+      }
+    });
+    exitSelectMode();
+  };
 
   const hoursScrollRef = useRef<HTMLDivElement>(null);
   const minutesScrollRef = useRef<HTMLDivElement>(null);
