@@ -95,7 +95,7 @@ export default function OrdersSettings() {
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
               <div className="flex items-center gap-2.5">
                 <div
-                  className="flex items-center justify-center rounded-full"
+                  className="flex items-center justify-center rounded-lg"
                   style={{
                     width: 32,
                     height: 32,
