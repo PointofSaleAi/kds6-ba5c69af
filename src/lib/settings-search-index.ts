@@ -44,6 +44,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { id: 'servable-modifiers', label: 'Servable modifiers', description: 'Track modifier preparation status', group: 'orders', groupLabel: 'Tickets', path: '/kds/v1/settings/orders#servable-modifiers', keywords: 'modifiers servable status tracking' },
   { id: 'allergen-badges', label: 'Allergen badges', description: 'Show allergen chips on tickets', group: 'orders', groupLabel: 'Tickets', path: '/kds/v1/settings/orders#allergen-badges', keywords: 'allergen badges chips warnings' },
   { id: 'sort-default', label: 'Default sort', description: 'Sort tickets by Time, Table, or Type', group: 'orders', groupLabel: 'Tickets', path: '/kds/v1/settings/orders#sort-default', keywords: 'sort order time table type default' },
+  { id: 'order-hold', label: 'Order Hold', description: 'Hold new orders before the kitchen sees them', group: 'orders', groupLabel: 'Tickets', path: '/kds/v1/settings/orders#order-hold', keywords: 'order hold delay queue time buffer' },
 
   // Expo
   { id: 'expo-send-button', label: 'Show send button', description: 'Always or only when ready', group: 'expo', groupLabel: 'Expo view', path: '/kds/v1/settings/expo#expo-send-button', keywords: 'expo send button ready always' },

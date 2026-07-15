@@ -1,10 +1,12 @@
-import { ShoppingBag, Sparkles, AlertTriangle, Timer } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
-import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { SwitchToggle, SegmentedToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
+
+const HOLD_TIME_OPTIONS = ['1m', '2m', '5m', '10m', '15m', '30m'];
 
 export default function OrdersSettings() {
   const {
@@ -12,8 +14,16 @@ export default function OrdersSettings() {
     showHeaderAllergens, setShowHeaderAllergens,
     servableModifiers, setServableModifiers,
     productTimers, setProductTimers,
+    orderHold, setOrderHold,
+    orderHoldMinutes, setOrderHoldMinutes,
   } = useKDSSettings();
   const hash = useHashHighlight();
+
+  const holdTimeValue = `${orderHoldMinutes}m`;
+  const handleHoldTimeChange = (value: string) => {
+    const minutes = parseInt(value.replace('m', ''), 10);
+    if (!Number.isNaN(minutes)) setOrderHoldMinutes(minutes);
+  };
 
   return (
     <>
@@ -62,6 +72,43 @@ export default function OrdersSettings() {
         right={<SwitchToggle checked={showHeaderAllergens} onChange={setShowHeaderAllergens} />}
         highlighted={hash === 'header-allergen-summary'}
       />
+
+      <SettingsPill
+        icon={Clock}
+        iconColor="#3B82F6"
+        label="Order Hold"
+        helper="Holds new orders for a set time before the kitchen sees them."
+        right={<SwitchToggle checked={orderHold} onChange={setOrderHold} />}
+        highlighted={hash === 'order-hold'}
+      />
+
+      {orderHold && (
+        <div className="mb-1 @container/pill">
+          <div
+            className="rounded-[28px] px-4 py-2.5"
+            style={{
+              background: 'hsl(var(--surface-card))',
+              border: '1px solid hsl(var(--border))',
+            }}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              <span
+                className="text-[15px] font-semibold"
+                style={{ color: 'hsl(var(--text-primary))' }}
+              >
+                Hold time
+              </span>
+              <div className="w-full @[340px]/pill:w-auto @[340px]/pill:shrink-0">
+                <SegmentedToggle
+                  options={HOLD_TIME_OPTIONS}
+                  value={HOLD_TIME_OPTIONS.includes(holdTimeValue) ? holdTimeValue : '5m'}
+                  onChange={handleHoldTimeChange}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </>
   );

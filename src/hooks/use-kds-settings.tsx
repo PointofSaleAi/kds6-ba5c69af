@@ -67,6 +67,8 @@ export interface KDSSettings {
   staggerMode: boolean;
   servableModifiers: boolean;
   productTimers: boolean;
+  orderHold: boolean;
+  orderHoldMinutes: number;
   timezone: string;
   currency: string;
   tempUnit: TempUnit;
@@ -90,6 +92,8 @@ interface KDSSettingsContextValue extends KDSSettings {
   setStaggerMode: (v: boolean) => void;
   setServableModifiers: (v: boolean) => void;
   setProductTimers: (v: boolean) => void;
+  setOrderHold: (v: boolean) => void;
+  setOrderHoldMinutes: (v: number) => void;
   setTimezone: (v: string) => void;
   setCurrency: (v: string) => void;
   setTempUnit: (v: TempUnit) => void;
@@ -120,6 +124,8 @@ const defaults: KDSSettings = {
   staggerMode: true,
   servableModifiers: false,
   productTimers: false,
+  orderHold: false,
+  orderHoldMinutes: 5,
   timezone: 'auto',
   currency: 'USD',
   tempUnit: 'F',
@@ -267,6 +273,8 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setStaggerMode: update('staggerMode'),
         setServableModifiers: update('servableModifiers'),
         setProductTimers: update('productTimers'),
+        setOrderHold: update('orderHold'),
+        setOrderHoldMinutes: update('orderHoldMinutes'),
         setTimezone: update('timezone'),
         setCurrency: update('currency'),
         setTempUnit: update('tempUnit'),
