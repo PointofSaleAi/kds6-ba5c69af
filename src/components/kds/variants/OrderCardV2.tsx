@@ -68,14 +68,16 @@ function V2ProductRow({
   const loading = state === 'loading';
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
   const [expanded, setExpanded] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const rowRef = useRef<HTMLDivElement | null>(null);
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
 
   const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7');
 
-  const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
+  const longPress = useLongPress(() => { if (!loading) setMenuOpen(true); }, { delay: 500 });
   const dispatchTap = useRowTap(
-    () => { if (!loading) onOpenRecipe(product); },
+    () => {},
     () => { if (!loading && !readOnly) onUndo(); },
     250,
   );
@@ -85,19 +87,34 @@ function V2ProductRow({
     250,
   );
 
-
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (rowRef.current && !rowRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
 
   return (
     <div
+      ref={rowRef}
       role="button"
       tabIndex={loading ? -1 : 0}
       onClick={dispatchTap}
-      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpenRecipe(product); } }}
+      onKeyDown={(e) => { if (!loading && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setMenuOpen(true); } }}
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
+      aria-haspopup="menu"
+      aria-expanded={menuOpen}
       data-onboarding="item-row"
-      className={`border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
+      className={`relative border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
       style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
       <div className={`flex gap-1 ${showDetails && (product.modifiers.length > 0 || product.allergens.length > 0 || product.notes) ? 'items-start' : 'items-center'}`}>
@@ -243,7 +260,34 @@ function V2ProductRow({
 
 
 
+
+
       </div>
+      {menuOpen && !loading && (
+        <div
+          role="menu"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute left-2 right-2 top-full z-50 mt-1 rounded-md border border-border bg-popover text-popover-foreground shadow-lg overflow-hidden animate-scale-in"
+        >
+          <button
+            type="button"
+            role="menuitem"
+            onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onLongPress(product); }}
+            className="w-full text-left px-3 py-2 text-sm font-semibold hover:bg-muted transition-colors"
+          >
+            86 it
+          </button>
+          <div className="h-px bg-border" />
+          <button
+            type="button"
+            role="menuitem"
+            onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onOpenRecipe(product); }}
+            className="w-full text-left px-3 py-2 text-sm font-semibold hover:bg-muted transition-colors"
+          >
+            View Recipe
+          </button>
+        </div>
+      )}
     </div>
   );
 }
