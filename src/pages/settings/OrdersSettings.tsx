@@ -1,7 +1,8 @@
-import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock, ChevronDown, Check } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
-import { SwitchToggle, SegmentedToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
