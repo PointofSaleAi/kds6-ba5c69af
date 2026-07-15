@@ -114,6 +114,12 @@ function getAiAction(type: string, message: string): AiAction {
   if (type === 'course-fired') {
     return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
   }
+  if (type === 'low-stock') {
+    return { label: "86 it", color: 'red', kind: 'view' };
+  }
+  if (type === 'pos-86d') {
+    return { label: 'View 86 list', color: 'red', kind: 'view' };
+  }
   return { label: 'View', color: 'navy', kind: 'view' };
 }
 
