@@ -273,6 +273,8 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setStaggerMode: update('staggerMode'),
         setServableModifiers: update('servableModifiers'),
         setProductTimers: update('productTimers'),
+        setOrderHold: update('orderHold'),
+        setOrderHoldMinutes: update('orderHoldMinutes'),
         setTimezone: update('timezone'),
         setCurrency: update('currency'),
         setTempUnit: update('tempUnit'),
