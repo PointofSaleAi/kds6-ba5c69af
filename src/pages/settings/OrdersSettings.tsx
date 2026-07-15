@@ -130,23 +130,23 @@ export default function OrdersSettings() {
                       minHeight: 32,
                     }}
                   >
-                    {HOLD_TIME_OPTIONS.includes(holdTimeValue) ? holdTimeValue : '5m'}
+                    {selectedLabel}
                     <ChevronDown size={14} />
                   </button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-32 p-1 rounded-xl border border-border bg-popover shadow-md"
+                  className="w-40 p-1 rounded-xl border border-border bg-popover shadow-md"
                   align="end"
                   sideOffset={6}
                 >
                   <div className="flex flex-col">
                     {HOLD_TIME_OPTIONS.map((opt) => {
-                      const active = holdTimeValue === opt;
+                      const active = holdTimeValue === opt.value;
                       return (
                         <button
-                          key={opt}
+                          key={opt.value}
                           type="button"
-                          onClick={() => handleHoldTimeChange(opt)}
+                          onClick={() => handleHoldTimeChange(opt.value)}
                           className="flex items-center justify-between w-full rounded-lg px-2.5 py-2 text-sm font-medium transition-colors"
                           style={{
                             color: active
@@ -155,7 +155,7 @@ export default function OrdersSettings() {
                             background: active ? 'hsl(var(--muted))' : 'transparent',
                           }}
                         >
-                          {opt}
+                          {opt.label}
                           {active && <Check size={14} style={{ color: 'hsl(var(--brand-primary))' }} />}
                         </button>
                       );
