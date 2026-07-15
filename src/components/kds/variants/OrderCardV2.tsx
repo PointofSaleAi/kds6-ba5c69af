@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { Order, OrderItem } from '@/types/kds';
 import { Check, ChevronRight, Loader2, Eye, Undo, Clock } from 'lucide-react';
 import { useLanguage, formatTimeForKDS } from '@/hooks/use-language';
