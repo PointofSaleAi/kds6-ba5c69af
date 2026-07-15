@@ -567,7 +567,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               </div>
               <div className="flex-1 min-h-0 overflow-y-auto w-full flex flex-col">
                 <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
-                  <OrderCard order={previewTicket} layoutOverride={previewLayout} />
+                  <SelectedVariantPreview order={previewTicket} layoutOverride={previewLayout} />
                 </div>
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
