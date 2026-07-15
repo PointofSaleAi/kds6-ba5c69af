@@ -172,8 +172,13 @@ export function EightySixSheet({
       setConfirmItem(null);
       setOpenPopoverId(null);
       setShowCustomTimePicker(false);
+      exitSelectMode();
     }
   }, [open]);
+
+  useEffect(() => {
+    if (view !== "add") exitSelectMode();
+  }, [view]);
 
   const snapToNearest = useCallback(
     (scrollRef: React.RefObject<HTMLDivElement>, maxValue: number, setValue: (v: number) => void) => {
