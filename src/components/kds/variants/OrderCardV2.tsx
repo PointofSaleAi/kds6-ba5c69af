@@ -244,30 +244,31 @@ function V2ProductRow({
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
-          <div
-            className="text-foreground"
-            style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
-          >
-            {tp(product.name)}
-          </div>
-          {showSecondary && (
+          <div style={{ display: 'inline-block', maxWidth: '100%' }}>
             <div
-              className="text-text-muted"
-              style={{
-                fontSize: 'var(--kds-item-name)',
-                fontWeight: 700,
-                lineHeight: 1.2,
-                textDecoration: done ? 'line-through' : 'none',
-                unicodeBidi: 'plaintext',
-                textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
-              }}
-              dir={secondaryDir}
+              className="text-foreground"
+              style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
             >
-              {tpSecondary(product.name)}
+              {tp(product.name)}
             </div>
+            {showSecondary && (
+              <div
+                className="text-text-muted"
+                style={{
+                  fontSize: 'var(--kds-item-name)',
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  textDecoration: done ? 'line-through' : 'none',
+                  unicodeBidi: 'plaintext',
+                  textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+                }}
+                dir={secondaryDir}
+              >
+                {tpSecondary(product.name)}
+              </div>
+            )}
+          </div>
 
-
-          )}
           {showDetails && product.allergens.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-0.5" data-onboarding="item-allergen">
               {product.allergens.map((a) => (
