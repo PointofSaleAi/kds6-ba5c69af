@@ -240,12 +240,6 @@ export function EightySixSheet({
     if (view !== "add") exitSelectMode();
   }, [view]);
 
-  // Expand all categories by default when opening the Add Items view.
-  useEffect(() => {
-    if (view === "add") {
-      setExpandedCategories(new Set(menuCategories.map((c) => c.name)));
-    }
-  }, [view, menuCategories]);
 
 
   const snapToNearest = useCallback(
