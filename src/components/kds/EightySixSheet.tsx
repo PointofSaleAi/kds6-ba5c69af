@@ -335,12 +335,26 @@ export function EightySixSheet({
       .map(([name, set]) => ({ name, items: Array.from(set).sort((a, b) => a.localeCompare(b)) }));
   }, [orders]);
 
+  const query = searchQuery.toLowerCase().trim();
   const filteredCategories = menuCategories
-    .map((cat) => ({
-      ...cat,
-      items: cat.items.filter((item) => item.toLowerCase().includes(searchQuery.toLowerCase())),
-    }))
+    .map((cat) => {
+      const categoryMatches = cat.name.toLowerCase().includes(query);
+      return {
+        ...cat,
+        items: categoryMatches ? cat.items : cat.items.filter((item) => item.toLowerCase().includes(query)),
+      };
+    })
     .filter((cat) => cat.items.length > 0);
+
+  // Expand all categories by default in Add Items view, and auto-expand any
+  // categories that contain matching products while searching.
+  useEffect(() => {
+    if (view === "add") {
+      setExpandedCategories(new Set(filteredCategories.map((c) => c.name)));
+    }
+  }, [view, filteredCategories]);
+
+
 
 
   return (
