@@ -84,6 +84,7 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
   '/kds/v1/settings/orders': {
     contextKey: 'settings-orders',
     chips: [
+      'Set up Order Hold',
       'Allergen badges',
       'Servable modifiers',
       'Ticket aging rules',
@@ -305,12 +306,34 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
     navigate('/kds/v1/settings/system/ai-integration');
   };
 
+  const CANNED_RESPONSES: Record<string, string> = {
+    'set up order hold': [
+      "**Order Hold** delays new tickets from hitting the kitchen for a set time, so servers can add or edit items before prep starts.",
+      '',
+      '**Next steps:**',
+      '1. Open **Settings → Tickets**.',
+      '2. Toggle **Order Hold** on.',
+      '3. Tap the **Hold time** pill and pick a delay (1m to 30m).',
+      '4. New tickets from the POS will now wait for that duration before appearing on the KDS.',
+      '',
+      'Want me to walk you through anything else, like turning it off or picking the right hold time for your service?',
+    ].join('\n'),
+  };
+
   const submitPrompt = async (prompt: string) => {
     const trimmed = prompt.trim();
     if (!trimmed || streaming) return;
     const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text: trimmed };
     const assistantId = `a-${Date.now()}`;
     const nextHistory = [...messages, userMsg];
+
+    const canned = CANNED_RESPONSES[trimmed.toLowerCase()];
+    if (canned) {
+      setMessages([...nextHistory, { id: assistantId, role: 'assistant', text: canned }]);
+      setInput('');
+      return;
+    }
+
 
     if (!providerReady) {
       const reason = !ai.enabled
