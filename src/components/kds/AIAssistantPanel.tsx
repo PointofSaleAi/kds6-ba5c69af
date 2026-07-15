@@ -13,6 +13,7 @@ import { useActiveKDSView } from '@/hooks/use-active-kds-view';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { RESTAURANT_PRESETS, buildPresetMessage, type RestaurantPreset, type RestaurantPresetId } from '@/data/restaurant-presets';
+import { useTheme } from '@/hooks/use-theme';
 
 interface AIAssistantPanelProps {
   open: boolean;
