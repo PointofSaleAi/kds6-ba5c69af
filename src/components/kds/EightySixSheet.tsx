@@ -22,6 +22,8 @@ import {
   ChevronLeft,
   Minus,
   Plus,
+  CircleMinus,
+  CirclePlus,
 } from "lucide-react";
 import { EightySixBadge } from "./EightySixBadge";
 import { Item86Modal } from "./Flag86Button";
