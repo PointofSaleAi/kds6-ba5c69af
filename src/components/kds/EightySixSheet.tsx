@@ -20,6 +20,8 @@ import {
   ChevronRight,
   X,
   ChevronLeft,
+  Minus,
+  Plus,
 } from "lucide-react";
 import { EightySixBadge } from "./EightySixBadge";
 import { Item86Modal } from "./Flag86Button";
@@ -46,6 +48,7 @@ export interface EightySixedItem {
   snoozedAt: Date;
   snoozeEndTime: Date | null;
   scheduledRestoreTime?: Date | null;
+  quantity?: number;
 }
 
 interface EightySixSheetProps {
@@ -54,7 +57,7 @@ interface EightySixSheetProps {
   eightySixedItems: EightySixedItem[];
   onRestoreItem: (itemId: string) => void;
   onScheduleRestore: (itemId: string, restoreTime: Date) => void;
-  onEightySixItem: (item: { name: string; category: string; snoozeDuration: string }) => void;
+  onEightySixItem: (item: { name: string; category: string; snoozeDuration: string; quantity?: number }) => void;
 }
 
 const UNCATEGORIZED = "Uncategorized";
@@ -83,6 +86,47 @@ const formatTimeRemaining = (endTime: Date | null) => {
 const formatScheduledRestoreTime = (restoreTime: Date) =>
   restoreTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
+interface InlineQtyAdjusterProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
+  return (
+    <div
+      className="flex items-center gap-1"
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(Math.max(1, value - 1));
+        }}
+        className="w-6 h-6 rounded-md bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        aria-label="Decrease quantity"
+      >
+        <Minus className="w-3 h-3" />
+      </button>
+      <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
+        {value}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(value + 1);
+        }}
+        className="w-6 h-6 rounded-md bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        aria-label="Increase quantity"
+      >
+        <Plus className="w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
 export function EightySixSheet({
   open,
   onOpenChange,
@@ -102,30 +146,46 @@ export function EightySixSheet({
   const [confirmItem, setConfirmItem] = useState<{ name: string; category: string } | null>(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectedQuantities, setSelectedQuantities] = useState<Record<string, number>>({});
   const modalDismissedAtRef = useRef(0);
 
   const itemKey = (name: string, category: string) => `${category}::${name}`;
 
   const toggleSelectItem = (name: string, category: string) => {
+    const k = itemKey(name, category);
     setSelectedItems((prev) => {
       const next = new Set(prev);
-      const k = itemKey(name, category);
-      if (next.has(k)) next.delete(k);
-      else next.add(k);
+      if (next.has(k)) {
+        next.delete(k);
+        setSelectedQuantities((q) => {
+          const nextQ = { ...q };
+          delete nextQ[k];
+          return nextQ;
+        });
+      } else {
+        next.add(k);
+        setSelectedQuantities((q) => ({ ...q, [k]: 1 }));
+      }
       return next;
     });
+  };
+
+  const setItemQuantity = (name: string, category: string, quantity: number) => {
+    const k = itemKey(name, category);
+    setSelectedQuantities((prev) => ({ ...prev, [k]: Math.max(1, quantity) }));
   };
 
   const exitSelectMode = () => {
     setSelectMode(false);
     setSelectedItems(new Set());
+    setSelectedQuantities({});
   };
 
   const bulk86Selected = () => {
     selectedItems.forEach((k) => {
       const [category, name] = k.split("::");
       if (!eightySixedItems.some((i) => i.name === name)) {
-        onEightySixItem({ name, category, snoozeDuration: selectedDuration });
+        onEightySixItem({ name, category, snoozeDuration: selectedDuration, quantity: selectedQuantities[k] ?? 1 });
       }
     });
     exitSelectMode();
@@ -247,8 +307,8 @@ export function EightySixSheet({
     });
   };
 
-  const handleEightySix = (itemName: string, category: string) => {
-    onEightySixItem({ name: itemName, category, snoozeDuration: selectedDuration });
+  const handleEightySix = (itemName: string, category: string, quantity = 1) => {
+    onEightySixItem({ name: itemName, category, snoozeDuration: selectedDuration, quantity });
   };
 
   const isItemEightySixed = (itemName: string) =>
@@ -297,7 +357,7 @@ export function EightySixSheet({
             {eightySixedItems.length > 0 && (
               <EightySixBadge
                 size="lg"
-                label={eightySixedItems.length.toString()}
+                label={eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0).toString()}
                 showIcon={false}
                 pulse
               />
@@ -315,7 +375,7 @@ export function EightySixSheet({
                 : "bg-muted text-foreground hover:bg-muted/80"
             }`}
           >
-            Currently 86'd ({eightySixedItems.length})
+            Currently 86'd ({eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0)})
           </button>
           <button
             onClick={() => setView("add")}
@@ -353,6 +413,11 @@ export function EightySixSheet({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="text-destructive font-semibold truncate">{item.name}</p>
+                          {(item.quantity ?? 1) > 1 && (
+                            <span className="text-xs font-semibold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
+                              x{item.quantity}
+                            </span>
+                          )}
                           <EightySixBadge size="sm" variant="subtle" />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -664,7 +729,15 @@ export function EightySixSheet({
                               </div>
                               {is86ed ? (
                                 <EightySixBadge size="sm" variant="subtle" />
-                              ) : selectMode ? null : (
+                              ) : selectMode ? (
+                                <InlineQtyAdjuster
+                                  value={selectedQuantities[itemKey(item, category.name)] ?? 1}
+                                  onChange={(qty) => {
+                                    if (!isSelected) toggleSelectItem(item, category.name);
+                                    setItemQuantity(item, category.name, qty);
+                                  }}
+                                />
+                              ) : (
                                 <span className="text-xs text-muted-foreground">Tap to 86</span>
                               )}
                             </button>

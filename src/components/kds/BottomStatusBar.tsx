@@ -72,7 +72,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const [eightySixedItems, setEightySixedItems] = useState<EightySixedItem[]>([]);
 
   const handleEightySixItem = useCallback(
-    (item: { name: string; category: string; snoozeDuration: string }) => {
+    (item: { name: string; category: string; snoozeDuration: string; quantity?: number }) => {
       const durations: Record<string, number | null> = {
         '15min': 15 * 60 * 1000,
         '1hr': 60 * 60 * 1000,
@@ -87,9 +87,13 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         reason: 'Out of Stock',
         snoozedAt: new Date(),
         snoozeEndTime: ms ? new Date(Date.now() + ms) : null,
+        quantity: item.quantity ?? 1,
       };
       setEightySixedItems(prev => [...prev, newItem]);
-      toast({ title: "Item 86'd", description: `${item.name} marked as unavailable` });
+      toast({
+        title: "Item 86'd",
+        description: `${newItem.quantity > 1 ? `${newItem.quantity} x ` : ''}${item.name} marked as unavailable`,
+      });
     },
     [toast],
   );
