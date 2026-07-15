@@ -65,6 +65,15 @@ function ProductCuePopover({
     if (cardRef.current) setCardH(cardRef.current.offsetHeight);
   }, [rect]);
 
+  const firedRef = useRef(false);
+  const handleAction = (fn: () => void) => (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    if ('preventDefault' in e) e.preventDefault();
+    if (firedRef.current) return;
+    firedRef.current = true;
+    fn();
+  };
+
   if (!rect) return null;
   const pad = 6;
   const spot = { top: rect.top - pad, left: rect.left - pad, width: rect.width + pad * 2, height: rect.height + pad * 2 };
@@ -79,14 +88,6 @@ function ProductCuePopover({
   left = Math.max(12, Math.min(left, vw - cardW - 12));
   top = Math.max(12, Math.min(top, vh - cardH - 12));
 
-  const firedRef = useRef(false);
-  const handleAction = (fn: () => void) => (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    if ('preventDefault' in e) e.preventDefault();
-    if (firedRef.current) return;
-    firedRef.current = true;
-    fn();
-  };
 
   return createPortal(
     <>
