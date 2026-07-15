@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import type { StatusRule } from '@/hooks/use-status-rules';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
-import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
-import UsersBold from '@/assets/users-bold.svg';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
+import { previewTicket } from '@/data/mock-preview-ticket';
+import type { Order, OrderType } from '@/types/kds';
 
 
 interface AgingEditPanelProps {
@@ -220,6 +221,19 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
   const contrast = getContrastRatio(rule.color, rule.textColor);
   const textColor = resolveTextColor(rule.textColor);
 
+  // Build a preview ticket whose age lands inside the current rule so every
+  // ticket variant applies this rule's color/text swatch automatically.
+  const previewOrder = useMemo<Order>(() => {
+    const ageMinutes = Math.max(0, rule.minMinutes) + 1;
+    const timeReceived = new Date(Date.now() - ageMinutes * 60_000);
+    return {
+      ...previewTicket,
+      orderType: previewType as OrderType,
+      timeReceived,
+      elapsedSeconds: ageMinutes * 60,
+    };
+  }, [rule.minMinutes, previewType]);
+
   return (
     <div className="space-y-4">
       {/* Errors */}
@@ -331,37 +345,8 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             );
           })}
         </div>
-        <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-          {/* Order type header: table name + clock time */}
-          <div className="px-4 py-2.5 flex items-center justify-between" style={{ backgroundColor: previewColors.headerBg }}>
-            <span className="text-base font-extrabold uppercase text-white tracking-wide">{previewMeta.headerLeft}</span>
-            <span className="text-sm font-mono font-bold text-white">12:34 PM</span>
-          </div>
-          {/* Order number section - status color (large left, server+timer right) */}
-          <div className="px-4 py-3 flex items-start justify-between gap-3" style={{ backgroundColor: rule.color, color: textColor }}>
-            <div className="font-black leading-none tracking-tight" style={{ fontSize: '72px', lineHeight: '0.85' }}>42</div>
-            <div className="flex flex-col items-end gap-1 text-right">
-              <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
-                <img src={PersonSimpleRunBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
-                Alex M.
-              </span>
-              <span className="flex items-center gap-1.5 text-sm font-semibold opacity-95 whitespace-nowrap">
-                <img src={UsersBold} alt="" width={14} height={14} className={`shrink-0 ${textColor === '#FFFFFF' ? 'invert' : ''} opacity-90`} />
-                Sarah Chen
-              </span>
-              <span className="font-mono text-base font-bold opacity-95">
-                {rule.minMinutes > 0 ? String(rule.minMinutes + 2).padStart(2, '0') : '03'}:12
-              </span>
-            </div>
-          </div>
-          {/* Ticket body */}
-          <div className="bg-surface-card px-4 py-2.5">
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm font-bold text-text-muted">2x</span>
-              <span className="text-sm font-bold uppercase text-text-primary tracking-wide">Chicken Burger</span>
-            </div>
-            <div className="text-xs text-text-muted mt-1 ml-7">+ Extra cheese, No onion</div>
-          </div>
+        <div className="rounded-lg overflow-hidden">
+          <SelectedVariantPreview order={previewOrder} />
         </div>
       </div>
     </div>

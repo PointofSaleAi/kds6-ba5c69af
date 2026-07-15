@@ -4,7 +4,7 @@ import { Search, Check, ArrowLeftRight, Languages, ChevronDown } from 'lucide-re
 import { useLanguage, type LanguageCode, type DisplayMode, type DateFormatIndex, type TimeFormatIndex } from '@/hooks/use-language';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { toast } from 'sonner';
-import { OrderCard } from './OrderCard';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
 import { previewTicket } from '@/data/mock-preview-ticket';
 
 interface Language {
@@ -567,7 +567,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               </div>
               <div className="flex-1 min-h-0 overflow-y-auto w-full flex flex-col">
                 <div className="flex-1 min-h-0 flex flex-col [&>*]:flex-1 [&>*]:min-h-0 [&>*]:flex [&>*]:flex-col">
-                  <OrderCard order={previewTicket} layoutOverride={previewLayout} />
+                  <SelectedVariantPreview order={previewTicket} layoutOverride={previewLayout} />
                 </div>
               </div>
               <div className="text-[10px] text-text-muted mt-2 text-center">
