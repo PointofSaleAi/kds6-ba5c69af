@@ -92,6 +92,8 @@ interface KDSSettingsContextValue extends KDSSettings {
   setStaggerMode: (v: boolean) => void;
   setServableModifiers: (v: boolean) => void;
   setProductTimers: (v: boolean) => void;
+  setOrderHold: (v: boolean) => void;
+  setOrderHoldMinutes: (v: number) => void;
   setTimezone: (v: string) => void;
   setCurrency: (v: string) => void;
   setTempUnit: (v: TempUnit) => void;
