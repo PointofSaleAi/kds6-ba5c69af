@@ -84,10 +84,12 @@ function ProductCuePopover({
       <div
         className="fixed inset-0 z-[9998]"
         aria-hidden="true"
-        onMouseDown={onClose}
-        onTouchStart={onClose}
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
+        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
+        onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
       >
-        <svg width="100%" height="100%" style={{ display: 'block' }}>
+        <svg width="100%" height="100%" style={{ display: 'block', pointerEvents: 'none' }}>
           <defs>
             <mask id="product-cue-mask">
               <rect width="100%" height="100%" fill="white" />
@@ -110,8 +112,10 @@ function ProductCuePopover({
       <div
         ref={cardRef}
         role="menu"
-        className="fixed z-[10001] rounded-2xl shadow-2xl p-2"
-        style={{ top, left, width: cardW, background: '#1F1F24', color: '#fff', border: '1px solid rgba(255,255,255,0.08)' }}
+        className="fixed z-[10001] rounded-2xl shadow-2xl p-2 bg-white text-black border border-black/10"
+        style={{ top, left, width: cardW }}
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
       >
@@ -119,7 +123,7 @@ function ProductCuePopover({
           type="button"
           role="menuitem"
           onClick={on86}
-          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-white/90 hover:bg-white/10 transition-colors"
+          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors"
         >
           86 it
         </button>
@@ -127,7 +131,7 @@ function ProductCuePopover({
           type="button"
           role="menuitem"
           onClick={onRecipe}
-          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-white/90 hover:bg-white/10 transition-colors"
+          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors"
         >
           View Recipe
         </button>
