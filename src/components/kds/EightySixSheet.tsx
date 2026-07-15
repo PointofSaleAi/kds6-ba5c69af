@@ -20,7 +20,6 @@ import {
   ChevronRight,
   X,
   ChevronLeft,
-  Ban,
 } from "lucide-react";
 import { EightySixBadge } from "./EightySixBadge";
 import { Item86Modal } from "./Flag86Button";
