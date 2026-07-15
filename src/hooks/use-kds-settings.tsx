@@ -67,6 +67,8 @@ export interface KDSSettings {
   staggerMode: boolean;
   servableModifiers: boolean;
   productTimers: boolean;
+  orderHold: boolean;
+  orderHoldMinutes: number;
   timezone: string;
   currency: string;
   tempUnit: TempUnit;
