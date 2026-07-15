@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import type { StatusRule } from '@/hooks/use-status-rules';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
-import PersonSimpleRunBold from '@/assets/person-simple-run-bold.svg';
-import UsersBold from '@/assets/users-bold.svg';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
+import { previewTicket } from '@/data/mock-preview-ticket';
+import type { Order, OrderType } from '@/types/kds';
 
 
 interface AgingEditPanelProps {
