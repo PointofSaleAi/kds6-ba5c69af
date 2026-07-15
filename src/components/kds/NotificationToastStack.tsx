@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bell, Info } from 'lucide-react';
+import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bell, Info, PackageX, Ban } from 'lucide-react';
 import { useNotifications } from '@/hooks/use-notifications';
 import type { NotificationType } from '@/types/notification';
 
@@ -12,6 +12,8 @@ const typeIcons: Record<NotificationType, React.ElementType> = {
   'overtime': AlertTriangle,
   'new-order': Bell,
   'recalled': Info,
+  'low-stock': PackageX,
+  'pos-86d': Ban,
   'system': Info,
 };
 
