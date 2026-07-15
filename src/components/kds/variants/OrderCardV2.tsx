@@ -186,6 +186,10 @@ function V2ProductRow({
   productTimersEnabled?: boolean;
 }) {
 
+  const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
+  const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
+  const showSecondary = displayMode === 'dual' && showSecondaryMenu && !product.isCancelled;
+
   const done = state === 'done';
   const loading = state === 'loading';
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
@@ -194,6 +198,7 @@ function V2ProductRow({
   const rowRef = useRef<HTMLDivElement | null>(null);
   const showDetails = !compact || expanded;
   const canExpand = compact && hasDetails && !loading;
+
 
   const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7');
 
