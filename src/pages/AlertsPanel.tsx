@@ -24,6 +24,17 @@ function useTimeAgo() {
   };
 }
 
+function EightySixNotifIcon({ className, size }: { className?: string; size?: number }) {
+  return (
+    <span
+      className={`font-bold ${className || ''}`}
+      style={{ fontSize: size ?? 16, lineHeight: 1 }}
+    >
+      86
+    </span>
+  );
+}
+
 const notifIcons: Record<NotificationType, { icon: React.ElementType; color: string }> = {
   'table-transfer': { icon: ArrowRightLeft, color: 'text-status-preparing' },
   'item-moved': { icon: Utensils, color: 'text-order-take-out' },
@@ -34,7 +45,7 @@ const notifIcons: Record<NotificationType, { icon: React.ElementType; color: str
   'new-order': { icon: Bell, color: 'text-warning' },
   'recalled': { icon: Info, color: 'text-status-preparing' },
   'low-stock': { icon: PackageX, color: 'text-warning' },
-  'pos-86d': { icon: Ban, color: 'text-destructive' },
+  'pos-86d': { icon: EightySixNotifIcon, color: 'text-destructive' },
   'system': { icon: Info, color: 'text-order-take-out' },
 };
 

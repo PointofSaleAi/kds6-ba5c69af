@@ -3,6 +3,17 @@ import { X, ArrowRightLeft, Utensils, Plus, Flame, Megaphone, AlertTriangle, Bel
 import { useNotifications } from '@/hooks/use-notifications';
 import type { NotificationType } from '@/types/notification';
 
+function EightySixToastIcon({ className, size }: { className?: string; size?: number }) {
+  return (
+    <span
+      className={`font-bold ${className || ''}`}
+      style={{ fontSize: size ?? 14, lineHeight: 1 }}
+    >
+      86
+    </span>
+  );
+}
+
 const typeIcons: Record<NotificationType, React.ElementType> = {
   'table-transfer': ArrowRightLeft,
   'item-moved': Utensils,
@@ -13,7 +24,7 @@ const typeIcons: Record<NotificationType, React.ElementType> = {
   'new-order': Bell,
   'recalled': Info,
   'low-stock': PackageX,
-  'pos-86d': Ban,
+  'pos-86d': EightySixToastIcon,
   'system': Info,
 };
 
