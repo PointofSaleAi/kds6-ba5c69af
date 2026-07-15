@@ -702,15 +702,28 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     timersRef.current.push(finish);
   };
 
+  const setAllRows = (target: RowState, from?: (s: RowState) => boolean) => {
+    setRowStates((prev) => {
+      const next = { ...prev };
+      allItems.forEach((p) => {
+        const cur = (next[p.id] ?? 'idle') as RowState;
+        if (!from || from(cur)) next[p.id] = target;
+      });
+      return next;
+    });
+  };
+
   const handleTicketAdvance = () => {
     if (bumping) return;
     if (ticketState === 'seen') {
       notifySeen();
+      setAllRows('cooking', (s) => s === 'idle');
       setPhaseOverride('preparing');
       return;
     }
     if (ticketState === 'preparing') {
       notifySeen();
+      setAllRows('ready', (s) => s !== 'done');
       setPhaseOverride('ready');
       return;
     }
