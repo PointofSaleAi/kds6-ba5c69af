@@ -129,7 +129,278 @@ function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
   );
 }
 
-export function EightySixSheet({
+// Bucket an item's duration into a preset key so batch-uniform detection
+// ignores second-level drift between items snoozed in the same bulk action.
+type DurationPreset = "indefinite" | "15min" | "1hr" | "end_of_shift" | `custom-${number}`;
+const getDurationPreset = (item: EightySixedItem): DurationPreset => {
+  if (!item.snoozeEndTime) return "indefinite";
+  const ms = item.snoozeEndTime.getTime() - item.snoozedAt.getTime();
+  const minutes = Math.round(ms / 60000);
+  if (Math.abs(minutes - 15) <= 1) return "15min";
+  if (Math.abs(minutes - 60) <= 1) return "1hr";
+  if (Math.abs(minutes - 480) <= 2) return "end_of_shift";
+  // Bucket custom to nearest 5 min so bulk-set customs still count as uniform.
+  return `custom-${Math.round(minutes / 5) * 5}`;
+};
+
+const getPresetLabel = (preset: DurationPreset): string => {
+  if (preset === "indefinite") return "Until manually restored";
+  if (preset === "15min") return "15 minutes";
+  if (preset === "1hr") return "1 hour";
+  if (preset === "end_of_shift") return "End of shift";
+  const mins = Number(preset.split("-")[1]);
+  if (mins >= 60) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return m ? `${h}h ${m}m` : `${h} hour${h > 1 ? "s" : ""}`;
+  }
+  return `${mins} minutes`;
+};
+
+const getStockKind = (item: EightySixedItem): "out" | "partial" =>
+  (item.quantity ?? 0) > 0 ? "partial" : "out";
+
+const isGroupUniform = (items: EightySixedItem[]): boolean => {
+  if (items.length <= 1) return true;
+  const preset = getDurationPreset(items[0]);
+  const stock = getStockKind(items[0]);
+  return items.every((i) => getDurationPreset(i) === preset && getStockKind(i) === stock);
+};
+
+const getMinTimeRemainingLabel = (items: EightySixedItem[]): string => {
+  const timed = items.filter((i) => i.snoozeEndTime);
+  if (timed.length === 0) return "Until manually restored";
+  const earliest = timed.reduce((min, i) =>
+    (i.snoozeEndTime!.getTime() < min.snoozeEndTime!.getTime() ? i : min),
+  );
+  return formatTimeRemaining(earliest.snoozeEndTime);
+};
+
+interface RestorePopoverProps {
+  itemId: string;
+  openPopoverId: string | null;
+  setOpenPopoverId: (v: string | null) => void;
+  showCustomTimePicker: boolean;
+  setShowCustomTimePicker: (v: boolean) => void;
+  handleRestoreWithDuration: (itemId: string, durationId: string) => void;
+  handleCustomTimeConfirm: (itemId: string) => void;
+  customHours: number;
+  customMinutes: number;
+  setCustomHours: (v: number) => void;
+  setCustomMinutes: (v: number) => void;
+  hoursScrollRef: React.RefObject<HTMLDivElement>;
+  minutesScrollRef: React.RefObject<HTMLDivElement>;
+  handleHoursScroll: () => void;
+  handleMinutesScroll: () => void;
+  hoursOptions: number[];
+  minutesOptions: number[];
+  triggerLabel?: string;
+  triggerClassName?: string;
+}
+
+function RestorePopover(props: RestorePopoverProps) {
+  const {
+    itemId, openPopoverId, setOpenPopoverId,
+    showCustomTimePicker, setShowCustomTimePicker,
+    handleRestoreWithDuration, handleCustomTimeConfirm,
+    customHours, customMinutes, setCustomHours, setCustomMinutes,
+    hoursScrollRef, minutesScrollRef, handleHoursScroll, handleMinutesScroll,
+    hoursOptions, minutesOptions,
+    triggerLabel = "Restore", triggerClassName,
+  } = props;
+  return (
+    <Popover
+      open={openPopoverId === itemId}
+      onOpenChange={(open) => {
+        setOpenPopoverId(open ? itemId : null);
+        if (!open) setShowCustomTimePicker(false);
+      }}
+    >
+      <PopoverTrigger asChild>
+        <Button size="sm" variant="outline" className={triggerClassName ?? "h-8 px-3 text-xs font-semibold"}>
+          {triggerLabel}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[220px] p-0 bg-popover border-border rounded-xl overflow-hidden" align="end" sideOffset={8}>
+        {showCustomTimePicker ? (
+          <div className="p-3">
+            <div className="flex items-center gap-2 mb-3">
+              <button onClick={() => setShowCustomTimePicker(false)} className="p-1 rounded-full hover:bg-muted transition-colors">
+                <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+              </button>
+              <p className="text-foreground text-sm font-medium">Custom time</p>
+            </div>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="relative overflow-hidden rounded-lg" style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS, width: 80 }}>
+                <div className="absolute left-1 right-1 pointer-events-none z-10 rounded-md"
+                  style={{ top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2), height: ITEM_HEIGHT,
+                    background: "hsl(var(--foreground) / 0.1)", border: "1px solid hsl(var(--foreground) / 0.15)" }} />
+                <div ref={hoursScrollRef} className="h-full overflow-y-scroll scrollbar-hide touch-pan-y"
+                  style={{ scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch", scrollBehavior: "smooth", overscrollBehavior: "contain" }}
+                  onScroll={handleHoursScroll}>
+                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
+                  {hoursOptions.map((hour) => {
+                    const isSelected = hour === customHours;
+                    return (
+                      <div key={hour} className="flex items-center justify-center cursor-pointer select-none"
+                        style={{ height: ITEM_HEIGHT, scrollSnapAlign: "center" }}
+                        onClick={() => { hoursScrollRef.current?.scrollTo({ top: hour * ITEM_HEIGHT, behavior: "smooth" }); setCustomHours(hour); }}>
+                        <span className={`text-sm font-semibold ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>{hour}h</span>
+                      </div>
+                    );
+                  })}
+                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-lg" style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS, width: 80 }}>
+                <div className="absolute left-1 right-1 pointer-events-none z-10 rounded-md"
+                  style={{ top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2), height: ITEM_HEIGHT,
+                    background: "hsl(var(--foreground) / 0.1)", border: "1px solid hsl(var(--foreground) / 0.15)" }} />
+                <div ref={minutesScrollRef} className="h-full overflow-y-scroll scrollbar-hide touch-pan-y"
+                  style={{ scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch", scrollBehavior: "smooth", overscrollBehavior: "contain" }}
+                  onScroll={handleMinutesScroll}>
+                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
+                  {minutesOptions.map((minute) => {
+                    const isSelected = minute === customMinutes;
+                    return (
+                      <div key={minute} className="flex items-center justify-center cursor-pointer select-none"
+                        style={{ height: ITEM_HEIGHT, scrollSnapAlign: "center" }}
+                        onClick={() => { minutesScrollRef.current?.scrollTo({ top: minute * ITEM_HEIGHT, behavior: "smooth" }); setCustomMinutes(minute); }}>
+                        <span className={`text-sm font-semibold ${isSelected ? "text-foreground" : "text-muted-foreground"}`}>{minute}m</span>
+                      </div>
+                    );
+                  })}
+                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
+                </div>
+              </div>
+            </div>
+            <Button onClick={() => handleCustomTimeConfirm(itemId)} disabled={customHours === 0 && customMinutes === 0}
+              className="w-full py-2 rounded-lg text-sm font-semibold">Confirm</Button>
+          </div>
+        ) : (
+          <div className="py-2">
+            <p className="text-muted-foreground text-xs px-3 py-1.5">Restore after</p>
+            {restoreDurations.map((duration) => (
+              <button key={duration.id} onClick={() => handleRestoreWithDuration(itemId, duration.id)}
+                className="w-full py-2.5 px-3 hover:bg-muted text-foreground text-sm text-left transition-colors">
+                {duration.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+interface ManageListProps extends Omit<RestorePopoverProps, "itemId" | "triggerLabel" | "triggerClassName"> {
+  items: EightySixedItem[];
+  onRestoreItem: (itemId: string) => void;
+  onScheduleRestore: (itemId: string, restoreTime: Date) => void;
+}
+
+function ManageEightySixedList(props: ManageListProps) {
+  const { items, onRestoreItem } = props;
+
+  const restoreAll = (list: EightySixedItem[]) => list.forEach((i) => onRestoreItem(i.id));
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, EightySixedItem[]>();
+    for (const it of items) {
+      const cat = it.category || UNCATEGORIZED;
+      if (!map.has(cat)) map.set(cat, []);
+      map.get(cat)!.push(it);
+    }
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [items]);
+
+  const topUniform = isGroupUniform(items);
+  const topPreset = getDurationPreset(items[0]);
+
+  const renderItemSubtext = (item: EightySixedItem) => {
+    const stock = getStockKind(item);
+    const preset = getDurationPreset(item);
+    const timeLabel = item.snoozeEndTime ? formatTimeRemaining(item.snoozeEndTime) : getPresetLabel(preset);
+    if (stock === "partial") {
+      return (
+        <p className="text-xs text-muted-foreground mt-0.5">
+          <span className="text-amber-600 dark:text-amber-400 font-semibold">{item.quantity} left</span>
+          <span> · {timeLabel}</span>
+        </p>
+      );
+    }
+    return <p className="text-xs text-muted-foreground mt-0.5">Out of stock · {timeLabel}</p>;
+  };
+
+  return (
+    <div className="pb-4">
+      {/* Top header */}
+      <div className="px-4 pt-3 pb-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-foreground text-base font-bold">{items.length} items 86'd</p>
+          <button
+            type="button"
+            onClick={() => restoreAll(items)}
+            className="h-8 px-3 rounded-lg bg-muted hover:bg-muted/80 text-foreground text-xs font-semibold transition-colors"
+          >
+            Restore all
+          </button>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          {topUniform
+            ? `Marked unavailable for ${getPresetLabel(topPreset)}${items[0].snoozeEndTime ? ` · ${getMinTimeRemainingLabel(items)}` : ""}`
+            : "Mixed durations · tap an item to restore individually"}
+        </p>
+      </div>
+
+      {/* Category groups */}
+      <div className="mt-2">
+        {grouped.map(([category, list]) => {
+          const uniform = isGroupUniform(list);
+          const preset = getDurationPreset(list[0]);
+          return (
+            <div key={category} className="border-t border-border">
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/40">
+                <div className="flex items-center gap-2">
+                  <p className="text-xs font-bold tracking-wider text-foreground uppercase">{category}</p>
+                  <span className="text-xs text-muted-foreground">({list.length})</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => restoreAll(list)}
+                  className="text-xs font-semibold text-destructive hover:text-destructive/80 transition-colors"
+                >
+                  Restore all ({list.length})
+                </button>
+              </div>
+
+              {uniform && (
+                <p className="px-4 pt-2 text-xs text-muted-foreground">
+                  Marked unavailable for {getPresetLabel(preset)}
+                  {list[0].snoozeEndTime ? ` · ${getMinTimeRemainingLabel(list)}` : ""}
+                </p>
+              )}
+
+              <div className="divide-y divide-border/60">
+                {list.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground truncate">{item.name}</p>
+                      {!uniform && renderItemSubtext(item)}
+                    </div>
+                    <RestorePopover {...props} itemId={item.id} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
   open,
   onOpenChange,
   eightySixedItems,
