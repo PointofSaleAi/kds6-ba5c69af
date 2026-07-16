@@ -94,38 +94,35 @@ interface InlineQtyAdjusterProps {
 function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
   return (
     <div
-      className="flex flex-col items-end gap-0.5"
+      className="flex items-center gap-1"
       onClick={(e) => e.stopPropagation()}
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onChange(Math.max(0, value - 1));
-          }}
-          className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
-          aria-label="Decrease quantity"
-        >
-          <Minus className="w-3 h-3" />
-        </button>
-        <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
-          {value}
-        </span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onChange(value + 1);
-          }}
-          className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
-          aria-label="Increase quantity"
-        >
-          <Plus className="w-3 h-3" />
-        </button>
-      </div>
-      <span className="text-[10px] text-muted-foreground">Available Stock</span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(Math.max(0, value - 1));
+        }}
+        className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        aria-label="Decrease quantity"
+      >
+        <Minus className="w-3 h-3" />
+      </button>
+      <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
+        {value}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(value + 1);
+        }}
+        className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
+        aria-label="Increase quantity"
+      >
+        <Plus className="w-3 h-3" />
+      </button>
     </div>
   );
 }
