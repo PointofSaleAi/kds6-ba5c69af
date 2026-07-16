@@ -447,213 +447,27 @@ export function EightySixSheet({
                 </Button>
               </div>
             ) : (
-              <div className="px-4 pt-2 pb-4 space-y-3">
-                {eightySixedItems.map((item) => (
-                  <div key={item.id} className="eighty-six-card flex items-center justify-between">
-                    <div className="flex items-start gap-3 flex-1">
-                      <div className="eighty-six-icon flex-shrink-0 mt-0.5">
-                        <X size={12} strokeWidth={3} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="text-destructive font-semibold truncate">{item.name}</p>
-                          {(item.quantity ?? 1) > 1 && (
-                            <span className="text-xs font-semibold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded">
-                              x{item.quantity}
-                            </span>
-                          )}
-                          <EightySixBadge size="sm" variant="subtle" />
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-muted-foreground">{item.category}</span>
-                          <span className="text-xs text-muted-foreground/50">&middot;</span>
-                          <span className="text-xs text-destructive font-medium">
-                            {item.reason}
-                          </span>
-                        </div>
-                        {item.scheduledRestoreTime ? (
-                          <div className="flex items-center gap-1.5 mt-2 text-amber-500 dark:text-amber-400 bg-amber-500/10 px-2 py-1 rounded-md w-fit">
-                            <RotateCcw className="w-3 h-3" />
-                            <span className="text-xs font-medium">
-                              Restores at {formatScheduledRestoreTime(item.scheduledRestoreTime)}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1.5 mt-2 text-muted-foreground">
-                            <Clock className="w-3 h-3" />
-                            <span className="text-xs">{formatTimeRemaining(item.snoozeEndTime)}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <Popover
-                      open={openPopoverId === item.id}
-                      onOpenChange={(open) => {
-                        setOpenPopoverId(open ? item.id : null);
-                        if (!open) setShowCustomTimePicker(false);
-                      }}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="gap-1"
-                        >
-                          <RotateCcw className="w-3 h-3" />
-                          Restore
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-[220px] p-0 bg-popover border-border rounded-xl overflow-hidden"
-                        align="end"
-                        sideOffset={8}
-                      >
-                        {showCustomTimePicker ? (
-                          <div className="p-3">
-                            <div className="flex items-center gap-2 mb-3">
-                              <button
-                                onClick={() => setShowCustomTimePicker(false)}
-                                className="p-1 rounded-full hover:bg-muted transition-colors"
-                              >
-                                <ChevronLeft className="w-4 h-4 text-muted-foreground" />
-                              </button>
-                              <p className="text-foreground text-sm font-medium">Custom time</p>
-                            </div>
-
-                            <div className="flex items-center justify-center gap-2 mb-3">
-                              {/* Hours */}
-                              <div
-                                className="relative overflow-hidden rounded-lg"
-                                style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS, width: 80 }}
-                              >
-                                <div
-                                  className="absolute left-1 right-1 pointer-events-none z-10 rounded-md"
-                                  style={{
-                                    top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
-                                    height: ITEM_HEIGHT,
-                                    background: "hsl(var(--foreground) / 0.1)",
-                                    border: "1px solid hsl(var(--foreground) / 0.15)",
-                                  }}
-                                />
-                                <div
-                                  ref={hoursScrollRef}
-                                  className="h-full overflow-y-scroll scrollbar-hide touch-pan-y"
-                                  style={{
-                                    scrollSnapType: "y mandatory",
-                                    WebkitOverflowScrolling: "touch",
-                                    scrollBehavior: "smooth",
-                                    overscrollBehavior: "contain",
-                                  }}
-                                  onScroll={handleHoursScroll}
-                                >
-                                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
-                                  {hoursOptions.map((hour) => {
-                                    const isSelected = hour === customHours;
-                                    return (
-                                      <div
-                                        key={hour}
-                                        className="flex items-center justify-center cursor-pointer select-none"
-                                        style={{ height: ITEM_HEIGHT, scrollSnapAlign: "center" }}
-                                        onClick={() => {
-                                          hoursScrollRef.current?.scrollTo({
-                                            top: hour * ITEM_HEIGHT,
-                                            behavior: "smooth",
-                                          });
-                                          setCustomHours(hour);
-                                        }}
-                                      >
-                                        <span
-                                          className={`text-sm font-semibold ${isSelected ? "text-foreground" : "text-muted-foreground"}`}
-                                        >
-                                          {hour}h
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
-                                </div>
-                              </div>
-                              {/* Minutes */}
-                              <div
-                                className="relative overflow-hidden rounded-lg"
-                                style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS, width: 80 }}
-                              >
-                                <div
-                                  className="absolute left-1 right-1 pointer-events-none z-10 rounded-md"
-                                  style={{
-                                    top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
-                                    height: ITEM_HEIGHT,
-                                    background: "hsl(var(--foreground) / 0.1)",
-                                    border: "1px solid hsl(var(--foreground) / 0.15)",
-                                  }}
-                                />
-                                <div
-                                  ref={minutesScrollRef}
-                                  className="h-full overflow-y-scroll scrollbar-hide touch-pan-y"
-                                  style={{
-                                    scrollSnapType: "y mandatory",
-                                    WebkitOverflowScrolling: "touch",
-                                    scrollBehavior: "smooth",
-                                    overscrollBehavior: "contain",
-                                  }}
-                                  onScroll={handleMinutesScroll}
-                                >
-                                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
-                                  {minutesOptions.map((minute) => {
-                                    const isSelected = minute === customMinutes;
-                                    return (
-                                      <div
-                                        key={minute}
-                                        className="flex items-center justify-center cursor-pointer select-none"
-                                        style={{ height: ITEM_HEIGHT, scrollSnapAlign: "center" }}
-                                        onClick={() => {
-                                          minutesScrollRef.current?.scrollTo({
-                                            top: minute * ITEM_HEIGHT,
-                                            behavior: "smooth",
-                                          });
-                                          setCustomMinutes(minute);
-                                        }}
-                                      >
-                                        <span
-                                          className={`text-sm font-semibold ${isSelected ? "text-foreground" : "text-muted-foreground"}`}
-                                        >
-                                          {minute}m
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                                  <div style={{ height: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2) }} />
-                                </div>
-                              </div>
-                            </div>
-
-                            <Button
-                              onClick={() => handleCustomTimeConfirm(item.id)}
-                              disabled={customHours === 0 && customMinutes === 0}
-                              className="w-full py-2 rounded-lg text-sm font-semibold"
-                            >
-                              Confirm
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="py-2">
-                            <p className="text-muted-foreground text-xs px-3 py-1.5">Restore after</p>
-                            {restoreDurations.map((duration) => (
-                              <button
-                                key={duration.id}
-                                onClick={() => handleRestoreWithDuration(item.id, duration.id)}
-                                className="w-full py-2.5 px-3 hover:bg-muted text-foreground text-sm text-left transition-colors"
-                              >
-                                {duration.label}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                ))}
-              </div>
+              <ManageEightySixedList
+                items={eightySixedItems}
+                onRestoreItem={onRestoreItem}
+                onScheduleRestore={onScheduleRestore}
+                openPopoverId={openPopoverId}
+                setOpenPopoverId={setOpenPopoverId}
+                showCustomTimePicker={showCustomTimePicker}
+                setShowCustomTimePicker={setShowCustomTimePicker}
+                handleRestoreWithDuration={handleRestoreWithDuration}
+                handleCustomTimeConfirm={handleCustomTimeConfirm}
+                customHours={customHours}
+                customMinutes={customMinutes}
+                setCustomHours={setCustomHours}
+                setCustomMinutes={setCustomMinutes}
+                hoursScrollRef={hoursScrollRef}
+                minutesScrollRef={minutesScrollRef}
+                handleHoursScroll={handleHoursScroll}
+                handleMinutesScroll={handleMinutesScroll}
+                hoursOptions={hoursOptions}
+                minutesOptions={minutesOptions}
+              />
             )}
           </ScrollArea>
         ) : (
