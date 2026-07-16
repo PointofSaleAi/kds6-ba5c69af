@@ -699,9 +699,16 @@ export function EightySixSheet({
               <div className="px-4 pt-3 pb-4 space-y-4">
                 {filteredCategories.map((category) => (
                   <div key={category.name}>
-                    <div className="flex items-center justify-between px-1 pb-1.5 mb-1 border-b border-border">
-                      <h3 className="text-sm font-bold text-foreground">{category.name}</h3>
-                      <span className="text-xs text-muted-foreground">{category.items.length}</span>
+                    <div className="flex items-center justify-between px-1 py-1.5">
+                      <h3 className="text-sm font-bold text-foreground">
+                        {category.name}
+                        <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+                          ({category.items.length})
+                        </span>
+                      </h3>
+                      {category.items.some((i) => selectedItems.has(itemKey(i, category.name))) && (
+                        <span className="text-xs text-muted-foreground">Available Stock</span>
+                      )}
                     </div>
                     <div className="space-y-0.5">
                       {category.items.map((item) => {
