@@ -436,7 +436,7 @@ export function EightySixSheet({
         {view === "manage" ? (
           <ScrollArea className="flex-1">
             {eightySixedItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 px-4">
+              <div className="h-full flex flex-col items-center justify-center px-4">
                 <Package className="w-12 h-12 text-muted-foreground/20 mb-4" />
                 <p className="text-muted-foreground text-center">No products are currently 86'd</p>
                 <Button
@@ -858,16 +858,6 @@ export function EightySixSheet({
           </div>
         )}
 
-        {view === "manage" && (
-          <div className="py-2 px-4 border-t border-border">
-            <Button
-              onClick={() => onOpenChange(false)}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Done
-            </Button>
-          </div>
-        )}
       </SheetContent>
     </Sheet>
   );
