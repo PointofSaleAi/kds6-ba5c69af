@@ -593,30 +593,27 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
             return (
               <div key={course.name}>
-                {/* Course header — collapsible */}
-                <div
-                  className={`border-b border-border cursor-pointer ${courseBgClass}`}
-                  style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', paddingBottom: '2px' }}
+                {/* Course header — V3 style */}
+                <button
+                  type="button"
                   onClick={() => toggleServedCourse(course.name)}
-                  role="button"
+                  className="w-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2 select-none active:opacity-80 border-t border-border"
                   aria-expanded={isExpanded}
                 >
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      className={`text-[10px] inline-block ${courseColorClass}`}
-                      style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 150ms' }}
-                      aria-hidden="true"
-                    >
-                      &#9654;
-                    </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-widest ${courseColorClass}`}>
-                      {course.name} &middot; {courseStatusLabel}
-                    </span>
-                    <span className={`ml-auto text-[10px] font-semibold ${courseColorClass}`}>
-                      {courseItems.filter(i => i.status === 'done').length} of {courseItems.length} ready
-                    </span>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <ChevronRight
+                      size={12}
+                      strokeWidth={2.5}
+                      className="shrink-0 transition-transform duration-200"
+                      style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
+                    />
+                    <span className="truncate">{course.name}</span>
+                    <span className={`normal-case tracking-normal ${courseColorClass}`}>· {courseStatusLabel}</span>
                   </div>
-                </div>
+                  <span className="text-[10px] font-semibold tabular-nums shrink-0">
+                    {courseItems.filter(i => i.status === 'done').length}/{courseItems.length}
+                  </span>
+                </button>
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
