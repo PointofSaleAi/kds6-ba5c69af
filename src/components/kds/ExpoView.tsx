@@ -682,7 +682,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           <div className="opacity-80" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
             {demoTicket.coursing.pending.items.map(pi => (
               <div key={pi.id} className="flex items-center gap-1.5 py-0.5">
-                <span className="text-[13px] font-semibold text-text-primary">
+                <span className="text-[13px] font-semibold text-foreground">
                   {pi.quantity}&times; {pi.name}
                 </span>
                 <span className="inline-flex items-center justify-center px-3 rounded-full text-[11px] font-semibold min-h-[24px] min-w-[64px] bg-warning/15 text-warning border border-warning/40">
