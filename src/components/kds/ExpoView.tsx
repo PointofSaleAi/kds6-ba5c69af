@@ -447,11 +447,6 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
     >
 
       {/* HEADER — V3 style: rounded badge + identifier + timer chip, secondary row */}
-      {(() => {
-        const detailedColors =
-          (useKDSSettings as any) && orderTypeColors ? undefined : undefined;
-        return null;
-      })()}
       <div
         role={isReady && !isSentOut ? 'button' : undefined}
         aria-label={isReady && !isSentOut ? `Send out order ${ticket.orderNumber}` : undefined}
