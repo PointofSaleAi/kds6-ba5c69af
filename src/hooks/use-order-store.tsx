@@ -73,17 +73,27 @@ function deriveStations(order: Order): ExpoStation[] {
   return stations;
 }
 
-function deriveExpoItems(order: Order): ExpoItem[] {
+function deriveExpoItems(order: Order, lifecycles: Record<string, ItemLifecycle>): ExpoItem[] {
   const items: ExpoItem[] = [];
   for (const course of order.courses) {
     for (const item of course.items) {
       let status: ExpoItemStatus = 'pending';
       let statusLabel: string | undefined;
-      if (item.isCompleted) {
+      const lc = lifecycles[item.id];
+      if (item.isCompleted || lc === 'served') {
+        // Expo shows served items as 'done' (sent icon handled via sentItemIds elsewhere);
+        // for lifecycle 'ready' below we also map to 'done' visually.
         status = 'done';
-      } else if (course.isFired || order.status === 'preparing' || order.status === 'seen') {
+      } else if (lc === 'ready') {
+        status = 'done';
+      } else if (lc === 'preparing') {
         status = 'firing';
         statusLabel = item.station ? `At ${item.station}...` : undefined;
+      } else if (lc === 'seen') {
+        status = 'pending';
+      } else {
+        // No lifecycle yet: default per spec = seen (eye) once ticket has arrived.
+        status = 'pending';
       }
       // Overtime check
       const elapsed = Math.round((Date.now() - order.timeReceived.getTime()) / 1000);
@@ -110,6 +120,7 @@ function deriveExpoItems(order: Order): ExpoItem[] {
   }
   return items;
 }
+
 
 function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
   // Dine-in & banquet always show courses even with a single course
