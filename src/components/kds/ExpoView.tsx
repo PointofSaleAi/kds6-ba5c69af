@@ -1,15 +1,15 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, Minus, Plus } from 'lucide-react';
-import noteIcon from '@/assets/note-bold.svg';
+import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, Minus, Plus, ChevronRight } from 'lucide-react';
 import { formatTime } from '@/lib/datetime';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
 import { StationBadge, stationColors } from './StationBadge';
+import { OrderNotesSection } from './OrderNotesSection';
 import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
-import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, DEFAULT_ORDER_TYPE_DETAILED_COLORS, type OrderTypeColors } from '@/hooks/use-kds-settings';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { useOrderStore } from '@/hooks/use-order-store';
 import {
