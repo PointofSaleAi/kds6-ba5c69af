@@ -724,17 +724,37 @@ export function EightySixSheet({
                 cat.items.filter((i) => !isItemEightySixed(i)).map((i) => itemKey(i, cat.name)),
               );
               const allSelected = allSelectableKeys.length > 0 && allSelectableKeys.every((k) => selectedItems.has(k));
-              // Expose select-all for category header taps (per existing behavior); not rendered as a row here.
-              void allSelected;
-              if (selectedItems.size > 0) return null;
+              const toggleSelectAll = () => {
+                if (allSelected) {
+                  setSelectedItems(new Set());
+                  setSelectedQuantities({});
+                } else {
+                  const next = new Set(selectedItems);
+                  const nextQ = { ...selectedQuantities };
+                  allSelectableKeys.forEach((k) => {
+                    next.add(k);
+                    if (nextQ[k] === undefined) nextQ[k] = 0;
+                  });
+                  setSelectedItems(next);
+                  setSelectedQuantities(nextQ);
+                }
+              };
               return (
-                <div className="px-4 py-2 border-b border-border">
-                  <p className="text-center text-xs text-muted-foreground">
-                    Tap a product below to select it · tap a category name to select all
-                  </p>
+                <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+                  <span className="text-xs text-muted-foreground">
+                    {selectedItems.size > 0 ? `${selectedItems.size} selected` : "Tap the product to select"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={toggleSelectAll}
+                    className="text-xs font-semibold text-primary hover:underline"
+                  >
+                    {allSelected ? "Deselect All" : "Select All"}
+                  </button>
                 </div>
               );
             })()}
+
 
 
 
