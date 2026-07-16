@@ -177,13 +177,16 @@ const getMinTimeRemainingLabel = (items: EightySixedItem[]): string => {
 };
 
 interface RestorePopoverProps {
-  itemId: string;
+  itemId?: string;
+  bulkItems?: EightySixedItem[];
   openPopoverId: string | null;
   setOpenPopoverId: (v: string | null) => void;
   showCustomTimePicker: boolean;
   setShowCustomTimePicker: (v: boolean) => void;
   handleRestoreWithDuration: (itemId: string, durationId: string) => void;
   handleCustomTimeConfirm: (itemId: string) => void;
+  handleRestoreAllWithDuration?: (items: EightySixedItem[], durationId: string) => void;
+  handleCustomTimeConfirmAll?: (items: EightySixedItem[]) => void;
   customHours: number;
   customMinutes: number;
   setCustomHours: (v: number) => void;
@@ -200,19 +203,40 @@ interface RestorePopoverProps {
 
 function RestorePopover(props: RestorePopoverProps) {
   const {
-    itemId, openPopoverId, setOpenPopoverId,
+    itemId, bulkItems, openPopoverId, setOpenPopoverId,
     showCustomTimePicker, setShowCustomTimePicker,
     handleRestoreWithDuration, handleCustomTimeConfirm,
+    handleRestoreAllWithDuration, handleCustomTimeConfirmAll,
     customHours, customMinutes, setCustomHours, setCustomMinutes,
     hoursScrollRef, minutesScrollRef, handleHoursScroll, handleMinutesScroll,
     hoursOptions, minutesOptions,
     triggerLabel = "Restore", triggerClassName,
   } = props;
+
+  const popoverKey = bulkItems ? `bulk:${bulkItems === props.bulkItems && !itemId ? "all" : bulkItems[0]?.category ?? "group"}` : itemId!;
+  const isOpen = openPopoverId === popoverKey;
+
+  const onSelectDuration = (durationId: string) => {
+    if (bulkItems && bulkItems.length > 0 && handleRestoreAllWithDuration) {
+      handleRestoreAllWithDuration(bulkItems, durationId);
+    } else if (itemId) {
+      handleRestoreWithDuration(itemId, durationId);
+    }
+  };
+
+  const onConfirmCustom = () => {
+    if (bulkItems && bulkItems.length > 0 && handleCustomTimeConfirmAll) {
+      handleCustomTimeConfirmAll(bulkItems);
+    } else if (itemId) {
+      handleCustomTimeConfirm(itemId);
+    }
+  };
+
   return (
     <Popover
-      open={openPopoverId === itemId}
+      open={isOpen}
       onOpenChange={(open) => {
-        setOpenPopoverId(open ? itemId : null);
+        setOpenPopoverId(open ? popoverKey : null);
         if (!open) setShowCustomTimePicker(false);
       }}
     >
@@ -274,14 +298,14 @@ function RestorePopover(props: RestorePopoverProps) {
                 </div>
               </div>
             </div>
-            <Button onClick={() => handleCustomTimeConfirm(itemId)} disabled={customHours === 0 && customMinutes === 0}
+            <Button onClick={onConfirmCustom} disabled={customHours === 0 && customMinutes === 0}
               className="w-full py-2 rounded-lg text-sm font-semibold">Confirm</Button>
           </div>
         ) : (
           <div className="py-2">
             <p className="text-muted-foreground text-xs px-3 py-1.5">Restore after</p>
             {restoreDurations.map((duration) => (
-              <button key={duration.id} onClick={() => handleRestoreWithDuration(itemId, duration.id)}
+              <button key={duration.id} onClick={() => onSelectDuration(duration.id)}
                 className="w-full py-2.5 px-3 hover:bg-muted text-foreground text-sm text-left transition-colors">
                 {duration.label}
               </button>
