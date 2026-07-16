@@ -660,12 +660,12 @@ export function EightySixSheet({
 
             <div className="px-4 pt-1 pb-2 border-b border-border">
               <p className="text-muted-foreground text-xs mb-1">Mark as unavailable for</p>
-              <div className="flex gap-1">
+              <div className="flex gap-1 flex-wrap">
                 {snoozeDurations.map((duration) => (
                   <button
                     key={duration.id}
                     onClick={() => setSelectedDuration(duration.id)}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       selectedDuration === duration.id
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground hover:bg-muted/80"
