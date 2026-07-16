@@ -187,7 +187,6 @@ function ExpoItemRow({
   useEffect(() => () => { if (clickTimerRef.current) clearTimeout(clickTimerRef.current); }, []);
 
   const handleSingleTap = () => {
-    if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
     if (done) {
       onItemSend?.(ticket.id, item.id, remainingQty);
     } else {
