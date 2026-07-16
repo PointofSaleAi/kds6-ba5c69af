@@ -94,38 +94,35 @@ interface InlineQtyAdjusterProps {
 function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
   return (
     <div
-      className="flex flex-col items-end gap-0.5"
+      className="flex items-center gap-1"
       onClick={(e) => e.stopPropagation()}
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onChange(Math.max(0, value - 1));
-          }}
-          className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
-          aria-label="Decrease quantity"
-        >
-          <Minus className="w-3 h-3" />
-        </button>
-        <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
-          {value}
-        </span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onChange(value + 1);
-          }}
-          className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
-          aria-label="Increase quantity"
-        >
-          <Plus className="w-3 h-3" />
-        </button>
-      </div>
-      <span className="text-[10px] text-muted-foreground">Available Stock</span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(Math.max(0, value - 1));
+        }}
+        className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
+        aria-label="Decrease quantity"
+      >
+        <Minus className="w-3 h-3" />
+      </button>
+      <span className="w-6 text-center text-sm font-semibold text-foreground tabular-nums">
+        {value}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(value + 1);
+        }}
+        className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
+        aria-label="Increase quantity"
+      >
+        <Plus className="w-3 h-3" />
+      </button>
     </div>
   );
 }
@@ -702,9 +699,16 @@ export function EightySixSheet({
               <div className="px-4 pt-3 pb-4 space-y-4">
                 {filteredCategories.map((category) => (
                   <div key={category.name}>
-                    <div className="flex items-center justify-between px-1 pb-1.5 mb-1 border-b border-border">
-                      <h3 className="text-sm font-bold text-foreground">{category.name}</h3>
-                      <span className="text-xs text-muted-foreground">{category.items.length}</span>
+                    <div className="flex items-center justify-between px-1 py-1.5">
+                      <h3 className="text-sm font-bold text-foreground">
+                        {category.name}
+                        <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+                          ({category.items.length})
+                        </span>
+                      </h3>
+                      {category.items.some((i) => selectedItems.has(itemKey(i, category.name))) && (
+                        <span className="text-xs text-muted-foreground">Available Stock</span>
+                      )}
                     </div>
                     <div className="space-y-0.5">
                       {category.items.map((item) => {
@@ -729,21 +733,6 @@ export function EightySixSheet({
                             }`}
                           >
                             <div className="flex items-center gap-2">
-                              {!is86ed && (
-                                <div
-                                  className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                                    isSelected
-                                      ? "bg-primary border-primary text-primary-foreground"
-                                      : "border-muted-foreground/50 bg-background"
-                                  }`}
-                                >
-                                  {isSelected && (
-                                    <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                      <path d="M2 6.5 L5 9.5 L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                  )}
-                                </div>
-                              )}
                               {is86ed && (
                                 <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
                                   <X size={10} strokeWidth={3} />
