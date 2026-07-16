@@ -317,16 +317,16 @@ function RestorePopover(props: RestorePopoverProps) {
   );
 }
 
-interface ManageListProps extends Omit<RestorePopoverProps, "itemId" | "triggerLabel" | "triggerClassName"> {
+interface ManageListProps extends Omit<RestorePopoverProps, "itemId" | "bulkItems" | "triggerLabel" | "triggerClassName"> {
   items: EightySixedItem[];
   onRestoreItem: (itemId: string) => void;
   onScheduleRestore: (itemId: string, restoreTime: Date) => void;
+  handleRestoreAllWithDuration: (items: EightySixedItem[], durationId: string) => void;
+  handleCustomTimeConfirmAll: (items: EightySixedItem[]) => void;
 }
 
 function ManageEightySixedList(props: ManageListProps) {
-  const { items, onRestoreItem } = props;
-
-  const restoreAll = (list: EightySixedItem[]) => list.forEach((i) => onRestoreItem(i.id));
+  const { items } = props;
 
   const grouped = useMemo(() => {
     const map = new Map<string, EightySixedItem[]>();
@@ -337,9 +337,6 @@ function ManageEightySixedList(props: ManageListProps) {
     }
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [items]);
-
-  const topUniform = isGroupUniform(items);
-  const topPreset = getDurationPreset(items[0]);
 
   const renderItemSubtext = (item: EightySixedItem) => {
     const stock = getStockKind(item);
@@ -362,13 +359,7 @@ function ManageEightySixedList(props: ManageListProps) {
       <div className="px-4 pt-3 pb-2">
         <div className="flex items-center justify-between gap-3">
           <p className="text-foreground text-base font-bold">{items.length} items 86'd</p>
-          <button
-            type="button"
-            onClick={() => restoreAll(items)}
-            className="h-8 px-3 rounded-lg bg-muted hover:bg-muted/80 text-foreground text-xs font-semibold transition-colors"
-          >
-            Restore all
-          </button>
+          <RestorePopover {...props} bulkItems={items} triggerLabel="Restore all" />
         </div>
       </div>
 
@@ -382,13 +373,7 @@ function ManageEightySixedList(props: ManageListProps) {
                   <p className="text-xs font-bold tracking-wider text-foreground uppercase">{category}</p>
                   <span className="text-xs text-muted-foreground">({list.length})</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => restoreAll(list)}
-                  className="text-xs font-semibold text-destructive hover:text-destructive/80 transition-colors"
-                >
-                  Restore all ({list.length})
-                </button>
+                <RestorePopover {...props} bulkItems={list} triggerLabel={`Restore all (${list.length})`} />
               </div>
 
               <div className="divide-y divide-border/60">
