@@ -218,6 +218,7 @@ function orderToExpoTicket(order: Order, lifecycles: Record<string, ItemLifecycl
 export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [seenOrderIds, setSeenOrderIds] = useState<Set<string>>(new Set());
+  const [itemLifecycles, setItemLifecycles] = useState<Record<string, ItemLifecycle>>({});
 
   const toggleOrderSeen = useCallback((orderId: string) => {
     setSeenOrderIds(prev => {
@@ -275,6 +276,31 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     ));
   }, []);
 
+  const setItemLifecycle = useCallback((orderId: string, itemId: string, state: ItemLifecycle | null) => {
+    setItemLifecycles(prev => {
+      const next = { ...prev };
+      if (state === null) delete next[itemId];
+      else next[itemId] = state;
+      return next;
+    });
+    // Keep isCompleted in sync with the 'served' terminal state.
+    setOrders(prev => prev.map(o => {
+      if (o.id !== orderId) return o;
+      const targetCompleted = state === 'served';
+      let touched = false;
+      const nextCourses = o.courses.map(c => ({
+        ...c,
+        items: c.items.map(i => {
+          if (i.id !== itemId) return i;
+          if (!!i.isCompleted === targetCompleted) return i;
+          touched = true;
+          return { ...i, isCompleted: targetCompleted };
+        }),
+      }));
+      return touched ? { ...o, courses: nextCourses } : o;
+    }));
+  }, []);
+
   // Auto-clear isRushed when all items in a rushed order are done
   useMemo(() => {
     setOrders(prev => {
@@ -295,8 +321,8 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const expoTickets = useMemo(() => {
     return orders
       .filter(o => o.status !== 'served')
-      .map(orderToExpoTicket);
-  }, [orders]);
+      .map(o => orderToExpoTicket(o, itemLifecycles));
+  }, [orders, itemLifecycles]);
 
   // Clean up seenOrderIds when orders are removed
   useMemo(() => {
@@ -322,7 +348,10 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     seenOrderIds,
     toggleOrderSeen,
     rushOrder,
-  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder]);
+    itemLifecycles,
+    setItemLifecycle,
+  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder, itemLifecycles, setItemLifecycle]);
+
 
   return (
     <OrderStoreContext.Provider value={value}>
