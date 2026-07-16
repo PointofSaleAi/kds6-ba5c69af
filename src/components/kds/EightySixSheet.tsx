@@ -733,21 +733,6 @@ export function EightySixSheet({
                             }`}
                           >
                             <div className="flex items-center gap-2">
-                              {!is86ed && (
-                                <div
-                                  className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                                    isSelected
-                                      ? "bg-primary border-primary text-primary-foreground"
-                                      : "border-muted-foreground/50 bg-background"
-                                  }`}
-                                >
-                                  {isSelected && (
-                                    <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                      <path d="M2 6.5 L5 9.5 L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                  )}
-                                </div>
-                              )}
                               {is86ed && (
                                 <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
                                   <X size={10} strokeWidth={3} />
