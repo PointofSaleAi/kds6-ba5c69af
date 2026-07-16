@@ -158,6 +158,8 @@ export default function DisplaySettings() {
   }
 
   if (ticketSpacingOpen) {
+    // Lazy import inline to keep bundle graph obvious.
+    const LiveStudio = require('@/components/settings/LiveStudio').LiveStudio as React.ComponentType;
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
@@ -168,104 +170,10 @@ export default function DisplaySettings() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket layout</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Live Studio</h1>
         </div>
         <div className="flex-1 px-6 pb-6 overflow-hidden">
-          <div className="h-full flex gap-6 min-h-0">
-            {/* LEFT: options */}
-            <div className="w-[320px] shrink-0 flex flex-col gap-4 overflow-y-auto">
-              <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
-                Controls padding, row gap, text size, layout density, and the primary ticket identifier.
-              </p>
-              <div className="grid gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Layout
-                  </span>
-                  <SegmentedToggle
-                    options={['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10', 'v11', 'v12', 'v13', 'v14']}
-                    value={ticketsRoute}
-                    onChange={(v) => {
-                      const nextRoute = v as import('@/hooks/use-kds-settings').TicketsRouteKey;
-                      setTicketsRoute(nextRoute);
-                      writeStoredTicketsRoute(nextRoute);
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Spacing
-                  </span>
-                  <SegmentedToggle
-                    options={['Compact', 'Standard', 'Spacious']}
-                    value={ticketSpacing}
-                    onChange={(v) => setTicketSpacing(v as 'Compact' | 'Standard' | 'Spacious')}
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Text size
-                  </span>
-                  <SegmentedToggle
-                    options={['Compact', 'Standard', 'Large']}
-                    value={textSize}
-                    onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')}
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Appearance
-                  </span>
-                  <SegmentedToggle
-                    options={['Compact', 'Standard', 'Header']}
-                    value={ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}
-                    onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : v === 'Header' ? 'header' : 'standard')}
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Identifier
-                  </span>
-                  <SegmentedToggle
-                    options={['Order number', 'Guest name']}
-                    value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'}
-                    onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* DIVIDER */}
-            <div className="w-px bg-border shrink-0" />
-
-            {/* RIGHT: preview */}
-            <div className="flex-1 min-w-0 flex flex-col">
-              <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
-                Preview
-              </p>
-              <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
-                <div
-                  className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass} ${selectedCardVariant === 'v5' ? 'v5-route' : ''}`}
-                >
-                  <KDSSettingsPreviewScope route={ticketsRoute}>
-                    {selectedCardVariant === 'v1' ? (
-                      <OrderCardV1 order={previewTicket} />
-                    ) : selectedCardVariant === 'v2' ? (
-                      <OrderCardV2 order={previewTicket} />
-                    ) : selectedCardVariant === 'v3' ? (
-                      <OrderCardV3 order={previewTicket} />
-                    ) : selectedCardVariant === 'v4' ? (
-                      <OrderCardV4 order={previewTicket} />
-                    ) : selectedCardVariant === 'v5' ? (
-                      <OrderCardV5 order={previewTicket} />
-                    ) : (
-                      <OrderCard order={previewTicket} layoutOverride={ticketLayout} legacyActions={ticketsRoute === 'Default'} />
-                    )}
-                  </KDSSettingsPreviewScope>
-                </div>
-              </div>
-            </div>
-          </div>
+          <LiveStudio />
         </div>
       </div>
     );
