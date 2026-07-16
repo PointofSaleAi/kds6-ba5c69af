@@ -356,8 +356,6 @@ function ManageEightySixedList(props: ManageListProps) {
       {/* Category groups */}
       <div className="mt-2">
         {grouped.map(([category, list]) => {
-          const uniform = isGroupUniform(list);
-          const preset = getDurationPreset(list[0]);
           return (
             <div key={category} className="border-t border-border">
               <div className="flex items-center justify-between px-4 py-2 bg-muted/40">
