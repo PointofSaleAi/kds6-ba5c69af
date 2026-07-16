@@ -157,7 +157,8 @@ function ExpoItemRow({
   if (sentItemIds.has(item.id) || remainingQty <= 0) return null;
 
   const done = item.status === 'done';
-  const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
+  // Expo view: suppress new-item pulse — expo only handles already-cooked items.
+  const isNewUnacked = false;
   const showToGoBadge = !!item.isToGo && ticket.orderType === 'dine-in';
   const showQtySelector = done && remainingQty > 1;
 
