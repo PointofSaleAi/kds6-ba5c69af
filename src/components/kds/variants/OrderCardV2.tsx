@@ -439,7 +439,9 @@ function V2ProductRow({
 
 
 
+        </div>
       </div>
+
       {menuOpen && !loading && (
         <ProductCuePopover
           anchorRef={rowRef}
