@@ -346,11 +346,6 @@ function ManageEightySixedList(props: ManageListProps) {
             Restore all
           </button>
         </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          {topUniform
-            ? `Marked unavailable for ${getPresetLabel(topPreset)}${items[0].snoozeEndTime ? ` · ${getMinTimeRemainingLabel(items)}` : ""}`
-            : "Mixed durations · tap an item to restore individually"}
-        </p>
       </div>
 
       {/* Category groups */}
