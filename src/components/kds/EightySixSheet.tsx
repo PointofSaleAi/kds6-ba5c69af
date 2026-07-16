@@ -577,12 +577,12 @@ export function EightySixSheet({
     });
   };
 
+  const isItemEightySixed = (itemName: string) =>
+    eightySixedItems.some((item) => item.name === itemName);
+
   const handleEightySix = (itemName: string, category: string, quantity = 1) => {
     onEightySixItem({ name: itemName, category, snoozeDuration: selectedDuration, quantity });
   };
-
-  const isItemEightySixed = (itemName: string) =>
-    eightySixedItems.some((item) => item.name === itemName);
 
   const { orders } = useOrderStore();
 
@@ -607,10 +607,9 @@ export function EightySixSheet({
   const filteredCategories = menuCategories
     .map((cat) => {
       const categoryMatches = cat.name.toLowerCase().includes(query);
-      return {
-        ...cat,
-        items: categoryMatches ? cat.items : cat.items.filter((item) => item.toLowerCase().includes(query)),
-      };
+      const visibleItems = (categoryMatches ? cat.items : cat.items.filter((item) => item.toLowerCase().includes(query)))
+        .filter((item) => !isItemEightySixed(item));
+      return { ...cat, items: visibleItems };
     })
     .filter((cat) => cat.items.length > 0);
 
