@@ -5,6 +5,14 @@ import { OrderCardV2 } from './variants/OrderCardV2';
 import { OrderCardV3 } from './variants/OrderCardV3';
 import { OrderCardV4 } from './variants/OrderCardV4';
 import { OrderCardV5 } from './variants/OrderCardV5';
+import { OrderCardV6 } from './variants/OrderCardV6';
+import { OrderCardV7 } from './variants/OrderCardV7';
+import { OrderCardV8 } from './variants/OrderCardV8';
+import { OrderCardV9 } from './variants/OrderCardV9';
+import { OrderCardV10 } from './variants/OrderCardV10';
+import { OrderCardV11 } from './variants/OrderCardV11';
+import { OrderCardV12 } from './variants/OrderCardV12';
+import { OrderCardV13 } from './variants/OrderCardV13';
 import { previewTicket } from '@/data/mock-preview-ticket';
 import { KDSSettingsPreviewScope, type TicketsRouteKey } from '@/hooks/use-kds-settings';
 import {
