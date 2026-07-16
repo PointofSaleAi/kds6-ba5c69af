@@ -240,7 +240,7 @@ function V2ProductRow({
       style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
       <div className={`flex gap-1 ${showDetails && (product.modifiers.length > 0 || product.allergens.length > 0 || product.notes) ? 'items-start' : 'items-center'}`}>
-        <span className="font-bold text-foreground shrink-0 text-center" style={{ fontSize: 'var(--kds-item-qty)', minWidth: 20, lineHeight: '14.4px' }}>
+        <span className="font-bold text-foreground shrink-0 text-right tabular-nums" style={{ fontSize: 'var(--kds-item-name)', minWidth: 20, lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}>
           {product.quantity}
         </span>
         <div className="flex-1 min-w-0">
