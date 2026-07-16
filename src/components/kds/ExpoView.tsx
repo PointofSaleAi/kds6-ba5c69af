@@ -238,9 +238,9 @@ function ExpoItemRow({
           </div>
 
           {hasDetails && (
-            <div style={{ paddingLeft: 24, marginTop: -1 }}>
+            <div style={{ paddingLeft: 24, marginTop: 0, lineHeight: 1.1 }}>
               {item.allergens && item.allergens.length > 0 && (
-                <div className="flex flex-wrap gap-1" style={{ lineHeight: 1, marginTop: 1 }}>
+                <div className="flex flex-wrap gap-x-1 gap-y-0.5" style={{ lineHeight: 1 }}>
                   {item.allergens.map(a => (
                     <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" suffix="allergy" />
                   ))}
@@ -248,32 +248,27 @@ function ExpoItemRow({
               )}
 
               {expoModifiers.length > 0 && (
-                <div>
+                <div className="flex flex-wrap gap-x-1.5 gap-y-0" style={{ lineHeight: 1.1 }}>
                   {expoModifiers
                     .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
                     .map((m, idx) => (
-                      <div key={idx}>
-                        <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-                          <div
-                            className={`font-semibold ${m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra'}`}
-                            style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.15, textDecoration: done ? 'line-through' : 'none' }}
-                          >
-                            {m.text}
-                          </div>
-                        </div>
-                      </div>
+                      <span
+                        key={idx}
+                        className={`font-semibold ${m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra'}`}
+                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.1, textDecoration: done ? 'line-through' : 'none' }}
+                      >
+                        {m.text}
+                      </span>
                     ))}
                 </div>
               )}
 
               {item.notes && item.notes.trim().length > 0 && (
-                <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-                  <div
-                    className={`italic text-text-muted font-medium ${done ? 'line-through' : ''}`}
-                    style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.15 }}
-                  >
-                    "{item.notes}"
-                  </div>
+                <div
+                  className={`italic text-text-muted font-medium ${done ? 'line-through' : ''}`}
+                  style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.1 }}
+                >
+                  "{item.notes}"
                 </div>
               )}
             </div>
