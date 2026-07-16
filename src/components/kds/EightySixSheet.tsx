@@ -235,12 +235,19 @@ export function EightySixSheet({
       setConfirmItem(null);
       setOpenPopoverId(null);
       setShowCustomTimePicker(false);
+      setSearchOpen(false);
+      setSearchQuery("");
+      setDurationPopoverOpen(false);
       exitSelectMode();
     }
   }, [open]);
 
   useEffect(() => {
-    if (view !== "add") exitSelectMode();
+    if (view !== "add") {
+      exitSelectMode();
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
   }, [view]);
 
 
