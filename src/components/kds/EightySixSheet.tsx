@@ -177,13 +177,17 @@ const getMinTimeRemainingLabel = (items: EightySixedItem[]): string => {
 };
 
 interface RestorePopoverProps {
-  itemId: string;
+  itemId?: string;
+  bulkItems?: EightySixedItem[];
+  bulkKey?: string;
   openPopoverId: string | null;
   setOpenPopoverId: (v: string | null) => void;
   showCustomTimePicker: boolean;
   setShowCustomTimePicker: (v: boolean) => void;
   handleRestoreWithDuration: (itemId: string, durationId: string) => void;
   handleCustomTimeConfirm: (itemId: string) => void;
+  handleRestoreAllWithDuration?: (items: EightySixedItem[], durationId: string) => void;
+  handleCustomTimeConfirmAll?: (items: EightySixedItem[]) => void;
   customHours: number;
   customMinutes: number;
   setCustomHours: (v: number) => void;
@@ -200,19 +204,40 @@ interface RestorePopoverProps {
 
 function RestorePopover(props: RestorePopoverProps) {
   const {
-    itemId, openPopoverId, setOpenPopoverId,
+    itemId, bulkItems, bulkKey, openPopoverId, setOpenPopoverId,
     showCustomTimePicker, setShowCustomTimePicker,
     handleRestoreWithDuration, handleCustomTimeConfirm,
+    handleRestoreAllWithDuration, handleCustomTimeConfirmAll,
     customHours, customMinutes, setCustomHours, setCustomMinutes,
     hoursScrollRef, minutesScrollRef, handleHoursScroll, handleMinutesScroll,
     hoursOptions, minutesOptions,
     triggerLabel = "Restore", triggerClassName,
   } = props;
+
+  const popoverKey = bulkItems ? `bulk:${bulkKey ?? "group"}` : itemId!;
+  const isOpen = openPopoverId === popoverKey;
+
+  const onSelectDuration = (durationId: string) => {
+    if (bulkItems && bulkItems.length > 0 && handleRestoreAllWithDuration) {
+      handleRestoreAllWithDuration(bulkItems, durationId);
+    } else if (itemId) {
+      handleRestoreWithDuration(itemId, durationId);
+    }
+  };
+
+  const onConfirmCustom = () => {
+    if (bulkItems && bulkItems.length > 0 && handleCustomTimeConfirmAll) {
+      handleCustomTimeConfirmAll(bulkItems);
+    } else if (itemId) {
+      handleCustomTimeConfirm(itemId);
+    }
+  };
+
   return (
     <Popover
-      open={openPopoverId === itemId}
+      open={isOpen}
       onOpenChange={(open) => {
-        setOpenPopoverId(open ? itemId : null);
+        setOpenPopoverId(open ? popoverKey : null);
         if (!open) setShowCustomTimePicker(false);
       }}
     >
@@ -274,14 +299,14 @@ function RestorePopover(props: RestorePopoverProps) {
                 </div>
               </div>
             </div>
-            <Button onClick={() => handleCustomTimeConfirm(itemId)} disabled={customHours === 0 && customMinutes === 0}
+            <Button onClick={onConfirmCustom} disabled={customHours === 0 && customMinutes === 0}
               className="w-full py-2 rounded-lg text-sm font-semibold">Confirm</Button>
           </div>
         ) : (
           <div className="py-2">
             <p className="text-muted-foreground text-xs px-3 py-1.5">Restore after</p>
             {restoreDurations.map((duration) => (
-              <button key={duration.id} onClick={() => handleRestoreWithDuration(itemId, duration.id)}
+              <button key={duration.id} onClick={() => onSelectDuration(duration.id)}
                 className="w-full py-2.5 px-3 hover:bg-muted text-foreground text-sm text-left transition-colors">
                 {duration.label}
               </button>
@@ -293,16 +318,16 @@ function RestorePopover(props: RestorePopoverProps) {
   );
 }
 
-interface ManageListProps extends Omit<RestorePopoverProps, "itemId" | "triggerLabel" | "triggerClassName"> {
+interface ManageListProps extends Omit<RestorePopoverProps, "itemId" | "bulkItems" | "triggerLabel" | "triggerClassName"> {
   items: EightySixedItem[];
   onRestoreItem: (itemId: string) => void;
   onScheduleRestore: (itemId: string, restoreTime: Date) => void;
+  handleRestoreAllWithDuration: (items: EightySixedItem[], durationId: string) => void;
+  handleCustomTimeConfirmAll: (items: EightySixedItem[]) => void;
 }
 
 function ManageEightySixedList(props: ManageListProps) {
-  const { items, onRestoreItem } = props;
-
-  const restoreAll = (list: EightySixedItem[]) => list.forEach((i) => onRestoreItem(i.id));
+  const { items } = props;
 
   const grouped = useMemo(() => {
     const map = new Map<string, EightySixedItem[]>();
@@ -313,9 +338,6 @@ function ManageEightySixedList(props: ManageListProps) {
     }
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [items]);
-
-  const topUniform = isGroupUniform(items);
-  const topPreset = getDurationPreset(items[0]);
 
   const renderItemSubtext = (item: EightySixedItem) => {
     const stock = getStockKind(item);
@@ -338,13 +360,7 @@ function ManageEightySixedList(props: ManageListProps) {
       <div className="px-4 pt-3 pb-2">
         <div className="flex items-center justify-between gap-3">
           <p className="text-foreground text-base font-bold">{items.length} items 86'd</p>
-          <button
-            type="button"
-            onClick={() => restoreAll(items)}
-            className="h-8 px-3 rounded-lg bg-muted hover:bg-muted/80 text-foreground text-xs font-semibold transition-colors"
-          >
-            Restore all
-          </button>
+          <RestorePopover {...props} bulkItems={items} bulkKey="all" triggerLabel="Restore all" />
         </div>
       </div>
 
@@ -358,13 +374,7 @@ function ManageEightySixedList(props: ManageListProps) {
                   <p className="text-xs font-bold tracking-wider text-foreground uppercase">{category}</p>
                   <span className="text-xs text-muted-foreground">({list.length})</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => restoreAll(list)}
-                  className="text-xs font-semibold text-destructive hover:text-destructive/80 transition-colors"
-                >
-                  Restore all ({list.length})
-                </button>
+                <RestorePopover {...props} bulkItems={list} bulkKey={category} triggerLabel={`Restore all (${list.length})`} />
               </div>
 
               <div className="divide-y divide-border/60">
@@ -568,6 +578,38 @@ export function EightySixSheet({
     }
   };
 
+  const handleRestoreAllWithDuration = (items: EightySixedItem[], durationId: string) => {
+    if (durationId === "custom") {
+      setShowCustomTimePicker(true);
+      return;
+    }
+    if (durationId === "now") {
+      items.forEach((i) => onRestoreItem(i.id));
+      setOpenPopoverId(null);
+      setShowCustomTimePicker(false);
+      return;
+    }
+    const duration = restoreDurations.find((d) => d.id === durationId);
+    if (duration && duration.ms) {
+      const restoreTime = new Date(Date.now() + duration.ms);
+      items.forEach((i) => onScheduleRestore(i.id, restoreTime));
+    } else {
+      items.forEach((i) => onRestoreItem(i.id));
+    }
+    setOpenPopoverId(null);
+    setShowCustomTimePicker(false);
+  };
+
+  const handleCustomTimeConfirmAll = (items: EightySixedItem[]) => {
+    if (customHours > 0 || customMinutes > 0) {
+      const ms = (customHours * 60 + customMinutes) * 60 * 1000;
+      const restoreTime = new Date(Date.now() + ms);
+      items.forEach((i) => onScheduleRestore(i.id, restoreTime));
+      setOpenPopoverId(null);
+      setShowCustomTimePicker(false);
+    }
+  };
+
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) => {
       const next = new Set(prev);
@@ -713,6 +755,8 @@ export function EightySixSheet({
                 setShowCustomTimePicker={setShowCustomTimePicker}
                 handleRestoreWithDuration={handleRestoreWithDuration}
                 handleCustomTimeConfirm={handleCustomTimeConfirm}
+                handleRestoreAllWithDuration={handleRestoreAllWithDuration}
+                handleCustomTimeConfirmAll={handleCustomTimeConfirmAll}
                 customHours={customHours}
                 customMinutes={customMinutes}
                 setCustomHours={setCustomHours}
