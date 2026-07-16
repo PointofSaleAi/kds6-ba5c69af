@@ -191,8 +191,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={StretchVertical}
         iconColor="#0E7460"
-        label="Ticket Layout"
-        helper="Controls spacing, text size, layout density, and ticket identifier."
+        label="Live Studio"
+        helper="Preview, compare, personalize, and apply one of 16 kitchen board designs."
         right={<ValueText>{ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}</ValueText>}
         onClick={() => setTicketSpacingOpen(true)}
         highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
