@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   Minus,
   Plus,
+  Hourglass,
 } from "lucide-react";
 import { EightySixBadge } from "./EightySixBadge";
 import { Item86Modal } from "./Flag86Button";
@@ -147,6 +148,8 @@ export function EightySixSheet({
   const [selectMode, setSelectMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [selectedQuantities, setSelectedQuantities] = useState<Record<string, number>>({});
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [durationPopoverOpen, setDurationPopoverOpen] = useState(false);
   const modalDismissedAtRef = useRef(0);
 
   const itemKey = (name: string, category: string) => `${category}::${name}`;
@@ -232,12 +235,19 @@ export function EightySixSheet({
       setConfirmItem(null);
       setOpenPopoverId(null);
       setShowCustomTimePicker(false);
+      setSearchOpen(false);
+      setSearchQuery("");
+      setDurationPopoverOpen(false);
       exitSelectMode();
     }
   }, [open]);
 
   useEffect(() => {
-    if (view !== "add") exitSelectMode();
+    if (view !== "add") {
+      exitSelectMode();
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
   }, [view]);
 
 
@@ -357,53 +367,70 @@ export function EightySixSheet({
 
 
 
+  const totalEightySixedCount = eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0);
+  const activeDurationLabel =
+    snoozeDurations.find((d) => d.id === selectedDuration)?.label ?? "1 hour";
+
   return (
     <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0 [&>button.absolute]:hidden"
         onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); closeConfirmItem(); } }}
       >
 
-        <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
-          <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
-            <span>86 Products</span>
-            {eightySixedItems.length > 0 && (
-              <EightySixBadge
-                size="lg"
-                label={eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0).toString()}
-                showIcon={false}
-                pulse
-              />
-            )}
-          </SheetTitle>
+        <SheetHeader className="px-4 pt-4 pb-3 border-b border-border">
+          <div className="flex items-center justify-between gap-2">
+            <SheetTitle className="text-foreground text-base font-semibold flex items-center gap-2 m-0">
+              <span className="inline-flex items-center justify-center h-6 min-w-[26px] px-1.5 rounded-md bg-destructive text-white text-[11px] font-bold tracking-tight">
+                86
+              </span>
+              <span>Products</span>
+            </SheetTitle>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setView(view === "manage" ? "add" : "manage")}
+                aria-pressed={view === "manage"}
+                className={`h-8 pl-2.5 pr-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
+                  view === "manage"
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-foreground hover:bg-muted/80"
+                }`}
+              >
+                <span>86'd</span>
+                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-white text-[10px] font-semibold flex items-center justify-center leading-none">
+                  {totalEightySixedCount}
+                </span>
+              </button>
+              {view === "add" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen((v) => {
+                      const next = !v;
+                      if (!next) setSearchQuery("");
+                      return next;
+                    });
+                  }}
+                  aria-label="Search products"
+                  aria-pressed={searchOpen}
+                  className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${
+                    searchOpen
+                      ? "bg-foreground text-background"
+                      : "bg-muted text-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  <Search className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
         </SheetHeader>
 
-        {/* View Toggle */}
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-border">
-          <button
-            onClick={() => setView("manage")}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === "manage"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground hover:bg-muted/80"
-            }`}
-          >
-            Currently 86'd ({eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0)})
-          </button>
-          <button
-            onClick={() => setView("add")}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === "add"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground hover:bg-muted/80"
-            }`}
-          >
-            Add Products
-          </button>
-        </div>
+
 
         {view === "manage" ? (
           <ScrollArea className="flex-1">
@@ -630,35 +657,66 @@ export function EightySixSheet({
           </ScrollArea>
         ) : (
           <>
-            <div className="px-4 py-2 border-b border-border">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search menu products..."
-                  className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
-                />
+            {searchOpen && (
+              <div className="px-4 py-2 border-b border-border">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    autoFocus
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search menu products..."
+                    className="pl-9 pr-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full hover:bg-muted-foreground/10 flex items-center justify-center"
+                      aria-label="Clear search"
+                    >
+                      <X className="w-3.5 h-3.5 text-muted-foreground" />
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="px-4 pt-1 pb-2 border-b border-border">
-              <p className="text-muted-foreground text-xs mb-1">Mark as unavailable for</p>
-              <div className="flex gap-1 flex-wrap">
-                {snoozeDurations.map((duration) => (
-                  <button
-                    key={duration.id}
-                    onClick={() => setSelectedDuration(duration.id)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      selectedDuration === duration.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
-                    }`}
-                  >
-                    {duration.label}
-                  </button>
-                ))}
+            <div className="flex items-center justify-between px-4 py-2 border-b border-border gap-3">
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <Hourglass className="w-4 h-4 text-muted-foreground" />
+                <span>Mark unavailable for</span>
               </div>
+              <Popover open={durationPopoverOpen} onOpenChange={setDurationPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="h-8 pl-3 pr-2 rounded-full bg-foreground text-background flex items-center gap-1.5 text-xs font-semibold hover:bg-foreground/90 transition-colors"
+                  >
+                    <span>{activeDurationLabel}</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="end" sideOffset={6} className="w-[200px] p-1 bg-popover border-border rounded-xl">
+                  {snoozeDurations.map((duration) => (
+                    <button
+                      key={duration.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedDuration(duration.id);
+                        setDurationPopoverOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                        selectedDuration === duration.id
+                          ? "bg-foreground text-background font-semibold"
+                          : "text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {duration.label}
+                    </button>
+                  ))}
+                </PopoverContent>
+              </Popover>
             </div>
 
             {(() => {
@@ -666,36 +724,19 @@ export function EightySixSheet({
                 cat.items.filter((i) => !isItemEightySixed(i)).map((i) => itemKey(i, cat.name)),
               );
               const allSelected = allSelectableKeys.length > 0 && allSelectableKeys.every((k) => selectedItems.has(k));
-              const toggleSelectAll = () => {
-                if (allSelected) {
-                  setSelectedItems(new Set());
-                  setSelectedQuantities({});
-                } else {
-                  const next = new Set(selectedItems);
-                  const nextQ = { ...selectedQuantities };
-                  allSelectableKeys.forEach((k) => {
-                    next.add(k);
-                    if (nextQ[k] === undefined) nextQ[k] = 0;
-                  });
-                  setSelectedItems(next);
-                  setSelectedQuantities(nextQ);
-                }
-              };
+              // Expose select-all for category header taps (per existing behavior); not rendered as a row here.
+              void allSelected;
+              if (selectedItems.size > 0) return null;
               return (
-                <div className="flex items-center justify-between px-4 py-2 border-b border-border">
-                  <span className="text-xs text-muted-foreground">
-                    {selectedItems.size > 0 ? `${selectedItems.size} selected` : "Tap the product to select"}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={toggleSelectAll}
-                    className="text-xs font-semibold text-primary hover:underline"
-                  >
-                    {allSelected ? "Deselect All" : "Select All"}
-                  </button>
+                <div className="px-4 py-2 border-b border-border">
+                  <p className="text-center text-xs text-muted-foreground">
+                    Tap a product below to select it · tap a category name to select all
+                  </p>
                 </div>
               );
             })()}
+
+
 
             <ScrollArea className="flex-1">
               <div className={`px-4 pt-1 space-y-3 ${selectedItems.size > 0 ? "pb-20" : "pb-4"}`}>
