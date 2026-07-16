@@ -360,7 +360,7 @@ function ManageEightySixedList(props: ManageListProps) {
       <div className="px-4 pt-3 pb-2">
         <div className="flex items-center justify-between gap-3">
           <p className="text-foreground text-base font-bold">{items.length} items 86'd</p>
-          <RestorePopover {...props} bulkItems={items} triggerLabel="Restore all" />
+          <RestorePopover {...props} bulkItems={items} bulkKey="all" triggerLabel="Restore all" />
         </div>
       </div>
 
@@ -374,7 +374,7 @@ function ManageEightySixedList(props: ManageListProps) {
                   <p className="text-xs font-bold tracking-wider text-foreground uppercase">{category}</p>
                   <span className="text-xs text-muted-foreground">({list.length})</span>
                 </div>
-                <RestorePopover {...props} bulkItems={list} triggerLabel={`Restore all (${list.length})`} />
+                <RestorePopover {...props} bulkItems={list} bulkKey={category} triggerLabel={`Restore all (${list.length})`} />
               </div>
 
               <div className="divide-y divide-border/60">
