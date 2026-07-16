@@ -9,6 +9,8 @@ import { mockOrders } from '@/data/mock-orders';
 /*  Shared order store: single source of truth for Home + Expo views  */
 /* ------------------------------------------------------------------ */
 
+export type ItemLifecycle = 'seen' | 'preparing' | 'ready' | 'served';
+
 interface OrderStoreContextValue {
   /** All active orders (not served) */
   orders: Order[];
@@ -37,7 +39,14 @@ interface OrderStoreContextValue {
 
   /** Set isRushed on an order (from Expo Rush button) */
   rushOrder: (orderId: string) => void;
+
+  /** Per-item lifecycle state shared between Kitchen KDS and Expo */
+  itemLifecycles: Record<string, ItemLifecycle>;
+
+  /** Update lifecycle for a single item (seen | preparing | ready | served) */
+  setItemLifecycle: (orderId: string, itemId: string, state: ItemLifecycle | null) => void;
 }
+
 
 const OrderStoreContext = createContext<OrderStoreContextValue | null>(null);
 
