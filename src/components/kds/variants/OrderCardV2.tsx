@@ -240,90 +240,96 @@ function V2ProductRow({
       style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
       <div className={`flex gap-1 ${showDetails && (product.modifiers.length > 0 || product.allergens.length > 0 || product.notes) ? 'items-start' : 'items-center'}`}>
-        <span className="font-bold text-foreground shrink-0 text-right tabular-nums" style={{ fontSize: 'var(--kds-item-name)', minWidth: 20, lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}>
-          {product.quantity}
-        </span>
         <div className="flex-1 min-w-0">
-          <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-            <div
-              className="text-foreground"
-              style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
-            >
-              {tp(product.name)}
-            </div>
-            {showSecondary && (
-              <div
-                className="text-text-muted"
-                style={{
-                  fontSize: 'var(--kds-item-name)',
-                  fontWeight: 700,
-                  lineHeight: 1.2,
-                  textDecoration: done ? 'line-through' : 'none',
-                  unicodeBidi: 'plaintext',
-                  textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
-                }}
-                dir={secondaryDir}
-              >
-                {tpSecondary(product.name)}
-              </div>
-            )}
-          </div>
-
-          {showDetails && product.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-0.5" data-onboarding="item-allergen">
-              {product.allergens.map((a) => (
-                <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
-              ))}
-            </div>
-          )}
-          {showDetails && product.modifiers.length > 0 && (
-            <div className="mt-0" data-onboarding="item-modifier">
-              {product.modifiers.map((m, i) => {
-                const raw = m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text;
-                return (
-                  <div key={i}>
-                    <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-                      <div
-                        className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
-                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
-                      >
-                        {tm(raw)}
-                      </div>
-                      {showSecondary && (
-                        <div
-                          className={`font-medium ${MODIFIER_CLASS[m.type]} opacity-70`}
-                          style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
-                          dir={secondaryDir}
-                        >
-                          {tmSecondary(raw)}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          {showDetails && product.notes && (
-            <>
+          <div className="flex items-baseline gap-1 min-w-0">
+            <span className="font-bold text-foreground shrink-0 text-right tabular-nums" style={{ fontSize: 'var(--kds-item-name)', width: 20, minWidth: 20, lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}>
+              {product.quantity}
+            </span>
+            <div className="flex-1 min-w-0">
               <div style={{ display: 'inline-block', maxWidth: '100%' }}>
                 <div
-                  className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-                  style={{ fontSize: 'var(--kds-modifier)' }}
+                  className="text-foreground"
+                  style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
                 >
-                  "{tn(product.notes)}"
+                  {tp(product.name)}
                 </div>
                 {showSecondary && (
                   <div
-                    className={`italic leading-snug text-text-muted font-medium opacity-70 ${done ? 'line-through' : ''}`}
-                    style={{ fontSize: 'var(--kds-modifier)', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                    className="text-text-muted"
+                    style={{
+                      fontSize: 'var(--kds-item-name)',
+                      fontWeight: 700,
+                      lineHeight: 1.2,
+                      textDecoration: done ? 'line-through' : 'none',
+                      unicodeBidi: 'plaintext',
+                      textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+                    }}
                     dir={secondaryDir}
                   >
-                    "{tnSecondary(product.notes)}"
+                    {tpSecondary(product.name)}
                   </div>
                 )}
               </div>
-            </>
+            </div>
+          </div>
+
+          {showDetails && (product.allergens.length > 0 || product.modifiers.length > 0 || product.notes) && (
+            <div style={{ paddingLeft: 24 }}>
+              {product.allergens.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-0.5" data-onboarding="item-allergen">
+                  {product.allergens.map((a) => (
+                    <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
+                  ))}
+                </div>
+              )}
+              {product.modifiers.length > 0 && (
+                <div className="mt-0" data-onboarding="item-modifier">
+                  {product.modifiers.map((m, i) => {
+                    const raw = m.type === 'extra' ? m.text.replace(/^\+\s*/, '') : m.text;
+                    return (
+                      <div key={i}>
+                        <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+                          <div
+                            className={`font-semibold ${MODIFIER_CLASS[m.type]}`}
+                            style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                          >
+                            {tm(raw)}
+                          </div>
+                          {showSecondary && (
+                            <div
+                              className={`font-medium ${MODIFIER_CLASS[m.type]} opacity-70`}
+                              style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                              dir={secondaryDir}
+                            >
+                              {tmSecondary(raw)}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {product.notes && (
+                <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+                  <div
+                    className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
+                    style={{ fontSize: 'var(--kds-modifier)' }}
+                  >
+                    "{tn(product.notes)}"
+                  </div>
+                  {showSecondary && (
+                    <div
+                      className={`italic leading-snug text-text-muted font-medium opacity-70 ${done ? 'line-through' : ''}`}
+                      style={{ fontSize: 'var(--kds-modifier)', unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+                      dir={secondaryDir}
+                    >
+                      "{tnSecondary(product.notes)}"
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           )}
 
         </div>
@@ -788,7 +794,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           <span
             className="rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums"
             style={{ background: timerStatus.color, color: timerStatus.textColor }}
-            aria-label={`Elapsed ${fmtElapsed(elapsed)} — ${timerStatus.label}`}
+            aria-label={`Elapsed ${fmtElapsed(elapsed)} - ${timerStatus.label}`}
             data-onboarding="ticket-timer"
           >
             {fmtElapsed(elapsed)}
@@ -940,7 +946,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         currentQuantity={flagProduct?.quantity ?? 1}
       />
 
-      {/* FOOTER — single bump-style button; double-tap to undo */}
+      {/* FOOTER - single bump-style button; double-tap to undo */}
       {!isCompact && !isHeaderOnly && !(typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7')) && (
         <FooterBumpButton
           ticketState={ticketState}

@@ -153,11 +153,11 @@ function ExpoItemRow({
     setSendQty(prev => Math.max(1, Math.min(prev, remainingQty || 1)));
   }, [remainingQty]);
 
-  // Hide sent items entirely — they are removed from the card
+  // Hide sent items entirely, they are removed from the card
   if (sentItemIds.has(item.id) || remainingQty <= 0) return null;
 
   const done = item.status === 'done';
-  // Expo view: suppress new-item pulse — expo only handles already-cooked items.
+  // Expo view: suppress new-item pulse, expo only handles already-cooked items.
   const isNewUnacked = false;
   const showToGoBadge = !!item.isToGo && ticket.orderType === 'dine-in';
   const showQtySelector = done && remainingQty > 1;
@@ -217,57 +217,65 @@ function ExpoItemRow({
       }}
     >
       <div className="flex gap-1 items-start">
-        <span
-          className="font-bold text-foreground shrink-0 text-right tabular-nums"
-          style={{ fontSize: 'var(--kds-item-name)', minWidth: 20, lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}
-        >
-          {remainingQty}
-        </span>
         <div className="flex-1 min-w-0">
-          <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-            <div
-              className="text-foreground"
-              style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+          <div className="flex items-baseline gap-1 min-w-0">
+            <span
+              className="font-bold text-foreground shrink-0 text-right tabular-nums"
+              style={{ fontSize: 'var(--kds-item-name)', width: 20, minWidth: 20, lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}
             >
-              {tp(item.name)}
+              {remainingQty}
+            </span>
+            <div className="flex-1 min-w-0">
+              <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+                <div
+                  className="text-foreground"
+                  style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                >
+                  {tp(item.name)}
+                </div>
+              </div>
             </div>
           </div>
 
-          {item.allergens && item.allergens.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-0.5" style={{ lineHeight: 1 }}>
-              {item.allergens.map(a => (
-                <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" suffix="allergy" />
-              ))}
-            </div>
-          )}
+          {hasDetails && (
+            <div style={{ paddingLeft: 24 }}>
+              {item.allergens && item.allergens.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-0.5" style={{ lineHeight: 1 }}>
+                  {item.allergens.map(a => (
+                    <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" suffix="allergy" />
+                  ))}
+                </div>
+              )}
 
-          {expoModifiers.length > 0 && (
-            <div className="mt-0">
-              {expoModifiers
-                .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
-                .map((m, idx) => (
-                  <div key={idx}>
-                    <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-                      <div
-                        className={`font-semibold ${m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra'}`}
-                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
-                      >
-                        {m.text}
+              {expoModifiers.length > 0 && (
+                <div className="mt-0">
+                  {expoModifiers
+                    .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+                    .map((m, idx) => (
+                      <div key={idx}>
+                        <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+                          <div
+                            className={`font-semibold ${m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra'}`}
+                            style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                          >
+                            {m.text}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          )}
+                    ))}
+                </div>
+              )}
 
-          {item.notes && item.notes.trim().length > 0 && (
-            <div style={{ display: 'inline-block', maxWidth: '100%' }}>
-              <div
-                className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
-                style={{ fontSize: 'var(--kds-modifier)' }}
-              >
-                "{item.notes}"
-              </div>
+              {item.notes && item.notes.trim().length > 0 && (
+                <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+                  <div
+                    className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
+                    style={{ fontSize: 'var(--kds-modifier)' }}
+                  >
+                    "{item.notes}"
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -419,7 +427,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       style={isSentOut ? { opacity: 0.65 } : undefined}
     >
 
-      {/* HEADER — V3 style: rounded badge + identifier + timer chip, secondary row */}
+      {/* HEADER - V3 style: rounded badge + identifier + timer chip, secondary row */}
       <div
         role={isReady && !isSentOut ? 'button' : undefined}
         aria-label={isReady && !isSentOut ? `Send out order ${ticket.orderNumber}` : undefined}
@@ -482,7 +490,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
-      {/* Order notes — V3 style */}
+      {/* Order notes - V3 style */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
         <OrderNotesSection notes={ticket.orderNotes} orderId={ticket.id} />
       )}
@@ -561,7 +569,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
             return (
               <div key={course.name}>
-                {/* Course header — V3 style */}
+                {/* Course header - V3 style */}
                 <button
                   type="button"
                   onClick={() => toggleServedCourse(course.name)}
