@@ -219,7 +219,7 @@ function ExpoItemRow({
       <div className={`flex gap-1 ${hasDetails ? 'items-start' : 'items-center'}`}>
         <span
           className="font-bold text-foreground shrink-0 text-center"
-          style={{ fontSize: 'var(--kds-item-qty)', minWidth: 20, lineHeight: '14.4px' }}
+          style={{ fontSize: 'var(--kds-item-name)', minWidth: 20, lineHeight: 1.2 }}
         >
           {remainingQty}
         </span>
