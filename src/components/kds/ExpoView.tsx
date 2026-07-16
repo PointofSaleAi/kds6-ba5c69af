@@ -446,45 +446,42 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       style={isSentOut ? { opacity: 0.65 } : undefined}
     >
 
-      {/* Header (Rows 1 + 2). Tap-to-send when whole ticket is ready. */}
+      {/* HEADER — V3 style: rounded badge + identifier + timer chip, secondary row */}
+      {(() => {
+        const detailedColors =
+          (useKDSSettings as any) && orderTypeColors ? undefined : undefined;
+        return null;
+      })()}
       <div
         role={isReady && !isSentOut ? 'button' : undefined}
         aria-label={isReady && !isSentOut ? `Send out order ${ticket.orderNumber}` : undefined}
         onClick={() => { if (isReady && !isSentOut) onSendOut(ticket.id); }}
-        className={isReady && !isSentOut ? 'cursor-pointer active:opacity-90 transition-opacity' : ''}
+        className={`px-2.5 py-2 bg-muted ${isReady && !isSentOut ? 'cursor-pointer active:opacity-90 transition-opacity' : ''}`}
       >
-        {/* Row 1: Order type strip */}
-        <div
-          className="flex items-center px-2"
-          style={{ backgroundColor: headerStyle.bgColor, height: '28px' }}
-        >
-          <span className="text-[11px] font-medium uppercase tracking-wide text-white leading-none">
-            {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()} &middot; {ticket.tableName}
-          </span>
-          {isReady && !isSentOut && (
-            <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-white/90">
-              <Check className="w-3 h-3" strokeWidth={3} />
-              Tap to send
-            </span>
-          )}
-        </div>
-
-        {/* Row 2: Urgency row */}
-        <div
-          className="flex items-center justify-between px-2"
-          style={{ backgroundColor: urgencyBgColor, height: '36px' }}
-        >
+        <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span
-              className="text-[18px] font-extrabold text-white leading-none tabular-nums"
-              style={{ letterSpacing: '0.01em', fontVariantNumeric: 'tabular-nums' }}
-            >
+            {ticket.orderType === 'dine-in' && ticket.tableName ? (
+              <span
+                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
+                style={{ background: '#1A1A2E', color: '#FFFFFF' }}
+              >
+                {ticket.tableName}
+              </span>
+            ) : (
+              <span
+                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
+                style={{ background: headerStyle.bgColor, color: '#FFFFFF' }}
+              >
+                {orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase()}
+              </span>
+            )}
+            <span className="font-bold text-foreground text-[14px] shrink-0 truncate tabular-nums">
               {ticket.orderNumber}
             </span>
             {isRushed && (
               <span
-                className="inline-flex items-center bg-destructive text-white rounded-full leading-none uppercase"
-                style={{ fontSize: '10px', fontWeight: 500, padding: '2px 10px' }}
+                className="inline-flex items-center bg-destructive text-white rounded-full leading-none uppercase shrink-0"
+                style={{ fontSize: '10px', fontWeight: 500, padding: '2px 8px' }}
                 aria-label="Rush"
               >
                 RUSH
@@ -492,11 +489,24 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             )}
           </div>
           <span
-            className="text-[13px] font-medium font-mono text-white leading-none tabular-nums"
-            style={{ fontVariantNumeric: 'tabular-nums' }}
+            className="rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums"
+            style={{ background: urgencyBgColor, color: '#FFFFFF' }}
           >
             {formatTimer(ticket.timerSeconds)}
           </span>
+        </div>
+        <div className="flex items-center justify-between gap-2 mt-0.5">
+          <span className="text-[12px] font-medium text-foreground truncate">
+            {ticket.orderType === 'dine-in' ? (ticket.tableName || '') : (orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase())}
+          </span>
+          {isReady && !isSentOut ? (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-success shrink-0">
+              <Check className="w-3 h-3" strokeWidth={3} />
+              Tap to send
+            </span>
+          ) : (
+            <span className="text-[11px] text-muted-foreground shrink-0 truncate" />
+          )}
         </div>
       </div>
 
@@ -509,30 +519,9 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
         </div>
       )}
 
-      {/* Order notes (expo packaging + special instructions) — Home screen style */}
+      {/* Order notes — V3 style */}
       {ticket.orderNotes && ticket.orderNotes.trim().length > 0 && (
-        <div className="border-t border-border">
-          <div
-            className="flex items-start select-none"
-            style={{ padding: '2px 8px', gap: '3px' }}
-          >
-            <img
-              src={noteIcon}
-              width={11}
-              height={11}
-              className="shrink-0"
-              style={{ marginTop: '1px', filter: 'brightness(0) saturate(100%) invert(45%) sepia(8%) saturate(541%) hue-rotate(182deg) brightness(94%) contrast(86%)' }}
-              alt=""
-              aria-hidden="true"
-            />
-            <div
-              className="flex-1 min-w-0 text-[11px] text-text-primary"
-              style={{ lineHeight: 1.2 }}
-            >
-              {ticket.orderNotes}
-            </div>
-          </div>
-        </div>
+        <OrderNotesSection notes={ticket.orderNotes} orderId={ticket.id} />
       )}
 
       {/* Station chips removed from header per design update */}
