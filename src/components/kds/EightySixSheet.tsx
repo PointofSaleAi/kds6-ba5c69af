@@ -780,29 +780,25 @@ export function EightySixSheet({
         />
 
 
-        <div className="py-2 px-4 border-t border-border">
-          {view === "add" ? (
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-medium text-muted-foreground">
-                {selectedItems.size} selected
-              </span>
-              <Button
-                onClick={bulk86Selected}
-                disabled={selectedItems.size === 0}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
-              </Button>
-            </div>
-          ) : (
+        {view === "add" && selectedItems.size > 0 && (
+          <Button
+            onClick={bulk86Selected}
+            className="absolute bottom-4 right-4 bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg z-50"
+          >
+            86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
+          </Button>
+        )}
+
+        {view === "manage" && (
+          <div className="py-2 px-4 border-t border-border">
             <Button
               onClick={() => onOpenChange(false)}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Done
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
