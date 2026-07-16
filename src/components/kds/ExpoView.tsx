@@ -523,28 +523,29 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
       {/* Coursing: Served course (collapsed) for demo ticket 6 */}
       {demoTicket?.coursing?.served && (
-        <div className="border-b border-border bg-muted/50" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px', marginBottom: '2px' }}>
-          <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
-            <span>&#9654;</span>
-            <span className="font-bold uppercase tracking-wider">{demoTicket.coursing.served.course} &middot; PREPARED</span>
-            <span className="ml-auto text-[10px] text-text-muted">
-              {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} of {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)} ready
-            </span>
+        <div className="w-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2 border-t border-border">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <ChevronRight size={12} strokeWidth={2.5} className="shrink-0" />
+            <span className="truncate">{demoTicket.coursing.served.course}</span>
+            <span className="text-success normal-case tracking-normal">· Prepared</span>
           </div>
+          <span className="text-[10px] font-semibold tabular-nums shrink-0">
+            {demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)}/{demoTicket.coursing.served.items.reduce((s, i) => s + i.quantity, 0)}
+          </span>
         </div>
       )}
 
       {/* Active course label for coursed demo tickets */}
       {demoTicket?.coursing?.active && (
-        <div className="border-b border-border" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-              {demoTicket.coursing.active.course} &middot; {demoTicket.coursing.active.label}
-            </span>
-            <span className="text-[10px] text-text-muted">
-              {ticket.items.filter(i => i.status === 'done').length} of {ticket.items.length} ready
-            </span>
+        <div className="w-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center justify-between gap-2 border-t border-border">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <ChevronRight size={12} strokeWidth={2.5} className="shrink-0 rotate-90 transition-transform" />
+            <span className="truncate">{demoTicket.coursing.active.course}</span>
+            <span className="normal-case tracking-normal">· {demoTicket.coursing.active.label}</span>
           </div>
+          <span className="text-[10px] font-semibold tabular-nums shrink-0">
+            {ticket.items.filter(i => i.status === 'done').length}/{ticket.items.length}
+          </span>
         </div>
       )}
 
