@@ -554,6 +554,25 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const timersRef = useRef<number[]>([]);
   useEffect(() => () => { timersRef.current.forEach(clearTimeout); }, []);
 
+  // Shared lifecycle store: propagates per-item status between Kitchen KDS & Expo.
+  const { itemLifecycles, setItemLifecycle } = useOrderStore();
+  const rowStateToLifecycle = (s: RowState): ItemLifecycle | null => {
+    if (s === 'cooking' || s === 'loading') return 'preparing';
+    if (s === 'ready') return 'ready';
+    if (s === 'done') return 'served';
+    return 'seen';
+  };
+  const lifecycleToRowState = (lc: ItemLifecycle | undefined, isCompleted?: boolean): RowState => {
+    if (isCompleted || lc === 'served') return 'done';
+    if (lc === 'ready') return 'ready';
+    if (lc === 'preparing') return 'cooking';
+    return 'idle';
+  };
+  const syncLifecycle = (orderId: string, itemId: string, s: RowState) => {
+    const target = rowStateToLifecycle(s);
+    setItemLifecycle(orderId, itemId, target);
+  };
+
   // Onboarding walkthrough hook: advance/undo the first sample item on cue.
   useEffect(() => {
     if (order.id !== 'onboarding-sample') return;
@@ -592,6 +611,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         return { ...p, [detail.itemId]: 'done' };
       });
       onItemDone?.(order.id, detail.itemId);
+      syncLifecycle(order.id, detail.itemId, 'done');
       if (!isSeen) onMarkSeen?.(order.id);
     };
     window.addEventListener('kds:qr-mark-ready', onQr);
@@ -601,17 +621,25 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const notifySeen = () => { if (!isSeen) onMarkSeen?.(order.id); };
   const setRow = (id: string, s: RowState) => setRowStates((p) => ({ ...p, [id]: s }));
-  const getRowState = (product: OrderItem): RowState => rowStates[product.id] ?? (product.isCompleted ? 'done' : isSeen ? 'cooking' : 'idle');
+  const getRowState = (product: OrderItem): RowState => {
+    const local = rowStates[product.id];
+    if (local) return local;
+    // Fall back to shared lifecycle so Expo → Kitchen updates (e.g. Served) reflect here.
+    return lifecycleToRowState(itemLifecycles[product.id], product.isCompleted);
+  };
   const toggleRow = (id: string) => {
     setRowStates((p) => {
-      const current = p[id] ?? 'idle';
+      const current = p[id] ?? lifecycleToRowState(itemLifecycles[id]);
       let next = p;
-      if (current === 'idle') next = { ...p, [id]: 'cooking' };
-      else if (current === 'cooking') next = { ...p, [id]: 'ready' };
+      let nextState: RowState = current;
+      if (current === 'idle') { nextState = 'cooking'; next = { ...p, [id]: 'cooking' }; }
+      else if (current === 'cooking') { nextState = 'ready'; next = { ...p, [id]: 'ready' }; }
       else if (current === 'ready') {
         onItemDone?.(order.id, id);
+        nextState = 'done';
         next = { ...p, [id]: 'done' };
       }
+      if (nextState !== current) syncLifecycle(order.id, id, nextState);
       // Mark ticket seen only when every item has been touched (viewed)
       const allTouched = allItems.every(pr => pr.isCompleted || (next[pr.id] ?? 'idle') !== 'idle');
       if (allTouched && !isSeen) onMarkSeen?.(order.id);
@@ -620,11 +648,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   };
   const undoRow = (id: string) => {
     setRowStates((p) => {
-      const current = p[id] ?? 'idle';
-      if (current === 'done') return { ...p, [id]: 'ready' };
-      if (current === 'ready') return { ...p, [id]: 'cooking' };
-      if (current === 'cooking') return { ...p, [id]: 'idle' };
-      return p;
+      const current = p[id] ?? lifecycleToRowState(itemLifecycles[id]);
+      let nextState: RowState | null = null;
+      if (current === 'done') nextState = 'ready';
+      else if (current === 'ready') nextState = 'cooking';
+      else if (current === 'cooking') nextState = 'idle';
+      if (nextState === null) return p;
+      syncLifecycle(order.id, id, nextState);
+      return { ...p, [id]: nextState };
     });
   };
   const recallRow = (id: string) => {
@@ -637,6 +668,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       return next;
     });
   };
+
 
   // For dine-in table tickets: determine the active course (first course with
   // remaining items) and keep it expanded by default while collapsing upcoming courses.
