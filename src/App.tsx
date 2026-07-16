@@ -85,7 +85,15 @@ const App = () => (
               <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
               <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
               <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
-              <Route path="/kds/v7" element={<KdsV7Page />} />
+              <Route path="/kds/v7" element={<Index cardVariant="v6" />} />
+              <Route path="/kds/v8" element={<Index cardVariant="v7" />} />
+              <Route path="/kds/v9" element={<Index cardVariant="v8" />} />
+              <Route path="/kds/v10" element={<Index cardVariant="v9" />} />
+              <Route path="/kds/v11" element={<Index cardVariant="v10" />} />
+              <Route path="/kds/v12" element={<Index cardVariant="v11" />} />
+              <Route path="/kds/v13" element={<Index cardVariant="v12" />} />
+              <Route path="/kds/v14" element={<Index cardVariant="v13" />} />
+              <Route path="/kds/qr-scan" element={<KdsV7Page />} />
               <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
               <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 
