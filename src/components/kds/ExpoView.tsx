@@ -216,7 +216,7 @@ function ExpoItemRow({
         }, 240);
       }}
     >
-      <div className="flex gap-1 items-baseline">
+      <div className="flex gap-1 items-start">
         <span
           className="font-bold text-foreground shrink-0 text-right tabular-nums"
           style={{ fontSize: 'var(--kds-item-name)', minWidth: 20, lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}
