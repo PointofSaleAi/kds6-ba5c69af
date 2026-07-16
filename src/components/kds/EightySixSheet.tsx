@@ -790,14 +790,19 @@ export function EightySixSheet({
 
 
         <div className="p-4 border-t border-border">
-          {view === "add" && selectMode ? (
-            <Button
-              onClick={bulk86Selected}
-              disabled={selectedItems.size === 0}
-              className="w-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
-            </Button>
+          {view === "add" ? (
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm font-medium text-muted-foreground">
+                {selectedItems.size} selected
+              </span>
+              <Button
+                onClick={bulk86Selected}
+                disabled={selectedItems.size === 0}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
+              </Button>
+            </div>
           ) : (
             <Button
               onClick={() => onOpenChange(false)}
