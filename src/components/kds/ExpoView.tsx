@@ -914,7 +914,7 @@ interface ExpoViewProps {
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [], controlledFilter, hideTopControls }: ExpoViewProps) {
   const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder, setItemLifecycle } = useOrderStore();
-  const { textSize, ticketSpacing } = useKDSSettings();
+  const { textSize, ticketSpacing, safetyEmphasis } = useKDSSettings();
   const [internalFilter, setInternalFilter] = useState<ExpoFilter>('all');
   const filter = controlledFilter ?? internalFilter;
   const setFilter = setInternalFilter;
@@ -1424,7 +1424,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
   };
 
   return (
-    <div className={`flex-1 flex flex-col overflow-hidden ${getKdsScaleClasses(textSize, ticketSpacing)}`}>
+    <div className={`flex-1 flex flex-col overflow-hidden ${getKdsScaleClasses(textSize, ticketSpacing, safetyEmphasis)}`}>
       {!hideTopControls && (
         <ExpoTopControls
           filter={filter}

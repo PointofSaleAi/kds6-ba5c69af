@@ -98,7 +98,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, safetyEmphasis, getRouteSetting } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -1248,7 +1248,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(effectiveTextSize, effectiveTicketSpacing)}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(effectiveTextSize, effectiveTicketSpacing, safetyEmphasis)}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}
