@@ -202,7 +202,7 @@ function V2ProductRow({
   const canExpand = compact && hasDetails && !loading;
 
 
-  const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7');
+  const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/qr-scan');
 
   const longPress = useLongPress(() => { if (!loading) setMenuOpen(true); }, { delay: 500 });
   const dispatchTap = useRowTap(
