@@ -151,7 +151,7 @@ function deriveExpoCourses(order: Order): ExpoCourse[] | undefined {
   });
 }
 
-function orderToExpoTicket(order: Order): ExpoTicket {
+function orderToExpoTicket(order: Order, lifecycles: Record<string, ItemLifecycle>): ExpoTicket {
   const timerSeconds = Math.round((Date.now() - order.timeReceived.getTime()) / 1000);
 
   // Derive auto-fire from unfired courses with autoFireTargetSeconds
@@ -203,7 +203,7 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     tableName: order.tableName,
     timerSeconds,
     stations: deriveStations(order),
-    items: deriveExpoItems(order),
+    items: deriveExpoItems(order, lifecycles),
     autoFireSeconds,
     hasCoursing,
     activeCourseFiredAt,
@@ -211,6 +211,7 @@ function orderToExpoTicket(order: Order): ExpoTicket {
     orderNotes: order.orderNotes,
   };
 }
+
 
 /* ---------- Provider ---------- */
 
