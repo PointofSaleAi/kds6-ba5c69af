@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, Minus, Plus, ChevronRight } from 'lucide-react';
+import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, ChevronRight } from 'lucide-react';
 import { formatTime } from '@/lib/datetime';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
