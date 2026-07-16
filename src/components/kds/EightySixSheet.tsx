@@ -361,7 +361,7 @@ export function EightySixSheet({
     <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0 relative"
         onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); closeConfirmItem(); } }}
@@ -683,7 +683,9 @@ export function EightySixSheet({
               };
               return (
                 <div className="flex items-center justify-between px-4 py-2 border-b border-border">
-                  <span className="text-xs text-muted-foreground">Tap the product to select</span>
+                  <span className="text-xs text-muted-foreground">
+                    {selectedItems.size > 0 ? `${selectedItems.size} selected` : "Tap the product to select"}
+                  </span>
                   <button
                     type="button"
                     onClick={toggleSelectAll}
@@ -696,7 +698,7 @@ export function EightySixSheet({
             })()}
 
             <ScrollArea className="flex-1">
-              <div className="px-4 pt-1 pb-4 space-y-3">
+              <div className={`px-4 pt-1 space-y-3 ${selectedItems.size > 0 ? "pb-20" : "pb-4"}`}>
                 {filteredCategories.map((category) => (
                   <div key={category.name}>
                     <div className="flex items-center justify-between px-1 py-1">
@@ -778,29 +780,25 @@ export function EightySixSheet({
         />
 
 
-        <div className="py-2 px-4 border-t border-border">
-          {view === "add" ? (
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-medium text-muted-foreground">
-                {selectedItems.size} selected
-              </span>
-              <Button
-                onClick={bulk86Selected}
-                disabled={selectedItems.size === 0}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
-              </Button>
-            </div>
-          ) : (
+        {view === "add" && selectedItems.size > 0 && (
+          <Button
+            onClick={bulk86Selected}
+            className="absolute bottom-4 right-4 bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg z-50"
+          >
+            86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
+          </Button>
+        )}
+
+        {view === "manage" && (
+          <div className="py-2 px-4 border-t border-border">
             <Button
               onClick={() => onOpenChange(false)}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Done
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
