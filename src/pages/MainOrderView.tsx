@@ -1127,6 +1127,33 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return wrap(withSelectedTicketSettings(<OrderCardV5 order={v5Order} {...sharedVariantProps} />));
     }
+    // v6-v13: themed wrappers around V2 with identical functional wiring.
+    const themedV2Variants: Record<string, React.ComponentType<any>> = {
+      v6: OrderCardV6,
+      v7: OrderCardV7,
+      v8: OrderCardV8,
+      v9: OrderCardV9,
+      v10: OrderCardV10,
+      v11: OrderCardV11,
+      v12: OrderCardV12,
+      v13: OrderCardV13,
+    };
+    const ThemedCard = themedV2Variants[effectiveCardVariant];
+    if (ThemedCard) {
+      let flatIdxT = 0;
+      const themedOrder: Order = {
+        ...displayOrder,
+        courses: (displayOrder.courses ?? []).map((c) => ({
+          ...c,
+          items: (c.items ?? []).map((it) => {
+            const keep = flatIdxT % 3 === 0;
+            flatIdxT++;
+            return keep ? it : { ...it, modifiers: [], allergens: [], notes: undefined };
+          }),
+        })),
+      };
+      return wrap(withSelectedTicketSettings(<ThemedCard order={themedOrder} {...sharedVariantProps} isHistory={isHistory} />));
+    }
     const isTrainingSample = displayOrder.id.startsWith('training-sample-');
     return wrap(withSelectedTicketSettings(
       <OrderCard
