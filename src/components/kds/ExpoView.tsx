@@ -776,11 +776,31 @@ function ExpoStationBar() {
   );
 
   const legendBlock = (
-    <div className="flex items-center flex-wrap gap-3">
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Eye className="w-3 h-3" style={{ color: '#6C7A89' }} /> Seen</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><ClocheIcon size={12} strokeWidth={2.2} color="#374151" /> Preparing</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Check className="w-3 h-3" style={{ color: '#16A34A' }} /> Ready</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Check className="w-3 h-3" style={{ color: '#27AE60' }} /> Served</span>
+    <div className="flex items-center flex-wrap gap-2">
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center" style={{ width: 16, height: 16, color: '#6C7A89' }}>
+          <Eye size={13} strokeWidth={2} />
+        </span>
+        Seen
+      </span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center rounded-[4px]" style={{ width: 16, height: 16, background: '#374151' }}>
+          <ClocheIcon size={10} strokeWidth={2.4} color="#fff" />
+        </span>
+        Preparing
+      </span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center rounded-full" style={{ width: 16, height: 16, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }}>
+          <Check size={10} strokeWidth={3} />
+        </span>
+        Ready
+      </span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center rounded-full" style={{ width: 16, height: 16, background: '#27AE60' }}>
+          <Check size={10} color="#fff" strokeWidth={3} />
+        </span>
+        Served
+      </span>
     </div>
   );
 
