@@ -356,8 +356,6 @@ function ManageEightySixedList(props: ManageListProps) {
       {/* Category groups */}
       <div className="mt-2">
         {grouped.map(([category, list]) => {
-          const uniform = isGroupUniform(list);
-          const preset = getDurationPreset(list[0]);
           return (
             <div key={category} className="border-t border-border">
               <div className="flex items-center justify-between px-4 py-2 bg-muted/40">
@@ -379,19 +377,12 @@ function ManageEightySixedList(props: ManageListProps) {
                   <div key={item.id} className="flex items-center justify-between gap-3 px-4 py-3">
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-foreground truncate">{item.name}</p>
-                      {!uniform && renderItemSubtext(item)}
+                      {renderItemSubtext(item)}
                     </div>
                     <RestorePopover {...props} itemId={item.id} />
                   </div>
                 ))}
               </div>
-
-              {uniform && (
-                <p className="px-4 py-2 text-xs text-muted-foreground border-t border-border/60">
-                  Marked unavailable for {getPresetLabel(preset)}
-                  {list[0].snoozeEndTime ? ` · ${getMinTimeRemainingLabel(list)}` : ""}
-                </p>
-              )}
             </div>
           );
         })}
