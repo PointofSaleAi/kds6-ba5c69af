@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, ChevronRight } from 'lucide-react';
+import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, RotateCcw, ChevronRight, Eye } from 'lucide-react';
+import { ClocheIcon } from './icons/ClocheIcon';
 import { formatTime } from '@/lib/datetime';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
@@ -754,10 +755,10 @@ function ExpoStationBar() {
 
   const legendBlock = (
     <div className="flex items-center flex-wrap gap-3">
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-success shrink-0" /><Check className="w-3 h-3 text-success" /> Ready</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-warning shrink-0" /><Flame className="w-3 h-3 text-warning" /> In progress</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-destructive shrink-0" /><AlertTriangle className="w-3 h-3 text-destructive" /> Overtime</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><span className="w-2 h-2 rounded-full bg-text-muted shrink-0" /><Hourglass className="w-3 h-3 text-text-muted" /> Queued</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Eye className="w-3 h-3" style={{ color: '#6C7A89' }} /> Seen</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><ClocheIcon size={12} strokeWidth={2.2} color="#374151" /> Preparing</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Check className="w-3 h-3" style={{ color: '#16A34A' }} /> Ready</span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Check className="w-3 h-3" style={{ color: '#27AE60' }} /> Served</span>
     </div>
   );
 
