@@ -5,7 +5,6 @@ import { CheckCircle, Hourglass, Flame, Check, ArrowUpRight, AlertTriangle, Rota
 import { formatTime } from '@/lib/datetime';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { AllergenBadge } from './AllergenBadge';
-import { StationBadge, stationColors } from './StationBadge';
 import { OrderNotesSection } from './OrderNotesSection';
 import type { ViewMode } from '@/types/kds';
 import { useLanguage } from '@/hooks/use-language';
@@ -157,75 +156,14 @@ function ExpoItemRow({
   // Hide sent items entirely — they are removed from the card
   if (sentItemIds.has(item.id) || remainingQty <= 0) return null;
 
-  const isPrepared = item.status === 'done';
+  const done = item.status === 'done';
   const isNewUnacked = !!(item.isNew && !acknowledgedNewItemIds.has(item.id));
   const showToGoBadge = !!item.isToGo && ticket.orderType === 'dine-in';
-  const showQtySelector = isPrepared && remainingQty > 1;
+  const showQtySelector = done && remainingQty > 1;
 
-  const stationChip = item.station && stationColors[item.station as keyof typeof stationColors] ? (
-    <ExpoStationBadge station={item.station} />
-  ) : null;
   const statusIcon = <ExpoStatusIcon status={item.status} />;
   const expoModifiers = getExpoRelevantModifiers(item.modifiers);
-
-  // Indented column matches FlatItemList exactly: invisible "0x" placeholder of width 2.25ch + 4px gap
-  const indentPlaceholder = (
-    <span
-      className="invisible shrink-0 font-normal"
-      aria-hidden="true"
-      style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1, width: '2.25ch', display: 'inline-block' }}
-    >
-      0x
-    </span>
-  );
-
-
-  const modifierRow = expoModifiers.length > 0 ? (
-    <div style={{ marginTop: '1px', display: 'flex', flexDirection: 'column', gap: '0px' }}>
-      {expoModifiers
-        .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
-        .map((m, idx) => {
-          const colorClass =
-            m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra';
-          return (
-            <div key={idx} className="flex items-start" style={{ lineHeight: '1', paddingTop: '0px', paddingBottom: '0px', gap: '4px' }}>
-              <span className="invisible shrink-0 font-normal" aria-hidden="true" style={{ fontSize: 'var(--kds-item-qty)', lineHeight: '0.9', width: '2.25ch', display: 'inline-block' }}>
-                0x
-              </span>
-              <span
-                className={`min-w-0 font-semibold ${colorClass}`}
-                style={{ fontSize: 'var(--kds-modifier)', lineHeight: '0.9', display: 'inline-block' }}
-              >
-                {m.text}
-              </span>
-            </div>
-          );
-        })}
-    </div>
-  ) : null;
-
-  const allergenRow = item.allergens && item.allergens.length > 0 ? (
-    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px', lineHeight: 1 }}>
-      {indentPlaceholder}
-      <div className="flex flex-wrap items-start" style={{ gap: '4px', rowGap: '2px', lineHeight: 1 }}>
-        {item.allergens.map(a => (
-          <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" suffix="allergy" />
-        ))}
-      </div>
-    </div>
-  ) : null;
-
-  const noteRow = item.notes && item.notes.trim().length > 0 ? (
-    <div className="flex items-start" style={{ gap: '4px', marginTop: '1px' }}>
-      {indentPlaceholder}
-      <div
-        className="italic leading-snug min-w-0 text-text-muted font-medium"
-        style={{ fontSize: 'var(--kds-modifier)' }}
-      >
-        "{item.notes}"
-      </div>
-    </div>
-  ) : null;
+  const hasDetails = expoModifiers.length > 0 || (item.allergens?.length ?? 0) > 0 || !!item.notes;
 
   const toGoBadge = showToGoBadge ? (
     <span
@@ -237,19 +175,19 @@ function ExpoItemRow({
     </span>
   ) : null;
 
-  // Outer row with Home-style dense spacing + bottom divider (except last).
+  // Outer row with V3-style spacing + bottom divider (except last).
   // Single tap = advance status (queued -> in progress -> ready -> sent).
   // Double tap = revert one step.
-  const isTapToSend = isPrepared && remainingQty > 0;
+  const isTapToSend = done && remainingQty > 0;
   const isInteractive = remainingQty > 0;
-  const outerClass = `${isLast ? '' : 'border-b border-border/50'} ${isPrepared ? 'border-l-[3px] border-l-success' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isInteractive) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
+  const outerClass = `relative border-b border-border/40 last:border-b-0 select-none transition-opacity ${isLast ? '' : ''} ${done ? 'border-l-[3px] border-l-success opacity-60' : ''} ${isNewUnacked ? 'animate-new-item' : ''} ${(isDemo || isInteractive) ? 'cursor-pointer' : ''} ${isTapToSend ? 'active:bg-success/10 transition-colors' : ''}`;
 
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (clickTimerRef.current) clearTimeout(clickTimerRef.current); }, []);
 
   const handleSingleTap = () => {
     if (isNewUnacked) onAcknowledgeNewItem?.(item.id);
-    if (isPrepared) {
+    if (done) {
       onItemSend?.(ticket.id, item.id, remainingQty);
     } else {
       onItemAdvance?.(ticket.id, item.id);
@@ -262,7 +200,7 @@ function ExpoItemRow({
   return (
     <div
       className={outerClass}
-      style={{ paddingTop: '2px', paddingBottom: '2px' }}
+      style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
       role={isInteractive ? 'button' : undefined}
       aria-label={isInteractive ? `Update status for ${tp(item.name)}` : undefined}
       onClick={() => {
@@ -278,32 +216,67 @@ function ExpoItemRow({
         }, 240);
       }}
     >
-      <div className="flex items-start" style={{ gap: '4px' }}>
+      <div className={`flex gap-1 ${hasDetails ? 'items-start' : 'items-center'}`}>
+        <span
+          className="font-bold text-foreground shrink-0 text-center"
+          style={{ fontSize: 'var(--kds-item-qty)', minWidth: 20, lineHeight: '14.4px' }}
+        >
+          {remainingQty}
+        </span>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap min-w-0" style={{ gap: '4px', rowGap: '2px', lineHeight: 1.1 }}>
-            <span
-              className="font-normal shrink-0"
-              style={{ fontSize: 'var(--kds-item-qty)', lineHeight: 1.1, width: '2.25ch', textAlign: 'right', display: 'inline-block' }}
-            >
-              {remainingQty}x
-            </span>
-            <span
-              className="font-bold uppercase text-foreground min-w-0 break-words"
-              style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
+          <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+            <div
+              className="text-foreground"
+              style={{ fontSize: 'var(--kds-item-name)', fontWeight: 700, lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
             >
               {tp(item.name)}
-            </span>
-            {toGoBadge}
-            {stationChip}
-            <span className="self-center inline-flex items-center" aria-label={`Status: ${item.status}`}>
-              {statusIcon}
-            </span>
+            </div>
           </div>
+
+          {item.allergens && item.allergens.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-0.5" style={{ lineHeight: 1 }}>
+              {item.allergens.map(a => (
+                <AllergenBadge key={a.type} allergen={{ type: a.type as any, label: a.label, icon: '' }} variant="item" suffix="allergy" />
+              ))}
+            </div>
+          )}
+
+          {expoModifiers.length > 0 && (
+            <div className="mt-0">
+              {expoModifiers
+                .sort((a, b) => (a.kind === 'remove' ? -1 : 1) - (b.kind === 'remove' ? -1 : 1))
+                .map((m, idx) => (
+                  <div key={idx}>
+                    <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+                      <div
+                        className={`font-semibold ${m.kind === 'remove' ? 'text-modifier-remove' : 'text-modifier-extra'}`}
+                        style={{ fontSize: 'var(--kds-modifier)', lineHeight: 1.2, textDecoration: done ? 'line-through' : 'none' }}
+                      >
+                        {m.text}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+
+          {item.notes && item.notes.trim().length > 0 && (
+            <div style={{ display: 'inline-block', maxWidth: '100%' }}>
+              <div
+                className={`italic leading-snug text-text-muted font-medium ${done ? 'line-through' : ''}`}
+                style={{ fontSize: 'var(--kds-modifier)' }}
+              >
+                "{item.notes}"
+              </div>
+            </div>
+          )}
         </div>
+
+        {toGoBadge}
+        <span className="self-center inline-flex items-center" aria-label={`Status: ${item.status}`}>
+          {statusIcon}
+        </span>
       </div>
-      {allergenRow}
-      {modifierRow}
-      {noteRow}
     </div>
   );
 }
@@ -612,7 +585,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
 
                 {/* Course items (collapsible) */}
                 {isExpanded && (
-                  <div className={`px-1 ${isQueued ? 'opacity-80' : ''}`} style={{ paddingTop: '2px', paddingBottom: '6px' }}>
+                  <div className={`${isQueued ? 'opacity-80' : ''}`}>
                     {courseItems.map((item, idx) => (
                       <ExpoItemRow
                         key={item.id}
@@ -641,7 +614,7 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
           })}
         </>
       ) : (
-        <div className="px-1" style={{ paddingTop: '4px', paddingBottom: '6px' }}>
+        <div>
           {ticket.items.map((item, idx) => (
             <ExpoItemRow
               key={item.id}
