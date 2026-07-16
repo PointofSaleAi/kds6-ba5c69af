@@ -288,7 +288,7 @@ function ExpoItemRow({
               {remainingQty}x
             </span>
             <span
-              className="font-bold uppercase text-text-primary min-w-0 break-words"
+              className="font-bold uppercase text-foreground min-w-0 break-words"
               style={{ fontSize: 'var(--kds-item-name)', lineHeight: 1.1, wordBreak: 'break-word' }}
             >
               {tp(item.name)}
