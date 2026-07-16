@@ -46,7 +46,7 @@ type AppScreen =
   | 'performance';
 
 interface IndexProps {
-  cardVariant?: 'default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5';
+  cardVariant?: import('@/lib/ticket-card-variant').CardVariant;
   legacyActions?: boolean;
 }
 

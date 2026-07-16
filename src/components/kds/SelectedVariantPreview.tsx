@@ -5,6 +5,14 @@ import { OrderCardV2 } from './variants/OrderCardV2';
 import { OrderCardV3 } from './variants/OrderCardV3';
 import { OrderCardV4 } from './variants/OrderCardV4';
 import { OrderCardV5 } from './variants/OrderCardV5';
+import { OrderCardV6 } from './variants/OrderCardV6';
+import { OrderCardV7 } from './variants/OrderCardV7';
+import { OrderCardV8 } from './variants/OrderCardV8';
+import { OrderCardV9 } from './variants/OrderCardV9';
+import { OrderCardV10 } from './variants/OrderCardV10';
+import { OrderCardV11 } from './variants/OrderCardV11';
+import { OrderCardV12 } from './variants/OrderCardV12';
+import { OrderCardV13 } from './variants/OrderCardV13';
 import { previewTicket } from '@/data/mock-preview-ticket';
 import { KDSSettingsPreviewScope, type TicketsRouteKey } from '@/hooks/use-kds-settings';
 import {
@@ -45,6 +53,12 @@ export function SelectedVariantPreview({
 
   const variant = getCardVariantForTicketsRoute(route);
 
+  const themedMap: Record<string, React.ComponentType<{ order: Order }>> = {
+    v6: OrderCardV6, v7: OrderCardV7, v8: OrderCardV8, v9: OrderCardV9,
+    v10: OrderCardV10, v11: OrderCardV11, v12: OrderCardV12, v13: OrderCardV13,
+  };
+  const ThemedCard = themedMap[variant];
+
   const content =
     variant === 'v1' ? (
       <OrderCardV1 order={order} />
@@ -56,6 +70,8 @@ export function SelectedVariantPreview({
       <OrderCardV4 order={order} />
     ) : variant === 'v5' ? (
       <OrderCardV5 order={order} />
+    ) : ThemedCard ? (
+      <ThemedCard order={order} />
     ) : (
       <OrderCard order={order} layoutOverride={layoutOverride} legacyActions={route === 'Default'} />
     );
