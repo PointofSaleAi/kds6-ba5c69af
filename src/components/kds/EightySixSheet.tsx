@@ -367,53 +367,70 @@ export function EightySixSheet({
 
 
 
+  const totalEightySixedCount = eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0);
+  const activeDurationLabel =
+    snoozeDurations.find((d) => d.id === selectedDuration)?.label ?? "1 hour";
+
   return (
     <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0 [&>button.absolute]:hidden"
         onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); closeConfirmItem(); } }}
       >
 
-        <SheetHeader className="px-4 pt-4 pb-2 border-b border-destructive/30">
-          <SheetTitle className="text-foreground text-lg font-semibold flex items-center gap-3">
-            <span>86 Products</span>
-            {eightySixedItems.length > 0 && (
-              <EightySixBadge
-                size="lg"
-                label={eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0).toString()}
-                showIcon={false}
-                pulse
-              />
-            )}
-          </SheetTitle>
+        <SheetHeader className="px-4 pt-4 pb-3 border-b border-border">
+          <div className="flex items-center justify-between gap-2">
+            <SheetTitle className="text-foreground text-base font-semibold flex items-center gap-2 m-0">
+              <span className="inline-flex items-center justify-center h-6 min-w-[26px] px-1.5 rounded-md bg-destructive text-white text-[11px] font-bold tracking-tight">
+                86
+              </span>
+              <span>Products</span>
+            </SheetTitle>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setView(view === "manage" ? "add" : "manage")}
+                aria-pressed={view === "manage"}
+                className={`h-8 pl-2.5 pr-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
+                  view === "manage"
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-foreground hover:bg-muted/80"
+                }`}
+              >
+                <span>86'd</span>
+                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-white text-[10px] font-semibold flex items-center justify-center leading-none">
+                  {totalEightySixedCount}
+                </span>
+              </button>
+              {view === "add" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen((v) => {
+                      const next = !v;
+                      if (!next) setSearchQuery("");
+                      return next;
+                    });
+                  }}
+                  aria-label="Search products"
+                  aria-pressed={searchOpen}
+                  className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${
+                    searchOpen
+                      ? "bg-foreground text-background"
+                      : "bg-muted text-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  <Search className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
         </SheetHeader>
 
-        {/* View Toggle */}
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-border">
-          <button
-            onClick={() => setView("manage")}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === "manage"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground hover:bg-muted/80"
-            }`}
-          >
-            Currently 86'd ({eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0)})
-          </button>
-          <button
-            onClick={() => setView("add")}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === "add"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground hover:bg-muted/80"
-            }`}
-          >
-            Add Products
-          </button>
-        </div>
+
 
         {view === "manage" ? (
           <ScrollArea className="flex-1">
