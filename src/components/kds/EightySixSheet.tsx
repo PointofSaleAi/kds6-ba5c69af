@@ -754,6 +754,8 @@ export function EightySixSheet({
                 setShowCustomTimePicker={setShowCustomTimePicker}
                 handleRestoreWithDuration={handleRestoreWithDuration}
                 handleCustomTimeConfirm={handleCustomTimeConfirm}
+                handleRestoreAllWithDuration={handleRestoreAllWithDuration}
+                handleCustomTimeConfirmAll={handleCustomTimeConfirmAll}
                 customHours={customHours}
                 customMinutes={customMinutes}
                 setCustomHours={setCustomHours}
