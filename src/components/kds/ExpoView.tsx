@@ -490,19 +490,14 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
             {formatTimer(ticket.timerSeconds)}
           </span>
         </div>
-        <div className="flex items-center justify-between gap-2 mt-0.5">
-          <span className="text-[12px] font-medium text-foreground truncate">
-            {ticket.orderType === 'dine-in' ? (ticket.tableName || '') : (orderTypeLabel[ticket.orderType] || ticket.orderType.toUpperCase())}
-          </span>
-          {isReady && !isSentOut ? (
+        {isReady && !isSentOut && (
+          <div className="flex items-center justify-end gap-2 mt-0.5">
             <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-success shrink-0">
               <Check className="w-3 h-3" strokeWidth={3} />
               Tap to send
             </span>
-          ) : (
-            <span className="text-[11px] text-muted-foreground shrink-0 truncate" />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Allergen badges */}
