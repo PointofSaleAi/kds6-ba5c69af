@@ -848,12 +848,14 @@ export function EightySixSheet({
 
 
         {view === "add" && selectedItems.size > 0 && (
-          <Button
-            onClick={bulk86Selected}
-            className="absolute bottom-4 right-4 bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg z-50"
-          >
-            86 it{selectedItems.size > 0 ? ` (${selectedItems.size})` : ""}
-          </Button>
+          <div className="absolute bottom-4 right-4 z-50">
+            <Button
+              onClick={bulk86Selected}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg"
+            >
+              86 it ({selectedItems.size})
+            </Button>
+          </div>
         )}
 
         {view === "manage" && (
