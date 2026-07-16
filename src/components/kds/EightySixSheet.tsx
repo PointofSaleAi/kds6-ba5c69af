@@ -819,6 +819,9 @@ export function EightySixSheet({
                       })}
                     </div>
                   </div>
+                  {index < filteredCategories.length - 1 && (
+                    <Separator className="my-2" />
+                  )}
                 ))}
               </div>
             </ScrollArea>
