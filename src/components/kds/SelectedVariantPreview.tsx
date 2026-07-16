@@ -53,6 +53,12 @@ export function SelectedVariantPreview({
 
   const variant = getCardVariantForTicketsRoute(route);
 
+  const themedMap: Record<string, React.ComponentType<{ order: Order }>> = {
+    v6: OrderCardV6, v7: OrderCardV7, v8: OrderCardV8, v9: OrderCardV9,
+    v10: OrderCardV10, v11: OrderCardV11, v12: OrderCardV12, v13: OrderCardV13,
+  };
+  const ThemedCard = themedMap[variant];
+
   const content =
     variant === 'v1' ? (
       <OrderCardV1 order={order} />
@@ -64,6 +70,8 @@ export function SelectedVariantPreview({
       <OrderCardV4 order={order} />
     ) : variant === 'v5' ? (
       <OrderCardV5 order={order} />
+    ) : ThemedCard ? (
+      <ThemedCard order={order} />
     ) : (
       <OrderCard order={order} layoutOverride={layoutOverride} legacyActions={route === 'Default'} />
     );
