@@ -148,6 +148,8 @@ export function EightySixSheet({
   const [selectMode, setSelectMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [selectedQuantities, setSelectedQuantities] = useState<Record<string, number>>({});
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [durationPopoverOpen, setDurationPopoverOpen] = useState(false);
   const modalDismissedAtRef = useRef(0);
 
   const itemKey = (name: string, category: string) => `${category}::${name}`;
