@@ -913,7 +913,7 @@ interface ExpoViewProps {
 }
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [], controlledFilter, hideTopControls }: ExpoViewProps) {
-  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
+  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder, setItemLifecycle } = useOrderStore();
   const { textSize, ticketSpacing } = useKDSSettings();
   const [internalFilter, setInternalFilter] = useState<ExpoFilter>('all');
   const filter = controlledFilter ?? internalFilter;
@@ -1056,33 +1056,32 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
     const ticket = rawTickets.find(t => t.id === ticketId);
     const item = ticket?.items.find(i => i.id === itemId);
     if (!item) return;
-    setItemStatusOverrides(prev => {
-      const current = prev.get(itemId) ?? item.status;
-      const next = advanceStatus(current);
-      if (next === current) return prev;
-      const map = new Map(prev);
-      map.set(itemId, next);
-      return map;
-    });
-  }, [cycleDemoItem, rawTickets]);
+    // Expo can only mark ready (status === 'done') → served.
+    if (item.status === 'done') {
+      setItemLifecycle(ticketId, itemId, 'served');
+      setSentItemIds(prev => {
+        const next = new Set(prev);
+        next.add(itemId);
+        return next;
+      });
+    }
+  }, [cycleDemoItem, rawTickets, setItemLifecycle]);
 
   const handleItemRevert = useCallback((ticketId: string, itemId: string) => {
     if (ticketId.startsWith('demo-')) {
       cycleDemoItem(ticketId, itemId, 'revert');
       return;
     }
-    const ticket = rawTickets.find(t => t.id === ticketId);
-    const item = ticket?.items.find(i => i.id === itemId);
-    if (!item) return;
-    setItemStatusOverrides(prev => {
-      const current = prev.get(itemId) ?? item.status;
-      const next = revertStatus(current);
-      if (next === current) return prev;
-      const map = new Map(prev);
-      map.set(itemId, next);
-      return map;
+    // Real tickets: expo cannot revert kitchen states; only undo a local send-out.
+    setSentItemIds(prev => {
+      if (!prev.has(itemId)) return prev;
+      const next = new Set(prev);
+      next.delete(itemId);
+      return next;
     });
-  }, [cycleDemoItem, rawTickets]);
+    setItemLifecycle(ticketId, itemId, 'ready');
+  }, [cycleDemoItem, setItemLifecycle]);
+
 
   // Demo send out
   const handleDemoSendOut = useCallback((id: string) => {
