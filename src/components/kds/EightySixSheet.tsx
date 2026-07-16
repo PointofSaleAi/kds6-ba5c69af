@@ -436,12 +436,12 @@ export function EightySixSheet({
         {view === "manage" ? (
           <ScrollArea className="flex-1 h-full">
             {eightySixedItems.length === 0 ? (
-              <div className="min-h-full flex flex-col items-center justify-center px-4">
-                <Package className="w-12 h-12 text-muted-foreground/20 mb-4" />
-                <p className="text-muted-foreground text-center">No products are currently 86'd</p>
+              <div className="h-full flex flex-col items-center justify-center px-4 text-center">
+                <Package className="w-12 h-12 text-muted-foreground/20 mb-4 mx-auto" />
+                <p className="text-muted-foreground text-center w-full">No products are currently 86'd</p>
                 <Button
                   onClick={() => setView("add")}
-                  className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 mx-auto"
                 >
                   Add Products
                 </Button>
