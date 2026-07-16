@@ -14,6 +14,14 @@ import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
 import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
+import { OrderCardV6 } from '@/components/kds/variants/OrderCardV6';
+import { OrderCardV7 } from '@/components/kds/variants/OrderCardV7';
+import { OrderCardV8 } from '@/components/kds/variants/OrderCardV8';
+import { OrderCardV9 } from '@/components/kds/variants/OrderCardV9';
+import { OrderCardV10 } from '@/components/kds/variants/OrderCardV10';
+import { OrderCardV11 } from '@/components/kds/variants/OrderCardV11';
+import { OrderCardV12 } from '@/components/kds/variants/OrderCardV12';
+import { OrderCardV13 } from '@/components/kds/variants/OrderCardV13';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
