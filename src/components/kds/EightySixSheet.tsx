@@ -858,16 +858,6 @@ export function EightySixSheet({
           </div>
         )}
 
-        {view === "manage" && (
-          <div className="py-2 px-4 border-t border-border">
-            <Button
-              onClick={() => onOpenChange(false)}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Done
-            </Button>
-          </div>
-        )}
       </SheetContent>
     </Sheet>
   );
