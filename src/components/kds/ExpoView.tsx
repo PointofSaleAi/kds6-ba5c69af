@@ -913,7 +913,7 @@ interface ExpoViewProps {
 }
 
 export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChange, onTicketSentOut, onAllTicketsChange, selectedProducts = [], controlledFilter, hideTopControls }: ExpoViewProps) {
-  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder } = useOrderStore();
+  const { expoTickets: rawTickets, sendOutOrder, orders, setOrders, updateOrderStatus, rushOrder, setItemLifecycle } = useOrderStore();
   const { textSize, ticketSpacing } = useKDSSettings();
   const [internalFilter, setInternalFilter] = useState<ExpoFilter>('all');
   const filter = controlledFilter ?? internalFilter;
