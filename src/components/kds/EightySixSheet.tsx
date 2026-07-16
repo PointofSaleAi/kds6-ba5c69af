@@ -436,7 +436,7 @@ export function EightySixSheet({
         {view === "manage" ? (
           <ScrollArea className="flex-1 w-full">
             {eightySixedItems.length === 0 ? (
-              <div className="min-h-full flex flex-col items-center justify-center px-4 text-center">
+              <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
                 <Package className="w-12 h-12 text-muted-foreground/20 mb-4 mx-auto" />
                 <p className="text-muted-foreground text-center w-full">No products are currently 86'd</p>
                 <Button
