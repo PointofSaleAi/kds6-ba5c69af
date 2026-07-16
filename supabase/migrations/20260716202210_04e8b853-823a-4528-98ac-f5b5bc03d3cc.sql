@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Public read recipe-videos" ON storage.objects;
