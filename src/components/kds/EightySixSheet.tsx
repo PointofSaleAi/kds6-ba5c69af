@@ -374,7 +374,13 @@ function ManageEightySixedList(props: ManageListProps) {
                   <p className="text-xs font-bold tracking-wider text-foreground uppercase">{category}</p>
                   <span className="text-xs text-muted-foreground">({list.length})</span>
                 </div>
-                <RestorePopover {...props} bulkItems={list} bulkKey={category} triggerLabel={`Restore all (${list.length})`} />
+                <RestorePopover
+                  {...props}
+                  bulkItems={list}
+                  bulkKey={category}
+                  triggerLabel={`Restore all (${list.length})`}
+                  triggerClassName="h-auto px-0 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-transparent bg-transparent shadow-none border-none"
+                />
               </div>
 
               <div className="divide-y divide-border/60">
