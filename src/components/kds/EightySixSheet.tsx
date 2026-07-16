@@ -374,13 +374,6 @@ function ManageEightySixedList(props: ManageListProps) {
                 </button>
               </div>
 
-              {uniform && (
-                <p className="px-4 pt-2 text-xs text-muted-foreground">
-                  Marked unavailable for {getPresetLabel(preset)}
-                  {list[0].snoozeEndTime ? ` · ${getMinTimeRemainingLabel(list)}` : ""}
-                </p>
-              )}
-
               <div className="divide-y divide-border/60">
                 {list.map((item) => (
                   <div key={item.id} className="flex items-center justify-between gap-3 px-4 py-3">
@@ -392,6 +385,13 @@ function ManageEightySixedList(props: ManageListProps) {
                   </div>
                 ))}
               </div>
+
+              {uniform && (
+                <p className="px-4 py-2 text-xs text-muted-foreground border-t border-border/60">
+                  Marked unavailable for {getPresetLabel(preset)}
+                  {list[0].snoozeEndTime ? ` · ${getMinTimeRemainingLabel(list)}` : ""}
+                </p>
+              )}
             </div>
           );
         })}
