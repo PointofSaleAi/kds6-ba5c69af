@@ -696,10 +696,10 @@ export function EightySixSheet({
             })()}
 
             <ScrollArea className="flex-1">
-              <div className="px-4 pt-3 pb-4 space-y-4">
+              <div className="px-4 pt-1 pb-4 space-y-3">
                 {filteredCategories.map((category) => (
                   <div key={category.name}>
-                    <div className="flex items-center justify-between px-1 py-1.5">
+                    <div className="flex items-center justify-between px-1 py-1">
                       <h3 className="text-sm font-bold text-foreground">
                         {category.name}
                         <span className="ml-1.5 text-xs font-normal text-muted-foreground">
@@ -738,7 +738,7 @@ export function EightySixSheet({
                                   <X size={10} strokeWidth={3} />
                                 </div>
                               )}
-                              <span className={`text-sm font-normal text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
+                              <span className={`text-sm font-medium text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
                                 {item}
                               </span>
                             </div>
@@ -778,7 +778,7 @@ export function EightySixSheet({
         />
 
 
-        <div className="p-4 border-t border-border">
+        <div className="py-2 px-4 border-t border-border">
           {view === "add" ? (
             <div className="flex items-center justify-between gap-3">
               <span className="text-sm font-medium text-muted-foreground">
