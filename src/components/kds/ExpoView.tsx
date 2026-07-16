@@ -674,10 +674,10 @@ function ExpoTicketCard({ ticket, onSendOut, onRush, holdStations, onToggleHold,
       {/* Pending course for demo ticket 6 */}
       {demoTicket?.coursing?.pending && (
         <>
-          <div className="border-t border-border bg-warning/10" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '6px', paddingBottom: '6px' }}>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-warning">
-              {demoTicket.coursing.pending.course} &middot; {demoTicket.coursing.pending.label}
-            </span>
+          <div className="w-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide bg-muted text-muted-foreground flex items-center gap-1.5 border-t border-border">
+            <ChevronRight size={12} strokeWidth={2.5} className="shrink-0" />
+            <span className="truncate">{demoTicket.coursing.pending.course}</span>
+            <span className="text-warning normal-case tracking-normal">· {demoTicket.coursing.pending.label}</span>
           </div>
           <div className="opacity-80" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '4px', paddingBottom: '4px' }}>
             {demoTicket.coursing.pending.items.map(pi => (
