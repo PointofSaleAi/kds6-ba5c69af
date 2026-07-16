@@ -272,7 +272,7 @@ function V2ProductRow({
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-end gap-1 shrink-0" style={{ height: 'calc(var(--kds-item-name) * 1.2)', lineHeight: 'calc(var(--kds-item-name) * 1.2)' }}>
+          <div className="flex items-center justify-end gap-1 shrink-0" style={{ height: 'calc(var(--kds-item-name) * 1.2)', lineHeight: 'calc(var(--kds-item-name) * 1.2)', transform: 'translateY(4px)' }}>
             {canExpand && !done && (
               <button
                 type="button"
