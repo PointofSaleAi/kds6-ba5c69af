@@ -100,10 +100,10 @@ function getExpoRelevantModifiers(
 /* -- Item status icon -- */
 
 function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
-  if (status === 'done') return <Check className="w-3.5 h-3.5 text-success" />;
-  if (status === 'firing') return <Flame className="w-3.5 h-3.5 text-warning" />;
-  if (status === 'sent') return <ArrowUpRight className="w-3.5 h-3.5 text-text-muted" />;
-  return <Hourglass className="w-3.5 h-3.5 text-text-muted" />;
+  if (status === 'sent') return <Check className="w-3.5 h-3.5" style={{ color: '#27AE60' }} />;
+  if (status === 'done') return <Check className="w-3.5 h-3.5" style={{ color: '#16A34A' }} />;
+  if (status === 'firing') return <ClocheIcon size={14} strokeWidth={2.2} color="#374151" />;
+  return <Eye className="w-3.5 h-3.5" style={{ color: '#6C7A89' }} />;
 }
 
 /* -- Reusable item row renderer for ExpoTicketCard -- */
