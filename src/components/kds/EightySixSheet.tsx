@@ -368,7 +368,7 @@ export function EightySixSheet({
 
 
 
-  const totalEightySixedCount = eightySixedItems.reduce((sum, i) => sum + (i.quantity ?? 1), 0);
+  const totalEightySixedCount = eightySixedItems.length;
   const activeDurationLabel =
     snoozeDurations.find((d) => d.id === selectedDuration)?.label ?? "1 hour";
 
