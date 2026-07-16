@@ -25,21 +25,23 @@ import type { Order } from '@/types/kds';
 interface SelectedVariantPreviewProps {
   order?: Order;
   layoutOverride?: 'standard' | 'compact';
+  routeOverride?: TicketsRouteKey;
 }
 
 /**
  * Renders the mock preview ticket using whichever ticket-card variant the
- * user selected in Settings > Display > Ticket Layout. Keeps preview tickets
- * across settings screens (Status Colors, Language, etc.) in sync with the
- * Ticket Layout choice.
+ * user selected in Settings > Display > Ticket Layout (or a caller-provided
+ * routeOverride, used by the Live Studio filmstrip).
  */
 export function SelectedVariantPreview({
   order = previewTicket,
   layoutOverride,
+  routeOverride,
 }: SelectedVariantPreviewProps) {
   const [route, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('v3'));
 
   useEffect(() => {
+    if (routeOverride) return;
     const sync = () => setRoute(readStoredTicketsRoute('v3'));
     window.addEventListener('storage', sync);
     window.addEventListener('focus', sync);
@@ -49,9 +51,10 @@ export function SelectedVariantPreview({
       window.removeEventListener('focus', sync);
       window.removeEventListener(TICKETS_ROUTE_CHANGE_EVENT, sync);
     };
-  }, []);
+  }, [routeOverride]);
 
-  const variant = getCardVariantForTicketsRoute(route);
+  const activeRoute = routeOverride ?? route;
+  const variant = getCardVariantForTicketsRoute(activeRoute);
 
   const themedMap: Record<string, React.ComponentType<{ order: Order }>> = {
     v6: OrderCardV6, v7: OrderCardV7, v8: OrderCardV8, v9: OrderCardV9,
@@ -73,8 +76,8 @@ export function SelectedVariantPreview({
     ) : ThemedCard ? (
       <ThemedCard order={order} />
     ) : (
-      <OrderCard order={order} layoutOverride={layoutOverride} legacyActions={route === 'Default'} />
+      <OrderCard order={order} layoutOverride={layoutOverride} legacyActions={activeRoute === 'Default'} />
     );
 
-  return <KDSSettingsPreviewScope route={route}>{content}</KDSSettingsPreviewScope>;
+  return <KDSSettingsPreviewScope route={activeRoute}>{content}</KDSSettingsPreviewScope>;
 }
