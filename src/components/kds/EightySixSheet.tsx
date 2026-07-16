@@ -361,7 +361,7 @@ export function EightySixSheet({
     <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0"
+        className="w-[400px] sm:max-w-[400px] bg-background border-border p-0 flex flex-col gap-0 relative"
         onPointerDownOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onInteractOutside={(e) => { if (confirmItem) e.preventDefault(); }}
         onEscapeKeyDown={(e) => { if (confirmItem) { e.preventDefault(); closeConfirmItem(); } }}
@@ -683,7 +683,9 @@ export function EightySixSheet({
               };
               return (
                 <div className="flex items-center justify-between px-4 py-2 border-b border-border">
-                  <span className="text-xs text-muted-foreground">Tap the product to select</span>
+                  <span className="text-xs text-muted-foreground">
+                    {selectedItems.size > 0 ? `${selectedItems.size} selected` : "Tap the product to select"}
+                  </span>
                   <button
                     type="button"
                     onClick={toggleSelectAll}
@@ -696,7 +698,7 @@ export function EightySixSheet({
             })()}
 
             <ScrollArea className="flex-1">
-              <div className="px-4 pt-1 pb-4 space-y-3">
+              <div className={`px-4 pt-1 space-y-3 ${selectedItems.size > 0 ? "pb-20" : "pb-4"}`}>
                 {filteredCategories.map((category) => (
                   <div key={category.name}>
                     <div className="flex items-center justify-between px-1 py-1">
