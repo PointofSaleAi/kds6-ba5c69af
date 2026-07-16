@@ -761,7 +761,7 @@ export function EightySixSheet({
 
             <ScrollArea className="flex-1">
               <div className={`px-4 pt-1 space-y-3 ${selectedItems.size > 0 ? "pb-20" : "pb-4"}`}>
-                {filteredCategories.map((category) => (
+                {filteredCategories.map((category, index) => (
                   <div key={category.name}>
                     <div className="flex items-center justify-between px-1 py-1">
                       <h3 className="text-sm font-bold text-foreground">
