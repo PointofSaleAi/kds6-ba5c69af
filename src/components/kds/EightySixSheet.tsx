@@ -179,6 +179,7 @@ const getMinTimeRemainingLabel = (items: EightySixedItem[]): string => {
 interface RestorePopoverProps {
   itemId?: string;
   bulkItems?: EightySixedItem[];
+  bulkKey?: string;
   openPopoverId: string | null;
   setOpenPopoverId: (v: string | null) => void;
   showCustomTimePicker: boolean;
@@ -203,7 +204,7 @@ interface RestorePopoverProps {
 
 function RestorePopover(props: RestorePopoverProps) {
   const {
-    itemId, bulkItems, openPopoverId, setOpenPopoverId,
+    itemId, bulkItems, bulkKey, openPopoverId, setOpenPopoverId,
     showCustomTimePicker, setShowCustomTimePicker,
     handleRestoreWithDuration, handleCustomTimeConfirm,
     handleRestoreAllWithDuration, handleCustomTimeConfirmAll,
@@ -213,7 +214,7 @@ function RestorePopover(props: RestorePopoverProps) {
     triggerLabel = "Restore", triggerClassName,
   } = props;
 
-  const popoverKey = bulkItems ? `bulk:${bulkItems === props.bulkItems && !itemId ? "all" : bulkItems[0]?.category ?? "group"}` : itemId!;
+  const popoverKey = bulkItems ? `bulk:${bulkKey ?? "group"}` : itemId!;
   const isOpen = openPopoverId === popoverKey;
 
   const onSelectDuration = (durationId: string) => {
