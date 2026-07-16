@@ -30,6 +30,7 @@ import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { getCardVariantForTicketsRoute, readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import { LiveStudio } from '@/components/settings/LiveStudio';
 
 export default function DisplaySettings() {
   const {
@@ -158,8 +159,6 @@ export default function DisplaySettings() {
   }
 
   if (ticketSpacingOpen) {
-    // Lazy import inline to keep bundle graph obvious.
-    const LiveStudio = require('@/components/settings/LiveStudio').LiveStudio as React.ComponentType;
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
