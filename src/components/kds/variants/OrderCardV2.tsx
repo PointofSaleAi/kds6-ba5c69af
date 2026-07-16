@@ -333,6 +333,7 @@ function V2ProductRow({
           )}
 
         </div>
+        <div className="flex items-center gap-1 shrink-0" style={{ minHeight: 'calc(var(--kds-item-name) * 1.2)' }}>
         {canExpand && !done && (
           <button
             type="button"
