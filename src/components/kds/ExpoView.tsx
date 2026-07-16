@@ -100,10 +100,32 @@ function getExpoRelevantModifiers(
 /* -- Item status icon -- */
 
 function ExpoStatusIcon({ status }: { status: ExpoItemStatus | 'sent' }) {
-  if (status === 'sent') return <Check className="w-3.5 h-3.5" style={{ color: '#27AE60' }} />;
-  if (status === 'done') return <Check className="w-3.5 h-3.5" style={{ color: '#16A34A' }} />;
-  if (status === 'firing') return <ClocheIcon size={14} strokeWidth={2.2} color="#374151" />;
-  return <Eye className="w-3.5 h-3.5" style={{ color: '#6C7A89' }} />;
+  if (status === 'sent') {
+    return (
+      <span className="shrink-0 inline-flex items-center justify-center rounded-full" style={{ background: '#27AE60', width: 22, height: 22 }}>
+        <Check size={14} color="#fff" strokeWidth={3} />
+      </span>
+    );
+  }
+  if (status === 'done') {
+    return (
+      <span className="shrink-0 inline-flex items-center justify-center rounded-full" style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }}>
+        <Check size={14} strokeWidth={3} />
+      </span>
+    );
+  }
+  if (status === 'firing') {
+    return (
+      <span className="shrink-0 inline-flex items-center justify-center rounded-[5px]" style={{ width: 22, height: 22, background: '#374151' }}>
+        <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
+      </span>
+    );
+  }
+  return (
+    <span className="shrink-0 inline-flex items-center justify-center" style={{ width: 22, height: 22, color: '#6C7A89' }}>
+      <Eye size={18} strokeWidth={2} />
+    </span>
+  );
 }
 
 /* -- Reusable item row renderer for ExpoTicketCard -- */
@@ -754,11 +776,31 @@ function ExpoStationBar() {
   );
 
   const legendBlock = (
-    <div className="flex items-center flex-wrap gap-3">
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Eye className="w-3 h-3" style={{ color: '#6C7A89' }} /> Seen</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><ClocheIcon size={12} strokeWidth={2.2} color="#374151" /> Preparing</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Check className="w-3 h-3" style={{ color: '#16A34A' }} /> Ready</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted"><Check className="w-3 h-3" style={{ color: '#27AE60' }} /> Served</span>
+    <div className="flex items-center flex-wrap gap-2">
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center" style={{ width: 16, height: 16, color: '#6C7A89' }}>
+          <Eye size={13} strokeWidth={2} />
+        </span>
+        Seen
+      </span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center rounded-[4px]" style={{ width: 16, height: 16, background: '#374151' }}>
+          <ClocheIcon size={10} strokeWidth={2.4} color="#fff" />
+        </span>
+        Preparing
+      </span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center rounded-full" style={{ width: 16, height: 16, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }}>
+          <Check size={10} strokeWidth={3} />
+        </span>
+        Ready
+      </span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-text-muted">
+        <span className="inline-flex items-center justify-center rounded-full" style={{ width: 16, height: 16, background: '#27AE60' }}>
+          <Check size={10} color="#fff" strokeWidth={3} />
+        </span>
+        Served
+      </span>
     </div>
   );
 
