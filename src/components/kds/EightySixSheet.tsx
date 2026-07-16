@@ -762,66 +762,68 @@ export function EightySixSheet({
             <ScrollArea className="flex-1">
               <div className={`px-4 pt-1 space-y-3 ${selectedItems.size > 0 ? "pb-20" : "pb-4"}`}>
                 {filteredCategories.map((category, index) => (
-                  <div key={category.name}>
-                    <div className="flex items-center justify-between px-1 py-1">
-                      <h3 className="text-sm font-bold text-foreground">
-                        {category.name}
-                        <span className="ml-1.5 text-xs font-normal text-muted-foreground">
-                          ({category.items.length})
-                        </span>
-                      </h3>
-                      {category.items.some((i) => selectedItems.has(itemKey(i, category.name))) && (
-                        <span className="text-xs text-muted-foreground">Available Stock</span>
-                      )}
+                  <>
+                    <div key={category.name}>
+                      <div className="flex items-center justify-between px-1 py-1">
+                        <h3 className="text-sm font-bold text-foreground">
+                          {category.name}
+                          <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+                            ({category.items.length})
+                          </span>
+                        </h3>
+                        {category.items.some((i) => selectedItems.has(itemKey(i, category.name))) && (
+                          <span className="text-xs text-muted-foreground">Available Stock</span>
+                        )}
+                      </div>
+                      <div className="space-y-0.5">
+                        {category.items.map((item) => {
+                          const is86ed = isItemEightySixed(item);
+                          const k = itemKey(item, category.name);
+                          const isSelected = selectedItems.has(k);
+                          return (
+                            <button
+                              key={item}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                if (is86ed) return;
+                                toggleSelectItem(item, category.name);
+                              }}
+                              disabled={is86ed}
+                              className={`w-full flex items-center justify-between px-2 py-2.5 rounded-lg transition-colors ${
+                                is86ed
+                                  ? "cursor-not-allowed eighty-six-row"
+                                  : isSelected
+                                    ? "bg-primary/5"
+                                    : "hover:bg-muted/60"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                {is86ed && (
+                                  <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
+                                    <X size={10} strokeWidth={3} />
+                                  </div>
+                                )}
+                                <span className={`text-sm font-medium text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
+                                  {item}
+                                </span>
+                              </div>
+                              {is86ed ? (
+                                <EightySixBadge size="sm" variant="subtle" />
+                              ) : isSelected ? (
+                                <InlineQtyAdjuster
+                                  value={selectedQuantities[k] ?? 0}
+                                  onChange={(qty) => setItemQuantity(item, category.name, qty)}
+                                />
+                              ) : null}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                    <div className="space-y-0.5">
-                      {category.items.map((item) => {
-                        const is86ed = isItemEightySixed(item);
-                        const k = itemKey(item, category.name);
-                        const isSelected = selectedItems.has(k);
-                        return (
-                          <button
-                            key={item}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              if (is86ed) return;
-                              toggleSelectItem(item, category.name);
-                            }}
-                            disabled={is86ed}
-                            className={`w-full flex items-center justify-between px-2 py-2.5 rounded-lg transition-colors ${
-                              is86ed
-                                ? "cursor-not-allowed eighty-six-row"
-                                : isSelected
-                                  ? "bg-primary/5"
-                                  : "hover:bg-muted/60"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              {is86ed && (
-                                <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
-                                  <X size={10} strokeWidth={3} />
-                                </div>
-                              )}
-                              <span className={`text-sm font-medium text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
-                                {item}
-                              </span>
-                            </div>
-                            {is86ed ? (
-                              <EightySixBadge size="sm" variant="subtle" />
-                            ) : isSelected ? (
-                              <InlineQtyAdjuster
-                                value={selectedQuantities[k] ?? 0}
-                                onChange={(qty) => setItemQuantity(item, category.name, qty)}
-                              />
-                            ) : null}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  {index < filteredCategories.length - 1 && (
-                    <Separator className="my-2" />
-                  )}
+                    {index < filteredCategories.length - 1 && (
+                      <Separator className="my-2" />
+                    )}
+                  </>
                 ))}
               </div>
             </ScrollArea>
