@@ -634,27 +634,14 @@ export function EightySixSheet({
         ) : (
           <>
             <div className="px-4 py-2 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1 min-w-0">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search menu products..."
-                    className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
-                  />
-                </div>
-                <Button
-                  size="sm"
-                  variant={selectMode ? "default" : "outline"}
-                  onClick={() => {
-                    if (selectMode) exitSelectMode();
-                    else setSelectMode(true);
-                  }}
-                  className="h-9 px-3 shrink-0"
-                >
-                  {selectMode ? "Cancel" : "Select"}
-                </Button>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search menu products..."
+                  className="pl-9 bg-muted border-input text-foreground placeholder:text-muted-foreground"
+                />
               </div>
             </div>
 
@@ -677,96 +664,109 @@ export function EightySixSheet({
               </div>
             </div>
 
-            <ScrollArea className="flex-1">
-              <div className="px-4 pt-2 pb-4 space-y-2">
-                {filteredCategories.map((category) => {
-                  const isExpanded = expandedCategories.has(category.name);
-                  return (
-                    <div key={category.name} className="bg-muted rounded-xl overflow-hidden">
-                      <button
-                      onClick={() => toggleCategory(category.name)}
-                      className="w-full flex items-center justify-between p-3 hover:bg-muted/80 transition-colors"
-                    >
-                      <span className={`text-sm ${isExpanded ? "font-semibold text-muted-foreground" : "font-medium text-foreground"}`}>
-                        {category.name}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground text-sm">{category.items.length}</span>
-                        {isExpanded ? (
-                          <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                        )}
-                      </div>
-                    </button>
+            {(() => {
+              const allSelectableKeys = filteredCategories.flatMap((cat) =>
+                cat.items.filter((i) => !isItemEightySixed(i)).map((i) => itemKey(i, cat.name)),
+              );
+              const allSelected = allSelectableKeys.length > 0 && allSelectableKeys.every((k) => selectedItems.has(k));
+              const toggleSelectAll = () => {
+                if (allSelected) {
+                  setSelectedItems(new Set());
+                  setSelectedQuantities({});
+                } else {
+                  const next = new Set(selectedItems);
+                  const nextQ = { ...selectedQuantities };
+                  allSelectableKeys.forEach((k) => {
+                    next.add(k);
+                    if (nextQ[k] === undefined) nextQ[k] = 0;
+                  });
+                  setSelectedItems(next);
+                  setSelectedQuantities(nextQ);
+                }
+              };
+              return (
+                <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+                  <span className="text-xs text-muted-foreground">Tap the product to select</span>
+                  <button
+                    type="button"
+                    onClick={toggleSelectAll}
+                    className="text-xs font-semibold text-primary hover:underline"
+                  >
+                    {allSelected ? "Deselect All" : "Select All"}
+                  </button>
+                </div>
+              );
+            })()}
 
-                    {isExpanded && (
-                      <div className="border-t border-border bg-muted/40">
-                        {category.items.map((item) => {
-                          const is86ed = isItemEightySixed(item);
-                          const isSelected = selectedItems.has(itemKey(item, category.name));
-                          return (
-                            <button
-                              key={item}
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                if (is86ed) return;
-                                if (selectMode) toggleSelectItem(item, category.name);
-                                else openConfirmItem({ name: item, category: category.name });
-                              }}
-                              disabled={is86ed}
-                              className={`w-full flex items-center justify-between pl-6 pr-3 py-3 border-t border-border/50 first:border-t-0 transition-colors ${
-                                is86ed
-                                  ? "cursor-not-allowed eighty-six-row"
-                                  : "hover:bg-muted/80"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2">
-                                {selectMode && !is86ed && (
-                                  <div
-                                    className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                                      isSelected
-                                        ? "bg-primary border-primary text-primary-foreground"
-                                        : "border-muted-foreground/50 bg-background"
-                                    }`}
-                                  >
-                                    {isSelected && (
-                                      <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                        <path d="M2 6.5 L5 9.5 L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
-                                      </svg>
-                                    )}
-                                  </div>
-                                )}
-                                {is86ed && (
-                                  <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
-                                    <X size={10} strokeWidth={3} />
-                                  </div>
-                                )}
-                                <span className={`text-sm font-normal text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
-                                  {item}
-                                </span>
-                              </div>
-                              {is86ed ? (
-                                <EightySixBadge size="sm" variant="subtle" />
-                              ) : selectMode ? (
-                                <InlineQtyAdjuster
-                                  value={selectedQuantities[itemKey(item, category.name)] ?? 0}
-                                  onChange={(qty) => {
-                                    if (!isSelected) toggleSelectItem(item, category.name);
-                                    setItemQuantity(item, category.name, qty);
-                                  }}
-                                />
-                              ) : (
-                                <span className="text-xs text-muted-foreground">Tap to 86</span>
+            <ScrollArea className="flex-1">
+              <div className="px-4 pt-3 pb-4 space-y-4">
+                {filteredCategories.map((category) => (
+                  <div key={category.name}>
+                    <div className="flex items-center justify-between px-1 pb-1.5 mb-1 border-b border-border">
+                      <h3 className="text-sm font-bold text-foreground">{category.name}</h3>
+                      <span className="text-xs text-muted-foreground">{category.items.length}</span>
+                    </div>
+                    <div className="space-y-0.5">
+                      {category.items.map((item) => {
+                        const is86ed = isItemEightySixed(item);
+                        const k = itemKey(item, category.name);
+                        const isSelected = selectedItems.has(k);
+                        return (
+                          <button
+                            key={item}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              if (is86ed) return;
+                              toggleSelectItem(item, category.name);
+                            }}
+                            disabled={is86ed}
+                            className={`w-full flex items-center justify-between px-2 py-2.5 rounded-lg transition-colors ${
+                              is86ed
+                                ? "cursor-not-allowed eighty-six-row"
+                                : isSelected
+                                  ? "bg-primary/5"
+                                  : "hover:bg-muted/60"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              {!is86ed && (
+                                <div
+                                  className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                                    isSelected
+                                      ? "bg-primary border-primary text-primary-foreground"
+                                      : "border-muted-foreground/50 bg-background"
+                                  }`}
+                                >
+                                  {isSelected && (
+                                    <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                      <path d="M2 6.5 L5 9.5 L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  )}
+                                </div>
                               )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
+                              {is86ed && (
+                                <div className="eighty-six-icon w-4 h-4 flex-shrink-0">
+                                  <X size={10} strokeWidth={3} />
+                                </div>
+                              )}
+                              <span className={`text-sm font-normal text-foreground ${is86ed ? "eighty-six-text" : ""}`}>
+                                {item}
+                              </span>
+                            </div>
+                            {is86ed ? (
+                              <EightySixBadge size="sm" variant="subtle" />
+                            ) : isSelected ? (
+                              <InlineQtyAdjuster
+                                value={selectedQuantities[k] ?? 0}
+                                onChange={(qty) => setItemQuantity(item, category.name, qty)}
+                              />
+                            ) : null}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                  );
-                })}
+                ))}
               </div>
             </ScrollArea>
           </>
