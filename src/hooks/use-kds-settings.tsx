@@ -10,6 +10,8 @@ export type ExpoSendButtonMode = 'always' | 'when-ready';
 export type TicketLayout = 'standard' | 'compact' | 'header';
 export type TicketSpacing = 'Compact' | 'Standard' | 'Spacious';
 export type TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3';
+export type KDSDensity = 'Low' | 'Medium' | 'High';
+export type KDSSafetyEmphasis = 'Muted' | 'Bright' | 'Highlighted';
 
 export type OrderTypeColors = Record<string, string>;
 
@@ -86,6 +88,8 @@ export interface KDSSettings {
   ticketLayout: TicketLayout;
   ticketSpacing: TicketSpacing;
   ticketHeaderStyle: TicketHeaderStyle;
+  density: KDSDensity;
+  safetyEmphasis: KDSSafetyEmphasis;
   routeOverrides: RouteOverrides;
 }
 
@@ -111,6 +115,8 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketLayout: (v: TicketLayout) => void;
   setTicketSpacing: (v: TicketSpacing) => void;
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
+  setDensity: (v: KDSDensity) => void;
+  setSafetyEmphasis: (v: KDSSafetyEmphasis) => void;
   /** Currently-active tickets route ('Default'..'v6') or null when not on a tickets route. */
   activeTicketsRoute: TicketsRouteKey | null;
   getRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K) => NonNullable<RouteOverride[K]>;
@@ -143,6 +149,8 @@ const defaults: KDSSettings = {
   ticketLayout: 'standard',
   ticketSpacing: 'Standard',
   ticketHeaderStyle: 'default',
+  density: 'Medium',
+  safetyEmphasis: 'Bright',
   routeOverrides: {},
 };
 
@@ -292,6 +300,8 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTicketLayout: setPerRoute('ticketLayout'),
         setTicketSpacing: setPerRoute('ticketSpacing'),
         setTicketHeaderStyle: update('ticketHeaderStyle'),
+        setDensity: update('density'),
+        setSafetyEmphasis: update('safetyEmphasis'),
         activeTicketsRoute,
         getRouteSetting,
         setRouteSetting,

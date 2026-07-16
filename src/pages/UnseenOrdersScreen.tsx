@@ -48,8 +48,8 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { isPortrait } = usePortrait();
   const { t } = useLanguage();
-  const { textSize, ticketSpacing } = useKDSSettings();
-  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
+  const { textSize, ticketSpacing, safetyEmphasis } = useKDSSettings();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing, safetyEmphasis);
 
   const unseenOrders = useMemo(() => {
     let list = sourceOrders.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
