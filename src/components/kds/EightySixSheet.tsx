@@ -577,6 +577,38 @@ export function EightySixSheet({
     }
   };
 
+  const handleRestoreAllWithDuration = (items: EightySixedItem[], durationId: string) => {
+    if (durationId === "custom") {
+      setShowCustomTimePicker(true);
+      return;
+    }
+    if (durationId === "now") {
+      items.forEach((i) => onRestoreItem(i.id));
+      setOpenPopoverId(null);
+      setShowCustomTimePicker(false);
+      return;
+    }
+    const duration = restoreDurations.find((d) => d.id === durationId);
+    if (duration && duration.ms) {
+      const restoreTime = new Date(Date.now() + duration.ms);
+      items.forEach((i) => onScheduleRestore(i.id, restoreTime));
+    } else {
+      items.forEach((i) => onRestoreItem(i.id));
+    }
+    setOpenPopoverId(null);
+    setShowCustomTimePicker(false);
+  };
+
+  const handleCustomTimeConfirmAll = (items: EightySixedItem[]) => {
+    if (customHours > 0 || customMinutes > 0) {
+      const ms = (customHours * 60 + customMinutes) * 60 * 1000;
+      const restoreTime = new Date(Date.now() + ms);
+      items.forEach((i) => onScheduleRestore(i.id, restoreTime));
+      setOpenPopoverId(null);
+      setShowCustomTimePicker(false);
+    }
+  };
+
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) => {
       const next = new Set(prev);
