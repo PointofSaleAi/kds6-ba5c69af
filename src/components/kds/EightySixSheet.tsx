@@ -778,7 +778,7 @@ export function EightySixSheet({
         />
 
 
-        <div className="p-4 border-t border-border">
+        <div className="py-2 px-4 border-t border-border">
           {view === "add" ? (
             <div className="flex items-center justify-between gap-3">
               <span className="text-sm font-medium text-muted-foreground">
