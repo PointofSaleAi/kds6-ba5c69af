@@ -400,7 +400,7 @@ function ManageEightySixedList(props: ManageListProps) {
   );
 }
 
-
+export function EightySixSheet({
   open,
   onOpenChange,
   eightySixedItems,
