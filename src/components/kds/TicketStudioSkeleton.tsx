@@ -364,7 +364,7 @@ export function TicketStudioSkeleton() {
   const [identifier, setIdentifier] = useState<string>('order');
   const [safety, setSafety] = useState<string>('highlighted');
   const [theme, setTheme] = useState<string>('light');
-  const [station, setStation] = useState<string>('expediter');
+  
 
   // New: personalize panel tabs + preview state.
   const [tab, setTab] = useState<PanelTab>('display');
@@ -434,7 +434,7 @@ export function TicketStudioSkeleton() {
     setIdentifier('order');
     setSafety('highlighted');
     setTheme('light');
-    setStation('expediter');
+    
     setAgingStageIndex(null);
     setOrderTypeKey('dine-in');
     setExpandedRule(null);
@@ -654,33 +654,6 @@ export function TicketStudioSkeleton() {
                     { value: 'auto', label: 'Auto' },
                   ]}
                 />
-              </Field>
-              <Field label="Station">
-                <div className="flex flex-wrap gap-1.5">
-                  {(
-                    [
-                      { value: 'expediter', label: 'Expediter' },
-                      { value: 'bar', label: 'Bar' },
-                      { value: 'prep-1', label: 'Prep 1' },
-                      { value: 'prep-2', label: 'Prep 2' },
-                    ] as const
-                  ).map((o) => {
-                    const active = station === o.value;
-                    return (
-                      <button
-                        key={o.value}
-                        onClick={() => setStation(o.value)}
-                        className={`px-2.5 h-7 rounded-full text-[11px] font-semibold transition-colors ${
-                          active
-                            ? 'bg-foreground text-background'
-                            : 'bg-muted text-text-secondary hover:text-text-primary'
-                        }`}
-                      >
-                        {o.label}
-                      </button>
-                    );
-                  })}
-                </div>
               </Field>
             </>
           )}
