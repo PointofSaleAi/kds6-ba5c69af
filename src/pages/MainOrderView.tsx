@@ -1056,6 +1056,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       isSeen: seenOrderIds.has(displayOrder.id),
     };
 
+    // Calm Board (from Ticket Studio) overrides the variant with a live card
+    // whose visuals match the Calm Board preview.
+    if (isCalmBoard && !isHistory) {
+      return wrap(withSelectedTicketSettings(<CalmBoardCard order={displayOrder} {...sharedVariantProps} />));
+    }
+
+
+
     if (effectiveCardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
       const mins = V1_AGING_SPREAD_MIN[idx];
