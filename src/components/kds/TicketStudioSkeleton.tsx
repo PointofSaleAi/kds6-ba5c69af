@@ -577,7 +577,7 @@ export function TicketStudioSkeleton() {
       <aside className="w-[210px] md:w-[230px] lg:w-[260px] xl:w-[300px] 2xl:w-[340px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
         <div className="px-4 py-3 border-b border-border space-y-2.5">
           <h2 className="text-sm font-bold text-text-primary">Personalize</h2>
-          <Segmented
+          <UnderlineTabs
             value={tab}
             onChange={(v) => setTab(v as PanelTab)}
             options={[
