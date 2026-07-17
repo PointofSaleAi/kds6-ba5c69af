@@ -304,6 +304,32 @@ function Segmented({
   );
 }
 
+function UnderlineTabs({
+  options, value, onChange,
+}: { options: readonly SegOption[]; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="flex items-center border-b border-border">
+      {options.map((o) => {
+        const active = o.value === value;
+        return (
+          <button
+            key={o.value}
+            onClick={() => onChange(o.value)}
+            className={`relative px-3 py-2 text-[11px] font-semibold transition-colors ${
+              active ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            {o.label}
+            {active && (
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-t-full" />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -551,7 +577,7 @@ export function TicketStudioSkeleton() {
       <aside className="w-[210px] md:w-[230px] lg:w-[260px] xl:w-[300px] 2xl:w-[340px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
         <div className="px-4 py-3 border-b border-border space-y-2.5">
           <h2 className="text-sm font-bold text-text-primary">Personalize</h2>
-          <Segmented
+          <UnderlineTabs
             value={tab}
             onChange={(v) => setTab(v as PanelTab)}
             options={[
