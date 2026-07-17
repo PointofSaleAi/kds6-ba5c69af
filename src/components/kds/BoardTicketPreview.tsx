@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRight, Eye, Check } from 'lucide-react';
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
-import { ClocheIcon } from '../icons/ClocheIcon';
+import { ClocheIcon } from './icons/ClocheIcon';
 
 type Props = {
   boardId: string;
