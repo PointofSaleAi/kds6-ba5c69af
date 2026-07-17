@@ -96,7 +96,7 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 
 /* --------------------------------- CALM ----------------------------------- */
 
-function CalmBoardTicket({ identifier, orderType, orderTypeKey }: VProps) {
+function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick }: VProps) {
   const isTableOrder = orderType?.toUpperCase() === 'DINE IN';
   const isGuest = identifier === 'guest';
   const headerLabel = isTableOrder
@@ -109,13 +109,20 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey }: VProps) {
   // Baseline of 33s so the ticket starts in the "New/Start" band and ages naturally.
   const timer = useLiveTimer(33);
   const { getStatusForElapsed } = useStatusRules();
-  const { orderTypeColors } = useKDSSettings();
-  const elapsedSec = timer.split(':').reduce((a, b) => a * 60 + Number(b), 0);
+  const { orderTypeColors, orderTypeDetailedColors } = useKDSSettings();
+  const liveElapsed = timer.split(':').reduce((a, b) => a * 60 + Number(b), 0);
+  const elapsedSec = typeof agingOverrideSeconds === 'number' ? agingOverrideSeconds : liveElapsed;
   const status = getStatusForElapsed(elapsedSec);
 
-  // Order type pill color from user settings (falls back to defaults).
+  // Order type header colors from user settings (falls back to defaults).
   const key = orderTypeKey ?? 'dine-in';
-  const pillColor = orderTypeColors?.[key] || DEFAULT_ORDER_TYPE_COLORS[key] || '#1A1A2E';
+  const detailed = orderTypeDetailedColors?.[key];
+  const pillColor = detailed?.headerBg || orderTypeColors?.[key] || '#1A1A2E';
+  const pillText = detailed?.headerText || '#FFFFFF';
+
+  const displayTimer = typeof agingOverrideSeconds === 'number'
+    ? `${String(Math.floor(agingOverrideSeconds / 60)).padStart(2, '0')}:${String(agingOverrideSeconds % 60).padStart(2, '0')}`
+    : timer;
 
   return (
     <Card>
@@ -123,13 +130,23 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey }: VProps) {
         className="px-3 py-1.5 flex justify-between items-center"
         style={{ background: status.color, color: status.textColor }}
       >
-        <span
+        <button
+          type="button"
+          onClick={onHeaderClick}
           className="inline-flex items-center h-5 px-2 rounded-full text-[10px] font-bold tracking-wide"
-          style={{ background: pillColor, color: '#FFFFFF' }}
+          style={{ background: pillColor, color: pillText }}
         >
           {headerLabel}
-        </span>
-        <div className="text-[11px] font-mono tabular-nums">{timer}</div>
+        </button>
+        <button
+          type="button"
+          onClick={onTimerClick}
+          className="text-[11px] font-mono tabular-nums cursor-pointer hover:opacity-80"
+          style={{ color: status.textColor }}
+          title="Cycle aging stage (preview only)"
+        >
+          {displayTimer}
+        </button>
       </div>
       <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
         <span>
@@ -144,6 +161,7 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey }: VProps) {
       <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
         ALLERGENS: PEANUT, GLUTEN, NUT
       </div>
+
       <div className="px-3 py-2 space-y-1.5">
         <div className="text-[9px] font-bold text-text-secondary tracking-wide">APPETIZER</div>
         <div className="text-[12px] font-semibold">Cheese Selection</div>
