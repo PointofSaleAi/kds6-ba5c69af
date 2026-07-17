@@ -61,14 +61,14 @@ function Segmented({
 
 
   return (
-    <div className="inline-flex rounded-full bg-muted p-1 gap-1">
+    <div className="inline-flex rounded-full bg-muted p-0.5 gap-0.5">
       {options.map((o) => {
         const active = o.value === value;
         return (
           <button
             key={o.value}
             onClick={() => onChange(o.value)}
-            className={`px-4 h-9 rounded-full text-xs font-semibold transition-colors ${
+            className={`px-2.5 h-7 rounded-full text-[11px] font-semibold transition-colors ${
               active
                 ? 'bg-foreground text-background shadow-sm'
                 : 'text-text-secondary hover:text-text-primary'
@@ -81,6 +81,7 @@ function Segmented({
     </div>
   );
 }
+
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
