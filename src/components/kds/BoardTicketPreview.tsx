@@ -433,13 +433,14 @@ function CalmBoardBody() {
 
 /* ------------------------------ FOCUS LANE -------------------------------- */
 
-function FocusLaneTicket({ identifier }: VProps) {
+function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(2013, agingOverrideSeconds);
   return (
     <Card>
       <div className="h-1.5 bg-[#16A085]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
         <div className="text-[16px] font-black">{idLabel(identifier)}</div>
-        <div className="text-[13px] font-mono">33:33</div>
+        <button type="button" onClick={onTimerClick} className="text-[13px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
         ALLERGEN WARNING: PEANUT, GLUTEN
