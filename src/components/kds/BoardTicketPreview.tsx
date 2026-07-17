@@ -435,11 +435,14 @@ function CalmBoardBody() {
 
 function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
   const { text } = useDisplayTimer(2013, agingOverrideSeconds);
+  const [phase, setPhase] = useState<'seen' | 'preparing' | 'ready'>('seen');
+  const orderNumberLabel = identifier === 'order' ? '23' : idLabel(identifier);
+  const phases: Array<'seen' | 'preparing' | 'ready'> = ['seen', 'preparing', 'ready'];
   return (
     <Card>
       <div className="h-1.5 bg-[#16A085]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
-        <div className="text-[16px] font-black">{idLabel(identifier)}</div>
+        <div className="text-[16px] font-black">{orderNumberLabel}</div>
         <button type="button" onClick={onTimerClick} className="text-[13px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
@@ -466,9 +469,30 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
         <div className="text-[11px] text-[#2471A3] font-semibold mt-0.5">+1 Grilled Barramundi</div>
       </div>
       <div className="grid grid-cols-3 divide-x divide-border">
-        <button className="py-2 text-[10px] font-bold text-[#16A085]">SEEN</button>
-        <button className="py-2 text-[10px] font-bold text-[#16A085]">PREPARING</button>
-        <button className="py-2 text-[10px] font-bold text-[#16A085]">READY</button>
+        {phases.map((p) => {
+          const active = phase === p;
+          const passed = phases.indexOf(p) < phases.indexOf(phase);
+          return (
+            <button
+              key={p}
+              type="button"
+              disabled={!active}
+              onClick={() => {
+                const idx = phases.indexOf(phase);
+                if (idx < phases.length - 1) setPhase(phases[idx + 1]);
+              }}
+              className={`py-2 text-[10px] font-bold transition ${
+                active
+                  ? 'text-[#16A085]'
+                  : passed
+                  ? 'text-[#16A085]/40'
+                  : 'text-[#16A085]/30'
+              } ${active ? 'cursor-pointer' : 'cursor-default'}`}
+            >
+              {p.toUpperCase()}
+            </button>
+          );
+        })}
       </div>
     </Card>
   );
