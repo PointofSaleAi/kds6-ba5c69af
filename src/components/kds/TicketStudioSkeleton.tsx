@@ -110,14 +110,11 @@ export function TicketStudioSkeleton() {
       <div className="flex-1 min-w-0 flex flex-col gap-4">
         <div className="flex-1 min-h-0 rounded-2xl border border-border bg-card overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <div className="flex items-center gap-2 min-w-0">
-              <SlidersHorizontal className="w-3.5 h-3.5 shrink-0 text-text-secondary" />
-              <div className="flex items-baseline gap-2 min-w-0">
-                <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
-                <span className="text-xs text-text-secondary truncate">
-                  {board.subtitle} · Board 1 of {BOARDS.length}
-                </span>
-              </div>
+            <div className="flex items-baseline gap-2 min-w-0">
+              <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
+              <span className="text-xs text-text-secondary truncate">
+                {board.subtitle} · Board 1 of {BOARDS.length}
+              </span>
             </div>
             <div className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 shrink-0">
               <span className="text-[10px] font-semibold text-text-primary">Preview</span>
