@@ -209,10 +209,30 @@ function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAd
   );
 }
 
+const TICKET_PHASE_ORDER: Array<'seen' | 'preparing' | 'ready' | 'served'> = ['seen', 'preparing', 'ready', 'served'];
+const PHASE_TO_PRODUCT_STATE: Record<'seen' | 'preparing' | 'ready' | 'served', CalmProductState> = {
+  seen: 'idle',
+  preparing: 'cooking',
+  ready: 'ready',
+  served: 'done',
+};
+const PRODUCT_STATE_TO_PHASE: Record<CalmProductState, 'seen' | 'preparing' | 'ready' | 'served'> = {
+  idle: 'seen',
+  cooking: 'preparing',
+  ready: 'ready',
+  done: 'served',
+};
+
 function CalmBoardBody() {
   const [expanded, setExpanded] = useState(false);
-  const [ticketPhase, setTicketPhase] = useState<'seen' | 'preparing' | 'ready'>('seen');
+  const [ticketPhase, setTicketPhase] = useState<'seen' | 'preparing' | 'ready' | 'served'>('seen');
   const [products, setProducts] = useState(INITIAL_CALM_PRODUCTS);
+
+  const syncTicketFromProducts = (list: typeof INITIAL_CALM_PRODUCTS) => {
+    const first = list[0].state;
+    const allSame = list.every((p) => p.state === first);
+    if (allSame) setTicketPhase(PRODUCT_STATE_TO_PHASE[first]);
+  };
 
   const advanceProduct = (idx: number) => {
     setProducts((prev) => {
@@ -221,15 +241,17 @@ function CalmBoardBody() {
       const current = next[idx].state;
       const nextState = order[(order.indexOf(current) + 1) % order.length];
       next[idx] = { ...next[idx], state: nextState };
+      syncTicketFromProducts(next);
       return next;
     });
   };
 
   const advanceTicket = () => {
     setTicketPhase((prev) => {
-      if (prev === 'seen') return 'preparing';
-      if (prev === 'preparing') return 'ready';
-      return 'seen';
+      const nextPhase = TICKET_PHASE_ORDER[(TICKET_PHASE_ORDER.indexOf(prev) + 1) % TICKET_PHASE_ORDER.length];
+      const targetState = PHASE_TO_PRODUCT_STATE[nextPhase];
+      setProducts((list) => list.map((p) => ({ ...p, state: targetState })));
+      return nextPhase;
     });
   };
 
@@ -247,9 +269,15 @@ function CalmBoardBody() {
       ? 'border border-[#1A1A2E] text-[#1A1A2E] bg-transparent hover:bg-[#1A1A2E] hover:text-white'
       : ticketPhase === 'preparing'
       ? 'bg-[#1A1A2E] text-white'
+      : ticketPhase === 'ready'
+      ? 'bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]'
       : 'bg-[#16A34A] text-white';
 
-  const ticketLabel = ticketPhase === 'seen' ? 'SEEN' : ticketPhase === 'preparing' ? 'PREPARING' : 'READY';
+  const ticketLabel =
+    ticketPhase === 'seen' ? 'SEEN'
+    : ticketPhase === 'preparing' ? 'PREPARING'
+    : ticketPhase === 'ready' ? 'READY'
+    : 'SERVED';
 
   return (
     <>
@@ -257,7 +285,7 @@ function CalmBoardBody() {
         {sortedCourses.map((course) => (
           <div key={course}>
             <div className="text-[9px] font-bold text-text-secondary tracking-wide">{course}</div>
-            {grouped[course].map((product, i) => {
+            {grouped[course].map((product) => {
               const globalIdx = products.findIndex((p) => p.name === product.name && p.course === product.course);
               return (
                 <div key={product.name} className="flex items-start justify-between gap-2">
@@ -293,6 +321,7 @@ function CalmBoardBody() {
     </>
   );
 }
+
 
 /* ------------------------------ FOCUS LANE -------------------------------- */
 
