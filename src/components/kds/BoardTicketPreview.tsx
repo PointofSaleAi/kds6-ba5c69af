@@ -477,7 +477,9 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
 /* ----------------------------- DISTANCE VIEW ------------------------------ */
 
 function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
-  const { text } = useDisplayTimer(1944, agingOverrideSeconds);
+  const { text, elapsed } = useDisplayTimer(1944, agingOverrideSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const status = getStatusForElapsed(elapsed);
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
@@ -492,7 +494,12 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
           <div className="text-[42px] font-black leading-none">23</div>
           <div className="text-[9px] text-text-secondary">Order</div>
         </div>
-        <button type="button" onClick={onTimerClick} className="relative w-14 h-14 rounded-full border-[3px] border-[#E67E22] flex items-center justify-center cursor-pointer hover:opacity-80">
+        <button
+          type="button"
+          onClick={onTimerClick}
+          className="relative w-14 h-14 rounded-full border-[3px] flex items-center justify-center cursor-pointer hover:opacity-80 transition-colors"
+          style={{ borderColor: status.color }}
+        >
           <span className="text-[11px] font-mono tabular-nums font-bold">{text}</span>
         </button>
       </div>
