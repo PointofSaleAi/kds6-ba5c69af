@@ -331,6 +331,7 @@ export function TicketStudioSkeleton() {
   const [theme, setTheme] = useState<string>('light');
   const [station, setStation] = useState<string>('expediter');
   const [orderType, setOrderType] = useState<string>('dine-in');
+  const { orderTypeColors } = useKDSSettings();
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
   const activeOrderType = ORDER_TYPES.find((o) => o.value === orderType) ?? ORDER_TYPES[0];
