@@ -23,6 +23,8 @@ type SegOption<T extends string> = { value: T; label: string };
 function Segmented<T extends string>({
   options, value, onChange,
 }: { options: SegOption<T>[]; value: T; onChange: (v: T) => void }) {
+  const handle = (v: string) => onChange(v as T);
+
   return (
     <div className="inline-flex rounded-full bg-muted p-1 gap-1">
       {options.map((o) => {
