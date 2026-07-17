@@ -71,6 +71,19 @@ function useLiveTimer(baselineSeconds: number = 0) {
   return `${mm}:${ss}`;
 }
 
+/** Returns the timer string to display, honoring the preview aging override. */
+function useDisplayTimer(baselineSeconds: number, override?: number) {
+  const live = useLiveTimer(baselineSeconds);
+  if (typeof override === 'number') {
+    const mm = String(Math.floor(override / 60)).padStart(2, '0');
+    const ss = String(override % 60).padStart(2, '0');
+    return { text: `${mm}:${ss}`, elapsed: override };
+  }
+  const elapsed = live.split(':').reduce((a, b) => a * 60 + Number(b), 0);
+  return { text: live, elapsed };
+}
+
+
 /* ------------------------------- shared bits ------------------------------ */
 
 const Card = ({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) => (
