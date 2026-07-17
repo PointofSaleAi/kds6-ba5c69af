@@ -338,8 +338,45 @@ export function TicketStudioSkeleton() {
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
-      {/* LEFT: preview + bottom board picker */}
-      <div className="flex-1 min-w-0 flex flex-col gap-4">
+      {/* LEFT: vertical board list */}
+      <aside className="w-[220px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+          <h2 className="text-sm font-bold text-text-primary">Boards</h2>
+          <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
+        </div>
+        <div className="flex-1 min-h-0 overflow-auto p-2 space-y-1.5">
+          {BOARDS.map((b) => {
+            const active = b.id === selectedBoard;
+            return (
+              <button
+                key={b.id}
+                onClick={() => setSelectedBoard(b.id)}
+                className={`w-full text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 ${
+                  active
+                    ? 'border-foreground bg-muted/40 shadow-sm'
+                    : 'border-border hover:border-text-secondary hover:bg-muted/20'
+                }`}
+              >
+                <div className="relative w-[72px] h-10 rounded-md bg-muted overflow-hidden shrink-0">
+                  <BoardThumb id={b.id} active={active} />
+                  {b.featured && (
+                    <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-foreground text-background text-[8px] flex items-center justify-center font-bold">
+                      ★
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
+                  <div className="text-[10px] text-text-secondary leading-tight line-clamp-2">{b.subtitle}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* MIDDLE: ticket preview */}
+      <div className="flex-1 min-w-0 flex flex-col">
         <div className="flex-1 min-h-0 rounded-2xl border border-border bg-card overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <div className="flex items-baseline gap-2 min-w-0">
@@ -425,52 +462,6 @@ export function TicketStudioSkeleton() {
                 );
               })}
             </div>
-          </div>
-        </div>
-
-
-
-        {/* Bottom-left: layout selector — compact */}
-        <div className="rounded-2xl border border-border bg-card px-3 py-2 shrink-0">
-          <div className="flex items-center justify-between mb-1.5">
-            <h3 className="text-xs font-bold text-text-primary">
-              Choose from {BOARDS.length} boards
-            </h3>
-            <span className="text-[10px] text-text-secondary">Tap to preview</span>
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {BOARDS.map((b) => {
-              const active = b.id === selectedBoard;
-              return (
-                <button
-                  key={b.id}
-                  onClick={() => setSelectedBoard(b.id)}
-                  className={`shrink-0 w-32 rounded-lg border-2 text-left transition-all ${
-                    active
-                      ? 'border-foreground shadow-sm'
-                      : 'border-border hover:border-text-secondary'
-                  }`}
-                >
-                  <div className="relative h-16 rounded-t-md bg-muted overflow-hidden">
-                    <BoardThumb id={b.id} active={active} />
-                    {b.featured && (
-                      <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-foreground text-background text-[9px] flex items-center justify-center font-bold">
-                        ★
-                      </div>
-                    )}
-                    {active && (
-                      <div className="absolute top-1 left-1 rounded-full bg-foreground text-background text-[9px] px-1.5 py-0.5 font-semibold">
-                        Selected
-                      </div>
-                    )}
-                  </div>
-                  <div className="px-2 py-1.5">
-                    <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
-                    <div className="text-[10px] text-text-secondary truncate leading-tight">{b.subtitle}</div>
-                  </div>
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
