@@ -118,14 +118,21 @@ export function TicketStudioSkeleton() {
                 {board.subtitle} · Board 1 of {BOARDS.length}
               </span>
             </div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 shrink-0">
-              <span className="text-[10px] font-semibold text-text-primary">Preview</span>
+            <button
+              onClick={() => setPreviewOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-foreground text-background px-2.5 py-1 shrink-0 hover:opacity-90 transition-opacity"
+            >
+              <Expand className="w-3 h-3" />
+              <span className="text-[10px] font-semibold">Preview</span>
+            </button>
+          </div>
+          <div className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center bg-surface-bg">
+            <div className="w-full max-w-[360px]">
+              <SelectedVariantPreview />
             </div>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <ScaledKdsPreview />
-          </div>
         </div>
+
 
         {/* Bottom-left: layout selector — compact */}
         <div className="rounded-2xl border border-border bg-card px-3 py-2 shrink-0">
