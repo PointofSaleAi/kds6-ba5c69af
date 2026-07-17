@@ -332,6 +332,7 @@ export function TicketStudioSkeleton() {
   const [orderType, setOrderType] = useState<string>('dine-in');
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
+  const activeOrderType = ORDER_TYPES.find((o) => o.value === orderType) ?? ORDER_TYPES[0];
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
@@ -372,7 +373,11 @@ export function TicketStudioSkeleton() {
                 padding: layout === 'compact' ? 4 : layout === 'spacious' ? 24 : 12,
               }}
             >
-              <BoardTicketPreview boardId={selectedBoard} identifier={identifier as 'order' | 'guest' | 'table'} />
+              <BoardTicketPreview
+                boardId={selectedBoard}
+                identifier={identifier as 'order' | 'guest' | 'table'}
+                orderType={activeOrderType.label}
+              />
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
               [data-ts-preview][data-density="low"] .space-y-1 > * + *,
