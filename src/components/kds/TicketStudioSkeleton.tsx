@@ -377,6 +377,7 @@ export function TicketStudioSkeleton() {
                 boardId={selectedBoard}
                 identifier={identifier as 'order' | 'guest'}
                 orderType={activeOrderType.label}
+                orderTypeKey={activeOrderType.value}
               />
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
