@@ -274,21 +274,26 @@ export default function DisplaySettings() {
 
   if (ticketStudioOpen) {
     return (
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
-          <button
-            onClick={() => setTicketStudioOpen(false)}
-            className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
-            aria-label="Back"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket studio</h1>
-        </div>
-        <div className="flex-1 px-6 pb-6 overflow-hidden flex items-center justify-center">
-          <p className="text-sm text-center" style={{ color: 'hsl(var(--text-secondary))' }}>
-            Browse named board designs and preview before applying to a station.
-          </p>
+      <div
+        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
+        style={overlayStyle}
+      >
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
+          <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
+            <button
+              onClick={() => setTicketStudioOpen(false)}
+              className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              aria-label="Back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-2xl font-bold text-text-primary">Ticket studio</h1>
+          </div>
+          <div className="flex-1 min-h-0 overflow-auto p-0 bg-surface-bg flex items-center justify-center">
+            <p className="text-sm text-center" style={{ color: 'hsl(var(--text-secondary))' }}>
+              Browse named board designs and preview before applying to a station.
+            </p>
+          </div>
         </div>
       </div>
     );
