@@ -1,5 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, RotateCcw, X } from 'lucide-react';
+import { ChevronDown, Eye, RotateCcw, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
 import { useStatusRules, type StatusRule } from '@/hooks/use-status-rules';
 import {
@@ -464,19 +464,28 @@ export function TicketStudioSkeleton() {
       <div className="flex-1 min-w-0 flex flex-col">
         <div className="flex-1 min-h-0 rounded-2xl border border-border bg-card overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <div className="flex items-baseline gap-2 min-w-0">
+            <div className="flex flex-col justify-center min-w-0">
               <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
               <span className="text-xs text-text-secondary truncate">
                 {board.subtitle} · Board 1 of {BOARDS.length}
               </span>
             </div>
-            <button
-              onClick={handleReset}
-              className="h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 px-3 hover:bg-muted/70 transition-colors"
-            >
-              <RotateCcw className="w-3 h-3" />
-              Reset
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setPreviewOpen(true)}
+                className="h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 px-3 hover:bg-muted/70 transition-colors"
+              >
+                <Eye className="w-3 h-3" />
+                Preview
+              </button>
+              <button
+                onClick={handleReset}
+                className="h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 px-3 hover:bg-muted/70 transition-colors"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Reset
+              </button>
+            </div>
           </div>
           <div
             className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center"
