@@ -75,6 +75,7 @@ export default function DisplaySettings() {
   const [languageFromHash, setLanguageFromHash] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
+  const [ticketStudioOpen, setTicketStudioOpen] = useState(false);
   const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
   useEffect(() => {
