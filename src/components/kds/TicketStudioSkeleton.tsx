@@ -309,15 +309,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const ORDER_TYPES = [
-  { value: 'dine-in', label: 'DINE IN', color: '#1A1A2E' },
-  { value: 'take-out', label: 'TAKE OUT', color: '#2980B9' },
-  { value: 'delivery', label: 'DELIVERY', color: '#16A085' },
-  { value: 'banquet', label: 'BANQUET', color: '#F39C12' },
-  { value: 'drive-thru', label: 'DRIVE THRU', color: '#8E44AD' },
-  { value: 'curb-side', label: 'CURB SIDE', color: '#D35400' },
-  { value: 'scheduled', label: 'SCHEDULED', color: '#2C3E50' },
-  { value: 'phone-in', label: 'PHONE IN', color: '#C0392B' },
-  { value: 'custom', label: 'CUSTOM', color: '#6C7A89' },
+  { value: 'dine-in',    label: 'DINE IN' },
+  { value: 'take-out',   label: 'TAKE OUT' },
+  { value: 'delivery',   label: 'DELIVERY' },
+  { value: 'banquet',    label: 'BANQUET' },
+  { value: 'drive-thru', label: 'DRIVE THRU' },
+  { value: 'curb-side',  label: 'CURB SIDE' },
+  { value: 'scheduled',  label: 'SCHEDULED' },
+  { value: 'phone-in',   label: 'PHONE IN' },
+  { value: 'custom',     label: 'CUSTOM' },
 ] as const;
 
 export function TicketStudioSkeleton() {
