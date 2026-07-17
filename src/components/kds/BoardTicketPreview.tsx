@@ -61,7 +61,7 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 
 /* --------------------------------- CALM ----------------------------------- */
 
-function CalmBoardTicket() {
+function CalmBoardTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
@@ -95,7 +95,7 @@ function CalmBoardTicket() {
 
 /* ------------------------------ FOCUS LANE -------------------------------- */
 
-function FocusLaneTicket() {
+function FocusLaneTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="h-1.5 bg-[#16A085]" />
@@ -137,7 +137,7 @@ function FocusLaneTicket() {
 
 /* ----------------------------- DISTANCE VIEW ------------------------------ */
 
-function DistanceViewTicket() {
+function DistanceViewTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
@@ -179,7 +179,7 @@ function DistanceViewTicket() {
 
 /* --------------------------- PROGRESSIVE TICKET --------------------------- */
 
-function ProgressiveTicket() {
+function ProgressiveTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="px-3 py-2 flex justify-between items-center border-b border-border">
@@ -236,7 +236,7 @@ function Row({ n, name, chips = [] }: { n: string; name: string; chips?: [string
 
 /* ------------------------------ SAFETY FIRST ------------------------------ */
 
-function SafetyFirstTicket() {
+function SafetyFirstTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
@@ -286,7 +286,7 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
 
 /* ----------------------------- TIMELINE FLOW ------------------------------ */
 
-function TimelineFlowTicket() {
+function TimelineFlowTicket({ identifier }: VProps) {
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="text-[10px] font-bold text-text-secondary uppercase mb-1.5 tracking-wide flex items-center gap-1">
@@ -329,7 +329,7 @@ function TimelineFlowTicket() {
 
 /* ---------------------------- ADAPTIVE DENSITY ---------------------------- */
 
-function AdaptiveDensityTicket() {
+function AdaptiveDensityTicket({ identifier }: VProps) {
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="flex gap-1 mb-1.5 text-[9px] font-bold">
@@ -389,7 +389,7 @@ function AdaptiveDensityTicket() {
 
 /* --------------------------- DARK COMMAND CENTER -------------------------- */
 
-function DarkCommandTicket() {
+function DarkCommandTicket({ identifier }: VProps) {
   return (
     <Card dark>
       <div className="px-3 py-1.5 flex justify-between items-center border-b border-[#2A2A44]">
