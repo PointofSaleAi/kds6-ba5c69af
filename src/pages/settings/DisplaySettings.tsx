@@ -314,6 +314,14 @@ export default function DisplaySettings() {
         highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />
 
+      <SettingsPill
+        icon={LayoutGrid}
+        iconColor="#5E4DD8"
+        label="Ticket studio"
+        helper="Browse named board designs and preview before applying to a station."
+        onClick={() => setTicketStudioOpen(true)}
+        highlighted={hash === 'ticket-studio'}
+      />
 
       <SettingsPill
         icon={Palette}
