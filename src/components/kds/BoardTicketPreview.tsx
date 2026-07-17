@@ -170,14 +170,57 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
 
 type CalmProductState = 'idle' | 'cooking' | 'ready' | 'done';
 
-const INITIAL_CALM_PRODUCTS = [
-  { course: 'APPETIZER', name: 'Cheese Selection', qty: 1, state: 'idle' as CalmProductState },
-  { course: 'ENTREE', name: 'Meatballs', qty: 2, state: 'idle' as CalmProductState },
-  { course: 'ENTREE', name: 'Filet Mignon', qty: 1, state: 'idle' as CalmProductState },
-  { course: 'DESSERT', name: 'Tiramisu', qty: 1, state: 'idle' as CalmProductState },
-  { course: 'DESSERT', name: 'Crème Brûlée', qty: 2, state: 'idle' as CalmProductState },
-  { course: 'SIDES', name: 'Truffle Fries', qty: 1, state: 'idle' as CalmProductState },
+type CalmModifier = { text: string; kind: 'add' | 'remove' | 'mod' };
+type CalmProduct = {
+  course: string;
+  name: string;
+  qty: number;
+  state: CalmProductState;
+  modifiers?: CalmModifier[];
+  note?: string;
+  allergens?: string[];
+};
+
+const INITIAL_CALM_PRODUCTS: CalmProduct[] = [
+  {
+    course: 'APPETIZER',
+    name: 'Cheese Selection',
+    qty: 1,
+    state: 'idle',
+    modifiers: [{ text: 'Extra crackers', kind: 'add' }],
+    allergens: ['DAIRY', 'GLUTEN'],
+  },
+  {
+    course: 'ENTREE',
+    name: 'Meatballs',
+    qty: 2,
+    state: 'idle',
+    modifiers: [
+      { text: 'Extra parmesan', kind: 'add' },
+      { text: 'No basil', kind: 'remove' },
+    ],
+    note: 'One plate split for sharing',
+  },
+  {
+    course: 'ENTREE',
+    name: 'Filet Mignon',
+    qty: 1,
+    state: 'idle',
+    modifiers: [{ text: 'Medium rare', kind: 'mod' }],
+    allergens: ['NUT'],
+  },
+  { course: 'DESSERT', name: 'Tiramisu', qty: 1, state: 'idle' },
+  {
+    course: 'DESSERT',
+    name: 'Crème Brûlée',
+    qty: 2,
+    state: 'idle',
+    note: 'Serve together',
+  },
+  { course: 'SIDES', name: 'Truffle Fries', qty: 1, state: 'idle', modifiers: [{ text: 'Side aioli', kind: 'add' }] },
 ];
+
+const CALM_ORDER_NOTE = 'Anniversary — please pace mains after apps.';
 
 function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAdvance: () => void }) {
   const base = 'shrink-0 flex items-center justify-center active:scale-95 transition';
@@ -256,7 +299,7 @@ function CalmBoardBody() {
   };
 
   const visibleProducts = expanded ? products : products.slice(0, 3);
-  const grouped = visibleProducts.reduce<Record<string, typeof products>>((acc, p) => {
+  const grouped = visibleProducts.reduce<Record<string, CalmProduct[]>>((acc, p) => {
     acc[p.course] = acc[p.course] || [];
     acc[p.course].push(p);
     return acc;
@@ -281,6 +324,14 @@ function CalmBoardBody() {
 
   return (
     <>
+      {CALM_ORDER_NOTE && (
+        <div className="px-3 pt-2">
+          <div className="rounded-md bg-[#FFF8E1] border border-[#F5D57A] px-2 py-1 text-[10px] text-[#8A5A00] leading-snug">
+            <span className="font-bold uppercase tracking-wide mr-1">Order note</span>
+            {CALM_ORDER_NOTE}
+          </div>
+        </div>
+      )}
       <div className="px-3 py-2 space-y-1.5">
         {sortedCourses.map((course) => (
           <div key={course}>
@@ -291,7 +342,34 @@ function CalmBoardBody() {
                 <div key={product.name} className="flex items-start justify-between gap-2">
                   <div className="flex items-baseline gap-2 min-w-0 flex-1">
                     <span className="text-[12px] font-normal text-text-secondary shrink-0">{product.qty}x</span>
-                    <span className="text-[12px] font-semibold truncate">{product.name}</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[12px] font-semibold truncate leading-tight">{product.name}</div>
+                      {product.modifiers?.map((m, i) => (
+                        <div
+                          key={i}
+                          className={`text-[10px] leading-tight ${
+                            m.kind === 'add'
+                              ? 'text-[#2471A3] font-semibold'
+                              : m.kind === 'remove'
+                              ? 'text-[#C0392B] font-semibold line-through'
+                              : 'text-text-secondary'
+                          }`}
+                        >
+                          {m.kind === 'add' ? '+ ' : m.kind === 'remove' ? '– ' : ''}
+                          {m.text}
+                        </div>
+                      ))}
+                      {product.note && (
+                        <div className="text-[10px] italic text-text-secondary leading-tight">“{product.note}”</div>
+                      )}
+                      {product.allergens && product.allergens.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-0.5">
+                          {product.allergens.map((a) => (
+                            <AllergenChip key={a} label={a} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <CalmProductAction state={product.state} onAdvance={() => advanceProduct(globalIdx)} />
                 </div>
@@ -299,6 +377,7 @@ function CalmBoardBody() {
             })}
           </div>
         ))}
+
 
         <button
           type="button"
