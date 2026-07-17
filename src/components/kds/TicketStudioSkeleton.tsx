@@ -567,7 +567,7 @@ export function TicketStudioSkeleton() {
         </div>
         <div className="border-t border-border p-3 space-y-1.5">
           <div className="flex gap-1.5">
-            <button className="flex-1 h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 hover:bg-muted/70 transition-colors">
+            <button onClick={handleReset} className="flex-1 h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 hover:bg-muted/70 transition-colors">
               <RotateCcw className="w-3 h-3" />
               Reset
             </button>
@@ -576,7 +576,7 @@ export function TicketStudioSkeleton() {
               Save preset
             </button>
           </div>
-          <button className="w-full h-9 rounded-full bg-[hsl(330_85%_55%)] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity">
+          <button onClick={handleApply} className="w-full h-9 rounded-full bg-[hsl(330_85%_55%)] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity">
             <Check className="w-3.5 h-3.5" />
             Apply to station
           </button>
