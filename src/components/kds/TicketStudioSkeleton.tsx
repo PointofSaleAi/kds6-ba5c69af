@@ -348,13 +348,14 @@ export function TicketStudioSkeleton() {
   const [expandedOrderType, setExpandedOrderType] = useState<string | null>(null);
 
   // Live data from global stores (shared with dedicated settings screens).
-  const { rules, setRules } = useStatusRules();
+  const { rules, setRules, resetToDefaults: resetAgingRules } = useStatusRules();
   const {
     orderTypeColors,
     orderTypeDetailedColors,
     setOrderTypeColors,
     setOrderTypeDetailedColors,
   } = useKDSSettings();
+
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
 
@@ -410,7 +411,13 @@ export function TicketStudioSkeleton() {
     setStation('expediter');
     setAgingStageIndex(null);
     setOrderTypeKey('dine-in');
+    setExpandedRule(null);
+    setExpandedOrderType(null);
+    resetAgingRules();
+    setOrderTypeColors(DEFAULT_ORDER_TYPE_COLORS);
+    setOrderTypeDetailedColors(DEFAULT_ORDER_TYPE_DETAILED_COLORS);
   };
+
 
 
 
