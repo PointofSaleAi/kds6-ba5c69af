@@ -162,30 +162,68 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
         ALLERGENS: PEANUT, GLUTEN, NUT
       </div>
 
+      <CalmBoardBody />
+    </Card>
+  );
+}
+
+function CalmBoardBody() {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <>
       <div className="px-3 py-2 space-y-1.5">
         <div className="text-[9px] font-bold text-text-secondary tracking-wide">APPETIZER</div>
         <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-bold text-text-secondary">1x</span>
+          <span className="text-[12px] font-normal text-text-secondary">1x</span>
           <span className="text-[12px] font-semibold">Cheese Selection</span>
         </div>
         <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">ENTREE</div>
         <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-bold text-text-secondary">2x</span>
+          <span className="text-[12px] font-normal text-text-secondary">2x</span>
           <span className="text-[12px] font-semibold">Meatballs</span>
         </div>
         <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-bold text-text-secondary">1x</span>
+          <span className="text-[12px] font-normal text-text-secondary">1x</span>
           <span className="text-[12px] font-semibold">Filet Mignon</span>
         </div>
-        <div className="flex items-center justify-between text-[10px] text-text-secondary pt-1">
-          <span>+ 2 Courses</span>
-          <ChevronDown className="w-3 h-3" />
-        </div>
+
+        {expanded && (
+          <>
+            <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">DESSERT</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-[12px] font-normal text-text-secondary">1x</span>
+              <span className="text-[12px] font-semibold">Tiramisu</span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-[12px] font-normal text-text-secondary">2x</span>
+              <span className="text-[12px] font-semibold">Crème Brûlée</span>
+            </div>
+            <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">SIDES</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-[12px] font-normal text-text-secondary">1x</span>
+              <span className="text-[12px] font-semibold">Truffle Fries</span>
+            </div>
+          </>
+        )}
+
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="w-full flex items-center justify-between text-[10px] text-text-secondary pt-1 hover:text-[#2C3E50] transition-colors"
+        >
+          <span>{expanded ? 'Hide extra courses' : '+ 2 Courses'}</span>
+          <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        </button>
       </div>
-      <button className="w-full bg-[#1A1A2E] text-white text-[11px] font-bold py-2 tracking-wide">
-        MARK AS SEEN
-      </button>
-    </Card>
+      <div className="px-3 pb-3 pt-1">
+        <button
+          type="button"
+          className="w-full bg-[#1A1A2E] text-white text-[11px] font-bold py-2 tracking-wide rounded-md hover:bg-[#2A2A44] active:scale-[0.99] transition"
+        >
+          MARK AS SEEN
+        </button>
+      </div>
+    </>
   );
 }
 
