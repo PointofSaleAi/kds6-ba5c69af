@@ -64,49 +64,28 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 function CalmBoardTicket({ identifier }: VProps) {
   return (
     <Card>
-      {/* Dark header */}
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-wide">
-          <span className="opacity-70">⋮⋮</span>
-          {idLabel(identifier)}
-        </div>
+        <div className="text-[11px] font-bold tracking-wide">{idLabel(identifier)}</div>
         <div className="text-[11px] font-mono">33:33</div>
       </div>
-
-      {/* Identifier + server row */}
-      <div className="px-3 py-1.5 flex justify-between items-start border-b border-border">
-        <div className="leading-tight">
-          <div className="text-[15px] font-black text-[#2C3E50]">23</div>
-          <div className="text-[10px] text-text-secondary">John Peterson</div>
-        </div>
-        <div className="text-right leading-tight">
-          <div className="text-[11px] font-bold text-[#2C3E50] flex items-center justify-end gap-1">
-            <span className="text-[10px]">🏃</span> Maria S.
-          </div>
-          <div className="text-[10px] text-text-secondary">8:00 PM</div>
-        </div>
+      <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
+        <span><span className="font-bold">23</span> John Peterson</span>
+        <span className="text-text-secondary">Maria S. · 8:00 PM</span>
       </div>
-
-      {/* Allergens */}
-      <div className="px-3 py-1 text-[10px] font-bold text-[#C0392B] border-b border-border tracking-wide uppercase">
-        Allergens: Peanut, Gluten, Nut
+      <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
+        ALLERGENS: PEANUT, GLUTEN, NUT
       </div>
-
-      {/* Courses, centered */}
-      <div className="px-3 py-2 space-y-1 text-center">
-        <div className="text-[9px] font-bold text-text-secondary tracking-wide uppercase">Appetizer</div>
-        <div className="text-[13px] font-bold text-[#2C3E50]">Cheese Selection</div>
-
-        <div className="text-[9px] font-bold text-text-secondary tracking-wide uppercase pt-1.5">Entree</div>
-        <div className="text-[13px] font-bold text-[#2C3E50]">Meatballs</div>
-        <div className="text-[13px] font-bold text-[#2C3E50]">Filet Mignon</div>
-
-        <div className="flex items-center justify-between text-[10px] text-text-secondary pt-1.5 border-t border-border mt-1.5">
+      <div className="px-3 py-2 space-y-1.5">
+        <div className="text-[9px] font-bold text-text-secondary tracking-wide">APPETIZER</div>
+        <div className="text-[12px] font-semibold">Cheese Selection</div>
+        <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">ENTREE</div>
+        <div className="text-[12px] font-semibold">Meatballs</div>
+        <div className="text-[12px] font-semibold">Filet Mignon</div>
+        <div className="flex items-center justify-between text-[10px] text-text-secondary pt-1">
           <span>+ 2 Courses</span>
           <ChevronDown className="w-3 h-3" />
         </div>
       </div>
-
       <button className="w-full bg-[#1A1A2E] text-white text-[11px] font-bold py-2 tracking-wide">
         MARK AS SEEN
       </button>
