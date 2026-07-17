@@ -348,13 +348,13 @@ export function TicketStudioSkeleton() {
                 <button
                   key={b.id}
                   onClick={() => setSelectedBoard(b.id)}
-                  className={`shrink-0 w-28 rounded-lg border-2 text-left transition-all ${
+                  className={`shrink-0 w-32 rounded-lg border-2 text-left transition-all ${
                     active
                       ? 'border-foreground shadow-sm'
                       : 'border-border hover:border-text-secondary'
                   }`}
                 >
-                  <div className="relative h-12 rounded-t-md bg-muted overflow-hidden">
+                  <div className="relative h-16 rounded-t-md bg-muted overflow-hidden">
                     <BoardThumb id={b.id} active={active} />
                     {b.featured && (
                       <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-foreground text-background text-[9px] flex items-center justify-center font-bold">
