@@ -1,6 +1,13 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import { RotateCcw, X } from 'lucide-react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ChevronDown, RotateCcw, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
+import { useStatusRules, type StatusRule } from '@/hooks/use-status-rules';
+import {
+  useKDSSettings,
+  DEFAULT_ORDER_TYPE_COLORS,
+  DEFAULT_ORDER_TYPE_DETAILED_COLORS,
+} from '@/hooks/use-kds-settings';
+
 
 function ScaledKdsPreview({ boardId }: { boardId: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -308,6 +315,20 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 
+const ORDER_TYPES_LIST = [
+  { key: 'dine-in', label: 'Dine in' },
+  { key: 'take-out', label: 'Take out', warm: true },
+  { key: 'delivery', label: 'Delivery' },
+  { key: 'banquet', label: 'Banquet' },
+  { key: 'drive-thru', label: 'Drive thru', warm: true },
+  { key: 'curb-side', label: 'Curb side' },
+  { key: 'scheduled', label: 'Scheduled' },
+  { key: 'phone-in', label: 'Phone-in' },
+  { key: 'custom', label: 'Custom' },
+] as const;
+
+type PanelTab = 'display' | 'aging' | 'order-type';
+
 export function TicketStudioSkeleton() {
   const [selectedBoard, setSelectedBoard] = useState('calm-board');
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -319,7 +340,65 @@ export function TicketStudioSkeleton() {
   const [theme, setTheme] = useState<string>('light');
   const [station, setStation] = useState<string>('expediter');
 
+  // New: personalize panel tabs + preview state.
+  const [tab, setTab] = useState<PanelTab>('display');
+  const [orderTypeKey, setOrderTypeKey] = useState<string>('dine-in');
+  const [agingStageIndex, setAgingStageIndex] = useState<number | null>(null);
+  const [expandedRule, setExpandedRule] = useState<string | null>(null);
+  const [expandedOrderType, setExpandedOrderType] = useState<string | null>(null);
+
+  // Live data from global stores (shared with dedicated settings screens).
+  const { rules, setRules } = useStatusRules();
+  const {
+    orderTypeColors,
+    orderTypeDetailedColors,
+    setOrderTypeColors,
+    setOrderTypeDetailedColors,
+  } = useKDSSettings();
+
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
+
+  // Preview-only aging override. Uses each rule's minMinutes + 30s so the
+  // preview lands squarely in that band. Never persists to real orders.
+  const agingOverrideSeconds = useMemo(() => {
+    if (agingStageIndex === null) return undefined;
+    const rule = rules[Math.min(agingStageIndex, rules.length - 1)];
+    return rule ? rule.minMinutes * 60 + 30 : undefined;
+  }, [agingStageIndex, rules]);
+
+  const cycleAgingStage = () => {
+    setAgingStageIndex((i) => {
+      const next = i === null ? 0 : (i + 1) % rules.length;
+      return next;
+    });
+    const nextIndex = agingStageIndex === null ? 0 : (agingStageIndex + 1) % rules.length;
+    const nextRule = rules[nextIndex];
+    if (nextRule) {
+      setTab('aging');
+      setExpandedRule(nextRule.id);
+    }
+  };
+
+  const openOrderTypeInPanel = (key: string) => {
+    setOrderTypeKey(key);
+    setTab('order-type');
+    setExpandedOrderType(key);
+  };
+
+  const updateRule = (id: string, patch: Partial<StatusRule>) => {
+    setRules(rules.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  };
+
+  const updateOrderTypeColor = (key: string, field: 'headerBg' | 'headerText', value: string) => {
+    const current = orderTypeDetailedColors?.[key] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[key];
+    setOrderTypeDetailedColors({
+      ...orderTypeDetailedColors,
+      [key]: { ...current, [field]: value },
+    });
+    if (field === 'headerBg') {
+      setOrderTypeColors({ ...orderTypeColors, [key]: value });
+    }
+  };
 
   const handleReset = () => {
     setLayout('standard');
@@ -329,7 +408,11 @@ export function TicketStudioSkeleton() {
     setSafety('highlighted');
     setTheme('light');
     setStation('expediter');
+    setAgingStageIndex(null);
+    setOrderTypeKey('dine-in');
   };
+
+
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
@@ -416,9 +499,13 @@ export function TicketStudioSkeleton() {
               <BoardTicketPreview
                 boardId={selectedBoard}
                 identifier={identifier as 'order' | 'guest'}
-                orderType="DINE IN"
-                orderTypeKey="dine-in"
+                orderType={orderTypeKey === 'dine-in' ? 'DINE IN' : ORDER_TYPES_LIST.find((o) => o.key === orderTypeKey)?.label.toUpperCase()}
+                orderTypeKey={orderTypeKey}
+                agingOverrideSeconds={agingOverrideSeconds}
+                onHeaderClick={() => openOrderTypeInPanel(orderTypeKey)}
+                onTimerClick={cycleAgingStage}
               />
+
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
               [data-ts-preview][data-density="low"] .space-y-1 > * + *,
@@ -446,104 +533,318 @@ export function TicketStudioSkeleton() {
 
       {/* RIGHT: personalize — adaptive width */}
       <aside className="w-[210px] md:w-[230px] lg:w-[260px] xl:w-[300px] 2xl:w-[340px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+        <div className="px-4 py-3 border-b border-border space-y-2.5">
           <h2 className="text-sm font-bold text-text-primary">Personalize</h2>
+          <Segmented
+            value={tab}
+            onChange={(v) => setTab(v as PanelTab)}
+            options={[
+              { value: 'display', label: 'Display' },
+              { value: 'aging', label: 'Ticket aging' },
+              { value: 'order-type', label: 'Order type' },
+            ]}
+          />
         </div>
         <div className="flex-1 min-h-0 overflow-auto p-4 space-y-4">
-          <Field label="Layout">
-            <Segmented
-              value={layout}
-              onChange={setLayout}
-              options={[
-                { value: 'compact', label: 'Compact' },
-                { value: 'standard', label: 'Standard' },
-                { value: 'spacious', label: 'Spacious' },
-              ]}
-            />
-          </Field>
-          <Field label="Density">
-            <Segmented
-              value={density}
-              onChange={setDensity}
-              options={[
-                { value: 'low', label: 'Low' },
-                { value: 'medium', label: 'Medium' },
-                { value: 'high', label: 'High' },
-              ]}
-            />
-          </Field>
-          <Field label="Text size">
-            <Segmented
-              value={textSize}
-              onChange={setTextSize}
-              options={[
-                { value: 'small', label: 'Small' },
-                { value: 'medium', label: 'Medium' },
-                { value: 'large', label: 'Large' },
-              ]}
-            />
-          </Field>
-          <Field label="Ticket identifier">
-            <Segmented
-              value={identifier}
-              onChange={setIdentifier}
-              options={[
-                { value: 'order', label: 'Order number' },
-                { value: 'guest', label: 'Guest name' },
-              ]}
-            />
-          </Field>
-          <Field label="Safety emphasis">
-            <Segmented
-              value={safety}
-              onChange={setSafety}
-              options={[
-                { value: 'muted', label: 'Muted' },
-                { value: 'bright', label: 'Bright' },
-                { value: 'highlighted', label: 'Highlighted' },
-              ]}
-            />
-          </Field>
-          <Field label="Theme">
-            <Segmented
-              value={theme}
-              onChange={setTheme}
-              options={[
-                { value: 'light', label: 'Light' },
-                { value: 'dark', label: 'Dark' },
-                { value: 'auto', label: 'Auto' },
-              ]}
-            />
-          </Field>
-          <Field label="Station">
-            <div className="flex flex-wrap gap-1.5">
-              {(
-                [
-                  { value: 'expediter', label: 'Expediter' },
-                  { value: 'bar', label: 'Bar' },
-                  { value: 'prep-1', label: 'Prep 1' },
-                  { value: 'prep-2', label: 'Prep 2' },
-                ] as const
-              ).map((o) => {
-                const active = station === o.value;
+          {tab === 'display' && (
+            <>
+              <Field label="Layout">
+                <Segmented
+                  value={layout}
+                  onChange={setLayout}
+                  options={[
+                    { value: 'compact', label: 'Compact' },
+                    { value: 'standard', label: 'Standard' },
+                    { value: 'spacious', label: 'Spacious' },
+                  ]}
+                />
+              </Field>
+              <Field label="Density">
+                <Segmented
+                  value={density}
+                  onChange={setDensity}
+                  options={[
+                    { value: 'low', label: 'Low' },
+                    { value: 'medium', label: 'Medium' },
+                    { value: 'high', label: 'High' },
+                  ]}
+                />
+              </Field>
+              <Field label="Text size">
+                <Segmented
+                  value={textSize}
+                  onChange={setTextSize}
+                  options={[
+                    { value: 'small', label: 'Small' },
+                    { value: 'medium', label: 'Medium' },
+                    { value: 'large', label: 'Large' },
+                  ]}
+                />
+              </Field>
+              <Field label="Ticket identifier">
+                <Segmented
+                  value={identifier}
+                  onChange={setIdentifier}
+                  options={[
+                    { value: 'order', label: 'Order number' },
+                    { value: 'guest', label: 'Guest name' },
+                  ]}
+                />
+              </Field>
+              <Field label="Safety emphasis">
+                <Segmented
+                  value={safety}
+                  onChange={setSafety}
+                  options={[
+                    { value: 'muted', label: 'Muted' },
+                    { value: 'bright', label: 'Bright' },
+                    { value: 'highlighted', label: 'Highlighted' },
+                  ]}
+                />
+              </Field>
+              <Field label="Theme">
+                <Segmented
+                  value={theme}
+                  onChange={setTheme}
+                  options={[
+                    { value: 'light', label: 'Light' },
+                    { value: 'dark', label: 'Dark' },
+                    { value: 'auto', label: 'Auto' },
+                  ]}
+                />
+              </Field>
+              <Field label="Station">
+                <div className="flex flex-wrap gap-1.5">
+                  {(
+                    [
+                      { value: 'expediter', label: 'Expediter' },
+                      { value: 'bar', label: 'Bar' },
+                      { value: 'prep-1', label: 'Prep 1' },
+                      { value: 'prep-2', label: 'Prep 2' },
+                    ] as const
+                  ).map((o) => {
+                    const active = station === o.value;
+                    return (
+                      <button
+                        key={o.value}
+                        onClick={() => setStation(o.value)}
+                        className={`px-2.5 h-7 rounded-full text-[11px] font-semibold transition-colors ${
+                          active
+                            ? 'bg-foreground text-background'
+                            : 'bg-muted text-text-secondary hover:text-text-primary'
+                        }`}
+                      >
+                        {o.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </Field>
+            </>
+          )}
+
+          {tab === 'aging' && (
+            <div className="space-y-2">
+              <p className="text-[11px] text-text-secondary">
+                Time bands drive the ticket header color as orders age. Edits sync with Settings › Ticket aging rules.
+              </p>
+              {rules.map((rule) => {
+                const open = expandedRule === rule.id;
+                const textResolved =
+                  rule.textColor === 'white' ? '#FFFFFF' : rule.textColor === 'black' ? '#000000' : '#6C7A89';
+                const rangeLabel =
+                  rule.maxMinutes === null
+                    ? `${rule.minMinutes}+ min`
+                    : `${rule.minMinutes}\u2013${rule.maxMinutes} min`;
                 return (
-                  <button
-                    key={o.value}
-                    onClick={() => setStation(o.value)}
-                    className={`px-2.5 h-7 rounded-full text-[11px] font-semibold transition-colors ${
-                      active
-                        ? 'bg-foreground text-background'
-                        : 'bg-muted text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
-                    {o.label}
-                  </button>
+                  <div key={rule.id} className="rounded-lg border border-border bg-surface-card overflow-hidden">
+                    <button
+                      onClick={() => setExpandedRule(open ? null : rule.id)}
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-muted/30 transition-colors"
+                    >
+                      <span
+                        className="w-7 h-7 rounded-md shrink-0 border border-border"
+                        style={{ backgroundColor: rule.color, color: textResolved }}
+                      />
+                      <div className="min-w-0 flex-1 text-left">
+                        <div className="text-[11px] font-bold text-text-primary truncate">{rule.label}</div>
+                        <div className="text-[10px] text-text-secondary">{rangeLabel}</div>
+                      </div>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 text-text-secondary transition-transform ${open ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {open && (
+                      <div className="px-2.5 py-2.5 border-t border-border space-y-2.5">
+                        <label className="block">
+                          <div className="text-[10px] font-semibold text-text-secondary mb-1">Name</div>
+                          <input
+                            type="text"
+                            value={rule.label}
+                            onChange={(e) => updateRule(rule.id, { label: e.target.value })}
+                            className="w-full h-8 px-2 rounded-md border border-border bg-background text-[11px]"
+                          />
+                        </label>
+                        <div className="flex gap-2">
+                          <label className="flex-1">
+                            <div className="text-[10px] font-semibold text-text-secondary mb-1">From (min)</div>
+                            <input
+                              type="number"
+                              min={0}
+                              value={rule.minMinutes}
+                              onChange={(e) => updateRule(rule.id, { minMinutes: Math.max(0, Number(e.target.value)) })}
+                              className="w-full h-8 px-2 rounded-md border border-border bg-background text-[11px]"
+                            />
+                          </label>
+                          <label className="flex-1">
+                            <div className="text-[10px] font-semibold text-text-secondary mb-1">To (min)</div>
+                            <input
+                              type="number"
+                              min={0}
+                              value={rule.maxMinutes ?? ''}
+                              placeholder={rule.maxMinutes === null ? '∞' : ''}
+                              disabled={rule.maxMinutes === null}
+                              onChange={(e) =>
+                                updateRule(rule.id, {
+                                  maxMinutes: e.target.value === '' ? null : Number(e.target.value),
+                                })
+                              }
+                              className="w-full h-8 px-2 rounded-md border border-border bg-background text-[11px] disabled:opacity-60"
+                            />
+                          </label>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-semibold text-text-secondary mb-1">Color</div>
+                          <div className="flex items-center gap-2">
+                            <label className="relative cursor-pointer">
+                              <input
+                                type="color"
+                                value={rule.color}
+                                onChange={(e) => updateRule(rule.id, { color: e.target.value })}
+                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                              />
+                              <span
+                                className="block w-7 h-7 rounded-md border border-border"
+                                style={{ backgroundColor: rule.color }}
+                              />
+                            </label>
+                            <span className="text-[10px] font-mono uppercase text-text-muted">{rule.color}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-semibold text-text-secondary mb-1">Text color</div>
+                          <div className="inline-flex rounded-full bg-muted p-0.5 gap-0.5">
+                            {(['white', 'grey', 'black'] as const).map((tc) => {
+                              const active = rule.textColor === tc;
+                              return (
+                                <button
+                                  key={tc}
+                                  onClick={() => updateRule(rule.id, { textColor: tc })}
+                                  className={`px-2.5 h-6 rounded-full text-[10px] font-semibold capitalize transition-colors ${
+                                    active
+                                      ? 'bg-foreground text-background'
+                                      : 'text-text-secondary hover:text-text-primary'
+                                  }`}
+                                >
+                                  {tc}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
-          </Field>
+          )}
+
+          {tab === 'order-type' && (
+            <div className="space-y-2">
+              <p className="text-[11px] text-text-secondary">
+                Header colors per order type. Edits sync with Settings › Order type colors.
+              </p>
+              {ORDER_TYPES_LIST.map((ot) => {
+                const open = expandedOrderType === ot.key;
+                const colors =
+                  orderTypeDetailedColors?.[ot.key] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[ot.key];
+                const isActive = orderTypeKey === ot.key;
+                return (
+                  <div
+                    key={ot.key}
+                    className={`rounded-lg border overflow-hidden ${
+                      isActive ? 'border-foreground' : 'border-border'
+                    } bg-surface-card`}
+                  >
+                    <button
+                      onClick={() => {
+                        setOrderTypeKey(ot.key);
+                        setExpandedOrderType(open ? null : ot.key);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-muted/30 transition-colors"
+                    >
+                      <span
+                        className="w-7 h-7 rounded-md shrink-0 border border-border"
+                        style={{ backgroundColor: colors.headerBg }}
+                      />
+                      <div className="min-w-0 flex-1 text-left flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[11px] font-bold text-text-primary truncate">{ot.label}</span>
+                        {'warm' in ot && ot.warm && (
+                          <span className="text-[8px] font-bold uppercase tracking-wide px-1.5 py-[1px] rounded bg-[#FFF3D6] text-[#8A5A00]">
+                            Warm
+                          </span>
+                        )}
+                      </div>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 text-text-secondary transition-transform ${open ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {open && (
+                      <div className="px-2.5 py-2.5 border-t border-border space-y-2.5">
+                        {(
+                          [
+                            { field: 'headerBg', label: 'Background' },
+                            { field: 'headerText', label: 'Text' },
+                          ] as const
+                        ).map(({ field, label }) => (
+                          <div key={field}>
+                            <div className="text-[10px] font-semibold text-text-secondary mb-1">{label}</div>
+                            <div className="flex items-center gap-2">
+                              <label className="relative cursor-pointer">
+                                <input
+                                  type="color"
+                                  value={colors[field]}
+                                  onChange={(e) => updateOrderTypeColor(ot.key, field, e.target.value)}
+                                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                />
+                                <span
+                                  className="block w-7 h-7 rounded-md border border-border"
+                                  style={{ backgroundColor: colors[field] }}
+                                />
+                              </label>
+                              <input
+                                type="text"
+                                value={colors[field]}
+                                onChange={(e) => {
+                                  const v = e.target.value;
+                                  if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) updateOrderTypeColor(ot.key, field, v);
+                                }}
+                                className="flex-1 h-7 px-2 rounded-md border border-border bg-background text-[10px] font-mono uppercase"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </aside>
+
 
       {previewOpen && (
         <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
