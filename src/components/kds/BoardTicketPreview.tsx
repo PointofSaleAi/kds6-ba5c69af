@@ -164,10 +164,19 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
 
       <div className="px-3 py-2 space-y-1.5">
         <div className="text-[9px] font-bold text-text-secondary tracking-wide">APPETIZER</div>
-        <div className="text-[12px] font-semibold">Cheese Selection</div>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[12px] font-bold text-text-secondary">1x</span>
+          <span className="text-[12px] font-semibold">Cheese Selection</span>
+        </div>
         <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">ENTREE</div>
-        <div className="text-[12px] font-semibold">Meatballs</div>
-        <div className="text-[12px] font-semibold">Filet Mignon</div>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[12px] font-bold text-text-secondary">2x</span>
+          <span className="text-[12px] font-semibold">Meatballs</span>
+        </div>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[12px] font-bold text-text-secondary">1x</span>
+          <span className="text-[12px] font-semibold">Filet Mignon</span>
+        </div>
         <div className="flex items-center justify-between text-[10px] text-text-secondary pt-1">
           <span>+ 2 Courses</span>
           <ChevronDown className="w-3 h-3" />
