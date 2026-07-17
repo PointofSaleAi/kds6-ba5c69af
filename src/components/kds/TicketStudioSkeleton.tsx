@@ -53,93 +53,201 @@ const BOARDS: Board[] = [
   { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast focused operations', featured: true },
 ];
 
-function BoardThumb({ id, active }: { id: string; active: boolean }) {
-  const stroke = active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))';
-  const fill = active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground) / 0.55)';
-  const bg = id === 'dark-command-center' ? '#0D0D1A' : 'transparent';
-  const tickFill = id === 'dark-command-center' ? '#E5E7EB' : fill;
+function BoardThumb({ id }: { id: string; active: boolean }) {
+  // Rich mini renderings that mirror each PDF screen at a glance.
+  // viewBox 112x56 — non-uniform scaled to fill the thumb container.
+  const bg =
+    id === 'dark-command-center'
+      ? '#0D0D1A'
+      : id === 'safety-first'
+      ? '#0D0D1A'
+      : '#F0F2F5';
 
   const content = (() => {
     switch (id) {
       case 'calm-board':
+        // 3x2 grid of white cards with dark headers
         return (
           <g>
             {[0, 1, 2].map((c) =>
-              [0, 1].map((r) => (
-                <rect key={`${c}-${r}`} x={4 + c * 34} y={4 + r * 20} width={30} height={16} rx={2} fill="none" stroke={stroke} strokeWidth={1} />
-              ))
+              [0, 1].map((r) => {
+                const x = 3 + c * 36;
+                const y = 3 + r * 26;
+                return (
+                  <g key={`${c}-${r}`}>
+                    <rect x={x} y={y} width={34} height={24} rx={2} fill="#FFFFFF" stroke="#D5DBE0" strokeWidth={0.5} />
+                    <rect x={x} y={y} width={34} height={5} rx={2} fill="#1A1A2E" />
+                    <rect x={x + 2} y={y + 8} width={20} height={1.5} fill="#C0392B" />
+                    <rect x={x + 2} y={y + 12} width={26} height={1.5} fill="#2C3E50" />
+                    <rect x={x + 2} y={y + 15} width={22} height={1.5} fill="#2C3E50" opacity={0.7} />
+                    <rect x={x} y={y + 20} width={34} height={4} fill="#1A1A2E" />
+                  </g>
+                );
+              })
             )}
           </g>
         );
+
       case 'focus-lane':
         return (
           <g>
-            <rect x={4} y={6} width={20} height={32} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.5} />
-            <rect x={38} y={4} width={32} height={36} rx={2} fill="none" stroke={stroke} strokeWidth={1.4} />
-            <rect x={84} y={6} width={20} height={32} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.5} />
+            {/* Left context card */}
+            <rect x={3} y={8} width={24} height={40} rx={2} fill="#FFFFFF" stroke="#D5DBE0" />
+            <rect x={5} y={11} width={16} height={2} fill="#2C3E50" />
+            <rect x={5} y={15} width={12} height={1.5} fill="#2C3E50" opacity={0.6} />
+            {/* Focused center */}
+            <rect x={31} y={3} width={50} height={50} rx={2} fill="#FFFFFF" stroke="#16A085" strokeWidth={1.5} />
+            <rect x={31} y={3} width={50} height={3} fill="#16A085" />
+            <rect x={33} y={9} width={24} height={3} fill="#2C3E50" />
+            <rect x={33} y={14} width={46} height={3} fill="#FFF3D6" />
+            <text x={33} y={17} fontSize={2.5} fontWeight={700} fill="#8A5A00">ALLERGEN</text>
+            <text x={34} y={26} fontSize={7} fontWeight={900} fill="#2C3E50">2</text>
+            <rect x={40} y={22} width={20} height={2} fill="#2C3E50" />
+            <text x={34} y={34} fontSize={7} fontWeight={900} fill="#2C3E50">1</text>
+            <rect x={40} y={30} width={22} height={2} fill="#2C3E50" />
+            <rect x={33} y={44} width={14} height={5} rx={1} fill="none" stroke="#16A085" />
+            <rect x={49} y={44} width={14} height={5} rx={1} fill="none" stroke="#16A085" />
+            <rect x={65} y={44} width={14} height={5} rx={1} fill="none" stroke="#16A085" />
+            {/* Right context card */}
+            <rect x={85} y={8} width={24} height={40} rx={2} fill="#FFFFFF" stroke="#D5DBE0" />
+            <rect x={87} y={11} width={16} height={2} fill="#2C3E50" />
+            <rect x={87} y={15} width={12} height={1.5} fill="#2C3E50" opacity={0.6} />
           </g>
         );
+
       case 'distance-view':
         return (
           <g>
-            <rect x={6} y={6} width={100} height={32} rx={3} fill="none" stroke={stroke} strokeWidth={1.2} />
-            <text x={56} y={28} textAnchor="middle" fontSize={16} fontWeight={900} fill={tickFill}>#42</text>
+            <rect x={3} y={3} width={106} height={50} rx={2} fill="#FFFFFF" stroke="#D5DBE0" />
+            <rect x={3} y={3} width={106} height={5} fill="#1A1A2E" />
+            <rect x={3} y={10} width={106} height={4} fill="#FDECEA" />
+            <text x={8} y={30} fontSize={16} fontWeight={900} fill="#2C3E50">23</text>
+            <circle cx={90} cy={26} r={9} fill="none" stroke="#E67E22" strokeWidth={2} />
+            <text x={90} y={29} textAnchor="middle" fontSize={5} fontWeight={800} fill="#2C3E50">32:24</text>
+            <rect x={30} y={38} width={45} height={3} fill="#2C3E50" />
+            <rect x={30} y={43} width={35} height={2} fill="#2471A3" />
+            <rect x={30} y={47} width={30} height={2} fill="#C0392B" />
           </g>
         );
+
       case 'progressive-ticket':
         return (
           <g>
-            <rect x={6} y={4} width={100} height={10} rx={2} fill={fill} opacity={0.9} />
-            <rect x={6} y={16} width={100} height={10} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.5} />
-            <rect x={6} y={28} width={100} height={10} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.3} />
+            <rect x={3} y={3} width={106} height={50} rx={2} fill="#FFFFFF" stroke="#D5DBE0" />
+            <rect x={5} y={6} width={40} height={3} fill="#2C3E50" />
+            <rect x={90} y={6} width={16} height={3} fill="#2C3E50" opacity={0.6} />
+            <rect x={5} y={11} width={102} height={3} fill="#FDECEA" />
+            {/* Active course expanded */}
+            <rect x={5} y={16} width={102} height={18} rx={1} fill="#F6FAF9" stroke="#16A085" strokeWidth={0.5} />
+            <rect x={7} y={18} width={30} height={2} fill="#16A085" />
+            <rect x={7} y={22} width={70} height={2} fill="#2C3E50" />
+            <rect x={7} y={26} width={80} height={2} fill="#2C3E50" opacity={0.7} />
+            <rect x={7} y={30} width={65} height={2} fill="#2C3E50" opacity={0.7} />
+            {/* Collapsed */}
+            <rect x={5} y={36} width={102} height={3} fill="#2C3E50" opacity={0.3} />
+            <rect x={5} y={40} width={102} height={3} fill="#2C3E50" opacity={0.2} />
+            <rect x={3} y={48} width={106} height={5} fill="#16A085" />
           </g>
         );
+
       case 'safety-first':
         return (
           <g>
-            <rect x={4} y={4} width={104} height={12} rx={2} fill="#C0392B" />
-            <text x={56} y={13} textAnchor="middle" fontSize={7} fontWeight={800} fill="#fff">ALLERGEN</text>
-            <rect x={4} y={20} width={104} height={8} rx={1.5} fill="none" stroke={stroke} strokeWidth={1} />
-            <rect x={4} y={30} width={104} height={8} rx={1.5} fill="none" stroke={stroke} strokeWidth={1} />
+            <rect x={3} y={3} width={106} height={50} rx={2} fill="#0D0D1A" />
+            <rect x={3} y={3} width={106} height={4} fill="#1A1A2E" />
+            <rect x={3} y={9} width={106} height={9} fill="#E84C3D" />
+            <text x={56} y={15} textAnchor="middle" fontSize={4} fontWeight={800} fill="#FFFFFF">
+              ALLERGEN: PEANUT · CLEAN BOARD
+            </text>
+            <rect x={5} y={22} width={40} height={2} fill="#FFFFFF" />
+            <rect x={5} y={26} width={30} height={2.5} fill="#3B1F1F" />
+            <rect x={5} y={32} width={44} height={2} fill="#FFFFFF" />
+            <rect x={5} y={36} width={28} height={2.5} fill="#3B1F1F" />
+            <rect x={5} y={42} width={38} height={2} fill="#FFFFFF" />
+            <rect x={3} y={48} width={106} height={5} fill="#1A1A2E" />
           </g>
         );
+
       case 'timeline-flow':
         return (
           <g>
-            {['New', 'Cook', 'Plate', 'Ready'].map((l, i) => (
-              <g key={l}>
-                <rect x={4 + i * 27} y={6} width={24} height={32} rx={2} fill="none" stroke={stroke} strokeWidth={1} />
-                <rect x={6 + i * 27} y={10} width={20} height={3} rx={1} fill={fill} opacity={0.7} />
-                <rect x={6 + i * 27} y={15} width={14} height={3} rx={1} fill={fill} opacity={0.4} />
+            <rect x={0} y={0} width={112} height={56} fill="#F0F2F5" />
+            {/* SLA ruler */}
+            <line x1={2} y1={7} x2={110} y2={7} stroke="#95A5A6" strokeWidth={0.5} />
+            {['New', 'Cook', 'Plate', 'Ready'].map((l, i) => {
+              const x = 2 + i * 27.5;
+              return (
+                <g key={l}>
+                  <text x={x + 13} y={5} textAnchor="middle" fontSize={3} fontWeight={700} fill="#6C7A89">{l}</text>
+                  <rect x={x} y={10} width={26} height={30} rx={1.5} fill="#FFFFFF" stroke="#D5DBE0" strokeWidth={0.5} />
+                  <rect x={x + 2} y={13} width={12} height={2} fill="#2C3E50" />
+                  <rect x={x + 2} y={17} width={22} height={1.5} fill="#E84C3D" />
+                  <rect x={x + 2} y={21} width={20} height={1.5} fill="#16A085" />
+                  <rect x={x + 2} y={26} width={16} height={1.5} fill="#95A5A6" />
+                  <rect x={x + 2} y={34} width={22} height={4} rx={1} fill="none" stroke="#2C3E50" strokeWidth={0.4} />
+                </g>
+              );
+            })}
+            {/* Overdue card in Cook lane */}
+            <rect x={30} y={42} width={26} height={11} rx={1} fill="#FDECEA" stroke="#E84C3D" strokeWidth={0.6} />
+            <text x={32} y={47} fontSize={3} fontWeight={800} fill="#C0392B">OVERDUE</text>
+          </g>
+        );
+
+      case 'adaptive-density':
+        return (
+          <g>
+            {/* mode pills */}
+            <rect x={3} y={3} width={16} height={5} rx={2.5} fill="#E5E9EF" />
+            <rect x={22} y={3} width={16} height={5} rx={2.5} fill="#1A1A2E" />
+            <rect x={41} y={3} width={16} height={5} rx={2.5} fill="#E5E9EF" />
+            {/* dense ticket rows */}
+            <rect x={3} y={11} width={106} height={42} rx={1.5} fill="#FFFFFF" stroke="#D5DBE0" strokeWidth={0.5} />
+            <rect x={3} y={11} width={106} height={5} fill="#1A1A2E" />
+            <rect x={5} y={13} width={12} height={2} fill="#E84C3D" />
+            {[18, 22, 26, 30, 34, 38, 42, 46].map((y, i) => (
+              <g key={y}>
+                <rect x={5} y={y} width={2} height={2} fill="#95A5A6" />
+                <rect x={9} y={y} width={40 + (i % 3) * 8} height={2} fill="#2C3E50" opacity={i % 2 ? 0.7 : 1} />
+                <rect x={80} y={y} width={20} height={2} fill="#2C3E50" opacity={0.4} />
               </g>
             ))}
           </g>
         );
-      case 'adaptive-density':
-        return (
-          <g>
-            {[0, 1, 2, 3, 4].map((r) => (
-              <rect key={r} x={4} y={4 + r * 7} width={104} height={5} rx={1} fill="none" stroke={stroke} strokeWidth={0.8} />
-            ))}
-          </g>
-        );
+
       case 'dark-command-center':
         return (
           <g>
-            <rect x={4} y={4} width={104} height={36} rx={2} fill="#1A1A2E" />
-            <rect x={8} y={8} width={30} height={4} rx={1} fill="#E84C3D" />
-            <rect x={8} y={16} width={60} height={3} rx={1} fill="#E5E7EB" opacity={0.9} />
-            <rect x={8} y={22} width={80} height={3} rx={1} fill="#E5E7EB" opacity={0.6} />
-            <rect x={8} y={28} width={50} height={3} rx={1} fill="#E5E7EB" opacity={0.6} />
+            <rect x={0} y={0} width={112} height={56} fill="#0D0D1A" />
+            {[0, 1].map((c) =>
+              [0, 1].map((r) => {
+                const x = 3 + c * 54;
+                const y = 3 + r * 27;
+                return (
+                  <g key={`${c}-${r}`}>
+                    <rect x={x} y={y} width={52} height={25} rx={2} fill="#1A1A2E" stroke="#2A2A44" strokeWidth={0.5} />
+                    <rect x={x} y={y} width={52} height={4} fill="#0D0D1A" />
+                    <rect x={x + 2} y={y + 1} width={12} height={2} fill="#F5B4AC" />
+                    <rect x={x + 2} y={y + 7} width={30} height={1.5} fill="#E84C3D" />
+                    <rect x={x + 2} y={y + 11} width={38} height={1.5} fill="#E5E7EB" />
+                    <rect x={x + 2} y={y + 14} width={32} height={1.5} fill="#E5E7EB" opacity={0.7} />
+                    <rect x={x + 2} y={y + 17} width={28} height={1.5} fill="#E5E7EB" opacity={0.5} />
+                    <rect x={x} y={y + 21} width={52} height={4} fill="#0D0D1A" />
+                    <rect x={x + 18} y={y + 22} width={16} height={2} fill="#5EE3C1" />
+                  </g>
+                );
+              })
+            )}
           </g>
         );
+
       default:
         return null;
     }
   })();
 
   return (
-    <svg viewBox="0 0 112 44" className="w-full h-full" preserveAspectRatio="none" style={{ background: bg }}>
+    <svg viewBox="0 0 112 56" className="w-full h-full" preserveAspectRatio="none" style={{ background: bg }}>
       {content}
     </svg>
   );
