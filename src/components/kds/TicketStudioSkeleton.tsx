@@ -373,7 +373,11 @@ export function TicketStudioSkeleton() {
                 padding: layout === 'compact' ? 4 : layout === 'spacious' ? 24 : 12,
               }}
             >
-              <BoardTicketPreview boardId={selectedBoard} identifier={identifier as 'order' | 'guest' | 'table'} />
+              <BoardTicketPreview
+                boardId={selectedBoard}
+                identifier={identifier as 'order' | 'guest' | 'table'}
+                orderType={activeOrderType.label}
+              />
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
               [data-ts-preview][data-density="low"] .space-y-1 > * + *,
