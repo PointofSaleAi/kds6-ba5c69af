@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { RotateCcw, Save, Check, X } from 'lucide-react';
+import { RotateCcw, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
 
 function ScaledKdsPreview({ boardId }: { boardId: string }) {
