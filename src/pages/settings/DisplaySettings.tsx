@@ -289,11 +289,8 @@ export default function DisplaySettings() {
             </button>
             <h1 className="text-2xl font-bold text-text-primary">Ticket studio</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-auto p-0 bg-surface-bg flex items-center justify-center">
-            <p className="text-sm text-center" style={{ color: 'hsl(var(--text-secondary))' }}>
-              Browse named board designs and preview before applying to a station.
-            </p>
-          </div>
+          <TicketStudioSkeleton />
+
         </div>
       </div>
     );
