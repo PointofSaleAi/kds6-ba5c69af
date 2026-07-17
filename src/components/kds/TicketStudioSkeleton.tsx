@@ -84,9 +84,10 @@ export function TicketStudioSkeleton() {
           </div>
           <div className="flex-1 min-h-0 overflow-auto p-6 flex items-start justify-center">
             <div className="rounded-xl border border-border bg-surface-bg p-4 w-full max-w-[420px]">
-              <KDSSettingsPreviewScope>
+              <KDSSettingsPreviewScope route="v3">
                 <OrderCardV2 order={previewTicket} />
               </KDSSettingsPreviewScope>
+
             </div>
           </div>
         </div>
