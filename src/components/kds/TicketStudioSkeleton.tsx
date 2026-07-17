@@ -219,7 +219,7 @@ export function TicketStudioSkeleton() {
           </div>
           <div className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center bg-surface-bg">
             <div className="w-full max-w-[360px]">
-              <SelectedVariantPreview />
+              <BoardTicketPreview boardId={selectedBoard} />
             </div>
           </div>
         </div>
