@@ -519,12 +519,13 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
 
 /* --------------------------- PROGRESSIVE TICKET --------------------------- */
 
-function ProgressiveTicket({ identifier }: VProps) {
+function ProgressiveTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(2013, agingOverrideSeconds);
   return (
     <Card>
       <div className="px-3 py-2 flex justify-between items-center border-b border-border">
         <div className="text-[13px] font-bold">{idLabel(identifier, "title")} <span className="text-text-secondary font-normal">(3)</span></div>
-        <div className="text-[12px] font-mono">33:33</div>
+        <button type="button" onClick={onTimerClick} className="text-[12px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
         [CRITICAL ALLERGEN: PEANUT, GLUTEN, NUT]
