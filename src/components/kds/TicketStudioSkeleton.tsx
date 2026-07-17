@@ -296,6 +296,32 @@ export function TicketStudioSkeleton() {
         </div>
       </aside>
 
+      {previewOpen && (
+        <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
+          <div
+            className="relative w-full h-full max-w-[1600px] max-h-[95vh] rounded-2xl overflow-hidden bg-card border border-border flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border shrink-0">
+              <div className="flex items-baseline gap-2 min-w-0">
+                <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
+                <span className="text-xs text-text-secondary truncate">Full KDS preview</span>
+              </div>
+              <button
+                onClick={() => setPreviewOpen(false)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-muted/70 px-2.5 py-1 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span className="text-[11px] font-semibold text-text-primary">Close</span>
+              </button>
+            </div>
+            <div className="flex-1 min-h-0">
+              <ScaledKdsPreview />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
