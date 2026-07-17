@@ -247,6 +247,7 @@ export function TicketStudioSkeleton() {
                   }`}
                 >
                   <div className="relative h-12 rounded-t-md bg-muted overflow-hidden">
+                    <BoardThumb id={b.id} active={active} />
                     {b.featured && (
                       <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-foreground text-background text-[9px] flex items-center justify-center font-bold">
                         ★
