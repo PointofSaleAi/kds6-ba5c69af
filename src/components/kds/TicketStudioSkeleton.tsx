@@ -308,7 +308,7 @@ function UnderlineTabs({
   options, value, onChange,
 }: { options: readonly SegOption[]; value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center border-b border-border">
+    <div className="flex items-center">
       {options.map((o) => {
         const active = o.value === value;
         return (
