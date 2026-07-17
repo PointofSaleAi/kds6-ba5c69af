@@ -53,6 +53,98 @@ const BOARDS: Board[] = [
   { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast focused operations', featured: true },
 ];
 
+function BoardThumb({ id, active }: { id: string; active: boolean }) {
+  const stroke = active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))';
+  const fill = active ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground) / 0.55)';
+  const bg = id === 'dark-command-center' ? '#0D0D1A' : 'transparent';
+  const tickFill = id === 'dark-command-center' ? '#E5E7EB' : fill;
+
+  const content = (() => {
+    switch (id) {
+      case 'calm-board':
+        return (
+          <g>
+            {[0, 1, 2].map((c) =>
+              [0, 1].map((r) => (
+                <rect key={`${c}-${r}`} x={4 + c * 34} y={4 + r * 20} width={30} height={16} rx={2} fill="none" stroke={stroke} strokeWidth={1} />
+              ))
+            )}
+          </g>
+        );
+      case 'focus-lane':
+        return (
+          <g>
+            <rect x={4} y={6} width={20} height={32} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.5} />
+            <rect x={38} y={4} width={32} height={36} rx={2} fill="none" stroke={stroke} strokeWidth={1.4} />
+            <rect x={84} y={6} width={20} height={32} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.5} />
+          </g>
+        );
+      case 'distance-view':
+        return (
+          <g>
+            <rect x={6} y={6} width={100} height={32} rx={3} fill="none" stroke={stroke} strokeWidth={1.2} />
+            <text x={56} y={28} textAnchor="middle" fontSize={16} fontWeight={900} fill={tickFill}>#42</text>
+          </g>
+        );
+      case 'progressive-ticket':
+        return (
+          <g>
+            <rect x={6} y={4} width={100} height={10} rx={2} fill={fill} opacity={0.9} />
+            <rect x={6} y={16} width={100} height={10} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.5} />
+            <rect x={6} y={28} width={100} height={10} rx={2} fill="none" stroke={stroke} strokeWidth={1} opacity={0.3} />
+          </g>
+        );
+      case 'safety-first':
+        return (
+          <g>
+            <rect x={4} y={4} width={104} height={12} rx={2} fill="#C0392B" />
+            <text x={56} y={13} textAnchor="middle" fontSize={7} fontWeight={800} fill="#fff">ALLERGEN</text>
+            <rect x={4} y={20} width={104} height={8} rx={1.5} fill="none" stroke={stroke} strokeWidth={1} />
+            <rect x={4} y={30} width={104} height={8} rx={1.5} fill="none" stroke={stroke} strokeWidth={1} />
+          </g>
+        );
+      case 'timeline-flow':
+        return (
+          <g>
+            {['New', 'Cook', 'Plate', 'Ready'].map((l, i) => (
+              <g key={l}>
+                <rect x={4 + i * 27} y={6} width={24} height={32} rx={2} fill="none" stroke={stroke} strokeWidth={1} />
+                <rect x={6 + i * 27} y={10} width={20} height={3} rx={1} fill={fill} opacity={0.7} />
+                <rect x={6 + i * 27} y={15} width={14} height={3} rx={1} fill={fill} opacity={0.4} />
+              </g>
+            ))}
+          </g>
+        );
+      case 'adaptive-density':
+        return (
+          <g>
+            {[0, 1, 2, 3, 4].map((r) => (
+              <rect key={r} x={4} y={4 + r * 7} width={104} height={5} rx={1} fill="none" stroke={stroke} strokeWidth={0.8} />
+            ))}
+          </g>
+        );
+      case 'dark-command-center':
+        return (
+          <g>
+            <rect x={4} y={4} width={104} height={36} rx={2} fill="#1A1A2E" />
+            <rect x={8} y={8} width={30} height={4} rx={1} fill="#E84C3D" />
+            <rect x={8} y={16} width={60} height={3} rx={1} fill="#E5E7EB" opacity={0.9} />
+            <rect x={8} y={22} width={80} height={3} rx={1} fill="#E5E7EB" opacity={0.6} />
+            <rect x={8} y={28} width={50} height={3} rx={1} fill="#E5E7EB" opacity={0.6} />
+          </g>
+        );
+      default:
+        return null;
+    }
+  })();
+
+  return (
+    <svg viewBox="0 0 112 44" className="w-full h-full" preserveAspectRatio="none" style={{ background: bg }}>
+      {content}
+    </svg>
+  );
+}
+
 type SegOption = { value: string; label: string };
 
 function Segmented({
