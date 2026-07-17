@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import {
   Monitor, Type, Rows3, Palette, Languages,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
-  StretchVertical, LayoutPanelLeft,
+  StretchVertical, LayoutPanelLeft, LayoutGrid,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -75,6 +75,7 @@ export default function DisplaySettings() {
   const [languageFromHash, setLanguageFromHash] = useState(false);
   const [orderTypeColorsOpen, setOrderTypeColorsOpen] = useState(false);
   const [ticketSpacingOpen, setTicketSpacingOpen] = useState(false);
+  const [ticketStudioOpen, setTicketStudioOpen] = useState(false);
   const [stationPickerOpen, setStationPickerOpen] = useState(false);
   const hash = useHashHighlight();
   useEffect(() => {
@@ -271,6 +272,28 @@ export default function DisplaySettings() {
     );
   }
 
+  if (ticketStudioOpen) {
+    return (
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
+          <button
+            onClick={() => setTicketStudioOpen(false)}
+            className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-2xl font-bold text-text-primary">Ticket studio</h1>
+        </div>
+        <div className="flex-1 px-6 pb-6 overflow-hidden flex items-center justify-center">
+          <p className="text-sm text-center" style={{ color: 'hsl(var(--text-secondary))' }}>
+            Browse named board designs and preview before applying to a station.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <SectionHeaderCard
@@ -291,6 +314,14 @@ export default function DisplaySettings() {
         highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />
 
+      <SettingsPill
+        icon={LayoutGrid}
+        iconColor="#5E4DD8"
+        label="Ticket studio"
+        helper="Browse named board designs and preview before applying to a station."
+        onClick={() => setTicketStudioOpen(true)}
+        highlighted={hash === 'ticket-studio'}
+      />
 
       <SettingsPill
         icon={Palette}
