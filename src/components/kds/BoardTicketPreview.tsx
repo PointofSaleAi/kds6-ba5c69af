@@ -309,6 +309,9 @@ function CalmBoardBody() {
   }, {});
   const courseOrder = ['APPETIZER', 'ENTREE', 'DESSERT', 'SIDES'];
   const sortedCourses = courseOrder.filter((c) => grouped[c]);
+  for (const c of sortedCourses) {
+    grouped[c] = [...grouped[c]].sort((a, b) => Number(a.state === 'done') - Number(b.state === 'done'));
+  }
 
   const ticketButtonStyle =
     ticketPhase === 'seen'
