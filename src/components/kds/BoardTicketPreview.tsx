@@ -3,7 +3,17 @@ import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRig
 import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 
-type Props = { boardId: string; identifier?: 'order' | 'guest'; orderType?: string; orderTypeKey?: string };
+type Props = {
+  boardId: string;
+  identifier?: 'order' | 'guest';
+  orderType?: string;
+  orderTypeKey?: string;
+  /** Preview-only override for elapsed seconds used by the aging color calc. */
+  agingOverrideSeconds?: number;
+  /** Preview-only click handlers used by Ticket Studio to route tab focus. */
+  onHeaderClick?: () => void;
+  onTimerClick?: () => void;
+};
 
 /** Returns the primary ticket identifier label based on the setting. */
 export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', variant: 'upper' | 'title' = 'upper') {
@@ -20,8 +30,8 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey }: Props) {
-  const vprops: VProps = { identifier, orderType, orderTypeKey };
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick }: Props) {
+  const vprops: VProps = { identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick };
   switch (boardId) {
     case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
     case 'distance-view':       return <DistanceViewTicket {...vprops} />;
@@ -35,7 +45,15 @@ export function BoardTicketPreview({ boardId, identifier = 'order', orderType, o
   }
 }
 
-type VProps = { identifier: NonNullable<Props['identifier']>; orderType?: string; orderTypeKey?: string };
+type VProps = {
+  identifier: NonNullable<Props['identifier']>;
+  orderType?: string;
+  orderTypeKey?: string;
+  agingOverrideSeconds?: number;
+  onHeaderClick?: () => void;
+  onTimerClick?: () => void;
+};
+
 
 /** Live count-up timer. Formats mm:ss. */
 function useLiveTimer(baselineSeconds: number = 0) {
