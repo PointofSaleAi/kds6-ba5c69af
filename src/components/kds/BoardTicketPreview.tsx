@@ -733,7 +733,8 @@ function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick 
 
 /* --------------------------- DARK COMMAND CENTER -------------------------- */
 
-function DarkCommandTicket({ identifier }: VProps) {
+function DarkCommandTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1923, agingOverrideSeconds);
   return (
     <Card dark>
       <div className="px-3 py-1.5 flex justify-between items-center border-b border-[#2A2A44]">
@@ -741,7 +742,7 @@ function DarkCommandTicket({ identifier }: VProps) {
           <span className="bg-[#0D0D1A] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[12px] font-bold">23</span>
         </div>
-        <span className="bg-[#3B1F1F] text-[#F5B4AC] text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
+        <button type="button" onClick={onTimerClick} className="bg-[#3B1F1F] text-[#F5B4AC] text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-0.5 text-[10px] flex justify-between border-b border-[#2A2A44] text-[#B8B8CC]">
         <span>John Peterson</span>
