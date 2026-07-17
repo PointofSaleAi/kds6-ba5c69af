@@ -478,8 +478,22 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
 
 function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
   const { text, elapsed } = useDisplayTimer(1944, agingOverrideSeconds);
-  const { getStatusForElapsed } = useStatusRules();
+  const { rules, getStatusForElapsed } = useStatusRules();
   const status = getStatusForElapsed(elapsed);
+
+  // Build a rainbow ring where each rule occupies an equal arc.
+  // Passed + current stages show their color; upcoming stages stay neutral.
+  // The current status color ends up as the last colored segment in the ring.
+  const currentIdx = Math.max(0, rules.findIndex((r) => r.id === status.ruleId));
+  const seg = 360 / Math.max(rules.length, 1);
+  const stops = rules
+    .map((r, i) => {
+      const color = i <= currentIdx ? r.color : '#E5E7EB';
+      return `${color} ${i * seg}deg ${(i + 1) * seg}deg`;
+    })
+    .join(', ');
+  const ringBg = `conic-gradient(from 0deg, ${stops})`;
+
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
@@ -497,12 +511,16 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
         <button
           type="button"
           onClick={onTimerClick}
-          className="relative w-14 h-14 rounded-full border-[3px] flex items-center justify-center cursor-pointer hover:opacity-80 transition-colors"
-          style={{ borderColor: status.color }}
+          className="relative w-14 h-14 rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition-colors"
+          style={{ background: ringBg }}
+          aria-label={`Aging status: ${status.label}`}
         >
-          <span className="text-[11px] font-mono tabular-nums font-bold">{text}</span>
+          <span className="absolute inset-[3px] rounded-full bg-white flex items-center justify-center">
+            <span className="text-[11px] font-mono tabular-nums font-bold text-[#2C3E50]">{text}</span>
+          </span>
         </button>
       </div>
+
       <div className="px-3 py-2 space-y-2 border-b border-border">
         <div>
           <div className="text-[15px] font-black uppercase leading-tight">2x Filet Mignon</div>
