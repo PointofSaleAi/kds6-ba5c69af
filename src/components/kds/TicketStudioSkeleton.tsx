@@ -308,18 +308,18 @@ function UnderlineTabs({
   options, value, onChange,
 }: { options: readonly SegOption[]; value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center">
+    <div className="flex items-end">
       {options.map((o) => {
         const active = o.value === value;
         return (
           <button
             key={o.value}
             onClick={() => onChange(o.value)}
-            className={`relative px-3 py-2 text-[11px] font-semibold transition-colors ${
+            className={`relative px-3 pt-2 pb-0 text-[11px] font-semibold transition-colors ${
               active ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
             }`}
           >
-            {o.label}
+            <span className="block pb-2">{o.label}</span>
             {active && (
               <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-t-full" />
             )}
