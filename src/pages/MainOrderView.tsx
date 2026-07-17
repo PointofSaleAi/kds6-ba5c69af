@@ -14,7 +14,9 @@ import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
 import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
+import { CalmBoardCard } from '@/components/kds/variants/CalmBoardCard';
 import { TicketStudioScope } from '@/components/kds/TicketStudioScope';
+import { useTicketStudioConfig } from '@/hooks/use-ticket-studio';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
