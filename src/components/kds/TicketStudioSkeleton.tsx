@@ -1,5 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, RotateCcw, X } from 'lucide-react';
+import { ChevronDown, Eye, RotateCcw, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
 import { useStatusRules, type StatusRule } from '@/hooks/use-status-rules';
 import {
