@@ -45,10 +45,10 @@ export const BOARD_TO_ROUTE: Record<TicketStudioBoardId, TicketsRouteKey> = {
   'calm-board': 'v4',
   'focus-lane': 'v3',
   'distance-view': 'v1',
-  'progressive-ticket': 'v4',
-  'safety-first': 'v4',
-  'timeline-flow': 'v4',
-  'adaptive-density': 'v4',
+  'progressive-ticket': 'v2',
+  'safety-first': 'Default',
+  'timeline-flow': 'v5',
+  'adaptive-density': 'v6',
   'dark-command-center': 'v4',
 };
 
