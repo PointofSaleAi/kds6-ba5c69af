@@ -515,8 +515,8 @@ export function TicketStudioSkeleton() {
               value={identifier}
               onChange={setIdentifier}
               options={[
-                { value: 'order', label: 'Order #' },
-                { value: 'guest', label: 'Guest' },
+                { value: 'order', label: 'Order number' },
+                { value: 'guest', label: 'Guest name' },
               ]}
             />
           </Field>
