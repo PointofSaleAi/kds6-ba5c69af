@@ -18,12 +18,12 @@ const BOARDS: Board[] = [
   { id: 'main-prep-classic', name: 'Main Prep Classic', subtitle: 'Detailed service' },
 ];
 
-type SegOption<T extends string> = { value: T; label: string };
+type SegOption = { value: string; label: string };
 
-function Segmented<T extends string>({
+function Segmented({
   options, value, onChange,
-}: { options: SegOption<T>[]; value: T; onChange: (v: T) => void }) {
-  const handle = (v: string) => onChange(v as T);
+}: { options: readonly SegOption[]; value: string; onChange: (v: string) => void }) {
+
 
   return (
     <div className="inline-flex rounded-full bg-muted p-1 gap-1">
