@@ -93,7 +93,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function TicketStudioSkeleton() {
-  const [selectedBoard, setSelectedBoard] = useState('expo-focus');
+  const [selectedBoard, setSelectedBoard] = useState('calm-board');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [layout, setLayout] = useState<string>('standard');
   const [density, setDensity] = useState<string>('medium');
