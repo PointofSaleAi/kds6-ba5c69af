@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRight } from 'lucide-react';
+import { useStatusRules } from '@/hooks/use-status-rules';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 
-type Props = { boardId: string; identifier?: 'order' | 'guest'; orderType?: string };
+type Props = { boardId: string; identifier?: 'order' | 'guest'; orderType?: string; orderTypeKey?: string };
 
 /** Returns the primary ticket identifier label based on the setting. */
 export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', variant: 'upper' | 'title' = 'upper') {
@@ -17,8 +20,8 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'order', orderType }: Props) {
-  const vprops: VProps = { identifier, orderType };
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey }: Props) {
+  const vprops: VProps = { identifier, orderType, orderTypeKey };
   switch (boardId) {
     case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
     case 'distance-view':       return <DistanceViewTicket {...vprops} />;
@@ -32,7 +35,20 @@ export function BoardTicketPreview({ boardId, identifier = 'order', orderType }:
   }
 }
 
-type VProps = { identifier: NonNullable<Props['identifier']>; orderType?: string };
+type VProps = { identifier: NonNullable<Props['identifier']>; orderType?: string; orderTypeKey?: string };
+
+/** Live count-up timer. Formats mm:ss. */
+function useLiveTimer(baselineSeconds: number = 0) {
+  const [seconds, setSeconds] = useState(baselineSeconds);
+  useEffect(() => {
+    setSeconds(baselineSeconds);
+    const id = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [baselineSeconds]);
+  const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const ss = String(seconds % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
 
 /* ------------------------------- shared bits ------------------------------ */
 
