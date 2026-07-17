@@ -168,44 +168,109 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
   );
 }
 
+type CalmProductState = 'idle' | 'cooking' | 'ready' | 'done';
+
+const INITIAL_CALM_PRODUCTS = [
+  { course: 'APPETIZER', name: 'Cheese Selection', qty: 1, state: 'idle' as CalmProductState },
+  { course: 'ENTREE', name: 'Meatballs', qty: 2, state: 'idle' as CalmProductState },
+  { course: 'ENTREE', name: 'Filet Mignon', qty: 1, state: 'idle' as CalmProductState },
+  { course: 'DESSERT', name: 'Tiramisu', qty: 1, state: 'idle' as CalmProductState },
+  { course: 'DESSERT', name: 'Crème Brûlée', qty: 2, state: 'idle' as CalmProductState },
+  { course: 'SIDES', name: 'Truffle Fries', qty: 1, state: 'idle' as CalmProductState },
+];
+
+function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAdvance: () => void }) {
+  const base = 'shrink-0 flex items-center justify-center active:scale-95 transition';
+  if (state === 'done') {
+    return (
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: '#27AE60', width: 22, height: 22 }} aria-label="Product served">
+        <Check size={14} color="#fff" strokeWidth={3} />
+      </button>
+    );
+  }
+  if (state === 'ready') {
+    return (
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }} aria-label="Mark product served">
+        <Check size={14} strokeWidth={3} />
+      </button>
+    );
+  }
+  if (state === 'cooking') {
+    return (
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: '#374151', color: '#fff' }} aria-label="Mark product ready">
+        <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
+      </button>
+    );
+  }
+  return (
+    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-black/[0.04]`} style={{ width: 22, height: 22, color: '#6C7A89' }} aria-label="Start cooking">
+      <Eye size={18} strokeWidth={2} />
+    </button>
+  );
+}
+
 function CalmBoardBody() {
   const [expanded, setExpanded] = useState(false);
+  const [ticketPhase, setTicketPhase] = useState<'seen' | 'preparing' | 'ready'>('seen');
+  const [products, setProducts] = useState(INITIAL_CALM_PRODUCTS);
+
+  const advanceProduct = (idx: number) => {
+    setProducts((prev) => {
+      const next = [...prev];
+      const order: CalmProductState[] = ['idle', 'cooking', 'ready', 'done'];
+      const current = next[idx].state;
+      const nextState = order[(order.indexOf(current) + 1) % order.length];
+      next[idx] = { ...next[idx], state: nextState };
+      return next;
+    });
+  };
+
+  const advanceTicket = () => {
+    setTicketPhase((prev) => {
+      if (prev === 'seen') return 'preparing';
+      if (prev === 'preparing') return 'ready';
+      return 'seen';
+    });
+  };
+
+  const visibleProducts = expanded ? products : products.slice(0, 3);
+  const grouped = visibleProducts.reduce<Record<string, typeof products>>((acc, p) => {
+    acc[p.course] = acc[p.course] || [];
+    acc[p.course].push(p);
+    return acc;
+  }, {});
+  const courseOrder = ['APPETIZER', 'ENTREE', 'DESSERT', 'SIDES'];
+  const sortedCourses = courseOrder.filter((c) => grouped[c]);
+
+  const ticketButtonStyle =
+    ticketPhase === 'seen'
+      ? 'border border-[#1A1A2E] text-[#1A1A2E] bg-transparent hover:bg-[#1A1A2E] hover:text-white'
+      : ticketPhase === 'preparing'
+      ? 'bg-[#1A1A2E] text-white'
+      : 'bg-[#16A34A] text-white';
+
+  const ticketLabel = ticketPhase === 'seen' ? 'SEEN' : ticketPhase === 'preparing' ? 'PREPARING' : 'READY';
+
   return (
     <>
       <div className="px-3 py-2 space-y-1.5">
-        <div className="text-[9px] font-bold text-text-secondary tracking-wide">APPETIZER</div>
-        <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-normal text-text-secondary">1x</span>
-          <span className="text-[12px] font-semibold">Cheese Selection</span>
-        </div>
-        <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">ENTREE</div>
-        <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-normal text-text-secondary">2x</span>
-          <span className="text-[12px] font-semibold">Meatballs</span>
-        </div>
-        <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-normal text-text-secondary">1x</span>
-          <span className="text-[12px] font-semibold">Filet Mignon</span>
-        </div>
-
-        {expanded && (
-          <>
-            <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">DESSERT</div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[12px] font-normal text-text-secondary">1x</span>
-              <span className="text-[12px] font-semibold">Tiramisu</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[12px] font-normal text-text-secondary">2x</span>
-              <span className="text-[12px] font-semibold">Crème Brûlée</span>
-            </div>
-            <div className="text-[9px] font-bold text-text-secondary tracking-wide pt-1">SIDES</div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[12px] font-normal text-text-secondary">1x</span>
-              <span className="text-[12px] font-semibold">Truffle Fries</span>
-            </div>
-          </>
-        )}
+        {sortedCourses.map((course) => (
+          <div key={course}>
+            <div className="text-[9px] font-bold text-text-secondary tracking-wide">{course}</div>
+            {grouped[course].map((product, i) => {
+              const globalIdx = products.findIndex((p) => p.name === product.name && p.course === product.course);
+              return (
+                <div key={product.name} className="flex items-start justify-between gap-2">
+                  <div className="flex items-baseline gap-2 min-w-0 flex-1">
+                    <span className="text-[12px] font-normal text-text-secondary shrink-0">{product.qty}x</span>
+                    <span className="text-[12px] font-semibold truncate">{product.name}</span>
+                  </div>
+                  <CalmProductAction state={product.state} onAdvance={() => advanceProduct(globalIdx)} />
+                </div>
+              );
+            })}
+          </div>
+        ))}
 
         <button
           type="button"
@@ -219,9 +284,10 @@ function CalmBoardBody() {
       <div className="px-3 pb-3 pt-1">
         <button
           type="button"
-          className="w-full border border-[#1A1A2E] text-[#1A1A2E] bg-transparent text-[11px] font-bold py-2 tracking-wide rounded-md hover:bg-[#1A1A2E] hover:text-white active:scale-[0.99] transition"
+          onClick={advanceTicket}
+          className={`w-full text-[11px] font-bold py-2 tracking-wide rounded-md active:scale-[0.99] transition ${ticketButtonStyle}`}
         >
-          SEEN
+          {ticketLabel}
         </button>
       </div>
     </>
