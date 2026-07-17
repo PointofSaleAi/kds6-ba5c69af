@@ -1,8 +1,43 @@
-import { useState } from 'react';
-import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
-import { previewTicket } from '@/data/mock-preview-ticket';
-import { KDSSettingsPreviewScope } from '@/hooks/use-kds-settings';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { SlidersHorizontal, RotateCcw, Save, Check } from 'lucide-react';
+
+function ScaledKdsPreview() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.5);
+  const BASE_W = 1440;
+  const BASE_H = 900;
+
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const { width, height } = el.getBoundingClientRect();
+      setScale(Math.min(width / BASE_W, height / BASE_H));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={wrapRef} className="w-full h-full relative overflow-hidden bg-surface-bg">
+      <div
+        style={{
+          width: BASE_W,
+          height: BASE_H,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        }}
+        className="absolute top-0 left-0"
+      >
+        <iframe
+          src="/kds/v3"
+          title="KDS preview"
+          className="w-full h-full border-0 pointer-events-none"
+        />
+      </div>
+    </div>
+  );
+}
 
 type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 
