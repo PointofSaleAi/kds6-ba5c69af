@@ -321,6 +321,16 @@ export function TicketStudioSkeleton() {
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
 
+  const handleReset = () => {
+    setLayout('standard');
+    setDensity('medium');
+    setTextSize('large');
+    setIdentifier('order');
+    setSafety('highlighted');
+    setTheme('light');
+    setStation('expediter');
+  };
+
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
       {/* LEFT: vertical board list */}
