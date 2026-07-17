@@ -509,46 +509,46 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
 
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
-        <span>{idLabel(identifier)} | 8:09 PM | Maria S.</span>
+      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 text-[11px] font-bold flex justify-between">
+        <span>TABLE 4 | 8:09 PM | Maria S.</span>
       </div>
-      <div className="bg-[#FDECEA] text-[#C0392B] text-[9px] font-bold px-3 py-1">
-        Allergy to nuts. Prepare separately and notify server.
+      <div className="bg-[#F5B041] text-[#1A1A2E] text-[10px] font-semibold leading-tight px-3 py-1.5">
+        Allergy to nuts, Please prepare food separately and notify server
       </div>
       <div className="px-3 py-2 flex items-center justify-between border-b border-border">
         <div>
-          <div className="text-[9px] text-text-secondary font-bold">Ticket</div>
-          <div className="text-[42px] font-black leading-none">23</div>
-          <div className="text-[9px] text-text-secondary">Order</div>
+          <div className="text-[10px] text-text-secondary font-semibold">Ticket</div>
+          <div className="text-[44px] font-black leading-none text-[#2C3E50]">23</div>
+          <div className="text-[10px] text-text-secondary">Order</div>
         </div>
         <button
           type="button"
           onClick={onTimerClick}
-          className="relative w-14 h-14 rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition-colors"
+          className="relative w-16 h-16 rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition-colors"
           style={{ background: ringBg }}
           aria-label={`Aging status: ${status.label}`}
         >
           <span className="absolute inset-[3px] rounded-full bg-white flex items-center justify-center">
-            <span className="text-[11px] font-mono tabular-nums font-bold text-[#2C3E50]">{text}</span>
+            <span className="text-[12px] font-mono tabular-nums font-bold text-[#2C3E50]">{text}</span>
           </span>
         </button>
       </div>
 
-      <div className="px-3 py-2 space-y-2 border-b border-border">
+      <div className="px-3 py-2.5 space-y-2.5 border-b border-border">
         <div>
-          <div className="text-[15px] font-black uppercase leading-tight">2x Filet Mignon</div>
-          <div className="text-[10px] text-text-secondary">medium rare</div>
-          <div className="text-[10px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
-          <div className="text-[10px] text-[#C0392B] font-semibold">No pickles</div>
+          <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
+          <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
+          <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
+          <div className="text-[11px] text-[#8E44AD] font-semibold">No pickles</div>
         </div>
         <div>
-          <div className="text-[15px] font-black uppercase leading-tight">2x Filet Mignon</div>
-          <div className="text-[10px] text-text-secondary">medium rare</div>
-          <div className="text-[10px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
+          <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
+          <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
+          <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
         </div>
       </div>
-      <button className="w-full text-[11px] font-bold py-2.5 flex items-center justify-center gap-1.5 text-[#2C3E50]">
-        <CheckCircle2 className="w-3.5 h-3.5" />
+      <button className="w-full text-[12px] font-bold py-2.5 flex items-center justify-center gap-2 text-[#2C3E50] tracking-wide">
+        <CheckCircle2 className="w-4 h-4" />
         MARK AS COMPLETE
       </button>
     </Card>
