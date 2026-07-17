@@ -63,7 +63,7 @@ export function TicketStudioScope({ children }: { children: ReactNode }) {
       data-ts-safety={cfg.safety}
       data-ts-theme={cfg.theme}
       data-ts-identifier={cfg.identifier}
-      className="contents"
+      
     >
       {children}
     </div>
