@@ -14,6 +14,7 @@ import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
 import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
+import { TicketStudioScope } from '@/components/kds/TicketStudioScope';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
@@ -1024,8 +1025,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
     const isSample = displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID;
-    const wrap = (node: ReactNode) =>
-      isSample ? <div data-order-id={displayOrder.id} className="contents">{node}</div> : node;
+    const wrap = (node: ReactNode) => {
+      const scoped = <TicketStudioScope>{node}</TicketStudioScope>;
+      return isSample ? <div data-order-id={displayOrder.id} className="contents">{scoped}</div> : scoped;
+    };
 
     if (isHistory && effectiveCardVariant === 'default') {
       return wrap(

@@ -1,6 +1,21 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { RotateCcw, Save, Check, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
+import {
+  BOARD_TO_ROUTE,
+  DEFAULT_TICKET_STUDIO_CONFIG,
+  readTicketStudioConfig,
+  writeTicketStudioConfig,
+  type TicketStudioBoardId,
+  type TSDensity,
+  type TSIdentifier,
+  type TSLayout,
+  type TSSafety,
+  type TSTextSize,
+  type TSTheme,
+} from '@/lib/ticket-studio-config';
+import { writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import { toast } from '@/hooks/use-toast';
 
 function ScaledKdsPreview({ boardId }: { boardId: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -308,17 +323,36 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function TicketStudioSkeleton() {
-  const [selectedBoard, setSelectedBoard] = useState('calm-board');
+  const initial = readTicketStudioConfig();
+  const [selectedBoard, setSelectedBoard] = useState<TicketStudioBoardId>(initial.board);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [layout, setLayout] = useState<string>('standard');
-  const [density, setDensity] = useState<string>('medium');
-  const [textSize, setTextSize] = useState<string>('large');
-  const [identifier, setIdentifier] = useState<string>('order');
-  const [safety, setSafety] = useState<string>('highlighted');
-  const [theme, setTheme] = useState<string>('light');
+  const [layout, setLayout] = useState<TSLayout>(initial.layout);
+  const [density, setDensity] = useState<TSDensity>(initial.density);
+  const [textSize, setTextSize] = useState<TSTextSize>(initial.textSize);
+  const [identifier, setIdentifier] = useState<TSIdentifier>(initial.identifier);
+  const [safety, setSafety] = useState<TSSafety>(initial.safety);
+  const [theme, setTheme] = useState<TSTheme>(initial.theme);
   const [station, setStation] = useState<string>('expediter');
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
+
+  const handleApply = () => {
+    const cfg = { board: selectedBoard, layout, density, textSize, identifier, safety, theme };
+    writeTicketStudioConfig(cfg);
+    writeStoredTicketsRoute(BOARD_TO_ROUTE[selectedBoard]);
+    toast({ title: 'Applied', description: `${board.name} is now active across Tickets, Seen, Unseen, and History.` });
+  };
+
+  const handleReset = () => {
+    setSelectedBoard(DEFAULT_TICKET_STUDIO_CONFIG.board);
+    setLayout(DEFAULT_TICKET_STUDIO_CONFIG.layout);
+    setDensity(DEFAULT_TICKET_STUDIO_CONFIG.density);
+    setTextSize(DEFAULT_TICKET_STUDIO_CONFIG.textSize);
+    setIdentifier(DEFAULT_TICKET_STUDIO_CONFIG.identifier);
+    setSafety(DEFAULT_TICKET_STUDIO_CONFIG.safety);
+    setTheme(DEFAULT_TICKET_STUDIO_CONFIG.theme);
+  };
+
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
@@ -400,7 +434,7 @@ export function TicketStudioSkeleton() {
               return (
                 <button
                   key={b.id}
-                  onClick={() => setSelectedBoard(b.id)}
+                  onClick={() => setSelectedBoard(b.id as TicketStudioBoardId)}
                   className={`shrink-0 w-32 rounded-lg border-2 text-left transition-all ${
                     active
                       ? 'border-foreground shadow-sm'
@@ -440,7 +474,7 @@ export function TicketStudioSkeleton() {
           <Field label="Layout">
             <Segmented
               value={layout}
-              onChange={setLayout}
+              onChange={(v) => setLayout(v as TSLayout)}
               options={[
                 { value: 'compact', label: 'Compact' },
                 { value: 'standard', label: 'Standard' },
@@ -451,7 +485,7 @@ export function TicketStudioSkeleton() {
           <Field label="Density">
             <Segmented
               value={density}
-              onChange={setDensity}
+              onChange={(v) => setDensity(v as TSDensity)}
               options={[
                 { value: 'low', label: 'Low' },
                 { value: 'medium', label: 'Medium' },
@@ -462,7 +496,7 @@ export function TicketStudioSkeleton() {
           <Field label="Text size">
             <Segmented
               value={textSize}
-              onChange={setTextSize}
+              onChange={(v) => setTextSize(v as TSTextSize)}
               options={[
                 { value: 'small', label: 'Small' },
                 { value: 'medium', label: 'Medium' },
@@ -473,7 +507,7 @@ export function TicketStudioSkeleton() {
           <Field label="Ticket identifier">
             <Segmented
               value={identifier}
-              onChange={setIdentifier}
+              onChange={(v) => setIdentifier(v as TSIdentifier)}
               options={[
                 { value: 'order', label: 'Order #' },
                 { value: 'guest', label: 'Guest' },
@@ -484,7 +518,7 @@ export function TicketStudioSkeleton() {
           <Field label="Safety emphasis">
             <Segmented
               value={safety}
-              onChange={setSafety}
+              onChange={(v) => setSafety(v as TSSafety)}
               options={[
                 { value: 'muted', label: 'Muted' },
                 { value: 'bright', label: 'Bright' },
@@ -495,7 +529,7 @@ export function TicketStudioSkeleton() {
           <Field label="Theme">
             <Segmented
               value={theme}
-              onChange={setTheme}
+              onChange={(v) => setTheme(v as TSTheme)}
               options={[
                 { value: 'light', label: 'Light' },
                 { value: 'dark', label: 'Dark' },
@@ -533,7 +567,7 @@ export function TicketStudioSkeleton() {
         </div>
         <div className="border-t border-border p-3 space-y-1.5">
           <div className="flex gap-1.5">
-            <button className="flex-1 h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 hover:bg-muted/70 transition-colors">
+            <button onClick={handleReset} className="flex-1 h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 hover:bg-muted/70 transition-colors">
               <RotateCcw className="w-3 h-3" />
               Reset
             </button>
@@ -542,7 +576,7 @@ export function TicketStudioSkeleton() {
               Save preset
             </button>
           </div>
-          <button className="w-full h-9 rounded-full bg-[hsl(330_85%_55%)] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity">
+          <button onClick={handleApply} className="w-full h-9 rounded-full bg-[hsl(330_85%_55%)] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity">
             <Check className="w-3.5 h-3.5" />
             Apply to station
           </button>
