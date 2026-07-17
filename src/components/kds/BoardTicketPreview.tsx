@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRight } from 'lucide-react';
+import { useStatusRules } from '@/hooks/use-status-rules';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 
-type Props = { boardId: string; identifier?: 'order' | 'guest'; orderType?: string };
+type Props = { boardId: string; identifier?: 'order' | 'guest'; orderType?: string; orderTypeKey?: string };
 
 /** Returns the primary ticket identifier label based on the setting. */
 export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', variant: 'upper' | 'title' = 'upper') {
@@ -17,8 +20,8 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'order', orderType }: Props) {
-  const vprops: VProps = { identifier, orderType };
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey }: Props) {
+  const vprops: VProps = { identifier, orderType, orderTypeKey };
   switch (boardId) {
     case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
     case 'distance-view':       return <DistanceViewTicket {...vprops} />;
@@ -32,7 +35,20 @@ export function BoardTicketPreview({ boardId, identifier = 'order', orderType }:
   }
 }
 
-type VProps = { identifier: NonNullable<Props['identifier']>; orderType?: string };
+type VProps = { identifier: NonNullable<Props['identifier']>; orderType?: string; orderTypeKey?: string };
+
+/** Live count-up timer. Formats mm:ss. */
+function useLiveTimer(baselineSeconds: number = 0) {
+  const [seconds, setSeconds] = useState(baselineSeconds);
+  useEffect(() => {
+    setSeconds(baselineSeconds);
+    const id = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [baselineSeconds]);
+  const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const ss = String(seconds % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
 
 /* ------------------------------- shared bits ------------------------------ */
 
@@ -62,7 +78,7 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 
 /* --------------------------------- CALM ----------------------------------- */
 
-function CalmBoardTicket({ identifier, orderType }: VProps) {
+function CalmBoardTicket({ identifier, orderType, orderTypeKey }: VProps) {
   const isTableOrder = orderType?.toUpperCase() === 'DINE IN';
   const isGuest = identifier === 'guest';
   const headerLabel = isTableOrder
@@ -71,13 +87,31 @@ function CalmBoardTicket({ identifier, orderType }: VProps) {
     ? orderType.toUpperCase()
     : idLabel(identifier);
 
+  // Live timer + status-rule driven header color (aging).
+  // Baseline of 33s so the ticket starts in the "New/Start" band and ages naturally.
+  const timer = useLiveTimer(33);
+  const { getStatusForElapsed } = useStatusRules();
+  const { orderTypeColors } = useKDSSettings();
+  const elapsedSec = timer.split(':').reduce((a, b) => a * 60 + Number(b), 0);
+  const status = getStatusForElapsed(elapsedSec);
+
+  // Order type pill color from user settings (falls back to defaults).
+  const key = orderTypeKey ?? 'dine-in';
+  const pillColor = orderTypeColors?.[key] || DEFAULT_ORDER_TYPE_COLORS[key] || '#1A1A2E';
+
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
-        <div className="text-[11px] font-bold tracking-wide">
+      <div
+        className="px-3 py-1.5 flex justify-between items-center"
+        style={{ background: status.color, color: status.textColor }}
+      >
+        <span
+          className="inline-flex items-center h-5 px-2 rounded-full text-[10px] font-bold tracking-wide"
+          style={{ background: pillColor, color: '#FFFFFF' }}
+        >
           {headerLabel}
-        </div>
-        <div className="text-[11px] font-mono">33:33</div>
+        </span>
+        <div className="text-[11px] font-mono tabular-nums">{timer}</div>
       </div>
       <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
         <span>
