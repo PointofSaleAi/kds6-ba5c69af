@@ -307,6 +307,18 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+const ORDER_TYPES = [
+  { value: 'dine-in', label: 'DINE IN', color: '#1A1A2E' },
+  { value: 'take-out', label: 'TAKE OUT', color: '#2980B9' },
+  { value: 'delivery', label: 'DELIVERY', color: '#16A085' },
+  { value: 'banquet', label: 'BANQUET', color: '#F39C12' },
+  { value: 'drive-thru', label: 'DRIVE THRU', color: '#8E44AD' },
+  { value: 'curb-side', label: 'CURB SIDE', color: '#D35400' },
+  { value: 'scheduled', label: 'SCHEDULED', color: '#2C3E50' },
+  { value: 'phone-in', label: 'PHONE IN', color: '#C0392B' },
+  { value: 'custom', label: 'CUSTOM', color: '#6C7A89' },
+] as const;
+
 export function TicketStudioSkeleton() {
   const [selectedBoard, setSelectedBoard] = useState('calm-board');
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -317,6 +329,7 @@ export function TicketStudioSkeleton() {
   const [safety, setSafety] = useState<string>('highlighted');
   const [theme, setTheme] = useState<string>('light');
   const [station, setStation] = useState<string>('expediter');
+  const [orderType, setOrderType] = useState<string>('dine-in');
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
 
