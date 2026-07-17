@@ -315,6 +315,20 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 
+const ORDER_TYPES_LIST = [
+  { key: 'dine-in', label: 'Dine in' },
+  { key: 'take-out', label: 'Take out', warm: true },
+  { key: 'delivery', label: 'Delivery' },
+  { key: 'banquet', label: 'Banquet' },
+  { key: 'drive-thru', label: 'Drive thru', warm: true },
+  { key: 'curb-side', label: 'Curb side' },
+  { key: 'scheduled', label: 'Scheduled' },
+  { key: 'phone-in', label: 'Phone-in' },
+  { key: 'custom', label: 'Custom' },
+] as const;
+
+type PanelTab = 'display' | 'aging' | 'order-type';
+
 export function TicketStudioSkeleton() {
   const [selectedBoard, setSelectedBoard] = useState('calm-board');
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -326,7 +340,65 @@ export function TicketStudioSkeleton() {
   const [theme, setTheme] = useState<string>('light');
   const [station, setStation] = useState<string>('expediter');
 
+  // New: personalize panel tabs + preview state.
+  const [tab, setTab] = useState<PanelTab>('display');
+  const [orderTypeKey, setOrderTypeKey] = useState<string>('dine-in');
+  const [agingStageIndex, setAgingStageIndex] = useState<number | null>(null);
+  const [expandedRule, setExpandedRule] = useState<string | null>(null);
+  const [expandedOrderType, setExpandedOrderType] = useState<string | null>(null);
+
+  // Live data from global stores (shared with dedicated settings screens).
+  const { rules, setRules } = useStatusRules();
+  const {
+    orderTypeColors,
+    orderTypeDetailedColors,
+    setOrderTypeColors,
+    setOrderTypeDetailedColors,
+  } = useKDSSettings();
+
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
+
+  // Preview-only aging override. Uses each rule's minMinutes + 30s so the
+  // preview lands squarely in that band. Never persists to real orders.
+  const agingOverrideSeconds = useMemo(() => {
+    if (agingStageIndex === null) return undefined;
+    const rule = rules[Math.min(agingStageIndex, rules.length - 1)];
+    return rule ? rule.minMinutes * 60 + 30 : undefined;
+  }, [agingStageIndex, rules]);
+
+  const cycleAgingStage = () => {
+    setAgingStageIndex((i) => {
+      const next = i === null ? 0 : (i + 1) % rules.length;
+      return next;
+    });
+    const nextIndex = agingStageIndex === null ? 0 : (agingStageIndex + 1) % rules.length;
+    const nextRule = rules[nextIndex];
+    if (nextRule) {
+      setTab('aging');
+      setExpandedRule(nextRule.id);
+    }
+  };
+
+  const openOrderTypeInPanel = (key: string) => {
+    setOrderTypeKey(key);
+    setTab('order-type');
+    setExpandedOrderType(key);
+  };
+
+  const updateRule = (id: string, patch: Partial<StatusRule>) => {
+    setRules(rules.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  };
+
+  const updateOrderTypeColor = (key: string, field: 'headerBg' | 'headerText', value: string) => {
+    const current = orderTypeDetailedColors?.[key] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[key];
+    setOrderTypeDetailedColors({
+      ...orderTypeDetailedColors,
+      [key]: { ...current, [field]: value },
+    });
+    if (field === 'headerBg') {
+      setOrderTypeColors({ ...orderTypeColors, [key]: value });
+    }
+  };
 
   const handleReset = () => {
     setLayout('standard');
@@ -336,7 +408,11 @@ export function TicketStudioSkeleton() {
     setSafety('highlighted');
     setTheme('light');
     setStation('expediter');
+    setAgingStageIndex(null);
+    setOrderTypeKey('dine-in');
   };
+
+
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
