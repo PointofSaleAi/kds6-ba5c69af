@@ -64,6 +64,7 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 
 function CalmBoardTicket({ identifier, orderType }: VProps) {
   const isTableOrder = orderType?.toUpperCase() === 'DINE IN';
+  const isGuest = identifier === 'guest';
   const headerLabel = isTableOrder
     ? idLabel('table')
     : orderType
@@ -79,7 +80,13 @@ function CalmBoardTicket({ identifier, orderType }: VProps) {
         <div className="text-[11px] font-mono">33:33</div>
       </div>
       <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
-        <span><span className="font-bold">23</span> John Peterson</span>
+        <span>
+          {isGuest ? (
+            <><span className="font-bold">John Peterson</span> 23</>
+          ) : (
+            <><span className="font-bold">23</span> John Peterson</>
+          )}
+        </span>
         <span className="text-text-secondary">Maria S. · 8:00 PM</span>
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
