@@ -65,7 +65,7 @@ function CalmBoardTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
-        <div className="text-[11px] font-bold tracking-wide">TABLE 4</div>
+        <div className="text-[11px] font-bold tracking-wide">{idLabel(identifier)}</div>
         <div className="text-[11px] font-mono">33:33</div>
       </div>
       <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
@@ -100,7 +100,7 @@ function FocusLaneTicket({ identifier }: VProps) {
     <Card>
       <div className="h-1.5 bg-[#16A085]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
-        <div className="text-[16px] font-black">TABLE 4</div>
+        <div className="text-[16px] font-black">{idLabel(identifier)}</div>
         <div className="text-[13px] font-mono">33:33</div>
       </div>
       <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
@@ -141,7 +141,7 @@ function DistanceViewTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
-        <span>TABLE 4 | 8:09 PM | Maria S.</span>
+        <span>{idLabel(identifier)} | 8:09 PM | Maria S.</span>
       </div>
       <div className="bg-[#FDECEA] text-[#C0392B] text-[9px] font-bold px-3 py-1">
         Allergy to nuts. Prepare separately and notify server.
@@ -183,7 +183,7 @@ function ProgressiveTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="px-3 py-2 flex justify-between items-center border-b border-border">
-        <div className="text-[13px] font-bold">Table 4 <span className="text-text-secondary font-normal">(3)</span></div>
+        <div className="text-[13px] font-bold">{idLabel(identifier, "title")} <span className="text-text-secondary font-normal">(3)</span></div>
         <div className="text-[12px] font-mono">33:33</div>
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
@@ -241,7 +241,7 @@ function SafetyFirstTicket({ identifier }: VProps) {
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">TABLE 4</span>
+          <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
         </div>
         <span className="bg-[#C0392B] text-white text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
@@ -394,7 +394,7 @@ function DarkCommandTicket({ identifier }: VProps) {
     <Card dark>
       <div className="px-3 py-1.5 flex justify-between items-center border-b border-[#2A2A44]">
         <div className="flex items-center gap-1.5">
-          <span className="bg-[#0D0D1A] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">TABLE 4</span>
+          <span className="bg-[#0D0D1A] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[12px] font-bold">23</span>
         </div>
         <span className="bg-[#3B1F1F] text-[#F5B4AC] text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
