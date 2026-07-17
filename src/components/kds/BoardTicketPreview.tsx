@@ -481,18 +481,31 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
   const { rules, getStatusForElapsed } = useStatusRules();
   const status = getStatusForElapsed(elapsed);
 
-  // Build a rainbow ring where each rule occupies an equal arc.
-  // Passed + current stages show their color; upcoming stages stay neutral.
-  // The current status color ends up as the last colored segment in the ring.
+  // Build a loader-style rainbow ring. Each rule occupies an equal arc;
+  // the current rule fills progressively so the ring is never fully occupied.
+  // The current status color always sits at the leading edge of the filled arc.
   const currentIdx = Math.max(0, rules.findIndex((r) => r.id === status.ruleId));
   const seg = 360 / Math.max(rules.length, 1);
-  const stops = rules
-    .map((r, i) => {
-      const color = i <= currentIdx ? r.color : '#E5E7EB';
-      return `${color} ${i * seg}deg ${(i + 1) * seg}deg`;
-    })
-    .join(', ');
-  const ringBg = `conic-gradient(from 0deg, ${stops})`;
+  const rule = rules[currentIdx];
+  const ruleStart = rule.minMinutes * 60;
+  const ruleEnd = rule.maxMinutes ? rule.maxMinutes * 60 : ruleStart + 600;
+  const ruleProgress = Math.min(Math.max((elapsed - ruleStart) / (ruleEnd - ruleStart), 0), 1);
+  const fillAngle = currentIdx * seg + ruleProgress * seg;
+
+  const stops: string[] = [];
+  for (let i = 0; i < rules.length; i++) {
+    const start = i * seg;
+    const end = (i + 1) * seg;
+    if (end <= fillAngle + 0.5) {
+      stops.push(`${rules[i].color} ${start}deg ${end}deg`);
+    } else if (start < fillAngle) {
+      stops.push(`${rules[i].color} ${start}deg ${fillAngle}deg`);
+      stops.push(`#E5E7EB ${fillAngle}deg ${end}deg`);
+    } else {
+      stops.push(`#E5E7EB ${start}deg ${end}deg`);
+    }
+  }
+  const ringBg = `conic-gradient(from -90deg, ${stops.join(', ')})`;
 
   return (
     <Card>
