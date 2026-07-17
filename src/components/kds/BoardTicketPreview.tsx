@@ -1,25 +1,37 @@
 import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRight } from 'lucide-react';
 
-type Props = { boardId: string };
+type Props = { boardId: string; identifier?: 'order' | 'guest' | 'table' };
+
+/** Returns the primary ticket identifier label based on the setting. */
+export function idLabel(identifier: Props['identifier'] = 'table', variant: 'upper' | 'title' = 'upper') {
+  const map = {
+    order: variant === 'upper' ? 'ORDER #23' : 'Order #23',
+    guest: variant === 'upper' ? 'JOHN PETERSON' : 'John Peterson',
+    table: variant === 'upper' ? 'TABLE 4' : 'Table 4',
+  } as const;
+  return map[identifier];
+}
 
 /**
  * Board-specific standalone ticket previews.
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId }: Props) {
+export function BoardTicketPreview({ boardId, identifier = 'table' }: Props) {
   switch (boardId) {
-    case 'focus-lane':          return <FocusLaneTicket />;
-    case 'distance-view':       return <DistanceViewTicket />;
-    case 'progressive-ticket':  return <ProgressiveTicket />;
-    case 'safety-first':        return <SafetyFirstTicket />;
-    case 'timeline-flow':       return <TimelineFlowTicket />;
-    case 'adaptive-density':    return <AdaptiveDensityTicket />;
-    case 'dark-command-center': return <DarkCommandTicket />;
+    case 'focus-lane':          return <FocusLaneTicket identifier={identifier} />;
+    case 'distance-view':       return <DistanceViewTicket identifier={identifier} />;
+    case 'progressive-ticket':  return <ProgressiveTicket identifier={identifier} />;
+    case 'safety-first':        return <SafetyFirstTicket identifier={identifier} />;
+    case 'timeline-flow':       return <TimelineFlowTicket identifier={identifier} />;
+    case 'adaptive-density':    return <AdaptiveDensityTicket identifier={identifier} />;
+    case 'dark-command-center': return <DarkCommandTicket identifier={identifier} />;
     case 'calm-board':
-    default:                    return <CalmBoardTicket />;
+    default:                    return <CalmBoardTicket identifier={identifier} />;
   }
 }
+
+type VProps = { identifier: NonNullable<Props['identifier']> };
 
 /* ------------------------------- shared bits ------------------------------ */
 
