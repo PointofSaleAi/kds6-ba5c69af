@@ -2,9 +2,9 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { RotateCcw, Save, Check, Expand, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
 
-function ScaledKdsPreview() {
+function ScaledKdsPreview({ boardId }: { boardId: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.5);
+  const [scale, setScale] = useState(1);
   const BASE_W = 1440;
   const BASE_H = 900;
 
@@ -19,8 +19,10 @@ function ScaledKdsPreview() {
     return () => ro.disconnect();
   }, []);
 
+  const isDark = boardId === 'dark-command-center' || boardId === 'safety-first';
+
   return (
-    <div ref={wrapRef} className="w-full h-full relative overflow-hidden bg-surface-bg">
+    <div ref={wrapRef} className="w-full h-full relative overflow-hidden" style={{ background: isDark ? '#0D0D1A' : '#F0F2F5' }}>
       <div
         style={{
           width: BASE_W,
@@ -28,13 +30,26 @@ function ScaledKdsPreview() {
           transform: `scale(${scale})`,
           transformOrigin: 'top left',
         }}
-        className="absolute top-0 left-0"
+        className="absolute top-0 left-0 flex"
       >
-        <iframe
-          src="/kds/v3"
-          title="KDS preview"
-          className="w-full h-full border-0 pointer-events-none"
-        />
+        {/* Sidebar */}
+        <div className="w-[56px] h-full shrink-0" style={{ background: '#0D0D1A' }} />
+        {/* Main */}
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="h-[48px] shrink-0 border-b flex items-center px-6" style={{ borderColor: isDark ? '#2A2A44' : '#D5DBE0', background: isDark ? '#1A1A2E' : '#FFFFFF' }}>
+            <div className="text-sm font-bold" style={{ color: isDark ? '#FFFFFF' : '#2C3E50' }}>Kitchen Display</div>
+          </div>
+          <div className="flex-1 min-h-0 overflow-hidden p-6">
+            <div className="grid grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i}>
+                  <BoardTicketPreview boardId={boardId} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="h-[44px] shrink-0 border-t" style={{ borderColor: isDark ? '#2A2A44' : '#D5DBE0', background: isDark ? '#1A1A2E' : '#FFFFFF' }} />
+        </div>
       </div>
     </div>
   );
@@ -516,7 +531,7 @@ export function TicketStudioSkeleton() {
               </button>
             </div>
             <div className="flex-1 min-h-0">
-              <ScaledKdsPreview />
+              <ScaledKdsPreview boardId={selectedBoard} />
             </div>
           </div>
         </div>
