@@ -52,6 +52,39 @@ export const BOARD_TO_ROUTE: Record<TicketStudioBoardId, TicketsRouteKey> = {
   'dark-command-center': 'v4',
 };
 
+/** Signature personalization applied when a board is activated. */
+export const BOARD_SIGNATURES: Partial<Record<TicketStudioBoardId, Partial<TicketStudioConfig>>> = {
+  'dark-command-center': { theme: 'dark' },
+  'safety-first':        { safety: 'highlighted' },
+  'distance-view':       { textSize: 'large' },
+  'adaptive-density':    { density: 'high' },
+  'calm-board':          { density: 'low' },
+};
+
+export const BOARD_ROUTE_SLUGS: TicketStudioBoardId[] = [
+  'calm-board',
+  'focus-lane',
+  'distance-view',
+  'progressive-ticket',
+  'safety-first',
+  'timeline-flow',
+  'adaptive-density',
+  'dark-command-center',
+];
+
+export function getBoardRoutePath(boardId: TicketStudioBoardId): string {
+  return `/kds/board/${boardId}`;
+}
+
+export function buildBoardConfig(boardId: TicketStudioBoardId, base?: Partial<TicketStudioConfig>): TicketStudioConfig {
+  return {
+    ...DEFAULT_TICKET_STUDIO_CONFIG,
+    ...(base ?? {}),
+    ...(BOARD_SIGNATURES[boardId] ?? {}),
+    board: boardId,
+  };
+}
+
 export function readTicketStudioConfig(): TicketStudioConfig {
   if (typeof window === 'undefined') return DEFAULT_TICKET_STUDIO_CONFIG;
   try {
