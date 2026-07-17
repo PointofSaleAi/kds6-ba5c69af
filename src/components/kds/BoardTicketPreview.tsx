@@ -628,7 +628,8 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
 
 /* ----------------------------- TIMELINE FLOW ------------------------------ */
 
-function TimelineFlowTicket({ identifier }: VProps) {
+function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(763, agingOverrideSeconds);
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="text-[10px] font-bold text-text-secondary uppercase mb-1.5 tracking-wide flex items-center gap-1">
@@ -637,7 +638,7 @@ function TimelineFlowTicket({ identifier }: VProps) {
       <Card>
         <div className="px-3 py-1.5 flex justify-between items-center border-b border-border">
           <div className="text-[12px] font-bold">Order 2</div>
-          <div className="text-[11px] font-mono">12:43</div>
+          <button type="button" onClick={onTimerClick} className="text-[11px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
         </div>
         <div className="px-3 py-1 flex justify-between text-[10px] border-b border-border">
           <span>21 · Table #</span>
