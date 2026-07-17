@@ -672,7 +672,8 @@ function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
 
 /* ---------------------------- ADAPTIVE DENSITY ---------------------------- */
 
-function AdaptiveDensityTicket({ identifier }: VProps) {
+function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1927, agingOverrideSeconds);
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="flex gap-1 mb-1.5 text-[9px] font-bold">
@@ -686,7 +687,7 @@ function AdaptiveDensityTicket({ identifier }: VProps) {
             <span className="bg-[#E84C3D] text-white text-[8px] font-bold px-1.5 py-0.5 rounded">URGENT</span>
             <span className="text-[12px] font-bold">23</span>
           </div>
-          <span className="bg-[#FDECEA] text-[#C0392B] text-[10px] font-mono px-1.5 py-0.5 rounded">32:07</span>
+          <button type="button" onClick={onTimerClick} className="bg-[#FDECEA] text-[#C0392B] text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
         </div>
         <div className="px-3 py-0.5 text-[10px] flex justify-between border-b border-border">
           <span>John Peterson</span>
