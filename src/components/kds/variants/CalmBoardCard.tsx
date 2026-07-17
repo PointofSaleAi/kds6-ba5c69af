@@ -180,7 +180,7 @@ function CalmProductRow({
   onToggle: () => void;
   onLongPress: (p: OrderItem) => void;
 }) {
-  const longPress = useLongPress({ onLongPress: () => onLongPress(product), threshold: 450 });
+  const longPress = useLongPress(() => onLongPress(product), { threshold: 450 });
   const done = state === 'done';
   return (
     <div
@@ -198,7 +198,7 @@ function CalmProductRow({
         </div>
         {product.modifiers && product.modifiers.length > 0 && (
           <div className="text-[10px] text-text-secondary truncate">
-            {product.modifiers.map((m) => m.name).join(', ')}
+            {product.modifiers.map((m) => m.text).join(', ')}
           </div>
         )}
       </div>
