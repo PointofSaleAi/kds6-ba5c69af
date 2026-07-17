@@ -577,7 +577,8 @@ function Row({ n, name, chips = [] }: { n: string; name: string; chips?: [string
 
 /* ------------------------------ SAFETY FIRST ------------------------------ */
 
-function SafetyFirstTicket({ identifier }: VProps) {
+function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1923, agingOverrideSeconds);
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
@@ -585,7 +586,7 @@ function SafetyFirstTicket({ identifier }: VProps) {
           <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
         </div>
-        <span className="bg-[#C0392B] text-white text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
+        <button type="button" onClick={onTimerClick} className="bg-[#C0392B] text-white text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-0.5 text-[9px] flex justify-between border-b border-border">
         <span>John Peterson</span>
