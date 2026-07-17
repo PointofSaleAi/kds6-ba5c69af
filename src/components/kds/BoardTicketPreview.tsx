@@ -170,14 +170,57 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
 
 type CalmProductState = 'idle' | 'cooking' | 'ready' | 'done';
 
-const INITIAL_CALM_PRODUCTS = [
-  { course: 'APPETIZER', name: 'Cheese Selection', qty: 1, state: 'idle' as CalmProductState },
-  { course: 'ENTREE', name: 'Meatballs', qty: 2, state: 'idle' as CalmProductState },
-  { course: 'ENTREE', name: 'Filet Mignon', qty: 1, state: 'idle' as CalmProductState },
-  { course: 'DESSERT', name: 'Tiramisu', qty: 1, state: 'idle' as CalmProductState },
-  { course: 'DESSERT', name: 'Crème Brûlée', qty: 2, state: 'idle' as CalmProductState },
-  { course: 'SIDES', name: 'Truffle Fries', qty: 1, state: 'idle' as CalmProductState },
+type CalmModifier = { text: string; kind: 'add' | 'remove' | 'mod' };
+type CalmProduct = {
+  course: string;
+  name: string;
+  qty: number;
+  state: CalmProductState;
+  modifiers?: CalmModifier[];
+  note?: string;
+  allergens?: string[];
+};
+
+const INITIAL_CALM_PRODUCTS: CalmProduct[] = [
+  {
+    course: 'APPETIZER',
+    name: 'Cheese Selection',
+    qty: 1,
+    state: 'idle',
+    modifiers: [{ text: 'Extra crackers', kind: 'add' }],
+    allergens: ['DAIRY', 'GLUTEN'],
+  },
+  {
+    course: 'ENTREE',
+    name: 'Meatballs',
+    qty: 2,
+    state: 'idle',
+    modifiers: [
+      { text: 'Extra parmesan', kind: 'add' },
+      { text: 'No basil', kind: 'remove' },
+    ],
+    note: 'One plate split for sharing',
+  },
+  {
+    course: 'ENTREE',
+    name: 'Filet Mignon',
+    qty: 1,
+    state: 'idle',
+    modifiers: [{ text: 'Medium rare', kind: 'mod' }],
+    allergens: ['NUT'],
+  },
+  { course: 'DESSERT', name: 'Tiramisu', qty: 1, state: 'idle' },
+  {
+    course: 'DESSERT',
+    name: 'Crème Brûlée',
+    qty: 2,
+    state: 'idle',
+    note: 'Serve together',
+  },
+  { course: 'SIDES', name: 'Truffle Fries', qty: 1, state: 'idle', modifiers: [{ text: 'Side aioli', kind: 'add' }] },
 ];
+
+const CALM_ORDER_NOTE = 'Anniversary — please pace mains after apps.';
 
 function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAdvance: () => void }) {
   const base = 'shrink-0 flex items-center justify-center active:scale-95 transition';
