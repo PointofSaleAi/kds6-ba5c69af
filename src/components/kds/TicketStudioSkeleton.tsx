@@ -428,13 +428,13 @@ export function TicketStudioSkeleton() {
   };
 
   const handleReset = () => {
-    setLayout('standard');
-    setDensity('medium');
+    setLayout('compact');
+    setDensity('high');
     setTextSize('large');
     setIdentifier('order');
-    setSafety('highlighted');
+    setSafety('bright');
     setTheme('light');
-    
+
     setAgingStageIndex(null);
     setOrderTypeKey('dine-in');
     setExpandedRule(null);
