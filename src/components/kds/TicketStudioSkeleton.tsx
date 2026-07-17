@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { SlidersHorizontal, RotateCcw, Save, Check } from 'lucide-react';
+import { RotateCcw, Save, Check, Expand, X } from 'lucide-react';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
 
 function ScaledKdsPreview() {
   const wrapRef = useRef<HTMLDivElement>(null);
