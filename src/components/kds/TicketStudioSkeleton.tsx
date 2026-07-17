@@ -395,6 +395,28 @@ export function TicketStudioSkeleton() {
               [data-ts-preview][data-theme="dark"] svg { filter: invert(1) hue-rotate(180deg); }
             `}} />
           </div>
+          {/* Order type chip nav */}
+          <div className="border-t border-border bg-card px-3 py-2 shrink-0">
+            <div className="flex gap-1.5 overflow-x-auto">
+              {ORDER_TYPES.map((o) => {
+                const active = orderType === o.value;
+                return (
+                  <button
+                    key={o.value}
+                    onClick={() => setOrderType(o.value)}
+                    className="shrink-0 px-3 h-7 rounded-full text-[10px] font-bold tracking-wide transition-all border"
+                    style={
+                      active
+                        ? { background: o.color, color: '#FFFFFF', borderColor: o.color }
+                        : { background: 'transparent', color: o.color, borderColor: o.color + '55' }
+                    }
+                  >
+                    {o.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
 
