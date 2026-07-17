@@ -1,25 +1,23 @@
-Plan to fix the remaining product action icon alignment issue:
+## Update Ticket Studio board selector
 
-1. **Refactor the V3 item row structure**
-   - Move the product-level action area into the same first-line row as the quantity and product name.
-   - Use a 3-column layout:
+Replace the current 9-item `BOARDS` array in `src/components/kds/TicketStudioSkeleton.tsx` with the 8 layouts from the PDF, using the exact names and a short subtitle drawn from each concept.
 
-```text
-[qty] [product name] [action icons]
-      [modifiers / notes / allergens below]
-```
+### New board list (in PDF order)
 
-2. **Lock the action icon rail to the product-name line box**
-   - Replace the current `minHeight` action wrapper with an explicit first-line height based on `var(--kds-item-name) * 1.2`.
-   - Keep icons centered inside that line-height box so they align with the first line of the product name, not with modifiers, notes, allergen chips, timers, or wrapped details.
+1. **Calm Board** — Balanced operations, low visual noise
+2. **Focus Lane** — Priority ticket centered, context at edges
+3. **Distance View** — Maximum readability from several feet
+4. **Progressive Ticket** — Reveals detail for the active course
+5. **Safety First** — Allergen and cross-contact controls lead
+6. **Timeline Flow** — New, Cooking, Plating, Ready lanes
+7. **Adaptive Density** — Comfortable, Balanced, Rush modes
+8. **Dark Command Center** — High-contrast focused operations
 
-3. **Prevent timer/expand chips from shifting the main action icon**
-   - Keep the chevron, prep timer chip, and state icon visually grouped, but prevent the tallest chip from changing the vertical alignment reference.
-   - This addresses cases where some products still look misaligned because extra chips make the right-side action group taller.
+### Changes
 
-4. **Keep detail rows aligned under the product name**
-   - Preserve the existing `24px` left offset for allergens, modifiers, add-ons, and notes so they remain aligned under the product name column.
+- Replace `BOARDS` entries with new `id`/`name`/`subtitle` tuples matching the list above (ids: `calm-board`, `focus-lane`, `distance-view`, `progressive-ticket`, `safety-first`, `timeline-flow`, `adaptive-density`, `dark-command-center`).
+- Mark a small subset as `featured: true` (Calm Board, Safety First, Dark Command Center) to keep the star treatment consistent.
+- Update default `selectedBoard` state to `'calm-board'` so the preview opens on the general-purpose default.
+- The header caption "Choose from {BOARDS.length} boards" will auto-update to "Choose from 8 boards".
 
-5. **Verify edge cases**
-   - Check products with: no modifiers, modifiers, add-ons, notes, allergen chips, Arabic secondary language, long wrapped names, prep timer visible, and served/ready/preparing states.
-   - Confirm the action icon center matches the product-name first-line center across those cases.
+No other files affected; layout, sizing, and preview behavior stay unchanged.
