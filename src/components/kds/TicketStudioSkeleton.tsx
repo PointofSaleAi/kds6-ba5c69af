@@ -375,7 +375,7 @@ export function TicketStudioSkeleton() {
             >
               <BoardTicketPreview
                 boardId={selectedBoard}
-                identifier={identifier as 'order' | 'guest' | 'table'}
+                identifier={identifier as 'order' | 'guest'}
                 orderType={activeOrderType.label}
               />
             </div>
@@ -517,7 +517,6 @@ export function TicketStudioSkeleton() {
               options={[
                 { value: 'order', label: 'Order #' },
                 { value: 'guest', label: 'Guest' },
-                { value: 'table', label: 'Table' },
               ]}
             />
           </Field>

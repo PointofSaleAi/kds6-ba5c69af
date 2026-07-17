@@ -1,9 +1,9 @@
 import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRight } from 'lucide-react';
 
-type Props = { boardId: string; identifier?: 'order' | 'guest' | 'table'; orderType?: string };
+type Props = { boardId: string; identifier?: 'order' | 'guest'; orderType?: string };
 
 /** Returns the primary ticket identifier label based on the setting. */
-export function idLabel(identifier: Props['identifier'] = 'table', variant: 'upper' | 'title' = 'upper') {
+export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', variant: 'upper' | 'title' = 'upper') {
   const map = {
     order: variant === 'upper' ? 'ORDER #23' : 'Order #23',
     guest: variant === 'upper' ? 'JOHN PETERSON' : 'John Peterson',
@@ -17,7 +17,7 @@ export function idLabel(identifier: Props['identifier'] = 'table', variant: 'upp
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'table', orderType }: Props) {
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType }: Props) {
   const vprops: VProps = { identifier, orderType };
   switch (boardId) {
     case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
