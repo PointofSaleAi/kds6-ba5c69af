@@ -272,6 +272,7 @@ function CalmBoardBody() {
   const [expanded, setExpanded] = useState(false);
   const [ticketPhase, setTicketPhase] = useState<'seen' | 'preparing' | 'ready' | 'served'>('seen');
   const [products, setProducts] = useState(INITIAL_CALM_PRODUCTS);
+  const idPrefix = useId();
 
   const syncTicketFromProducts = (list: typeof INITIAL_CALM_PRODUCTS) => {
     const first = list[0].state;
@@ -324,6 +325,9 @@ function CalmBoardBody() {
     : ticketPhase === 'ready' ? 'READY'
     : 'SERVED';
 
+  const timerStateFor = (s: CalmProductState): 'idle' | 'cooking' | 'done' =>
+    s === 'idle' ? 'idle' : s === 'cooking' ? 'cooking' : 'done';
+
   return (
     <>
       {CALM_ORDER_NOTE && (
@@ -338,8 +342,10 @@ function CalmBoardBody() {
         {sortedCourses.map((course) => (
           <div key={course}>
             <div className="text-[9px] font-bold text-text-secondary tracking-wide">{course}</div>
+            <div className="space-y-1.5">
             {grouped[course].map((product) => {
               const globalIdx = products.findIndex((p) => p.name === product.name && p.course === product.course);
+              const itemId = `${idPrefix}-${product.course}-${product.name}`;
               return (
                 <div key={product.name} className="flex items-start justify-between gap-2">
                   <div className="flex items-baseline gap-2 min-w-0 flex-1">
@@ -373,12 +379,17 @@ function CalmBoardBody() {
                       )}
                     </div>
                   </div>
-                  <CalmProductAction state={product.state} onAdvance={() => advanceProduct(globalIdx)} />
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <ItemPrepTimerChip itemId={itemId} state={timerStateFor(product.state)} enabled />
+                    <CalmProductAction state={product.state} onAdvance={() => advanceProduct(globalIdx)} />
+                  </div>
                 </div>
               );
             })}
+            </div>
           </div>
         ))}
+
 
 
         <button
