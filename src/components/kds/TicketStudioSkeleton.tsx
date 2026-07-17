@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { RotateCcw, Save, Check, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
+import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 
 function ScaledKdsPreview({ boardId }: { boardId: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -308,15 +309,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const ORDER_TYPES = [
-  { value: 'dine-in', label: 'DINE IN', color: '#1A1A2E' },
-  { value: 'take-out', label: 'TAKE OUT', color: '#2980B9' },
-  { value: 'delivery', label: 'DELIVERY', color: '#16A085' },
-  { value: 'banquet', label: 'BANQUET', color: '#F39C12' },
-  { value: 'drive-thru', label: 'DRIVE THRU', color: '#8E44AD' },
-  { value: 'curb-side', label: 'CURB SIDE', color: '#D35400' },
-  { value: 'scheduled', label: 'SCHEDULED', color: '#2C3E50' },
-  { value: 'phone-in', label: 'PHONE IN', color: '#C0392B' },
-  { value: 'custom', label: 'CUSTOM', color: '#6C7A89' },
+  { value: 'dine-in',    label: 'DINE IN' },
+  { value: 'take-out',   label: 'TAKE OUT' },
+  { value: 'delivery',   label: 'DELIVERY' },
+  { value: 'banquet',    label: 'BANQUET' },
+  { value: 'drive-thru', label: 'DRIVE THRU' },
+  { value: 'curb-side',  label: 'CURB SIDE' },
+  { value: 'scheduled',  label: 'SCHEDULED' },
+  { value: 'phone-in',   label: 'PHONE IN' },
+  { value: 'custom',     label: 'CUSTOM' },
 ] as const;
 
 export function TicketStudioSkeleton() {
@@ -330,6 +331,7 @@ export function TicketStudioSkeleton() {
   const [theme, setTheme] = useState<string>('light');
   const [station, setStation] = useState<string>('expediter');
   const [orderType, setOrderType] = useState<string>('dine-in');
+  const { orderTypeColors } = useKDSSettings();
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
   const activeOrderType = ORDER_TYPES.find((o) => o.value === orderType) ?? ORDER_TYPES[0];
@@ -406,6 +408,7 @@ export function TicketStudioSkeleton() {
             <div className="flex gap-1.5 overflow-x-auto">
               {ORDER_TYPES.map((o) => {
                 const active = orderType === o.value;
+                const color = orderTypeColors?.[o.value] || DEFAULT_ORDER_TYPE_COLORS[o.value];
                 return (
                   <button
                     key={o.value}
@@ -413,8 +416,8 @@ export function TicketStudioSkeleton() {
                     className="shrink-0 px-3 h-7 rounded-full text-[10px] font-bold tracking-wide transition-all border"
                     style={
                       active
-                        ? { background: o.color, color: '#FFFFFF', borderColor: o.color }
-                        : { background: 'transparent', color: o.color, borderColor: o.color + '55' }
+                        ? { background: color, color: '#FFFFFF', borderColor: color }
+                        : { background: 'transparent', color, borderColor: color + '55' }
                     }
                   >
                     {o.label}
