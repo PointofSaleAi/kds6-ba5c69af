@@ -348,13 +348,14 @@ export function TicketStudioSkeleton() {
   const [expandedOrderType, setExpandedOrderType] = useState<string | null>(null);
 
   // Live data from global stores (shared with dedicated settings screens).
-  const { rules, setRules } = useStatusRules();
+  const { rules, setRules, resetToDefaults: resetAgingRules } = useStatusRules();
   const {
     orderTypeColors,
     orderTypeDetailedColors,
     setOrderTypeColors,
     setOrderTypeDetailedColors,
   } = useKDSSettings();
+
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
 
