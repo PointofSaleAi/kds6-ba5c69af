@@ -315,11 +315,11 @@ function UnderlineTabs({
           <button
             key={o.value}
             onClick={() => onChange(o.value)}
-            className={`relative px-3 pt-2 pb-0 text-[11px] font-semibold transition-colors ${
+            className={`relative shrink-0 px-2 pt-2 pb-0 text-[11px] font-semibold whitespace-nowrap transition-colors ${
               active ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
             }`}
           >
-            <span className="block pb-2">{o.label}</span>
+            <span className="block pb-2 whitespace-nowrap">{o.label}</span>
             {active && (
               <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-t-full" />
             )}
