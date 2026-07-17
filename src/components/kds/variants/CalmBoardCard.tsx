@@ -180,7 +180,7 @@ function CalmProductRow({
   onToggle: () => void;
   onLongPress: (p: OrderItem) => void;
 }) {
-  const longPress = useLongPress(() => onLongPress(product), { threshold: 450 });
+  const longPress = useLongPress(() => onLongPress(product), { delay: 450 });
   const done = state === 'done';
   return (
     <div
