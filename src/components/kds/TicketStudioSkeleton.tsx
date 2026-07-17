@@ -337,7 +337,25 @@ export function TicketStudioSkeleton() {
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
 
   const handleApply = () => {
-    const cfg = { board: selectedBoard, layout, density, textSize, identifier, safety, theme };
+    // Board-specific signature defaults so distinct boards still feel distinct
+    // even when two share the same underlying card variant.
+    const boardSignature: Partial<Record<TicketStudioBoardId, Partial<{ theme: TSTheme; safety: TSSafety; density: TSDensity; textSize: TSTextSize }>>> = {
+      'dark-command-center': { theme: 'dark' },
+      'safety-first':        { safety: 'highlighted' },
+      'distance-view':       { textSize: 'large' },
+      'adaptive-density':    { density: 'high' },
+      'calm-board':          { density: 'low' },
+    };
+    const sig = boardSignature[selectedBoard] ?? {};
+    const cfg = {
+      board: selectedBoard,
+      layout,
+      density: sig.density ?? density,
+      textSize: sig.textSize ?? textSize,
+      identifier,
+      safety: sig.safety ?? safety,
+      theme: sig.theme ?? theme,
+    };
     writeTicketStudioConfig(cfg);
     writeStoredTicketsRoute(BOARD_TO_ROUTE[selectedBoard]);
     toast({ title: 'Applied', description: `${board.name} is now active across Tickets, Seen, Unseen, and History.` });
