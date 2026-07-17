@@ -434,7 +434,7 @@ export function TicketStudioSkeleton() {
               return (
                 <button
                   key={b.id}
-                  onClick={() => setSelectedBoard(b.id)}
+                  onClick={() => setSelectedBoard(b.id as TicketStudioBoardId)}
                   className={`shrink-0 w-32 rounded-lg border-2 text-left transition-all ${
                     active
                       ? 'border-foreground shadow-sm'
@@ -474,7 +474,7 @@ export function TicketStudioSkeleton() {
           <Field label="Layout">
             <Segmented
               value={layout}
-              onChange={setLayout}
+              onChange={(v) => setLayout(v as TSLayout)}
               options={[
                 { value: 'compact', label: 'Compact' },
                 { value: 'standard', label: 'Standard' },
@@ -485,7 +485,7 @@ export function TicketStudioSkeleton() {
           <Field label="Density">
             <Segmented
               value={density}
-              onChange={setDensity}
+              onChange={(v) => setDensity(v as TSDensity)}
               options={[
                 { value: 'low', label: 'Low' },
                 { value: 'medium', label: 'Medium' },
@@ -496,7 +496,7 @@ export function TicketStudioSkeleton() {
           <Field label="Text size">
             <Segmented
               value={textSize}
-              onChange={setTextSize}
+              onChange={(v) => setTextSize(v as TSTextSize)}
               options={[
                 { value: 'small', label: 'Small' },
                 { value: 'medium', label: 'Medium' },
@@ -507,7 +507,7 @@ export function TicketStudioSkeleton() {
           <Field label="Ticket identifier">
             <Segmented
               value={identifier}
-              onChange={setIdentifier}
+              onChange={(v) => setIdentifier(v as TSIdentifier)}
               options={[
                 { value: 'order', label: 'Order #' },
                 { value: 'guest', label: 'Guest' },
@@ -518,7 +518,7 @@ export function TicketStudioSkeleton() {
           <Field label="Safety emphasis">
             <Segmented
               value={safety}
-              onChange={setSafety}
+              onChange={(v) => setSafety(v as TSSafety)}
               options={[
                 { value: 'muted', label: 'Muted' },
                 { value: 'bright', label: 'Bright' },
@@ -529,7 +529,7 @@ export function TicketStudioSkeleton() {
           <Field label="Theme">
             <Segmented
               value={theme}
-              onChange={setTheme}
+              onChange={(v) => setTheme(v as TSTheme)}
               options={[
                 { value: 'light', label: 'Light' },
                 { value: 'dark', label: 'Dark' },
