@@ -14,14 +14,6 @@ import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
 import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
-import { OrderCardV6 } from '@/components/kds/variants/OrderCardV6';
-import { OrderCardV7 } from '@/components/kds/variants/OrderCardV7';
-import { OrderCardV8 } from '@/components/kds/variants/OrderCardV8';
-import { OrderCardV9 } from '@/components/kds/variants/OrderCardV9';
-import { OrderCardV10 } from '@/components/kds/variants/OrderCardV10';
-import { OrderCardV11 } from '@/components/kds/variants/OrderCardV11';
-import { OrderCardV12 } from '@/components/kds/variants/OrderCardV12';
-import { OrderCardV13 } from '@/components/kds/variants/OrderCardV13';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
@@ -98,7 +90,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, safetyEmphasis, getRouteSetting } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -1135,33 +1127,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       };
       return wrap(withSelectedTicketSettings(<OrderCardV5 order={v5Order} {...sharedVariantProps} />));
     }
-    // v6-v13: themed wrappers around V2 with identical functional wiring.
-    const themedV2Variants: Record<string, React.ComponentType<any>> = {
-      v6: OrderCardV6,
-      v7: OrderCardV7,
-      v8: OrderCardV8,
-      v9: OrderCardV9,
-      v10: OrderCardV10,
-      v11: OrderCardV11,
-      v12: OrderCardV12,
-      v13: OrderCardV13,
-    };
-    const ThemedCard = themedV2Variants[effectiveCardVariant];
-    if (ThemedCard) {
-      let flatIdxT = 0;
-      const themedOrder: Order = {
-        ...displayOrder,
-        courses: (displayOrder.courses ?? []).map((c) => ({
-          ...c,
-          items: (c.items ?? []).map((it) => {
-            const keep = flatIdxT % 3 === 0;
-            flatIdxT++;
-            return keep ? it : { ...it, modifiers: [], allergens: [], notes: undefined };
-          }),
-        })),
-      };
-      return wrap(withSelectedTicketSettings(<ThemedCard order={themedOrder} {...sharedVariantProps} isHistory={isHistory} />));
-    }
     const isTrainingSample = displayOrder.id.startsWith('training-sample-');
     return wrap(withSelectedTicketSettings(
       <OrderCard
@@ -1248,7 +1213,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             </main>
           </div>
         ) : (
-        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(effectiveTextSize, effectiveTicketSpacing, safetyEmphasis)}`}>
+        <div ref={boardContentRef} style={{ order: 2 }} className={`flex-1 flex flex-col overflow-hidden relative ${getKdsScaleClasses(effectiveTextSize, effectiveTicketSpacing)}`}>
           {isHistory ? (
             <>
               {/* History filter bar */}

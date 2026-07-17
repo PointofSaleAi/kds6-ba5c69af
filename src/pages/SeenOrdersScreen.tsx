@@ -39,8 +39,8 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
-  const { textSize, ticketSpacing, safetyEmphasis } = useKDSSettings();
-  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing, safetyEmphasis);
+  const { textSize, ticketSpacing } = useKDSSettings();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const seenOrders = useMemo(() => {
     let list = orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));

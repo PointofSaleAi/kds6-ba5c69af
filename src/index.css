@@ -338,22 +338,6 @@
   --kds-child-gap: 5px;
 }
 
-/* KDS safety-emphasis scale (allergen chip prominence) */
-.kds-safety-muted [data-allergen-chip] {
-  opacity: 0.7;
-  filter: saturate(0.6);
-}
-.kds-safety-bright [data-allergen-chip] {
-  opacity: 1;
-}
-.kds-safety-highlighted [data-allergen-chip] {
-  opacity: 1;
-  box-shadow: 0 0 0 2px hsl(var(--brand-danger, 0 84% 60%)), 0 0 8px hsl(var(--brand-danger, 0 84% 60%) / 0.5);
-  font-weight: 800 !important;
-}
-
-
-
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

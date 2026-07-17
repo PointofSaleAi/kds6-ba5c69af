@@ -39,7 +39,6 @@ export function AllergenBadge({ allergen, variant = 'item', suffix }: AllergenBa
 
   return (
     <span
-      data-allergen-chip=""
       className={`inline-flex items-center rounded border font-bold uppercase ${color.bg} ${color.border} ${color.text}`}
       style={sizeStyle}
     >

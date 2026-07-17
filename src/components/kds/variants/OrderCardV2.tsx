@@ -202,7 +202,7 @@ function V2ProductRow({
   const canExpand = compact && hasDetails && !loading;
 
 
-  const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/qr-scan');
+  const readOnly = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7');
 
   const longPress = useLongPress(() => { if (!loading) setMenuOpen(true); }, { delay: 500 });
   const dispatchTap = useRowTap(
@@ -978,7 +978,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       />
 
       {/* FOOTER - single bump-style button; double-tap to undo */}
-      {!isCompact && !isHeaderOnly && !(typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/qr-scan')) && (
+      {!isCompact && !isHeaderOnly && !(typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v7')) && (
         <FooterBumpButton
           ticketState={ticketState}
           bumping={bumping}

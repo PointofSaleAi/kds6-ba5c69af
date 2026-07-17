@@ -45,9 +45,9 @@ const ORDER_TYPE_OPTIONS: { value: OrderType; label: string }[] = [
 export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScreenProps) {
   const [dateFilter, setDateFilter] = useState('today');
   const [search, setSearch] = useState('');
-  const { orderTypeColors, textSize, ticketSpacing, safetyEmphasis } = useKDSSettings();
+  const { orderTypeColors, textSize, ticketSpacing } = useKDSSettings();
   const { t, tperson, tl, to } = useLanguage();
-  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing, safetyEmphasis);
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
 

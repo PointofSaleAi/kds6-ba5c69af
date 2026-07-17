@@ -56,8 +56,8 @@ function buildPrepBoard(orders: Order[]): PrepCourse[] {
 
 export function PrepBoard({ orders }: PrepBoardProps) {
   const { tp, tc } = useLanguage();
-  const { textSize, ticketSpacing, safetyEmphasis } = useKDSSettings();
-  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing, safetyEmphasis);
+  const { textSize, ticketSpacing } = useKDSSettings();
+  const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
   const prepCourses = useMemo(() => buildPrepBoard(orders), [orders]);
 
   if (prepCourses.length === 0) {
