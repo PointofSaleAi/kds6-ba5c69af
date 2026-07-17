@@ -78,7 +78,7 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 
 /* --------------------------------- CALM ----------------------------------- */
 
-function CalmBoardTicket({ identifier, orderType }: VProps) {
+function CalmBoardTicket({ identifier, orderType, orderTypeKey }: VProps) {
   const isTableOrder = orderType?.toUpperCase() === 'DINE IN';
   const isGuest = identifier === 'guest';
   const headerLabel = isTableOrder
@@ -87,13 +87,31 @@ function CalmBoardTicket({ identifier, orderType }: VProps) {
     ? orderType.toUpperCase()
     : idLabel(identifier);
 
+  // Live timer + status-rule driven header color (aging).
+  // Baseline of 33s so the ticket starts in the "New/Start" band and ages naturally.
+  const timer = useLiveTimer(33);
+  const { getStatusForElapsed } = useStatusRules();
+  const { orderTypeColors } = useKDSSettings();
+  const elapsedSec = timer.split(':').reduce((a, b) => a * 60 + Number(b), 0);
+  const status = getStatusForElapsed(elapsedSec);
+
+  // Order type pill color from user settings (falls back to defaults).
+  const key = orderTypeKey ?? 'dine-in';
+  const pillColor = orderTypeColors?.[key] || DEFAULT_ORDER_TYPE_COLORS[key] || '#1A1A2E';
+
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
-        <div className="text-[11px] font-bold tracking-wide">
+      <div
+        className="px-3 py-1.5 flex justify-between items-center"
+        style={{ background: status.color, color: status.textColor }}
+      >
+        <span
+          className="inline-flex items-center h-5 px-2 rounded-full text-[10px] font-bold tracking-wide"
+          style={{ background: pillColor, color: '#FFFFFF' }}
+        >
           {headerLabel}
-        </div>
-        <div className="text-[11px] font-mono">33:33</div>
+        </span>
+        <div className="text-[11px] font-mono tabular-nums">{timer}</div>
       </div>
       <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
         <span>
