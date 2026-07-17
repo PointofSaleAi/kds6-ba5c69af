@@ -125,42 +125,42 @@ export function TicketStudioSkeleton() {
           </div>
         </div>
 
-        {/* Bottom-left: layout selector */}
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-text-primary">
+        {/* Bottom-left: layout selector — compact */}
+        <div className="rounded-2xl border border-border bg-card px-3 py-2 shrink-0">
+          <div className="flex items-center justify-between mb-1.5">
+            <h3 className="text-xs font-bold text-text-primary">
               Choose from {BOARDS.length} boards
             </h3>
-            <span className="text-xs text-text-secondary">Tap a layout to preview</span>
+            <span className="text-[10px] text-text-secondary">Tap to preview</span>
           </div>
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-1">
             {BOARDS.map((b) => {
               const active = b.id === selectedBoard;
               return (
                 <button
                   key={b.id}
                   onClick={() => setSelectedBoard(b.id)}
-                  className={`shrink-0 w-40 rounded-xl border-2 text-left transition-all ${
+                  className={`shrink-0 w-28 rounded-lg border-2 text-left transition-all ${
                     active
-                      ? 'border-foreground shadow-md'
+                      ? 'border-foreground shadow-sm'
                       : 'border-border hover:border-text-secondary'
                   }`}
                 >
-                  <div className="relative h-24 rounded-t-[10px] bg-muted overflow-hidden">
+                  <div className="relative h-12 rounded-t-md bg-muted overflow-hidden">
                     {b.featured && (
-                      <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-foreground text-background text-[10px] flex items-center justify-center font-bold">
+                      <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-foreground text-background text-[9px] flex items-center justify-center font-bold">
                         ★
                       </div>
                     )}
                     {active && (
-                      <div className="absolute top-1.5 left-1.5 rounded-full bg-foreground text-background text-[10px] px-1.5 py-0.5 font-semibold">
+                      <div className="absolute top-1 left-1 rounded-full bg-foreground text-background text-[9px] px-1.5 py-0.5 font-semibold">
                         Selected
                       </div>
                     )}
                   </div>
-                  <div className="p-2.5">
-                    <div className="text-xs font-bold text-text-primary truncate">{b.name}</div>
-                    <div className="text-[11px] text-text-secondary truncate">{b.subtitle}</div>
+                  <div className="px-2 py-1.5">
+                    <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
+                    <div className="text-[10px] text-text-secondary truncate leading-tight">{b.subtitle}</div>
                   </div>
                 </button>
               );
@@ -169,8 +169,8 @@ export function TicketStudioSkeleton() {
         </div>
       </div>
 
-      {/* RIGHT: personalize */}
-      <aside className="w-[320px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
+      {/* RIGHT: personalize — narrower */}
+      <aside className="w-[240px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
         <div className="flex items-center gap-2 px-5 py-4 border-b border-border">
           <SlidersHorizontal className="w-4 h-4" />
           <h2 className="text-base font-bold text-text-primary">Personalize</h2>
