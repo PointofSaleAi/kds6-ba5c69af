@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { SlidersHorizontal, RotateCcw, Save, Check } from 'lucide-react';
+import { RotateCcw, Save, Check, Expand, X } from 'lucide-react';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
 
 function ScaledKdsPreview() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -94,6 +95,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export function TicketStudioSkeleton() {
   const [selectedBoard, setSelectedBoard] = useState('expo-focus');
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [layout, setLayout] = useState<string>('standard');
   const [density, setDensity] = useState<string>('medium');
   const [textSize, setTextSize] = useState<string>('large');
@@ -116,14 +118,21 @@ export function TicketStudioSkeleton() {
                 {board.subtitle} · Board 1 of {BOARDS.length}
               </span>
             </div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 shrink-0">
-              <span className="text-[10px] font-semibold text-text-primary">Preview</span>
+            <button
+              onClick={() => setPreviewOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-foreground text-background px-2.5 py-1 shrink-0 hover:opacity-90 transition-opacity"
+            >
+              <Expand className="w-3 h-3" />
+              <span className="text-[10px] font-semibold">Preview</span>
+            </button>
+          </div>
+          <div className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center bg-surface-bg">
+            <div className="w-full max-w-[360px]">
+              <SelectedVariantPreview />
             </div>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <ScaledKdsPreview />
-          </div>
         </div>
+
 
         {/* Bottom-left: layout selector — compact */}
         <div className="rounded-2xl border border-border bg-card px-3 py-2 shrink-0">
@@ -287,6 +296,32 @@ export function TicketStudioSkeleton() {
         </div>
       </aside>
 
+      {previewOpen && (
+        <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
+          <div
+            className="relative w-full h-full max-w-[1600px] max-h-[95vh] rounded-2xl overflow-hidden bg-card border border-border flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border shrink-0">
+              <div className="flex items-baseline gap-2 min-w-0">
+                <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
+                <span className="text-xs text-text-secondary truncate">Full KDS preview</span>
+              </div>
+              <button
+                onClick={() => setPreviewOpen(false)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-muted/70 px-2.5 py-1 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span className="text-[11px] font-semibold text-text-primary">Close</span>
+              </button>
+            </div>
+            <div className="flex-1 min-h-0">
+              <ScaledKdsPreview />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
