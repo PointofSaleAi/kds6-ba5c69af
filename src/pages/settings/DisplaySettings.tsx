@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import {
   Monitor, Type, Rows3, Palette, Languages,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
-  StretchVertical, LayoutPanelLeft,
+  StretchVertical, LayoutPanelLeft, LayoutGrid,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
