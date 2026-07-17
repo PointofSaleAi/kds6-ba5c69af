@@ -43,15 +43,14 @@ function ScaledKdsPreview() {
 type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 
 const BOARDS: Board[] = [
-  { id: 'main-prep', name: 'Main Prep', subtitle: 'Balanced service', featured: true },
-  { id: 'expo-focus', name: 'Expo Focus', subtitle: 'Selected order' },
-  { id: 'distance-grid', name: 'Distance Grid', subtitle: 'Across the kitchen' },
-  { id: 'course-flow', name: 'Course Flow', subtitle: 'Coursed service' },
-  { id: 'safety-queue', name: 'Safety Queue', subtitle: 'Allergen control', featured: true },
-  { id: 'timeline-lanes', name: 'Timeline Lanes', subtitle: 'SLA workflow' },
-  { id: 'rush-adaptive', name: 'Rush Adaptive', subtitle: 'Changing volume' },
-  { id: 'dark-ops', name: 'Dark Ops', subtitle: 'Low light service', featured: true },
-  { id: 'main-prep-classic', name: 'Main Prep Classic', subtitle: 'Detailed service' },
+  { id: 'calm-board', name: 'Calm Board', subtitle: 'Balanced operations, low visual noise', featured: true },
+  { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority ticket centered, context at edges' },
+  { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum readability from several feet' },
+  { id: 'progressive-ticket', name: 'Progressive Ticket', subtitle: 'Reveals detail for the active course' },
+  { id: 'safety-first', name: 'Safety First', subtitle: 'Allergen and cross-contact controls lead', featured: true },
+  { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready lanes' },
+  { id: 'adaptive-density', name: 'Adaptive Density', subtitle: 'Comfortable, Balanced, Rush modes' },
+  { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast focused operations', featured: true },
 ];
 
 type SegOption = { value: string; label: string };
@@ -94,7 +93,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function TicketStudioSkeleton() {
-  const [selectedBoard, setSelectedBoard] = useState('expo-focus');
+  const [selectedBoard, setSelectedBoard] = useState('calm-board');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [layout, setLayout] = useState<string>('standard');
   const [density, setDensity] = useState<string>('medium');
