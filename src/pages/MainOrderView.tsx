@@ -124,6 +124,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const fallbackTicketsRoute = useMemo(() => getTicketsRouteForCardVariant(cardVariant, legacyActions), [cardVariant, legacyActions]);
   const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(() => readStoredTicketsRoute(fallbackTicketsRoute));
   const effectiveCardVariant = getCardVariantForTicketsRoute(selectedTicketsRoute);
+  const ticketStudioConfig = useTicketStudioConfig();
+  const isCalmBoard = ticketStudioConfig.board === 'calm-board';
   const effectiveLegacyActions = selectedTicketsRoute === 'Default';
   const effectiveTextSize = getRouteSetting(selectedTicketsRoute, 'textSize') || textSize;
   const effectiveTicketSpacing = getRouteSetting(selectedTicketsRoute, 'ticketSpacing') || ticketSpacing;
