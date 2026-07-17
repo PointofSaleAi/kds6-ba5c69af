@@ -408,6 +408,7 @@ export function TicketStudioSkeleton() {
             <div className="flex gap-1.5 overflow-x-auto">
               {ORDER_TYPES.map((o) => {
                 const active = orderType === o.value;
+                const color = orderTypeColors?.[o.value] || DEFAULT_ORDER_TYPE_COLORS[o.value];
                 return (
                   <button
                     key={o.value}
@@ -415,8 +416,8 @@ export function TicketStudioSkeleton() {
                     className="shrink-0 px-3 h-7 rounded-full text-[10px] font-bold tracking-wide transition-all border"
                     style={
                       active
-                        ? { background: o.color, color: '#FFFFFF', borderColor: o.color }
-                        : { background: 'transparent', color: o.color, borderColor: o.color + '55' }
+                        ? { background: color, color: '#FFFFFF', borderColor: color }
+                        : { background: 'transparent', color, borderColor: color + '55' }
                     }
                   >
                     {o.label}
