@@ -218,9 +218,9 @@ function CalmBoardBody() {
       <div className="px-3 pb-3 pt-1">
         <button
           type="button"
-          className="w-full bg-[#1A1A2E] text-white text-[11px] font-bold py-2 tracking-wide rounded-md hover:bg-[#2A2A44] active:scale-[0.99] transition"
+          className="w-full border border-[#1A1A2E] text-[#1A1A2E] bg-transparent text-[11px] font-bold py-2 tracking-wide rounded-md hover:bg-[#1A1A2E] hover:text-white active:scale-[0.99] transition"
         >
-          MARK AS SEEN
+          SEEN
         </button>
       </div>
     </>
