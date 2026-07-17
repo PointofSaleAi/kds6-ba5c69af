@@ -71,6 +71,19 @@ function useLiveTimer(baselineSeconds: number = 0) {
   return `${mm}:${ss}`;
 }
 
+/** Returns the timer string to display, honoring the preview aging override. */
+function useDisplayTimer(baselineSeconds: number, override?: number) {
+  const live = useLiveTimer(baselineSeconds);
+  if (typeof override === 'number') {
+    const mm = String(Math.floor(override / 60)).padStart(2, '0');
+    const ss = String(override % 60).padStart(2, '0');
+    return { text: `${mm}:${ss}`, elapsed: override };
+  }
+  const elapsed = live.split(':').reduce((a, b) => a * 60 + Number(b), 0);
+  return { text: live, elapsed };
+}
+
+
 /* ------------------------------- shared bits ------------------------------ */
 
 const Card = ({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) => (
@@ -420,13 +433,14 @@ function CalmBoardBody() {
 
 /* ------------------------------ FOCUS LANE -------------------------------- */
 
-function FocusLaneTicket({ identifier }: VProps) {
+function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(2013, agingOverrideSeconds);
   return (
     <Card>
       <div className="h-1.5 bg-[#16A085]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
         <div className="text-[16px] font-black">{idLabel(identifier)}</div>
-        <div className="text-[13px] font-mono">33:33</div>
+        <button type="button" onClick={onTimerClick} className="text-[13px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
         ALLERGEN WARNING: PEANUT, GLUTEN
@@ -462,7 +476,8 @@ function FocusLaneTicket({ identifier }: VProps) {
 
 /* ----------------------------- DISTANCE VIEW ------------------------------ */
 
-function DistanceViewTicket({ identifier }: VProps) {
+function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1944, agingOverrideSeconds);
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
@@ -477,9 +492,9 @@ function DistanceViewTicket({ identifier }: VProps) {
           <div className="text-[42px] font-black leading-none">23</div>
           <div className="text-[9px] text-text-secondary">Order</div>
         </div>
-        <div className="relative w-14 h-14 rounded-full border-[3px] border-[#E67E22] flex items-center justify-center">
-          <span className="text-[11px] font-mono font-bold">32:24</span>
-        </div>
+        <button type="button" onClick={onTimerClick} className="relative w-14 h-14 rounded-full border-[3px] border-[#E67E22] flex items-center justify-center cursor-pointer hover:opacity-80">
+          <span className="text-[11px] font-mono tabular-nums font-bold">{text}</span>
+        </button>
       </div>
       <div className="px-3 py-2 space-y-2 border-b border-border">
         <div>
@@ -504,12 +519,13 @@ function DistanceViewTicket({ identifier }: VProps) {
 
 /* --------------------------- PROGRESSIVE TICKET --------------------------- */
 
-function ProgressiveTicket({ identifier }: VProps) {
+function ProgressiveTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(2013, agingOverrideSeconds);
   return (
     <Card>
       <div className="px-3 py-2 flex justify-between items-center border-b border-border">
         <div className="text-[13px] font-bold">{idLabel(identifier, "title")} <span className="text-text-secondary font-normal">(3)</span></div>
-        <div className="text-[12px] font-mono">33:33</div>
+        <button type="button" onClick={onTimerClick} className="text-[12px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
         [CRITICAL ALLERGEN: PEANUT, GLUTEN, NUT]
@@ -561,7 +577,8 @@ function Row({ n, name, chips = [] }: { n: string; name: string; chips?: [string
 
 /* ------------------------------ SAFETY FIRST ------------------------------ */
 
-function SafetyFirstTicket({ identifier }: VProps) {
+function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1923, agingOverrideSeconds);
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
@@ -569,7 +586,7 @@ function SafetyFirstTicket({ identifier }: VProps) {
           <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
         </div>
-        <span className="bg-[#C0392B] text-white text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
+        <button type="button" onClick={onTimerClick} className="bg-[#C0392B] text-white text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-0.5 text-[9px] flex justify-between border-b border-border">
         <span>John Peterson</span>
@@ -611,7 +628,8 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
 
 /* ----------------------------- TIMELINE FLOW ------------------------------ */
 
-function TimelineFlowTicket({ identifier }: VProps) {
+function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(763, agingOverrideSeconds);
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="text-[10px] font-bold text-text-secondary uppercase mb-1.5 tracking-wide flex items-center gap-1">
@@ -620,7 +638,7 @@ function TimelineFlowTicket({ identifier }: VProps) {
       <Card>
         <div className="px-3 py-1.5 flex justify-between items-center border-b border-border">
           <div className="text-[12px] font-bold">Order 2</div>
-          <div className="text-[11px] font-mono">12:43</div>
+          <button type="button" onClick={onTimerClick} className="text-[11px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
         </div>
         <div className="px-3 py-1 flex justify-between text-[10px] border-b border-border">
           <span>21 · Table #</span>
@@ -654,7 +672,8 @@ function TimelineFlowTicket({ identifier }: VProps) {
 
 /* ---------------------------- ADAPTIVE DENSITY ---------------------------- */
 
-function AdaptiveDensityTicket({ identifier }: VProps) {
+function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1927, agingOverrideSeconds);
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="flex gap-1 mb-1.5 text-[9px] font-bold">
@@ -668,7 +687,7 @@ function AdaptiveDensityTicket({ identifier }: VProps) {
             <span className="bg-[#E84C3D] text-white text-[8px] font-bold px-1.5 py-0.5 rounded">URGENT</span>
             <span className="text-[12px] font-bold">23</span>
           </div>
-          <span className="bg-[#FDECEA] text-[#C0392B] text-[10px] font-mono px-1.5 py-0.5 rounded">32:07</span>
+          <button type="button" onClick={onTimerClick} className="bg-[#FDECEA] text-[#C0392B] text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
         </div>
         <div className="px-3 py-0.5 text-[10px] flex justify-between border-b border-border">
           <span>John Peterson</span>
@@ -714,7 +733,8 @@ function AdaptiveDensityTicket({ identifier }: VProps) {
 
 /* --------------------------- DARK COMMAND CENTER -------------------------- */
 
-function DarkCommandTicket({ identifier }: VProps) {
+function DarkCommandTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
+  const { text } = useDisplayTimer(1923, agingOverrideSeconds);
   return (
     <Card dark>
       <div className="px-3 py-1.5 flex justify-between items-center border-b border-[#2A2A44]">
@@ -722,7 +742,7 @@ function DarkCommandTicket({ identifier }: VProps) {
           <span className="bg-[#0D0D1A] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[12px] font-bold">23</span>
         </div>
-        <span className="bg-[#3B1F1F] text-[#F5B4AC] text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
+        <button type="button" onClick={onTimerClick} className="bg-[#3B1F1F] text-[#F5B4AC] text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-0.5 text-[10px] flex justify-between border-b border-[#2A2A44] text-[#B8B8CC]">
         <span>John Peterson</span>
