@@ -44,7 +44,6 @@ import KdsReplyPage from "./pages/KdsReplyPage.tsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.tsx";
 import KdsV7Page from "./pages/KdsV7Page.tsx";
 import QrStickersPage from "./pages/QrStickersPage.tsx";
-import BoardRoute from "./pages/BoardRoute.tsx";
 
 const queryClient = new QueryClient();
 
@@ -87,7 +86,6 @@ const App = () => (
               <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
               <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
               <Route path="/kds/v7" element={<KdsV7Page />} />
-              <Route path="/kds/board/:boardId" element={<BoardRoute />} />
               <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
               <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
 

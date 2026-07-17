@@ -14,9 +14,6 @@ import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
 import { OrderCardV4 } from '@/components/kds/variants/OrderCardV4';
 import { OrderCardV5 } from '@/components/kds/variants/OrderCardV5';
-import { CalmBoardCard } from '@/components/kds/variants/CalmBoardCard';
-import { TicketStudioScope } from '@/components/kds/TicketStudioScope';
-import { useTicketStudioConfig } from '@/hooks/use-ticket-studio';
 
 import { PrepBoard } from '@/components/kds/PrepBoard';
 import ExpoView from '@/components/kds/ExpoView';
@@ -124,8 +121,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const fallbackTicketsRoute = useMemo(() => getTicketsRouteForCardVariant(cardVariant, legacyActions), [cardVariant, legacyActions]);
   const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(() => readStoredTicketsRoute(fallbackTicketsRoute));
   const effectiveCardVariant = getCardVariantForTicketsRoute(selectedTicketsRoute);
-  const ticketStudioConfig = useTicketStudioConfig();
-  const isCalmBoard = ticketStudioConfig.board === 'calm-board';
   const effectiveLegacyActions = selectedTicketsRoute === 'Default';
   const effectiveTextSize = getRouteSetting(selectedTicketsRoute, 'textSize') || textSize;
   const effectiveTicketSpacing = getRouteSetting(selectedTicketsRoute, 'ticketSpacing') || ticketSpacing;
@@ -1029,10 +1024,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
     const isSample = displayOrder.id === ONBOARDING_SAMPLE_ORDER_ID;
-    const wrap = (node: ReactNode) => {
-      const scoped = <TicketStudioScope>{node}</TicketStudioScope>;
-      return isSample ? <div data-order-id={displayOrder.id} className="contents">{scoped}</div> : scoped;
-    };
+    const wrap = (node: ReactNode) =>
+      isSample ? <div data-order-id={displayOrder.id} className="contents">{node}</div> : node;
 
     if (isHistory && effectiveCardVariant === 'default') {
       return wrap(
@@ -1055,14 +1048,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       onItemDismiss: isHistory ? handleRecallItem : handleItemDismiss,
       isSeen: seenOrderIds.has(displayOrder.id),
     };
-
-    // Calm Board (from Ticket Studio) overrides the variant with a live card
-    // whose visuals match the Calm Board preview.
-    if (isCalmBoard && !isHistory) {
-      return wrap(withSelectedTicketSettings(<CalmBoardCard order={displayOrder} {...sharedVariantProps} />));
-    }
-
-
 
     if (effectiveCardVariant === 'v1') {
       const idx = Math.abs(displayOrder.orderNumber) % V1_AGING_SPREAD_MIN.length;
