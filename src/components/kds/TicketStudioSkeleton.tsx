@@ -411,7 +411,13 @@ export function TicketStudioSkeleton() {
     setStation('expediter');
     setAgingStageIndex(null);
     setOrderTypeKey('dine-in');
+    setExpandedRule(null);
+    setExpandedOrderType(null);
+    resetAgingRules();
+    setOrderTypeColors(DEFAULT_ORDER_TYPE_COLORS);
+    setOrderTypeDetailedColors(DEFAULT_ORDER_TYPE_DETAILED_COLORS);
   };
+
 
 
 
