@@ -58,13 +58,14 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export function TicketStudioSkeleton() {
   const [selectedBoard, setSelectedBoard] = useState('expo-focus');
-  const [layout, setLayout] = useState<'compact' | 'standard' | 'spacious'>('standard');
-  const [density, setDensity] = useState<'low' | 'medium' | 'high'>('medium');
-  const [textSize, setTextSize] = useState<'small' | 'medium' | 'large'>('large');
-  const [identifier, setIdentifier] = useState<'order' | 'guest' | 'table'>('order');
-  const [safety, setSafety] = useState<'muted' | 'bright' | 'highlighted'>('highlighted');
-  const [theme, setTheme] = useState<'light' | 'dark' | 'auto'>('light');
-  const [station, setStation] = useState<'expediter' | 'bar' | 'prep-1' | 'prep-2'>('expediter');
+  const [layout, setLayout] = useState<string>('standard');
+  const [density, setDensity] = useState<string>('medium');
+  const [textSize, setTextSize] = useState<string>('large');
+  const [identifier, setIdentifier] = useState<string>('order');
+  const [safety, setSafety] = useState<string>('highlighted');
+  const [theme, setTheme] = useState<string>('light');
+  const [station, setStation] = useState<string>('expediter');
+
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
 
   return (
