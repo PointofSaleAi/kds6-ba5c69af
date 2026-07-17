@@ -1,25 +1,37 @@
 import { ChevronDown, ChevronRight, AlertTriangle, CheckCircle2, Flame, ArrowRight } from 'lucide-react';
 
-type Props = { boardId: string };
+type Props = { boardId: string; identifier?: 'order' | 'guest' | 'table' };
+
+/** Returns the primary ticket identifier label based on the setting. */
+export function idLabel(identifier: Props['identifier'] = 'table', variant: 'upper' | 'title' = 'upper') {
+  const map = {
+    order: variant === 'upper' ? 'ORDER #23' : 'Order #23',
+    guest: variant === 'upper' ? 'JOHN PETERSON' : 'John Peterson',
+    table: variant === 'upper' ? 'TABLE 4' : 'Table 4',
+  } as const;
+  return map[identifier];
+}
 
 /**
  * Board-specific standalone ticket previews.
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId }: Props) {
+export function BoardTicketPreview({ boardId, identifier = 'table' }: Props) {
   switch (boardId) {
-    case 'focus-lane':          return <FocusLaneTicket />;
-    case 'distance-view':       return <DistanceViewTicket />;
-    case 'progressive-ticket':  return <ProgressiveTicket />;
-    case 'safety-first':        return <SafetyFirstTicket />;
-    case 'timeline-flow':       return <TimelineFlowTicket />;
-    case 'adaptive-density':    return <AdaptiveDensityTicket />;
-    case 'dark-command-center': return <DarkCommandTicket />;
+    case 'focus-lane':          return <FocusLaneTicket identifier={identifier} />;
+    case 'distance-view':       return <DistanceViewTicket identifier={identifier} />;
+    case 'progressive-ticket':  return <ProgressiveTicket identifier={identifier} />;
+    case 'safety-first':        return <SafetyFirstTicket identifier={identifier} />;
+    case 'timeline-flow':       return <TimelineFlowTicket identifier={identifier} />;
+    case 'adaptive-density':    return <AdaptiveDensityTicket identifier={identifier} />;
+    case 'dark-command-center': return <DarkCommandTicket identifier={identifier} />;
     case 'calm-board':
-    default:                    return <CalmBoardTicket />;
+    default:                    return <CalmBoardTicket identifier={identifier} />;
   }
 }
+
+type VProps = { identifier: NonNullable<Props['identifier']> };
 
 /* ------------------------------- shared bits ------------------------------ */
 
@@ -49,11 +61,11 @@ const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | '
 
 /* --------------------------------- CALM ----------------------------------- */
 
-function CalmBoardTicket() {
+function CalmBoardTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
-        <div className="text-[11px] font-bold tracking-wide">TABLE 4</div>
+        <div className="text-[11px] font-bold tracking-wide">{idLabel(identifier)}</div>
         <div className="text-[11px] font-mono">33:33</div>
       </div>
       <div className="px-3 py-1.5 flex justify-between text-[10px] border-b border-border">
@@ -83,12 +95,12 @@ function CalmBoardTicket() {
 
 /* ------------------------------ FOCUS LANE -------------------------------- */
 
-function FocusLaneTicket() {
+function FocusLaneTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="h-1.5 bg-[#16A085]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
-        <div className="text-[16px] font-black">TABLE 4</div>
+        <div className="text-[16px] font-black">{idLabel(identifier)}</div>
         <div className="text-[13px] font-mono">33:33</div>
       </div>
       <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
@@ -125,11 +137,11 @@ function FocusLaneTicket() {
 
 /* ----------------------------- DISTANCE VIEW ------------------------------ */
 
-function DistanceViewTicket() {
+function DistanceViewTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1 text-[10px] font-bold flex justify-between">
-        <span>TABLE 4 | 8:09 PM | Maria S.</span>
+        <span>{idLabel(identifier)} | 8:09 PM | Maria S.</span>
       </div>
       <div className="bg-[#FDECEA] text-[#C0392B] text-[9px] font-bold px-3 py-1">
         Allergy to nuts. Prepare separately and notify server.
@@ -167,11 +179,11 @@ function DistanceViewTicket() {
 
 /* --------------------------- PROGRESSIVE TICKET --------------------------- */
 
-function ProgressiveTicket() {
+function ProgressiveTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="px-3 py-2 flex justify-between items-center border-b border-border">
-        <div className="text-[13px] font-bold">Table 4 <span className="text-text-secondary font-normal">(3)</span></div>
+        <div className="text-[13px] font-bold">{idLabel(identifier, "title")} <span className="text-text-secondary font-normal">(3)</span></div>
         <div className="text-[12px] font-mono">33:33</div>
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
@@ -224,12 +236,12 @@ function Row({ n, name, chips = [] }: { n: string; name: string; chips?: [string
 
 /* ------------------------------ SAFETY FIRST ------------------------------ */
 
-function SafetyFirstTicket() {
+function SafetyFirstTicket({ identifier }: VProps) {
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">TABLE 4</span>
+          <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
         </div>
         <span className="bg-[#C0392B] text-white text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>
@@ -274,7 +286,7 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
 
 /* ----------------------------- TIMELINE FLOW ------------------------------ */
 
-function TimelineFlowTicket() {
+function TimelineFlowTicket({ identifier }: VProps) {
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="text-[10px] font-bold text-text-secondary uppercase mb-1.5 tracking-wide flex items-center gap-1">
@@ -317,7 +329,7 @@ function TimelineFlowTicket() {
 
 /* ---------------------------- ADAPTIVE DENSITY ---------------------------- */
 
-function AdaptiveDensityTicket() {
+function AdaptiveDensityTicket({ identifier }: VProps) {
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="flex gap-1 mb-1.5 text-[9px] font-bold">
@@ -377,12 +389,12 @@ function AdaptiveDensityTicket() {
 
 /* --------------------------- DARK COMMAND CENTER -------------------------- */
 
-function DarkCommandTicket() {
+function DarkCommandTicket({ identifier }: VProps) {
   return (
     <Card dark>
       <div className="px-3 py-1.5 flex justify-between items-center border-b border-[#2A2A44]">
         <div className="flex items-center gap-1.5">
-          <span className="bg-[#0D0D1A] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">TABLE 4</span>
+          <span className="bg-[#0D0D1A] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[12px] font-bold">23</span>
         </div>
         <span className="bg-[#3B1F1F] text-[#F5B4AC] text-[10px] font-mono px-1.5 py-0.5 rounded">32:03</span>

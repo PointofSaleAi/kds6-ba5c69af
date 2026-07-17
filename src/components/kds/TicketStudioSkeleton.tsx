@@ -334,12 +334,56 @@ export function TicketStudioSkeleton() {
             </div>
             {/* Preview button hidden for now */}
           </div>
-          <div className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center bg-surface-bg">
-            <div className="w-full max-w-[360px]">
-              <BoardTicketPreview boardId={selectedBoard} />
+          <div
+            className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center"
+            style={{
+              background:
+                theme === 'dark'
+                  ? '#0D0D1A'
+                  : theme === 'auto'
+                  ? 'linear-gradient(90deg, #F0F2F5 0 50%, #0D0D1A 50% 100%)'
+                  : '#F0F2F5',
+            }}
+          >
+            <div
+              data-ts-preview
+              data-theme={theme}
+              data-safety={safety}
+              data-density={density}
+              data-textsize={textSize}
+              data-layout={layout}
+              style={{
+                width: layout === 'compact' ? 280 : layout === 'spacious' ? 380 : 340,
+                transform: `scale(${textSize === 'small' ? 0.9 : textSize === 'large' ? 1.12 : 1})`,
+                transformOrigin: 'top center',
+                padding: layout === 'compact' ? 4 : layout === 'spacious' ? 24 : 12,
+              }}
+            >
+              <BoardTicketPreview boardId={selectedBoard} identifier={identifier as 'order' | 'guest' | 'table'} />
             </div>
+            <style dangerouslySetInnerHTML={{ __html: `
+              [data-ts-preview][data-density="low"] .space-y-1 > * + *,
+              [data-ts-preview][data-density="low"] .space-y-1\\.5 > * + *,
+              [data-ts-preview][data-density="low"] .space-y-2 > * + * { margin-top: .55rem; }
+              [data-ts-preview][data-density="high"] .space-y-1 > * + *,
+              [data-ts-preview][data-density="high"] .space-y-1\\.5 > * + *,
+              [data-ts-preview][data-density="high"] .space-y-2 > * + * { margin-top: .1rem; }
+              [data-ts-preview][data-density="high"] .py-2 { padding-top: .3rem; padding-bottom: .3rem; }
+              [data-ts-preview][data-density="high"] .py-1\\.5 { padding-top: .2rem; padding-bottom: .2rem; }
+              [data-ts-preview][data-density="low"]  .py-1\\.5 { padding-top: .55rem; padding-bottom: .55rem; }
+              [data-ts-preview][data-safety="muted"] { filter: saturate(.35); }
+              [data-ts-preview][data-safety="bright"] { filter: saturate(1.35); }
+              [data-ts-preview][data-safety="highlighted"] .text-\\[\\#C0392B\\],
+              [data-ts-preview][data-safety="highlighted"] .bg-\\[\\#E84C3D\\],
+              [data-ts-preview][data-safety="highlighted"] .bg-\\[\\#C0392B\\] { animation: ts-pulse 1.4s ease-in-out infinite; }
+              @keyframes ts-pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+              [data-ts-preview][data-theme="dark"] { filter: invert(1) hue-rotate(180deg); }
+              [data-ts-preview][data-theme="dark"] img,
+              [data-ts-preview][data-theme="dark"] svg { filter: invert(1) hue-rotate(180deg); }
+            `}} />
           </div>
         </div>
+
 
 
         {/* Bottom-left: layout selector — compact */}
