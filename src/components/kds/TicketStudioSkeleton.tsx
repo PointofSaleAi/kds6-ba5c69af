@@ -172,7 +172,6 @@ export function TicketStudioSkeleton() {
       {/* RIGHT: personalize — adaptive width */}
       <aside className="w-[210px] md:w-[230px] lg:w-[260px] xl:w-[300px] 2xl:w-[340px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
         <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-          <SlidersHorizontal className="w-3.5 h-3.5" />
           <h2 className="text-sm font-bold text-text-primary">Personalize</h2>
         </div>
         <div className="flex-1 min-h-0 overflow-auto p-4 space-y-4">
