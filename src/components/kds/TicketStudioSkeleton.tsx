@@ -1,6 +1,21 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { RotateCcw, Save, Check, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
+import {
+  BOARD_TO_ROUTE,
+  DEFAULT_TICKET_STUDIO_CONFIG,
+  readTicketStudioConfig,
+  writeTicketStudioConfig,
+  type TicketStudioBoardId,
+  type TSDensity,
+  type TSIdentifier,
+  type TSLayout,
+  type TSSafety,
+  type TSTextSize,
+  type TSTheme,
+} from '@/lib/ticket-studio-config';
+import { writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import { toast } from '@/hooks/use-toast';
 
 function ScaledKdsPreview({ boardId }: { boardId: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -308,17 +323,36 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function TicketStudioSkeleton() {
-  const [selectedBoard, setSelectedBoard] = useState('calm-board');
+  const initial = readTicketStudioConfig();
+  const [selectedBoard, setSelectedBoard] = useState<TicketStudioBoardId>(initial.board);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [layout, setLayout] = useState<string>('standard');
-  const [density, setDensity] = useState<string>('medium');
-  const [textSize, setTextSize] = useState<string>('large');
-  const [identifier, setIdentifier] = useState<string>('order');
-  const [safety, setSafety] = useState<string>('highlighted');
-  const [theme, setTheme] = useState<string>('light');
+  const [layout, setLayout] = useState<TSLayout>(initial.layout);
+  const [density, setDensity] = useState<TSDensity>(initial.density);
+  const [textSize, setTextSize] = useState<TSTextSize>(initial.textSize);
+  const [identifier, setIdentifier] = useState<TSIdentifier>(initial.identifier);
+  const [safety, setSafety] = useState<TSSafety>(initial.safety);
+  const [theme, setTheme] = useState<TSTheme>(initial.theme);
   const [station, setStation] = useState<string>('expediter');
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
+
+  const handleApply = () => {
+    const cfg = { board: selectedBoard, layout, density, textSize, identifier, safety, theme };
+    writeTicketStudioConfig(cfg);
+    writeStoredTicketsRoute(BOARD_TO_ROUTE[selectedBoard]);
+    toast({ title: 'Applied', description: `${board.name} is now active across Tickets, Seen, Unseen, and History.` });
+  };
+
+  const handleReset = () => {
+    setSelectedBoard(DEFAULT_TICKET_STUDIO_CONFIG.board);
+    setLayout(DEFAULT_TICKET_STUDIO_CONFIG.layout);
+    setDensity(DEFAULT_TICKET_STUDIO_CONFIG.density);
+    setTextSize(DEFAULT_TICKET_STUDIO_CONFIG.textSize);
+    setIdentifier(DEFAULT_TICKET_STUDIO_CONFIG.identifier);
+    setSafety(DEFAULT_TICKET_STUDIO_CONFIG.safety);
+    setTheme(DEFAULT_TICKET_STUDIO_CONFIG.theme);
+  };
+
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
