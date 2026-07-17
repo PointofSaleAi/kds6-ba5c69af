@@ -499,9 +499,13 @@ export function TicketStudioSkeleton() {
               <BoardTicketPreview
                 boardId={selectedBoard}
                 identifier={identifier as 'order' | 'guest'}
-                orderType="DINE IN"
-                orderTypeKey="dine-in"
+                orderType={orderTypeKey === 'dine-in' ? 'DINE IN' : ORDER_TYPES_LIST.find((o) => o.key === orderTypeKey)?.label.toUpperCase()}
+                orderTypeKey={orderTypeKey}
+                agingOverrideSeconds={agingOverrideSeconds}
+                onHeaderClick={() => openOrderTypeInPanel(orderTypeKey)}
+                onTimerClick={cycleAgingStage}
               />
+
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
               [data-ts-preview][data-density="low"] .space-y-1 > * + *,
