@@ -30,6 +30,8 @@ import OrderTypeColorsSettings from '@/pages/OrderTypeColorsSettings';
 import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { getCardVariantForTicketsRoute, readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import { TicketStudioSkeleton } from '@/components/kds/TicketStudioSkeleton';
+
 
 export default function DisplaySettings() {
   const {
