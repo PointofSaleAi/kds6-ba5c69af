@@ -1,6 +1,13 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import { RotateCcw, X } from 'lucide-react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ChevronDown, RotateCcw, X } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
+import { useStatusRules, type StatusRule } from '@/hooks/use-status-rules';
+import {
+  useKDSSettings,
+  DEFAULT_ORDER_TYPE_COLORS,
+  DEFAULT_ORDER_TYPE_DETAILED_COLORS,
+} from '@/hooks/use-kds-settings';
+
 
 function ScaledKdsPreview({ boardId }: { boardId: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
