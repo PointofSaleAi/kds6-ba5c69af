@@ -21,6 +21,9 @@ import {
   Volume2,
   X,
 } from 'lucide-react';
+import { TicketsIcon } from './icons/TicketsIcon';
+import restaurantLogo from '@/assets/icons/restaurant-logo.png';
+import versionIcon from '@/assets/version-icon.svg';
 import { BoardTicketPreview } from './BoardTicketPreview';
 import { useStatusRules, type StatusRule } from '@/hooks/use-status-rules';
 import {
