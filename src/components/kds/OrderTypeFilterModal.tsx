@@ -76,13 +76,13 @@ export default function OrderTypeFilterModal({ open, onClose, activeTypes, onApp
                   <button
                     key={opt.value}
                     onClick={() => toggle(opt.value)}
-                    className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors min-h-[44px] flex items-center gap-2 ${
+                    className={`px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors min-h-[44px] border-2 ${
                       active
-                        ? 'bg-brand-primary text-primary-foreground'
-                        : 'bg-muted text-text-secondary hover:text-text-primary'
+                        ? 'text-white'
+                        : 'bg-transparent hover:opacity-80'
                     }`}
+                    style={active ? { backgroundColor: color, borderColor: color } : { borderColor: color, color }}
                   >
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
                     {opt.label}
                   </button>
                 );
