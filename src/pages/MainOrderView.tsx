@@ -288,6 +288,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyFilterOpen, setHistoryFilterOpen] = useState(false);
   
   const [historyActiveTypes, setHistoryActiveTypes] = useState<OrderType[]>([]);
+  const [orderTypeFilter, setOrderTypeFilter] = useState<OrderType[]>([]);
   const boardContentRef = useRef<HTMLDivElement | null>(null);
   const [boardContentWidth, setBoardContentWidth] = useState(0);
 
@@ -436,6 +437,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     centerSet.forEach((c) => (centerStationMap[c] || []).forEach((s) => allowedStations.add(s)));
 
     let filtered = orders.filter((o) => {
+      if (orderTypeFilter.length > 0 && !orderTypeFilter.includes(o.orderType)) return false;
       if (activeFilter === 'new') { if (o.status !== 'new') return false; }
       else if (activeFilter === 'preparing') { if (!(o.status === 'preparing' || o.status === 'seen')) return false; }
       else if (activeFilter === 'completed') { if (o.status === 'served') return false; }
@@ -504,7 +506,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const rushed = sorted.filter(o => o.isRushed);
     const nonRushed = sorted.filter(o => !o.isRushed);
     return [...rushed, ...nonRushed];
-  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters]);
+  }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters, orderTypeFilter]);
 
   const filteredHistory = useMemo(() => {
     const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
@@ -1560,7 +1562,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} orderTypeFilter={orderTypeFilter} onOrderTypeFilterChange={setOrderTypeFilter} />
       <OnboardingWalkthrough />
     </div>
   );

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Package } from 'lucide-react';
+import { LayoutGrid, Columns3, StretchHorizontal, Sun, Moon, ArrowUpDown, Volume2, VolumeX, Languages, Filter, Building2, Package, Utensils, Check } from 'lucide-react';
+import { DEFAULT_ORDER_TYPE_COLORS, useKDSSettings } from '@/hooks/use-kds-settings';
+import type { OrderType } from '@/types/kds';
 import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
@@ -29,6 +31,8 @@ interface BottomStatusBarProps {
   onOpenRevenueFilter?: () => void;
   aiAssistantOpen?: boolean;
   onToggleAiAssistant?: () => void;
+  orderTypeFilter?: OrderType[];
+  onOrderTypeFilterChange?: (types: OrderType[]) => void;
 }
 
 function SoundToggle() {
@@ -59,13 +63,16 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
-export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, aiAssistantOpen, onToggleAiAssistant }: BottomStatusBarProps) {
+export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, aiAssistantOpen, onToggleAiAssistant, orderTypeFilter, onOrderTypeFilterChange }: BottomStatusBarProps) {
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
+  const { orderTypeColors } = useKDSSettings();
   const { isPortrait } = usePortrait();
   const { toast } = useToast();
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+  const [typeFilterOpen, setTypeFilterOpen] = useState(false);
+  const typeFilterRef = useRef<HTMLDivElement>(null);
 
   // 86 Items state
   const [eightySixOpen, setEightySixOpen] = useState(false);
@@ -148,6 +155,33 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
     return () => document.removeEventListener('mousedown', handleClick);
   }, [sortOpen]);
 
+  useEffect(() => {
+    if (!typeFilterOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (typeFilterRef.current && !typeFilterRef.current.contains(e.target as Node)) {
+        setTypeFilterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [typeFilterOpen]);
+
+  const orderTypeOptions: { value: OrderType; label: string }[] = [
+    { value: 'dine-in', label: 'Dine In' },
+    { value: 'take-out', label: 'Take Out' },
+    { value: 'delivery', label: 'Delivery' },
+    { value: 'banquet', label: 'Banquet' },
+    { value: 'drive-thru', label: 'Drive Thru' },
+    { value: 'curb-side', label: 'Curb Side' },
+    { value: 'scheduled', label: 'Scheduled' },
+    { value: 'phone-in', label: 'Phone-In' },
+  ];
+  const activeTypes = orderTypeFilter ?? [];
+  const toggleType = (v: OrderType) => {
+    if (!onOrderTypeFilterChange) return;
+    onOrderTypeFilterChange(activeTypes.includes(v) ? activeTypes.filter(x => x !== v) : [...activeTypes, v]);
+  };
+
   const viewModes: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
     { mode: 'grid', icon: LayoutGrid, label: t.grid },
     { mode: 'horizontal', icon: Columns3, label: t.horizontal },
@@ -214,6 +248,67 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue center filter'}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        {/* Order type filter */}
+        <div className="relative" ref={typeFilterRef}>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  data-onboarding="order-type-filter"
+                  onClick={() => setTypeFilterOpen(o => !o)}
+                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] relative ${
+                    activeTypes.length > 0
+                      ? 'bg-primary-foreground/20 text-primary-foreground'
+                      : 'bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground'
+                  }`}
+                  aria-label="Filter by order type"
+                >
+                  <Utensils size={15} />
+                  {activeTypes.length > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 rounded-full bg-brand-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                      {activeTypes.length}
+                    </span>
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top"><p>Order type</p></TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          {typeFilterOpen && (
+            <div className="absolute bottom-full mb-2 left-0 bg-card border border-border rounded-lg shadow-lg py-1 min-w-[200px] z-50">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-border">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Order type</span>
+                {activeTypes.length > 0 && (
+                  <button
+                    onClick={() => onOrderTypeFilterChange?.([])}
+                    className="text-[11px] font-semibold text-brand-primary hover:underline"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              {orderTypeOptions.map(opt => {
+                const selected = activeTypes.includes(opt.value);
+                const color = orderTypeColors[opt.value] || DEFAULT_ORDER_TYPE_COLORS[opt.value];
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => toggleType(opt.value)}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors min-h-[36px]"
+                  >
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                    <span className="flex-1 text-left">{opt.label}</span>
+                    {selected && <Check size={14} className="text-brand-primary" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+
 
 
 
