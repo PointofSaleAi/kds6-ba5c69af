@@ -63,7 +63,9 @@ function useAnchorRect(selector: string | null, dep: unknown): Rect | null {
     let cancelled = false;
     const measure = () => {
       if (cancelled) return;
-      const el = document.querySelector(selector) as HTMLElement | null;
+      const el = Array.from(document.querySelectorAll(selector)).find(
+        (node) => !(node as HTMLElement).closest('[data-ts-preview]'),
+      ) as HTMLElement | undefined;
       if (!el) { setRect(null); return; }
       const r = el.getBoundingClientRect();
       setRect(prev => {
@@ -229,7 +231,9 @@ export function OnboardingWalkthrough() {
   const TICKET_DONE_STEP = 11;
 
   const clickSample = (sel: string) => {
-    const el = document.querySelector(`${SAMPLE} ${sel}`) as HTMLElement | null;
+    const el = Array.from(document.querySelectorAll(`${SAMPLE} ${sel}`)).find(
+      (node) => !(node as HTMLElement).closest('[data-ts-preview]'),
+    ) as HTMLElement | undefined;
     el?.click();
   };
   const dispatchItem = (type: 'advance' | 'undo') => {
@@ -295,7 +299,10 @@ export function OnboardingWalkthrough() {
     if (!active || !step) return;
     if (lastDirectionRef.current === 'prev') return;
     const t = window.setTimeout(() => {
-      if (!document.querySelector(step.anchor)) {
+      const hasAnchor = Array.from(document.querySelectorAll(step.anchor)).some(
+        (node) => !(node as HTMLElement).closest('[data-ts-preview]'),
+      );
+      if (!hasAnchor) {
         next();
       }
     }, 600);
