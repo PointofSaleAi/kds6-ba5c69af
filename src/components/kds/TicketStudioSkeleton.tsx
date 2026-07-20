@@ -961,7 +961,7 @@ export function TicketStudioSkeleton() {
               data-density={density}
               data-textsize={textSize}
               data-layout={layout}
-              className="w-full h-full"
+              className={`w-full h-full ${theme === 'dark' ? 'dark' : ''}`}
             >
               <KdsScreenMock
                 boardId={selectedBoard}
