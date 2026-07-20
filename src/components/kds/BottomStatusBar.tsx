@@ -402,6 +402,12 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       onScheduleRestore={handleScheduleRestore}
       onEightySixItem={handleEightySixItem}
     />
+    <OrderTypeFilterModal
+      open={typeFilterOpen}
+      onClose={() => setTypeFilterOpen(false)}
+      activeTypes={activeTypes}
+      onApply={(types) => onOrderTypeFilterChange?.(types)}
+    />
     </>
   );
 }
