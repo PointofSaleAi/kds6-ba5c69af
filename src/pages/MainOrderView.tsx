@@ -437,6 +437,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     centerSet.forEach((c) => (centerStationMap[c] || []).forEach((s) => allowedStations.add(s)));
 
     let filtered = orders.filter((o) => {
+      if (orderTypeFilter.length > 0 && !orderTypeFilter.includes(o.orderType)) return false;
       if (activeFilter === 'new') { if (o.status !== 'new') return false; }
       else if (activeFilter === 'preparing') { if (!(o.status === 'preparing' || o.status === 'seen')) return false; }
       else if (activeFilter === 'completed') { if (o.status === 'served') return false; }
