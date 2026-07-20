@@ -72,7 +72,7 @@ function KdsScreenMock({
   const ticketScale = fitScale * textScale;
 
   return (
-    <div className="w-full h-full relative overflow-hidden rounded-xl flex flex-col bg-surface-bg">
+    <div data-ts-preview className="w-full h-full relative overflow-hidden rounded-xl flex flex-col bg-surface-bg">
       <div className="flex-1 min-h-0 flex">
         <KDSSidebar
           activeFilter="all"
