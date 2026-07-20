@@ -1,15 +1,24 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArrowLeftRight,
+  ArrowUpDown,
   Bell,
+  Building2,
+  CheckCircle2,
   ChevronDown,
   Clock,
   Eye,
-  Home,
+  EyeOff,
+  Filter,
+  Languages,
   LayoutGrid,
-  List,
+  Moon,
+  Package,
   RotateCcw,
   Settings as SettingsIcon,
+  Undo2,
   Utensils,
+  Volume2,
   X,
 } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
@@ -36,8 +45,6 @@ type KdsScreenMockProps = {
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
-  baseW?: number;
-  baseH?: number;
 };
 
 function KdsScreenMock({
@@ -47,116 +54,101 @@ function KdsScreenMock({
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
-  baseW = 1200,
-  baseH = 720,
 }: KdsScreenMockProps) {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useLayoutEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => {
-      const { width, height } = el.getBoundingClientRect();
-      setScale(Math.min(width / baseW, height / baseH, 1));
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [baseW, baseH]);
-
   const isDark = boardId === 'dark-command-center' || boardId === 'safety-first';
   const surface = isDark ? '#0D0D1A' : '#F0F2F5';
   const chrome = isDark ? '#1A1A2E' : '#FFFFFF';
-  const border = isDark ? '#2A2A44' : '#D5DBE0';
+  const border = isDark ? '#2A2A44' : '#E1E5EA';
   const textPrimary = isDark ? '#FFFFFF' : '#2C3E50';
   const textMuted = isDark ? '#95A5A6' : '#6C7A89';
 
   const ticketScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
 
-  const navItems = [Home, List, LayoutGrid, Bell, Clock, SettingsIcon];
+  const navItems = [
+    { icon: Utensils, label: 'Tickets', active: true },
+    { icon: CheckCircle2, label: 'Ready' },
+    { icon: Undo2, label: 'Recalled' },
+    { icon: Clock, label: 'History', badge: 6 },
+    { icon: Bell, label: 'Alerts', badge: 2 },
+    { icon: SettingsIcon, label: 'Settings' },
+  ];
 
   return (
     <div
-      ref={wrapRef}
-      className="w-full h-full relative overflow-hidden rounded-xl"
+      className="w-full h-full relative overflow-hidden rounded-xl flex"
       style={{ background: surface }}
     >
-      <div
-        style={{
-          width: baseW,
-          height: baseH,
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
-        }}
-        className="absolute top-0 left-0 flex"
-      >
-        {/* Left rail */}
-        <div
-          className="w-[56px] h-full shrink-0 flex flex-col items-center py-4 gap-4"
-          style={{ background: '#0D0D1A' }}
-        >
-          <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-            <Utensils className="w-4 h-4 text-white" />
+      {/* Left rail — matches real KDSSidebar (w-20 dark, rounded inner panel) */}
+      <div className="shrink-0 h-full py-2 px-2" style={{ background: '#0D0D1A' }}>
+        <div className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5" style={{ background: 'rgba(255,255,255,0.02)' }}>
+          {/* Logo mark */}
+          <div className="w-12 h-12 rounded-xl bg-white/10 mx-auto flex items-center justify-center">
+            <Utensils className="w-5 h-5 text-white" />
           </div>
-          <div className="w-full h-px bg-white/10" />
-          {navItems.map((Icon, i) => (
-            <div
-              key={i}
-              className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                i === 0 ? 'bg-white/15' : 'hover:bg-white/5'
-              }`}
-              style={i === 0 ? { boxShadow: 'inset 3px 0 0 #E84C3D' } : undefined}
-            >
-              <Icon className="w-4 h-4 text-white/80" />
-            </div>
-          ))}
+          <div className="mx-2 my-1 border-t border-white/10" />
+          <div className="flex-1 flex flex-col gap-1">
+            {navItems.map((it, i) => (
+              <div
+                key={i}
+                className="relative flex flex-col items-center justify-center h-11 rounded-xl"
+                style={it.active ? { background: 'rgba(255,255,255,0.15)' } : undefined}
+              >
+                <it.icon className="w-5 h-5 text-white/85" />
+                {it.badge ? (
+                  <span className="absolute -top-0.5 right-2 bg-[#E84C3D] text-white text-[8px] font-bold rounded-full min-w-[14px] h-3.5 px-1 flex items-center justify-center">
+                    {it.badge}
+                  </span>
+                ) : null}
+              </div>
+            ))}
+          </div>
+          {/* Switch to POS */}
+          <div className="flex flex-col items-center justify-center h-11 rounded-xl">
+            <ArrowLeftRight className="w-5 h-5 text-white/85" />
+          </div>
+        </div>
+      </div>
+
+      {/* Main column */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar — order type chips + counts */}
+        <div
+          className="h-9 shrink-0 border-b flex items-center justify-between px-3 gap-2"
+          style={{ borderColor: border, background: chrome }}
+        >
+          <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
+            {SCREEN_ORDER_TYPES.slice(0, 4).map((t, i) => {
+              const c = ['#1A1A2E', '#2980B9', '#16A085', '#F39C12'][i];
+              return (
+                <span
+                  key={t.key}
+                  className="px-2 h-6 inline-flex items-center rounded-full text-[10px] font-bold tracking-wide text-white shrink-0"
+                  style={{ background: c }}
+                >
+                  {t.label}
+                </span>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-2 text-[10px] shrink-0" style={{ color: textMuted }}>
+            <span className="font-semibold" style={{ color: textPrimary }}>12 active</span>
+            <span>·</span>
+            <span style={{ color: '#E84C3D' }}>3 overtime</span>
+          </div>
         </div>
 
-        {/* Main column */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Top bar */}
-          <div
-            className="h-[48px] shrink-0 border-b flex items-center justify-between px-5"
-            style={{ borderColor: border, background: chrome }}
-          >
-            <div className="flex items-center gap-3">
-              <div className="text-[13px] font-bold" style={{ color: textPrimary }}>
-                Kitchen Display
-              </div>
-              <div className="flex items-center gap-1.5">
-                {['All', 'New', 'Preparing', 'Ready'].map((t, i) => (
-                  <span
-                    key={t}
-                    className="px-2.5 h-6 inline-flex items-center rounded-full text-[10px] font-semibold"
-                    style={{
-                      background: i === 0 ? '#212121' : 'transparent',
-                      color: i === 0 ? '#FFFFFF' : textMuted,
-                      border: i === 0 ? 'none' : `1px solid ${border}`,
-                    }}
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center gap-3 text-[11px]" style={{ color: textMuted }}>
-              <span>12 active</span>
-              <span>· 3 overtime</span>
-            </div>
-          </div>
-
-          {/* Body: tickets grid + summary panel */}
-          <div className="flex-1 min-h-0 flex">
-            <div className="flex-1 min-w-0 overflow-hidden p-4">
-              <div className="grid grid-cols-3 gap-3 h-full">
-                {SCREEN_ORDER_TYPES.map((ot, i) => (
+        {/* Body: tickets grid + summary panel */}
+        <div className="flex-1 min-h-0 flex">
+          <div className="flex-1 min-w-0 overflow-hidden p-2.5">
+            <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full">
+              {SCREEN_ORDER_TYPES.map((ot, i) => (
+                <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden">
                   <div
-                    key={ot.key}
-                    className="min-w-0"
+                    className="origin-top-left"
                     style={{
                       transform: `scale(${ticketScale})`,
-                      transformOrigin: 'top left',
                       width: `${100 / ticketScale}%`,
+                      height: `${100 / ticketScale}%`,
                     }}
                   >
                     <BoardTicketPreview
@@ -173,84 +165,85 @@ function KdsScreenMock({
                       onTimerClick={onTimerClick}
                     />
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-
-            {/* Summary panel */}
-            <aside
-              className="w-[220px] shrink-0 border-l flex flex-col"
-              style={{ borderColor: border, background: chrome }}
-            >
-              <div
-                className="px-3 py-2.5 border-b flex items-center justify-between"
-                style={{ borderColor: border }}
-              >
-                <span className="text-[11px] font-bold" style={{ color: textPrimary }}>
-                  Item summary
-                </span>
-                <span className="text-[10px]" style={{ color: textMuted }}>
-                  24 items
-                </span>
-              </div>
-              <div className="flex-1 overflow-hidden p-3 space-y-3">
-                {[
-                  { course: 'APPETIZERS', items: [['Bruschetta', '3'], ['Calamari', '2']] },
-                  { course: 'ENTREES', items: [['Ribeye', '4'], ['Salmon', '3'], ['Risotto', '2']] },
-                  { course: 'DESSERTS', items: [['Tiramisu', '2'], ['Sorbet', '1']] },
-                ].map((section) => (
-                  <div key={section.course}>
-                    <div
-                      className="text-[9px] font-bold tracking-wider mb-1.5"
-                      style={{ color: '#16A085' }}
-                    >
-                      {section.course}
-                    </div>
-                    <div className="space-y-1">
-                      {section.items.map(([name, count]) => (
-                        <div
-                          key={name}
-                          className="flex items-center justify-between text-[11px]"
-                        >
-                          <span style={{ color: textPrimary }}>{name}</span>
-                          <span className="font-bold" style={{ color: textPrimary }}>
-                            {count}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </aside>
           </div>
 
-          {/* Footer / status bar */}
-          <div
-            className="h-[40px] shrink-0 border-t flex items-center justify-between px-4"
+          {/* Summary panel */}
+          <aside
+            className="w-[180px] shrink-0 border-l flex flex-col"
             style={{ borderColor: border, background: chrome }}
           >
-            <div className="flex items-center gap-3 text-[10px]" style={{ color: textMuted }}>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#16A085]" />
-                Online
+            <div
+              className="px-3 h-9 border-b flex items-center justify-between"
+              style={{ borderColor: border }}
+            >
+              <span className="text-[11px] font-bold" style={{ color: textPrimary }}>
+                Item summary
               </span>
-              <span>Station: Grill</span>
-              <span>Avg 8:24</span>
+              <span className="text-[9px]" style={{ color: textMuted }}>24</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex-1 overflow-hidden p-2.5 space-y-2.5">
+              {[
+                { course: 'APPETIZERS', items: [['Bruschetta', '3'], ['Calamari', '2']] },
+                { course: 'ENTREES', items: [['Ribeye', '4'], ['Salmon', '3'], ['Risotto', '2']] },
+                { course: 'DESSERTS', items: [['Tiramisu', '2'], ['Sorbet', '1']] },
+              ].map((section) => (
+                <div key={section.course}>
+                  <div
+                    className="text-[9px] font-bold tracking-wider mb-1"
+                    style={{ color: '#16A085' }}
+                  >
+                    {section.course}
+                  </div>
+                  <div className="space-y-0.5">
+                    {section.items.map(([name, count]) => (
+                      <div
+                        key={name}
+                        className="flex items-center justify-between text-[10px]"
+                      >
+                        <span className="truncate" style={{ color: textPrimary }}>{name}</span>
+                        <span className="font-bold ml-2" style={{ color: textPrimary }}>{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </aside>
+        </div>
+
+        {/* Footer / status bar — matches real dark rounded bar */}
+        <div className="shrink-0 px-2 pb-2 pt-1.5" style={{ background: surface }}>
+          <div
+            className="h-10 rounded-full flex items-center justify-between px-2.5 gap-2"
+            style={{ background: '#212121' }}
+          >
+            <div className="flex items-center gap-1.5">
+              {[LayoutGrid, Filter, ArrowUpDown, Building2, Package, Utensils].map((Ic, i) => (
+                <div key={i} className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                  <Ic className="w-3 h-3 text-white/80" />
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 text-[10px] text-white/70 font-medium">
+              <span>7:24 PM</span>
+              <span className="text-white/30">·</span>
+              <span>{`{orderCount} active`.replace('{orderCount}', '12')}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
               <span
-                className="px-2 h-6 inline-flex items-center rounded-md text-[10px] font-semibold text-white"
-                style={{ background: '#212121' }}
+                className="px-2.5 h-7 inline-flex items-center rounded-full text-[10px] font-bold text-white"
+                style={{ background: '#E84C3D' }}
               >
                 86 Items
               </span>
-              <span
-                className="px-2 h-6 inline-flex items-center rounded-md text-[10px] font-semibold"
-                style={{ border: `1px solid ${border}`, color: textPrimary }}
-              >
-                Filters
-              </span>
+              {[Volume2, Languages, Moon].map((Ic, i) => (
+                <div key={i} className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                  <Ic className="w-3 h-3 text-white/80" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -262,6 +255,8 @@ function KdsScreenMock({
 type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 
 const BOARDS: Board[] = [
+
+
   { id: 'calm-board', name: 'Calm Board', subtitle: 'Balanced operations, low visual noise', featured: true },
   { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority ticket centered, context at edges' },
   { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum readability from several feet' },
@@ -1090,8 +1085,6 @@ export function TicketStudioSkeleton() {
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
                 onTimerClick={cycleAgingStage}
-                baseW={1440}
-                baseH={880}
               />
             </div>
           </div>
