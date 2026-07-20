@@ -448,45 +448,9 @@ export function TicketStudioSkeleton() {
 
 
   return (
-    <div className="flex-1 min-h-0 overflow-hidden flex gap-4 pb-2">
-      {/* LEFT: vertical board list */}
-      <aside className="w-[220px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-          <h2 className="text-sm font-bold text-text-primary">Boards</h2>
-          <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
-        </div>
-        <div className="flex-1 min-h-0 overflow-auto p-2 space-y-1.5">
-          {BOARDS.map((b) => {
-            const active = b.id === selectedBoard;
-            return (
-              <button
-                key={b.id}
-                onClick={() => setSelectedBoard(b.id)}
-                className={`w-full text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 ${
-                  active
-                    ? 'border-foreground bg-muted/40 shadow-sm'
-                    : 'border-border hover:border-text-secondary hover:bg-muted/20'
-                }`}
-              >
-                <div className="relative w-[72px] h-10 rounded-md bg-muted overflow-hidden shrink-0">
-                  <BoardThumb id={b.id} active={active} />
-                  {b.featured && (
-                    <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-foreground text-background text-[8px] flex items-center justify-center font-bold">
-                      ★
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
-                  <div className="text-[10px] text-text-secondary leading-tight line-clamp-2">{b.subtitle}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </aside>
-
-      {/* MIDDLE: ticket preview */}
+    <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-4 pb-2">
+      <div className="flex-1 min-h-0 flex gap-4">
+        {/* MIDDLE: ticket preview */}
       <div className="flex-1 min-w-0 flex flex-col">
         <div className="flex-1 min-h-0 rounded-2xl border border-border bg-card overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
@@ -859,34 +823,73 @@ export function TicketStudioSkeleton() {
           )}
         </div>
       </aside>
+    </div>
 
-
-      {previewOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
-          <div
-            className="relative w-full h-full max-w-[1600px] max-h-[95vh] rounded-2xl overflow-hidden bg-card border border-border flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border shrink-0">
-              <div className="flex items-baseline gap-2 min-w-0">
-                <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
-                <span className="text-xs text-text-secondary truncate">Full KDS preview</span>
-              </div>
+    {/* BOTTOM: horizontal board list */}
+    <aside className="h-[110px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
+        <h2 className="text-sm font-bold text-text-primary">Boards</h2>
+        <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
+      </div>
+      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden p-2">
+        <div className="flex items-stretch gap-2 h-full">
+          {BOARDS.map((b) => {
+            const active = b.id === selectedBoard;
+            return (
               <button
-                onClick={() => setPreviewOpen(false)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-muted/70 px-2.5 py-1 transition-colors"
+                key={b.id}
+                onClick={() => setSelectedBoard(b.id)}
+                className={`shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
+                  active
+                    ? 'border-foreground bg-muted/40 shadow-sm'
+                    : 'border-border hover:border-text-secondary hover:bg-muted/20'
+                }`}
               >
-                <X className="w-3.5 h-3.5" />
-                <span className="text-[11px] font-semibold text-text-primary">Close</span>
+                <div className="relative w-[80px] h-full rounded-md bg-muted overflow-hidden shrink-0">
+                  <BoardThumb id={b.id} active={active} />
+                  {b.featured && (
+                    <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-foreground text-background text-[8px] flex items-center justify-center font-bold">
+                      ★
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 flex flex-col justify-center h-full">
+                  <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
+                  <div className="text-[10px] text-text-secondary leading-tight line-clamp-2">{b.subtitle}</div>
+                </div>
               </button>
+            );
+          })}
+        </div>
+      </div>
+    </aside>
+
+    {previewOpen && (
+      <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
+        <div
+          className="relative w-full h-full max-w-[1600px] max-h-[95vh] rounded-2xl overflow-hidden bg-card border border-border flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-border shrink-0">
+            <div className="flex items-baseline gap-2 min-w-0">
+              <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
+              <span className="text-xs text-text-secondary truncate">Full KDS preview</span>
             </div>
-            <div className="flex-1 min-h-0">
-              <ScaledKdsPreview boardId={selectedBoard} />
-            </div>
+            <button
+              onClick={() => setPreviewOpen(false)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-muted hover:bg-muted/70 px-2.5 py-1 transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-semibold text-text-primary">Close</span>
+            </button>
+          </div>
+          <div className="flex-1 min-h-0">
+            <ScaledKdsPreview boardId={selectedBoard} />
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    )}
+  </div>
   );
 }
 
