@@ -288,6 +288,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [historyFilterOpen, setHistoryFilterOpen] = useState(false);
   
   const [historyActiveTypes, setHistoryActiveTypes] = useState<OrderType[]>([]);
+  const [orderTypeFilter, setOrderTypeFilter] = useState<OrderType[]>([]);
   const boardContentRef = useRef<HTMLDivElement | null>(null);
   const [boardContentWidth, setBoardContentWidth] = useState(0);
 
