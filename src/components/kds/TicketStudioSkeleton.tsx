@@ -1085,8 +1085,6 @@ export function TicketStudioSkeleton() {
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
                 onTimerClick={cycleAgingStage}
-                baseW={1440}
-                baseH={880}
               />
             </div>
           </div>
