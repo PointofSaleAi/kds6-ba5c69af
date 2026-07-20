@@ -302,8 +302,6 @@ function KdsScreenMock({
           </div>
         </div>
       </div>
-
-      </div>
     </div>
   );
 }
