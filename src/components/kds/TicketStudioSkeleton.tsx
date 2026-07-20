@@ -535,6 +535,45 @@ export function TicketStudioSkeleton() {
             `}} />
           </div>
         </div>
+
+        {/* BOTTOM: horizontal board list */}
+        <aside className="h-[110px] shrink-0 rounded-2xl border border-border bg-card flex flex-col mt-4">
+          <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
+            <h2 className="text-sm font-bold text-text-primary">Boards</h2>
+            <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
+          </div>
+          <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden p-2">
+            <div className="flex items-stretch gap-2 h-full">
+              {BOARDS.map((b) => {
+                const active = b.id === selectedBoard;
+                return (
+                  <button
+                    key={b.id}
+                    onClick={() => setSelectedBoard(b.id)}
+                    className={`shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
+                      active
+                        ? 'border-foreground bg-muted/40 shadow-sm'
+                        : 'border-border hover:border-text-secondary hover:bg-muted/20'
+                    }`}
+                  >
+                    <div className="relative w-[80px] h-full rounded-md bg-muted overflow-hidden shrink-0">
+                      <BoardThumb id={b.id} active={active} />
+                      {b.featured && (
+                        <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-foreground text-background text-[8px] flex items-center justify-center font-bold">
+                          ★
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1 flex flex-col justify-center h-full">
+                      <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
+                      <div className="text-[10px] text-text-secondary leading-tight line-clamp-2">{b.subtitle}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
       </div>
 
       {/* RIGHT: personalize — adaptive width */}
@@ -824,45 +863,6 @@ export function TicketStudioSkeleton() {
         </div>
       </aside>
     </div>
-
-    {/* BOTTOM: horizontal board list */}
-    <aside className="h-[110px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
-        <h2 className="text-sm font-bold text-text-primary">Boards</h2>
-        <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
-      </div>
-      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden p-2">
-        <div className="flex items-stretch gap-2 h-full">
-          {BOARDS.map((b) => {
-            const active = b.id === selectedBoard;
-            return (
-              <button
-                key={b.id}
-                onClick={() => setSelectedBoard(b.id)}
-                className={`shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
-                  active
-                    ? 'border-foreground bg-muted/40 shadow-sm'
-                    : 'border-border hover:border-text-secondary hover:bg-muted/20'
-                }`}
-              >
-                <div className="relative w-[80px] h-full rounded-md bg-muted overflow-hidden shrink-0">
-                  <BoardThumb id={b.id} active={active} />
-                  {b.featured && (
-                    <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-foreground text-background text-[8px] flex items-center justify-center font-bold">
-                      ★
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0 flex-1 flex flex-col justify-center h-full">
-                  <div className="text-[11px] font-bold text-text-primary truncate leading-tight">{b.name}</div>
-                  <div className="text-[10px] text-text-secondary leading-tight line-clamp-2">{b.subtitle}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </aside>
 
     {previewOpen && (
       <div className="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
