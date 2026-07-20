@@ -132,38 +132,12 @@ function KdsScreenMock({
       </div>
 
 
-      {/* Main column */}
+      {/* Main column — real KDS has no top bar; tickets go edge-to-edge */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar — order type chips + counts */}
-        <div
-          className="h-9 shrink-0 border-b flex items-center justify-between px-3 gap-2"
-          style={{ borderColor: border, background: chrome }}
-        >
-          <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
-            {SCREEN_ORDER_TYPES.slice(0, 4).map((t, i) => {
-              const c = ['#1A1A2E', '#2980B9', '#16A085', '#F39C12'][i];
-              return (
-                <span
-                  key={t.key}
-                  className="px-2 h-6 inline-flex items-center rounded-full text-[10px] font-bold tracking-wide text-white shrink-0"
-                  style={{ background: c }}
-                >
-                  {t.label}
-                </span>
-              );
-            })}
-          </div>
-          <div className="flex items-center gap-2 text-[10px] shrink-0" style={{ color: textMuted }}>
-            <span className="font-semibold" style={{ color: textPrimary }}>12 active</span>
-            <span>·</span>
-            <span style={{ color: '#E84C3D' }}>3 overtime</span>
-          </div>
-        </div>
-
         {/* Body: tickets grid + summary panel */}
         <div className="flex-1 min-h-0 flex">
-          <div className="flex-1 min-w-0 overflow-hidden p-2.5">
-            <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full">
+          <div className="flex-1 min-w-0 overflow-hidden p-1.5">
+            <div className="grid grid-cols-3 grid-rows-2 gap-1.5 h-full">
               {SCREEN_ORDER_TYPES.map((ot, i) => (
                 <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden">
                   <div
@@ -193,41 +167,74 @@ function KdsScreenMock({
             </div>
           </div>
 
-          {/* Summary panel */}
+          {/* Summary panel — mirrors real ItemSummaryPanel */}
           <aside
             className="w-[180px] shrink-0 border-l flex flex-col"
             style={{ borderColor: border, background: chrome }}
           >
+            {/* Header */}
             <div
-              className="px-3 h-9 border-b flex items-center justify-between"
+              className="px-2 h-9 border-b flex items-center justify-between"
               style={{ borderColor: border }}
             >
-              <span className="text-[11px] font-bold" style={{ color: textPrimary }}>
-                Item summary
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div className="w-4 h-4 rounded-full bg-[#16A085]/15 flex items-center justify-center shrink-0">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#16A085]" />
+                </div>
+                <span className="text-[11px] font-bold truncate" style={{ color: textPrimary }}>
+                  Cooking Summary
+                </span>
+              </div>
+              <span
+                className="text-[10px] font-bold rounded-full px-1.5 min-w-[22px] text-center"
+                style={{ background: isDark ? 'rgba(255,255,255,0.12)' : '#E1E5EA', color: textPrimary }}
+              >
+                24
               </span>
-              <span className="text-[9px]" style={{ color: textMuted }}>24</span>
             </div>
-            <div className="flex-1 overflow-hidden p-2.5 space-y-2.5">
+            {/* Expand-all toggle row */}
+            <div
+              className="flex items-center justify-between px-2 h-7 border-b text-[10px]"
+              style={{ borderColor: border, color: textMuted }}
+            >
+              <span className="font-semibold">Expand all</span>
+              <span
+                className="relative inline-flex h-3.5 w-6 rounded-full"
+                style={{ background: '#16A085' }}
+              >
+                <span className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-white" />
+              </span>
+            </div>
+            {/* Categories */}
+            <div className="flex-1 overflow-hidden p-2 space-y-2">
               {[
                 { course: 'APPETIZERS', items: [['Bruschetta', '3'], ['Calamari', '2']] },
                 { course: 'ENTREES', items: [['Ribeye', '4'], ['Salmon', '3'], ['Risotto', '2']] },
                 { course: 'DESSERTS', items: [['Tiramisu', '2'], ['Sorbet', '1']] },
               ].map((section) => (
                 <div key={section.course}>
-                  <div
-                    className="text-[9px] font-bold tracking-wider mb-1"
-                    style={{ color: '#16A085' }}
-                  >
-                    {section.course}
+                  <div className="flex items-center justify-between mb-1">
+                    <span
+                      className="text-[9px] font-bold tracking-wider"
+                      style={{ color: '#16A085' }}
+                    >
+                      {section.course}
+                    </span>
+                    <ChevronDown className="w-3 h-3" style={{ color: textMuted }} />
                   </div>
                   <div className="space-y-0.5">
                     {section.items.map(([name, count]) => (
                       <div
                         key={name}
-                        className="flex items-center justify-between text-[10px]"
+                        className="flex items-center justify-between text-[10px] px-1 py-0.5 rounded"
                       >
                         <span className="truncate" style={{ color: textPrimary }}>{name}</span>
-                        <span className="font-bold ml-2" style={{ color: textPrimary }}>{count}</span>
+                        <span
+                          className="font-bold ml-2 rounded-full px-1.5 text-[9px]"
+                          style={{ background: isDark ? 'rgba(255,255,255,0.1)' : '#F0F2F5', color: textPrimary }}
+                        >
+                          {count}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -237,39 +244,65 @@ function KdsScreenMock({
           </aside>
         </div>
 
-        {/* Footer / status bar — matches real dark rounded bar */}
-        <div className="shrink-0 px-2 pb-2 pt-1.5" style={{ background: surface }}>
-          <div
-            className="h-10 rounded-full flex items-center justify-between px-2.5 gap-2"
-            style={{ background: '#212121' }}
-          >
-            <div className="flex items-center gap-1.5">
-              {[LayoutGrid, Filter, ArrowUpDown, Building2, Package, Utensils].map((Ic, i) => (
-                <div key={i} className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                  <Ic className="w-3 h-3 text-white/80" />
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-2 text-[10px] text-white/70 font-medium">
-              <span>7:24 PM</span>
-              <span className="text-white/30">·</span>
-              <span>{`{orderCount} active`.replace('{orderCount}', '12')}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                className="px-2.5 h-7 inline-flex items-center rounded-full text-[10px] font-bold text-white"
-                style={{ background: '#E84C3D' }}
-              >
-                86 Items
-              </span>
-              {[Volume2, Languages, Moon].map((Ic, i) => (
-                <div key={i} className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                  <Ic className="w-3 h-3 text-white/80" />
+        {/* Footer — mirrors real BottomStatusBar (h-52 brand-dark, no rounding) */}
+        <div
+          className="h-[44px] shrink-0 flex items-center justify-between px-3 gap-2"
+          style={{ background: '#212121' }}
+        >
+          {/* Left: order count */}
+          <div className="flex items-center gap-1.5 shrink-0 text-white">
+            <span className="text-[13px] font-bold leading-none">12</span>
+            <span className="text-[10px] font-semibold text-white/80">Orders in queue</span>
+          </div>
+
+          {/* Center: filters + sort + view mode pill */}
+          <div className="flex items-center gap-1.5">
+            {[Filter, Building2, Utensils, ArrowUpDown].map((Ic, i) => (
+              <div key={i} className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                <Ic className="w-3 h-3 text-white/70" />
+              </div>
+            ))}
+            <div className="flex items-center bg-white/10 rounded-full p-0.5 gap-0.5 ml-1">
+              {[LayoutGrid, Filter, Package].map((Ic, i) => (
+                <div
+                  key={i}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                    i === 0 ? 'bg-white' : ''
+                  }`}
+                >
+                  <Ic className={`w-3 h-3 ${i === 0 ? 'text-[#0D0D1A]' : 'text-white/60'}`} />
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Right: language/sound/theme + 86 Products + AI */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {[Languages, Volume2, Moon].map((Ic, i) => (
+              <div key={i} className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                <Ic className="w-3 h-3 text-white/70" />
+              </div>
+            ))}
+            <div
+              className="flex items-center gap-1.5 px-2 h-7 rounded-xl"
+              style={{ background: 'rgba(100,100,100,0.4)' }}
+            >
+              <div className="flex flex-col items-center leading-none">
+                <span className="text-[8px] text-white font-semibold">86</span>
+                <span className="text-[8px] text-white font-semibold">Products</span>
+              </div>
+              <Package className="w-3 h-3 text-white/60" />
+            </div>
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg,#8B5CF6,#EC4899)' }}
+            >
+              <span className="text-[8px] font-bold text-white">AI</span>
+            </div>
+          </div>
         </div>
+      </div>
+
       </div>
     </div>
   );
