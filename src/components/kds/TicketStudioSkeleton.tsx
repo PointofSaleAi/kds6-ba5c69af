@@ -89,6 +89,7 @@ function KdsScreenMock({
               {SCREEN_ORDER_TYPES.map((ot, i) => (
                 <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
                   <div
+                    data-ts-ticket
                     className="origin-top"
                     style={{
                       transform: `scale(${ticketScale})`,
@@ -574,7 +575,7 @@ export function TicketStudioSkeleton() {
               data-density={density}
               data-textsize={textSize}
               data-layout={layout}
-              className="w-full h-full"
+              className={`w-full h-full ${theme === 'dark' ? 'dark' : ''}`}
             >
               <KdsScreenMock
                 boardId={selectedBoard}
