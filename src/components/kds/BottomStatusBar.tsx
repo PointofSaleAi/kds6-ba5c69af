@@ -155,6 +155,33 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
     return () => document.removeEventListener('mousedown', handleClick);
   }, [sortOpen]);
 
+  useEffect(() => {
+    if (!typeFilterOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (typeFilterRef.current && !typeFilterRef.current.contains(e.target as Node)) {
+        setTypeFilterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [typeFilterOpen]);
+
+  const orderTypeOptions: { value: OrderType; label: string }[] = [
+    { value: 'dine-in', label: 'Dine In' },
+    { value: 'take-out', label: 'Take Out' },
+    { value: 'delivery', label: 'Delivery' },
+    { value: 'banquet', label: 'Banquet' },
+    { value: 'drive-thru', label: 'Drive Thru' },
+    { value: 'curb-side', label: 'Curb Side' },
+    { value: 'scheduled', label: 'Scheduled' },
+    { value: 'phone-in', label: 'Phone-In' },
+  ];
+  const activeTypes = orderTypeFilter ?? [];
+  const toggleType = (v: OrderType) => {
+    if (!onOrderTypeFilterChange) return;
+    onOrderTypeFilterChange(activeTypes.includes(v) ? activeTypes.filter(x => x !== v) : [...activeTypes, v]);
+  };
+
   const viewModes: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
     { mode: 'grid', icon: LayoutGrid, label: t.grid },
     { mode: 'horizontal', icon: Columns3, label: t.horizontal },
