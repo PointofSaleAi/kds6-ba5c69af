@@ -65,12 +65,12 @@ function KdsScreenMock({
   const ticketScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
 
   const navItems = [
-    { icon: Utensils, label: 'Tickets', active: true },
-    { icon: CheckCircle2, label: 'Ready' },
-    { icon: Undo2, label: 'Recalled' },
-    { icon: Clock, label: 'History', badge: 6 },
-    { icon: Bell, label: 'Alerts', badge: 2 },
-    { icon: SettingsIcon, label: 'Settings' },
+    { icon: TicketsIcon, label: 'Tickets', active: true, size: 22 },
+    { icon: Clock, label: 'History', badge: 6, badgeColor: '#E84C3D', size: 20 },
+    { icon: Eye, label: 'New', badge: 3, badgeColor: '#2980B9', size: 20 },
+    { icon: EyeOff, label: 'Hide', badge: 2, badgeColor: '#E84C3D', size: 20 },
+    { icon: Bell, label: 'Alerts', badge: 4, badgeColor: '#E84C3D', size: 20 },
+    { icon: SettingsIcon, label: 'Settings', size: 20 },
   ];
 
   return (
@@ -78,36 +78,56 @@ function KdsScreenMock({
       className="w-full h-full relative overflow-hidden rounded-xl flex"
       style={{ background: surface }}
     >
-      {/* Left rail — matches real KDSSidebar (w-20 dark, rounded inner panel) */}
-      <div className="shrink-0 h-full py-2 px-2" style={{ background: '#0D0D1A' }}>
-        <div className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5" style={{ background: 'rgba(255,255,255,0.02)' }}>
-          {/* Logo mark */}
-          <div className="w-12 h-12 rounded-xl bg-white/10 mx-auto flex items-center justify-center">
-            <Utensils className="w-5 h-5 text-white" />
-          </div>
-          <div className="mx-2 my-1 border-t border-white/10" />
-          <div className="flex-1 flex flex-col gap-1">
-            {navItems.map((it, i) => (
-              <div
-                key={i}
-                className="relative flex flex-col items-center justify-center h-11 rounded-xl"
-                style={it.active ? { background: 'rgba(255,255,255,0.15)' } : undefined}
-              >
-                <it.icon className="w-5 h-5 text-white/85" />
+      {/* Left rail — mirrors real KDSSidebar */}
+      <div className="shrink-0 h-full py-1.5 px-1.5 w-[68px]" style={{ background: '#0D0D1A' }}>
+        <div
+          className="h-full rounded-2xl flex flex-col gap-1 py-1.5 px-1"
+          style={{
+            background: '#7575754D',
+            boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
+          }}
+        >
+          {/* Restaurant logo */}
+          <button className="flex items-center justify-center w-full h-11 shrink-0 rounded-xl">
+            <img src={restaurantLogo} alt="" className="w-9 h-9 object-contain" />
+          </button>
+          <div className="mx-1.5 border-t border-white/10" />
+
+          {/* Nav items */}
+          {navItems.map((it, i) => (
+            <button
+              key={i}
+              className={`flex-1 flex items-center justify-center rounded-xl min-h-[36px] relative border-2 ${
+                it.active ? 'bg-white/10 border-white/80' : 'border-transparent'
+              }`}
+            >
+              <span className="relative shrink-0">
+                <it.icon size={it.size} className="text-white/90" />
                 {it.badge ? (
-                  <span className="absolute -top-0.5 right-2 bg-[#E84C3D] text-white text-[8px] font-bold rounded-full min-w-[14px] h-3.5 px-1 flex items-center justify-center">
+                  <span
+                    className="absolute -top-1.5 -right-2 text-white text-[8px] font-bold rounded-full min-w-[14px] h-3.5 px-0.5 flex items-center justify-center"
+                    style={{ background: it.badgeColor }}
+                  >
                     {it.badge}
                   </span>
                 ) : null}
-              </div>
-            ))}
-          </div>
+              </span>
+            </button>
+          ))}
+
           {/* Switch to POS */}
-          <div className="flex flex-col items-center justify-center h-11 rounded-xl">
-            <ArrowLeftRight className="w-5 h-5 text-white/85" />
+          <div className="flex-1 flex items-center justify-center rounded-xl min-h-[36px] border-2 border-transparent">
+            <ArrowLeftRight size={18} className="text-white/90" />
+          </div>
+
+          {/* Version */}
+          <div className="flex flex-col items-center justify-center gap-0 shrink-0 pt-0.5">
+            <img src={versionIcon} alt="" className="w-7 h-7 object-contain" />
+            <span className="text-white/70 text-[8px] font-semibold tracking-wide">v4.10.2</span>
           </div>
         </div>
       </div>
+
 
       {/* Main column */}
       <div className="flex-1 flex flex-col min-w-0">
