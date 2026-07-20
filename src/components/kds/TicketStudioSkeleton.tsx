@@ -254,6 +254,9 @@ function KdsScreenMock({
 
 type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 
+const BOARDS: Board[] = [
+
+
   { id: 'calm-board', name: 'Calm Board', subtitle: 'Balanced operations, low visual noise', featured: true },
   { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority ticket centered, context at edges' },
   { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum readability from several feet' },
