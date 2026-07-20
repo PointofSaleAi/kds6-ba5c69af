@@ -11,6 +11,7 @@ import { useSound } from '@/hooks/use-sound';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { DockDragHandle } from './DockDragHandle';
 import { EightySixSheet, type EightySixedItem } from './EightySixSheet';
+import OrderTypeFilterModal from './OrderTypeFilterModal';
 import { useToast } from '@/hooks/use-toast';
 
 
