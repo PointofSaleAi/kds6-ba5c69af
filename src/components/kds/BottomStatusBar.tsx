@@ -31,6 +31,8 @@ interface BottomStatusBarProps {
   onOpenRevenueFilter?: () => void;
   aiAssistantOpen?: boolean;
   onToggleAiAssistant?: () => void;
+  orderTypeFilter?: OrderType[];
+  onOrderTypeFilterChange?: (types: OrderType[]) => void;
 }
 
 function SoundToggle() {
