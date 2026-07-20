@@ -587,24 +587,21 @@ export function TicketStudioSkeleton() {
               />
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
-              [data-ts-preview][data-density="low"] .space-y-1 > * + *,
-              [data-ts-preview][data-density="low"] .space-y-1\\.5 > * + *,
-              [data-ts-preview][data-density="low"] .space-y-2 > * + * { margin-top: .55rem; }
-              [data-ts-preview][data-density="high"] .space-y-1 > * + *,
-              [data-ts-preview][data-density="high"] .space-y-1\\.5 > * + *,
-              [data-ts-preview][data-density="high"] .space-y-2 > * + * { margin-top: .1rem; }
-              [data-ts-preview][data-density="high"] .py-2 { padding-top: .3rem; padding-bottom: .3rem; }
-              [data-ts-preview][data-density="high"] .py-1\\.5 { padding-top: .2rem; padding-bottom: .2rem; }
-              [data-ts-preview][data-density="low"]  .py-1\\.5 { padding-top: .55rem; padding-bottom: .55rem; }
-              [data-ts-preview][data-safety="muted"] { filter: saturate(.35); }
-              [data-ts-preview][data-safety="bright"] { filter: saturate(1.35); }
-              [data-ts-preview][data-safety="highlighted"] .text-\\[\\#C0392B\\],
-              [data-ts-preview][data-safety="highlighted"] .bg-\\[\\#E84C3D\\],
-              [data-ts-preview][data-safety="highlighted"] .bg-\\[\\#C0392B\\] { animation: ts-pulse 1.4s ease-in-out infinite; }
+              [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-1 > * + *,
+              [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-1\\.5 > * + *,
+              [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-2 > * + * { margin-top: .55rem; }
+              [data-ts-preview][data-density="high"] [data-ts-ticket] .space-y-1 > * + *,
+              [data-ts-preview][data-density="high"] [data-ts-ticket] .space-y-1\\.5 > * + *,
+              [data-ts-preview][data-density="high"] [data-ts-ticket] .space-y-2 > * + * { margin-top: .1rem; }
+              [data-ts-preview][data-density="high"] [data-ts-ticket] .py-2 { padding-top: .3rem; padding-bottom: .3rem; }
+              [data-ts-preview][data-density="high"] [data-ts-ticket] .py-1\\.5 { padding-top: .2rem; padding-bottom: .2rem; }
+              [data-ts-preview][data-density="low"] [data-ts-ticket] .py-1\\.5 { padding-top: .55rem; padding-bottom: .55rem; }
+              [data-ts-preview][data-safety="muted"] [data-ts-ticket] { filter: saturate(.35); }
+              [data-ts-preview][data-safety="bright"] [data-ts-ticket] { filter: saturate(1.35); }
+              [data-ts-preview][data-safety="highlighted"] [data-ts-ticket] .text-\\[\\#C0392B\\],
+              [data-ts-preview][data-safety="highlighted"] [data-ts-ticket] .bg-\\[\\#E84C3D\\],
+              [data-ts-preview][data-safety="highlighted"] [data-ts-ticket] .bg-\\[\\#C0392B\\] { animation: ts-pulse 1.4s ease-in-out infinite; }
               @keyframes ts-pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
-              [data-ts-preview][data-theme="dark"] { filter: invert(1) hue-rotate(180deg); }
-              [data-ts-preview][data-theme="dark"] img,
-              [data-ts-preview][data-theme="dark"] svg { filter: invert(1) hue-rotate(180deg); }
             `}} />
           </div>
         </div>
