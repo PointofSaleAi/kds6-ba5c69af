@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, ArrowLeft, Eye, Bell, CheckCircle2, ListChecks, LayoutGrid, GraduationCap, AlertTriangle, Tag, Clock, Hash, MessageSquare, Utensils } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { useOnboarding } from '@/hooks/use-onboarding';
 import { useOrderStore } from '@/hooks/use-order-store';
 import { makeOnboardingSampleOrder, ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
@@ -63,7 +64,9 @@ function useAnchorRect(selector: string | null, dep: unknown): Rect | null {
     let cancelled = false;
     const measure = () => {
       if (cancelled) return;
-      const el = document.querySelector(selector) as HTMLElement | null;
+      const el = Array.from(document.querySelectorAll(selector)).find(
+        (node) => !(node as HTMLElement).closest('[data-ts-preview]'),
+      ) as HTMLElement | undefined;
       if (!el) { setRect(null); return; }
       const r = el.getBoundingClientRect();
       setRect(prev => {
@@ -218,6 +221,8 @@ function CompletionCard({ onChoose }: { onChoose: (c: 'training' | 'done') => vo
 export function OnboardingWalkthrough() {
   const { active, stepIndex, totalSteps, next, prev, skip, showCompletion, dismissCompletion } = useOnboarding();
   const { orders, setOrders } = useOrderStore();
+  const { pathname } = useLocation();
+  const isTicketBoardRoute = !pathname.includes('/settings');
 
   // Step indices that map to the 3-tap ticket footer button progression.
   // Kept in sync with STEPS above (Mark ticket seen / in progress / done).
@@ -229,7 +234,9 @@ export function OnboardingWalkthrough() {
   const TICKET_DONE_STEP = 11;
 
   const clickSample = (sel: string) => {
-    const el = document.querySelector(`${SAMPLE} ${sel}`) as HTMLElement | null;
+    const el = Array.from(document.querySelectorAll(`${SAMPLE} ${sel}`)).find(
+      (node) => !(node as HTMLElement).closest('[data-ts-preview]'),
+    ) as HTMLElement | undefined;
     el?.click();
   };
   const dispatchItem = (type: 'advance' | 'undo') => {
@@ -274,7 +281,7 @@ export function OnboardingWalkthrough() {
   // Note: no unmount cleanup effect — React StrictMode's double-mount would
   // then remove the just-injected sample and leave it stripped forever.
   useEffect(() => {
-    const shouldInject = active || showCompletion; // keep sample until completion prompt dismissed
+    const shouldInject = isTicketBoardRoute && (active || showCompletion); // keep sample until completion prompt dismissed
     const has = orders.some(o => o.id === ONBOARDING_SAMPLE_ORDER_ID);
     if (shouldInject && !has) {
       setOrders(prev => (prev.some(o => o.id === ONBOARDING_SAMPLE_ORDER_ID) ? prev : [makeOnboardingSampleOrder(), ...prev]));
@@ -283,7 +290,7 @@ export function OnboardingWalkthrough() {
       setOrders(prev => prev.filter(o => o.id !== ONBOARDING_SAMPLE_ORDER_ID));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, showCompletion, orders]);
+  }, [active, showCompletion, isTicketBoardRoute, orders]);
 
   const step = active ? STEPS[Math.min(stepIndex, STEPS.length - 1)] : null;
   const rect = useAnchorRect(step ? step.anchor : null, stepIndex);
@@ -292,10 +299,13 @@ export function OnboardingWalkthrough() {
   // but only when moving forward. Auto-skipping while the user is pressing Back
   // would immediately snap them forward again.
   useEffect(() => {
-    if (!active || !step) return;
+    if (!isTicketBoardRoute || !active || !step) return;
     if (lastDirectionRef.current === 'prev') return;
     const t = window.setTimeout(() => {
-      if (!document.querySelector(step.anchor)) {
+      const hasAnchor = Array.from(document.querySelectorAll(step.anchor)).some(
+        (node) => !(node as HTMLElement).closest('[data-ts-preview]'),
+      );
+      if (!hasAnchor) {
         next();
       }
     }, 600);
@@ -309,7 +319,7 @@ export function OnboardingWalkthrough() {
     return { top: rect.top - p, left: rect.left - p, width: rect.width + p * 2, height: rect.height + p * 2 };
   }, [rect]);
 
-  if (!active && !showCompletion) return null;
+  if (!isTicketBoardRoute || (!active && !showCompletion)) return null;
 
   return (
     <>
