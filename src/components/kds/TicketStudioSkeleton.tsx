@@ -675,7 +675,7 @@ export function TicketStudioSkeleton() {
             </div>
           </div>
           <div
-            className="flex-1 min-h-0 overflow-auto p-4 flex items-start justify-center"
+            className="flex-1 min-h-0 overflow-hidden p-3"
             style={{
               background:
                 theme === 'dark'
@@ -692,23 +692,16 @@ export function TicketStudioSkeleton() {
               data-density={density}
               data-textsize={textSize}
               data-layout={layout}
-              style={{
-                width: layout === 'compact' ? 280 : layout === 'spacious' ? 380 : 340,
-                transform: `scale(${textSize === 'small' ? 0.9 : textSize === 'large' ? 1.12 : 1})`,
-                transformOrigin: 'top center',
-                padding: layout === 'compact' ? 4 : layout === 'spacious' ? 24 : 12,
-              }}
+              className="w-full h-full"
             >
-              <BoardTicketPreview
+              <KdsScreenMock
                 boardId={selectedBoard}
                 identifier={identifier as 'order' | 'guest'}
-                orderType={orderTypeKey === 'dine-in' ? 'DINE IN' : ORDER_TYPES_LIST.find((o) => o.key === orderTypeKey)?.label.toUpperCase()}
-                orderTypeKey={orderTypeKey}
+                textSize={textSize}
                 agingOverrideSeconds={agingOverrideSeconds}
-                onHeaderClick={() => openOrderTypeInPanel(orderTypeKey)}
+                onHeaderClick={(k) => openOrderTypeInPanel(k)}
                 onTimerClick={cycleAgingStage}
               />
-
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
               [data-ts-preview][data-density="low"] .space-y-1 > * + *,
