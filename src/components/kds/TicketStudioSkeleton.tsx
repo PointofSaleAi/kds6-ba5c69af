@@ -85,7 +85,7 @@ function KdsScreenMock({
 
         <div className="flex-1 min-w-0 flex">
           <div className="flex-1 min-w-0 overflow-hidden p-1.5">
-            <div ref={gridRef} className="grid grid-cols-3 grid-rows-2 gap-1.5 h-full items-start">
+            <div ref={gridRef} className="grid grid-cols-3 gap-1.5 h-full content-start items-start">
               {SCREEN_ORDER_TYPES.map((ot, i) => (
                 <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
                   <div
