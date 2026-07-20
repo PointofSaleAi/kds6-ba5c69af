@@ -78,7 +78,7 @@ function KdsScreenMock({
     const compute = () => {
       const cols = 3;
       const rows = 2;
-      const gap = 6; // matches gap-1.5
+      const gap = 0; // tickets sit flush like real KDS
       const cellW = (el.clientWidth - gap * (cols - 1)) / cols;
       const cellH = (el.clientHeight - gap * (rows - 1)) / rows;
       const s = Math.min(cellW / NATURAL_W, cellH / NATURAL_H);
@@ -102,34 +102,36 @@ function KdsScreenMock({
 
   return (
     <div
-      className="w-full h-full relative overflow-hidden rounded-xl flex"
+      className="w-full h-full relative overflow-hidden rounded-xl flex flex-col"
       style={{ background: surface }}
     >
-      {/* Left rail — mirrors real KDSSidebar */}
-      <div className="shrink-0 h-full py-1.5 px-1.5 w-[68px]" style={{ background: '#0D0D1A' }}>
+      {/* Top row: left rail + main body */}
+      <div className="flex-1 min-h-0 flex">
+      {/* Left rail — mirrors real KDSSidebar, transparent background */}
+      <div className="shrink-0 h-full py-1.5 px-1.5 w-[68px]">
         <div
           className="h-full rounded-2xl flex flex-col gap-1 py-1.5 px-1"
           style={{
-            background: '#7575754D',
-            boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
+            background: isDark ? '#7575754D' : 'rgba(13,13,26,0.06)',
+            boxShadow: isDark ? 'inset 4px 4px 24px rgba(255,255,255,0.15)' : 'inset 4px 4px 24px rgba(13,13,26,0.08)',
           }}
         >
           {/* Restaurant logo */}
           <button className="flex items-center justify-center w-full h-11 shrink-0 rounded-xl">
             <img src={restaurantLogo} alt="" className="w-9 h-9 object-contain" />
           </button>
-          <div className="mx-1.5 border-t border-white/10" />
+          <div className="mx-1.5 border-t" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(13,13,26,0.1)' }} />
 
           {/* Nav items */}
           {navItems.map((it, i) => (
             <button
               key={i}
               className={`flex-1 flex items-center justify-center rounded-xl min-h-[36px] relative border-2 ${
-                it.active ? 'bg-white/10 border-white/80' : 'border-transparent'
+                it.active ? (isDark ? 'bg-white/10 border-white/80' : 'bg-black/10 border-black/60') : 'border-transparent'
               }`}
             >
               <span className="relative shrink-0">
-                <it.icon size={it.size} className="text-white/90" />
+                <it.icon size={it.size} className={isDark ? 'text-white/90' : 'text-[#0D0D1A]/80'} />
                 {it.badge ? (
                   <span
                     className="absolute -top-1.5 -right-2 text-white text-[8px] font-bold rounded-full min-w-[14px] h-3.5 px-0.5 flex items-center justify-center"
@@ -144,13 +146,13 @@ function KdsScreenMock({
 
           {/* Switch to POS */}
           <div className="flex-1 flex items-center justify-center rounded-xl min-h-[36px] border-2 border-transparent">
-            <ArrowLeftRight size={18} className="text-white/90" />
+            <ArrowLeftRight size={18} className={isDark ? 'text-white/90' : 'text-[#0D0D1A]/80'} />
           </div>
 
           {/* Version */}
           <div className="flex flex-col items-center justify-center gap-0 shrink-0 pt-0.5">
             <img src={versionIcon} alt="" className="w-7 h-7 object-contain" />
-            <span className="text-white/70 text-[8px] font-semibold tracking-wide">v4.10.2</span>
+            <span className={`text-[8px] font-semibold tracking-wide ${isDark ? 'text-white/70' : 'text-[#0D0D1A]/60'}`}>v4.10.2</span>
           </div>
         </div>
       </div>
@@ -161,7 +163,7 @@ function KdsScreenMock({
         {/* Body: tickets grid + summary panel */}
         <div className="flex-1 min-h-0 flex">
           <div className="flex-1 min-w-0 overflow-hidden p-1.5">
-            <div ref={gridRef} className="grid grid-cols-3 grid-rows-2 gap-1.5 h-full">
+            <div ref={gridRef} className="grid grid-cols-3 grid-rows-2 gap-0 h-full">
               {SCREEN_ORDER_TYPES.map((ot, i) => (
                 <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
                   <div
