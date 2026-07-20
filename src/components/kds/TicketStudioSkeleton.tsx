@@ -65,7 +65,31 @@ function KdsScreenMock({
   const textPrimary = isDark ? '#FFFFFF' : '#2C3E50';
   const textMuted = isDark ? '#95A5A6' : '#6C7A89';
 
-  const ticketScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
+  const textScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
+
+  // Responsive scale: fit natural 320px-wide ticket into each grid cell.
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [fitScale, setFitScale] = useState(1);
+  useLayoutEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const NATURAL_W = 320;
+    const NATURAL_H = 360;
+    const compute = () => {
+      const cols = 3;
+      const rows = 2;
+      const gap = 6; // matches gap-1.5
+      const cellW = (el.clientWidth - gap * (cols - 1)) / cols;
+      const cellH = (el.clientHeight - gap * (rows - 1)) / rows;
+      const s = Math.min(cellW / NATURAL_W, cellH / NATURAL_H);
+      setFitScale(Math.max(0.4, Math.min(1.2, s)));
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const ticketScale = fitScale * textScale;
 
   const navItems = [
     { icon: TicketsIcon, label: 'Tickets', active: true, size: 22 },
