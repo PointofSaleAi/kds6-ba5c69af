@@ -1073,8 +1073,27 @@ export function TicketStudioSkeleton() {
               <span className="text-[11px] font-semibold text-text-primary">Close</span>
             </button>
           </div>
-          <div className="flex-1 min-h-0">
-            <ScaledKdsPreview boardId={selectedBoard} />
+          <div className="flex-1 min-h-0 p-3" style={{ background: theme === 'dark' ? '#0D0D1A' : '#F0F2F5' }}>
+            <div
+              data-ts-preview
+              data-theme={theme}
+              data-safety={safety}
+              data-density={density}
+              data-textsize={textSize}
+              data-layout={layout}
+              className="w-full h-full"
+            >
+              <KdsScreenMock
+                boardId={selectedBoard}
+                identifier={identifier as 'order' | 'guest'}
+                textSize={textSize}
+                agingOverrideSeconds={agingOverrideSeconds}
+                onHeaderClick={(k) => openOrderTypeInPanel(k)}
+                onTimerClick={cycleAgingStage}
+                baseW={1440}
+                baseH={880}
+              />
+            </div>
           </div>
         </div>
       </div>
