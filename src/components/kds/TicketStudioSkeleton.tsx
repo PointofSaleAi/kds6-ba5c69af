@@ -158,10 +158,9 @@ function KdsScreenMock({
       </div>
 
 
-      {/* Main column — real KDS has no top bar; tickets go edge-to-edge */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Body: tickets grid + summary panel */}
-        <div className="flex-1 min-h-0 flex">
+      {/* Body: tickets grid + summary panel (real KDS has no top bar) */}
+      <div className="flex-1 min-w-0 flex">
+
           <div className="flex-1 min-w-0 overflow-hidden p-1.5">
             <div ref={gridRef} className="grid grid-cols-3 grid-rows-2 gap-0 h-full">
               {SCREEN_ORDER_TYPES.map((ot, i) => (
@@ -268,66 +267,67 @@ function KdsScreenMock({
             </div>
           </aside>
         </div>
+      </div>
 
-        {/* Footer — mirrors real BottomStatusBar (h-52 brand-dark, no rounding) */}
-        <div
-          className="h-[44px] shrink-0 flex items-center justify-between px-3 gap-2"
-          style={{ background: '#212121' }}
-        >
-          {/* Left: order count */}
-          <div className="flex items-center gap-1.5 shrink-0 text-white">
-            <span className="text-[13px] font-bold leading-none">12</span>
-            <span className="text-[10px] font-semibold text-white/80">Orders in queue</span>
-          </div>
+      {/* Footer — full width; sidebar ends above this */}
+      <div
+        className="h-[44px] shrink-0 flex items-center justify-between px-3 gap-2"
+        style={{ background: '#212121' }}
+      >
+        {/* Left: order count */}
+        <div className="flex items-center gap-1.5 shrink-0 text-white">
+          <span className="text-[13px] font-bold leading-none">12</span>
+          <span className="text-[10px] font-semibold text-white/80">Orders in queue</span>
+        </div>
 
-          {/* Center: filters + sort + view mode pill */}
-          <div className="flex items-center gap-1.5">
-            {[Filter, Building2, Utensils, ArrowUpDown].map((Ic, i) => (
-              <div key={i} className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
-                <Ic className="w-3 h-3 text-white/70" />
+        {/* Center: filters + sort + view mode pill */}
+        <div className="flex items-center gap-1.5">
+          {[Filter, Building2, Utensils, ArrowUpDown].map((Ic, i) => (
+            <div key={i} className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+              <Ic className="w-3 h-3 text-white/70" />
+            </div>
+          ))}
+          <div className="flex items-center bg-white/10 rounded-full p-0.5 gap-0.5 ml-1">
+            {[LayoutGrid, Filter, Package].map((Ic, i) => (
+              <div
+                key={i}
+                className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                  i === 0 ? 'bg-white' : ''
+                }`}
+              >
+                <Ic className={`w-3 h-3 ${i === 0 ? 'text-[#0D0D1A]' : 'text-white/60'}`} />
               </div>
             ))}
-            <div className="flex items-center bg-white/10 rounded-full p-0.5 gap-0.5 ml-1">
-              {[LayoutGrid, Filter, Package].map((Ic, i) => (
-                <div
-                  key={i}
-                  className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                    i === 0 ? 'bg-white' : ''
-                  }`}
-                >
-                  <Ic className={`w-3 h-3 ${i === 0 ? 'text-[#0D0D1A]' : 'text-white/60'}`} />
-                </div>
-              ))}
-            </div>
           </div>
+        </div>
 
-          {/* Right: language/sound/theme + 86 Products + AI */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            {[Languages, Volume2, Moon].map((Ic, i) => (
-              <div key={i} className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
-                <Ic className="w-3 h-3 text-white/70" />
-              </div>
-            ))}
-            <div
-              className="flex items-center gap-1.5 px-2 h-7 rounded-xl"
-              style={{ background: 'rgba(100,100,100,0.4)' }}
-            >
-              <div className="flex flex-col items-center leading-none">
-                <span className="text-[8px] text-white font-semibold">86</span>
-                <span className="text-[8px] text-white font-semibold">Products</span>
-              </div>
-              <Package className="w-3 h-3 text-white/60" />
+        {/* Right: language/sound/theme + 86 Products + AI */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {[Languages, Volume2, Moon].map((Ic, i) => (
+            <div key={i} className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+              <Ic className="w-3 h-3 text-white/70" />
             </div>
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg,#8B5CF6,#EC4899)' }}
-            >
-              <span className="text-[8px] font-bold text-white">AI</span>
+          ))}
+          <div
+            className="flex items-center gap-1.5 px-2 h-7 rounded-xl"
+            style={{ background: 'rgba(100,100,100,0.4)' }}
+          >
+            <div className="flex flex-col items-center leading-none">
+              <span className="text-[8px] text-white font-semibold">86</span>
+              <span className="text-[8px] text-white font-semibold">Products</span>
             </div>
+            <Package className="w-3 h-3 text-white/60" />
+          </div>
+          <div
+            className="w-6 h-6 rounded-full flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg,#8B5CF6,#EC4899)' }}
+          >
+            <span className="text-[8px] font-bold text-white">AI</span>
           </div>
         </div>
       </div>
     </div>
+
   );
 }
 
