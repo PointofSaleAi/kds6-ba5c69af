@@ -161,15 +161,14 @@ function KdsScreenMock({
         {/* Body: tickets grid + summary panel */}
         <div className="flex-1 min-h-0 flex">
           <div className="flex-1 min-w-0 overflow-hidden p-1.5">
-            <div className="grid grid-cols-3 grid-rows-2 gap-1.5 h-full">
+            <div ref={gridRef} className="grid grid-cols-3 grid-rows-2 gap-1.5 h-full">
               {SCREEN_ORDER_TYPES.map((ot, i) => (
-                <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden">
+                <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
                   <div
-                    className="origin-top-left"
+                    className="origin-top"
                     style={{
                       transform: `scale(${ticketScale})`,
-                      width: `${100 / ticketScale}%`,
-                      height: `${100 / ticketScale}%`,
+                      width: 320,
                     }}
                   >
                     <BoardTicketPreview
