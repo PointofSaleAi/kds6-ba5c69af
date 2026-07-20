@@ -1,15 +1,24 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArrowLeftRight,
+  ArrowUpDown,
   Bell,
+  Building2,
+  CheckCircle2,
   ChevronDown,
   Clock,
   Eye,
-  Home,
+  EyeOff,
+  Filter,
+  Languages,
   LayoutGrid,
-  List,
+  Moon,
+  Package,
   RotateCcw,
   Settings as SettingsIcon,
+  Undo2,
   Utensils,
+  Volume2,
   X,
 } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
