@@ -156,7 +156,7 @@ const BOARDS: Board[] = [
 
 function BoardThumb({ id }: { id: string; active: boolean }) {
   // Rich mini renderings that mirror each PDF screen at a glance.
-  // viewBox 112x56 — non-uniform scaled to fill the thumb container.
+  // viewBox 112x56, non-uniform scaled to fill the thumb container.
   const bg =
     id === 'dark-command-center'
       ? '#0D0D1A'
@@ -648,7 +648,7 @@ export function TicketStudioSkeleton() {
         </aside>
       </div>
 
-      {/* RIGHT: personalize — adaptive width */}
+      {/* RIGHT: personalize, adaptive width */}
       <aside className="w-[210px] md:w-[230px] lg:w-[260px] xl:w-[300px] 2xl:w-[340px] shrink-0 rounded-2xl border border-border bg-card flex flex-col">
         <div className="px-4 pt-3 pb-0 border-b border-border space-y-2.5">
           <h2 className="text-sm font-bold text-text-primary">Personalize</h2>
