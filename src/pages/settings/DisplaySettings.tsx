@@ -3,7 +3,7 @@ import { useOrderStore } from '@/hooks/use-order-store';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   Monitor, Type, Rows3, Palette, Languages,
-  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
+  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft, Zap,
   StretchVertical, LayoutPanelLeft, LayoutGrid,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
