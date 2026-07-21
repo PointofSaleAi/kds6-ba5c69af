@@ -126,11 +126,18 @@ export default {
           "0%, 100%": { boxShadow: "0 0 0 0 rgb(var(--ticket-blink-rgb, 226 75 74) / 0)" },
           "50%": { boxShadow: "0 0 18px 4px rgb(var(--ticket-blink-rgb, 226 75 74) / 0.7)" },
         },
+        "row-blink": {
+          "0%, 100%": { boxShadow: "inset 0 0 0 0 rgb(var(--row-blink-rgb, 127 140 141) / 0)" },
+          "50%": { boxShadow: "inset 0 0 0 2px rgb(var(--row-blink-rgb, 127 140 141) / 0.85)" },
+        },
+
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "ticket-blink": "ticket-blink 1.4s ease-in-out infinite",
+        "row-blink": "row-blink 1.4s ease-in-out infinite",
+
       },
     },
   },

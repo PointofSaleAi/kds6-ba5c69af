@@ -68,6 +68,7 @@ function ProductRow({
   onRemove,
   onLongPress,
   compact = false,
+  isNewBlink = false,
 }: {
   product: OrderItem;
   accent: string;
@@ -77,7 +78,9 @@ function ProductRow({
   onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
+  isNewBlink?: boolean;
 }) {
+
   const done = state === 'done';
   const loading = state === 'loading';
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
@@ -106,9 +109,10 @@ function ProductRow({
       {...longPress}
       aria-pressed={done}
       aria-disabled={loading}
-      className={`flex items-start border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
-      style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 6, paddingRight: 6, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)', gap: 4 }}
+      className={`flex items-start border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'} ${isNewBlink ? 'animate-row-blink' : ''}`}
+      style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 6, paddingRight: 6, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)', gap: 4, ...(isNewBlink ? { ['--row-blink-rgb' as any]: '127 140 141' } : {}) }}
     >
+
       <span
         className="font-bold shrink-0 text-center"
         style={{ color: accent, fontSize: 'var(--kds-item-qty)', minWidth: 18, lineHeight: '14.3px' }}
@@ -397,8 +401,10 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                         onReset={() => setRow(product.id, 'idle')}
                         onRemove={() => removeRow(product.id)}
                         onLongPress={setRecipeProduct}
+                        isNewBlink={!!product.isNew && getRowState(product) === 'idle'}
                       />
                     ))}
+
                   </div>
                 </div>
               );
@@ -439,8 +445,10 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 onRemove={() => removeRow(product.id)}
                 onLongPress={setRecipeProduct}
                 compact={isCompact}
+                isNewBlink={!!product.isNew && getRowState(product) === 'idle'}
               />
             ))}
+
           </div>
         )}
       </div>
