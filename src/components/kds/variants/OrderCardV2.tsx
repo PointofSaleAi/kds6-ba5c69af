@@ -851,6 +851,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
           onAcknowledge={acknowledgeMessage}
           onReply={sendReply}
+          variant="v3"
         />
       )}
 
