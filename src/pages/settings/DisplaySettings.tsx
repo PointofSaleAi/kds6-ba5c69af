@@ -37,6 +37,7 @@ export default function DisplaySettings() {
   const {
     ticketHeaderStyle, setTicketHeaderStyle,
     getRouteSetting, setRouteSetting,
+    reducedMotion, setReducedMotion,
   } = useKDSSettings();
   const [ticketsRoute, setTicketsRoute] = useState<import('@/hooks/use-kds-settings').TicketsRouteKey>(
     () => readStoredTicketsRoute('v3'),
