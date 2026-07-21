@@ -849,7 +849,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             <span data-onboarding="ticket-orderno" className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
           </div>
           <span
-            className={`rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums ${isOvertimeElapsed ? 'animate-pulse' : ''}`}
+            className={`rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums ${(isOvertimeElapsed && ticketState !== 'done' && !isHistory) ? 'animate-pulse' : ''}`}
             style={{ background: timerStatus.color, color: timerStatus.textColor }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} - ${timerStatus.label}`}
             data-onboarding="ticket-timer"
