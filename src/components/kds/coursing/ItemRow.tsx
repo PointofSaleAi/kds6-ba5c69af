@@ -94,7 +94,7 @@ export function ItemRow({ item, dimmed }: ItemRowProps) {
         className="flex items-center shrink-0"
         style={{ gap: '4px', display: dimmed ? 'none' : 'flex' }}
       >
-        <KdsActionIcon icon="seen" label="Mark seen" />
+        <KdsActionIcon icon="seen" label="Mark Seen" />
       </div>
     </div>
   );

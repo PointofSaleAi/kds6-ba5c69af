@@ -231,7 +231,7 @@ function HistoryItemRow({ item, isLast, selected, selectionMode, onTap, onLongPr
           className="shrink-0 flex items-center justify-center rounded-full"
           style={{ background: '#E84C3D', width: 22, height: 22 }}
           aria-hidden="true"
-          title="Tap to recall product"
+          title="Tap to Recall Product"
         >
           <Undo size={14} color="#fff" strokeWidth={2.5} />
         </span>
@@ -611,8 +611,8 @@ export function HistoryOrderCard({ order, compact, onRecall, onRecallItem, expoH
             onClick={() => onRecall?.(order.id)}
             className="w-full py-2.5 rounded flex items-center justify-center gap-2 uppercase hover:opacity-90 transition-colors min-h-[44px] border-2"
             style={{ color: '#E84C3D', borderColor: '#E84C3D', fontSize: '16px', fontWeight: 700, backgroundColor: 'transparent' }}
-            title="Tap to recall ticket"
-            aria-label="Recall ticket"
+            title="Tap to Recall Ticket"
+            aria-label="Recall Ticket"
           >
             <Undo size={22} strokeWidth={2.5} color="#E84C3D" />
             Recall

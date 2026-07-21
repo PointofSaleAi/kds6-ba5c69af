@@ -1258,7 +1258,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   <PopoverTrigger asChild>
                     <button
                       className="relative p-2 rounded-lg border border-input bg-surface-card hover:bg-muted min-h-[36px] min-w-[36px] flex items-center justify-center"
-                      aria-label="Filter orders"
+                      aria-label="Filter Orders"
                     >
                       <SlidersHorizontal size={14} className="text-text-primary" />
                       {historyActiveTypes.length > 0 && (

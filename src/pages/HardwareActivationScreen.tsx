@@ -220,7 +220,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                     <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or mobile number</label>
                     <input
                       type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                      placeholder="Enter your email or mobile number"
+                      placeholder="Enter Your Email or Mobile Number"
                       className="font-montserrat" style={inputStyle}
                     />
                   </div>
@@ -231,7 +231,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                         <div>
                           <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
                           <div style={{ position: 'relative' }}>
-                            <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                            <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
                             <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
                               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                             </button>

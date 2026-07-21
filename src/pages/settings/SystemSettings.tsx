@@ -34,7 +34,7 @@ export default function SystemSettings() {
       <SettingsPill
         icon={GraduationCap}
         iconColor="#F59E0B"
-        label="Show me how this KDS works"
+        label="Show me How This KDS Works"
         helper="Replay the new-staff onboarding walkthrough on the KDS ticket screen."
         onClick={() => window.dispatchEvent(new CustomEvent('kds:start-onboarding'))}
       />

@@ -243,7 +243,7 @@ export default function AIInstructionsSettings() {
                 disabled={!newDo.trim()}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-opacity shrink-0 disabled:opacity-30"
                 style={{ background: '#16A085' }}
-                aria-label="Add do"
+                aria-label="Add Do"
               >
                 <Plus size={16} color="#FFFFFF" />
               </button>
@@ -295,7 +295,7 @@ export default function AIInstructionsSettings() {
                 disabled={!newDont.trim()}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-opacity shrink-0 disabled:opacity-30"
                 style={{ background: '#E74C3C' }}
-                aria-label="Add don't"
+                aria-label="Add Don't"
               >
                 <Plus size={16} color="#FFFFFF" />
               </button>

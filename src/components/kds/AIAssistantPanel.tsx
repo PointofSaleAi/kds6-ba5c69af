@@ -639,7 +639,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                   </button>
                   <button
                     onClick={onClose}
-                    aria-label="Close AI assistant"
+                    aria-label="Close AI Assistant"
                     className="w-10 h-10 rounded-full bg-neutral-800/60 hover:bg-neutral-700/60 flex items-center justify-center active:opacity-70 transition-opacity"
                   >
                     <X className="w-5 h-5 text-white" />
@@ -885,7 +885,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                   <button
                     type="submit"
                     disabled={!input.trim() || streaming || recording}
-                    aria-label="Send message"
+                    aria-label="Send Message"
                     className={cn(
                       'w-12 h-12 rounded-full flex items-center justify-center transition-all flex-shrink-0',
                       input.trim() && !streaming && !recording

@@ -297,7 +297,7 @@ function V2ProductRow({
               enabled={productTimersEnabled}
             />
             {loading && (
-              <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking product served">
+              <span className="shrink-0 flex items-center justify-center" style={{ width: 22, height: 22 }} aria-label="Marking Product Served">
                 <Loader2 size={14} className="animate-spin" color="#6C7A89" />
               </span>
             )}
@@ -306,7 +306,7 @@ function V2ProductRow({
                 <span
                   className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
                   style={{ background: '#27AE60', width: 22, height: 22 }}
-                  aria-label="Product served"
+                  aria-label="Product Served"
                   title="Served"
                 >
                   <Check size={14} color="#fff" strokeWidth={3} />
@@ -343,7 +343,7 @@ function V2ProductRow({
                 data-onboarding="item-ready"
                 className="shrink-0 flex items-center justify-center rounded-full active:scale-95 transition animate-scale-in"
                 style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }}
-                aria-label="Mark product served (double-tap to undo)"
+                aria-label="Mark Product Served (Double-Tap to Undo)"
                 title="Ready. Tap to mark served. Double-tap to undo."
               >
                 <Check size={14} strokeWidth={3} />
@@ -356,7 +356,7 @@ function V2ProductRow({
                 data-onboarding="item-bell"
                 className="shrink-0 flex items-center justify-center rounded-[5px] active:scale-95 transition animate-scale-in"
                 style={{ width: 22, height: 22, background: '#374151', color: '#fff' }}
-                aria-label="Mark product ready (double-tap to undo)"
+                aria-label="Mark Product Ready (Double-Tap to Undo)"
                 title="Tap when ready. Double-tap to undo."
               >
                 <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
@@ -369,7 +369,7 @@ function V2ProductRow({
                 data-onboarding="item-eye"
                 className="shrink-0 flex items-center justify-center rounded-md hover:bg-black/[0.04] active:scale-95 transition"
                 style={{ width: 22, height: 22, color: '#6C7A89' }}
-                aria-label="Start cooking (double-tap to undo)"
+                aria-label="Start Cooking (Double-Tap to Undo)"
               >
                 <Eye size={18} strokeWidth={2} />
               </button>

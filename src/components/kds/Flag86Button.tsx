@@ -35,13 +35,13 @@ function QuantityAdjuster({ value, onChange }: QuantityAdjusterProps) {
         </span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <button type="button" onClick={dec} style={btn} aria-label="Decrease quantity">
+        <button type="button" onClick={dec} style={btn} aria-label="Decrease Quantity">
           <Minus size={16} />
         </button>
         <span style={{ minWidth: 24, textAlign: 'center', fontSize: 16, fontWeight: 700, color: '#FFFFFF' }}>
           {value}
         </span>
-        <button type="button" onClick={inc} style={btn} aria-label="Increase quantity">
+        <button type="button" onClick={inc} style={btn} aria-label="Increase Quantity">
           <Plus size={16} />
         </button>
       </div>
@@ -366,13 +366,13 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
           </span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button type="button" onClick={dec} style={stepBtn} aria-label="Decrease quantity">
+            <button type="button" onClick={dec} style={stepBtn} aria-label="Decrease Quantity">
               <Minus size={16} />
             </button>
             <span style={{ minWidth: 28, textAlign: 'center', fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>
               {qty}
             </span>
-            <button type="button" onClick={inc} style={stepBtn} aria-label="Increase quantity">
+            <button type="button" onClick={inc} style={stepBtn} aria-label="Increase Quantity">
               <Plus size={16} />
             </button>
           </div>

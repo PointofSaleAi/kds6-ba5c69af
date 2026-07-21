@@ -235,7 +235,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 )}
                 <button
                   onClick={onClose}
-                  aria-label="Close alerts"
+                  aria-label="Close Alerts"
                   className="w-10 h-10 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center active:opacity-70 transition-opacity"
                 >
                   <X className="w-5 h-5 text-text-secondary" />
@@ -273,7 +273,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 <button
                   type="button"
                   onClick={() => setAiSummaryOpen(v => !v)}
-                  aria-label="AI summary"
+                  aria-label="AI Summary"
                   className={`ml-auto relative w-9 h-9 rounded-full flex items-center justify-center transition-colors
                     ${aiSummaryOpen ? 'bg-[#1A1A2E]' : 'bg-muted hover:bg-muted/80'}`}
                 >

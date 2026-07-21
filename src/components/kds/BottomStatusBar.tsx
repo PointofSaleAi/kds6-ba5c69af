@@ -57,7 +57,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
       data-onboarding="language"
       onClick={onOpen}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
-      aria-label="Change language"
+      aria-label="Change Language"
     >
       <Languages size={15} className="text-primary-foreground/70" />
     </button>
@@ -224,7 +224,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 data-onboarding="filter"
                 onClick={onOpenCategoryFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
-                aria-label="Category filter"
+                aria-label="Category Filter"
               >
                 <Filter size={15} className="text-primary-foreground/70" />
               </button>
@@ -241,7 +241,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 data-onboarding="revenue"
                 onClick={onOpenRevenueFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
-                aria-label="Revenue center filter"
+                aria-label="Revenue Center Filter"
               >
                 <Building2 size={15} className="text-primary-foreground/70" />
               </button>
@@ -262,7 +262,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                     ? 'bg-primary-foreground/20 text-primary-foreground'
                     : 'bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground'
                 }`}
-                aria-label="Filter by order type"
+                aria-label="Filter by Order Type"
               >
                 <Utensils size={15} />
                 {activeTypes.length > 0 && (
@@ -296,7 +296,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                       ? 'bg-primary-foreground/20 text-primary-foreground'
                       : 'bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground'
                   }`}
-                  aria-label="Sort orders"
+                  aria-label="Sort Orders"
                 >
                   <ArrowUpDown size={15} />
                 </button>

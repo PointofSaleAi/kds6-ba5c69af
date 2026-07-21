@@ -106,7 +106,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
               <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or mobile number</label>
               <input
                 type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                placeholder="Enter your email or mobile number"
+                placeholder="Enter Your Email or Mobile Number"
                 className="font-montserrat" style={inputStyle}
               />
             </div>
@@ -193,7 +193,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
                     <input
                       type={showNew ? 'text' : 'password'} value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Enter new password"
+                      placeholder="Enter New Password"
                       className="font-montserrat"
                       style={{ ...inputStyle, paddingRight: '48px' }}
                     />
@@ -208,7 +208,7 @@ export default function ResetFlow({ type, onBack, onComplete }: ResetFlowProps) 
                     <input
                       type={showConfirm ? 'text' : 'password'} value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm new password"
+                      placeholder="Confirm New Password"
                       className="font-montserrat"
                       style={{ ...inputStyle, paddingRight: '48px' }}
                     />

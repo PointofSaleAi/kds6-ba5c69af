@@ -107,7 +107,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
           <button
             onClick={onAdd}
             className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
-            title="Add new status level"
+            title="Add New Status Level"
           >
             <Plus size={12} />
             Add
@@ -163,7 +163,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
               <button
                 onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
                 className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center"
-                title="Remove status level"
+                title="Remove Status Level"
               >
                 <Trash2 size={12} />
               </button>

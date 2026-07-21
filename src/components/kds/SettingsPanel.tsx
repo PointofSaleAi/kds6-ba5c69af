@@ -327,11 +327,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
   // Display section rows
   const displayRows = [
-    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure language" /> },
+    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
     { name: 'Text size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
     { name: 'Ticket layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
-    { name: 'Status colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise status colors" /> },
-    { name: 'Order type colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise order type colors" /> },
+    { name: 'Status colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
+    { name: 'Order type colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
     { name: 'Allergen badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
     { name: 'Enable badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
     { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order number', 'Guest name']} value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')} /> },
@@ -340,11 +340,11 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
   ];
 
   const hardwareRows = [
-    { name: 'KOT printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT printer" /> },
-    { name: 'Label printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure label printer" /> },
-    { name: 'Sound settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure sound settings" /> },
-    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync now" icon={RefreshCw} spinning={syncing} /> },
-    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure connection" /> },
+    { name: 'KOT printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
+    { name: 'Label printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
+    { name: 'Sound settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
+    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
+    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure Connection" /> },
   ];
 
   const accountRows = [
@@ -352,8 +352,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     { name: 'Station ID', subtitle: 'STN-001', control: null },
     { name: 'Bug reporting', subtitle: 'In-app reporting tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
     { name: 'Debug mode', subtitle: 'Verbose logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
-    { name: 'Upload logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload logs" icon={Upload} spinning={uploadingLogs} /> },
-    { name: 'Feedback & support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a feature" /> },
+    { name: 'Upload logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
+    { name: 'Feedback & support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
   ];
 
   return (
@@ -388,7 +388,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                     handler?.();
                   }}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted text-text-primary text-[11px] font-bold uppercase tracking-wider min-h-[36px] hover:bg-muted/80 transition-colors shrink-0"
-                  title="Reset all status colors and thresholds to defaults"
+                  title="Reset all Status Colors and Thresholds to Defaults"
                 >
                   <RefreshCw size={13} />
                   Reset to Defaults

@@ -163,7 +163,7 @@ export function SettingsSidebar() {
           />
           <button
             type="button"
-            aria-label="Voice search"
+            aria-label="Voice Search"
             className="shrink-0 active:opacity-60 transition-opacity"
           >
             <Mic className="w-[1.05rem] h-[1.05rem]" style={{ color: 'hsl(var(--text-muted))' }} strokeWidth={2.2} />

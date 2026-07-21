@@ -130,7 +130,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
           <span
             className="shrink-0 flex items-center justify-center rounded-full"
             style={{ width: 18, height: 18 }}
-            aria-label="Marking product done"
+            aria-label="Marking Product Done"
           >
             <Loader2 size={14} className="animate-spin" color="#6C7A89" />
           </span>
@@ -139,7 +139,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
           <span
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
             style={{ background: '#27AE60', width: 18, height: 18 }}
-            aria-label="Product done"
+            aria-label="Product Done"
           >
             <Check size={12} color="#fff" strokeWidth={3} />
           </span>

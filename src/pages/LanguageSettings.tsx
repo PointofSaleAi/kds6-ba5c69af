@@ -222,7 +222,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                         <button
                           onClick={handleSwap}
                           className="shrink-0 w-8 h-8 rounded-full bg-brand-primary text-primary-foreground flex items-center justify-center hover:bg-brand-primary/90 transition-colors"
-                          aria-label="Swap languages"
+                          aria-label="Swap Languages"
                         >
                           <ArrowLeftRight size={14} />
                         </button>

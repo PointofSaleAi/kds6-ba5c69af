@@ -97,7 +97,7 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
                     onChange={setIntervalMin}
                     min={1}
                     max={30}
-                    label="Release interval"
+                    label="Release Interval"
                     unit="minutes between batches"
                   />
                   <Stepper
@@ -105,7 +105,7 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
                     onChange={setMaxOrders}
                     min={1}
                     max={10}
-                    label="Max orders per batch"
+                    label="Max Orders per Batch"
                     unit="orders released at once"
                   />
                 </div>

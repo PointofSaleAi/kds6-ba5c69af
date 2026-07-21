@@ -134,7 +134,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
             <h2 className="text-lg font-bold text-text-primary">{t.settings}</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close settings">
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close Settings">
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -153,7 +153,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow icon={Monitor} label={t.textSize} right={<SegmentedToggle options={[t.compact, t.standard, t.large]} value={textSize} onChange={setTextSize} />} />
             <SettingsRow
               icon={Monitor}
-              label="Ticket layout"
+              label="Ticket Layout"
               description={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand' : 'Standard, full details visible'}
               right={
                 <SegmentedToggle
@@ -200,7 +200,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             </div>
             <SettingsRow
               icon={Send}
-              label="Show send button"
+              label="Show Send Button"
               description={expoSendButtonMode === 'always' ? 'Always — show on all products' : 'When ready — only when product is marked done on KDS'}
               right={
                 <SegmentedToggle
@@ -220,13 +220,13 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             </div>
             <SettingsRow
               icon={Printer}
-              label="KOT printer"
+              label="KOT Printer"
               description={kot.printerId ? kot.printerName : 'No printer assigned'}
               onClick={() => onOpenSub('printer-kot')}
             />
             <SettingsRow
               icon={Tag}
-              label="Label printer"
+              label="Label Printer"
               description={labelEnabled ? (label.printerId ? label.printerName : 'No printer assigned') : 'Disabled'}
               right={<Toggle checked={labelEnabled} onChange={setLabelEnabled} />}
               onClick={labelEnabled ? () => onOpenSub('printer-label') : undefined}

@@ -859,7 +859,7 @@ function CourseItemTapRow({
           )}
           {(showOnboardingActionSet || isDone) && (
             <span {...(item.id === 'onb-i-3' ? { 'data-onboarding': 'item-check' } : {})}>
-              <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from ticket" />
+              <LegacyActionPill variant="check" onClick={() => onDismissItem?.(item.id)} title="Remove from Ticket" />
             </span>
           )}
         </div>

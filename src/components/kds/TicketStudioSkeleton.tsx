@@ -779,7 +779,7 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Text size">
+              <Field label="Text Size">
                 <Segmented
                   value={textSize}
                   onChange={setTextSize}
@@ -790,7 +790,7 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Ticket identifier">
+              <Field label="Ticket Identifier">
                 <Segmented
                   value={identifier}
                   onChange={setIdentifier}
@@ -800,7 +800,7 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Safety emphasis">
+              <Field label="Safety Emphasis">
                 <Segmented
                   value={safety}
                   onChange={setSafety}

@@ -35,7 +35,7 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Printer}
         iconColor="#5E4DD8"
-        label="KOT printer"
+        label="KOT Printer"
         helper={kot.printerId ? `Connected to ${kot.printerName}` : 'No printer assigned. Tap to pair one.'}
         right={<ValueText>{kot.printerId ? kot.printerName : 'Not set'}</ValueText>}
         onClick={() => openPrinter('kot')}
@@ -45,7 +45,7 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Tag}
         iconColor="#0A84FF"
-        label="Label printer"
+        label="Label Printer"
         helper={label.printerId ? `Connected to ${label.printerName}` : 'No printer assigned. Tap to pair one.'}
         right={<ValueText>{label.printerId ? label.printerName : 'Not set'}</ValueText>}
         onClick={() => openPrinter('label')}
@@ -55,7 +55,7 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Volume2}
         iconColor="#F9900E"
-        label="Sound settings"
+        label="Sound Settings"
         helper="Volume, custom alert sounds, and per-event toggles."
         onClick={() => setSoundOpen(true)}
         highlighted={hash === 'sound-settings'}

@@ -193,7 +193,7 @@ function ExpoItemRow({
     <span
       className="inline-flex items-center bg-text-primary text-white rounded-full uppercase leading-none"
       style={{ fontSize: '9px', fontWeight: 500, padding: '1px 6px' }}
-      aria-label="To go product"
+      aria-label="To Go Product"
     >
       TO GO
     </span>

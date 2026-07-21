@@ -239,7 +239,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             {videoMode && (
               <button
                 type="button"
-                aria-label="Back to recipe"
+                aria-label="Back to Recipe"
                 onClick={() => setVideoMode(false)}
                 className="shrink-0 inline-flex items-center justify-center rounded-full"
                 style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}
@@ -451,7 +451,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`Open full recipe for ${product.name} in a new tab`}
-                          title="Scan with your phone or tap to open full recipe"
+                          title="Scan with Your Phone or Tap to Open Full Recipe"
                           onClick={(e) => e.stopPropagation()}
                           className="flex items-center justify-center rounded-lg cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
                           style={{ width: 128, height: 128, background: '#FFFFFF', border: `1px solid ${C.border}`, padding: 6 }}
@@ -588,7 +588,7 @@ function VideoView({ stepTitles, videoUrl, duration, tight, C }: { stepTitles: s
         {!playing && (
           <button
             type="button"
-            aria-label="Play video"
+            aria-label="Play Video"
             onClick={togglePlay}
             className="absolute inset-0 m-auto inline-flex items-center justify-center rounded-full"
             style={{ width: 64, height: 64, background: C.brandRed, color: '#FFFFFF' }}
@@ -602,7 +602,7 @@ function VideoView({ stepTitles, videoUrl, duration, tight, C }: { stepTitles: s
         <button type="button" aria-label={playing ? 'Pause' : 'Play'} onClick={togglePlay} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           {playing ? <Pause size={14} /> : <Play size={14} />}
         </button>
-        <button type="button" aria-label="Rewind 10s" onClick={rewind} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
+        <button type="button" aria-label="Rewind 10S" onClick={rewind} className="inline-flex items-center justify-center rounded-full" style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}>
           <Rewind size={14} />
         </button>
         <div

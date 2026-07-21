@@ -107,7 +107,7 @@ function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
           onChange(Math.max(0, value - 1));
         }}
         className="w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center text-foreground hover:bg-muted/80 active:scale-95 transition-colors"
-        aria-label="Decrease quantity"
+        aria-label="Decrease Quantity"
       >
         <Minus className="w-3 h-3" />
       </button>
@@ -121,7 +121,7 @@ function InlineQtyAdjuster({ value, onChange }: InlineQtyAdjusterProps) {
           onChange(value + 1);
         }}
         className="w-6 h-6 rounded-full bg-[#212121] border border-[#212121] flex items-center justify-center text-white hover:bg-[#212121]/80 active:scale-95 transition-colors"
-        aria-label="Increase quantity"
+        aria-label="Increase Quantity"
       >
         <Plus className="w-3 h-3" />
       </button>
@@ -720,7 +720,7 @@ export function EightySixSheet({
                       return next;
                     });
                   }}
-                  aria-label="Search products"
+                  aria-label="Search Products"
                   aria-pressed={searchOpen}
                   className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${
                     searchOpen
@@ -794,7 +794,7 @@ export function EightySixSheet({
                       type="button"
                       onClick={() => setSearchQuery("")}
                       className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full hover:bg-muted-foreground/10 flex items-center justify-center"
-                      aria-label="Clear search"
+                      aria-label="Clear Search"
                     >
                       <X className="w-3.5 h-3.5 text-muted-foreground" />
                     </button>

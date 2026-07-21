@@ -301,7 +301,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     <button
                       onClick={handleSwap}
                       className="shrink-0 w-8 h-8 rounded-full bg-brand-primary text-primary-foreground flex items-center justify-center hover:bg-brand-primary/90 transition-colors"
-                      aria-label="Swap languages"
+                      aria-label="Swap Languages"
                     >
                       <ArrowLeftRight size={14} />
                     </button>
@@ -411,7 +411,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                               <Search size={14} className="text-text-muted shrink-0" />
                               <input
                                 type="text"
-                                placeholder="Select language"
+                                placeholder="Select Language"
                                 value={reqSelectedLang || reqLangSearch}
                                 onChange={(e) => {
                                   setReqLangSearch(e.target.value);

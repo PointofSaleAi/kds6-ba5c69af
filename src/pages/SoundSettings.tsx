@@ -216,7 +216,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                 <button
                   onClick={playMainVolume}
                   className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-                  aria-label="Test sound"
+                  aria-label="Test Sound"
                 >
                   <Play size={16} className="text-brand-primary" />
                 </button>
@@ -292,7 +292,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                   <button
                     onClick={removeCustomFile}
                     className="p-1.5 hover:bg-white/10 rounded-md min-h-[32px] min-w-[32px] flex items-center justify-center"
-                    aria-label="Remove custom sound"
+                    aria-label="Remove Custom Sound"
                   >
                     <XIcon size={14} className="text-primary-foreground" />
                   </button>
@@ -330,7 +330,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
             {/* Other alert sounds */}
             <div className="px-4 pt-2">
               <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Other alert sounds</div>
-              <SoundPicker label="Urgent / overtime alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
+              <SoundPicker label="Urgent / Overtime Alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
               <SoundPicker label="Service Bell (Manual)" options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
             </div>
 
