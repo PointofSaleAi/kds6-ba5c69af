@@ -16,6 +16,8 @@ import { useRowTap } from '@/hooks/use-row-tap';
 import { RecipeReferenceModal } from '@/components/kds/RecipeReferenceModal';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
+import { KitchenMessageSection } from '@/components/kds/KitchenMessageSection';
+import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 import { Item86Modal } from '@/components/kds/Flag86Button';
 import { useFlag86 } from '@/hooks/use-flag86';
