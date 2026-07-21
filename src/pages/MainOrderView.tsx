@@ -8,7 +8,6 @@ import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { OrderCard } from '@/components/kds/OrderCard';
-import { HistoryOrderCard } from '@/components/kds/HistoryOrderCard';
 import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
 import { OrderCardV2 } from '@/components/kds/variants/OrderCardV2';
 import { OrderCardV3 } from '@/components/kds/variants/OrderCardV3';
@@ -1022,6 +1021,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const isSeenScreen = activeNav === 'seen-orders';
   const isUnseenScreen = activeNav === 'unseen-orders';
   const isSubScreen = isHistory || isSeenScreen || isUnseenScreen;
+  const effectiveBoardMode: ViewMode = staggerMode || viewMode === 'stagger' ? 'stagger' : viewMode;
 
   const V1_AGING_SPREAD_MIN = [1, 4, 7, 9, 13, 17, 24, 32];
   const renderOrderCard = (displayOrder: Order, opts?: { compactRows?: boolean }) => {
@@ -1029,17 +1029,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const wrap = (node: ReactNode) =>
       isSample ? <div data-order-id={displayOrder.id} className="contents">{node}</div> : node;
 
-    if (isHistory && effectiveCardVariant === 'default') {
-      return wrap(
-        <KDSSettingsPreviewScope route={selectedTicketsRoute}>
-          <HistoryOrderCard
-            order={displayOrder}
-            onRecall={handleRecall}
-            onRecallItem={handleRecallItem}
-          />
-        </KDSSettingsPreviewScope>
-      );
-    }
     const withSelectedTicketSettings = (node: ReactNode) => (
       <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
     );
@@ -1133,21 +1122,22 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return wrap(withSelectedTicketSettings(
       <OrderCard
         order={displayOrder}
-        onBump={handleBump}
-        onRecall={handleStepBack}
+        onBump={isHistory ? handleRecall : handleBump}
+        onRecall={isHistory ? handleRecall : handleStepBack}
         onFireCourse={handleFireCourse}
         onItemStatusChange={handleItemStatusChange}
         showAllergens={showAllergens}
         highlightItemNames={highlightItemNames}
         onMarkSeen={markOrderSeen}
-        onItemDismiss={handleItemDismiss}
-        onAcknowledgeNotes={acknowledgeOrderNotes}
-        onUnacknowledgeNotes={unacknowledgeOrderNotes}
-        isAcknowledgmentPending={isAcknowledgmentPending}
-        onBumpBlocked={handleBumpBlocked}
+        onItemDismiss={isHistory ? handleRecallItem : handleItemDismiss}
+        onAcknowledgeNotes={isHistory ? undefined : acknowledgeOrderNotes}
+        onUnacknowledgeNotes={isHistory ? undefined : unacknowledgeOrderNotes}
+        isAcknowledgmentPending={isHistory ? undefined : isAcknowledgmentPending}
+        onBumpBlocked={isHistory ? undefined : handleBumpBlocked}
         compactRows={opts?.compactRows}
         layoutOverride={isTrainingSample ? 'standard' : undefined}
         legacyActions={effectiveLegacyActions || isTrainingSample}
+        isHistory={isHistory}
       />
     ));
   };
@@ -1400,7 +1390,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
-                  {viewMode === 'grid' && (
+                  {effectiveBoardMode === 'grid' && (
                     <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : effectiveCardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -1409,7 +1399,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   )}
-                  {viewMode === 'horizontal' && (
+                  {effectiveBoardMode === 'horizontal' && (
                     <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
@@ -1418,7 +1408,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       ))}
                     </div>
                   )}
-                  {viewMode === 'stagger' && (
+                  {effectiveBoardMode === 'stagger' && (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerHistoryColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
@@ -1440,7 +1430,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="ready" hideTopControls />
             ) : (
               <KDSSettingsPreviewScope route={selectedTicketsRoute}>
-                <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={(order) => renderOrderCard(getStationDisplayOrder(order), { compactRows: viewMode === 'grid' })} cardVariant={effectiveCardVariant} />
+                <SeenOrdersScreen orders={seenScreenOrders} viewMode={effectiveBoardMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={(order) => renderOrderCard(getStationDisplayOrder(order), { compactRows: effectiveBoardMode === 'grid' })} cardVariant={effectiveCardVariant} staggerColumnCount={staggerColumnCount} />
               </KDSSettingsPreviewScope>
             )
           ) : isUnseenScreen ? (
@@ -1448,7 +1438,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="recalled" hideTopControls />
             ) : (
               <KDSSettingsPreviewScope route={selectedTicketsRoute}>
-                <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={(order) => renderOrderCard(getStationDisplayOrder(order), { compactRows: viewMode === 'grid' })} cardVariant={effectiveCardVariant} />
+                <UnseenOrdersScreen orders={unseenScreenOrders} viewMode={effectiveBoardMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={(order) => renderOrderCard(getStationDisplayOrder(order), { compactRows: effectiveBoardMode === 'grid' })} cardVariant={effectiveCardVariant} staggerColumnCount={staggerColumnCount} />
               </KDSSettingsPreviewScope>
             )
           ) : (
@@ -1488,7 +1478,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="all" hideTopControls />
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
-                  {(staggerMode || viewMode === 'stagger') ? (
+                  {effectiveBoardMode === 'stagger' ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
@@ -1505,7 +1495,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         </div>
                       ))}
                     </div>
-                  ) : viewMode === 'grid' ? (
+                  ) : effectiveBoardMode === 'grid' ? (
                     <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : effectiveCardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       <AnimatePresence mode="popLayout">
                         {filteredOrders.map((order) => {
