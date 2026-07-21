@@ -958,6 +958,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
                       productTimersEnabled={productTimers}
+                      isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle' && !isHistory}
                     />
                   ))}
                 </div>
