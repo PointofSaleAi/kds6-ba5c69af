@@ -69,6 +69,8 @@ interface OrderCardProps {
   suppressKitchenMessages?: boolean;
   /** When true, restore legacy per-product icon actions on product rows. */
   legacyActions?: boolean;
+  /** When true, card is rendered in History and actions recall instead of advancing/removing. */
+  isHistory?: boolean;
 }
 
 // Text size scaling is now handled via CSS custom properties (--kds-*)
@@ -84,7 +86,7 @@ const statusBodyMap: Record<string, string> = {
 
 import { formatTime as formatStaticTime } from '@/lib/datetime';
 
-export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare, suppressHeader, suppressKitchenMessages, legacyActions }: OrderCardProps) {
+export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onItemStatusChange, onAcknowledgeNotes, onUnacknowledgeNotes, onMarkSeen, onItemDismiss, isAcknowledgmentPending, onBumpBlocked, stationCourse, showAllergens = true, highlightItemNames, compactRows, layoutOverride, forceEmphasizedV1Header, bare, suppressHeader, suppressKitchenMessages, legacyActions, isHistory = false }: OrderCardProps) {
   const { timeFormat, tperson, tl } = useLanguage();
   const { pathname } = useLocation();
   const showCustomerContact =
@@ -278,6 +280,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   const courseLifecycleMap = useMemo(() => {
     if (!isDineIn) return new Map<string, 'active' | 'pending' | 'served'>();
     const map = new Map<string, 'active' | 'pending' | 'served'>();
+    if (isHistory) {
+      for (const c of displayCourses) map.set(c.course, 'active');
+      return map;
+    }
     let foundActive = false;
     for (const c of displayCourses) {
       const ids = c.items.filter(i => !i.isCancelled).map(i => i.id);
@@ -293,7 +299,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
       }
     }
     return map;
-  }, [isDineIn, displayCourses, itemStatuses, confirmedCourses]);
+  }, [isDineIn, displayCourses, itemStatuses, confirmedCourses, isHistory]);
 
   // Track when each course became "active" for course-level aging.
   // Prefers the shared `_startedAt` field on the course (so the Summary panel
@@ -513,6 +519,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   // Compute ticket-level collective state from item statuses
   const ticketState: TicketState = useMemo(() => {
     // For coursed orders: derive from active course only, or show final DONE if all served
+    if (isHistory) return 'done';
     if (isDineIn) {
       if (allCoursesServed) return 'done';
       if (activeCourseItemIds.length === 0) return 'seen';
@@ -529,7 +536,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
     const anyUnseen = allItemIds.some(id => !itemStatuses.get(id));
     if (anyUnseen) return 'seen';
     return 'preparing';
-  }, [isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
+  }, [isHistory, isDineIn, allCoursesServed, activeCourseItemIds, allItemIds, itemStatuses]);
 
   // Ticket-level advance: operates on active course only for dine-in
   // Find the currently active course name
@@ -560,6 +567,10 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
 
   const handleTicketAdvance = useCallback((orderId: string) => {
     // Mark as seen in global store on first advance (unseen → preparing)
+    if (isHistory && ticketState === 'done') {
+      onBump?.(orderId);
+      return;
+    }
     if (ticketState === 'seen') {
       onMarkSeen?.(orderId);
     }
@@ -648,7 +659,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
         return next;
       });
     }
-  }, [ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked, collectServableModIds]);
+  }, [isHistory, ticketState, isDineIn, activeCourseName, allCoursesServed, activeCourseItemIds, allItemIds, onBump, onItemStatusChange, onMarkSeen, assignSeenIndex, isAcknowledgmentPending, onBumpBlocked, collectServableModIds]);
 
   // Ticket-level recall: operates on active course only for dine-in
   const handleTicketRecall = useCallback((_orderId: string) => {
@@ -794,13 +805,14 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
   // Sort courses: active first, then pending, then served
   const sortedDisplayCourses = useMemo(() => {
     if (!isDineIn) return displayCourses;
+    if (isHistory) return displayCourses;
     const priority = { active: 0, pending: 1, served: 2 };
     return [...displayCourses].sort((a, b) => {
       const aStatus = courseLifecycleMap.get(a.course) || 'pending';
       const bStatus = courseLifecycleMap.get(b.course) || 'pending';
       return priority[aStatus] - priority[bStatus];
     });
-  }, [isDineIn, displayCourses, courseLifecycleMap]);
+  }, [isDineIn, isHistory, displayCourses, courseLifecycleMap]);
 
   if (compact) {
     return <CompactOrderCard order={order} liveElapsed={liveElapsed} urgency={urgency} onBump={onBump} />;
@@ -1038,7 +1050,7 @@ export function OrderCard({ order, compact, onBump, onRecall, onFireCourse, onIt
           <div className="border-t border-border">
             {isDineIn ? (
               sortedDisplayCourses
-                .filter((courseGroup) => (courseLifecycleMap.get(courseGroup.course) || 'pending') !== 'served')
+                .filter((courseGroup) => isHistory || (courseLifecycleMap.get(courseGroup.course) || 'pending') !== 'served')
                 .map((courseGroup) => {
                   const lifecycleStatus = courseLifecycleMap.get(courseGroup.course) || 'pending';
                   let forcedStatus: StationStatus | undefined;
