@@ -61,7 +61,7 @@ export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTick
           data-onboarding="ticket-footer-undo"
           onClick={() => onTicketRecall?.(orderId)}
           className="w-[44px] min-h-[44px] bg-muted rounded flex items-center justify-center hover:opacity-80 transition-colors shrink-0"
-          title="Go back"
+          title="Go Back"
         >
           <img src={undoIcon} alt="Back" className="w-8 h-6" />
         </button>

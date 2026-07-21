@@ -76,7 +76,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
         <div className="text-center mb-8">
           <PosaiLogo variant="light" className="h-20 object-contain mx-auto mb-2" />
           <h1 className="text-white text-xl font-bold font-montserrat">Sign In to Kitchen Display System</h1>
-          <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>Personal device login</p>
+          <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>Personal Device Login</p>
         </div>
 
         {/* Method tabs */}
@@ -120,7 +120,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
                 <div>
                   <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
                   <div style={{ position: 'relative' }}>
-                    <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                    <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>

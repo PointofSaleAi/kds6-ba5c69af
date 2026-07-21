@@ -28,10 +28,10 @@ interface PerformanceDashboardProps {
 
 export default function PerformanceDashboard({ onBack }: PerformanceDashboardProps) {
   const stats = [
-    { label: 'Total orders served', value: '48', icon: TrendingUp, color: 'text-success' },
-    { label: 'Avg ticket time', value: '18 min', sub: 'target 15 min', icon: Clock, color: 'text-warning' },
-    { label: 'Fastest ticket', value: '6 min', icon: Zap, color: 'text-brand-primary' },
-    { label: 'Slowest ticket', value: '32 min', icon: AlertTriangle, color: 'text-destructive' },
+    { label: 'Total Orders Served', value: '48', icon: TrendingUp, color: 'text-success' },
+    { label: 'Avg Ticket Time', value: '18 min', sub: 'target 15 min', icon: Clock, color: 'text-warning' },
+    { label: 'Fastest Ticket', value: '6 min', icon: Zap, color: 'text-brand-primary' },
+    { label: 'Slowest Ticket', value: '32 min', icon: AlertTriangle, color: 'text-destructive' },
   ];
 
   const slowItems = [
@@ -51,10 +51,10 @@ export default function PerformanceDashboard({ onBack }: PerformanceDashboardPro
     <div className="fixed inset-0 bg-surface-bg flex flex-col overflow-auto">
       <div className="bg-surface-card border-b border-border px-6 py-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
-          <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Go back">
+          <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Go Back">
             <ArrowLeft size={20} className="text-text-primary" />
           </button>
-          <h1 className="text-xl font-bold text-text-primary">Kitchen performance - today</h1>
+          <h1 className="text-xl font-bold text-text-primary">Kitchen Performance - Today</h1>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 bg-muted text-text-primary rounded-lg text-sm font-medium hover:bg-muted/70 transition-colors min-h-[44px]">
           <Download size={16} />
@@ -80,7 +80,7 @@ export default function PerformanceDashboard({ onBack }: PerformanceDashboardPro
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-surface-card rounded-lg border border-border p-4">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Orders per hour</h3>
+            <h3 className="text-sm font-semibold text-text-primary mb-4">Orders per Hour</h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={hourlyOrders}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 87%)" />
@@ -93,7 +93,7 @@ export default function PerformanceDashboard({ onBack }: PerformanceDashboardPro
           </div>
 
           <div className="bg-surface-card rounded-lg border border-border p-4">
-            <h3 className="text-sm font-semibold text-text-primary mb-4">Avg ticket time by hour</h3>
+            <h3 className="text-sm font-semibold text-text-primary mb-4">Avg Ticket Time by Hour</h3>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={hourlyAvgTime}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 87%)" />
@@ -109,13 +109,13 @@ export default function PerformanceDashboard({ onBack }: PerformanceDashboardPro
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Category breakdown */}
           <div className="bg-surface-card rounded-lg border border-border p-4">
-            <h3 className="text-sm font-semibold text-text-primary mb-3">Category breakdown</h3>
+            <h3 className="text-sm font-semibold text-text-primary mb-3">Category Breakdown</h3>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-text-muted text-xs uppercase tracking-wider">
                   <th className="text-left py-2">Category</th>
                   <th className="text-right py-2">Orders</th>
-                  <th className="text-right py-2">Avg time</th>
+                  <th className="text-right py-2">Avg Time</th>
                 </tr>
               </thead>
               <tbody>

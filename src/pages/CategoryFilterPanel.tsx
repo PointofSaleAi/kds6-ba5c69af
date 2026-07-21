@@ -65,7 +65,7 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
-            <h2 className="text-lg font-bold text-text-primary">Filter by category</h2>
+            <h2 className="text-lg font-bold text-text-primary">Filter by Category</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -73,7 +73,7 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
 
           <div className="flex-1 overflow-y-auto px-4 py-4">
             {availableCategories.length === 0 ? (
-              <div className="text-sm text-text-secondary text-center py-8">No active categories</div>
+              <div className="text-sm text-text-secondary text-center py-8">No Active Categories</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {allCategories.map((cat) => {

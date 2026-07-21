@@ -14,7 +14,7 @@ export default function ExpoSettings() {
       <SectionHeaderCard
         icon={Send}
         iconColor={GROUP_COLOR.expo}
-        title="Expo view"
+        title="Expo View"
         shortDescription="Control how the Expediter view presents Send actions and ticket readiness."
         longDescription="Control how the Expediter view presents Send actions and ticket readiness. Choose whether the Send button is always available, or only after stations have marked their products done on the KDS."
       />
@@ -22,7 +22,7 @@ export default function ExpoSettings() {
       <SettingsPill
         icon={Send}
         iconColor="#7C3AED"
-        label="Show send button"
+        label="Show Send Button"
         helper={expoSendButtonMode === 'always'
           ? 'Always visible on every product.'
           : 'Only when the product is marked done on the KDS.'}

@@ -36,7 +36,7 @@ export default function AccountSettings() {
 
   const handleUploadLogs = () => {
     toast({
-      title: 'Logs uploaded',
+      title: 'Logs Uploaded',
       description: 'Diagnostic logs sent to support.',
     });
   };
@@ -45,7 +45,7 @@ export default function AccountSettings() {
     setFeedbackOpen(false);
     setFeedbackText('');
     toast({
-      title: 'Feedback received',
+      title: 'Feedback Received',
       description: 'Thanks, your request was sent to the product team.',
     });
   };
@@ -87,7 +87,7 @@ export default function AccountSettings() {
       // ignore
     }
     toast({
-      title: 'Settings reset',
+      title: 'Settings Reset',
       description: 'All system settings have been restored to defaults.',
     });
     setTimeout(() => window.location.reload(), 300);
@@ -112,7 +112,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Smartphone}
         iconColor="#0A84FF"
-        label="Device name"
+        label="Device Name"
         helper="Identifier shown on receipts and in the admin console."
         right={<ValueText>Kitchen Display 1</ValueText>}
         highlighted={hash === 'device-name'}
@@ -130,7 +130,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={AlertCircle}
         iconColor="#E84C3D"
-        label="Bug reporting"
+        label="Bug Reporting"
         helper="Enable the in-app reporting tool for crash and issue capture."
         right={<SwitchToggle checked={bugReporting} onChange={handleBugReportingChange} />}
         highlighted={hash === 'bug-reporting'}
@@ -139,7 +139,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Bug}
         iconColor="#F9900E"
-        label="Debug mode"
+        label="Debug Mode"
         helper="Enable verbose logging and the developer scenario selector."
         right={<SwitchToggle checked={devMode} onChange={handleDevModeChange} />}
         highlighted={hash === 'debug-mode'}
@@ -148,7 +148,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Upload}
         iconColor="#16A085"
-        label="Upload logs"
+        label="Upload Logs"
         helper="Send recent diagnostic logs to eatOS support."
         onClick={handleUploadLogs}
         highlighted={hash === 'upload-logs'}
@@ -157,7 +157,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={MessageSquare}
         iconColor="#7C3AED"
-        label="Feedback & support"
+        label="Feedback & Support"
         helper="Request a feature or contact support."
         onClick={() => setFeedbackOpen(true)}
         highlighted={hash === 'feedback-support'}
@@ -166,7 +166,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={RotateCcw}
         iconColor="#0A84FF"
-        label="Reset to default"
+        label="Reset to Default"
         helper="Restore all system settings to their original defaults on this device."
         onClick={() => setResetOpen(true)}
         highlighted={hash === 'reset-to-default'}
@@ -175,7 +175,7 @@ export default function AccountSettings() {
       <SettingsPill
         icon={LogOut}
         iconColor="#C0392B"
-        label="Log out"
+        label="Log Out"
         helper="Sign out of this device and return to activation."
         onClick={() => setLogoutOpen(true)}
         highlighted={hash === 'log-out'}
@@ -240,7 +240,7 @@ export default function AccountSettings() {
       <AlertDialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Request a feature</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">Request a Feature</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
               Tell us what would make the KDS work better for your kitchen.
             </AlertDialogDescription>

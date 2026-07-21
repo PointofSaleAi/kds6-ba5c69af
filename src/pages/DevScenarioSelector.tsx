@@ -48,14 +48,14 @@ export default function DevScenarioSelector({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-[600px]">
           <ScenarioCard
             icon={<UserPlus className="w-5 h-5" style={{ color: '#6C7A89' }} />}
-            title="New user"
-            subtitle="First time activating this device"
+            title="New User"
+            subtitle="First Time Activating This Device"
             onClick={onNewUser}
           />
           <ScenarioCard
             icon={<LogIn className="w-5 h-5" style={{ color: '#6C7A89' }} />}
-            title="Existing user"
-            subtitle="Device already activated - sign in with PIN"
+            title="Existing User"
+            subtitle="Device Already Activated - Sign in with PIN"
             onClick={onExistingUser}
           />
         </div>

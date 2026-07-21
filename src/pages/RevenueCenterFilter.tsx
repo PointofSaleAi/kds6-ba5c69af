@@ -67,7 +67,7 @@ export default function RevenueCenterFilter({ open, onClose, onApply, activeCent
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
-            <h2 className="text-lg font-bold text-text-primary">Revenue center filter</h2>
+            <h2 className="text-lg font-bold text-text-primary">Revenue Center Filter</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>

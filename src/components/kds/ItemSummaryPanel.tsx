@@ -247,7 +247,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   if (collapsed) {
     return (
       <div className="w-10 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-3 shrink-0">
-        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand panel">
+        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand Panel">
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
         <span className="text-[14px] font-bold text-white mt-2 [writing-mode:vertical-lr]">{totalRemaining} {t.toCookLabel}</span>
@@ -274,7 +274,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           </span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
+        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse Panel">
           <ChevronRight size={16} strokeWidth={3} />
         </button>
       </div>

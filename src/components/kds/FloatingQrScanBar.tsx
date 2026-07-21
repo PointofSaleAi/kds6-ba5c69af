@@ -44,11 +44,11 @@ export function FloatingQrScanBar() {
       items.find(i => i.name.toLowerCase().includes(q));
 
     if (!match) {
-      toast({ title: 'No product matched', description: `"${raw}" was not found on any active ticket.` });
+      toast({ title: 'No Product Matched', description: `"${raw}" was not found on any active ticket.` });
       return;
     }
     if (match.done) {
-      toast({ title: 'Already served', description: `${match.name} on #${match.orderNumber}.` });
+      toast({ title: 'Already Served', description: `${match.name} on #${match.orderNumber}.` });
     } else {
       markItemDone(match.orderId, match.id);
       toast({ title: 'Marked as Served', description: `${match.name} on #${match.orderNumber}.` });
@@ -69,7 +69,7 @@ export function FloatingQrScanBar() {
               type="button"
               onClick={() => setOpen(false)}
               className="rounded-md p-1 hover:bg-muted"
-              aria-label="Close scanner"
+              aria-label="Close Scanner"
             >
               <X className="w-4 h-4 text-muted-foreground" />
             </button>
@@ -90,7 +90,7 @@ export function FloatingQrScanBar() {
               autoFocus
               value={value}
               onChange={e => setValue(e.target.value)}
-              placeholder="Scan or type product…"
+              placeholder="Scan or Type Product…"
               list="qr-scan-items"
               className="flex-1 rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
@@ -118,7 +118,7 @@ export function FloatingQrScanBar() {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        aria-label="Toggle QR scanner"
+        aria-label="Toggle QR Scanner"
         className="h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-xl flex items-center justify-center hover:opacity-90 active:scale-95 transition"
       >
         <QrCode className="w-6 h-6" />

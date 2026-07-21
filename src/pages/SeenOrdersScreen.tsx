@@ -77,7 +77,7 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
         <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mb-5">
           <Eye size={40} className="text-text-muted" />
         </div>
-        <h2 className="text-xl font-bold text-text-primary mb-1.5">Nothing seen yet</h2>
+        <h2 className="text-xl font-bold text-text-primary mb-1.5">Nothing Seen Yet</h2>
         <p className="text-text-muted text-sm">
           {isStationView && stationCourse
             ? `No seen ${stationCourse} orders right now`

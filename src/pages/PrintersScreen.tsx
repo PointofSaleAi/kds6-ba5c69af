@@ -18,9 +18,9 @@ interface PrinterDevice {
 
 const mockPrinters: PrinterDevice[] = [
   { id: 'p1', name: 'Kitchen Epson TM-T88', ip: '192.168.1.101', status: 'online', paired: true },
-  { id: 'p2', name: 'Bar printer', ip: '192.168.1.102', status: 'online', paired: true },
-  { id: 'p3', name: 'Expo printer', ip: '192.168.1.103', status: 'low-paper', paired: true },
-  { id: 'p4', name: 'Backup printer', ip: '192.168.1.104', status: 'offline', paired: false },
+  { id: 'p2', name: 'Bar Printer', ip: '192.168.1.102', status: 'online', paired: true },
+  { id: 'p3', name: 'Expo Printer', ip: '192.168.1.103', status: 'low-paper', paired: true },
+  { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline', paired: false },
 ];
 
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {

@@ -93,7 +93,7 @@ export function RecipeModalV1({ product, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close recipe"
+            aria-label="Close Recipe"
             className="shrink-0 flex items-center justify-center rounded-full"
             style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.1)', color: '#FFFFFF' }}
           >

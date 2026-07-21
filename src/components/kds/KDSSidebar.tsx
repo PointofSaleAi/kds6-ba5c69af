@@ -52,7 +52,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
   const navItems: SidebarItem[] = isExpo
     ? [
         { icon: TicketsIcon, label: 'Tickets', action: 'home' },
-        { icon: CheckCircle2, label: 'Ready only', action: 'seen-orders' },
+        { icon: CheckCircle2, label: 'Ready Only', action: 'seen-orders' },
         { icon: Undo2, label: 'Recalled', action: 'unseen-orders' },
         { icon: Clock, label: t.history, badge: 6, action: 'history' },
         { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },

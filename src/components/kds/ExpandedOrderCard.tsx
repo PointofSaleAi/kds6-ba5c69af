@@ -92,7 +92,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
           <button
             onClick={onClose}
             className="absolute top-1.5 right-1.5 p-2 rounded-full bg-black/20 hover:bg-black/40 text-primary-foreground transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-            aria-label="Close expanded card"
+            aria-label="Close Expanded Card"
           >
             <X size={18} />
           </button>
@@ -202,7 +202,7 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                                   <button onClick={() => handleUndoItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
                                     <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
                                   </button>
-                                  <button onClick={() => handleAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark done">
+                                  <button onClick={() => handleAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark Done">
                                     <img src={readyIcon} alt="Ready" style={{ width: '40px', height: '30px' }} />
                                   </button>
                                 </>
@@ -211,12 +211,12 @@ export function ExpandedOrderCard({ order, onClose, onBump }: ExpandedOrderCardP
                                   <button onClick={() => handleUndoItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Undo">
                                     <img src={undoIcon} alt="Undo" style={{ width: '40px', height: '30px' }} />
                                   </button>
-                                  <button onClick={() => handleAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark ready">
+                                  <button onClick={() => handleAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark Ready">
                                     <img src={preparingIcon} alt="Preparing" style={{ width: '40px', height: '30px' }} />
                                   </button>
                                 </>
                               ) : (
-                                <button onClick={() => handleAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark seen">
+                                <button onClick={() => handleAdvanceItem(item.id)} className="flex items-center justify-center rounded-[3px] overflow-hidden min-w-[44px] min-h-[33px]" aria-label="Mark Seen">
                                   <img src={seenIcon} alt="Seen" style={{ width: '40px', height: '30px' }} />
                                 </button>
                               )}

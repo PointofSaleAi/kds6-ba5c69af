@@ -22,9 +22,9 @@ interface PrinterDevice {
 
 const mockPrinters: PrinterDevice[] = [
   { id: 'p1', name: 'Kitchen Epson TM-T88', ip: '192.168.1.101', status: 'online' },
-  { id: 'p2', name: 'Bar printer', ip: '192.168.1.102', status: 'online' },
-  { id: 'p3', name: 'Expo printer', ip: '192.168.1.103', status: 'low-paper' },
-  { id: 'p4', name: 'Backup printer', ip: '192.168.1.104', status: 'offline' },
+  { id: 'p2', name: 'Bar Printer', ip: '192.168.1.102', status: 'online' },
+  { id: 'p3', name: 'Expo Printer', ip: '192.168.1.103', status: 'low-paper' },
+  { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline' },
 ];
 
 const mockLabelPrinters: PrinterDevice[] = [
@@ -55,7 +55,7 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
 
 const titles: Record<PrinterModalType, string> = {
   kot: 'KOT printer',
-  label: 'Label printer',
+  label: 'Label Printer',
 };
 
 const ctas: Record<PrinterModalType, string> = {

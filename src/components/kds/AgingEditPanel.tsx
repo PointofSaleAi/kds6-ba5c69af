@@ -282,7 +282,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
                   onChange({ color: hex });
                 }}
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                aria-label="Pick status color"
+                aria-label="Pick Status Color"
               />
             </label>
             <input

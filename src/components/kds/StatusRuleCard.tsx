@@ -97,7 +97,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
             <div className="px-4 pb-4 pt-1 space-y-4 border-t border-border">
               {/* Label */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Status name</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Status Name</label>
                 <input
                   type="text"
                   value={rule.label}
@@ -121,7 +121,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                   />
                   <span className="text-text-muted text-sm">to</span>
                   {isLast ? (
-                    <span className="px-3 py-2 text-sm text-text-secondary italic bg-muted rounded-lg border border-border">No limit</span>
+                    <span className="px-3 py-2 text-sm text-text-secondary italic bg-muted rounded-lg border border-border">No Limit</span>
                   ) : (
                     <input
                       type="number"
@@ -175,7 +175,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
 
               {/* Text colour */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text color</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text Color</label>
                 <div className="flex gap-2">
                   {textColorOptions.map((tc) => (
                     <button

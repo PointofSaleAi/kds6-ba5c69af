@@ -166,7 +166,7 @@ function ProductRow({
         </button>
       )}
       {loading && (
-        <span className="shrink-0 mt-0.5 flex items-center justify-center" style={{ width: 16, height: 16 }} aria-label="Marking product done">
+        <span className="shrink-0 mt-0.5 flex items-center justify-center" style={{ width: 16, height: 16 }} aria-label="Marking Product Done">
           <Loader2 size={12} className="animate-spin" color="#6C7A89" />
         </span>
       )}
@@ -174,7 +174,7 @@ function ProductRow({
         <span
           className="shrink-0 mt-0.5 flex items-center justify-center rounded-full animate-scale-in"
           style={{ background: '#27AE60', width: 16, height: 16 }}
-          aria-label="Product done"
+          aria-label="Product Done"
         >
           <Check size={10} color="#fff" strokeWidth={3} />
         </span>

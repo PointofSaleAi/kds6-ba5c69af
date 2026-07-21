@@ -1258,7 +1258,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   <PopoverTrigger asChild>
                     <button
                       className="relative p-2 rounded-lg border border-input bg-surface-card hover:bg-muted min-h-[36px] min-w-[36px] flex items-center justify-center"
-                      aria-label="Filter orders"
+                      aria-label="Filter Orders"
                     >
                       <SlidersHorizontal size={14} className="text-text-primary" />
                       {historyActiveTypes.length > 0 && (
@@ -1455,7 +1455,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
                       {resolvedStationCourse}
                     </span>
-                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station view</span>
+                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
                   </div>
                   <button
                     onClick={() => setStationCourse(null)}

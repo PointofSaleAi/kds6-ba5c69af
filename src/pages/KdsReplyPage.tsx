@@ -5,11 +5,11 @@ import { validateReplyToken, consumeReplyToken } from '@/lib/demo-auth';
 
 const PRESET_REPLIES = [
   'Got it',
-  'On its way',
+  'On its Way',
   '5 mins',
-  'Need more time',
-  'Out of stock',
-  'Cooking now',
+  'Need More Time',
+  'Out of Stock',
+  'Cooking Now',
 ];
 
 const MAX_CHARS = 100;
@@ -64,14 +64,14 @@ export default function KdsReplyPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 py-4">
-        <h1 className="text-lg font-bold text-gray-900">Kitchen reply</h1>
+        <h1 className="text-lg font-bold text-gray-900">Kitchen Reply</h1>
         <p className="text-xs text-gray-500 mt-0.5">Message ID: {messageId}</p>
       </div>
 
       <div className="flex-1 p-4 flex flex-col gap-4">
         {/* Quick replies */}
         <div>
-          <p className="text-xs font-semibold text-gray-500 mb-2">Quick replies</p>
+          <p className="text-xs font-semibold text-gray-500 mb-2">Quick Replies</p>
           <div className="flex flex-wrap gap-2">
             {PRESET_REPLIES.map(preset => (
               <button

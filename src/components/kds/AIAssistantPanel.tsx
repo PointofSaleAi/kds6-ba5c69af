@@ -25,18 +25,18 @@ type RouteContent = { chips: string[]; example: string; contextKey: string };
 const HOME_CONTENT: RouteContent = {
   contextKey: 'home-unseen',
   chips: [
-    'Mark all seen',
-    'Oldest first',
-    'Filter by order type',
-    'Allergen alerts',
-    'Show overtime tickets',
-    'Sort by table',
-    'Hide seen tickets',
-    'Show all tickets',
-    'Busiest station',
-    'Fire next course',
-    'Show dine-in only',
-    'Show delivery only',
+    'Mark all Seen',
+    'Oldest First',
+    'Filter by Order Type',
+    'Allergen Alerts',
+    'Show Overtime Tickets',
+    'Sort by Table',
+    'Hide Seen Tickets',
+    'Show all Tickets',
+    'Busiest Station',
+    'Fire Next Course',
+    'Show Dine-in Only',
+    'Show Delivery Only',
   ],
   example: '"How many unseen tickets are waiting?"',
 };
@@ -49,36 +49,36 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
   '/kds/v1/history': {
     contextKey: 'history',
     chips: [
-      'Recall a ticket',
+      'Recall a Ticket',
       "Today's summary",
-      'Filter by time',
-      'Search by table',
-      'Show cancelled tickets',
-      'Filter by order type',
-      'Show overtime tickets',
-      'Export summary',
-      'Average ticket time',
-      'Busiest hour',
-      'Top allergens today',
-      'Recalled tickets',
+      'Filter by Time',
+      'Search by Table',
+      'Show Cancelled Tickets',
+      'Filter by Order Type',
+      'Show Overtime Tickets',
+      'Export Summary',
+      'Average Ticket Time',
+      'Busiest Hour',
+      'Top Allergens Today',
+      'Recalled Tickets',
     ],
     example: '"Recall ticket 32"',
   },
   '/kds/v1/settings/display': {
     contextKey: 'settings-display',
     chips: [
-      'Text size',
-      'Ticket layout',
-      'Dark mode',
-      'Reset display',
-      'Order type colours',
+      'Text Size',
+      'Ticket Layout',
+      'Dark Mode',
+      'Reset Display',
+      'Order Type Colours',
       'Language',
-      'Allergen badges',
-      'Ticket spacing',
-      'Cards per row',
-      'Stagger mode',
-      'Ticket identifier',
-      'Header style',
+      'Allergen Badges',
+      'Ticket Spacing',
+      'Cards per Row',
+      'Stagger Mode',
+      'Ticket Identifier',
+      'Header Style',
     ],
     example: '"Switch to compact layout"',
   },
@@ -86,27 +86,27 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
     contextKey: 'settings-orders',
     chips: [
       'Set up Order Hold',
-      'Allergen badges',
-      'Servable modifiers',
-      'Ticket aging rules',
-      'Reset tickets',
-      'Header allergen summary',
-      'Sort default',
-      'Course aging',
-      'Order notes',
+      'Allergen Badges',
+      'Servable Modifiers',
+      'Ticket Aging Rules',
+      'Reset Tickets',
+      'Header Allergen Summary',
+      'Sort Default',
+      'Course Aging',
+      'Order Notes',
     ],
     example: '"Enable allergen badges"',
   },
   '/kds/v1/settings/hardware': {
     contextKey: 'settings-hardware',
     chips: [
-      'KOT printer',
-      'Sound settings',
-      'Sync now',
+      'KOT Printer',
+      'Sound Settings',
+      'Sync Now',
       'Connection',
-      'Label printer',
-      'Test print',
-      'Pair device',
+      'Label Printer',
+      'Test Print',
+      'Pair Device',
       'Station ID',
     ],
     example: '"Set up my KOT printer"',
@@ -114,14 +114,14 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
   '/kds/v1/settings/account': {
     contextKey: 'settings-account',
     chips: [
-      'Device name',
+      'Device Name',
       'Station ID',
-      'Bug reporting',
+      'Bug Reporting',
       'Log out',
-      'Reset to defaults',
-      'Upload logs',
-      'App version',
-      'Switch user',
+      'Reset to Defaults',
+      'Upload Logs',
+      'App Version',
+      'Switch User',
     ],
     example: '"What is my station ID?"',
   },
@@ -130,18 +130,18 @@ const ROUTE_CONTENT: Record<string, RouteContent> = {
 const FALLBACK_CONTENT: RouteContent = {
   contextKey: 'settings-nav',
   chips: [
-    'Display settings',
-    'Ticket settings',
+    'Display Settings',
+    'Ticket Settings',
     'Hardware',
     'Account',
     'Language',
-    'Sound settings',
-    'Order type colours',
-    'Reset to defaults',
-    'AI integration',
-    'AI instructions',
+    'Sound Settings',
+    'Order Type Colours',
+    'Reset to Defaults',
+    'AI Integration',
+    'AI Instructions',
     'Printers',
-    'Status rules',
+    'Status Rules',
   ],
   example: '"Set text size to large"',
 };
@@ -151,18 +151,18 @@ const VIEW_CONTENT: Record<string, RouteContent> = {
   'seen-orders': {
     contextKey: 'home-seen',
     chips: [
-      'Show overtime tickets',
-      'Filter by station',
-      'Allergen alerts',
-      'Sort by order type',
-      'Mark all done',
-      'Show unseen tickets',
-      'Filter by time',
-      'Show all tickets',
-      'Oldest first',
-      'Busiest station',
-      'Show dine-in only',
-      'Show delivery only',
+      'Show Overtime Tickets',
+      'Filter by Station',
+      'Allergen Alerts',
+      'Sort by Order Type',
+      'Mark all Done',
+      'Show Unseen Tickets',
+      'Filter by Time',
+      'Show all Tickets',
+      'Oldest First',
+      'Busiest Station',
+      'Show Dine-in Only',
+      'Show Delivery Only',
     ],
     example: '"Show all overtime tickets"',
   },
@@ -324,14 +324,14 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         { label: '10 minutes', value: 'apply:orderhold:10' },
         { label: '15 minutes', value: 'apply:orderhold:15' },
         { label: '30 minutes', value: 'apply:orderhold:30' },
-        { label: 'Turn it off', value: 'apply:orderhold:off' },
+        { label: 'Turn it Off', value: 'apply:orderhold:off' },
       ],
     }),
     'dark mode': () => ({
       text: "Sure — do you want dark mode on or off?",
       chips: [
         { label: 'Turn on', value: 'apply:theme:dark' },
-        { label: 'Turn off', value: 'apply:theme:light' },
+        { label: 'Turn Off', value: 'apply:theme:light' },
       ],
     }),
     'text size': () => ({
@@ -347,7 +347,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       chips: [
         { label: 'Standard', value: 'apply:layout:standard' },
         { label: 'Compact', value: 'apply:layout:compact' },
-        { label: 'Header only', value: 'apply:layout:header' },
+        { label: 'Header Only', value: 'apply:layout:header' },
       ],
     }),
     'ticket spacing': () => ({
@@ -362,7 +362,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       text: "Allergen badges highlight allergy info on each product. On or off?",
       chips: [
         { label: 'Turn on', value: 'apply:allergens:on' },
-        { label: 'Turn off', value: 'apply:allergens:off' },
+        { label: 'Turn Off', value: 'apply:allergens:off' },
       ],
     }),
     'header allergen summary': () => ({
@@ -376,43 +376,43 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       text: "Servable modifiers move specific modifiers through the 3-step lifecycle. On or off?",
       chips: [
         { label: 'Turn on', value: 'apply:servmods:on' },
-        { label: 'Turn off', value: 'apply:servmods:off' },
+        { label: 'Turn Off', value: 'apply:servmods:off' },
       ],
     }),
     'course aging': () => ({
       text: "Apply status aging colours per course block instead of the whole ticket?",
       chips: [
         { label: 'Turn on', value: 'apply:courseaging:on' },
-        { label: 'Turn off', value: 'apply:courseaging:off' },
+        { label: 'Turn Off', value: 'apply:courseaging:off' },
       ],
     }),
     'stagger mode': () => ({
       text: "Stagger mode releases tickets in batches. On or off?",
       chips: [
         { label: 'Turn on', value: 'apply:stagger:on' },
-        { label: 'Turn off', value: 'apply:stagger:off' },
+        { label: 'Turn Off', value: 'apply:stagger:off' },
       ],
     }),
     'sort default': () => ({
       text: "How should tickets be sorted by default?",
       chips: [
-        { label: 'By time', value: 'apply:sort:By time' },
-        { label: 'By table', value: 'apply:sort:By table' },
-        { label: 'By type', value: 'apply:sort:By type' },
+        { label: 'By Time', value: 'apply:sort:By time' },
+        { label: 'By Table', value: 'apply:sort:By table' },
+        { label: 'By Type', value: 'apply:sort:By type' },
       ],
     }),
     'language': () => ({
       text: "Want to open the language settings?",
       chips: [
-        { label: 'Open language settings', value: 'apply:nav:/kds/v1/settings/display/language' },
-        { label: 'Not now', value: 'apply:noop:cancel' },
+        { label: 'Open Language Settings', value: 'apply:nav:/kds/v1/settings/display/language' },
+        { label: 'Not Now', value: 'apply:noop:cancel' },
       ],
     }),
     'ai integration': () => ({
       text: "I can take you to the AI integration settings.",
       chips: [
         { label: 'Open AI Integration', value: 'apply:nav:/kds/v1/settings/system/ai-integration' },
-        { label: 'Not now', value: 'apply:noop:cancel' },
+        { label: 'Not Now', value: 'apply:noop:cancel' },
       ],
     }),
   };
@@ -639,7 +639,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                   </button>
                   <button
                     onClick={onClose}
-                    aria-label="Close AI assistant"
+                    aria-label="Close AI Assistant"
                     className="w-10 h-10 rounded-full bg-neutral-800/60 hover:bg-neutral-700/60 flex items-center justify-center active:opacity-70 transition-opacity"
                   >
                     <X className="w-5 h-5 text-white" />
@@ -885,7 +885,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                   <button
                     type="submit"
                     disabled={!input.trim() || streaming || recording}
-                    aria-label="Send message"
+                    aria-label="Send Message"
                     className={cn(
                       'w-12 h-12 rounded-full flex items-center justify-center transition-all flex-shrink-0',
                       input.trim() && !streaming && !recording

@@ -193,7 +193,7 @@ function ExpoItemRow({
     <span
       className="inline-flex items-center bg-text-primary text-white rounded-full uppercase leading-none"
       style={{ fontSize: '9px', fontWeight: 500, padding: '1px 6px' }}
-      aria-label="To go product"
+      aria-label="To Go Product"
     >
       TO GO
     </span>
@@ -850,8 +850,8 @@ function ExpoTopControls({
   };
 
   const filters: { key: ExpoFilter; label: string }[] = [
-    { key: 'all', label: 'All tickets' },
-    { key: 'ready', label: 'Ready only' },
+    { key: 'all', label: 'All Tickets' },
+    { key: 'ready', label: 'Ready Only' },
     { key: 'recalled', label: 'Recalled' },
   ];
 
@@ -1441,7 +1441,7 @@ export default function ExpoView({ viewMode, pinnedTicketIds = [], onFilterChang
           <div className="flex-1 flex flex-col items-center justify-center h-full gap-3">
             <CheckCircle size={48} className="text-success/60" />
             <div className="text-center">
-              <p className="text-success/80 text-lg font-bold">Kitchen clear</p>
+              <p className="text-success/80 text-lg font-bold">Kitchen Clear</p>
               <p className="text-success/50 text-sm mt-1">All tickets fulfilled, waiting for new orders</p>
             </div>
           </div>

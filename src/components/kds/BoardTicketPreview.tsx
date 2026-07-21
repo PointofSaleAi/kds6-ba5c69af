@@ -159,7 +159,7 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
           onClick={onTimerClick}
           className="text-[11px] font-mono tabular-nums cursor-pointer hover:opacity-80"
           style={{ color: status.textColor }}
-          title="Cycle aging stage (preview only)"
+          title="Cycle Aging Stage (Preview Only)"
         >
           {displayTimer}
         </button>
@@ -241,27 +241,27 @@ function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAd
   const base = 'shrink-0 flex items-center justify-center active:scale-95 transition';
   if (state === 'done') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: '#27AE60', width: 22, height: 22 }} aria-label="Product served">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: '#27AE60', width: 22, height: 22 }} aria-label="Product Served">
         <Check size={14} color="#fff" strokeWidth={3} />
       </button>
     );
   }
   if (state === 'ready') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }} aria-label="Mark product served">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }} aria-label="Mark Product Served">
         <Check size={14} strokeWidth={3} />
       </button>
     );
   }
   if (state === 'cooking') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: '#374151', color: '#fff' }} aria-label="Mark product ready">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: '#374151', color: '#fff' }} aria-label="Mark Product Ready">
         <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
       </button>
     );
   }
   return (
-    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-black/[0.04]`} style={{ width: 22, height: 22, color: '#6C7A89' }} aria-label="Start cooking">
+    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-black/[0.04]`} style={{ width: 22, height: 22, color: '#6C7A89' }} aria-label="Start Cooking">
       <Eye size={18} strokeWidth={2} />
     </button>
   );
@@ -349,7 +349,7 @@ function CalmBoardBody() {
       {CALM_ORDER_NOTE && (
         <div className="px-3 pt-2">
           <div className="rounded-md bg-[#FFF8E1] border border-[#F5D57A] px-2 py-1 text-[10px] text-[#8A5A00] leading-snug">
-            <span className="font-bold uppercase tracking-wide mr-1">Order note</span>
+            <span className="font-bold uppercase tracking-wide mr-1">Order Note</span>
             {CALM_ORDER_NOTE}
           </div>
         </div>
@@ -563,7 +563,7 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
           <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
           <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
           <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
-          <div className="text-[11px] text-[#8E44AD] font-semibold">No pickles</div>
+          <div className="text-[11px] text-[#8E44AD] font-semibold">No Pickles</div>
         </div>
         <div>
           <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
@@ -718,7 +718,7 @@ function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
         </div>
         <div className="px-3 py-1.5 border-t border-border">
           <div className="text-[9px] font-bold text-text-secondary">Allergies</div>
-          <div className="text-[10px]">Allow pina</div>
+          <div className="text-[10px]">Allow Pina</div>
         </div>
         <button className="w-full border-t border-border text-[11px] font-bold py-2 flex items-center justify-center gap-1.5">
           <Flame className="w-3 h-3" /> COOK
@@ -831,7 +831,7 @@ function DarkCommandTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
             <span className="text-[12px] font-semibold">Meatballs</span>
           </div>
           <div className="pl-6 mt-0.5 text-[10px] text-[#B8B8CC] space-y-0.5">
-            <div>Medium rare</div>
+            <div>Medium Rare</div>
             <div>Extra Cheese</div>
             <div className="italic">"Make it extra spicy please"</div>
           </div>

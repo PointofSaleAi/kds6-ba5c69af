@@ -67,7 +67,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
     <div className={`fixed inset-0 bg-surface-bg flex flex-col ${scaleClasses}`}>
       <div className="bg-surface-card border-b border-border px-6 py-4">
         <div className="flex items-center gap-4 mb-4">
-          <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Go back">
+          <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Go Back">
             <ArrowLeft size={20} className="text-text-primary" />
           </button>
           <h1 className="text-xl font-bold text-text-primary">{t.orderHistoryTitle}</h1>

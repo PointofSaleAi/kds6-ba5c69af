@@ -155,7 +155,7 @@ function ProductPill({
           <span
             className="shrink-0 inline-flex items-center justify-center rounded-full animate-scale-in bg-success"
             style={{ width: 18, height: 18 }}
-            aria-label="Product done"
+            aria-label="Product Done"
           >
             <Check size={12} color="#fff" strokeWidth={3} />
           </span>

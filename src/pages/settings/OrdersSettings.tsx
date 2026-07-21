@@ -49,7 +49,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Sparkles}
         iconColor="#7C3AED"
-        label="Servable modifiers"
+        label="Servable Modifiers"
         helper="Track Queued, Preparing, and Done state on each modifier individually."
         right={<SwitchToggle checked={servableModifiers} onChange={setServableModifiers} />}
         highlighted={hash === 'servable-modifiers'}
@@ -58,7 +58,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Timer}
         iconColor="#F59E0B"
-        label="Coursing timer"
+        label="Coursing Timer"
         helper="Tracks prep time per product, so chefs on different stations can see each other's progress."
         right={<SwitchToggle checked={productTimers} onChange={setProductTimers} />}
         highlighted={hash === 'product-timers'}
@@ -67,7 +67,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={AlertTriangle}
         iconColor="#C0392B"
-        label="Allergen badges"
+        label="Allergen Badges"
         helper="Show colored allergen chips next to each product on the ticket."
         right={<SwitchToggle checked={showAllergens} onChange={setShowAllergens} />}
         highlighted={hash === 'allergen-badges'}
@@ -76,7 +76,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={AlertTriangle}
         iconColor="#C0392B"
-        label="Ticket header allergen summary"
+        label="Ticket Header Allergen Summary"
         helper="Show a combined allergen strip at the top of each ticket card."
         right={<SwitchToggle checked={showHeaderAllergens} onChange={setShowHeaderAllergens} />}
         highlighted={hash === 'header-allergen-summary'}
@@ -85,7 +85,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Clock}
         iconColor="#3B82F6"
-        label="Order hold"
+        label="Order Hold"
         helper="Holds new orders for a set time before the kitchen sees them."
         right={<SwitchToggle checked={orderHold} onChange={setOrderHold} />}
         highlighted={hash === 'order-hold'}

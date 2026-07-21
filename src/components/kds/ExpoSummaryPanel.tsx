@@ -91,7 +91,7 @@ export function ExpoSummaryPanel({
   if (collapsed) {
     return (
       <div className="w-10 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-3 shrink-0">
-        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand panel">
+        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand Panel">
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
         <span className="text-[10px] font-bold text-sidebar-foreground/70 mt-2 [writing-mode:vertical-lr]">{tickets.length} tickets</span>
@@ -114,7 +114,7 @@ export function ExpoSummaryPanel({
           <img src={cookingSummaryIcon} alt="" className="w-5 h-5 opacity-70 shrink-0" />
           <span className="text-[15px] font-semibold text-sidebar-foreground uppercase tracking-wide shrink-0">Summary</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse panel">
+        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse Panel">
           <ChevronRight size={18} strokeWidth={3} />
         </button>
       </div>
@@ -122,7 +122,7 @@ export function ExpoSummaryPanel({
       <div className="flex-1 flex flex-col bg-surface-card border-l border-border overflow-hidden">
         {/* Status counters */}
         <div className="px-3 py-3 border-b border-border space-y-2">
-          <CounterRow label="Ready to send" count={ready} colorClass="text-success" />
+          <CounterRow label="Ready to Send" count={ready} colorClass="text-success" />
           <CounterRow label="Preparing" count={inProgress} colorClass="text-warning" />
           <CounterRow label="Pending" count={pending} colorClass="text-text-muted" />
         </div>
@@ -148,13 +148,13 @@ export function ExpoSummaryPanel({
               onClick={() => setReadySectionCollapsed(!readySectionCollapsed)}
               className="w-full flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-muted/30 transition-colors"
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-success">Ready to send</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-success">Ready to Send</span>
               <span className="text-[10px] text-text-muted">{readySectionCollapsed ? '+' : '-'}</span>
             </button>
             {!readySectionCollapsed && (
               <>
                 {readyProducts.length === 0 ? (
-                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No products ready yet</div>
+                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No Products Ready Yet</div>
                 ) : (
                   readyProducts.map(p => {
                     const isSelected = selectedSet.has(p.name);
@@ -206,13 +206,13 @@ export function ExpoSummaryPanel({
               className="w-full flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-muted/30 transition-colors"
               aria-expanded={!pendingSectionCollapsed}
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products pending</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products Pending</span>
               <span className="text-[10px] text-text-muted">{pendingSectionCollapsed ? '+' : '-'}</span>
             </button>
             {!pendingSectionCollapsed && (
               <>
                 {productList.length === 0 ? (
-                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All products prepared</div>
+                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All Products Prepared</div>
                 ) : (
                   productList.map(p => {
                     const isSelected = selectedSet.has(p.name);

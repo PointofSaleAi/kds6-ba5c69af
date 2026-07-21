@@ -22,7 +22,7 @@ export function TrainingModeBar() {
   return (
     <div
       role="region"
-      aria-label="Training mode"
+      aria-label="Training Mode"
       className="fixed top-0 left-0 right-0 z-[9997] flex items-center justify-between gap-3 px-4"
       style={{
         background: TEAL,

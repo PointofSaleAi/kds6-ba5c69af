@@ -21,38 +21,38 @@ const SAMPLE = `[data-order-id="${ONBOARDING_SAMPLE_ORDER_ID}"]`;
 
 const STEPS: Step[] = [
   // Ticket card cues
-  { anchor: `${SAMPLE} [data-onboarding="ticket-header"]`, title: 'Order type', body: 'Color tells you Dine-in, Take-out, Delivery, or Banquet at a glance.', icon: Tag, preferSide: 'right' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-orderno"]`, title: 'Order or table number', body: 'Big and centered so you can read it across the kitchen.', icon: Hash, preferSide: 'right' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-timer"]`, title: 'Ticket timer', body: 'Counts how long this order has been open. Turns amber, then red as it gets older.', icon: Clock, preferSide: 'left' },
-  { anchor: `${SAMPLE} [data-onboarding="item-row"]`, title: 'Item row', body: 'Each row is one item on the order.', icon: Utensils, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-header"]`, title: 'Order Type', body: 'Color tells you Dine-in, Take-out, Delivery, or Banquet at a glance.', icon: Tag, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-orderno"]`, title: 'Order or Table Number', body: 'Big and centered so you can read it across the kitchen.', icon: Hash, preferSide: 'right' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-timer"]`, title: 'Ticket Timer', body: 'Counts how long this order has been open. Turns amber, then red as it gets older.', icon: Clock, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="item-row"]`, title: 'Item Row', body: 'Each row is one item on the order.', icon: Utensils, preferSide: 'right' },
   { anchor: `${SAMPLE} [data-onboarding="item-allergen"]`, title: 'Allergen', body: 'Allergens always show as a red chip. Never miss one.', icon: AlertTriangle, preferSide: 'right' },
   { anchor: `${SAMPLE} [data-onboarding="item-modifier"]`, title: 'Modifiers', body: 'Extras show in blue. Removals show in red with a strikethrough.', icon: MessageSquare, preferSide: 'right' },
-  { anchor: `${SAMPLE} [data-onboarding="item-eye"]`, title: 'Mark item seen', body: 'Tap the eye to mark just this item as seen.', icon: Eye, preferSide: 'left' },
-  { anchor: `${SAMPLE} [data-onboarding="item-bell"]`, title: 'Mark item cooking', body: 'Tap the bell when the item is on the pass.', icon: Bell, preferSide: 'left' },
-  { anchor: `${SAMPLE} [data-onboarding="item-check"]`, title: 'Mark item done', body: 'Tap the check when the item is out and served.', icon: CheckCircle2, preferSide: 'left' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark ticket seen', body: 'First tap marks every item on the ticket as seen so the line knows it is acknowledged.', icon: Eye, preferSide: 'top' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark ticket in progress', body: 'Second tap moves the whole ticket to in progress, letting the team know cooking has started.', icon: Bell, preferSide: 'top' },
-  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark ticket done', body: 'Third tap marks the ticket done and removes it from the active queue.', icon: CheckCircle2, preferSide: 'top' },
+  { anchor: `${SAMPLE} [data-onboarding="item-eye"]`, title: 'Mark Item Seen', body: 'Tap the eye to mark just this item as seen.', icon: Eye, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="item-bell"]`, title: 'Mark Item Cooking', body: 'Tap the bell when the item is on the pass.', icon: Bell, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="item-check"]`, title: 'Mark Item Done', body: 'Tap the check when the item is out and served.', icon: CheckCircle2, preferSide: 'left' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark Ticket Seen', body: 'First tap marks every item on the ticket as seen so the line knows it is acknowledged.', icon: Eye, preferSide: 'top' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark Ticket in Progress', body: 'Second tap moves the whole ticket to in progress, letting the team know cooking has started.', icon: Bell, preferSide: 'top' },
+  { anchor: `${SAMPLE} [data-onboarding="ticket-footer-btn"]`, title: 'Mark Ticket Done', body: 'Third tap marks the ticket done and removes it from the active queue.', icon: CheckCircle2, preferSide: 'top' },
 
   // Summary panel cues
-  { anchor: '[data-onboarding="summary-header"]', title: 'Summary panel', body: 'A running list of everything still to cook, grouped by category.', icon: ListChecks, preferSide: 'left' },
+  { anchor: '[data-onboarding="summary-header"]', title: 'Summary Panel', body: 'A running list of everything still to cook, grouped by category.', icon: ListChecks, preferSide: 'left' },
   { anchor: '[data-onboarding="summary-overtime"]', title: 'Overtime', body: 'Items open too long land here. Fire these first.', icon: AlertTriangle, preferSide: 'left' },
   { anchor: '[data-onboarding="summary-category"]', title: 'Category', body: 'Items are grouped by category. Tap a category to filter the queue.', icon: ListChecks, preferSide: 'left' },
   { anchor: '[data-onboarding="summary-product"]', title: 'Product', body: 'Tap a product to filter the queue to only tickets with that product. Tap again to clear.', icon: ListChecks, preferSide: 'left' },
 
   // Footer cues
-  { anchor: '[data-onboarding="queue-count"]', title: 'Orders in queue', body: 'This is the number of active orders across your queue.', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="queue-count"]', title: 'Orders in Queue', body: 'This is the number of active orders across your queue.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="filter"]', title: 'Filter', body: 'Filter the queue by category.', icon: LayoutGrid, preferSide: 'top' },
-  { anchor: '[data-onboarding="revenue"]', title: 'Revenue center', body: 'Filter by revenue center or route printing.', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="revenue"]', title: 'Revenue Center', body: 'Filter by revenue center or route printing.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="sort"]', title: 'Sort', body: 'Sort the queue by time, table, or type.', icon: LayoutGrid, preferSide: 'top' },
-  { anchor: '[data-onboarding="view-grid"]', title: 'Grid view', body: 'Show tickets in a grid layout.', icon: LayoutGrid, preferSide: 'top' },
-  { anchor: '[data-onboarding="view-horizontal"]', title: 'Horizontal view', body: 'Show tickets in a horizontal row layout.', icon: LayoutGrid, preferSide: 'top' },
-  { anchor: '[data-onboarding="view-stagger"]', title: 'Stagger view', body: 'Show tickets in a staggered column layout.', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="view-grid"]', title: 'Grid View', body: 'Show tickets in a grid layout.', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="view-horizontal"]', title: 'Horizontal View', body: 'Show tickets in a horizontal row layout.', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="view-stagger"]', title: 'Stagger View', body: 'Show tickets in a staggered column layout.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="language"]', title: 'Language', body: 'Switch the KDS interface language.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="sound"]', title: 'Sound', body: 'Mute or unmute new-order and alert sounds.', icon: LayoutGrid, preferSide: 'top' },
   { anchor: '[data-onboarding="theme"]', title: 'Theme', body: 'Switch between light and dark theme.', icon: LayoutGrid, preferSide: 'top' },
-  { anchor: '[data-onboarding="ai"]', title: 'Ask AI anything', body: 'Change settings or run actions just by asking. Try "switch to grid view".', icon: LayoutGrid, preferSide: 'top' },
-  { anchor: '[data-onboarding="datetime"]', title: 'Date and time', body: 'Local date and time for this device.', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="ai"]', title: 'Ask AI Anything', body: 'Change settings or run actions just by asking. Try "switch to grid view".', icon: LayoutGrid, preferSide: 'top' },
+  { anchor: '[data-onboarding="datetime"]', title: 'Date and Time', body: 'Local date and time for this device.', icon: LayoutGrid, preferSide: 'top' },
 ];
 
 interface Rect { top: number; left: number; width: number; height: number; }

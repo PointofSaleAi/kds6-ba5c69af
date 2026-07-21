@@ -121,7 +121,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold">Ticket aging rules</h1>
+            <h1 className="text-2xl font-bold">Ticket Aging Rules</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden p-0 bg-surface-bg">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
@@ -171,7 +171,7 @@ export default function DisplaySettings() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket layout</h1>
+          <h1 className="text-2xl font-bold text-text-primary">Ticket Layout</h1>
         </div>
         <div className="flex-1 px-6 pb-6 overflow-hidden">
           <div className="h-full flex gap-6 min-h-0">
@@ -289,7 +289,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-text-primary">Ticket studio</h1>
+            <h1 className="text-2xl font-bold text-text-primary">Ticket Studio</h1>
           </div>
           <TicketStudioSkeleton />
 
@@ -321,7 +321,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={LayoutGrid}
         iconColor="#5E4DD8"
-        label="Ticket studio"
+        label="Ticket Studio"
         helper="Browse named board designs and preview before applying to a station."
         onClick={() => setTicketStudioOpen(true)}
         highlighted={hash === 'ticket-studio'}
@@ -330,7 +330,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Palette}
         iconColor="#F9900E"
-        label="Status colors"
+        label="Status Colors"
         helper="Tickets change color as they age. Adjust thresholds for your kitchen speed."
         onClick={() => setStatusOpen(true)}
         highlighted={hash === 'status-colors'}
@@ -339,7 +339,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Paintbrush}
         iconColor="#16A085"
-        label="Order type colors"
+        label="Order Type Colors"
         helper="Customize header colors for Dine In, Take Out, Delivery, and Banquet."
         onClick={() => setOrderTypeColorsOpen(true)}
         highlighted={hash === 'order-type-colors'}
@@ -348,7 +348,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Bell}
         iconColor="#E84C3D"
-        label="Enable badge"
+        label="Enable Badge"
         helper="Show unread count badge on the sidebar icon."
         right={<SwitchToggle checked={showBadge} onChange={setShowBadge} />}
         highlighted={hash === 'enable-badge'}
@@ -358,7 +358,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={SlidersHorizontal}
         iconColor="#5E4DD8"
-        label="Mode switcher"
+        label="Mode Switcher"
         helper={
           mode === 'Prep' && stationCourse
             ? `Station mode · ${stationCourse}`
@@ -448,7 +448,7 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={LayoutPanelLeft}
         iconColor="#6B7280"
-        label="Reset chrome layout"
+        label="Reset Chrome Layout"
         helper="Move sidebar back to left, summary panel to right, and status bar to bottom."
         right={<ValueText>{`${dockLayout.mainSidebar} / ${dockLayout.summaryPanel} / ${dockLayout.bottomBar}`}</ValueText>}
         onClick={resetLayout}

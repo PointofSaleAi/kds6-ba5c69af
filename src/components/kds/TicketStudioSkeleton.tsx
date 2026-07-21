@@ -170,14 +170,14 @@ type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 const BOARDS: Board[] = [
 
 
-  { id: 'calm-board', name: 'Calm Board', subtitle: 'Balanced operations, low visual noise', featured: true },
-  { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority ticket centered, context at edges' },
-  { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum readability from several feet' },
-  { id: 'progressive-ticket', name: 'Progressive Ticket', subtitle: 'Reveals detail for the active course' },
-  { id: 'safety-first', name: 'Safety First', subtitle: 'Allergen and cross-contact controls lead', featured: true },
-  { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready lanes' },
-  { id: 'adaptive-density', name: 'Adaptive Density', subtitle: 'Comfortable, Balanced, Rush modes' },
-  { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast focused operations', featured: true },
+  { id: 'calm-board', name: 'Calm Board', subtitle: 'Balanced Operations, Low Visual Noise', featured: true },
+  { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority Ticket Centered, Context at Edges' },
+  { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum Readability from Several Feet' },
+  { id: 'progressive-ticket', name: 'Progressive Ticket', subtitle: 'Reveals Detail for the Active Course' },
+  { id: 'safety-first', name: 'Safety First', subtitle: 'Allergen and Cross-contact Controls Lead', featured: true },
+  { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready Lanes' },
+  { id: 'adaptive-density', name: 'Adaptive Density', subtitle: 'Comfortable, Balanced, Rush Modes' },
+  { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast Focused Operations', featured: true },
 ];
 
 function BoardThumb({ id }: { id: string; active: boolean }) {
@@ -451,8 +451,8 @@ const ORDER_TYPES_LIST = [
   { key: 'take-out', label: 'Take out', warm: true },
   { key: 'delivery', label: 'Delivery' },
   { key: 'banquet', label: 'Banquet' },
-  { key: 'drive-thru', label: 'Drive thru', warm: true },
-  { key: 'curb-side', label: 'Curb side' },
+  { key: 'drive-thru', label: 'Drive Thru', warm: true },
+  { key: 'curb-side', label: 'Curb Side' },
   { key: 'scheduled', label: 'Scheduled' },
   { key: 'phone-in', label: 'Phone-in' },
   { key: 'custom', label: 'Custom' },
@@ -749,8 +749,8 @@ export function TicketStudioSkeleton() {
             onChange={(v) => setTab(v as PanelTab)}
             options={[
               { value: 'display', label: 'Display' },
-              { value: 'aging', label: 'Ticket aging' },
-              { value: 'order-type', label: 'Order type' },
+              { value: 'aging', label: 'Ticket Aging' },
+              { value: 'order-type', label: 'Order Type' },
             ]}
           />
         </div>
@@ -779,7 +779,7 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Text size">
+              <Field label="Text Size">
                 <Segmented
                   value={textSize}
                   onChange={setTextSize}
@@ -790,17 +790,17 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Ticket identifier">
+              <Field label="Ticket Identifier">
                 <Segmented
                   value={identifier}
                   onChange={setIdentifier}
                   options={[
-                    { value: 'order', label: 'Order number' },
-                    { value: 'guest', label: 'Guest name' },
+                    { value: 'order', label: 'Order Number' },
+                    { value: 'guest', label: 'Guest Name' },
                   ]}
                 />
               </Field>
-              <Field label="Safety emphasis">
+              <Field label="Safety Emphasis">
                 <Segmented
                   value={safety}
                   onChange={setSafety}
@@ -914,7 +914,7 @@ export function TicketStudioSkeleton() {
                           </div>
                         </div>
                         <div>
-                          <div className="text-[10px] font-semibold text-text-secondary mb-1">Text color</div>
+                          <div className="text-[10px] font-semibold text-text-secondary mb-1">Text Color</div>
                           <div className="inline-flex rounded-full bg-muted p-0.5 gap-0.5">
                             {(['white', 'grey', 'black'] as const).map((tc) => {
                               const active = rule.textColor === tc;
@@ -1037,7 +1037,7 @@ export function TicketStudioSkeleton() {
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-border shrink-0">
             <div className="flex items-baseline gap-2 min-w-0">
               <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
-              <span className="text-xs text-text-secondary truncate">Full KDS preview</span>
+              <span className="text-xs text-text-secondary truncate">Full KDS Preview</span>
             </div>
             <button
               onClick={() => setPreviewOpen(false)}
