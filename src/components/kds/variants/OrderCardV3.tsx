@@ -445,7 +445,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 onRemove={() => removeRow(product.id)}
                 onLongPress={setRecipeProduct}
                 compact={isCompact}
-                isNewBlink={!!product.isNew && getRowState(product) === 'idle'}
+                isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle'}
               />
             ))}
 
