@@ -546,10 +546,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const { getStatusForElapsed, rules } = useStatusRules();
   const timerStatus = getStatusForElapsed(elapsed);
-  const isOvertime = timerStatus.ruleId === 'overtime'
-    || order.courses.some(c => c.items.some(i => !i.isCompleted && (elapsed / 60) >= 21));
-  const hasNewItem = order.courses.some(c => c.items.some(i => i.isNew && !i.isCompleted));
-  const blinkColor = isOvertime ? timerStatus.color : (hasNewItem ? (rules[0]?.color || '#4A4A47') : null);
+  const isOvertimeElapsed = timerStatus.ruleId === 'overtime' || (elapsed / 60) >= 21;
   const hexToRgbTriplet = (hex: string) => {
     const h = hex.replace('#', '');
     const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
@@ -804,6 +801,18 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   };
 
   const handleBump = handleTicketAdvance;
+
+  // Blink the ticket when overtime or when new items are pending acknowledgement.
+  // Stops as soon as the ticket status advances past 'seen' or every new item has been acted on.
+  const ticketAcknowledged = ticketState !== 'seen' || isSeen;
+  const pendingNewItem = order.courses.some(c => c.items.some(i => {
+    if (!i.isNew || i.isCompleted) return false;
+    const s = rowStates[i.id] ?? 'idle';
+    return s === 'idle';
+  }));
+  const blinkColor = (isOvertimeElapsed && !ticketAcknowledged)
+    ? timerStatus.color
+    : (pendingNewItem ? (rules[0]?.color || '#4A4A47') : null);
 
   return (
     <div
