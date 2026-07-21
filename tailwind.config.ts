@@ -96,6 +96,7 @@ export default {
         "text-muted": "hsl(var(--text-muted))",
         "surface-card": "hsl(var(--surface-card))",
         "surface-bg": "hsl(var(--surface-bg))",
+        "tickets-bg": "hsl(var(--tickets-bg))",
         "sidebar-bg": "hsl(var(--sidebar-bg))",
       },
       borderRadius: {
