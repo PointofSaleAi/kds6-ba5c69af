@@ -3,6 +3,7 @@ import {
   ChevronDown,
   Eye,
   RotateCcw,
+  Columns2,
   X,
 } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
