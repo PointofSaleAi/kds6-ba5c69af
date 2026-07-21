@@ -24,6 +24,8 @@ const SCREEN_ORDER_TYPES = [
   { key: 'banquet', label: 'BANQUET' },
   { key: 'drive-thru', label: 'DRIVE THRU' },
   { key: 'curb-side', label: 'CURB SIDE' },
+  { key: 'phone-in', label: 'PHONE IN' },
+  { key: 'scheduled', label: 'SCHEDULED' },
 ] as const;
 
 type KdsScreenMockProps = {
