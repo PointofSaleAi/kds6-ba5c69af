@@ -6,11 +6,11 @@ import { issueReplyToken, REPLY_TOKEN_TTL_SECONDS } from '@/lib/demo-auth';
 
 const PRESET_REPLIES = [
   'Got it',
-  'On its way',
+  'On its Way',
   '5 mins',
-  'Need more time',
-  'Out of stock',
-  'Cooking now',
+  'Need More Time',
+  'Out of Stock',
+  'Cooking Now',
 ];
 
 const MAX_CHARS = 100;

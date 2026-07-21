@@ -28,12 +28,12 @@ const META = {
 };
 
 const UTENSILS = [
-  'Chef knife',
-  'Cutting board',
-  'Small mixing bowl',
-  'Serrated bread knife',
-  'Sheet tray',
-  'Microplane or box grater',
+  'Chef Knife',
+  'Cutting Board',
+  'Small Mixing Bowl',
+  'Serrated Bread Knife',
+  'Sheet Tray',
+  'Microplane or Box Grater',
   'Tongs',
 ];
 
