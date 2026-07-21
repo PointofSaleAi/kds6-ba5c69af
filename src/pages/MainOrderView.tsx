@@ -1440,7 +1440,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="ready" hideTopControls />
             ) : (
               <KDSSettingsPreviewScope route={selectedTicketsRoute}>
-                <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={renderOrderCard} cardVariant={effectiveCardVariant} />
+                <SeenOrdersScreen orders={seenScreenOrders} viewMode={viewMode} showAllergens={showAllergens} onBump={handleBump} onStepBack={handleStepBack} onFireCourse={handleFireCourse} onItemStatusChange={handleItemStatusChange} onMarkSeen={markOrderSeen} onItemDismiss={handleItemDismiss} renderCard={(order) => renderOrderCard(getStationDisplayOrder(order), { compactRows: viewMode === 'grid' })} cardVariant={effectiveCardVariant} />
               </KDSSettingsPreviewScope>
             )
           ) : isUnseenScreen ? (
