@@ -802,6 +802,18 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const handleBump = handleTicketAdvance;
 
+  // Blink the ticket when overtime or when new items are pending acknowledgement.
+  // Stops as soon as the ticket status advances past 'seen' or every new item has been acted on.
+  const ticketAcknowledged = ticketState !== 'seen' || isSeen;
+  const pendingNewItem = order.courses.some(c => c.items.some(i => {
+    if (!i.isNew || i.isCompleted) return false;
+    const s = rowStates[i.id] ?? 'idle';
+    return s === 'idle';
+  }));
+  const blinkColor = (isOvertimeElapsed && !ticketAcknowledged && ticketState !== 'done')
+    ? timerStatus.color
+    : (pendingNewItem ? (rules[0]?.color || '#4A4A47') : null);
+
   return (
     <div
       className={`bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col ${blinkColor ? 'animate-ticket-blink' : ''}`}
