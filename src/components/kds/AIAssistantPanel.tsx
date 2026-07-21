@@ -324,14 +324,14 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
         { label: '10 minutes', value: 'apply:orderhold:10' },
         { label: '15 minutes', value: 'apply:orderhold:15' },
         { label: '30 minutes', value: 'apply:orderhold:30' },
-        { label: 'Turn it off', value: 'apply:orderhold:off' },
+        { label: 'Turn it Off', value: 'apply:orderhold:off' },
       ],
     }),
     'dark mode': () => ({
       text: "Sure — do you want dark mode on or off?",
       chips: [
         { label: 'Turn on', value: 'apply:theme:dark' },
-        { label: 'Turn off', value: 'apply:theme:light' },
+        { label: 'Turn Off', value: 'apply:theme:light' },
       ],
     }),
     'text size': () => ({
@@ -347,7 +347,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       chips: [
         { label: 'Standard', value: 'apply:layout:standard' },
         { label: 'Compact', value: 'apply:layout:compact' },
-        { label: 'Header only', value: 'apply:layout:header' },
+        { label: 'Header Only', value: 'apply:layout:header' },
       ],
     }),
     'ticket spacing': () => ({
@@ -362,7 +362,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       text: "Allergen badges highlight allergy info on each product. On or off?",
       chips: [
         { label: 'Turn on', value: 'apply:allergens:on' },
-        { label: 'Turn off', value: 'apply:allergens:off' },
+        { label: 'Turn Off', value: 'apply:allergens:off' },
       ],
     }),
     'header allergen summary': () => ({
@@ -376,43 +376,43 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
       text: "Servable modifiers move specific modifiers through the 3-step lifecycle. On or off?",
       chips: [
         { label: 'Turn on', value: 'apply:servmods:on' },
-        { label: 'Turn off', value: 'apply:servmods:off' },
+        { label: 'Turn Off', value: 'apply:servmods:off' },
       ],
     }),
     'course aging': () => ({
       text: "Apply status aging colours per course block instead of the whole ticket?",
       chips: [
         { label: 'Turn on', value: 'apply:courseaging:on' },
-        { label: 'Turn off', value: 'apply:courseaging:off' },
+        { label: 'Turn Off', value: 'apply:courseaging:off' },
       ],
     }),
     'stagger mode': () => ({
       text: "Stagger mode releases tickets in batches. On or off?",
       chips: [
         { label: 'Turn on', value: 'apply:stagger:on' },
-        { label: 'Turn off', value: 'apply:stagger:off' },
+        { label: 'Turn Off', value: 'apply:stagger:off' },
       ],
     }),
     'sort default': () => ({
       text: "How should tickets be sorted by default?",
       chips: [
-        { label: 'By time', value: 'apply:sort:By time' },
-        { label: 'By table', value: 'apply:sort:By table' },
-        { label: 'By type', value: 'apply:sort:By type' },
+        { label: 'By Time', value: 'apply:sort:By time' },
+        { label: 'By Table', value: 'apply:sort:By table' },
+        { label: 'By Type', value: 'apply:sort:By type' },
       ],
     }),
     'language': () => ({
       text: "Want to open the language settings?",
       chips: [
-        { label: 'Open language settings', value: 'apply:nav:/kds/v1/settings/display/language' },
-        { label: 'Not now', value: 'apply:noop:cancel' },
+        { label: 'Open Language Settings', value: 'apply:nav:/kds/v1/settings/display/language' },
+        { label: 'Not Now', value: 'apply:noop:cancel' },
       ],
     }),
     'ai integration': () => ({
       text: "I can take you to the AI integration settings.",
       chips: [
         { label: 'Open AI Integration', value: 'apply:nav:/kds/v1/settings/system/ai-integration' },
-        { label: 'Not now', value: 'apply:noop:cancel' },
+        { label: 'Not Now', value: 'apply:noop:cancel' },
       ],
     }),
   };

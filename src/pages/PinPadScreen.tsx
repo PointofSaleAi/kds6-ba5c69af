@@ -247,7 +247,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
 
                     <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
                       <div>
-                        <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or mobile number</label>
+                        <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or Mobile Number</label>
                         <input
                           type="text" value={input} onChange={(e) => setInput(e.target.value)}
                           placeholder="Enter Your Email or Mobile Number"

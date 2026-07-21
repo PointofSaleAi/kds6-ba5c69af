@@ -34,7 +34,7 @@ export default function DeviceActivatedScreen({ onComplete }: DeviceActivatedScr
 
         <PosaiLogo variant="light" className="h-28 object-contain mb-3" />
 
-        <h1 className="text-white text-2xl font-bold font-montserrat mb-2">Device activated</h1>
+        <h1 className="text-white text-2xl font-bold font-montserrat mb-2">Device Activated</h1>
         <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>
           Entering Kitchen Display System in {countdown}s...
         </p>

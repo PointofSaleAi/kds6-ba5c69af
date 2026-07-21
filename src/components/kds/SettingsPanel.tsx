@@ -327,33 +327,33 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
   // Display section rows
   const displayRows = [
-    { name: 'Language', subtitle: 'Display language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
-    { name: 'Text size', subtitle: 'Font scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
-    { name: 'Ticket layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
-    { name: 'Status colors', subtitle: 'Ticket aging colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
-    { name: 'Order type colors', subtitle: 'Header colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
-    { name: 'Allergen badges', subtitle: 'Show on tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
-    { name: 'Enable badge', subtitle: 'Sidebar icon count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
-    { name: 'Ticket Identifier', subtitle: 'Primary card label', control: <ChipGroup options={['Order number', 'Guest name']} value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')} /> },
-    { name: 'Servable modifiers', subtitle: 'Track modifier status', control: <SmallToggle checked={servableModifiers} onChange={setServableModifiers} /> },
-    { name: 'Mode switcher', subtitle: 'KDS operational mode', control: <ChipGroup options={['Standard', 'Expo', 'Station']} value={kdsMode === 'Prep' ? 'Station' : kdsMode} onChange={(v) => setKdsMode((v === 'Station' ? 'Prep' : v) as KDSMode)} /> },
+    { name: 'Language', subtitle: 'Display Language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
+    { name: 'Text Size', subtitle: 'Font Scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
+    { name: 'Ticket Layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
+    { name: 'Status Colors', subtitle: 'Ticket Aging Colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
+    { name: 'Order Type Colors', subtitle: 'Header Colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
+    { name: 'Allergen Badges', subtitle: 'Show on Tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
+    { name: 'Enable Badge', subtitle: 'Sidebar Icon Count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
+    { name: 'Ticket Identifier', subtitle: 'Primary Card Label', control: <ChipGroup options={['Order number', 'Guest name']} value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')} /> },
+    { name: 'Servable Modifiers', subtitle: 'Track Modifier Status', control: <SmallToggle checked={servableModifiers} onChange={setServableModifiers} /> },
+    { name: 'Mode Switcher', subtitle: 'KDS Operational Mode', control: <ChipGroup options={['Standard', 'Expo', 'Station']} value={kdsMode === 'Prep' ? 'Station' : kdsMode} onChange={(v) => setKdsMode((v === 'Station' ? 'Prep' : v) as KDSMode)} /> },
   ];
 
   const hardwareRows = [
-    { name: 'KOT printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
-    { name: 'Label printer', subtitle: 'No printer assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
-    { name: 'Sound settings', subtitle: 'Volume & alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
-    { name: 'Sync', subtitle: 'Orders & settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
+    { name: 'KOT Printer', subtitle: 'No Printer Assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
+    { name: 'Label Printer', subtitle: 'No Printer Assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
+    { name: 'Sound Settings', subtitle: 'Volume & Alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
+    { name: 'Sync', subtitle: 'Orders & Settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
     { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure Connection" /> },
   ];
 
   const accountRows = [
-    { name: 'Device name', subtitle: 'Kitchen Display 1', control: null },
+    { name: 'Device Name', subtitle: 'Kitchen Display 1', control: null },
     { name: 'Station ID', subtitle: 'STN-001', control: null },
-    { name: 'Bug reporting', subtitle: 'In-app reporting tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
-    { name: 'Debug mode', subtitle: 'Verbose logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
-    { name: 'Upload logs', subtitle: 'Send to eatOS support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
-    { name: 'Feedback & support', subtitle: 'Request a feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
+    { name: 'Bug Reporting', subtitle: 'In-app Reporting Tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
+    { name: 'Debug Mode', subtitle: 'Verbose Logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
+    { name: 'Upload Logs', subtitle: 'Send to Eatos Support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
+    { name: 'Feedback & Support', subtitle: 'Request a Feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
   ];
 
   return (
@@ -454,7 +454,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           <div className="absolute inset-0 bg-black/50" onClick={() => setFeatureModalOpen(false)} />
           <div className="relative bg-surface-card rounded-xl shadow-xl w-[480px] max-w-[90vw] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
-              <h3 className="text-[15px] font-bold text-text-primary">Request a feature</h3>
+              <h3 className="text-[15px] font-bold text-text-primary">Request a Feature</h3>
               <button onClick={() => setFeatureModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors min-h-[44px] min-w-[44px]">
                 <X size={18} className="text-text-muted" />
               </button>

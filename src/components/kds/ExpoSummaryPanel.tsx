@@ -148,13 +148,13 @@ export function ExpoSummaryPanel({
               onClick={() => setReadySectionCollapsed(!readySectionCollapsed)}
               className="w-full flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-muted/30 transition-colors"
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-success">Ready to send</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-success">Ready to Send</span>
               <span className="text-[10px] text-text-muted">{readySectionCollapsed ? '+' : '-'}</span>
             </button>
             {!readySectionCollapsed && (
               <>
                 {readyProducts.length === 0 ? (
-                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No products ready yet</div>
+                  <div className="px-3 py-3 text-[11px] text-text-muted text-center">No Products Ready Yet</div>
                 ) : (
                   readyProducts.map(p => {
                     const isSelected = selectedSet.has(p.name);
@@ -206,13 +206,13 @@ export function ExpoSummaryPanel({
               className="w-full flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-muted/30 transition-colors"
               aria-expanded={!pendingSectionCollapsed}
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products pending</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Products Pending</span>
               <span className="text-[10px] text-text-muted">{pendingSectionCollapsed ? '+' : '-'}</span>
             </button>
             {!pendingSectionCollapsed && (
               <>
                 {productList.length === 0 ? (
-                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All products prepared</div>
+                  <div className="px-3 py-4 text-[12px] text-text-muted text-center">All Products Prepared</div>
                 ) : (
                   productList.map(p => {
                     const isSelected = selectedSet.has(p.name);

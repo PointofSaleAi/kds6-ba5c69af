@@ -164,7 +164,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="text-xs font-semibold text-text-primary">{t.singleLanguage}</div>
-                            <div className="text-[10px] text-text-muted mt-0.5">One language on KDS</div>
+                            <div className="text-[10px] text-text-muted mt-0.5">One Language on KDS</div>
                             <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                               <span className="text-[11px] font-medium text-text-primary">2x French Fries</span>
                             </div>
@@ -189,7 +189,7 @@ export default function LanguageSettings({ open, onClose }: LanguageSettingsProp
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="text-xs font-semibold text-text-primary">{t.dualLanguage}</div>
-                            <div className="text-[10px] text-text-muted mt-0.5">Two languages per product</div>
+                            <div className="text-[10px] text-text-muted mt-0.5">Two Languages per Product</div>
                             <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                               <div className="text-[11px] font-bold text-text-primary">2x French Fries</div>
                               <div className="text-[9px] text-text-muted">

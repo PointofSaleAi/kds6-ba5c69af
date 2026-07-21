@@ -114,22 +114,22 @@ function getAiAction(type: string, message: string): AiAction {
     return { label: target ? `Update to Table ${target}` : 'Update tables', color: 'navy', kind: 'update-table', targetTable: target };
   }
   if (type === 'item-moved') {
-    return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+    return { label: 'Go to Ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
   }
   if (type === 'system' && /printer|offline|hardware/.test(lower)) {
-    return { label: 'Go to hardware', color: 'orange', kind: 'navigate-hardware' };
+    return { label: 'Go to Hardware', color: 'orange', kind: 'navigate-hardware' };
   }
   if (type === 'general-alert' && /vip/.test(lower)) {
-    return { label: 'Prioritise now', color: 'navy', kind: 'prioritise' };
+    return { label: 'Prioritise Now', color: 'navy', kind: 'prioritise' };
   }
   if (type === 'course-fired') {
-    return { label: 'Go to ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+    return { label: 'Go to Ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
   }
   if (type === 'low-stock') {
     return { label: "86 it", color: 'red', kind: 'view' };
   }
   if (type === 'pos-86d') {
-    return { label: 'View 86 list', color: 'red', kind: 'view' };
+    return { label: 'View 86 List', color: 'red', kind: 'view' };
   }
   return { label: 'View', color: 'navy', kind: 'view' };
 }

@@ -12,11 +12,11 @@ describe('OrderNotesSection', () => {
   it('toggles acknowledgement on tapping the notes row', () => {
     const onAck = vi.fn();
     render(<OrderNotesSection notes="Extra sauce" orderId="o1" onAcknowledgeNotes={onAck} />);
-    const row = screen.getByRole('button', { name: 'Acknowledge notes' });
+    const row = screen.getByRole('button', { name: 'Acknowledge Notes' });
     fireEvent.click(row);
     expect(onAck).toHaveBeenCalledWith('o1');
-    expect(screen.getByRole('button', { name: 'Mark notes as unseen' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Mark notes as unseen' }));
-    expect(screen.getByRole('button', { name: 'Acknowledge notes' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Mark Notes as Unseen' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Mark Notes as Unseen' }));
+    expect(screen.getByRole('button', { name: 'Acknowledge Notes' })).toBeInTheDocument();
   });
 });

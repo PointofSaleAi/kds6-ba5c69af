@@ -48,7 +48,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Order type colors</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Order Type Colors</h1>
       </div>
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
         <div className="grid grid-cols-2 gap-3">

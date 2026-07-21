@@ -36,7 +36,7 @@ export default function AccountSettings() {
 
   const handleUploadLogs = () => {
     toast({
-      title: 'Logs uploaded',
+      title: 'Logs Uploaded',
       description: 'Diagnostic logs sent to support.',
     });
   };
@@ -45,7 +45,7 @@ export default function AccountSettings() {
     setFeedbackOpen(false);
     setFeedbackText('');
     toast({
-      title: 'Feedback received',
+      title: 'Feedback Received',
       description: 'Thanks, your request was sent to the product team.',
     });
   };
@@ -87,7 +87,7 @@ export default function AccountSettings() {
       // ignore
     }
     toast({
-      title: 'Settings reset',
+      title: 'Settings Reset',
       description: 'All system settings have been restored to defaults.',
     });
     setTimeout(() => window.location.reload(), 300);
@@ -240,7 +240,7 @@ export default function AccountSettings() {
       <AlertDialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Request a feature</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">Request a Feature</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
               Tell us what would make the KDS work better for your kitchen.
             </AlertDialogDescription>

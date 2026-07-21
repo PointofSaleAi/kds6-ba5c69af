@@ -63,7 +63,7 @@ export function PrepBoard({ orders }: PrepBoardProps) {
   if (prepCourses.length === 0) {
     return (
       <div className={`flex-1 flex items-center justify-center ${scaleClasses}`}>
-        <p className="text-text-muted text-sm">No products to prepare</p>
+        <p className="text-text-muted text-sm">No Products to Prepare</p>
       </div>
     );
   }

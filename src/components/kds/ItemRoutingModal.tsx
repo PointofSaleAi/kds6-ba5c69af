@@ -77,7 +77,7 @@ export function ItemRoutingModal({ item, order, onClose, onConfirm }: ItemRoutin
           <div className="px-5 py-4 flex flex-col gap-5">
             {/* Context box */}
             <div className="bg-muted/60 rounded-xl border border-border p-4">
-              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Product being re-routed</div>
+              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Product Being Re-routed</div>
               <div className="text-[15px] font-bold text-text-primary uppercase tracking-wide">{tp(item.name)}</div>
               {displayMode === 'dual' && showSecondaryMenu && (
                 <div className="text-[12px] text-text-secondary mt-0.5 font-medium">{tpSecondary(item.name)}</div>

@@ -79,12 +79,12 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <p className="text-text-muted text-sm mt-2">Kitchen Display System</p>
             </div>
 
-            <h2 className="text-xl font-bold text-text-primary mb-2">Forgot password</h2>
-            <p className="text-text-secondary text-sm mb-6">Choose how to reset your password</p>
+            <h2 className="text-xl font-bold text-text-primary mb-2">Forgot Password</h2>
+            <p className="text-text-secondary text-sm mb-6">Choose How to Reset Your Password</p>
 
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-text-secondary block mb-1">Email address</label>
+                <label className="text-sm font-medium text-text-secondary block mb-1">Email Address</label>
                 <input
                   type="email"
                   value={email}
@@ -101,7 +101,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               </div>
 
               <div>
-                <label className="text-sm font-medium text-text-secondary block mb-1">Mobile number</label>
+                <label className="text-sm font-medium text-text-secondary block mb-1">Mobile Number</label>
                 <div className="flex gap-2">
                   <select className="px-2 py-2.5 rounded-lg border border-input bg-surface-card text-text-primary text-sm min-h-[44px]">
                     <option>+1</option>
@@ -142,7 +142,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <span className="text-sm">Back</span>
             </button>
 
-            <h2 className="text-xl font-bold text-text-primary mb-2">Enter verification code</h2>
+            <h2 className="text-xl font-bold text-text-primary mb-2">Enter Verification Code</h2>
             <p className="text-text-secondary text-sm mb-8">
               A 6-digit code was sent to {email ? `${email.slice(0, 3)}***` : `***${phone.slice(-4)}`}
             </p>
@@ -166,7 +166,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               {countdown > 0 ? (
                 <>Resend code in 0:{String(countdown).padStart(2, '0')}</>
               ) : (
-                <button className="text-brand-primary hover:underline">Resend code</button>
+                <button className="text-brand-primary hover:underline">Resend Code</button>
               )}
             </p>
 
@@ -191,7 +191,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <div className="w-20 h-20 rounded-full bg-success flex items-center justify-center mx-auto mb-6">
                 <Check size={40} className="text-primary-foreground" strokeWidth={3} />
               </div>
-              <h2 className="text-xl font-bold text-text-primary mb-2">Password updated successfully</h2>
+              <h2 className="text-xl font-bold text-text-primary mb-2">Password Updated Successfully</h2>
               <p className="text-text-secondary text-sm mb-6">You can now sign in with your new password</p>
               <button onClick={onComplete} className="w-full py-3 bg-brand-primary text-primary-foreground text-cta uppercase rounded-lg min-h-[48px]">
                 SIGN IN

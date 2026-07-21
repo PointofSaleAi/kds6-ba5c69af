@@ -195,7 +195,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <Send size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">Expo view</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">Expo View</span>
               </div>
             </div>
             <SettingsRow

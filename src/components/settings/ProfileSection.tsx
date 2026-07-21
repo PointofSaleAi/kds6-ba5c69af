@@ -67,10 +67,10 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
 
   const restaurantCards: Card[] = tab === 'today'
     ? [
-        { label: 'Tickets today', value: formatCount(ticketsToday) },
-        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeSec) },
+        { label: 'Tickets Today', value: formatCount(ticketsToday) },
+        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeSec) },
         {
-          label: 'Tickets in queue',
+          label: 'Tickets in Queue',
           value: (
             <span className="inline-flex items-center gap-2">
               <span className="w-2 h-2 rounded-full" style={{ background: queueDotColor(ticketsInQueue) }} />
@@ -78,35 +78,35 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
             </span>
           ),
         },
-        { label: 'Overtime tickets', value: formatCount(overtimeToday) },
-        { label: 'On-time rate', value: formatPct(onTimeRateToday) },
-        { label: 'Items prepared', value: formatCount(itemsPreparedToday) },
+        { label: 'Overtime Tickets', value: formatCount(overtimeToday) },
+        { label: 'On-time Rate', value: formatPct(onTimeRateToday) },
+        { label: 'Items Prepared', value: formatCount(itemsPreparedToday) },
       ]
     : [
-        { label: 'Total tickets', value: formatCount(ticketsTotal) },
-        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeAllTimeSec) },
-        { label: 'Busiest hour', value: busiestHourLabel ?? '—' },
-        { label: 'Total overtime tickets', value: formatCount(overtimeTotal) },
-        { label: 'On-time rate', value: formatPct(onTimeRateAllTime) },
-        { label: 'Total items prepared', value: formatCount(itemsPreparedTotal) },
+        { label: 'Total Tickets', value: formatCount(ticketsTotal) },
+        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeAllTimeSec) },
+        { label: 'Busiest Hour', value: busiestHourLabel ?? '—' },
+        { label: 'Total Overtime Tickets', value: formatCount(overtimeTotal) },
+        { label: 'On-time Rate', value: formatPct(onTimeRateAllTime) },
+        { label: 'Total Items Prepared', value: formatCount(itemsPreparedTotal) },
       ];
 
   const staffCards: Card[] = tab === 'today'
     ? [
-        { label: 'Tickets completed', value: formatCount(ticketsToday) },
-        { label: 'Hours worked', value: formatHours(hoursWorked) },
-        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeSec) },
-        { label: 'Items prepared', value: formatCount(itemsPreparedToday) },
-        { label: 'On-time rate', value: formatPct(onTimeRateToday) },
-        { label: 'Overtime tickets', value: formatCount(overtimeToday) },
+        { label: 'Tickets Completed', value: formatCount(ticketsToday) },
+        { label: 'Hours Worked', value: formatHours(hoursWorked) },
+        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeSec) },
+        { label: 'Items Prepared', value: formatCount(itemsPreparedToday) },
+        { label: 'On-time Rate', value: formatPct(onTimeRateToday) },
+        { label: 'Overtime Tickets', value: formatCount(overtimeToday) },
       ]
     : [
-        { label: 'Total tickets completed', value: formatCount(ticketsTotal) },
-        { label: 'Total hours worked', value: formatHours(hoursWorkedTotal) },
-        { label: 'Avg ticket time', value: formatMinutes(avgTicketTimeAllTimeSec) },
-        { label: 'Total items prepared', value: formatCount(itemsPreparedTotal) },
-        { label: 'On-time rate', value: formatPct(onTimeRateAllTime) },
-        { label: 'Total overtime tickets', value: formatCount(overtimeTotal) },
+        { label: 'Total Tickets Completed', value: formatCount(ticketsTotal) },
+        { label: 'Total Hours Worked', value: formatHours(hoursWorkedTotal) },
+        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeAllTimeSec) },
+        { label: 'Total Items Prepared', value: formatCount(itemsPreparedTotal) },
+        { label: 'On-time Rate', value: formatPct(onTimeRateAllTime) },
+        { label: 'Total Overtime Tickets', value: formatCount(overtimeTotal) },
       ];
 
   const cards = isStaff ? staffCards : restaurantCards;
@@ -140,7 +140,7 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
       </div>
 
       <div className="flex items-center justify-between mt-5 mb-3">
-        <span className="text-sm font-semibold font-montserrat" style={{ color: 'hsl(var(--text-primary))' }}>Performance summary</span>
+        <span className="text-sm font-semibold font-montserrat" style={{ color: 'hsl(var(--text-primary))' }}>Performance Summary</span>
         <div className="flex rounded-full p-0.5" style={{ background: 'hsl(var(--muted))' }}>
           {(['today', 'total'] as TabKey[]).map(k => (
             <button

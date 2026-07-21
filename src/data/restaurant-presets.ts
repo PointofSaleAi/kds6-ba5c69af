@@ -34,7 +34,7 @@ export interface RestaurantPreset {
 
 export const RESTAURANT_PRESETS: RestaurantPreset[] = [
   {
-    id: 'fine-dining', label: 'Fine dining',
+    id: 'fine-dining', label: 'Fine Dining',
     textSize: 'Standard', ticketSpacing: 'Spacious', ticketLayout: 'standard',
     ticketIdentifier: 'Guest name', agingRules: 'Slow kitchen', applyToCourseLevel: true,
     enableBadge: true, modeSwitcher: 'Standard', language: 'Dual',
@@ -42,7 +42,7 @@ export const RESTAURANT_PRESETS: RestaurantPreset[] = [
     volume: 50, alertSound: 'Soft ding',
   },
   {
-    id: 'casual-dining', label: 'Casual dining',
+    id: 'casual-dining', label: 'Casual Dining',
     textSize: 'Standard', ticketSpacing: 'Standard', ticketLayout: 'standard',
     ticketIdentifier: 'Guest name', agingRules: 'Standard', applyToCourseLevel: true,
     enableBadge: true, modeSwitcher: 'Standard', language: 'Single',
@@ -50,7 +50,7 @@ export const RESTAURANT_PRESETS: RestaurantPreset[] = [
     volume: 75, alertSound: 'Double chime',
   },
   {
-    id: 'quick-service', label: 'Quick service',
+    id: 'quick-service', label: 'Quick Service',
     textSize: 'Large', ticketSpacing: 'Compact', ticketLayout: 'compact',
     ticketIdentifier: 'Order number', agingRules: 'Fast kitchen', applyToCourseLevel: false,
     enableBadge: true, modeSwitcher: 'Standard', language: 'Single',
@@ -74,7 +74,7 @@ export const RESTAURANT_PRESETS: RestaurantPreset[] = [
     volume: 100, alertSound: 'Default beep',
   },
   {
-    id: 'bar-lounge', label: 'Bar & lounge',
+    id: 'bar-lounge', label: 'Bar & Lounge',
     textSize: 'Standard', ticketSpacing: 'Standard', ticketLayout: 'standard',
     ticketIdentifier: 'Guest name', agingRules: 'Standard', applyToCourseLevel: true,
     enableBadge: true, modeSwitcher: 'Expo', language: 'Single',
@@ -82,7 +82,7 @@ export const RESTAURANT_PRESETS: RestaurantPreset[] = [
     volume: 75, alertSound: 'Double chime',
   },
   {
-    id: 'fast-casual', label: 'Fast casual',
+    id: 'fast-casual', label: 'Fast Casual',
     textSize: 'Large', ticketSpacing: 'Compact', ticketLayout: 'compact',
     ticketIdentifier: 'Order number', agingRules: 'Fast kitchen', applyToCourseLevel: false,
     enableBadge: true, modeSwitcher: 'Standard', language: 'Single',
@@ -90,7 +90,7 @@ export const RESTAURANT_PRESETS: RestaurantPreset[] = [
     volume: 100, alertSound: 'Urgent alert',
   },
   {
-    id: 'food-truck', label: 'Food truck',
+    id: 'food-truck', label: 'Food Truck',
     textSize: 'Large', ticketSpacing: 'Compact', ticketLayout: 'compact',
     ticketIdentifier: 'Order number', agingRules: 'Fast kitchen', applyToCourseLevel: false,
     enableBadge: true, modeSwitcher: 'Standard', language: 'Single',

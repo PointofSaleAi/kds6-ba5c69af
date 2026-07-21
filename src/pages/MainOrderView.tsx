@@ -1455,7 +1455,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
                       {resolvedStationCourse}
                     </span>
-                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station view</span>
+                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
                   </div>
                   <button
                     onClick={() => setStationCourse(null)}

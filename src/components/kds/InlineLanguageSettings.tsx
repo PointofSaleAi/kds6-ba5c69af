@@ -258,7 +258,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   >
                     <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-text-primary">{t.singleLanguage}</div>
-                        <div className="text-[10px] text-text-muted mt-0.5">One language on KDS</div>
+                        <div className="text-[10px] text-text-muted mt-0.5">One Language on KDS</div>
                         <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                           <span className="text-[11px] font-medium text-text-primary">2x French Fries</span>
                         </div>
@@ -271,7 +271,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   >
                     <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-text-primary">{t.dualLanguage}</div>
-                        <div className="text-[10px] text-text-muted mt-0.5">Two languages per product</div>
+                        <div className="text-[10px] text-text-muted mt-0.5">Two Languages per Product</div>
                         <div className="mt-1.5 bg-muted/50 rounded px-2 py-1">
                           <div className="text-[11px] font-bold text-text-primary">2x French Fries</div>
                           <div className="text-[9px] text-text-muted">{getTranslation('fries', selectedLangInList)}</div>
@@ -386,7 +386,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                     >
                       {/* Header */}
                       <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
-                        <h3 className="text-sm font-bold text-text-primary">Request a language</h3>
+                        <h3 className="text-sm font-bold text-text-primary">Request a Language</h3>
                         <button
                           onClick={() => setRequestFormOpen(false)}
                           className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-text-muted"
@@ -460,7 +460,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                 )}
                                 {filteredMore.length > 0 && (
                                   <>
-                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More languages</div>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
                                     {filteredMore.map((lang) => (
                                       <button
                                         key={lang}
@@ -480,7 +480,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                   </>
                                 )}
                                 {filteredPopular.length === 0 && filteredMore.length === 0 && (
-                                  <div className="px-3 py-3 text-xs text-text-muted text-center">No languages found</div>
+                                  <div className="px-3 py-3 text-xs text-text-muted text-center">No Languages Found</div>
                                 )}
                               </div>,
                               document.body
@@ -583,7 +583,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
               {/* Date format - left */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date format</div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date Format</div>
                 <div className="space-y-2">
                   {dateFormats.map((fmt, i) => (
                     <button
@@ -606,7 +606,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Time format - right */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time format</div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time Format</div>
                 <div className="space-y-2">
                   {timeFormats.map((fmt, i) => (
                     <button
@@ -645,7 +645,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Temperature Unit - left */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Temperature unit</div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Temperature Unit</div>
                 <div className="space-y-2">
                   {(['F', 'C'] as const).map((unit) => (
                     <button
@@ -668,7 +668,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Week Start Day - right */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Week start day</div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Week Start Day</div>
                 <div className="space-y-2">
                   {(['Sunday', 'Monday'] as const).map((day) => (
                     <button

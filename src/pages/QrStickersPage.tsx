@@ -66,7 +66,7 @@ export default function QrStickersPage() {
       next.add(`${decoded.orderId}-${decoded.itemId}`);
       return next;
     });
-    toast({ title: 'Scan sent', description: 'Product marked as Served on the tickets screen.' });
+    toast({ title: 'Scan Sent', description: 'Product marked as Served on the tickets screen.' });
   };
 
   return (

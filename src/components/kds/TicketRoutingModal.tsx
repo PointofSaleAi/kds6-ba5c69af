@@ -59,7 +59,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
                 <Route size={16} className="text-warning" />
               </div>
               <div>
-                <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route entire ticket</div>
+                <div className="text-[16px] font-bold text-text-primary tracking-tight">Re-route Entire Ticket</div>
                 <div className="text-[11px] text-text-secondary mt-0.5 font-medium">
                   Ticket <span className="font-bold text-text-primary">{order.orderNumber}</span> · {orderTypeLabel} · {order.tableName}
                 </div>
@@ -85,7 +85,7 @@ export function TicketRoutingModal({ order, onClose, onConfirm }: TicketRoutingM
 
             {/* Items list */}
             <div>
-              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Products in this ticket</div>
+              <div className="text-[9px] uppercase text-text-muted tracking-[0.1em] font-bold mb-2">Products in This Ticket</div>
               <div className="bg-muted/60 rounded-xl border border-border overflow-hidden">
                 {allItems.map((item, idx) => (
                   <div

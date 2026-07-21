@@ -33,13 +33,13 @@ const VISIBLE_ITEMS = 5;
 
 const restoreDurations = [
   { id: "now", label: "Restore Now", ms: 0 },
-  { id: "5min", label: "In 5 minutes", ms: 5 * 60 * 1000 },
-  { id: "10min", label: "In 10 minutes", ms: 10 * 60 * 1000 },
-  { id: "15min", label: "In 15 minutes", ms: 15 * 60 * 1000 },
-  { id: "20min", label: "In 20 minutes", ms: 20 * 60 * 1000 },
-  { id: "1hr", label: "In 1 hour", ms: 60 * 60 * 1000 },
-  { id: "2hr", label: "In 2 hours", ms: 2 * 60 * 60 * 1000 },
-  { id: "custom", label: "Custom time", ms: null },
+  { id: "5min", label: "In 5 Minutes", ms: 5 * 60 * 1000 },
+  { id: "10min", label: "In 10 Minutes", ms: 10 * 60 * 1000 },
+  { id: "15min", label: "In 15 Minutes", ms: 15 * 60 * 1000 },
+  { id: "20min", label: "In 20 Minutes", ms: 20 * 60 * 1000 },
+  { id: "1hr", label: "In 1 Hour", ms: 60 * 60 * 1000 },
+  { id: "2hr", label: "In 2 Hours", ms: 2 * 60 * 60 * 1000 },
+  { id: "custom", label: "Custom Time", ms: null },
 ];
 
 export interface EightySixedItem {
@@ -70,8 +70,8 @@ const UNCATEGORIZED = "Uncategorized";
 const snoozeDurations = [
   { id: "15min", label: "15 min", ms: 15 * 60 * 1000 },
   { id: "1hr", label: "1 hour", ms: 60 * 60 * 1000 },
-  { id: "end_of_shift", label: "End of shift", ms: 8 * 60 * 60 * 1000 },
-  { id: "indefinite", label: "Until restored", ms: null },
+  { id: "end_of_shift", label: "End of Shift", ms: 8 * 60 * 60 * 1000 },
+  { id: "indefinite", label: "Until Restored", ms: null },
 ];
 
 const formatTimeRemaining = (endTime: Date | null) => {
@@ -253,7 +253,7 @@ function RestorePopover(props: RestorePopoverProps) {
               <button onClick={() => setShowCustomTimePicker(false)} className="p-1 rounded-full hover:bg-muted transition-colors">
                 <ChevronLeft className="w-4 h-4 text-muted-foreground" />
               </button>
-              <p className="text-foreground text-sm font-medium">Custom time</p>
+              <p className="text-foreground text-sm font-medium">Custom Time</p>
             </div>
             <div className="flex items-center justify-center gap-2 mb-3">
               <div className="relative overflow-hidden rounded-lg" style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS, width: 80 }}>
@@ -304,7 +304,7 @@ function RestorePopover(props: RestorePopoverProps) {
           </div>
         ) : (
           <div className="py-2">
-            <p className="text-muted-foreground text-xs px-3 py-1.5">Restore after</p>
+            <p className="text-muted-foreground text-xs px-3 py-1.5">Restore After</p>
             {restoreDurations.map((duration) => (
               <button key={duration.id} onClick={() => onSelectDuration(duration.id)}
                 className="w-full py-2.5 px-3 hover:bg-muted text-foreground text-sm text-left transition-colors">
@@ -806,7 +806,7 @@ export function EightySixSheet({
             <div className="flex items-center justify-between px-4 py-2 border-b border-border gap-3">
               <div className="flex items-center gap-2 text-sm text-foreground">
                 <Hourglass className="w-4 h-4 text-muted-foreground" />
-                <span>Mark unavailable for</span>
+                <span>Mark Unavailable for</span>
               </div>
               <Popover open={durationPopoverOpen} onOpenChange={setDurationPopoverOpen}>
                 <PopoverTrigger asChild>

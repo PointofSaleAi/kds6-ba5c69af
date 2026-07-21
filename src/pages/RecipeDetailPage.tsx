@@ -74,7 +74,7 @@ const ALLERGEN_LABELS: Record<string, { type: AllergenType; label: string }> = {
   soy: { type: 'soy', label: 'Soy' },
   peanut: { type: 'peanut', label: 'Peanut' },
   sesame: { type: 'sesame', label: 'Sesame' },
-  'tree-nut': { type: 'tree-nut', label: 'Tree nut' },
+  'tree-nut': { type: 'tree-nut', label: 'Tree Nut' },
 };
 
 function scaleQty(qty: string, factor: number): string {
@@ -141,7 +141,7 @@ export default function RecipeDetailPage() {
           </div>
           <div className="min-w-0">
             <div className="text-[15px] font-semibold text-slate-900 truncate">{RESTAURANT.name}</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-500">Recipe library</div>
+            <div className="text-[11px] uppercase tracking-wider text-slate-500">Recipe Library</div>
           </div>
         </div>
       </header>
@@ -292,7 +292,7 @@ export default function RecipeDetailPage() {
 
         {/* Prep steps */}
         <section>
-          <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-2">Prep steps</div>
+          <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-2">Prep Steps</div>
           <div className="space-y-4">
             {recipe.steps.map((step, i) => {
               const images = STEP_IMAGES[i % STEP_IMAGES.length];

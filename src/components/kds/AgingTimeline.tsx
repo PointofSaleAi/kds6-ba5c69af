@@ -48,7 +48,7 @@ export default function AgingTimeline({ rules, selectedId, onSelect, onBoundaryD
     <div className="space-y-2 px-1">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">Timeline</h3>
-        <span className="text-[10px] text-text-muted">Drag boundaries to adjust</span>
+        <span className="text-[10px] text-text-muted">Drag Boundaries to Adjust</span>
       </div>
 
       <div

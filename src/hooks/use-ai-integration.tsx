@@ -39,7 +39,7 @@ export const AI_PROVIDER_MODEL_OPTIONS: Record<Exclude<AIProviderId, ''>, AIMode
   ],
   openai: [
     { id: 'gpt-4o', name: 'GPT-4o', description: 'Most capable' },
-    { id: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Fast & efficient' },
+    { id: 'gpt-4o-mini', name: 'Gpt-4o Mini', description: 'Fast & efficient' },
     { id: 'gpt-3.5', name: 'GPT-3.5', description: 'Legacy model' },
   ],
   claude: [

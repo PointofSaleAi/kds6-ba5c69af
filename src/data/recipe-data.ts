@@ -20,10 +20,10 @@ export interface Recipe {
 
 const DEFAULT_RECIPE: Recipe = {
   ingredients: [
-    { qty: '1 portion', name: 'Main protein, seasoned' },
-    { qty: '2 tbsp', name: 'House sauce' },
-    { qty: '1 cup', name: 'Side accompaniment' },
-    { qty: 'to taste', name: 'Salt and cracked pepper' },
+    { qty: '1 portion', name: 'Main Protein, Seasoned' },
+    { qty: '2 tbsp', name: 'House Sauce' },
+    { qty: '1 cup', name: 'Side Accompaniment' },
+    { qty: 'to taste', name: 'Salt and Cracked Pepper' },
   ],
   steps: [
     { text: 'Mise en place all ingredients before firing the order.' },
@@ -37,12 +37,12 @@ const DEFAULT_RECIPE: Recipe = {
 const RECIPES: Record<string, Recipe> = {
   burger: {
     ingredients: [
-      { qty: '180g', name: 'Ground beef patty' },
-      { qty: '1', name: 'Brioche bun, toasted' },
-      { qty: '2 slices', name: 'Aged cheddar' },
-      { qty: '2 slices', name: 'Tomato, beefsteak' },
-      { qty: '2 leaves', name: 'Iceberg lettuce' },
-      { qty: '1 tbsp', name: 'House burger sauce' },
+      { qty: '180g', name: 'Ground Beef Patty' },
+      { qty: '1', name: 'Brioche Bun, Toasted' },
+      { qty: '2 slices', name: 'Aged Cheddar' },
+      { qty: '2 slices', name: 'Tomato, Beefsteak' },
+      { qty: '2 leaves', name: 'Iceberg Lettuce' },
+      { qty: '1 tbsp', name: 'House Burger Sauce' },
     ],
     steps: [
       { text: 'Season patty with salt and pepper just before grilling.' },
@@ -55,11 +55,11 @@ const RECIPES: Record<string, Recipe> = {
   },
   steak: {
     ingredients: [
-      { qty: '300g', name: 'Ribeye steak' },
-      { qty: '2 tbsp', name: 'Clarified butter' },
-      { qty: '2 sprigs', name: 'Fresh thyme' },
-      { qty: '2 cloves', name: 'Garlic, smashed' },
-      { qty: 'to taste', name: 'Maldon salt and cracked pepper' },
+      { qty: '300g', name: 'Ribeye Steak' },
+      { qty: '2 tbsp', name: 'Clarified Butter' },
+      { qty: '2 sprigs', name: 'Fresh Thyme' },
+      { qty: '2 cloves', name: 'Garlic, Smashed' },
+      { qty: 'to taste', name: 'Maldon Salt and Cracked Pepper' },
     ],
     steps: [
       { text: 'Pat steak dry and season generously.' },
@@ -71,11 +71,11 @@ const RECIPES: Record<string, Recipe> = {
   },
   salad: {
     ingredients: [
-      { qty: '120g', name: 'Mixed greens' },
-      { qty: '50g', name: 'Cherry tomatoes, halved' },
-      { qty: '30g', name: 'Shaved parmesan' },
-      { qty: '2 tbsp', name: 'House vinaigrette' },
-      { qty: '20g', name: 'Toasted croutons' },
+      { qty: '120g', name: 'Mixed Greens' },
+      { qty: '50g', name: 'Cherry Tomatoes, Halved' },
+      { qty: '30g', name: 'Shaved Parmesan' },
+      { qty: '2 tbsp', name: 'House Vinaigrette' },
+      { qty: '20g', name: 'Toasted Croutons' },
     ],
     steps: [
       { text: 'Wash and spin-dry greens just before service.' },
@@ -87,11 +87,11 @@ const RECIPES: Record<string, Recipe> = {
   },
   pizza: {
     ingredients: [
-      { qty: '220g', name: 'Pizza dough ball' },
-      { qty: '80g', name: 'San Marzano tomato sauce' },
-      { qty: '120g', name: 'Fresh mozzarella, torn' },
-      { qty: '6 leaves', name: 'Fresh basil' },
-      { qty: '1 tbsp', name: 'EVOO finishing oil' },
+      { qty: '220g', name: 'Pizza Dough Ball' },
+      { qty: '80g', name: 'San Marzano Tomato Sauce' },
+      { qty: '120g', name: 'Fresh Mozzarella, Torn' },
+      { qty: '6 leaves', name: 'Fresh Basil' },
+      { qty: '1 tbsp', name: 'EVOO Finishing Oil' },
     ],
     steps: [
       { text: 'Stretch dough to 12 inches on floured peel.' },
@@ -103,9 +103,9 @@ const RECIPES: Record<string, Recipe> = {
   },
   pasta: {
     ingredients: [
-      { qty: '120g', name: 'Dried pasta' },
-      { qty: '100g', name: 'Pasta sauce of the day' },
-      { qty: '20g', name: 'Grated parmigiano' },
+      { qty: '120g', name: 'Dried Pasta' },
+      { qty: '100g', name: 'Pasta Sauce of the Day' },
+      { qty: '20g', name: 'Grated Parmigiano' },
       { qty: '1 tbsp', name: 'EVOO' },
       { qty: 'pinch', name: 'Chili flakes (optional)' },
     ],
@@ -119,11 +119,11 @@ const RECIPES: Record<string, Recipe> = {
   },
   fish: {
     ingredients: [
-      { qty: '180g', name: 'White fish fillet, skin on' },
-      { qty: '1 tbsp', name: 'Grapeseed oil' },
+      { qty: '180g', name: 'White Fish Fillet, Skin on' },
+      { qty: '1 tbsp', name: 'Grapeseed Oil' },
       { qty: '1 tbsp', name: 'Butter' },
-      { qty: '1', name: 'Lemon wedge' },
-      { qty: 'to taste', name: 'Salt and white pepper' },
+      { qty: '1', name: 'Lemon Wedge' },
+      { qty: 'to taste', name: 'Salt and White Pepper' },
     ],
     steps: [
       { text: 'Score skin and pat completely dry.' },
@@ -135,11 +135,11 @@ const RECIPES: Record<string, Recipe> = {
   },
   chicken: {
     ingredients: [
-      { qty: '220g', name: 'Chicken breast, brined' },
-      { qty: '1 tbsp', name: 'Neutral oil' },
-      { qty: '1 tbsp', name: 'Compound butter' },
+      { qty: '220g', name: 'Chicken Breast, Brined' },
+      { qty: '1 tbsp', name: 'Neutral Oil' },
+      { qty: '1 tbsp', name: 'Compound Butter' },
       { qty: '2 sprigs', name: 'Rosemary' },
-      { qty: 'to taste', name: 'Salt and pepper' },
+      { qty: 'to taste', name: 'Salt and Pepper' },
     ],
     steps: [
       { text: 'Pat chicken dry, season both sides.' },

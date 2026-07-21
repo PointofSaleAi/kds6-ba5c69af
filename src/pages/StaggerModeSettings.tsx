@@ -112,7 +112,7 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
 
                 {/* Preview timeline */}
                 <div className="mt-4">
-                  <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Release preview</div>
+                  <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Release Preview</div>
                   <div className="flex items-end gap-2">
                     {previewSlots.map((slot, i) => (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">

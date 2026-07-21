@@ -17,9 +17,9 @@ interface PrinterDevice {
 
 const mockPrinters: PrinterDevice[] = [
   { id: 'p1', name: 'Kitchen Epson TM-T88', ip: '192.168.1.101', status: 'online' },
-  { id: 'p2', name: 'Bar printer', ip: '192.168.1.102', status: 'online' },
-  { id: 'p3', name: 'Expo printer', ip: '192.168.1.103', status: 'low-paper' },
-  { id: 'p4', name: 'Backup printer', ip: '192.168.1.104', status: 'offline' },
+  { id: 'p2', name: 'Bar Printer', ip: '192.168.1.102', status: 'online' },
+  { id: 'p3', name: 'Expo Printer', ip: '192.168.1.103', status: 'low-paper' },
+  { id: 'p4', name: 'Backup Printer', ip: '192.168.1.104', status: 'offline' },
 ];
 
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
@@ -75,7 +75,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Printer size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">Printer settings</h2>
+            <h2 className="text-lg font-bold text-text-primary">Printer Settings</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -84,7 +84,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
           <div className="flex-1 overflow-y-auto">
             {/* Current main */}
             <div className="px-4 pt-4 pb-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Current main printer</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Current Main Printer</div>
               {(() => {
                 const current = mockPrinters.find((p) => p.id === mainPrinter);
                 if (!current) return null;
@@ -103,7 +103,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
 
             {/* Available printers */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Available printers</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Available Printers</div>
               <div className="space-y-2">
                 {mockPrinters.map((printer) => (
                   <div

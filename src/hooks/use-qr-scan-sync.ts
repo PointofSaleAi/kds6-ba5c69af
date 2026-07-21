@@ -15,7 +15,7 @@ export function useQrScanSync() {
     const unsub = subscribeScan(({ orderId, itemId }) => {
       const order = orders.find(o => o.id === orderId);
       if (!order) {
-        toast({ title: 'Scan ignored', description: 'Order not on this screen.' });
+        toast({ title: 'Scan Ignored', description: 'Order not on this screen.' });
         return;
       }
       let match: { name: string; done: boolean } | null = null;
@@ -29,11 +29,11 @@ export function useQrScanSync() {
         if (match) break;
       }
       if (!match) {
-        toast({ title: 'Scan ignored', description: 'Product not found.' });
+        toast({ title: 'Scan Ignored', description: 'Product not found.' });
         return;
       }
       if (match.done) {
-        toast({ title: 'Already served', description: `${match.name} on #${order.orderNumber}.` });
+        toast({ title: 'Already Served', description: `${match.name} on #${order.orderNumber}.` });
         return;
       }
       window.dispatchEvent(

@@ -349,7 +349,7 @@ function CalmBoardBody() {
       {CALM_ORDER_NOTE && (
         <div className="px-3 pt-2">
           <div className="rounded-md bg-[#FFF8E1] border border-[#F5D57A] px-2 py-1 text-[10px] text-[#8A5A00] leading-snug">
-            <span className="font-bold uppercase tracking-wide mr-1">Order note</span>
+            <span className="font-bold uppercase tracking-wide mr-1">Order Note</span>
             {CALM_ORDER_NOTE}
           </div>
         </div>
@@ -563,7 +563,7 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
           <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
           <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
           <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
-          <div className="text-[11px] text-[#8E44AD] font-semibold">No pickles</div>
+          <div className="text-[11px] text-[#8E44AD] font-semibold">No Pickles</div>
         </div>
         <div>
           <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
@@ -718,7 +718,7 @@ function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
         </div>
         <div className="px-3 py-1.5 border-t border-border">
           <div className="text-[9px] font-bold text-text-secondary">Allergies</div>
-          <div className="text-[10px]">Allow pina</div>
+          <div className="text-[10px]">Allow Pina</div>
         </div>
         <button className="w-full border-t border-border text-[11px] font-bold py-2 flex items-center justify-center gap-1.5">
           <Flame className="w-3 h-3" /> COOK
@@ -831,7 +831,7 @@ function DarkCommandTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
             <span className="text-[12px] font-semibold">Meatballs</span>
           </div>
           <div className="pl-6 mt-0.5 text-[10px] text-[#B8B8CC] space-y-0.5">
-            <div>Medium rare</div>
+            <div>Medium Rare</div>
             <div>Extra Cheese</div>
             <div className="italic">"Make it extra spicy please"</div>
           </div>

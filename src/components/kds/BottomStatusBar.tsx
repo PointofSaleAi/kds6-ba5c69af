@@ -272,7 +272,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 )}
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top"><p>Order type</p></TooltipContent>
+            <TooltipContent side="top"><p>Order Type</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 

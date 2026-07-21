@@ -44,11 +44,11 @@ export function FloatingQrScanBar() {
       items.find(i => i.name.toLowerCase().includes(q));
 
     if (!match) {
-      toast({ title: 'No product matched', description: `"${raw}" was not found on any active ticket.` });
+      toast({ title: 'No Product Matched', description: `"${raw}" was not found on any active ticket.` });
       return;
     }
     if (match.done) {
-      toast({ title: 'Already served', description: `${match.name} on #${match.orderNumber}.` });
+      toast({ title: 'Already Served', description: `${match.name} on #${match.orderNumber}.` });
     } else {
       markItemDone(match.orderId, match.id);
       toast({ title: 'Marked as Served', description: `${match.name} on #${match.orderNumber}.` });
