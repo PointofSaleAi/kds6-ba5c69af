@@ -1404,7 +1404,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : effectiveCardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                          {renderOrderCard(order)}
+                          {renderOrderCard(getStationDisplayOrder(order), { compactRows: true })}
                         </motion.div>
                       ))}
                     </div>
@@ -1413,7 +1413,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
-                          {renderOrderCard(order)}
+                          {renderOrderCard(getStationDisplayOrder(order))}
                         </motion.div>
                       ))}
                     </div>
@@ -1424,9 +1424,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
                           {col.map((order) => (
                             <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
-                              {renderOrderCard(order)}
+                              {renderOrderCard(getStationDisplayOrder(order))}
                             </motion.div>
                           ))}
+
                         </div>
                       ))}
                     </div>
