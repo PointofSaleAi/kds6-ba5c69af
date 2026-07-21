@@ -123,8 +123,8 @@ export default {
           to: { height: "0" },
         },
         "ticket-blink": {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(var(--ticket-blink-rgb, 226 75 74), 0)" },
-          "50%": { boxShadow: "0 0 18px 4px rgba(var(--ticket-blink-rgb, 226 75 74), 0.7)" },
+          "0%, 100%": { boxShadow: "0 0 0 0 rgb(var(--ticket-blink-rgb, 226 75 74) / 0)" },
+          "50%": { boxShadow: "0 0 18px 4px rgb(var(--ticket-blink-rgb, 226 75 74) / 0.7)" },
         },
       },
       animation: {
