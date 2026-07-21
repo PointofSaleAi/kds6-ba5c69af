@@ -810,7 +810,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     const s = rowStates[i.id] ?? 'idle';
     return s === 'idle';
   }));
-  const blinkColor = (isOvertimeElapsed && !ticketAcknowledged && ticketState !== 'done')
+  const blinkColor = (isOvertimeElapsed && !ticketAcknowledged)
     ? timerStatus.color
     : (pendingNewItem ? (rules[0]?.color || '#4A4A47') : null);
 
