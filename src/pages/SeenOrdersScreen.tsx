@@ -33,6 +33,15 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
+function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
+  const safeColumnCount = Math.max(1, columnCount);
+  const columns = Array.from({ length: safeColumnCount }, () => [] as T[]);
+  items.forEach((item, i) => {
+    columns[i % safeColumnCount].push(item);
+  });
+  return columns;
+}
+
 export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default', staggerColumnCount }: SeenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const orders = ordersProp ?? storeOrders;
