@@ -89,7 +89,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -118,24 +118,30 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
   const fallbackTicketsRoute = useMemo(() => getTicketsRouteForCardVariant(cardVariant, legacyActions), [cardVariant, legacyActions]);
-  const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(() => readStoredTicketsRoute(fallbackTicketsRoute));
+  // Prefer the tickets route implied by the current URL (via KDSSettingsProvider's
+  // activeTicketsRoute) so History/Seen/Unseen always render the same layout as
+  // the Tickets screen for that route. Fall back to persisted preference only
+  // when the current path doesn't map to a tickets route (e.g. inside /settings
+  // when opened from a non-tickets entry).
+  const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(
+    () => activeTicketsRoute ?? readStoredTicketsRoute(fallbackTicketsRoute),
+  );
   const effectiveCardVariant = getCardVariantForTicketsRoute(selectedTicketsRoute);
   const effectiveLegacyActions = selectedTicketsRoute === 'Default';
   const effectiveTextSize = getRouteSetting(selectedTicketsRoute, 'textSize') || textSize;
   const effectiveTicketSpacing = getRouteSetting(selectedTicketsRoute, 'ticketSpacing') || ticketSpacing;
 
+  // Keep selectedTicketsRoute aligned with the URL as the user navigates
+  // between /kds/vN routes. Only fall back to persisted storage when the
+  // current path is not a tickets route.
   useEffect(() => {
-    setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
-  }, [fallbackTicketsRoute]);
+    setSelectedTicketsRoute(activeTicketsRoute ?? readStoredTicketsRoute(fallbackTicketsRoute));
+  }, [activeTicketsRoute, fallbackTicketsRoute]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const syncTicketsRoute = (event?: Event) => {
-      if (event instanceof CustomEvent && typeof event.detail === 'string') {
-        setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
-        return;
-      }
-      setSelectedTicketsRoute(readStoredTicketsRoute(fallbackTicketsRoute));
+    const syncTicketsRoute = () => {
+      setSelectedTicketsRoute(activeTicketsRoute ?? readStoredTicketsRoute(fallbackTicketsRoute));
     };
     window.addEventListener(TICKETS_ROUTE_CHANGE_EVENT, syncTicketsRoute);
     window.addEventListener('storage', syncTicketsRoute);
@@ -143,7 +149,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       window.removeEventListener(TICKETS_ROUTE_CHANGE_EVENT, syncTicketsRoute);
       window.removeEventListener('storage', syncTicketsRoute);
     };
-  }, [fallbackTicketsRoute]);
+  }, [activeTicketsRoute, fallbackTicketsRoute]);
 
   useEffect(() => {
     const handler = () => setAiAssistantOpen(true);
