@@ -532,11 +532,11 @@ export const mockOrders: Order[] = [
           { id: 'i-022', name: 'Mushroom Pasta',
             category: 'Pasta', quantity: 1, modifiers: [{ text: 'Gluten Free Pasta', type: 'neutral' }], allergens: [{ type: 'egg', label: 'EGG', icon: '\u{1F95A}' }], station: 'Grill' },
           { id: 'i-022b', name: 'Beef Wellington',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Medium rare', type: 'neutral' }, { text: '+ Red Wine Jus', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Medium rare', type: 'neutral' }, { text: '+ Red Wine Jus', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill', isNew: true },
           { id: 'i-022c', name: 'Grilled Halloumi',
             category: 'Vegetarian', quantity: 2, modifiers: [{ text: '+ Pomegranate', type: 'extra' }], allergens: [{ type: 'dairy', label: 'DAIRY', icon: '\u{1F95B}' }], station: 'Salad' },
           { id: 'i-022d', name: 'Pork Belly',
-            category: 'Meat', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: '+ Apple Compote', type: 'extra' }], allergens: [], station: 'Grill' },
+            category: 'Meat', quantity: 1, modifiers: [{ text: 'Crispy Skin', type: 'neutral' }, { text: '+ Apple Compote', type: 'extra' }], allergens: [], station: 'Grill', isNew: true },
         ],
       },
       {
