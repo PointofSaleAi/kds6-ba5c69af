@@ -24,6 +24,7 @@ interface SeenOrdersScreenProps {
   onItemDismiss?: (orderId: string, item: import("@/types/kds").OrderItem) => void;
   renderCard?: (order: import('@/types/kds').Order) => ReactNode;
   cardVariant?: CardVariant;
+  staggerColumnCount?: number;
 }
 
 const cardVariants = {
@@ -32,7 +33,7 @@ const cardVariants = {
   exit: { opacity: 0, scale: 0.9, filter: 'grayscale(1)', transition: { duration: 0.4, ease: 'easeOut' as const } },
 };
 
-export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default' }: SeenOrdersScreenProps) {
+export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default', staggerColumnCount }: SeenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const orders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
@@ -119,14 +120,18 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
               </AnimatePresence>
             </div>
           ) : (
-            <div className="flex flex-row flex-wrap gap-3 items-start">
-              <AnimatePresence mode="popLayout">
-                {seenOrders.map(order => (
-                  <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="flex-1" style={{ minWidth: 280, maxWidth: 400 }}>
-                    {renderOne(order)}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+            <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
+              {distributeIntoColumns(seenOrders, staggerColumnCount ?? (isPortrait ? 2 : 4)).map((col, colIdx) => (
+                <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
+                  <AnimatePresence mode="popLayout">
+                    {col.map(order => (
+                      <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="min-w-0">
+                        {renderOne(order)}
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              ))}
             </div>
           );
         })()}
