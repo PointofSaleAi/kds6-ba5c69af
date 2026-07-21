@@ -124,7 +124,7 @@ export default {
         },
         "ticket-blink": {
           "0%, 100%": { boxShadow: "0 0 0 0 rgb(var(--ticket-blink-rgb, 226 75 74) / 0)" },
-          "50%": { boxShadow: "0 0 18px 4px rgb(var(--ticket-blink-rgb, 226 75 74) / 0.7)" },
+          "50%": { boxShadow: "0 0 12px 2px rgb(var(--ticket-blink-rgb, 226 75 74) / 0.35)" },
         },
       },
       animation: {
