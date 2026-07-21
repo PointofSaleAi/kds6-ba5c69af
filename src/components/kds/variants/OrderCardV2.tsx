@@ -806,7 +806,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const handleBump = handleTicketAdvance;
 
   return (
-    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div
+      className={`bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col ${blinkColor ? 'animate-ticket-blink' : ''}`}
+      style={blinkColor ? ({ ['--ticket-blink-rgb' as string]: hexToRgbTriplet(blinkColor) } as React.CSSProperties) : undefined}
+    >
       {/* HEADER */}
       <div
         className={`px-2.5 py-2 bg-muted ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
