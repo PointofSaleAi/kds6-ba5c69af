@@ -175,6 +175,21 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const overtimeItems = useMemo(() => mode === 'active' ? buildOvertimeItems(activeRecords) : [], [activeRecords, mode]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(true);
+
+  // Post-fire items: products added to tickets after their course was fired (isNew flag)
+  const postFireItems = useMemo(() => {
+    if (mode !== 'active') return [] as { name: string; count: number }[];
+    const map = new Map<string, number>();
+    for (const r of activeRecords) {
+      if (!r.isNew) continue;
+      map.set(r.name, (map.get(r.name) || 0) + r.quantity);
+    }
+    return Array.from(map.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  }, [activeRecords, mode]);
+  const postFireTotal = postFireItems.reduce((a, i) => a + i.count, 0);
+  const [postFireCollapsed, setPostFireCollapsed] = useState(true);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
   const categoryCount = selectedCategories?.size ?? 0;
   const itemCount = selectedItems?.size ?? 0;
