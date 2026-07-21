@@ -493,6 +493,29 @@ export function TicketStudioSkeleton() {
 
 
   const board = BOARDS.find((b) => b.id === selectedBoard) ?? BOARDS[0];
+  const boardB = BOARDS.find((b) => b.id === selectedBoardB) ?? BOARDS[1];
+
+  const handleBoardClick = (id: string) => {
+    if (!compareMode) {
+      setSelectedBoard(id);
+      return;
+    }
+    if (activeSlot === 'A') {
+      setSelectedBoard(id);
+      setActiveSlot('B');
+    } else {
+      setSelectedBoardB(id);
+      setActiveSlot('A');
+    }
+  };
+
+  const toggleCompare = () => {
+    setCompareMode((v) => {
+      const next = !v;
+      if (next) setActiveSlot('A');
+      return next;
+    });
+  };
 
   // Preview-only aging override. Uses each rule's minMinutes + 30s so the
   // preview lands squarely in that band. Never persists to real orders.
