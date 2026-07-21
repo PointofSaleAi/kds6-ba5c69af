@@ -82,7 +82,7 @@ function ProductCuePopover({
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
   const GAP = 12;
-  const cardW = Math.min(280, vw - 24);
+  const cardW = Math.min(200, vw - 24);
   const spaceBelow = vh - (spot.top + spot.height);
   const placeBelow = spaceBelow >= cardH + GAP + 12;
   let top = placeBelow ? spot.top + spot.height + GAP : spot.top - cardH - GAP;
