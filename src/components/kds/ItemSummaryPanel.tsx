@@ -211,7 +211,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
   useEffect(() => {
     if (hasSeededDefaults.current) return;
-    if (summary.length === 0 && overtimeItems.length === 0) return;
+    if (summary.length === 0 && overtimeItems.length === 0 && postFireItems.length === 0) return;
     hasSeededDefaults.current = true;
     setCollapsedSections(new Set(summary.map(c => c.category)));
     if (overtimeItems.length > 0) setOvertimeCollapsed(true);
@@ -312,7 +312,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
       </div>
 
       {/* Expand-all toggle row */}
-      {(summary.length > 0 || overtimeItems.length > 0) && (
+      {(summary.length > 0 || overtimeItems.length > 0 || postFireItems.length > 0) && (
         <button
           type="button"
           onClick={toggleAllSections}
@@ -500,7 +500,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             </div>
           )}
 
-          {summary.length === 0 && overtimeItems.length === 0 && (
+          {summary.length === 0 && overtimeItems.length === 0 && postFireItems.length === 0 && (
             <div className="px-3 py-4 text-center">
               <p className="text-[12px] text-text-muted">{t.allItemsCompleted}</p>
             </div>
