@@ -1002,6 +1002,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               compact={isCompact}
               isHistory={isHistory}
               productTimersEnabled={productTimers}
+              isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle' && !isHistory}
             />
           ))
 
