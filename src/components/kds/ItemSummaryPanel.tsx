@@ -378,12 +378,14 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     />
                   </div>
                 </button>
-                <div className="flex-1 flex items-center gap-1.5 py-2 pr-1">
-                  
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleOvertimeHeaderFilter(); }}
+                  className="flex-1 flex items-center gap-1.5 py-2 pr-1 text-left hover:bg-destructive/5 transition-colors rounded"
+                >
                   <span className="text-[12px] uppercase tracking-widest font-bold text-destructive">
                     {t.overtimeHeader}
                   </span>
-                </div>
+                </button>
                 <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-destructive text-destructive-foreground">
                   {overtimeTotal}
                 </span>
