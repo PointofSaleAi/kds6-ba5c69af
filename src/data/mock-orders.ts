@@ -304,6 +304,7 @@ export const mockOrders: Order[] = [
             modifiers: [{ text: '+ Garlic Butter', type: 'extra' }],
             allergens: [{ type: 'shellfish', label: 'SHELLFISH', icon: '\u{1F990}' }],
             station: 'Grill',
+            isNew: true,
           },
         ],
       },
