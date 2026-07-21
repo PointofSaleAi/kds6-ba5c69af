@@ -140,6 +140,7 @@ const defaults: KDSSettings = {
   ticketSpacing: 'Standard',
   ticketHeaderStyle: 'default',
   routeOverrides: {},
+  reducedMotion: false,
 };
 
 function loadSettings(): KDSSettings {
