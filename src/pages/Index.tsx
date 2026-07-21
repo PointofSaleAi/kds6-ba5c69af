@@ -203,7 +203,7 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
         <MainOrderView
           onNavigate={handleNavigate}
           settingsOpen={inSettings}
-          onCloseSettings={() => navigate(basePath)}
+          onCloseSettings={() => navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')))}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
