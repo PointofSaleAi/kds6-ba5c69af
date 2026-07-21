@@ -580,19 +580,34 @@ export function TicketStudioSkeleton() {
 
 
   return (
-    <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-4 pb-2">
-      <div className="flex-1 min-h-0 flex gap-4">
+    <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-2 pb-0">
+      <div className="flex-1 min-h-0 flex gap-2">
         {/* MIDDLE: ticket preview */}
       <div className="flex-1 min-w-0 flex flex-col">
         <div className="flex-1 min-h-0 rounded-2xl border border-border bg-card overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <div className="flex flex-col justify-center min-w-0">
-              <h2 className="text-sm font-bold text-text-primary truncate">{board.name}</h2>
+              <h2 className="text-sm font-bold text-text-primary truncate">
+                {compareMode ? `${board.name}  vs  ${boardB.name}` : board.name}
+              </h2>
               <span className="text-xs text-text-secondary truncate">
-                {board.subtitle} · Board 1 of {BOARDS.length}
+                {compareMode
+                  ? `Comparing 2 boards · tap boards below to swap slot ${activeSlot}`
+                  : `${board.subtitle} · Board 1 of ${BOARDS.length}`}
               </span>
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={toggleCompare}
+                className={`h-8 rounded-full text-[11px] font-semibold inline-flex items-center justify-center gap-1 px-3 transition-colors ${
+                  compareMode
+                    ? 'bg-foreground text-background hover:bg-foreground/90'
+                    : 'bg-muted text-text-primary hover:bg-muted/70'
+                }`}
+              >
+                <Columns2 className="w-3 h-3" />
+                Two-Up
+              </button>
               <button
                 onClick={() => setPreviewOpen(true)}
                 className="h-8 rounded-full bg-muted text-[11px] font-semibold text-text-primary inline-flex items-center justify-center gap-1 px-3 hover:bg-muted/70 transition-colors"
@@ -610,7 +625,7 @@ export function TicketStudioSkeleton() {
             </div>
           </div>
           <div
-            className="flex-1 min-h-0 overflow-hidden p-3"
+            className="flex-1 min-h-0 overflow-hidden p-0"
             style={{
               background:
                 theme === 'dark'
@@ -627,16 +642,43 @@ export function TicketStudioSkeleton() {
               data-density={density}
               data-textsize={textSize}
               data-layout={layout}
-              className={`w-full h-full ${theme === 'dark' ? 'dark' : ''}`}
+              className={`w-full h-full ${theme === 'dark' ? 'dark' : ''} ${compareMode ? 'grid grid-cols-2 gap-1' : ''}`}
             >
-              <KdsScreenMock
-                boardId={selectedBoard}
-                identifier={identifier as 'order' | 'guest'}
-                textSize={textSize}
-                agingOverrideSeconds={agingOverrideSeconds}
-                onHeaderClick={(k) => openOrderTypeInPanel(k)}
-                onTimerClick={cycleAgingStage}
-              />
+              {compareMode ? (
+                <>
+                  <div className={`relative min-w-0 min-h-0 overflow-hidden border-2 ${activeSlot === 'A' ? 'border-foreground' : 'border-transparent'}`}>
+                    <div className="absolute top-1 left-1 z-10 h-5 min-w-[20px] px-1.5 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center">A</div>
+                    <KdsScreenMock
+                      boardId={selectedBoard}
+                      identifier={identifier as 'order' | 'guest'}
+                      textSize={textSize}
+                      agingOverrideSeconds={agingOverrideSeconds}
+                      onHeaderClick={(k) => openOrderTypeInPanel(k)}
+                      onTimerClick={cycleAgingStage}
+                    />
+                  </div>
+                  <div className={`relative min-w-0 min-h-0 overflow-hidden border-2 ${activeSlot === 'B' ? 'border-foreground' : 'border-transparent'}`}>
+                    <div className="absolute top-1 left-1 z-10 h-5 min-w-[20px] px-1.5 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center">B</div>
+                    <KdsScreenMock
+                      boardId={selectedBoardB}
+                      identifier={identifier as 'order' | 'guest'}
+                      textSize={textSize}
+                      agingOverrideSeconds={agingOverrideSeconds}
+                      onHeaderClick={(k) => openOrderTypeInPanel(k)}
+                      onTimerClick={cycleAgingStage}
+                    />
+                  </div>
+                </>
+              ) : (
+                <KdsScreenMock
+                  boardId={selectedBoard}
+                  identifier={identifier as 'order' | 'guest'}
+                  textSize={textSize}
+                  agingOverrideSeconds={agingOverrideSeconds}
+                  onHeaderClick={(k) => openOrderTypeInPanel(k)}
+                  onTimerClick={cycleAgingStage}
+                />
+              )}
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
               [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-1 > * + *,
@@ -659,25 +701,34 @@ export function TicketStudioSkeleton() {
         </div>
 
         {/* BOTTOM: horizontal board list */}
-        <aside className="h-[110px] shrink-0 rounded-2xl border border-border bg-card flex flex-col mt-4">
+        <aside className="h-[92px] shrink-0 rounded-2xl border border-border bg-card flex flex-col mt-2">
           <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
             <h2 className="text-sm font-bold text-text-primary">Boards</h2>
-            <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
+            <span className="text-[10px] text-text-secondary">
+              {compareMode ? `Slot ${activeSlot} · tap to assign` : `${BOARDS.length} total`}
+            </span>
           </div>
           <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden p-2">
             <div className="flex items-stretch gap-2 h-full">
               {BOARDS.map((b) => {
-                const active = b.id === selectedBoard;
+                const isA = b.id === selectedBoard;
+                const isB = compareMode && b.id === selectedBoardB;
+                const active = compareMode ? (isA || isB) : isA;
                 return (
                   <button
                     key={b.id}
-                    onClick={() => setSelectedBoard(b.id)}
-                    className={`shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
+                    onClick={() => handleBoardClick(b.id)}
+                    className={`relative shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
                       active
                         ? 'border-foreground bg-muted/40 shadow-sm'
                         : 'border-border hover:border-text-secondary hover:bg-muted/20'
                     }`}
                   >
+                    {compareMode && (isA || isB) && (
+                      <div className="absolute top-1 right-1 h-4 min-w-[16px] px-1 rounded-full bg-foreground text-background text-[9px] font-bold flex items-center justify-center">
+                        {isA ? 'A' : 'B'}
+                      </div>
+                    )}
                     <div className="relative w-[80px] h-full rounded-md bg-muted overflow-hidden shrink-0">
                       <BoardThumb id={b.id} active={active} />
                       {b.featured && (
