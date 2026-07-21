@@ -845,6 +845,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
       {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && orderMessages.length > 0 && (
+        <KitchenMessageSection
+          messages={orderMessages}
+          replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
+          onAcknowledge={acknowledgeMessage}
+          onReply={sendReply}
+        />
+      )}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
 
