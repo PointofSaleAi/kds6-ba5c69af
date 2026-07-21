@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageCircle, Reply } from 'lucide-react';
+import { MessageCircle, Reply, Eye } from 'lucide-react';
 import itemReadyIcon from '@/assets/item-ready-icon.svg';
 import type { KitchenMessage, KitchenReply } from '@/types/kitchen-message';
 import { KitchenReplyDialog } from './KitchenReplyDialog';
@@ -9,12 +9,14 @@ interface KitchenMessageSectionProps {
   replies: KitchenReply[];
   onAcknowledge: (messageId: string) => void;
   onReply: (messageId: string, text: string) => void;
+  variant?: 'default' | 'v3';
 }
 
 import { formatTime, formatTimeAgo as timeAgo } from '@/lib/datetime';
 
-export function KitchenMessageSection({ messages, replies, onAcknowledge, onReply }: KitchenMessageSectionProps) {
+export function KitchenMessageSection({ messages, replies, onAcknowledge, onReply, variant = 'default' }: KitchenMessageSectionProps) {
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
+  const isV3 = variant === 'v3';
 
   if (messages.length === 0) return null;
 
@@ -27,7 +29,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
         return (
           <div
             key={msg.message_id}
-            className={`border-b border-border ${isPending ? 'animate-pulse-once' : ''} ${!isPending ? 'opacity-60' : ''}`}
+            className={`border-b border-border ${isPending ? 'animate-pulse-once' : ''} ${!isPending && !isV3 ? 'opacity-60' : ''}`}
           >
             {/* Header bar */}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-[#7C3AED]/10">
@@ -46,7 +48,29 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                   <p className="text-[10px] text-text-muted mt-1">{msg.employee_name} - {msg.employee_role}</p>
                 )}
               </div>
-              {isPending && (
+              {isV3 ? (
+                <div className="shrink-0">
+                  {isPending ? (
+                    <button
+                      onClick={() => onAcknowledge(msg.message_id)}
+                      aria-label="Seen & Acknowledge"
+                      className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
+                      style={{ backgroundColor: '#EBD7FF' }}
+                    >
+                      <Eye size={16} strokeWidth={2.5} className="text-[#7C3AED]" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setReplyTarget(msg)}
+                      aria-label="Reply"
+                      className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
+                      style={{ backgroundColor: '#EBD7FF' }}
+                    >
+                      <MessageCircle size={16} strokeWidth={2.5} className="text-[#7C3AED]" />
+                    </button>
+                  )}
+                </div>
+              ) : isPending && (
                 <div className="flex flex-col items-center gap-1 shrink-0">
                   <button
                     onClick={() => onAcknowledge(msg.message_id)}
