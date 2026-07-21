@@ -1151,7 +1151,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   return (
     <div
-      className={`fixed inset-0 flex bg-surface-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
+      className={`fixed inset-0 flex bg-tickets-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
       style={{ top: 'var(--training-bar-h, 0px)' }}
     >
       {/* Kitchen message flash notification */}
@@ -1190,7 +1190,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         {settingsOpen ? (
           <div
             className="flex flex-1 overflow-hidden p-4 gap-4"
-            style={{ background: 'hsl(var(--surface-bg))', order: 2 }}
+            style={{ background: 'hsl(var(--tickets-bg))', order: 2 }}
           >
             <div
               className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"

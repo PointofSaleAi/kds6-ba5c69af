@@ -42,6 +42,7 @@
     /* Surfaces */
     --surface-card: 0 0% 100%;
     --surface-bg: 210 14% 95%;
+    --tickets-bg: 210 14% 90%;
 
     /* Text */
     --text-primary: 210 25% 24%;
@@ -126,6 +127,7 @@
     /* Surfaces - v5 palette */
     --surface-card: 228 13% 14%;
     --surface-bg: 225 14% 11%;
+    --tickets-bg: 225 14% 8%;
 
     /* Text - high contrast on dark */
     --text-primary: 0 0% 92%;
