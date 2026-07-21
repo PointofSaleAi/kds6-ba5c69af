@@ -241,6 +241,8 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
   const handlePostFireHeaderFilter = () => {
     if (postFireItems.length === 0) return;
+    setExpandAllOn(false);
+    setPostFireCollapsed(false);
     const allSelected = postFireItems.every(i => selectedItems?.has(i.name));
     postFireItems.forEach(i => {
       const isSel = selectedItems?.has(i.name) ?? false;
@@ -250,12 +252,17 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
   const handleOvertimeHeaderFilter = () => {
     if (overtimeItems.length === 0) return;
+    setExpandAllOn(false);
+    setOvertimeCollapsed(false);
     const allSelected = overtimeItems.every(i => selectedItems?.has(i.name));
     overtimeItems.forEach(i => {
       const isSel = selectedItems?.has(i.name) ?? false;
       if (allSelected ? isSel : !isSel) onItemToggle?.(i.name);
     });
   };
+
+  const isOvertimeSelected = overtimeItems.length > 0 && overtimeItems.every(i => selectedItems?.has(i.name));
+  const isPostFireSelected = postFireItems.length > 0 && postFireItems.every(i => selectedItems?.has(i.name));
 
   const toggleAllSections = () => {
     if (expandAllOn) {
