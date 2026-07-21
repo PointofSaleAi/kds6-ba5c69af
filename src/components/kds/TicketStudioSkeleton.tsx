@@ -701,34 +701,25 @@ export function TicketStudioSkeleton() {
         </div>
 
         {/* BOTTOM: horizontal board list */}
-        <aside className="h-[92px] shrink-0 rounded-2xl border border-border bg-card flex flex-col mt-2">
+        <aside className="h-[110px] shrink-0 rounded-2xl border border-border bg-card flex flex-col mt-4">
           <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
             <h2 className="text-sm font-bold text-text-primary">Boards</h2>
-            <span className="text-[10px] text-text-secondary">
-              {compareMode ? `Slot ${activeSlot} · tap to assign` : `${BOARDS.length} total`}
-            </span>
+            <span className="text-[10px] text-text-secondary">{BOARDS.length} total</span>
           </div>
           <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden p-2">
             <div className="flex items-stretch gap-2 h-full">
               {BOARDS.map((b) => {
-                const isA = b.id === selectedBoard;
-                const isB = compareMode && b.id === selectedBoardB;
-                const active = compareMode ? (isA || isB) : isA;
+                const active = b.id === selectedBoard;
                 return (
                   <button
                     key={b.id}
-                    onClick={() => handleBoardClick(b.id)}
-                    className={`relative shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
+                    onClick={() => (compareMode ? handleBoardClick(b.id) : setSelectedBoard(b.id))}
+                    className={`shrink-0 text-left rounded-xl border-2 transition-all p-2 flex items-center gap-2.5 h-full w-[190px] ${
                       active
                         ? 'border-foreground bg-muted/40 shadow-sm'
                         : 'border-border hover:border-text-secondary hover:bg-muted/20'
                     }`}
                   >
-                    {compareMode && (isA || isB) && (
-                      <div className="absolute top-1 right-1 h-4 min-w-[16px] px-1 rounded-full bg-foreground text-background text-[9px] font-bold flex items-center justify-center">
-                        {isA ? 'A' : 'B'}
-                      </div>
-                    )}
                     <div className="relative w-[80px] h-full rounded-md bg-muted overflow-hidden shrink-0">
                       <BoardThumb id={b.id} active={active} />
                       {b.featured && (
