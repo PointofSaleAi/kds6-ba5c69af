@@ -242,8 +242,16 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const handlePostFireHeaderFilter = () => {
     if (postFireItems.length === 0) return;
     const allSelected = postFireItems.every(i => selectedItems?.has(i.name));
-    // If all already selected, clear them; otherwise select all missing ones
     postFireItems.forEach(i => {
+      const isSel = selectedItems?.has(i.name) ?? false;
+      if (allSelected ? isSel : !isSel) onItemToggle?.(i.name);
+    });
+  };
+
+  const handleOvertimeHeaderFilter = () => {
+    if (overtimeItems.length === 0) return;
+    const allSelected = overtimeItems.every(i => selectedItems?.has(i.name));
+    overtimeItems.forEach(i => {
       const isSel = selectedItems?.has(i.name) ?? false;
       if (allSelected ? isSel : !isSel) onItemToggle?.(i.name);
     });
