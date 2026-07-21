@@ -631,7 +631,7 @@ export const mockOrders: Order[] = [
           { id: 'i-029', name: 'Sea Bass',
             category: 'Seafood', quantity: 1, modifiers: [{ text: 'Pan Seared', type: 'neutral' }], allergens: [{ type: 'shellfish', label: 'FISH', icon: '\u{1F990}' }], station: 'Grill' },
           { id: 'i-030', name: 'Chicken Caesar Wrap',
-            category: 'Sandwiches', quantity: 1, modifiers: [{ text: '+ Avocado', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill' },
+            category: 'Sandwiches', quantity: 1, modifiers: [{ text: '+ Avocado', type: 'extra' }], allergens: [{ type: 'gluten', label: 'GLUTEN', icon: '\u{1F33E}' }], station: 'Grill', isNew: true },
         ],
       },
       {
