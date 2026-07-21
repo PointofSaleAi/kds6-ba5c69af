@@ -109,12 +109,12 @@ function KdsScreenMock({
             />
 
             <div className="flex-1 min-w-0 flex">
-              <div className="flex-1 min-w-0 overflow-hidden p-2">
+              <div className="flex-1 min-w-0 overflow-auto p-2">
                 <div
-                  className="grid grid-cols-4 grid-rows-2 gap-2 h-full content-start items-start"
+                  className="grid grid-cols-4 auto-rows-min gap-2 content-start items-start"
                 >
                   {SCREEN_ORDER_TYPES.map((ot, i) => (
-                    <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
+                    <div key={ot.key} className="min-w-0 flex items-start justify-center">
                       <div
                         data-ts-ticket
                         className="origin-top w-full"
