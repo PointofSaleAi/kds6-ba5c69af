@@ -542,7 +542,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const { timeFormat } = useLanguage();
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
-  const { orderTypeDetailedColors } = useKDSSettings();
+  const { orderTypeDetailedColors, reducedMotion } = useKDSSettings();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const { getStatusForElapsed, rules } = useStatusRules();
   const timerStatus = getStatusForElapsed(elapsed);
