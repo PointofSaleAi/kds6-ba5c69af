@@ -1,41 +1,31 @@
-## Diagnosis
 
-The mismatch is caused by the layout route being reset to `/kds/v1` when leaving the Tickets screen or Settings, even though the selected Ticket Layout is `/v3`.
+## Problem
 
-Confirmed from the code:
-- `/kds/v3` renders `Index cardVariant="v2"`, but `/kds/v1` renders default `/v1` UI (`src/App.tsx:80-95`).
-- `Index` hardcodes `basePath = '/kds/v1'`, and Settings close currently navigates back to that base route (`src/pages/Index.tsx:56`, `src/pages/Index.tsx:205-206`).
-- `MainOrderView` sets History/Seen/Unseen via internal `activeNav`, but then calls `onCloseSettings?.()` for those screens, which navigates to `/kds/v1` even when the user is not in Settings (`src/pages/MainOrderView.tsx:903-914`).
-- `selectedTicketsRoute` prefers `activeTicketsRoute`, so once the URL becomes `/kds/v1`, `effectiveCardVariant` becomes the `/v1` ticket UI (`src/pages/MainOrderView.tsx:126-139`).
-- The settings route `/kds/v1/settings/...` is also interpreted as active ticket route `v1` by `pathToRouteKey`, so Settings can accidentally override the selected layout context (`src/hooks/use-kds-settings.tsx:183-188`).
+In Ticket Studio, `KdsScreenMock` embeds the real full-size `KDSSidebar` (80px), `ItemSummaryPanel`, and `BottomStatusBar` into a small preview container. Because only the tickets are scaled (not the chrome), the sidebar/summary/footer dominate the preview and overlap content. The grid is also hardcoded to `grid-cols-3`, while the real Tickets screen renders 4 columns.
 
-## Fix plan
+## Fix (single file: `src/components/kds/TicketStudioSkeleton.tsx`)
 
-1. **Stop sub-screen navigation from forcing `/kds/v1`**
-   - In `MainOrderView`, update `handleNavigate` so `history`, `seen-orders`, and `unseen-orders` only change `activeNav` when already on the ticket board.
-   - Only close Settings when `settingsOpen` is actually true.
+Treat the mock as a fixed "virtual KDS screen" (e.g. 1440×900) that gets uniformly `transform: scale()`d into the preview container. This keeps every element (sidebar, summary, footer, tickets) proportional to what the real Tickets screen looks like.
 
-2. **Return from Settings to the selected ticket layout, not `/kds/v1`**
-   - In `Index`, replace the hardcoded settings close target with `getTicketsRoutePath(readStoredTicketsRoute('v3'))`.
-   - Keep the existing Settings URL if needed, but make leaving Settings return to the selected `/kds/v3` route.
+1. **Wrap `KdsScreenMock` output in a scaled virtual viewport**
+   - Outer div: `w-full h-full relative overflow-hidden` + `ResizeObserver` measuring container size.
+   - Inner div: fixed `width: 1440px; height: 900px`, `transformOrigin: 'top left'`, `transform: scale(min(containerW/1440, containerH/900))`, centered via computed translate (or left-aligned with margin).
+   - This replaces the current per-ticket scaling logic.
 
-3. **Prevent Settings routes from pretending they are `/v1` tickets**
-   - In `use-kds-settings.tsx`, update `pathToRouteKey` so `/kds/v1/settings/...` returns `null` instead of `v1`.
-   - This makes Settings use the saved selected ticket layout rather than clobbering the active layout with the settings wrapper route.
+2. **Grid becomes 4 columns × 2 rows**
+   - Change `grid-cols-3` → `grid-cols-4`.
+   - Extend `SCREEN_ORDER_TYPES` to 8 entries (add `phone-in` and `scheduled`, which already exist as order type icons) so the 4×2 grid fills naturally.
+   - Remove the per-ticket `transform: scale(ticketScale)` and inline `width: 320` — tickets render at natural production size inside the virtual 1440px canvas, matching real Tickets screen density.
+   - Drop the custom `gridTemplateRows` calc; use `grid-rows-2` with `min-h-0`.
 
-4. **Make layout selection the single source of truth for all KDS sub-screens**
-   - Ensure `selectedTicketsRoute` resolves in this order:
-     1. direct ticket route (`/kds/v3`, `/kds/v4`, etc.)
-     2. saved Ticket Layout preference
-     3. safe fallback `v3`
-   - Then History, Seen, Unseen, and Tickets all pass through the same `renderOrderCard` path already in `MainOrderView`.
+3. **Remove obsolete scaling state**
+   - Delete `gridRef`, `fitScale`, `textScale`, `ticketScale`, and the associated `useLayoutEffect`.
+   - Keep `textSize` support by passing it through to `BoardTicketPreview` if it already reads it, or drop the prop usage here (it's a chrome-level concern, not needed for viewport scaling). Verify prop is still consumed elsewhere before removing.
 
-5. **Verification**
-   - Use Playwright with `kds-tickets-route = v3`.
-   - Open `/kds/v3` and verify Tickets renders V3 ticket UI.
-   - Click History, Seen, and Unseen from the sidebar and verify the URL does not degrade to `/kds/v1` and cards still render V3 UI.
-   - Open Settings > Display, select V3, close Settings, then repeat Tickets/History/Seen/Unseen verification.
+4. **Preserve behavior**
+   - Sidebar, summary panel, footer keep their real components and props unchanged — they just render inside the scaled virtual viewport.
+   - `data-ts-preview` / `data-ts-ticket` markers preserved so the onboarding walkthrough scoping still works.
 
-<presentation-actions>
-<presentation-link url="https://docs.lovable.dev/tips-tricks/troubleshooting">Troubleshooting docs</presentation-link>
-</presentation-actions>
+## Result
+
+Preview looks like a miniature, faithful screenshot of the real Tickets screen: narrow-looking sidebar/footer/summary relative to tickets, 4-column ticket grid, no overlap, and it stays crisp at any container size because it uses CSS transform scaling.
