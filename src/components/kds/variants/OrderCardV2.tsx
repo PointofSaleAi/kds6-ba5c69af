@@ -705,7 +705,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   }, [activeCourseIndex]);
 
 
-  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers, reducedMotion } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
