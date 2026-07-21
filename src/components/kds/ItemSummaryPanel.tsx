@@ -431,6 +431,75 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             </div>
           )}
 
+          {/* Post Fire section - items added to tickets after fire */}
+          {postFireItems.length > 0 && (
+            <div>
+              <div
+                className="flex items-center border-b border-border min-h-[36px] ring-1 ring-inset ring-border/50"
+                style={{ borderLeft: '2px solid hsl(var(--warning))' }}
+              >
+                <button
+                  onClick={handlePostFireToggle}
+                  className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
+                  aria-label={postFireCollapsed ? 'Expand post fire' : 'Collapse post fire'}
+                >
+                  <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
+                    <ChevronDown
+                      size={16}
+                      className={`text-text-primary dark:text-sidebar-foreground transition-transform duration-150 ${postFireCollapsed ? '-rotate-90' : ''}`}
+                    />
+                  </div>
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handlePostFireHeaderFilter(); }}
+                  className="flex-1 flex items-center gap-1.5 py-2 pr-1 text-left hover:bg-warning/5 transition-colors rounded"
+                >
+                  <span className="text-[12px] uppercase tracking-widest font-bold text-warning">
+                    Post Fire
+                  </span>
+                </button>
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white">
+                  {postFireTotal}
+                </span>
+              </div>
+
+              {!postFireCollapsed && (
+                <div className="pl-1.5 pr-2 py-0.5">
+                  {postFireItems.map((item) => {
+                    const isSelected = selectedItems?.has(item.name) ?? false;
+                    return (
+                      <div
+                        key={`postfire-${item.name}`}
+                        className="relative border-b border-border/30 last:border-b-0 bg-warning/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-warning"
+                      >
+                        <div
+                          className={`flex items-center justify-between ${isPortrait ? 'py-[1px] gap-1' : 'py-[2px]'} cursor-pointer`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onItemToggle?.(item.name);
+                          }}
+                        >
+                          <span
+                            className={`min-w-0 uppercase leading-tight break-words ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                            style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : {}) }}
+                          >
+                            {tp(item.name)}
+                          </span>
+                          <span
+                            className={`text-right text-[14px] font-bold tabular-nums ml-0.5 shrink-0 ${isSelected ? '' : 'text-warning'}`}
+                            style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
+                          >
+                            {item.count}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
           {summary.length === 0 && overtimeItems.length === 0 && (
             <div className="px-3 py-4 text-center">
               <p className="text-[12px] text-text-muted">{t.allItemsCompleted}</p>
