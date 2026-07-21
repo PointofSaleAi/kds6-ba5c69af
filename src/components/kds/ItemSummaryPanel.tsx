@@ -234,14 +234,31 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     setOvertimeCollapsed(v => !v);
   };
 
+  const handlePostFireToggle = () => {
+    setExpandAllOn(false);
+    setPostFireCollapsed(v => !v);
+  };
+
+  const handlePostFireHeaderFilter = () => {
+    if (postFireItems.length === 0) return;
+    const allSelected = postFireItems.every(i => selectedItems?.has(i.name));
+    // If all already selected, clear them; otherwise select all missing ones
+    postFireItems.forEach(i => {
+      const isSel = selectedItems?.has(i.name) ?? false;
+      if (allSelected ? isSel : !isSel) onItemToggle?.(i.name);
+    });
+  };
+
   const toggleAllSections = () => {
     if (expandAllOn) {
       setCollapsedSections(new Set(summary.map(c => c.category)));
       if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+      if (postFireItems.length > 0) setPostFireCollapsed(true);
       setExpandAllOn(false);
     } else {
       setCollapsedSections(new Set());
       if (overtimeItems.length > 0) setOvertimeCollapsed(false);
+      if (postFireItems.length > 0) setPostFireCollapsed(false);
       setExpandAllOn(true);
     }
   };
