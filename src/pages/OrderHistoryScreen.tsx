@@ -103,7 +103,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-auto p-4 bg-tickets-bg">
         <div className="space-y-2 max-w-4xl mx-auto">
           {isStationView && stationCourse && (
             <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-[12px] text-text-secondary">
