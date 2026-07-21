@@ -355,6 +355,16 @@ export default function DisplaySettings() {
         highlighted={hash === 'enable-badge'}
       />
 
+      <SettingsPill
+        icon={Zap}
+        iconColor="#7F8C8D"
+        label="Reduced Motion"
+        helper="Disable ticket, product row, and timer pill blinking animations."
+        right={<SwitchToggle checked={reducedMotion} onChange={setReducedMotion} />}
+        highlighted={hash === 'reduced-motion'}
+      />
+
+
 
       <SettingsPill
         icon={SlidersHorizontal}
