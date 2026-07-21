@@ -81,6 +81,7 @@ export interface KDSSettings {
   ticketSpacing: TicketSpacing;
   ticketHeaderStyle: TicketHeaderStyle;
   routeOverrides: RouteOverrides;
+  reducedMotion: boolean;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
