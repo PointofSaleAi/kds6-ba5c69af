@@ -544,8 +544,18 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const isDineIn = order.orderType === 'dine-in';
   const { orderTypeDetailedColors } = useKDSSettings();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
-  const { getStatusForElapsed } = useStatusRules();
+  const { getStatusForElapsed, rules } = useStatusRules();
   const timerStatus = getStatusForElapsed(elapsed);
+  const isOvertime = timerStatus.ruleId === 'overtime'
+    || order.courses.some(c => c.items.some(i => !i.isCompleted && (elapsed / 60) >= 21));
+  const hasNewItem = order.courses.some(c => c.items.some(i => i.isNew && !i.isCompleted));
+  const blinkColor = isOvertime ? timerStatus.color : (hasNewItem ? (rules[0]?.color || '#4A4A47') : null);
+  const hexToRgbTriplet = (hex: string) => {
+    const h = hex.replace('#', '');
+    const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+    const n = parseInt(full, 16);
+    return `${(n >> 16) & 255} ${(n >> 8) & 255} ${n & 255}`;
+  };
   const firedTime = order.timeReceived ? formatTime(order.timeReceived) : '';
   const showTableInstead = isDineIn && !!order.tableName;
 
@@ -796,7 +806,10 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const handleBump = handleTicketAdvance;
 
   return (
-    <div className="bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col">
+    <div
+      className={`bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col ${blinkColor ? 'animate-ticket-blink' : ''}`}
+      style={blinkColor ? ({ ['--ticket-blink-rgb' as string]: hexToRgbTriplet(blinkColor) } as React.CSSProperties) : undefined}
+    >
       {/* HEADER */}
       <div
         className={`px-2.5 py-2 bg-muted ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}

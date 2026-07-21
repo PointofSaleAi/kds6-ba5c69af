@@ -122,10 +122,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "ticket-blink": {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgb(var(--ticket-blink-rgb, 226 75 74) / 0)" },
+          "50%": { boxShadow: "0 0 18px 4px rgb(var(--ticket-blink-rgb, 226 75 74) / 0.7)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "ticket-blink": "ticket-blink 1.4s ease-in-out infinite",
       },
     },
   },
