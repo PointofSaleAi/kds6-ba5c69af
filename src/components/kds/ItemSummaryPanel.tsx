@@ -175,6 +175,21 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   const overtimeItems = useMemo(() => mode === 'active' ? buildOvertimeItems(activeRecords) : [], [activeRecords, mode]);
   const overtimeTotal = overtimeItems.reduce((a, i) => a + i.count, 0);
   const [overtimeCollapsed, setOvertimeCollapsed] = useState(true);
+
+  // Post-fire items: products added to tickets after their course was fired (isNew flag)
+  const postFireItems = useMemo(() => {
+    if (mode !== 'active') return [] as { name: string; count: number }[];
+    const map = new Map<string, number>();
+    for (const r of activeRecords) {
+      if (!r.isNew) continue;
+      map.set(r.name, (map.get(r.name) || 0) + r.quantity);
+    }
+    return Array.from(map.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  }, [activeRecords, mode]);
+  const postFireTotal = postFireItems.reduce((a, i) => a + i.count, 0);
+  const [postFireCollapsed, setPostFireCollapsed] = useState(true);
   const totalRemaining = summary.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.remaining, 0), 0);
   const categoryCount = selectedCategories?.size ?? 0;
   const itemCount = selectedItems?.size ?? 0;
@@ -196,7 +211,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
 
   useEffect(() => {
     if (hasSeededDefaults.current) return;
-    if (summary.length === 0 && overtimeItems.length === 0) return;
+    if (summary.length === 0 && overtimeItems.length === 0 && postFireItems.length === 0) return;
     hasSeededDefaults.current = true;
     setCollapsedSections(new Set(summary.map(c => c.category)));
     if (overtimeItems.length > 0) setOvertimeCollapsed(true);
@@ -219,14 +234,31 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     setOvertimeCollapsed(v => !v);
   };
 
+  const handlePostFireToggle = () => {
+    setExpandAllOn(false);
+    setPostFireCollapsed(v => !v);
+  };
+
+  const handlePostFireHeaderFilter = () => {
+    if (postFireItems.length === 0) return;
+    const allSelected = postFireItems.every(i => selectedItems?.has(i.name));
+    // If all already selected, clear them; otherwise select all missing ones
+    postFireItems.forEach(i => {
+      const isSel = selectedItems?.has(i.name) ?? false;
+      if (allSelected ? isSel : !isSel) onItemToggle?.(i.name);
+    });
+  };
+
   const toggleAllSections = () => {
     if (expandAllOn) {
       setCollapsedSections(new Set(summary.map(c => c.category)));
       if (overtimeItems.length > 0) setOvertimeCollapsed(true);
+      if (postFireItems.length > 0) setPostFireCollapsed(true);
       setExpandAllOn(false);
     } else {
       setCollapsedSections(new Set());
       if (overtimeItems.length > 0) setOvertimeCollapsed(false);
+      if (postFireItems.length > 0) setPostFireCollapsed(false);
       setExpandAllOn(true);
     }
   };
@@ -280,7 +312,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
       </div>
 
       {/* Expand-all toggle row */}
-      {(summary.length > 0 || overtimeItems.length > 0) && (
+      {(summary.length > 0 || overtimeItems.length > 0 || postFireItems.length > 0) && (
         <button
           type="button"
           onClick={toggleAllSections}
@@ -399,7 +431,76 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             </div>
           )}
 
-          {summary.length === 0 && overtimeItems.length === 0 && (
+          {/* Post Fire section - items added to tickets after fire */}
+          {postFireItems.length > 0 && (
+            <div>
+              <div
+                className="flex items-center border-b border-border min-h-[36px] ring-1 ring-inset ring-border/50"
+                style={{ borderLeft: '2px solid hsl(var(--warning))' }}
+              >
+                <button
+                  onClick={handlePostFireToggle}
+                  className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
+                  aria-label={postFireCollapsed ? 'Expand post fire' : 'Collapse post fire'}
+                >
+                  <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
+                    <ChevronDown
+                      size={16}
+                      className={`text-text-primary dark:text-sidebar-foreground transition-transform duration-150 ${postFireCollapsed ? '-rotate-90' : ''}`}
+                    />
+                  </div>
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handlePostFireHeaderFilter(); }}
+                  className="flex-1 flex items-center gap-1.5 py-2 pr-1 text-left hover:bg-warning/5 transition-colors rounded"
+                >
+                  <span className="text-[12px] uppercase tracking-widest font-bold text-warning">
+                    Post Fire
+                  </span>
+                </button>
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white">
+                  {postFireTotal}
+                </span>
+              </div>
+
+              {!postFireCollapsed && (
+                <div className="pl-1.5 pr-2 py-0.5">
+                  {postFireItems.map((item) => {
+                    const isSelected = selectedItems?.has(item.name) ?? false;
+                    return (
+                      <div
+                        key={`postfire-${item.name}`}
+                        className="relative border-b border-border/30 last:border-b-0 bg-warning/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-warning"
+                      >
+                        <div
+                          className={`flex items-center justify-between ${isPortrait ? 'py-[1px] gap-1' : 'py-[2px]'} cursor-pointer`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onItemToggle?.(item.name);
+                          }}
+                        >
+                          <span
+                            className={`min-w-0 uppercase leading-tight break-words ${isSelected ? 'font-bold' : 'font-medium'} text-text-primary`}
+                            style={{ fontSize: 'var(--kds-summary-text)', ...(isSelected ? { borderLeft: '3px solid #3B82F6', paddingLeft: '6px', marginLeft: '-9px' } : {}) }}
+                          >
+                            {tp(item.name)}
+                          </span>
+                          <span
+                            className={`text-right text-[14px] font-bold tabular-nums ml-0.5 shrink-0 ${isSelected ? '' : 'text-warning'}`}
+                            style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
+                          >
+                            {item.count}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {summary.length === 0 && overtimeItems.length === 0 && postFireItems.length === 0 && (
             <div className="px-3 py-4 text-center">
               <p className="text-[12px] text-text-muted">{t.allItemsCompleted}</p>
             </div>
