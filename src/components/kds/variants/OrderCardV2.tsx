@@ -824,8 +824,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       style={blinkColor ? ({ ['--ticket-blink-rgb' as string]: hexToRgbTriplet(blinkColor) } as React.CSSProperties) : undefined}
     >
       {/* HEADER */}
+      {(() => {
+        const isLite = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v3-lite');
+        const liteBg = isLite ? timerStatus.color : undefined;
+        const liteFg = isLite ? timerStatus.textColor : undefined;
+        return (
       <div
-        className={`px-2.5 py-2 bg-muted ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
+        className={`px-2.5 py-2 ${isLite ? '' : 'bg-muted'} ${isCompact ? 'cursor-pointer select-none active:opacity-80' : ''} ${isCompact && bumping ? 'opacity-70' : ''}`}
+        style={isLite ? { background: liteBg, color: liteFg } : undefined}
         onClick={isCompact ? handleBump : undefined}
         role={isCompact ? 'button' : undefined}
         aria-label={isCompact ? `Bump order ${order.orderNumber}` : undefined}
@@ -850,11 +856,11 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 {orderTypeLabel(order.orderType)}
               </span>
             )}
-            <span data-onboarding="ticket-orderno" className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
+            <span data-onboarding="ticket-orderno" className={`font-bold text-[14px] shrink-0 truncate ${isLite ? '' : 'text-foreground'}`} style={isLite ? { color: liteFg } : undefined}>{identifier}</span>
           </div>
           <span
             className={`rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums ${(!reducedMotion && isOvertimeElapsed && ticketState !== 'done' && !isHistory) ? 'animate-pulse' : ''}`}
-            style={{ background: timerStatus.color, color: timerStatus.textColor }}
+            style={isLite ? { background: 'transparent', color: liteFg } : { background: timerStatus.color, color: timerStatus.textColor }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} - ${timerStatus.label}`}
             data-onboarding="ticket-timer"
           >
@@ -862,12 +868,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           </span>
         </div>
         <div className="flex items-center justify-between gap-2 mt-0.5">
-          <span className="text-[12px] font-medium text-foreground truncate">{headerName}</span>
-          <span className="text-[11px] text-muted-foreground shrink-0 truncate">
+          <span className={`text-[12px] font-medium truncate ${isLite ? '' : 'text-foreground'}`} style={isLite ? { color: liteFg } : undefined}>{headerName}</span>
+          <span className={`text-[11px] shrink-0 truncate ${isLite ? '' : 'text-muted-foreground'}`} style={isLite ? { color: liteFg, opacity: 0.85 } : undefined}>
             {order.serverName}{firedTime ? ` · ${firedTime}` : ''}
           </span>
         </div>
       </div>
+        );
+      })()}
 
       {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
