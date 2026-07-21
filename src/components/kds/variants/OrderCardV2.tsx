@@ -177,6 +177,7 @@ function V2ProductRow({
   compact = false,
   isHistory = false,
   productTimersEnabled = false,
+  isNewBlink = false,
 }: {
   product: OrderItem;
   state: RowState;
@@ -188,6 +189,7 @@ function V2ProductRow({
   compact?: boolean;
   isHistory?: boolean;
   productTimersEnabled?: boolean;
+  isNewBlink?: boolean;
 }) {
 
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
