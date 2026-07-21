@@ -473,11 +473,11 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   className={`flex-1 flex items-center gap-1.5 py-2 pr-1 text-left hover:bg-warning/5 transition-colors rounded ${isPostFireSelected ? 'border-b-2 border-warning' : ''}`}
                   style={{ borderRadius: '4px' }}
                 >
-                  <span className={`text-[12px] uppercase tracking-widest font-bold ${isPostFireSelected ? 'text-warning' : 'text-warning'}`}>
+                  <span className="text-[12px] uppercase tracking-widest font-bold text-warning">
                     Post Fire
                   </span>
                 </button>
-                <span className={`text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white`}>
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white">
                   {postFireTotal}
                 </span>
               </div>
