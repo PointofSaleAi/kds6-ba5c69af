@@ -82,7 +82,7 @@ function ProductCuePopover({
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
   const GAP = 12;
-  const cardW = Math.min(200, vw - 24);
+  const cardW = Math.min(160, vw - 24);
   const spaceBelow = vh - (spot.top + spot.height);
   const placeBelow = spaceBelow >= cardH + GAP + 12;
   let top = placeBelow ? spot.top + spot.height + GAP : spot.top - cardH - GAP;
@@ -133,7 +133,7 @@ function ProductCuePopover({
           role="menuitem"
           onPointerUp={handleAction(on86)}
           onClick={handleAction(on86)}
-          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors touch-manipulation"
+          className="w-full text-left px-2 py-2 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors touch-manipulation"
         >
           86 it
         </button>
@@ -142,7 +142,7 @@ function ProductCuePopover({
           role="menuitem"
           onPointerUp={handleAction(onRecipe)}
           onClick={handleAction(onRecipe)}
-          className="w-full text-left px-3 py-2.5 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors touch-manipulation"
+          className="w-full text-left px-2 py-2 rounded-lg text-[13px] font-bold text-black hover:bg-black/5 transition-colors touch-manipulation"
         >
           View Recipe
         </button>
