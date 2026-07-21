@@ -24,6 +24,7 @@ interface UnseenOrdersScreenProps {
   onItemDismiss?: (orderId: string, item: import("@/types/kds").OrderItem) => void;
   renderCard?: (order: import('@/types/kds').Order) => ReactNode;
   cardVariant?: CardVariant;
+  staggerColumnCount?: number;
 }
 
 const cardVariants = {
@@ -41,7 +42,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default' }: UnseenOrdersScreenProps) {
+export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default', staggerColumnCount }: UnseenOrdersScreenProps) {
   const { orders: storeOrders, seenOrderIds } = useOrderStore();
   const sourceOrders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
@@ -127,8 +128,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
             </div>
           ) : (
             (() => {
-              const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
-              const columnCount = isPortrait ? (vw >= 960 ? 3 : 2) : 4;
+              const columnCount = staggerColumnCount ?? (isPortrait ? 2 : 4);
               const columns = distributeIntoColumns(unseenOrders, columnCount);
               return (
                 <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
