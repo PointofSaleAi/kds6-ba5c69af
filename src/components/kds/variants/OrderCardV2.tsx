@@ -177,6 +177,7 @@ function V2ProductRow({
   compact = false,
   isHistory = false,
   productTimersEnabled = false,
+  isNewBlink = false,
 }: {
   product: OrderItem;
   state: RowState;
@@ -188,6 +189,7 @@ function V2ProductRow({
   compact?: boolean;
   isHistory?: boolean;
   productTimersEnabled?: boolean;
+  isNewBlink?: boolean;
 }) {
 
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
@@ -240,8 +242,8 @@ function V2ProductRow({
       aria-haspopup="menu"
       aria-expanded={menuOpen}
       data-onboarding="item-row"
-      className={`relative border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'}`}
-      style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
+      className={`relative border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'} ${isNewBlink ? 'animate-row-blink' : ''}`}
+      style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)', ...(isNewBlink ? { ['--row-blink-rgb' as any]: '127 140 141' } : {}) }}
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-1 min-w-0">
@@ -956,6 +958,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
                       productTimersEnabled={productTimers}
+                      isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle' && !isHistory}
                     />
                   ))}
                 </div>
@@ -979,6 +982,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                       onLongPress={setFlagProduct}
                       isHistory={isHistory}
                       productTimersEnabled={productTimers}
+                      isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle' && !isHistory}
                     />
                   </div>
                 ))
@@ -998,6 +1002,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               compact={isCompact}
               isHistory={isHistory}
               productTimersEnabled={productTimers}
+              isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle' && !isHistory}
             />
           ))
 
