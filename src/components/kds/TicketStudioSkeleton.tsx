@@ -77,7 +77,7 @@ function KdsScreenMock({
     <div
       ref={containerRef}
       data-ts-preview
-      className="w-full h-full relative overflow-hidden rounded-xl bg-surface-bg"
+      className="w-full h-full relative overflow-hidden bg-surface-bg"
     >
       <div
         className="absolute"
