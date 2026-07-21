@@ -68,6 +68,7 @@ function ProductRow({
   onRemove,
   onLongPress,
   compact = false,
+  isNewBlink = false,
 }: {
   product: OrderItem;
   accent: string;
@@ -77,7 +78,9 @@ function ProductRow({
   onRemove: () => void;
   onLongPress: (p: OrderItem) => void;
   compact?: boolean;
+  isNewBlink?: boolean;
 }) {
+
   const done = state === 'done';
   const loading = state === 'loading';
   const hasDetails = product.modifiers.length > 0 || product.allergens.length > 0 || !!product.notes;
