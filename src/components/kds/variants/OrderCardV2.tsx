@@ -16,6 +16,8 @@ import { useRowTap } from '@/hooks/use-row-tap';
 import { RecipeReferenceModal } from '@/components/kds/RecipeReferenceModal';
 import { OrderNotesSection } from '@/components/kds/OrderNotesSection';
 import { OrderAllergenStrip } from '@/components/kds/OrderAllergenStrip';
+import { KitchenMessageSection } from '@/components/kds/KitchenMessageSection';
+import { useKitchenMessages } from '@/hooks/use-kitchen-messages';
 import { KdsActionIcon } from '@/components/kds/KdsActionIcon';
 import { Item86Modal } from '@/components/kds/Flag86Button';
 import { useFlag86 } from '@/hooks/use-flag86';
@@ -556,6 +558,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   // Shared lifecycle store: propagates per-item status between Kitchen KDS & Expo.
   const { itemLifecycles, setItemLifecycle } = useOrderStore();
+  const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
+  const orderMessages = getMessagesForOrder(order.id);
   const rowStateToLifecycle = (s: RowState): ItemLifecycle | null => {
     if (s === 'cooking' || s === 'loading') return 'preparing';
     if (s === 'ready') return 'ready';
@@ -841,6 +845,14 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
       {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
+      {!isHeaderOnly && orderMessages.length > 0 && (
+        <KitchenMessageSection
+          messages={orderMessages}
+          replies={replies.filter(r => orderMessages.some(m => m.message_id === r.message_id))}
+          onAcknowledge={acknowledgeMessage}
+          onReply={sendReply}
+        />
+      )}
 
       {/* PRODUCTS  course bands for dine-in (standard only), flat list otherwise */}
 
