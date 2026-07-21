@@ -204,7 +204,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const elapsed = useElapsedSeconds(order.timeReceived);
   const typeMeta = ORDER_TYPE_META[order.orderType] || ORDER_TYPE_META['custom'];
   const typeIcon = typeMeta.icon;
-  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens } = useKDSSettings();
+  const { orderTypeDetailedColors, ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, reducedMotion } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const guestName = order.guestName || order.customerName || order.serverName || 'Guest';
@@ -401,7 +401,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                         onReset={() => setRow(product.id, 'idle')}
                         onRemove={() => removeRow(product.id)}
                         onLongPress={setRecipeProduct}
-                        isNewBlink={!!product.isNew && getRowState(product) === 'idle'}
+                        isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle'}
                       />
                     ))}
 
@@ -445,7 +445,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 onRemove={() => removeRow(product.id)}
                 onLongPress={setRecipeProduct}
                 compact={isCompact}
-                isNewBlink={!!product.isNew && getRowState(product) === 'idle'}
+                isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle'}
               />
             ))}
 

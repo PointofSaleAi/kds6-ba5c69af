@@ -542,7 +542,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   const { timeFormat } = useLanguage();
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
   const isDineIn = order.orderType === 'dine-in';
-  const { orderTypeDetailedColors } = useKDSSettings();
+  const { orderTypeDetailedColors, reducedMotion } = useKDSSettings();
   const colorSet = orderTypeDetailedColors[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[order.orderType] || DEFAULT_ORDER_TYPE_DETAILED_COLORS.custom;
   const { getStatusForElapsed, rules } = useStatusRules();
   const timerStatus = getStatusForElapsed(elapsed);
@@ -810,9 +810,11 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     const s = rowStates[i.id] ?? 'idle';
     return s === 'idle';
   }));
-  const blinkColor = (isOvertimeElapsed && !ticketAcknowledged)
-    ? timerStatus.color
-    : (pendingNewItem ? (rules[0]?.color || '#4A4A47') : null);
+  const blinkColor = reducedMotion ? null : (
+    (isOvertimeElapsed && !ticketAcknowledged)
+      ? timerStatus.color
+      : (pendingNewItem ? (rules[0]?.color || '#4A4A47') : null)
+  );
 
   return (
     <div
@@ -849,7 +851,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             <span data-onboarding="ticket-orderno" className="font-bold text-foreground text-[14px] shrink-0 truncate">{identifier}</span>
           </div>
           <span
-            className={`rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums ${(isOvertimeElapsed && ticketState !== 'done' && !isHistory) ? 'animate-pulse' : ''}`}
+            className={`rounded-full px-2 py-0.5 text-[11px] font-bold font-mono-timer shrink-0 tabular-nums ${(!reducedMotion && isOvertimeElapsed && ticketState !== 'done' && !isHistory) ? 'animate-pulse' : ''}`}
             style={{ background: timerStatus.color, color: timerStatus.textColor }}
             aria-label={`Elapsed ${fmtElapsed(elapsed)} - ${timerStatus.label}`}
             data-onboarding="ticket-timer"

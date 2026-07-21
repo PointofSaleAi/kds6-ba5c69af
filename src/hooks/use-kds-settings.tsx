@@ -81,6 +81,7 @@ export interface KDSSettings {
   ticketSpacing: TicketSpacing;
   ticketHeaderStyle: TicketHeaderStyle;
   routeOverrides: RouteOverrides;
+  reducedMotion: boolean;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -105,6 +106,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketLayout: (v: TicketLayout) => void;
   setTicketSpacing: (v: TicketSpacing) => void;
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
+  setReducedMotion: (v: boolean) => void;
   /** Currently-active tickets route ('Default'..'v6') or null when not on a tickets route. */
   activeTicketsRoute: TicketsRouteKey | null;
   getRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K) => NonNullable<RouteOverride[K]>;
@@ -138,6 +140,7 @@ const defaults: KDSSettings = {
   ticketSpacing: 'Standard',
   ticketHeaderStyle: 'default',
   routeOverrides: {},
+  reducedMotion: false,
 };
 
 function loadSettings(): KDSSettings {
@@ -287,6 +290,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTicketLayout: setPerRoute('ticketLayout'),
         setTicketSpacing: setPerRoute('ticketSpacing'),
         setTicketHeaderStyle: update('ticketHeaderStyle'),
+        setReducedMotion: update('reducedMotion'),
         activeTicketsRoute,
         getRouteSetting,
         setRouteSetting,

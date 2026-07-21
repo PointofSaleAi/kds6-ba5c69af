@@ -3,7 +3,7 @@ import { useOrderStore } from '@/hooks/use-order-store';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   Monitor, Type, Rows3, Palette, Languages,
-  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft,
+  Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft, Zap,
   StretchVertical, LayoutPanelLeft, LayoutGrid,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
@@ -37,6 +37,7 @@ export default function DisplaySettings() {
   const {
     ticketHeaderStyle, setTicketHeaderStyle,
     getRouteSetting, setRouteSetting,
+    reducedMotion, setReducedMotion,
   } = useKDSSettings();
   const [ticketsRoute, setTicketsRoute] = useState<import('@/hooks/use-kds-settings').TicketsRouteKey>(
     () => readStoredTicketsRoute('v3'),
@@ -353,6 +354,16 @@ export default function DisplaySettings() {
         right={<SwitchToggle checked={showBadge} onChange={setShowBadge} />}
         highlighted={hash === 'enable-badge'}
       />
+
+      <SettingsPill
+        icon={Zap}
+        iconColor="#7F8C8D"
+        label="Reduced Motion"
+        helper="Disable ticket, product row, and timer pill blinking animations."
+        right={<SwitchToggle checked={reducedMotion} onChange={setReducedMotion} />}
+        highlighted={hash === 'reduced-motion'}
+      />
+
 
 
       <SettingsPill
