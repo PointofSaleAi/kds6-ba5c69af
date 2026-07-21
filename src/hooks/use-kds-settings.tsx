@@ -106,6 +106,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setTicketLayout: (v: TicketLayout) => void;
   setTicketSpacing: (v: TicketSpacing) => void;
   setTicketHeaderStyle: (v: TicketHeaderStyle) => void;
+  setReducedMotion: (v: boolean) => void;
   /** Currently-active tickets route ('Default'..'v6') or null when not on a tickets route. */
   activeTicketsRoute: TicketsRouteKey | null;
   getRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K) => NonNullable<RouteOverride[K]>;
