@@ -909,13 +909,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       if (target === 'home') {
         // Route to the layout the user selected in Settings > Ticket Layout.
         onNavigate('home');
-      } else {
+      } else if (settingsOpen) {
         onCloseSettings?.();
       }
     } else {
       onNavigate(target);
     }
-  }, [onNavigate, onCloseSettings, kdsMode]);
+  }, [onNavigate, onCloseSettings, settingsOpen, kdsMode]);
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
   const activeOrders = useMemo(() => orders.filter(o => o.status !== 'served'), [orders]);
