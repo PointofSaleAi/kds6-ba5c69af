@@ -401,8 +401,10 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                         onReset={() => setRow(product.id, 'idle')}
                         onRemove={() => removeRow(product.id)}
                         onLongPress={setRecipeProduct}
+                        isNewBlink={!!product.isNew && getRowState(product) === 'idle'}
                       />
                     ))}
+
                   </div>
                 </div>
               );
