@@ -558,6 +558,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   // Shared lifecycle store: propagates per-item status between Kitchen KDS & Expo.
   const { itemLifecycles, setItemLifecycle } = useOrderStore();
+  const { getMessagesForOrder, getRepliesForMessage, acknowledgeMessage, sendReply, replies } = useKitchenMessages();
+  const orderMessages = getMessagesForOrder(order.id);
   const rowStateToLifecycle = (s: RowState): ItemLifecycle | null => {
     if (s === 'cooking' || s === 'loading') return 'preparing';
     if (s === 'ready') return 'ready';
