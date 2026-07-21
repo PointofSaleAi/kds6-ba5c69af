@@ -290,6 +290,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTicketLayout: setPerRoute('ticketLayout'),
         setTicketSpacing: setPerRoute('ticketSpacing'),
         setTicketHeaderStyle: update('ticketHeaderStyle'),
+        setReducedMotion: update('reducedMotion'),
         activeTicketsRoute,
         getRouteSetting,
         setRouteSetting,
