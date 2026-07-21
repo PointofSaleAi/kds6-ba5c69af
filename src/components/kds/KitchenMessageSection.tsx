@@ -43,7 +43,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
             {/* Message body */}
             <div className="px-3 py-2 flex items-start gap-2">
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] text-text-primary leading-snug">{msg.message_text}</p>
+                <p className={`text-text-primary ${isV3 ? 'text-[11px]' : 'text-[13px]'} leading-snug`}>{msg.message_text}</p>
                 {msg.employee_role && (
                   <p className="text-[10px] text-text-muted mt-1">{msg.employee_name} - {msg.employee_role}</p>
                 )}
