@@ -49,100 +49,118 @@ function KdsScreenMock({
 
   const textScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
 
-  // Responsive scale: fit natural 320px-wide ticket into each production-spaced grid cell.
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [fitScale, setFitScale] = useState(1);
+  // Render as a fixed "virtual KDS screen" and uniformly scale it into the
+  // preview container so sidebar, summary panel, footer, and tickets all
+  // stay proportional to the real Tickets screen.
+  const VIRTUAL_W = 1440;
+  const VIRTUAL_H = 900;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
   useLayoutEffect(() => {
-    const el = gridRef.current;
+    const el = containerRef.current;
     if (!el) return;
-    const NATURAL_W = 320;
-    const NATURAL_H = 360;
     const compute = () => {
-      const cols = 3;
-      const rows = 2;
-      const gap = 6;
-      const cellW = (el.clientWidth - gap * (cols - 1)) / cols;
-      const cellH = (el.clientHeight - gap * (rows - 1)) / rows;
-      const s = Math.min(cellW / NATURAL_W, cellH / NATURAL_H);
-      setFitScale(Math.max(0.4, Math.min(1.2, s)));
+      const s = Math.min(el.clientWidth / VIRTUAL_W, el.clientHeight / VIRTUAL_H);
+      setScale(s > 0 ? s : 1);
     };
     compute();
     const ro = new ResizeObserver(compute);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  const ticketScale = fitScale * textScale;
+
+  const scaledW = VIRTUAL_W * scale;
+  const scaledH = VIRTUAL_H * scale;
 
   return (
-    <div data-ts-preview className="w-full h-full relative overflow-hidden rounded-xl flex flex-col bg-surface-bg">
-      <div className="flex-1 min-h-0 flex">
-        <KDSSidebar
-          activeFilter="all"
-          onFilterChange={() => undefined}
-          onNavigate={() => undefined}
-          activeNav="home"
-          seenCount={3}
-          unseenCount={2}
-        />
+    <div
+      ref={containerRef}
+      data-ts-preview
+      className="w-full h-full relative overflow-hidden rounded-xl bg-surface-bg"
+    >
+      <div
+        className="absolute"
+        style={{
+          width: scaledW,
+          height: scaledH,
+          left: '50%',
+          top: '50%',
+          transform: `translate(-50%, -50%)`,
+        }}
+      >
+        <div
+          style={{
+            width: VIRTUAL_W,
+            height: VIRTUAL_H,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+          }}
+          className="flex flex-col bg-surface-bg"
+        >
+          <div className="flex-1 min-h-0 flex">
+            <KDSSidebar
+              activeFilter="all"
+              onFilterChange={() => undefined}
+              onNavigate={() => undefined}
+              activeNav="home"
+              seenCount={3}
+              unseenCount={2}
+            />
 
-        <div className="flex-1 min-w-0 flex">
-          <div className="flex-1 min-w-0 overflow-hidden p-1.5">
-            <div
-              ref={gridRef}
-              className="grid grid-cols-3 gap-1.5 h-full content-start items-start"
-              style={{ gridTemplateRows: `repeat(2, ${Math.max(120, 360 * ticketScale)}px)` }}
-            >
-              {SCREEN_ORDER_TYPES.map((ot, i) => (
-                <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
-                  <div
-                    data-ts-ticket
-                    className="origin-top"
-                    style={{
-                      transform: `scale(${ticketScale})`,
-                      width: 320,
-                    }}
-                  >
-                    <BoardTicketPreview
-                      boardId={boardId}
-                      identifier={identifier}
-                      orderType={ot.label}
-                      orderTypeKey={ot.key}
-                      agingOverrideSeconds={
-                        agingOverrideSeconds !== undefined
-                          ? agingOverrideSeconds + i * 15
-                          : undefined
-                      }
-                      onHeaderClick={() => onHeaderClick?.(ot.key)}
-                      onTimerClick={onTimerClick}
-                    />
-                  </div>
+            <div className="flex-1 min-w-0 flex">
+              <div className="flex-1 min-w-0 overflow-hidden p-2">
+                <div
+                  className="grid grid-cols-4 grid-rows-2 gap-2 h-full content-start items-start"
+                >
+                  {SCREEN_ORDER_TYPES.map((ot, i) => (
+                    <div key={ot.key} className="min-w-0 min-h-0 overflow-hidden flex items-start justify-center">
+                      <div
+                        data-ts-ticket
+                        className="origin-top w-full"
+                        style={{ transform: `scale(${textScale})` }}
+                      >
+                        <BoardTicketPreview
+                          boardId={boardId}
+                          identifier={identifier}
+                          orderType={ot.label}
+                          orderTypeKey={ot.key}
+                          agingOverrideSeconds={
+                            agingOverrideSeconds !== undefined
+                              ? agingOverrideSeconds + i * 15
+                              : undefined
+                          }
+                          onHeaderClick={() => onHeaderClick?.(ot.key)}
+                          onTimerClick={onTimerClick}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <ItemSummaryPanel orders={previewOrders} />
             </div>
           </div>
 
-          <ItemSummaryPanel orders={previewOrders} />
+          <BottomStatusBar
+            orderCount={12}
+            viewMode="grid"
+            onViewModeChange={() => undefined}
+            theme="light"
+            onToggleTheme={() => undefined}
+            sortMode="newest"
+            onSortModeChange={() => undefined}
+            onOpenLanguageSettings={() => undefined}
+            onOpenCategoryFilter={() => undefined}
+            onOpenRevenueFilter={() => undefined}
+            aiAssistantOpen={false}
+            onToggleAiAssistant={() => undefined}
+            orderTypeFilter={[]}
+            onOrderTypeFilterChange={() => undefined}
+          />
         </div>
       </div>
-
-      <BottomStatusBar
-        orderCount={12}
-        viewMode="grid"
-        onViewModeChange={() => undefined}
-        theme="light"
-        onToggleTheme={() => undefined}
-        sortMode="newest"
-        onSortModeChange={() => undefined}
-        onOpenLanguageSettings={() => undefined}
-        onOpenCategoryFilter={() => undefined}
-        onOpenRevenueFilter={() => undefined}
-        aiAssistantOpen={false}
-        onToggleAiAssistant={() => undefined}
-        orderTypeFilter={[]}
-        onOrderTypeFilterChange={() => undefined}
-      />
     </div>
-
   );
 }
 
