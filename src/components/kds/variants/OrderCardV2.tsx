@@ -803,16 +803,27 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   const handleTicketRecall = () => {
     if (ticketState === 'done') {
-      setRowStates({});
+      allItems.forEach((p) => syncLifecycle(order.id, p.id, 'ready'));
+      setRowStates(() => {
+        const next: Record<string, RowState> = {};
+        allItems.forEach((p) => { next[p.id] = 'ready'; });
+        return next;
+      });
       setPhaseOverride('ready');
       return;
     }
     if (ticketState === 'ready') {
-      setRowStates({});
+      allItems.forEach((p) => syncLifecycle(order.id, p.id, 'cooking'));
+      setRowStates(() => {
+        const next: Record<string, RowState> = {};
+        allItems.forEach((p) => { next[p.id] = 'cooking'; });
+        return next;
+      });
       setPhaseOverride('preparing');
       return;
     }
     if (ticketState === 'preparing') {
+      allItems.forEach((p) => syncLifecycle(order.id, p.id, 'idle'));
       setRowStates({});
       setPhaseOverride('seen');
     }
