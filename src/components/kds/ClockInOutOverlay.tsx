@@ -19,10 +19,18 @@ interface Props {
  * a Logout button. Purely visual for KDS — no auth wiring.
  */
 export default function ClockInOutOverlay({ open, onClose }: Props) {
+  const navigate = useNavigate();
   const [now, setNow] = useState(() => new Date());
   const [pin, setPin] = useState('');
   const [revenueCenter, setRevenueCenter] = useState('Dine Center');
   const [rcOpen, setRcOpen] = useState(false);
+
+  const submitPin = useCallback(() => {
+    if (pin.length !== PIN_LENGTH) return;
+    setPin('');
+    onClose();
+    navigate('/kds/v3');
+  }, [pin, onClose, navigate]);
 
   useEffect(() => {
     if (!open) return;
