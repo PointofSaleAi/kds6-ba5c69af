@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-import {
-  ArrowLeftRight,
-  RefreshCw,
-  Headphones,
-  Bell,
-  Wifi,
-  UtensilsCrossed,
-} from 'lucide-react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
+import switchUserIcon from '@/assets/icons/switch-user.png';
+import dinnerIcon from '@/assets/icons/dinner.png';
+import localHostIcon from '@/assets/icons/local-host.png';
+import refreshIcon from '@/assets/icons/refresh.png';
+import supportIcon from '@/assets/icons/support.png';
+import notificationIcon from '@/assets/icons/notification.png';
+import wifiIcon from '@/assets/icons/wifi.png';
 
 const HEADER_H = 44;
 const HEADER_BG = '#0D0D1A';
