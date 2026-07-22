@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
-import pinIndicatorIcon from '@/assets/icons/pin-indicator.svg';
-import pinIndicatorFilledIcon from '@/assets/icons/pin-indicator-filled.svg';
+import { X, Sun, Fingerprint, ScanFace, ChevronDown, Delete } from 'lucide-react';
+
 
 const PIN_LENGTH = 4;
 const REVENUE_CENTERS = ['Dine Center', 'Bar', 'Patio', 'Takeout'];
