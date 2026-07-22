@@ -197,6 +197,21 @@ export default function OrdersSettings() {
         highlighted={hash === 'quick-replies'}
       />
 
+      <SettingsPill
+        icon={ArrowLeftRight}
+        iconColor="#3B82F6"
+        label="Ticket flow direction"
+        helper="Set which side new tickets enter from. Match your kitchen's reading direction — left to right for most layouts, right to left for right-to-left languages."
+        right={
+          <SegmentedToggle
+            options={['Newest on left', 'Newest on right']}
+            value={ticketFlowDirection === 'right' ? 'Newest on right' : 'Newest on left'}
+            onChange={(v) => setTicketFlowDirection(v === 'Newest on right' ? 'right' : 'left')}
+          />
+        }
+        highlighted={hash === 'ticket-flow-direction'}
+      />
+
       <QuickRepliesModal
         open={quickRepliesOpen}
         onClose={() => setQuickRepliesOpen(false)}
