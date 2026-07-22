@@ -1,9 +1,13 @@
 // TODO: Replace with API endpoint - all data should come from backend
-import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useRef, type ReactNode } from 'react';
 import { formatTime } from '@/lib/datetime';
 import type { Order } from '@/types/kds';
 import type { ExpoTicket, ExpoStation, ExpoItem, ExpoItemStatus, ExpoCourse, ExpoCourseStatus } from '@/data/mock-expo-orders';
 import { mockOrders } from '@/data/mock-orders';
+
+/** Seed the sequential counter above the highest number already in the mocks. */
+const INITIAL_ORDER_NUMBER =
+  (mockOrders.reduce((max, o) => (o.orderNumber > max ? o.orderNumber : max), 0) || 0) + 1;
 
 /* ------------------------------------------------------------------ */
 /*  Shared order store: single source of truth for Home + Expo views  */
