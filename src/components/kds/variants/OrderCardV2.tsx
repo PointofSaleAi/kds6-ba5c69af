@@ -244,7 +244,7 @@ function V2ProductRow({
       aria-haspopup="menu"
       aria-expanded={menuOpen}
       data-onboarding="item-row"
-      className={`relative border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'} ${isNewBlink ? 'bg-muted-foreground/10' : ''}`}
+      className={`relative border-b border-border/40 last:border-b-0 cursor-pointer select-none transition-opacity ${loading ? 'opacity-70 pointer-events-none' : done ? 'opacity-50 hover:bg-black/[0.02]' : 'hover:bg-black/[0.02]'} ${isNewBlink ? 'animate-new-row-blink' : ''}`}
       style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 'var(--kds-row-py)', paddingBottom: 'var(--kds-row-py)' }}
     >
       <div className="flex-1 min-w-0">
