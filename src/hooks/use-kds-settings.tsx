@@ -10,6 +10,7 @@ export type ExpoSendButtonMode = 'always' | 'when-ready';
 export type TicketLayout = 'standard' | 'compact' | 'header';
 export type TicketSpacing = 'Compact' | 'Standard' | 'Spacious';
 export type TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3';
+export type TicketFlowDirection = 'left' | 'right';
 
 export type OrderTypeColors = Record<string, string>;
 
