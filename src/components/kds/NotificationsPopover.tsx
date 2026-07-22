@@ -120,7 +120,7 @@ export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
       </div>
 
       {notifications.length > 0 && (
-        <div className="border-t border-white/10 flex">
+        <div className="border-t border-white/10 flex shrink-0">
           <button
             onClick={() => {
               clearAcknowledged();
