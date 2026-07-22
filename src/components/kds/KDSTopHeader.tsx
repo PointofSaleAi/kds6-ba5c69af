@@ -20,7 +20,7 @@ const HEADER_BG = '#0D0D1A';
  * screen mode / AI / refresh / support / notifications / wifi / clock.
  * Positioned fixed so it sits above the training bar offset seamlessly.
  */
-export function KDSTopHeader() {
+export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean } = {}) {
   const [time, setTime] = useState(() => new Date());
   const { unreadCount } = useNotifications();
 
@@ -95,9 +95,17 @@ export function KDSTopHeader() {
       <div className="flex items-center gap-2 md:gap-3">
         <ScreenModeChip />
 
-        <div className="flex items-center justify-center">
+        <button
+          type="button"
+          data-onboarding="ai"
+          onClick={onToggleAiAssistant}
+          aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
+          aria-pressed={aiAssistantOpen}
+          className="flex items-center justify-center w-8 h-8 rounded-full transition-colors hover:bg-white/10"
+          style={aiAssistantOpen ? { background: 'linear-gradient(135deg, hsla(280, 80%, 75%, 0.35) 0%, hsla(220, 90%, 70%, 0.35) 100%)' } : undefined}
+        >
           <AnimatedAIIcon size={20} />
-        </div>
+        </button>
 
         <button
           type="button"

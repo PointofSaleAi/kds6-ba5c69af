@@ -372,20 +372,6 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
             <span className="text-[#FF6B6B] text-sm font-bold">({eightySixedItems.length})</span>
           )}
         </button>
-        <button
-          data-onboarding="ai"
-          onClick={onToggleAiAssistant}
-          aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
-          aria-pressed={aiAssistantOpen}
-          className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
-            aiAssistantOpen
-              ? 'text-white'
-              : 'bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground/70'
-          }`}
-          style={aiAssistantOpen ? { background: 'linear-gradient(135deg, hsla(280, 80%, 75%, 0.35) 0%, hsla(220, 90%, 70%, 0.35) 100%)' } : undefined}
-        >
-          <AnimatedAIIcon size={18} />
-        </button>
       </div>
       )}
 
