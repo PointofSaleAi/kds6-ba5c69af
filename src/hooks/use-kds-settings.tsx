@@ -58,6 +58,14 @@ export interface RouteOverride {
 
 export type RouteOverrides = Partial<Record<TicketsRouteKey, RouteOverride>>;
 
+export const DEFAULT_QUICK_REPLIES: string[] = [
+  'Got it',
+  '5 min out',
+  'Item unavailable',
+  'On it',
+  'Need more time',
+];
+
 export interface KDSSettings {
   cardsPerRow: number;
   textSize: TextSize;
@@ -82,6 +90,8 @@ export interface KDSSettings {
   ticketHeaderStyle: TicketHeaderStyle;
   routeOverrides: RouteOverrides;
   reducedMotion: boolean;
+  quickReplies: boolean;
+  quickReplyItems: string[];
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
