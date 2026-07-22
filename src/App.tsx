@@ -49,6 +49,46 @@ import QrStickersPage from "./pages/QrStickersPage.tsx";
 
 const queryClient = new QueryClient();
 
+const AppShell = () => {
+  const { mode } = useScreenMode();
+  return (
+    <>
+      {mode === 'pos' && <PosModeShell />}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/kds/v3" replace />} />
+          <Route path="/kds/v1" element={<Index />} />
+          <Route path="/kds/default" element={<Index />} />
+          <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
+          <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
+          <Route path="/kds/v3-lite" element={<Index cardVariant="v2" />} />
+          <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
+          <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
+          <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
+          <Route path="/kds/v7" element={<KdsV7Page />} />
+          <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
+          <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
+          <Route path="/kds/v1/settings" element={<Index />}>
+            <Route index element={<Navigate to="display" replace />} />
+            <Route path="display" element={<DisplaySettings />} />
+            <Route path="orders" element={<OrdersSettings />} />
+            <Route path="expo" element={<ExpoSettings />} />
+            <Route path="hardware" element={<HardwareSettings />} />
+            <Route path="system" element={<SystemSettings />} />
+            <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
+            <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
+            <Route path="account" element={<AccountSettings />} />
+          </Route>
+          <Route path="/kds-reply" element={<KdsReplyPage />} />
+          <Route path="/recipe/:name" element={<RecipeDetailPage />} />
+          <Route path="/recipe" element={<RecipeDetailPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
