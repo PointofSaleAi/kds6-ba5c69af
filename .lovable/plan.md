@@ -1,38 +1,14 @@
-## Root cause
+## Problem
 
-`OrderCardV2` tracks item state in two places:
-- Local `rowStates` (drives the card UI)
-- Shared `itemLifecycles` in `useOrderStore` (drives Seen/Unseen screen filtering in `MainOrderView`)
-
-Per-item taps go through `toggleRow` / `undoRow`, which call `syncLifecycle`, so the Seen screen updates correctly.
-
-The ticket-level SEEN → PREPARING → READY → SERVED button uses different paths that mutate only local state:
-- `handleTicketAdvance` calls `setAllRows('cooking' | 'ready', ...)` and `runBumpAnimation`, none of which call `syncLifecycle`.
-- `handleTicketRecall` calls `setRowStates({})` to walk backwards, again without touching `itemLifecycles`.
-
-Because `MainOrderView.seenScreenOrders` filters by `itemLifecycles[item.id]`, a ticket advanced via its ticket-level button never appears in the Seen screen (and if one item was individually seen before, tapping the ticket button doesn't add the rest either).
+The mock orders in `src/data/mock-orders.ts` are defined out of order (23, 24, 25, 22, 26, 21, 27...). The queue renders them in array order, so the ticket numbers look scrambled on screen.
 
 ## Fix
 
-Make every ticket-level state change also sync the shared lifecycle so the Seen/Unseen screens match the card.
+Renumber the entries in `src/data/mock-orders.ts` so `orderNumber` matches array position — the first ticket gets the lowest number and each subsequent ticket increments by 1 (e.g. 21, 22, 23, 24, ... through the last entry).
 
-### `src/components/kds/variants/OrderCardV2.tsx`
+No other files change. `MainOrderView` already reverses the visible queue when "Newest on Right" is set, so sequence will read left-to-right or right-to-left based on that setting.
 
-1. `setAllRows(target, from?)`: after computing `next`, for every item whose row state actually changed, call `syncLifecycle(order.id, item.id, next[item.id])`. This covers the SEEN → PREPARING and PREPARING → READY ticket transitions.
+## Out of scope
 
-2. `runBumpAnimation`: in the per-item `setTimeout` that flips a row to `'done'`, also call `syncLifecycle(order.id, p.id, 'done')`. This covers READY → SERVED via the ticket button. (The initial `'loading'` sweep can stay local, since `rowStateToLifecycle('loading')` already maps to `preparing`; syncing on the final `'done'` is what the Seen screen needs.)
-
-3. `handleTicketRecall`: before `setRowStates({})` in each branch (`done → ready`, `ready → preparing`, `preparing → seen`), sync each item's lifecycle to the target row state. For the `preparing → seen` recall, sync to `null` (idle) so those items leave the Seen screen, matching how `undoRow` already behaves for individual products.
-
-No changes to `MainOrderView`, `SeenOrdersScreen`, `UnseenOrdersScreen`, or the order store are needed. `OrderCardV3` and other variants use their own paths and are out of scope for this bug.
-
-## Verification
-
-1. On `/kds/v3`, open a fresh ticket and tap the ticket-level SEEN button once.
-   - Seen screen now lists the ticket with all its items.
-   - Unseen screen no longer lists them.
-2. Tap the eye icon on a single item first, then tap the ticket-level advance button.
-   - Seen screen shows the full ticket (all items), not just the one item.
-3. Advance the ticket all the way to SERVED, then use ticket-level recall.
-   - Items reappear in Unseen after the final recall step (preparing → seen).
-4. Confirm the Tickets screen still shows all items unchanged and Expo view mirrors the same lifecycle states.
+- History mock (`OrderHistoryScreen.tsx`) numbering
+- Any change to sorting logic in `MainOrderView`
