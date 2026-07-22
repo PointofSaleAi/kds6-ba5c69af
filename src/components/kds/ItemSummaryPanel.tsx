@@ -454,7 +454,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             <div>
               <div
                 className="flex items-center border-b border-border min-h-[36px] ring-1 ring-inset ring-border/50"
-                style={{ borderLeft: '2px solid hsl(var(--status-new))' }}
+                style={{ borderLeft: '2px solid hsl(var(--warning))' }}
               >
                 <button
                   onClick={handlePostFireToggle}
@@ -470,14 +470,14 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); handlePostFireHeaderFilter(); }}
-                  className={`flex-1 flex items-center gap-1.5 py-2 pr-1 text-left hover:bg-status-new/5 transition-colors rounded ${isPostFireSelected ? 'border-b-2 border-status-new' : ''}`}
+                  className={`flex-1 flex items-center gap-1.5 py-2 pr-1 text-left hover:bg-warning/5 transition-colors rounded ${isPostFireSelected ? 'border-b-2 border-warning' : ''}`}
                   style={{ borderRadius: '4px' }}
                 >
-                  <span className="text-[12px] uppercase tracking-widest font-bold text-status-new">
+                  <span className="text-[12px] uppercase tracking-widest font-bold text-warning">
                     UnSeen
                   </span>
                 </button>
-                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-status-new text-white">
+                <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white">
                   {postFireTotal}
                 </span>
               </div>
@@ -489,7 +489,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                     return (
                       <div
                         key={`postfire-${item.name}`}
-                        className="relative border-b border-border/30 last:border-b-0 bg-status-new/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-status-new"
+                        className="relative border-b border-border/30 last:border-b-0 bg-warning/10 -ml-1.5 -mr-2 pl-1.5 pr-2 border-l-2 border-warning"
                       >
                         <div
                           className={`flex items-center justify-between ${isPortrait ? 'py-[1px] gap-1' : 'py-[2px]'} cursor-pointer`}
@@ -505,7 +505,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                             {tp(item.name)}
                           </span>
                           <span
-                            className={`text-right text-[14px] font-bold tabular-nums ml-0.5 shrink-0 ${isSelected ? '' : 'text-status-new'}`}
+                            className={`text-right text-[14px] font-bold tabular-nums ml-0.5 shrink-0 ${isSelected ? '' : 'text-warning'}`}
                             style={isSelected ? { backgroundColor: '#3B82F6', color: '#FFFFFF', borderRadius: '9999px', padding: '0 6px', minWidth: '22px', textAlign: 'center', display: 'inline-block' } : undefined}
                           >
                             {item.count}
