@@ -151,6 +151,8 @@ const defaults: KDSSettings = {
   ticketHeaderStyle: 'default',
   routeOverrides: {},
   reducedMotion: false,
+  quickReplies: false,
+  quickReplyItems: [...DEFAULT_QUICK_REPLIES],
 };
 
 function loadSettings(): KDSSettings {
