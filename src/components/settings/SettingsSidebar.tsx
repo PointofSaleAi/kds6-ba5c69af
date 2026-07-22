@@ -56,7 +56,7 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="px-3.5 pt-3.5 pb-3 shrink-0">
+      <div className="px-2.5 pt-3.5 pb-3 shrink-0">
         <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
@@ -94,7 +94,7 @@ export function SettingsSidebar() {
       </div>
 
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-3.5 pb-2">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-2.5 pb-2">
         {showResults ? (
           <div>
             <div
@@ -187,7 +187,7 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="px-3.5 pt-3 pb-3 shrink-0">
+      <div className="px-2.5 pt-3 pb-3 shrink-0">
         <div
           className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
           style={{
