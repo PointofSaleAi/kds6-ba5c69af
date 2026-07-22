@@ -197,6 +197,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         </div>
       </div>
       <ShiftProfilePopup open={profileOpen} onClose={() => setProfileOpen(false)} />
+      <ClockInOutOverlay open={clockOpen} onClose={() => setClockOpen(false)} />
     </header>
   );
 }
