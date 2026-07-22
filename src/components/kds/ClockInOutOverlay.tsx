@@ -152,7 +152,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 if (key === 'ENTER') {
                   const enabled = pin.length === PIN_LENGTH;
                   return (
-                    <motion.button key={key} onClick={() => { if (enabled) setPin(''); }} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label="Enter" whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
+                    <motion.button key={key} onClick={submitPin} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label="Enter" whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
                       Enter
                     </motion.button>
                   );
