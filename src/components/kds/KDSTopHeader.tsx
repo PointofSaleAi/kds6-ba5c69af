@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { NotificationsPopover } from '@/components/kds/NotificationsPopover';
+import { ShiftProfilePopup } from '@/components/kds/ShiftProfilePopup';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
@@ -26,6 +27,7 @@ const HEADER_BG = '#0D0D1A';
 export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlerts }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean; onOpenAlerts?: () => void } = {}) {
   const [time, setTime] = useState(() => new Date());
   const [notifOpen, setNotifOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
@@ -75,6 +77,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
         <button
           type="button"
+          onClick={() => setProfileOpen(true)}
           className="flex items-center gap-2 pl-0 pr-2 md:pr-3 bg-white/10 hover:bg-white/15 rounded-full transition-colors"
         >
           <span
@@ -190,6 +193,14 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           </span>
         </div>
       </div>
+      <ShiftProfilePopup
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        displayName={displayName}
+        roleLabel={roleLabel}
+        initials={initials}
+        avatarBg={avatarBg}
+      />
     </header>
   );
 }
