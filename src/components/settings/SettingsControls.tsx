@@ -23,7 +23,7 @@ export function SegmentedToggle({
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center ${
+            className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center whitespace-nowrap ${
               active
                 ? 'bg-[hsl(var(--brand-primary))] text-[hsl(var(--brand-primary-foreground))] dark:bg-white dark:text-black'
                 : 'bg-transparent text-[hsl(var(--text-secondary))]'
