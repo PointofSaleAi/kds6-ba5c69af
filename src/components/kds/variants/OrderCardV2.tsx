@@ -163,6 +163,8 @@ interface Props {
   onItemDismiss?: (orderId: string, item: OrderItem) => void;
   isSeen?: boolean;
   isHistory?: boolean;
+  /** When 'seen' only acknowledged POS messages render; when 'unseen' only pending ones. */
+  screenContext?: 'default' | 'seen' | 'unseen';
 }
 
 
