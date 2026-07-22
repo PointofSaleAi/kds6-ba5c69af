@@ -69,7 +69,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
         }));
     }
     return list;
-  }, [sourceOrders, seenOrderIds, isStationView, stationCourse]);
+  }, [sourceOrders, isStationView, stationCourse]);
 
   if (unseenOrders.length === 0) {
     return (
