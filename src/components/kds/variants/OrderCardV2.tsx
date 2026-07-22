@@ -580,7 +580,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     if (s === 'cooking' || s === 'loading') return 'preparing';
     if (s === 'ready') return 'ready';
     if (s === 'done') return 'served';
-    return 'seen';
+    // idle => clear the shared lifecycle entirely so the item leaves the Seen screen.
+    return null;
   };
   const lifecycleToRowState = (lc: ItemLifecycle | undefined, isCompleted?: boolean): RowState => {
     if (isCompleted || lc === 'served') return 'done';

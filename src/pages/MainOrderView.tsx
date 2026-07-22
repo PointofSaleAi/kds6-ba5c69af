@@ -919,8 +919,17 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const activeOrderCount = orders.filter((o) => o.status !== 'served').length;
   const activeOrders = useMemo(() => orders.filter(o => o.status !== 'served'), [orders]);
-  const seenCount = useMemo(() => activeOrders.filter(o => seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
-  const unseenCount = useMemo(() => activeOrders.filter(o => !seenOrderIds.has(o.id)).length, [activeOrders, seenOrderIds]);
+  // Badge counts on the sidebar reflect the per-item lifecycle model:
+  // Seen = tickets containing at least one item that's been touched (seen/preparing/ready).
+  // Unseen = tickets that still have untouched items pending.
+  const seenCount = useMemo(
+    () => activeOrders.filter(o => o.courses.some(c => c.items.some(i => !!itemLifecycles[i.id] && itemLifecycles[i.id] !== 'served'))).length,
+    [activeOrders, itemLifecycles]
+  );
+  const unseenCount = useMemo(
+    () => activeOrders.filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && !itemLifecycles[i.id]))).length,
+    [activeOrders, itemLifecycles]
+  );
 
   // Per-screen ticket sources used to feed both the screen body AND the right Summary panel
   // so the panel always reflects exactly what the user is currently looking at.
