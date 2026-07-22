@@ -1511,7 +1511,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               )}
 
-              {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
+              {displayOrders.length === 0 && kdsMode !== 'Expo' ? (
                 isStationView && resolvedStationCourse ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
