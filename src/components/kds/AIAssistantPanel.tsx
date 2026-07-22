@@ -610,7 +610,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed bg-black/40 z-40"
-            style={{ left: insets.left, right: insets.right, top: insets.top, bottom: insets.bottom }}
+            style={{ left: insets.left, right: insets.right, top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`, bottom: insets.bottom }}
             onClick={onClose}
           />
           <motion.div
@@ -619,7 +619,7 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
             exit={{ x: '110%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
             className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
-            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
+            style={{ right: insets.right, top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`, bottom: insets.bottom }}
           >
             <div
               className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-neutral-700/50 flex flex-col"
