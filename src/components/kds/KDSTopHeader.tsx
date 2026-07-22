@@ -3,6 +3,7 @@ import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { NotificationsPopover } from '@/components/kds/NotificationsPopover';
 import { ShiftProfilePopup } from '@/components/kds/ShiftProfilePopup';
+import ClockInOutOverlay from '@/components/kds/ClockInOutOverlay';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
@@ -28,6 +29,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
   const [time, setTime] = useState(() => new Date());
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [clockOpen, setClockOpen] = useState(false);
   const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
@@ -69,7 +71,8 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
       <div className="flex items-center gap-2 md:gap-3 min-w-0">
         <button
           type="button"
-          aria-label="Switch user"
+          aria-label="Clock in or out"
+          onClick={() => setClockOpen(true)}
           className="p-1 rounded hover:bg-white/10 transition-colors"
         >
           <img src={switchUserIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
@@ -194,6 +197,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         </div>
       </div>
       <ShiftProfilePopup open={profileOpen} onClose={() => setProfileOpen(false)} />
+      <ClockInOutOverlay open={clockOpen} onClose={() => setClockOpen(false)} />
     </header>
   );
 }
