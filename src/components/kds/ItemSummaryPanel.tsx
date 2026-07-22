@@ -449,7 +449,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
             </div>
           )}
 
-          {/* Post Fire section - items added to tickets after fire */}
+          {/* Un Seen section - items added to tickets after fire */}
           {postFireItems.length > 0 && (
             <div>
               <div
@@ -459,7 +459,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 <button
                   onClick={handlePostFireToggle}
                   className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
-                  aria-label={postFireCollapsed ? 'Expand post fire' : 'Collapse post fire'}
+                  aria-label={postFireCollapsed ? 'Expand un seen' : 'Collapse un seen'}
                 >
                   <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                     <ChevronDown
