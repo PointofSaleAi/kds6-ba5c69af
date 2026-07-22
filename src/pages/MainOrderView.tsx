@@ -1243,7 +1243,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             style={{ background: 'hsl(var(--surface-bg))', order: 2 }}
           >
             <div
-              className="w-[280px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
+              className="w-[182px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
               style={{
                 background: 'hsl(var(--surface-card))',
                 boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
