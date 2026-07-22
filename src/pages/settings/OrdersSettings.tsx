@@ -29,6 +29,7 @@ export default function OrdersSettings() {
     orderHold, setOrderHold,
     orderHoldMinutes, setOrderHoldMinutes,
     quickReplyItems, setQuickReplyItems,
+    ticketFlowDirection, setTicketFlowDirection,
   } = useKDSSettings();
   const hash = useHashHighlight();
   const [quickRepliesOpen, setQuickRepliesOpen] = useState(false);
