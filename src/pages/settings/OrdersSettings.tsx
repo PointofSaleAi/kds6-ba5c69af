@@ -183,7 +183,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={MessageSquare}
         iconColor="#64748B"
-        label="Quick replies"
+        label="Quick Replies"
         helper="Choose the quick responses kitchen staff can send on ticket messages."
         onClick={() => setQuickRepliesOpen(true)}
         right={
@@ -200,7 +200,7 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={ArrowLeftRight}
         iconColor="#3B82F6"
-        label="Ticket flow direction"
+        label="Ticket Flow Direction"
         helper="Set which side new tickets enter from. Match your kitchen's reading direction - left to right for most layouts, right to left for right-to-left languages."
         right={
           <SegmentedToggle
