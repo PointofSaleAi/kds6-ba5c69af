@@ -10,6 +10,7 @@ import {
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 
 const HEADER_H = 44;
 const HEADER_BG = '#0D0D1A';
