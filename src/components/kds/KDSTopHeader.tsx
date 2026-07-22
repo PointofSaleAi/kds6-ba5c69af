@@ -77,6 +77,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
         <button
           type="button"
+          onClick={() => setProfileOpen(true)}
           className="flex items-center gap-2 pl-0 pr-2 md:pr-3 bg-white/10 hover:bg-white/15 rounded-full transition-colors"
         >
           <span
