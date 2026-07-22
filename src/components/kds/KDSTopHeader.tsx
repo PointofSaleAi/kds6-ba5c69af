@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowLeftRight,
-  Monitor,
   RefreshCw,
   Headphones,
   Bell,
@@ -9,6 +8,7 @@ import {
   UtensilsCrossed,
 } from 'lucide-react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
+import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { useNotifications } from '@/hooks/use-notifications';
 
 const HEADER_H = 44;
@@ -93,17 +93,7 @@ export function KDSTopHeader() {
 
       {/* Right: system controls */}
       <div className="flex items-center gap-2 md:gap-3">
-        <button
-          type="button"
-          aria-label="Screen mode"
-          className="relative p-1 rounded hover:bg-white/10 transition-colors"
-        >
-          <Monitor size={16} className="text-white/80" />
-          <span
-            className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full"
-            style={{ background: '#22C55E', border: `1.5px solid ${HEADER_BG}` }}
-          />
-        </button>
+        <ScreenModeChip />
 
         <div className="flex items-center justify-center">
           <AnimatedAIIcon size={20} />
