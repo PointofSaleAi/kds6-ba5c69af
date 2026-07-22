@@ -3,7 +3,7 @@ import { X, Send, RefreshCw, Smartphone } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import { issueReplyToken, REPLY_TOKEN_TTL_SECONDS } from '@/lib/demo-auth';
-import { useKdsSettings, DEFAULT_QUICK_REPLIES } from '@/hooks/use-kds-settings';
+import { useKDSSettings, DEFAULT_QUICK_REPLIES } from '@/hooks/use-kds-settings';
 
 
 const MAX_CHARS = 100;
