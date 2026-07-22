@@ -69,7 +69,7 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
         }));
     }
     return list;
-  }, [orders, seenOrderIds, isStationView, stationCourse]);
+  }, [orders, isStationView, stationCourse]);
 
   if (seenOrders.length === 0) {
     return (
