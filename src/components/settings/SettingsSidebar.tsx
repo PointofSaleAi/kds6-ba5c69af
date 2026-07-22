@@ -64,14 +64,14 @@ export function SettingsSidebar() {
         <button
           type="button"
           onClick={() => navigate(SETTINGS_GROUPS.account.path)}
-          className="mt-3 w-full flex items-center gap-3 rounded-2xl px-3 py-2.5 active:opacity-70 transition-all text-left"
+          className="mt-3 w-full flex items-center gap-2 rounded-2xl px-2 py-2 active:opacity-70 transition-all text-left"
           style={{
             background: 'hsl(var(--text-primary) / 0.06)',
             boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.06)',
           }}
         >
           <div
-            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm font-montserrat shrink-0"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-[0.7rem] font-montserrat shrink-0"
             style={{ background: avatarBg }}
           >
             {initials}
