@@ -61,6 +61,7 @@ interface MainOrderViewProps {
   onOpenSub?: (sub: string) => void;
   onLogOut?: () => void;
   onDevModeChange?: (enabled: boolean) => void;
+  onOpenAlerts?: () => void;
   /** When set, OrderCards dim non-matching courses */
   stationCourse?: string;
   historyCategories?: string[];
@@ -84,7 +85,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
-export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default', legacyActions = false }: MainOrderViewProps) {
+export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, onOpenAlerts, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default', legacyActions = false }: MainOrderViewProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
@@ -1186,7 +1187,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   return (
     <>
-    <KDSTopHeader aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} />
+    <KDSTopHeader aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} onOpenAlerts={onOpenAlerts} />
     <div
       className={`fixed inset-0 flex bg-tickets-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
       style={{ top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 0px))' }}

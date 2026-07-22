@@ -37,10 +37,11 @@ interface Props {
   open: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLElement>;
+  onViewMore?: () => void;
 }
 
-export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
-  const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
+export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: Props) {
+  const { notifications, unreadCount, acknowledge } = useNotifications();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -117,25 +118,16 @@ export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
       </div>
 
       {notifications.length > 0 && (
-        <div className="border-t border-white/10 flex">
-          <button
-            onClick={() => {
-              clearAcknowledged();
-              onClose();
-            }}
-            className="flex-1 py-3 text-xs font-medium text-neutral-400 hover:bg-white/5 transition-colors"
-          >
-            Clear Read
-          </button>
-          <div className="w-px bg-white/10" />
-          <button
-            onClick={onClose}
-            className="flex-1 py-3 text-sm font-medium hover:bg-white/5 transition-colors"
-            style={{ color: '#3B82F6' }}
-          >
-            View More
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            onViewMore?.();
+            onClose();
+          }}
+          className="w-full py-3 text-sm font-medium hover:bg-white/5 transition-colors border-t border-white/10"
+          style={{ color: '#3B82F6' }}
+        >
+          View More
+        </button>
       )}
     </div>
   );

@@ -21,7 +21,7 @@ const HEADER_BG = '#0D0D1A';
  * screen mode / AI / refresh / support / notifications / wifi / clock.
  * Positioned fixed so it sits above the training bar offset seamlessly.
  */
-export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean } = {}) {
+export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlerts }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean; onOpenAlerts?: () => void } = {}) {
   const [time, setTime] = useState(() => new Date());
   const [notifOpen, setNotifOpen] = useState(false);
   const notifBtnRef = useRef<HTMLButtonElement>(null);
@@ -160,6 +160,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
             open={notifOpen}
             onClose={() => setNotifOpen(false)}
             anchorRef={notifBtnRef}
+            onViewMore={onOpenAlerts}
           />
         </div>
 
