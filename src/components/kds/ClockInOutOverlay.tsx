@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sun, Fingerprint, ScanFace, ChevronDown, CornerDownLeft } from 'lucide-react';
+import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
 
 
 const PIN_LENGTH = 4;
