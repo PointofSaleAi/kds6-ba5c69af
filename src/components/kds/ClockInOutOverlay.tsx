@@ -91,25 +91,25 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
 
           {/* Left: date / time / weather */}
           <div className="flex-1 flex flex-col justify-center px-12 lg:px-20 text-white">
-            <p className="text-lg font-semibold mb-6">{dateLabel}</p>
-            <div className="flex items-baseline gap-3 mb-10 whitespace-nowrap">
-              <span className="font-black leading-none tabular-nums" style={{ fontSize: 'clamp(96px, 14vw, 180px)' }}>
+            <p className="font-bold mb-8" style={{ fontSize: '28px' }}>{dateLabel}</p>
+            <div className="flex items-baseline gap-4 mb-16 whitespace-nowrap">
+              <span className="font-black leading-none tabular-nums" style={{ fontSize: 'clamp(160px, 20vw, 260px)' }}>
                 {displayHour}
-                <span className="inline-flex flex-col align-middle mx-2" style={{ verticalAlign: '0.15em' }}>
-                  <span className="rounded-full bg-white/70" style={{ width: '0.12em', height: '0.12em', marginBottom: '0.08em' }} />
-                  <span className="rounded-full bg-white/70" style={{ width: '0.12em', height: '0.12em' }} />
+                <span className="inline-flex flex-col align-middle mx-3" style={{ verticalAlign: '0.18em' }}>
+                  <span className="rounded-full bg-white/60" style={{ width: '0.13em', height: '0.13em', marginBottom: '0.09em' }} />
+                  <span className="rounded-full bg-white/60" style={{ width: '0.13em', height: '0.13em' }} />
                 </span>
                 {minStr}
               </span>
-              <span className="font-black text-white/40" style={{ fontSize: 'clamp(32px, 4vw, 56px)' }}>
+              <span className="font-black text-white/40" style={{ fontSize: 'clamp(56px, 7vw, 96px)' }}>
                 {isPM ? 'PM' : 'AM'}
               </span>
             </div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-5xl font-semibold">27°</span>
-              <Sun className="w-10 h-10 text-yellow-400" />
+            <div className="flex items-center gap-4 mb-4">
+              <span className="font-bold" style={{ fontSize: '64px', lineHeight: 1 }}>27°</span>
+              <Sun className="w-14 h-14 text-yellow-400" />
             </div>
-            <p className="text-xl font-semibold">Bengaluru, Karnataka</p>
+            <p className="font-bold" style={{ fontSize: '32px' }}>Bengaluru, Karnataka</p>
           </div>
 
           {/* Right: pin pad */}
