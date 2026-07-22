@@ -541,7 +541,7 @@ function FooterBumpButton({
 
 
 
-export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen, isHistory = false }: Props) {
+export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismiss, isSeen, isHistory = false, screenContext = 'default' }: Props) {
   const elapsed = useElapsedSeconds(order.timeReceived);
   const { timeFormat } = useLanguage();
   const headerName = order.guestName || order.customerName || order.serverName || 'Guest';
