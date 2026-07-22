@@ -305,6 +305,8 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setTicketSpacing: setPerRoute('ticketSpacing'),
         setTicketHeaderStyle: update('ticketHeaderStyle'),
         setReducedMotion: update('reducedMotion'),
+        setQuickReplies: update('quickReplies'),
+        setQuickReplyItems: update('quickReplyItems'),
         activeTicketsRoute,
         getRouteSetting,
         setRouteSetting,
