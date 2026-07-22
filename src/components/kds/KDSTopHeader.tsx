@@ -27,6 +27,7 @@ const HEADER_BG = '#0D0D1A';
 export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlerts }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean; onOpenAlerts?: () => void } = {}) {
   const [time, setTime] = useState(() => new Date());
   const [notifOpen, setNotifOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
