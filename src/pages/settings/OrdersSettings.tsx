@@ -201,7 +201,7 @@ export default function OrdersSettings() {
         icon={ArrowLeftRight}
         iconColor="#3B82F6"
         label="Ticket flow direction"
-        helper="Set which side new tickets enter from. Match your kitchen's reading direction — left to right for most layouts, right to left for right-to-left languages."
+        helper="Set which side new tickets enter from. Match your kitchen's reading direction - left to right for most layouts, right to left for right-to-left languages."
         right={
           <SegmentedToggle
             options={['Newest on left', 'Newest on right']}
