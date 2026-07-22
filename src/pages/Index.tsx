@@ -207,6 +207,7 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}
+          onOpenAlerts={() => setAlertsOpen(true)}
           historyCategories={historyCategories}
           historyCenters={historyCenters}
           onClearHistoryCategories={() => setHistoryCategories([])}
