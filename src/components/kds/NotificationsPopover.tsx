@@ -62,15 +62,17 @@ export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
   return (
     <div
       ref={ref}
-      className="fixed left-2 right-2 md:left-auto md:right-2 md:w-80 rounded-2xl shadow-2xl z-[9999] overflow-hidden"
+      className="fixed left-2 right-2 md:left-auto md:right-2 md:w-80 rounded-2xl shadow-2xl z-[9999] overflow-hidden flex flex-col"
       style={{
         top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 56px) + 6px)',
+        height: 'calc(100vh - var(--training-bar-h, 0px) - var(--kds-header-h, 44px) - var(--kds-footer-h, 52px) - 12px)',
+        maxHeight: 560,
         background: '#1C1C1E',
         border: '1px solid rgba(255,255,255,0.1)',
         fontFamily: 'Montserrat, sans-serif',
       }}
     >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
         <span className="text-sm font-semibold text-white">Notifications</span>
         {unreadCount > 0 && (
           <span
@@ -82,7 +84,8 @@ export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
         )}
       </div>
 
-      <div className="max-h-72 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto">
+
         {recent.length === 0 ? (
           <div className="px-4 py-6 text-center text-neutral-500 text-xs">
             No notifications yet
