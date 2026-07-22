@@ -43,7 +43,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 }
 
 export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default', staggerColumnCount }: SeenOrdersScreenProps) {
-  const { orders: storeOrders, seenOrderIds } = useOrderStore();
+  const { orders: storeOrders } = useOrderStore();
   const orders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
@@ -53,7 +53,7 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const seenOrders = useMemo(() => {
-    let list = orders.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));
+    let list = orders.filter(o => o.status !== 'served');
     if (isStationView && stationCourse) {
       list = list
         .filter(o =>

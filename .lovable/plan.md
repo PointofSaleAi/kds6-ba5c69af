@@ -1,20 +1,36 @@
-## Why the blink isn't visible
+## Root cause
 
-Route `/kds/v3` is wired in `src/App.tsx` to `<Index cardVariant="v2" />`, which renders `src/components/kds/variants/OrderCardV2.tsx` — not `OrderCardV3.tsx`. The `isNew` row-blink logic was previously added only to `OrderCardV3.tsx` (an unused file), so the mock `isNew: true` items never blink in the ticket you're viewing.
+`MainOrderView.tsx` already builds `seenScreenOrders` and `unseenScreenOrders` using the correct per-item lifecycle rule and passes them into the two screens. But both `SeenOrdersScreen.tsx` and `UnseenOrdersScreen.tsx` re-apply a ticket-level filter on the `orders` prop:
 
-The mock data already carries the flag (verified in `src/data/mock-orders.ts`: Meatballs, Grilled Salmon, Lobster Tail, Beef Wellington, Pork Belly, Chicken Caesar Wrap), and `use-order-store.tsx` preserves `item.isNew` end-to-end — the flag just isn't consumed by the visible row component.
+- `SeenOrdersScreen` line 56: `.filter(o => o.status !== 'served' && seenOrderIds.has(o.id))`
+- `UnseenOrdersScreen` line 56: `.filter(o => o.status !== 'served' && !seenOrderIds.has(o.id))`
+
+`seenOrderIds` is only set when **every** item in a ticket has been touched (see `OrderCardV2.tsx` `allTouched` check). So when a user marks a single product as seen, the ticket has one item with a lifecycle but its id is not in `seenOrderIds`. `SeenOrdersScreen` then discards the whole ticket, which is exactly the reported symptom.
 
 ## Fix
 
-Port the exact row-blink behavior from `OrderCardV3.tsx` into `V2ProductRow` inside `OrderCardV2.tsx`:
+Have each screen trust the pre-filtered `orders` prop from `MainOrderView` and apply only station-view refinement.
 
-1. Add `isNewBlink?: boolean` prop to `V2ProductRow`.
-2. On the row `<div>` (line 231), append `animate-row-blink` when `isNewBlink` is true and inject the `--row-blink-rgb: 127 140 141` CSS var via `style`.
-3. At the three `<V2ProductRow>` call sites (course-expanded list, completed items list, flat list), pass:
-   ```
-   isNewBlink={!reducedMotion && !!product.isNew && getRowState(product) === 'idle' && !isHistory}
-   ```
-   using the already-available `reducedMotion` from `useKDSSettings()` (it's already destructured in this file per earlier work).
-4. No other change: the `animate-row-blink` keyframe already exists in `tailwind.config.ts`, and blink stops automatically as soon as the row leaves `idle` state (advance, undo, or served).
+### `src/pages/SeenOrdersScreen.tsx`
+- Remove `seenOrderIds` from the store destructure.
+- Change the base list to `orders.filter(o => o.status !== 'served')`. Do not check `seenOrderIds`.
+- Keep the station-view refinement block unchanged.
 
-Scope is presentation-only, one file (`src/components/kds/variants/OrderCardV2.tsx`). No mock, store, or settings changes needed.
+### `src/pages/UnseenOrdersScreen.tsx`
+- Remove `seenOrderIds` from the store destructure.
+- Change the base list to `sourceOrders.filter(o => o.status !== 'served')`. Do not check `!seenOrderIds`.
+- Keep the station-view refinement block unchanged.
+
+`MainOrderView`'s memos already:
+- Seen: keep tickets containing at least one item with a lifecycle, and inside each ticket keep only those seen items.
+- Unseen: strip items whose lifecycle is set; drop tickets with no unseen items remaining.
+
+Tickets screen is untouched by this change.
+
+## Verification
+
+1. Open `/kds/v3`, tap the eye icon on one product in a ticket.
+2. Navigate to Seen: that ticket now appears, containing only the touched product.
+3. Navigate to Unseen: the same ticket appears without that product; other unseen products remain.
+4. Advance / recall the item and confirm it moves between Seen and Unseen correctly.
+5. Confirm the main Tickets screen still shows every product on every ticket.
