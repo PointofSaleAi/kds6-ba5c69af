@@ -232,6 +232,25 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [seenOrderIds, setSeenOrderIds] = useState<Set<string>>(new Set());
   const [itemLifecycles, setItemLifecycles] = useState<Record<string, ItemLifecycle>>({});
+  const nextOrderNumberRef = useRef<number>(INITIAL_ORDER_NUMBER);
+
+  const getNextOrderNumber = useCallback(() => {
+    const n = nextOrderNumberRef.current;
+    nextOrderNumberRef.current = n + 1;
+    return n;
+  }, []);
+
+  const addOrder = useCallback<OrderStoreContextValue['addOrder']>((input) => {
+    const orderNumber = input.orderNumber ?? getNextOrderNumber();
+    // If caller supplied an explicit number that is at/above our counter,
+    // advance the counter so future auto-assigned numbers stay unique.
+    if (input.orderNumber != null && input.orderNumber >= nextOrderNumberRef.current) {
+      nextOrderNumberRef.current = input.orderNumber + 1;
+    }
+    const created: Order = { ...input, orderNumber } as Order;
+    setOrders(prev => [created, ...prev]);
+    return created;
+  }, [getNextOrderNumber]);
 
   const toggleOrderSeen = useCallback((orderId: string) => {
     setSeenOrderIds(prev => {
