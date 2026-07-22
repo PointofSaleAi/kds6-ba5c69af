@@ -847,8 +847,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   return (
     <div
-      className={`bg-card rounded-md overflow-hidden shadow-sm flex flex-col ${outlineColor ? 'border-2' : 'border border-border'}`}
-      style={outlineColor ? { borderColor: outlineColor } : undefined}
+      className={`bg-card rounded-md overflow-hidden shadow-sm flex flex-col ${outlineColor ? 'border-2 animate-ticket-outline' : 'border border-border'}`}
+      style={outlineColor ? { borderColor: outlineColor, ['--pulse-color' as any]: outlineColor } : undefined}
     >
       {/* HEADER */}
       {(() => {
