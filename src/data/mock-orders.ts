@@ -4,7 +4,7 @@ import type { Order } from '@/types/kds';
 export const mockOrders: Order[] = [
   {
     id: 'ord-001',
-    orderNumber: 23,
+    orderNumber: 21,
     orderType: 'dine-in',
     status: 'new',
     tableName: 'TABLE 4',
@@ -89,7 +89,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ord-002',
-    orderNumber: 24,
+    orderNumber: 22,
     orderType: 'take-out',
     status: 'preparing',
     tableName: 'PICKUP',
@@ -169,7 +169,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ord-003',
-    orderNumber: 25,
+    orderNumber: 23,
     orderType: 'delivery',
     status: 'new',
     tableName: 'DELIVERY',
@@ -251,7 +251,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ord-004',
-    orderNumber: 22,
+    orderNumber: 24,
     orderType: 'dine-in',
     status: 'overtime',
     tableName: 'TABLE 12',
@@ -329,7 +329,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ord-005',
-    orderNumber: 26,
+    orderNumber: 25,
     orderType: 'banquet',
     status: 'seen',
     tableName: 'BANQUET A',
@@ -409,7 +409,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ord-006',
-    orderNumber: 21,
+    orderNumber: 26,
     orderType: 'dine-in',
     status: 'served',
     tableName: 'TABLE 7',
@@ -808,7 +808,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: 'ord-new-dine',
-    orderNumber: 35,
+    orderNumber: 34,
     orderType: 'dine-in',
     status: 'new',
     tableName: 'TABLE 15',
