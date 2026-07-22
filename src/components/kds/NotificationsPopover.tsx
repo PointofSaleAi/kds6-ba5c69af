@@ -41,7 +41,7 @@ interface Props {
 }
 
 export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: Props) {
-  const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
+  const { notifications, unreadCount, acknowledge } = useNotifications();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
