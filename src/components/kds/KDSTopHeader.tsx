@@ -71,7 +71,8 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
       <div className="flex items-center gap-2 md:gap-3 min-w-0">
         <button
           type="button"
-          aria-label="Switch user"
+          aria-label="Clock in or out"
+          onClick={() => setClockOpen(true)}
           className="p-1 rounded hover:bg-white/10 transition-colors"
         >
           <img src={switchUserIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
