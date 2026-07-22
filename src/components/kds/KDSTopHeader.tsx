@@ -193,6 +193,14 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           </span>
         </div>
       </div>
+      <ShiftProfilePopup
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        displayName={displayName}
+        roleLabel={roleLabel}
+        initials={initials}
+        avatarBg={avatarBg}
+      />
     </header>
   );
 }
