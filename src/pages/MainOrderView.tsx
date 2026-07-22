@@ -625,8 +625,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse, selectedSummaryItems, selectedSummaryCategories]);
 
   const staggerOrderColumns = useMemo(
-    () => distributeIntoColumns(filteredOrders, staggerColumnCount),
-    [filteredOrders, staggerColumnCount]
+    () => distributeIntoColumns(displayOrders, staggerColumnCount),
+    [displayOrders, staggerColumnCount]
   );
 
   const staggerHistoryColumns = useMemo(
