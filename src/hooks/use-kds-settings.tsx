@@ -93,6 +93,7 @@ export interface KDSSettings {
   reducedMotion: boolean;
   quickReplies: boolean;
   quickReplyItems: string[];
+  ticketFlowDirection: TicketFlowDirection;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
