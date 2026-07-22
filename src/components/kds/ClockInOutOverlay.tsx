@@ -140,8 +140,8 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                   <motion.button key={key} onClick={() => setPin('')} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
                 );
                 if (key === 'ENTER') return (
-                  <motion.button key={key} onClick={() => { if (pin.length === PIN_LENGTH) setPin(''); }} style={greyKey} aria-label="Enter" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
-                    <CornerDownLeft className="w-5 h-5" />
+                  <motion.button key={key} onClick={() => { if (pin.length === PIN_LENGTH) setPin(''); }} style={greyKey} aria-label="Enter" whileTap={tapAnim} whileHover={hoverAnim} transition={transition} className="text-sm font-bold tracking-wide">
+                    ENTER
                   </motion.button>
                 );
                 return (
