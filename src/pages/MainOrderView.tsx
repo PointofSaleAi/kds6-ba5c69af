@@ -95,7 +95,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { layout: dockLayout } = useDockLayout();
   const { active: onboardingActive } = useOnboarding();
   const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
-  const [viewMode, setViewMode] = useState<ViewMode>('stagger');
+  const [viewMode, setViewMode] = useState<ViewMode>(staggerMode ? 'stagger' : 'grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
   const { setView: setActiveKDSView } = useActiveKDSView();
