@@ -160,6 +160,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
             open={notifOpen}
             onClose={() => setNotifOpen(false)}
             anchorRef={notifBtnRef}
+            onViewMore={onOpenAlerts}
           />
         </div>
 
