@@ -132,9 +132,6 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   }, []);
 
 
-  const now = new Date();
-  const timeStr = formatTimeForKDS(now, tfmt);
-  const dateStr = formatDateForKDS(now, dfmt);
 
   const sortOptions: { value: SortMode; label: string }[] = [
     { value: 'newest', label: t.sortNewToOld },
