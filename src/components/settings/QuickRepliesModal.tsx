@@ -218,20 +218,6 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
           </section>
         </div>
 
-        {/* Footer */}
-        <div className="px-5 py-3 border-t border-border flex justify-end">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 rounded-xl text-sm font-bold min-h-[40px]"
-            style={{
-              background: 'hsl(var(--brand-primary))',
-              color: 'hsl(var(--brand-primary-foreground))',
-            }}
-          >
-            Done
-          </button>
-        </div>
       </div>
     </>
   );
