@@ -867,21 +867,41 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
           <div className="flex items-center gap-1.5 min-w-0">
             {isCompact && bumping && <Loader2 size={12} className="animate-spin shrink-0" />}
             {showTableInstead ? (
-              <span
-                data-onboarding="ticket-header"
-                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
-                style={{ background: '#1A1A2E', color: '#FFFFFF' }}
-              >
-                {order.tableName}
-              </span>
+              isLite ? (
+                <span
+                  data-onboarding="ticket-header"
+                  className="text-[10px] font-semibold uppercase shrink-0"
+                  style={{ color: liteFg }}
+                >
+                  {order.tableName}
+                </span>
+              ) : (
+                <span
+                  data-onboarding="ticket-header"
+                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
+                  style={{ background: '#1A1A2E', color: '#FFFFFF' }}
+                >
+                  {order.tableName}
+                </span>
+              )
             ) : (
-              <span
-                data-onboarding="ticket-header"
-                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
-                style={{ background: colorSet.headerBg, color: colorSet.headerText }}
-              >
-                {orderTypeLabel(order.orderType)}
-              </span>
+              isLite ? (
+                <span
+                  data-onboarding="ticket-header"
+                  className="text-[10px] font-semibold uppercase shrink-0"
+                  style={{ color: liteFg }}
+                >
+                  {orderTypeLabel(order.orderType)}
+                </span>
+              ) : (
+                <span
+                  data-onboarding="ticket-header"
+                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase shrink-0"
+                  style={{ background: colorSet.headerBg, color: colorSet.headerText }}
+                >
+                  {orderTypeLabel(order.orderType)}
+                </span>
+              )
             )}
             <span data-onboarding="ticket-orderno" className={`font-bold text-[14px] shrink-0 truncate ${isLite ? '' : 'text-foreground'}`} style={isLite ? { color: liteFg } : undefined}>{identifier}</span>
           </div>
