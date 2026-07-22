@@ -16,10 +16,11 @@ interface KitchenReplyDialogProps {
 }
 
 export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDialogProps) {
-  const { settings } = useKDSSettings();
-  const presetReplies = (settings.quickReplyItems && settings.quickReplyItems.length > 0)
-    ? settings.quickReplyItems
+  const { quickReplyItems } = useKDSSettings();
+  const presetReplies = (quickReplyItems && quickReplyItems.length > 0)
+    ? quickReplyItems
     : DEFAULT_QUICK_REPLIES;
+
 
   const [text, setText] = useState('');
   const [tokenInfo, setTokenInfo] = useState(() => issueReplyToken(message.message_id));
