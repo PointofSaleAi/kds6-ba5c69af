@@ -8,7 +8,7 @@ import {
   Wifi,
   UtensilsCrossed,
 } from 'lucide-react';
-import { AnimatedAIIcon } from '@/components/kds/AnimatedAIIcon';
+import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import { useNotifications } from '@/hooks/use-notifications';
 
 const HEADER_H = 44;
