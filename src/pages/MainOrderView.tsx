@@ -1062,12 +1062,14 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const withSelectedTicketSettings = (node: ReactNode) => (
       <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
     );
+    const screenContext: 'seen' | 'unseen' | 'default' = isSeenScreen ? 'seen' : isUnseenScreen ? 'unseen' : 'default';
     const sharedVariantProps = {
       onBump: isHistory ? handleRecall : handleBump,
       onMarkSeen: markOrderSeen,
       onItemDone: markItemDone,
       onItemDismiss: isHistory ? handleRecallItem : handleItemDismiss,
       isSeen: seenOrderIds.has(displayOrder.id),
+      screenContext,
     };
 
     if (effectiveCardVariant === 'v1') {
