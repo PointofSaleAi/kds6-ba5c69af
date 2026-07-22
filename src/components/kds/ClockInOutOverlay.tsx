@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sun, Fingerprint, ScanFace, ChevronDown, Delete } from 'lucide-react';
+import { X, Sun, Fingerprint, ScanFace, ChevronDown, CornerDownLeft } from 'lucide-react';
 
 
 const PIN_LENGTH = 4;
@@ -53,7 +53,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
   const displayHour = ((hours + 11) % 12) + 1;
   const minStr = mins.toString().padStart(2, '0');
 
-  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','BACK'];
+  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','ENTER'];
 
   const keyBase: React.CSSProperties = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -139,9 +139,9 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 if (key === 'C') return (
                   <motion.button key={key} onClick={() => setPin('')} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
                 );
-                if (key === 'BACK') return (
-                  <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
-                    <Delete className="w-5 h-5" />
+                if (key === 'ENTER') return (
+                  <motion.button key={key} onClick={() => { if (pin.length === PIN_LENGTH) setPin(''); }} style={greyKey} aria-label="Enter" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
+                    <CornerDownLeft className="w-5 h-5" />
                   </motion.button>
                 );
                 return (
