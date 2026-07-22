@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
-import pinIndicatorIcon from '@/assets/icons/pin-indicator.svg';
-import pinIndicatorFilledIcon from '@/assets/icons/pin-indicator-filled.svg';
+import { X, Sun, Fingerprint, ScanFace, ChevronDown, Delete } from 'lucide-react';
+
 
 const PIN_LENGTH = 4;
 const REVENUE_CENTERS = ['Dine Center', 'Bar', 'Patio', 'Takeout'];
@@ -54,7 +53,21 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
   const displayHour = ((hours + 11) % 12) + 1;
   const minStr = mins.toString().padStart(2, '0');
 
-  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','ENTER'];
+  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','BACK'];
+
+  const keyBase: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    borderRadius: '8px', fontFamily: 'Montserrat, sans-serif', fontWeight: 700,
+    fontSize: '28px', height: '64px', cursor: 'pointer', border: 'none', transition: 'filter 0.1s',
+  };
+  const lightKey: React.CSSProperties = {
+    ...keyBase, background: 'linear-gradient(180deg, #ECECEC 0%, #D4D4D4 100%)',
+    boxShadow: '0 2px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.7)', color: '#1A1A2E',
+  };
+  const greyKey: React.CSSProperties = {
+    ...keyBase, background: 'linear-gradient(180deg, #8C8C8C 0%, #6E6E6E 100%)',
+    boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)', color: '#FFFFFF',
+  };
 
   return (
     <AnimatePresence>
@@ -103,38 +116,36 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           <div className="w-[480px] flex flex-col justify-center px-8 py-10">
             <p className="text-center text-white/60 text-sm mb-4">Enter PIN to Clock In</p>
 
-            <div className="flex justify-center gap-6 mb-6">
+            <div className="flex justify-center gap-5 mb-6">
               {Array.from({ length: PIN_LENGTH }).map((_, i) => (
-                <img
+                <motion.span
                   key={i}
-                  src={i < pin.length ? pinIndicatorFilledIcon : pinIndicatorIcon}
-                  alt=""
-                  className="w-10 h-10"
-                  onError={(e) => {
-                    // Fallback if icon missing
-                    (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+                  className="font-montserrat font-black text-white select-none"
+                  style={{ fontSize: '3.5rem', lineHeight: 1 }}
+                  animate={{ opacity: i < pin.length ? 1 : 0.3, scale: i < pin.length ? [1, 1.3, 1] : 1 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                >
+                  ✱
+                </motion.span>
               ))}
             </div>
 
             {/* Number pad */}
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-3 gap-[8px] mb-2">
               {keys.map(key => {
+                const tapAnim = { scale: 0.92, y: 2 };
+                const hoverAnim = { scale: 1.03 };
+                const transition = { type: 'spring' as const, stiffness: 600, damping: 20, mass: 0.5 };
                 if (key === 'C') return (
-                  <button key={key} onClick={() => setPin('')} className="h-16 rounded-lg bg-white text-[#E84C3D] text-2xl font-bold shadow active:scale-95 transition-transform">C</button>
+                  <motion.button key={key} onClick={() => setPin('')} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
                 );
-                if (key === 'ENTER') return (
-                  <button key={key} className="h-16 rounded-lg bg-[#6E6E6E] text-white text-lg font-bold shadow active:scale-95 transition-transform">ENTER</button>
+                if (key === 'BACK') return (
+                  <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
+                    <Delete className="w-5 h-5" />
+                  </motion.button>
                 );
                 return (
-                  <button
-                    key={key}
-                    onClick={() => handleDigit(key)}
-                    className="h-16 rounded-lg bg-white text-[#1A1A2E] text-2xl font-bold shadow active:scale-95 transition-transform"
-                  >
-                    {key}
-                  </button>
+                  <motion.button key={key} onClick={() => handleDigit(key)} style={lightKey} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>{key}</motion.button>
                 );
               })}
             </div>
