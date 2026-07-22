@@ -375,11 +375,6 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
       )}
 
-      <div className="flex items-center gap-3">
-        <span data-onboarding="datetime" className="text-primary-foreground/80 text-sm">
-          {timeStr} &middot; {dateStr}
-        </span>
-      </div>
     </div>
     <EightySixSheet
       open={eightySixOpen}
