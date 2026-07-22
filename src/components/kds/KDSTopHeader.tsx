@@ -79,17 +79,18 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         >
           <span
             className="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[11px] font-bold"
-            style={{ background: '#3F3F46', color: '#FFFFFF' }}
+            style={{ background: avatarBg, color: '#FFFFFF' }}
           >
-            G
+            {initials}
           </span>
-          <span className="text-xs md:text-sm font-medium">Guest</span>
+          <span className="text-xs md:text-sm font-medium truncate max-w-[120px] md:max-w-[180px]">{displayName}</span>
           <span
-            className="text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide"
+            className="text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide truncate max-w-[80px] md:max-w-[120px]"
             style={{ background: 'rgba(255,255,255,0.15)' }}
           >
-            Staff
+            {roleLabel}
           </span>
+
 
           <span className="hidden md:block w-px h-4 bg-white/20 mx-1" />
 
