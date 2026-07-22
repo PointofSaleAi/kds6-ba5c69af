@@ -382,7 +382,9 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     rushOrder,
     itemLifecycles,
     setItemLifecycle,
-  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder, itemLifecycles, setItemLifecycle]);
+    getNextOrderNumber,
+    addOrder,
+  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder, itemLifecycles, setItemLifecycle, getNextOrderNumber, addOrder]);
 
 
   return (
