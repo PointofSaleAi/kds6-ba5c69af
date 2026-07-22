@@ -3,15 +3,8 @@ import { X, Send, RefreshCw, Smartphone } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import { issueReplyToken, REPLY_TOKEN_TTL_SECONDS } from '@/lib/demo-auth';
+import { useKdsSettings, DEFAULT_QUICK_REPLIES } from '@/hooks/use-kds-settings';
 
-const PRESET_REPLIES = [
-  'Got it',
-  'On its Way',
-  '5 mins',
-  'Need More Time',
-  'Out of Stock',
-  'Cooking Now',
-];
 
 const MAX_CHARS = 100;
 const QR_EXPIRY_SECONDS = REPLY_TOKEN_TTL_SECONDS;
