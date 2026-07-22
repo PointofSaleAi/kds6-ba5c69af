@@ -49,6 +49,15 @@ interface OrderStoreContextValue {
 
   /** Update lifecycle for a single item (seen | preparing | ready | served) */
   setItemLifecycle: (orderId: string, itemId: string, state: ItemLifecycle | null) => void;
+
+  /** Reserve the next sequential order number (monotonic; advances on each call). */
+  getNextOrderNumber: () => number;
+
+  /**
+   * Add a brand-new order to the queue. If `orderNumber` is omitted the next
+   * sequential number is assigned automatically.
+   */
+  addOrder: (order: Omit<Order, 'orderNumber'> & { orderNumber?: number }) => Order;
 }
 
 
