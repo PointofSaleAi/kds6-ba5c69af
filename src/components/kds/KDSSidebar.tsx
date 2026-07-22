@@ -51,7 +51,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
   const navItems: SidebarItem[] = isExpo
     ? [
-        { icon: TicketsIcon, label: 'Tickets', action: 'home' },
+        { icon: TicketsIcon, label: 'All', action: 'home' },
         { icon: CheckCircle2, label: 'Ready Only', action: 'seen-orders' },
         { icon: Undo2, label: 'Recalled', action: 'unseen-orders' },
         { icon: Clock, label: t.history, badge: 6, action: 'history' },
@@ -59,7 +59,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
         { icon: Settings, label: t.settings, action: 'settings' },
       ]
     : [
-        { icon: TicketsIcon, label: 'Tickets', action: 'home' },
+        { icon: TicketsIcon, label: 'All', action: 'home' },
         { icon: Clock, label: t.history, badge: 6, action: 'history' },
         { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
         { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
