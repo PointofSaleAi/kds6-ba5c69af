@@ -93,7 +93,7 @@ export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDia
             <div className="px-5 pt-4 pb-2">
               <p className="text-xs font-semibold text-text-secondary mb-2">Quick Replies</p>
               <div className="flex flex-wrap gap-2">
-                {PRESET_REPLIES.map(preset => (
+                {presetReplies.map(preset => (
                   <button
                     key={preset}
                     onClick={() => handlePreset(preset)}
