@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
 
@@ -18,10 +19,18 @@ interface Props {
  * a Logout button. Purely visual for KDS — no auth wiring.
  */
 export default function ClockInOutOverlay({ open, onClose }: Props) {
+  const navigate = useNavigate();
   const [now, setNow] = useState(() => new Date());
   const [pin, setPin] = useState('');
   const [revenueCenter, setRevenueCenter] = useState('Dine Center');
   const [rcOpen, setRcOpen] = useState(false);
+
+  const submitPin = useCallback(() => {
+    if (pin.length !== PIN_LENGTH) return;
+    setPin('');
+    onClose();
+    navigate('/kds/v3');
+  }, [pin, onClose, navigate]);
 
   useEffect(() => {
     if (!open) return;
@@ -35,10 +44,11 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
       if (e.key === 'Escape') onClose();
       else if (e.key >= '0' && e.key <= '9' && pin.length < PIN_LENGTH) setPin(p => p + e.key);
       else if (e.key === 'Backspace') setPin(p => p.slice(0, -1));
+      else if (e.key === 'Enter') submitPin();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, pin, onClose]);
+  }, [open, pin, onClose, submitPin]);
 
   const handleDigit = useCallback((d: string) => {
     setPin(p => (p.length < PIN_LENGTH ? p + d : p));
@@ -142,7 +152,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 if (key === 'ENTER') {
                   const enabled = pin.length === PIN_LENGTH;
                   return (
-                    <motion.button key={key} onClick={() => { if (enabled) setPin(''); }} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label="Enter" whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
+                    <motion.button key={key} onClick={submitPin} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label="Enter" whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
                       Enter
                     </motion.button>
                   );
@@ -161,7 +171,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                   <>
                     <button disabled={!enabled} className="h-14 rounded-lg bg-[#922B21] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock Out</button>
                     <button className="h-14 rounded-lg bg-[#6E6E6E] text-white font-semibold shadow active:scale-95 transition-transform">Break</button>
-                    <button disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock In</button>
+                    <button onClick={submitPin} disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock In</button>
                   </>
                 );
               })()}
