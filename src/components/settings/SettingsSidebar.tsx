@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Mic, Monitor, ShoppingBag, Send, Cpu, Cog, User } from 'lucide-react';
 import {
@@ -9,6 +9,7 @@ import {
 import { SettingsIconTile } from './SettingsIconTile';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import systemIcon from '@/assets/icons/settings-system.png';
+import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
   display: Monitor,
@@ -32,6 +33,7 @@ export function SettingsSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = useState('');
+  const { identity } = useActiveIdentity();
 
   const results = searchSettings(query);
   const showResults = query.trim().length > 0;
@@ -43,13 +45,54 @@ export function SettingsSidebar() {
 
   const groupIds: SettingsGroupId[] = ['account', 'system', 'orders', 'hardware', 'display'];
 
+  const isStaff = identity.kind === 'staff';
+  const displayName = identity.name;
+  const roleLabel = isStaff ? identity.role : 'Restaurant';
+  const initials = useMemo(() => initialsFromName(displayName), [displayName]);
+  const avatarBg = useMemo(
+    () => colorFromString(displayName + (isStaff ? identity.role : '')),
+    [displayName, identity, isStaff]
+  );
+
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
       <div className="px-3.5 pt-3.5 pb-3 shrink-0">
         <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
+
+        <button
+          type="button"
+          onClick={() => navigate(SETTINGS_GROUPS.account.path)}
+          className="mt-3 w-full flex items-center gap-3 rounded-2xl px-3 py-2.5 active:opacity-70 transition-all text-left"
+          style={{
+            background: 'hsl(var(--text-primary) / 0.06)',
+            boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.06)',
+          }}
+        >
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm font-montserrat shrink-0"
+            style={{ background: avatarBg }}
+          >
+            {initials}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div
+              className="text-[0.95rem] font-bold leading-tight truncate"
+              style={{ color: 'hsl(var(--text-primary))' }}
+            >
+              {displayName}
+            </div>
+            <div
+              className="text-[0.8rem] leading-tight truncate mt-0.5"
+              style={{ color: 'hsl(var(--text-muted))' }}
+            >
+              {roleLabel}
+            </div>
+          </div>
+        </button>
       </div>
+
 
       <div className="flex-1 overflow-y-auto scrollbar-hide px-3.5 pb-2">
         {showResults ? (
