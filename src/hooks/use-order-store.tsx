@@ -1,9 +1,13 @@
 // TODO: Replace with API endpoint - all data should come from backend
-import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useRef, type ReactNode } from 'react';
 import { formatTime } from '@/lib/datetime';
 import type { Order } from '@/types/kds';
 import type { ExpoTicket, ExpoStation, ExpoItem, ExpoItemStatus, ExpoCourse, ExpoCourseStatus } from '@/data/mock-expo-orders';
 import { mockOrders } from '@/data/mock-orders';
+
+/** Seed the sequential counter above the highest number already in the mocks. */
+const INITIAL_ORDER_NUMBER =
+  (mockOrders.reduce((max, o) => (o.orderNumber > max ? o.orderNumber : max), 0) || 0) + 1;
 
 /* ------------------------------------------------------------------ */
 /*  Shared order store: single source of truth for Home + Expo views  */
@@ -45,6 +49,15 @@ interface OrderStoreContextValue {
 
   /** Update lifecycle for a single item (seen | preparing | ready | served) */
   setItemLifecycle: (orderId: string, itemId: string, state: ItemLifecycle | null) => void;
+
+  /** Reserve the next sequential order number (monotonic; advances on each call). */
+  getNextOrderNumber: () => number;
+
+  /**
+   * Add a brand-new order to the queue. If `orderNumber` is omitted the next
+   * sequential number is assigned automatically.
+   */
+  addOrder: (order: Omit<Order, 'orderNumber'> & { orderNumber?: number }) => Order;
 }
 
 
@@ -219,6 +232,25 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(mockOrders);
   const [seenOrderIds, setSeenOrderIds] = useState<Set<string>>(new Set());
   const [itemLifecycles, setItemLifecycles] = useState<Record<string, ItemLifecycle>>({});
+  const nextOrderNumberRef = useRef<number>(INITIAL_ORDER_NUMBER);
+
+  const getNextOrderNumber = useCallback(() => {
+    const n = nextOrderNumberRef.current;
+    nextOrderNumberRef.current = n + 1;
+    return n;
+  }, []);
+
+  const addOrder = useCallback<OrderStoreContextValue['addOrder']>((input) => {
+    const orderNumber = input.orderNumber ?? getNextOrderNumber();
+    // If caller supplied an explicit number that is at/above our counter,
+    // advance the counter so future auto-assigned numbers stay unique.
+    if (input.orderNumber != null && input.orderNumber >= nextOrderNumberRef.current) {
+      nextOrderNumberRef.current = input.orderNumber + 1;
+    }
+    const created: Order = { ...input, orderNumber } as Order;
+    setOrders(prev => [created, ...prev]);
+    return created;
+  }, [getNextOrderNumber]);
 
   const toggleOrderSeen = useCallback((orderId: string) => {
     setSeenOrderIds(prev => {
@@ -350,7 +382,9 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     rushOrder,
     itemLifecycles,
     setItemLifecycle,
-  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder, itemLifecycles, setItemLifecycle]);
+    getNextOrderNumber,
+    addOrder,
+  }), [orders, expoTickets, markItemDone, markAllItemsDone, sendOutOrder, updateOrderStatus, seenOrderIds, toggleOrderSeen, rushOrder, itemLifecycles, setItemLifecycle, getNextOrderNumber, addOrder]);
 
 
   return (
