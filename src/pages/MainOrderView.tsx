@@ -928,10 +928,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const isItemSeen = (itemId: string) => !!itemLifecycles[itemId];
     // Show tickets that contain at least one item marked seen (or beyond).
     // Inside each ticket, only include the seen items.
+    // Order notes only appear here once acknowledged in the Tickets screen.
     let list = ordersWithItemStatuses
       .filter(o => o.status !== 'served')
       .map(o => ({
         ...o,
+        orderNotes: notesAcknowledgedIds.has(o.id) ? o.orderNotes : undefined,
         courses: o.courses
           .map(c => ({ ...c, items: c.items.filter(i => isItemSeen(i.id)) }))
           .filter(c => c.items.length > 0),
@@ -948,16 +950,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         }));
     }
     return list;
-  }, [ordersWithItemStatuses, itemLifecycles, isStationView, resolvedStationCourse]);
+  }, [ordersWithItemStatuses, itemLifecycles, isStationView, resolvedStationCourse, notesAcknowledgedIds]);
 
   const unseenScreenOrders = useMemo(() => {
     const isItemSeen = (itemId: string) => !!itemLifecycles[itemId];
     // Filter out items already seen; keep only tickets with at least one unseen item.
+    // Order notes only remain here while still unacknowledged in the Tickets screen.
     let list = filteredOrders
       .map(o => ordersWithItemStatusesById.get(o.id) ?? o)
       .filter(o => o.status !== 'served')
       .map(o => ({
         ...o,
+        orderNotes: notesAcknowledgedIds.has(o.id) ? undefined : o.orderNotes,
         courses: o.courses
           .map(c => ({ ...c, items: c.items.filter(i => !isItemSeen(i.id)) }))
           .filter(c => c.items.length > 0),
@@ -974,7 +978,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         }));
     }
     return list;
-  }, [filteredOrders, ordersWithItemStatusesById, itemLifecycles, isStationView, resolvedStationCourse]);
+  }, [filteredOrders, ordersWithItemStatusesById, itemLifecycles, isStationView, resolvedStationCourse, notesAcknowledgedIds]);
 
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
@@ -1058,6 +1062,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     const withSelectedTicketSettings = (node: ReactNode) => (
       <KDSSettingsPreviewScope route={selectedTicketsRoute}>{node}</KDSSettingsPreviewScope>
     );
+    const screenContext: 'seen' | 'unseen' | 'default' = isSeenScreen ? 'seen' : isUnseenScreen ? 'unseen' : 'default';
     const sharedVariantProps = {
       onBump: isHistory ? handleRecall : handleBump,
       onMarkSeen: markOrderSeen,
@@ -1098,7 +1103,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
           }),
         })),
       };
-      return wrap(withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} isHistory={isHistory} />));
+      return wrap(withSelectedTicketSettings(<OrderCardV2 order={v2Order} {...sharedVariantProps} isHistory={isHistory} screenContext={screenContext} />));
     }
     if (effectiveCardVariant === 'v3') {
       let flatIdx3 = 0;
