@@ -58,17 +58,17 @@ export function SettingsPill({
     : 'flex items-center gap-3 w-full min-w-0 @[340px]/pill:w-auto @[340px]/pill:flex-1';
 
   const labelTextClasses = shouldStack
-    ? 'text-[15px] font-semibold text-left break-words min-w-0 flex-1'
-    : 'text-[15px] font-semibold text-left break-words min-w-0 flex-1 @[340px]/pill:truncate';
+    ? 'text-[13px] font-semibold text-left break-words min-w-0 flex-1'
+    : 'text-[13px] font-semibold text-left break-words min-w-0 flex-1 @[340px]/pill:truncate';
 
   const rightWrapClasses = shouldStack
-    ? 'flex items-center gap-2 w-full pl-[52px] justify-end'
-    : 'flex items-center gap-2 w-full pl-[52px] @[340px]/pill:w-auto @[340px]/pill:pl-0 @[340px]/pill:shrink-0 @[340px]/pill:justify-end';
+    ? 'flex items-center gap-2 w-full pl-[44px] justify-end'
+    : 'flex items-center gap-2 w-full pl-[44px] @[340px]/pill:w-auto @[340px]/pill:pl-0 @[340px]/pill:shrink-0 @[340px]/pill:justify-end';
 
   return (
     <div className="mb-1 @container/pill">
       <div
-        className="rounded-[28px] overflow-hidden transition-all"
+        className="rounded-[22px] overflow-hidden transition-all"
         style={{
           background: 'hsl(var(--surface-card))',
           border: highlighted
@@ -96,7 +96,7 @@ export function SettingsPill({
           className={`${rowClasses} ${
             interactive ? 'cursor-pointer active:opacity-70 active:scale-[0.995] transition-all duration-150' : 'cursor-default'
           }`}
-          style={{ paddingTop: 10, paddingBottom: 10 }}
+          style={{ paddingTop: 7, paddingBottom: 7 }}
         >
           <div className={labelWrapClasses}>
             <SettingsIconTile icon={icon} bgColor={iconColor} />
