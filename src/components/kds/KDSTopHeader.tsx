@@ -59,7 +59,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
           aria-label="Switch user"
           className="p-1 rounded hover:bg-white/10 transition-colors"
         >
-          <ArrowLeftRight size={16} className="text-white/80" />
+          <img src={switchUserIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
         </button>
 
         <button
@@ -82,7 +82,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
 
           <span className="hidden md:block w-px h-4 bg-white/20 mx-1" />
 
-          <UtensilsCrossed size={14} className="hidden md:block text-white/70" />
+          <img src={dinnerIcon} alt="" className="hidden md:block w-4 h-4" />
           <span className="hidden md:inline text-[12px] text-white/90">
             Dinner Service (9:00 PM)
           </span>
@@ -108,29 +108,38 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
         <button
           type="button"
           aria-label="Local host"
-          className="relative p-1 rounded hover:bg-white/10 transition-colors"
+          className="relative p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
         >
-          <RefreshCw size={16} className="text-white/80" />
+          <img src={localHostIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
           <span
-            className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full"
+            className="absolute -top-0.5 -right-0.5 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full"
             style={{ background: '#F59E0B', border: `1.5px solid ${HEADER_BG}` }}
           />
         </button>
 
         <button
           type="button"
-          aria-label="Support"
-          className="hidden md:flex p-1.5 rounded-md hover:bg-white/10 transition-colors"
+          aria-label="Refresh"
+          className="hidden md:flex p-1 rounded hover:bg-white/10 transition-colors"
         >
-          <Headphones size={16} className="text-white/80" />
+          <img src={refreshIcon} alt="" className="w-5 h-5" />
+        </button>
+
+        <button
+          type="button"
+          aria-label="Support"
+          className="hidden md:flex p-1.5 rounded-md transition-colors"
+          style={{ background: 'rgba(255,255,255,0.08)' }}
+        >
+          <img src={supportIcon} alt="" className="w-5 h-5" />
         </button>
 
         <button
           type="button"
           aria-label="Notifications"
-          className="relative p-1 rounded hover:bg-white/10 transition-colors"
+          className="relative p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
         >
-          <Bell size={16} className="text-white/80" />
+          <img src={notificationIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
           {unreadCount > 0 && (
             <span
               className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] rounded-full text-[9px] font-bold flex items-center justify-center px-0.5"
@@ -144,9 +153,9 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
         <button
           type="button"
           aria-label="Network"
-          className="p-1 rounded hover:bg-white/10 transition-colors"
+          className="p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
         >
-          <Wifi size={16} className="text-white/80" />
+          <img src={wifiIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
         </button>
 
         <div className="flex flex-col items-end leading-tight ml-1 tabular-nums">
