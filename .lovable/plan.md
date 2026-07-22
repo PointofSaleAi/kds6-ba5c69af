@@ -1,14 +1,29 @@
-## Problem
+## Current Cause
 
-The mock orders in `src/data/mock-orders.ts` are defined out of order (23, 24, 25, 22, 26, 21, 27...). The queue renders them in array order, so the ticket numbers look scrambled on screen.
+The visible sequence is being driven by ticket age, not by order number. The current ticket sort maps `By time` to `newest`, which sorts by `timeReceived`. The mock tickets have sequential order numbers, but their `timeReceived` offsets are intentionally non-sequential, so the UI shows numbers like `21, 31, 33, 32...` when sorted old-to-new.
 
-## Fix
+There is also a second issue in horizontal mode when `Ticket Flow Direction = Newest on right`: the code both reverses the order data and applies `flex-row-reverse`, which can make the visual order harder to reason about.
 
-Renumber the entries in `src/data/mock-orders.ts` so `orderNumber` matches array position — the first ticket gets the lowest number and each subsequent ticket increments by 1 (e.g. 21, 22, 23, 24, ... through the last entry).
+## Plan
 
-No other files change. `MainOrderView` already reverses the visible queue when "Newest on Right" is set, so sequence will read left-to-right or right-to-left based on that setting.
+1. **Add explicit numeric order sorting**
+   - Update the main ticket ordering logic in `MainOrderView.tsx` so the default ticket list sorts by `orderNumber`, not by `timeReceived`.
+   - Keep table/type sort options working as they do now.
 
-## Out of scope
+2. **Preserve flow direction as placement only**
+   - Make `Ticket Flow Direction` control where the sequence starts visually:
+     - `Newest on left`: sequence displays left-to-right.
+     - `Newest on right`: sequence starts from the right and the user scrolls right-to-left.
+   - Avoid double-reversing the ticket array and the flex direction.
 
-- History mock (`OrderHistoryScreen.tsx`) numbering
-- Any change to sorting logic in `MainOrderView`
+3. **Align history sorting behavior**
+   - Apply the same order-number based default sorting to history, seen, and unseen ticket screens when they use the shared KDS ordering path.
+
+4. **Keep new order generation intact**
+   - Leave the existing sequential generator in `use-order-store.tsx` intact because it already assigns max existing number + 1 for newly added orders.
+   - The fix is for display order, not number generation.
+
+5. **Verify the result**
+   - Check `/kds/v3` in horizontal and grid modes.
+   - Confirm visible ticket numbers render in sequence.
+   - Confirm `Newest on right` places the sequence from the right without scrambling the order.

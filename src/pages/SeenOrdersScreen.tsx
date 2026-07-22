@@ -49,7 +49,7 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { t } = useLanguage();
   const { isPortrait } = usePortrait();
-  const { textSize, ticketSpacing } = useKDSSettings();
+  const { textSize, ticketSpacing, ticketFlowDirection } = useKDSSettings();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const seenOrders = useMemo(() => {
@@ -119,7 +119,7 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
               </AnimatePresence>
             </div>
           ) : viewMode === 'horizontal' ? (
-            <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+            <div className={`flex gap-1.5 overflow-x-auto pb-4 ${ticketFlowDirection === 'right' ? 'flex-row-reverse' : ''}`} style={{ minHeight: 400 }}>
               <AnimatePresence mode="popLayout">
                 {seenOrders.map(order => (
                   <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
