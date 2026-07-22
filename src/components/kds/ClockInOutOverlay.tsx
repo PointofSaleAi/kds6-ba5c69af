@@ -95,9 +95,9 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
             <div className="flex items-baseline gap-3 mb-4 whitespace-nowrap">
               <span className="font-black leading-none tabular-nums" style={{ fontSize: 'clamp(96px, 14vw, 180px)' }}>
                 {displayHour}
-                <span className="inline-flex flex-col justify-center align-middle mx-2" style={{ height: '0.62em', verticalAlign: '0.04em' }}>
-                  <span className="rounded-full bg-white/70" style={{ width: '0.16em', height: '0.16em', marginBottom: '0.14em' }} />
-                  <span className="rounded-full bg-white/70" style={{ width: '0.16em', height: '0.16em' }} />
+                <span className="inline-flex flex-col justify-center align-middle mx-2" style={{ height: '0.78em', verticalAlign: '0.02em' }}>
+                  <span className="rounded-full bg-white" style={{ width: '0.2em', height: '0.2em', marginBottom: '0.18em' }} />
+                  <span className="rounded-full bg-white" style={{ width: '0.2em', height: '0.2em' }} />
                 </span>
                 {minStr}
               </span>
