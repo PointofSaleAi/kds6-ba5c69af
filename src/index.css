@@ -494,3 +494,25 @@
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Pulsing outline for overtime / new-item tickets */
+@keyframes ticket-outline-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--pulse-color, transparent) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--pulse-color, transparent) 0%, transparent);
+  }
+}
+.animate-ticket-outline {
+  animation: ticket-outline-pulse 1.4s ease-in-out infinite;
+}
+
+/* Blinking row background for a newly-arrived item */
+@keyframes new-row-blink {
+  0%, 100% { background-color: hsl(var(--muted-foreground) / 0.18); }
+  50%      { background-color: hsl(var(--muted-foreground) / 0.03); }
+}
+.animate-new-row-blink {
+  animation: new-row-blink 1.2s ease-in-out infinite;
+}
