@@ -20,7 +20,7 @@ const HEADER_BG = '#0D0D1A';
  * screen mode / AI / refresh / support / notifications / wifi / clock.
  * Positioned fixed so it sits above the training bar offset seamlessly.
  */
-export function KDSTopHeader() {
+export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean } = {}) {
   const [time, setTime] = useState(() => new Date());
   const { unreadCount } = useNotifications();
 
