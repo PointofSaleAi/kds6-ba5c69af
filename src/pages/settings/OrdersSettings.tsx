@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock, Hourglass, ChevronDown, Check, MessageSquare, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock, Hourglass, ChevronDown, Check, MessageSquare, ChevronRight, ArrowLeftRight } from 'lucide-react';
+import { SegmentedToggle } from '@/components/settings/SettingsControls';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
@@ -28,6 +29,7 @@ export default function OrdersSettings() {
     orderHold, setOrderHold,
     orderHoldMinutes, setOrderHoldMinutes,
     quickReplyItems, setQuickReplyItems,
+    ticketFlowDirection, setTicketFlowDirection,
   } = useKDSSettings();
   const hash = useHashHighlight();
   const [quickRepliesOpen, setQuickRepliesOpen] = useState(false);
@@ -193,6 +195,21 @@ export default function OrdersSettings() {
           </div>
         }
         highlighted={hash === 'quick-replies'}
+      />
+
+      <SettingsPill
+        icon={ArrowLeftRight}
+        iconColor="#3B82F6"
+        label="Ticket flow direction"
+        helper="Set which side new tickets enter from. Match your kitchen's reading direction - left to right for most layouts, right to left for right-to-left languages."
+        right={
+          <SegmentedToggle
+            options={['Newest on left', 'Newest on right']}
+            value={ticketFlowDirection === 'right' ? 'Newest on right' : 'Newest on left'}
+            onChange={(v) => setTicketFlowDirection(v === 'Newest on right' ? 'right' : 'left')}
+          />
+        }
+        highlighted={hash === 'ticket-flow-direction'}
       />
 
       <QuickRepliesModal

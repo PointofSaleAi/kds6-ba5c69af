@@ -10,6 +10,7 @@ export type ExpoSendButtonMode = 'always' | 'when-ready';
 export type TicketLayout = 'standard' | 'compact' | 'header';
 export type TicketSpacing = 'Compact' | 'Standard' | 'Spacious';
 export type TicketHeaderStyle = 'default' | 'v1' | 'v2' | 'v3';
+export type TicketFlowDirection = 'left' | 'right';
 
 export type OrderTypeColors = Record<string, string>;
 
@@ -92,6 +93,7 @@ export interface KDSSettings {
   reducedMotion: boolean;
   quickReplies: boolean;
   quickReplyItems: string[];
+  ticketFlowDirection: TicketFlowDirection;
 }
 
 interface KDSSettingsContextValue extends KDSSettings {
@@ -119,6 +121,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setReducedMotion: (v: boolean) => void;
   setQuickReplies: (v: boolean) => void;
   setQuickReplyItems: (v: string[]) => void;
+  setTicketFlowDirection: (v: TicketFlowDirection) => void;
   /** Currently-active tickets route ('Default'..'v6') or null when not on a tickets route. */
   activeTicketsRoute: TicketsRouteKey | null;
   getRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K) => NonNullable<RouteOverride[K]>;
@@ -155,6 +158,7 @@ const defaults: KDSSettings = {
   reducedMotion: false,
   quickReplies: false,
   quickReplyItems: [...DEFAULT_QUICK_REPLIES],
+  ticketFlowDirection: 'left',
 };
 
 function loadSettings(): KDSSettings {
@@ -307,6 +311,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setReducedMotion: update('reducedMotion'),
         setQuickReplies: update('quickReplies'),
         setQuickReplyItems: update('quickReplyItems'),
+        setTicketFlowDirection: update('ticketFlowDirection'),
         activeTicketsRoute,
         getRouteSetting,
         setRouteSetting,

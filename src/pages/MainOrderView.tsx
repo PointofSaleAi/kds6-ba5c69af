@@ -91,7 +91,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, setStaggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, setStaggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute, ticketFlowDirection } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen, itemLifecycles } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
@@ -515,6 +515,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters, orderTypeFilter]);
 
+  // Visual flow direction: newest on left (default) or newest on right.
+  const displayOrders = useMemo(() => {
+    if (ticketFlowDirection === 'right') return [...filteredOrders].reverse();
+    return filteredOrders;
+  }, [filteredOrders, ticketFlowDirection]);
+
   const filteredHistory = useMemo(() => {
     const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
     const catSet = new Set(historyCategories.map(norm));
@@ -619,8 +625,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   }, [historyOrders, historySearch, historyActiveTypes, historyCategories, historyCenters, sortMode, isStationView, resolvedStationCourse, selectedSummaryItems, selectedSummaryCategories]);
 
   const staggerOrderColumns = useMemo(
-    () => distributeIntoColumns(filteredOrders, staggerColumnCount),
-    [filteredOrders, staggerColumnCount]
+    () => distributeIntoColumns(displayOrders, staggerColumnCount),
+    [displayOrders, staggerColumnCount]
   );
 
   const staggerHistoryColumns = useMemo(
@@ -1505,7 +1511,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 </div>
               )}
 
-              {filteredOrders.length === 0 && kdsMode !== 'Expo' ? (
+              {displayOrders.length === 0 && kdsMode !== 'Expo' ? (
                 isStationView && resolvedStationCourse ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
@@ -1542,7 +1548,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   ) : effectiveBoardMode === 'grid' ? (
                     <div className={`grid gap-1.5 items-start ${isPortrait ? 'grid-cols-2 min-[960px]:grid-cols-3' : effectiveCardVariant === 'v5' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1400px]:grid-cols-5' : (effectiveCardVariant === 'v1' || effectiveCardVariant === 'v4') ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 min-[1100px]:grid-cols-5 min-[1400px]:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}`}>
                       <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => {
+                        {displayOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className="min-w-0">
@@ -1555,7 +1561,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                   ) : (
                     <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
-                        {filteredOrders.map((order) => {
+                        {displayOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
                           return (
                             <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate={{ opacity: highlightItemNames.size > 0 && !orderHasSelectedItem(order) ? 0.4 : 1, x: 0, scale: 1 }} exit="exit" transition={{ opacity: { duration: 0.3 }, layout: { type: 'spring', damping: 25, stiffness: 200 } }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
