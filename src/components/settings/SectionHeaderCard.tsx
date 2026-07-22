@@ -25,19 +25,19 @@ export function SectionHeaderCard({
 
   return (
     <div
-      className="rounded-2xl mb-5 flex flex-col items-start"
+      className="rounded-2xl mb-4 flex flex-col items-start"
       style={{
         background: 'hsl(var(--surface-card))',
         border: '1px solid hsl(var(--border))',
-        padding: 20,
+        padding: 16,
       }}
     >
       <div
-        className="flex items-center justify-center shrink-0 mb-3"
+        className="flex items-center justify-center shrink-0 mb-2.5"
         style={{
-          width: 52,
-          height: 52,
-          borderRadius: 12,
+          width: 42,
+          height: 42,
+          borderRadius: 10,
           backgroundColor: iconColor,
           color: '#FFFFFF',
         }}
@@ -45,16 +45,16 @@ export function SectionHeaderCard({
         {iconNode ? (
           iconNode
         ) : iconSrc ? (
-          <img src={iconSrc} alt={title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
+          <img src={iconSrc} alt={title} style={{ width: 22, height: 22, objectFit: 'contain' }} />
         ) : Icon ? (
-          <Icon size={26} color="#FFFFFF" strokeWidth={2.2} />
+          <Icon size={22} color="#FFFFFF" strokeWidth={2.2} />
         ) : null}
       </div>
       <h1
-        className="mb-2"
+        className="mb-1.5"
         style={{
           color: 'hsl(var(--text-primary))',
-          fontSize: 22,
+          fontSize: 18,
           fontWeight: 600,
           lineHeight: 1.2,
         }}
@@ -63,7 +63,7 @@ export function SectionHeaderCard({
       </h1>
       <p
         className="w-full leading-relaxed"
-        style={{ color: 'hsl(var(--text-secondary))', fontSize: 14, fontWeight: 500 }}
+        style={{ color: 'hsl(var(--text-secondary))', fontSize: 12.5, fontWeight: 500 }}
       >
         {showMore && hasMore ? longDescription : shortDescription}
         {hasMore && (
@@ -71,7 +71,7 @@ export function SectionHeaderCard({
             type="button"
             onClick={() => setShowMore(!showMore)}
             className="ml-1"
-            style={{ color: 'hsl(var(--btn-seen))', fontSize: 14, fontWeight: 600 }}
+            style={{ color: 'hsl(var(--btn-seen))', fontSize: 12.5, fontWeight: 600 }}
           >
             {showMore ? 'Learn less' : 'Learn more...'}
           </button>
