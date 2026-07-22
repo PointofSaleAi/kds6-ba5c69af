@@ -37,9 +37,10 @@ interface Props {
   open: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLElement>;
+  onViewMore?: () => void;
 }
 
-export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
+export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: Props) {
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
   const ref = useRef<HTMLDivElement>(null);
 
