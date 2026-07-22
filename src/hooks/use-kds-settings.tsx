@@ -123,7 +123,7 @@ const defaults: KDSSettings = {
   showAllergens: true,
   showHeaderAllergens: true,
   sortDefault: 'By time',
-  staggerMode: true,
+  staggerMode: false,
   servableModifiers: false,
   productTimers: false,
   orderHold: false,
