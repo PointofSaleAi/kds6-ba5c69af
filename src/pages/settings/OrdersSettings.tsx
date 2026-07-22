@@ -1,11 +1,13 @@
-import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock, Hourglass, ChevronDown, Check, MessageSquare, X, Plus, RotateCcw } from 'lucide-react';
+import { useState } from 'react';
+import { ShoppingBag, Sparkles, AlertTriangle, Timer, Clock, Hourglass, ChevronDown, Check, MessageSquare, ChevronRight } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { useKDSSettings, DEFAULT_QUICK_REPLIES } from '@/hooks/use-kds-settings';
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
+import { QuickRepliesModal } from '@/components/settings/QuickRepliesModal';
 
 const HOLD_TIME_OPTIONS = [
   { value: 1, label: '1 minute' },
@@ -25,10 +27,10 @@ export default function OrdersSettings() {
     productTimers, setProductTimers,
     orderHold, setOrderHold,
     orderHoldMinutes, setOrderHoldMinutes,
-    quickReplies, setQuickReplies,
     quickReplyItems, setQuickReplyItems,
   } = useKDSSettings();
   const hash = useHashHighlight();
+  const [quickRepliesOpen, setQuickRepliesOpen] = useState(false);
 
   const holdTimeValue = orderHoldMinutes;
   const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || '5 minutes';
@@ -179,106 +181,27 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={MessageSquare}
         iconColor="#64748B"
-        label="Quick Replies"
-        helper="Let kitchen staff send preset quick responses to ticket messages."
-        right={<SwitchToggle checked={quickReplies} onChange={setQuickReplies} />}
+        label="Quick replies"
+        helper="Choose the quick responses kitchen staff can send on ticket messages."
+        onClick={() => setQuickRepliesOpen(true)}
+        right={
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold tabular-nums" style={{ color: 'hsl(var(--text-muted))' }}>
+              {quickReplyItems.length}/10
+            </span>
+            <ChevronRight size={16} style={{ color: 'hsl(var(--text-muted))' }} />
+          </div>
+        }
         highlighted={hash === 'quick-replies'}
       />
 
-      {quickReplies && (
-        <div className="mb-1 @container/pill">
-          <div
-            className="rounded-[28px] px-4 py-3"
-            style={{
-              background: 'hsl(var(--surface-card))',
-              border: '1px solid hsl(var(--border))',
-            }}
-          >
-            <div className="flex flex-col gap-2">
-              {quickReplyItems.map((item, idx) => {
-                const soft = 30;
-                const nearLimit = item.length > soft;
-                return (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-2 rounded-xl px-3 py-1.5"
-                    style={{
-                      background: 'hsl(var(--muted))',
-                      border: '1px solid hsl(var(--border))',
-                    }}
-                  >
-                    <input
-                      type="text"
-                      value={item}
-                      onChange={(e) => {
-                        const next = [...quickReplyItems];
-                        next[idx] = e.target.value;
-                        setQuickReplyItems(next);
-                      }}
-                      placeholder="Reply text"
-                      className="flex-1 bg-transparent outline-none text-[14px] font-medium"
-                      style={{
-                        color: nearLimit
-                          ? 'hsl(var(--destructive))'
-                          : 'hsl(var(--text-primary))',
-                      }}
-                    />
-                    <span
-                      className="text-[11px] tabular-nums"
-                      style={{
-                        color: nearLimit
-                          ? 'hsl(var(--destructive))'
-                          : 'hsl(var(--text-muted))',
-                      }}
-                    >
-                      {item.length}/{soft}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setQuickReplyItems(quickReplyItems.filter((_, i) => i !== idx))
-                      }
-                      className="flex items-center justify-center rounded-full h-6 w-6 transition-colors hover:bg-black/10"
-                      aria-label="Delete reply"
-                    >
-                      <X size={14} style={{ color: 'hsl(var(--text-muted))' }} />
-                    </button>
-                  </div>
-                );
-              })}
+      <QuickRepliesModal
+        open={quickRepliesOpen}
+        onClose={() => setQuickRepliesOpen(false)}
+        selected={quickReplyItems}
+        onChange={setQuickReplyItems}
+      />
 
-              <button
-                type="button"
-                onClick={() => setQuickReplyItems([...quickReplyItems, ''])}
-                className="flex items-center gap-1.5 self-start rounded-full px-3 py-1.5 text-sm font-semibold transition-colors mt-1"
-                style={{
-                  background: 'hsl(var(--brand-primary))',
-                  color: 'hsl(var(--brand-primary-foreground))',
-                }}
-              >
-                <Plus size={14} /> Add reply
-              </button>
-
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setQuickReplyItems([...DEFAULT_QUICK_REPLIES])}
-                  className="flex items-center gap-1 text-xs font-medium transition-colors hover:underline"
-                  style={{ color: 'hsl(var(--text-muted))' }}
-                >
-                  <RotateCcw size={12} /> Reset to defaults
-                </button>
-              </div>
-            </div>
-          </div>
-          <p
-            className="text-xs px-2 mb-3 mt-0.5"
-            style={{ color: 'hsl(var(--text-muted))' }}
-          >
-            These replies appear on ticket message threads for one-tap sending.
-          </p>
-        </div>
-      )}
 
     </>
   );
