@@ -1559,7 +1559,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                       </AnimatePresence>
                     </div>
                   ) : (
-                    <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                    <div className={`flex gap-1.5 overflow-x-auto pb-4 ${ticketFlowDirection === 'right' ? 'flex-row-reverse' : ''}`} style={{ minHeight: 400 }}>
                       <AnimatePresence mode="popLayout">
                         {displayOrders.map((order) => {
                           const displayOrder = getStationDisplayOrder(order);
