@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Check, Lock, Monitor, Tv2, MonitorSmartphone, Smartphone, type LucideIcon } from 'lucide-react';
-
-type ModeId = 'pos' | 'kds' | 'cfd' | 'kiosk';
+import { useScreenMode, type ScreenMode } from '@/hooks/use-screen-mode';
+import ManagerPinOverlay from './ManagerPinOverlay';
 
 interface ModeMeta {
-  id: ModeId;
+  id: ScreenMode;
   label: string;
   description: string;
   Icon: LucideIcon;
@@ -23,7 +23,8 @@ const MODES: ModeMeta[] = [
  */
 export function ScreenModeChip() {
   const [open, setOpen] = useState(false);
-  const [currentMode] = useState<ModeId>('kds');
+  const [pendingMode, setPendingMode] = useState<ScreenMode | null>(null);
+  const { mode: currentMode, setMode } = useScreenMode();
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,6 +37,12 @@ export function ScreenModeChip() {
 
   const current = MODES.find((m) => m.id === currentMode) ?? MODES[0];
   const CurrentIcon = current.Icon;
+
+  const handleSelect = (id: ScreenMode) => {
+    setOpen(false);
+    if (id === currentMode) return;
+    setPendingMode(id);
+  };
 
   return (
     <div className="relative" ref={wrapRef}>
@@ -64,7 +71,7 @@ export function ScreenModeChip() {
                 <button
                   key={m.id}
                   type="button"
-                  onClick={() => setOpen(false)}
+                  onClick={() => handleSelect(m.id)}
                   className={`w-full flex items-start gap-3 px-4 py-2.5 text-left hover:bg-white/5 transition-colors ${active ? 'bg-white/[0.04]' : ''}`}
                 >
                   <span
@@ -90,6 +97,17 @@ export function ScreenModeChip() {
           </div>
         </div>
       )}
+
+      <ManagerPinOverlay
+        open={pendingMode !== null}
+        title="Manager PIN Required"
+        subtitle={pendingMode ? `Enter PIN to switch to ${MODES.find(m => m.id === pendingMode)?.label}` : ''}
+        onClose={() => setPendingMode(null)}
+        onSuccess={() => {
+          if (pendingMode) setMode(pendingMode);
+          setPendingMode(null);
+        }}
+      />
     </div>
   );
 }

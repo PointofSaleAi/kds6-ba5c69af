@@ -22,10 +22,12 @@ import { ActiveKDSViewProvider } from "@/hooks/use-active-kds-view";
 import { ActiveIdentityProvider } from "@/hooks/use-active-identity";
 import { OnboardingProvider } from "@/hooks/use-onboarding";
 import { TrainingModeProvider } from "@/hooks/use-training-mode";
+import { ScreenModeProvider, useScreenMode } from "@/hooks/use-screen-mode";
 import { TrainingModeBar } from "@/components/kds/TrainingModeBar";
 import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
+import PosModeShell from "@/components/kds/PosModeShell";
 import Index from "./pages/Index.tsx";
 import IndexOnlineOrdering from "./pages/IndexOnlineOrdering.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -46,6 +48,46 @@ import KdsV7Page from "./pages/KdsV7Page.tsx";
 import QrStickersPage from "./pages/QrStickersPage.tsx";
 
 const queryClient = new QueryClient();
+
+const AppShell = () => {
+  const { mode } = useScreenMode();
+  return (
+    <>
+      {mode === 'pos' && <PosModeShell />}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/kds/v3" replace />} />
+          <Route path="/kds/v1" element={<Index />} />
+          <Route path="/kds/default" element={<Index />} />
+          <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
+          <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
+          <Route path="/kds/v3-lite" element={<Index cardVariant="v2" />} />
+          <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
+          <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
+          <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
+          <Route path="/kds/v7" element={<KdsV7Page />} />
+          <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
+          <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
+          <Route path="/kds/v1/settings" element={<Index />}>
+            <Route index element={<Navigate to="display" replace />} />
+            <Route path="display" element={<DisplaySettings />} />
+            <Route path="orders" element={<OrdersSettings />} />
+            <Route path="expo" element={<ExpoSettings />} />
+            <Route path="hardware" element={<HardwareSettings />} />
+            <Route path="system" element={<SystemSettings />} />
+            <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
+            <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
+            <Route path="account" element={<AccountSettings />} />
+          </Route>
+          <Route path="/kds-reply" element={<KdsReplyPage />} />
+          <Route path="/recipe/:name" element={<RecipeDetailPage />} />
+          <Route path="/recipe" element={<RecipeDetailPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -68,6 +110,7 @@ const App = () => (
       <ActiveIdentityProvider>
       <OnboardingProvider>
       <TrainingModeProvider>
+      <ScreenModeProvider>
       <TooltipProvider>
         <DockDragLayer>
           <TrainingModeBar />
@@ -75,45 +118,10 @@ const App = () => (
           <NotificationStationSync />
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Navigate to="/kds/v3" replace />} />
-              <Route path="/kds/v1" element={<Index />} />
-              <Route path="/kds/default" element={<Index />} />
-              <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
-              <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
-              <Route path="/kds/v3-lite" element={<Index cardVariant="v2" />} />
-              <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
-              <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
-              <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
-              <Route path="/kds/v7" element={<KdsV7Page />} />
-              <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
-              <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
-
-              {/* Settings render inside the main KDS shell so the left rail
-                  and bottom status bar stay visible. */}
-              <Route path="/kds/v1/settings" element={<Index />}>
-                <Route index element={<Navigate to="display" replace />} />
-                <Route path="display" element={<DisplaySettings />} />
-                <Route path="orders" element={<OrdersSettings />} />
-                <Route path="expo" element={<ExpoSettings />} />
-                <Route path="hardware" element={<HardwareSettings />} />
-                <Route path="system" element={<SystemSettings />} />
-                <Route path="system/ai-integration" element={<AIIntegrationSettings />} />
-                <Route path="system/ai-integration/ai-instructions" element={<AIInstructionsSettings />} />
-                <Route path="account" element={<AccountSettings />} />
-              </Route>
-
-
-              <Route path="/kds-reply" element={<KdsReplyPage />} />
-              <Route path="/recipe/:name" element={<RecipeDetailPage />} />
-              <Route path="/recipe" element={<RecipeDetailPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <AppShell />
         </DockDragLayer>
       </TooltipProvider>
+      </ScreenModeProvider>
       </TrainingModeProvider>
       </OnboardingProvider>
       </ActiveIdentityProvider>
