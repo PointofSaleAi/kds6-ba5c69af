@@ -27,10 +27,10 @@ export default function OrdersSettings() {
     productTimers, setProductTimers,
     orderHold, setOrderHold,
     orderHoldMinutes, setOrderHoldMinutes,
-    quickReplies, setQuickReplies,
     quickReplyItems, setQuickReplyItems,
   } = useKDSSettings();
   const hash = useHashHighlight();
+  const [quickRepliesOpen, setQuickRepliesOpen] = useState(false);
 
   const holdTimeValue = orderHoldMinutes;
   const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || '5 minutes';
