@@ -53,7 +53,21 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
   const displayHour = ((hours + 11) % 12) + 1;
   const minStr = mins.toString().padStart(2, '0');
 
-  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','ENTER'];
+  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','BACK'];
+
+  const keyBase: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    borderRadius: '8px', fontFamily: 'Montserrat, sans-serif', fontWeight: 700,
+    fontSize: '28px', height: '64px', cursor: 'pointer', border: 'none', transition: 'filter 0.1s',
+  };
+  const lightKey: React.CSSProperties = {
+    ...keyBase, background: 'linear-gradient(180deg, #ECECEC 0%, #D4D4D4 100%)',
+    boxShadow: '0 2px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.7)', color: '#1A1A2E',
+  };
+  const greyKey: React.CSSProperties = {
+    ...keyBase, background: 'linear-gradient(180deg, #8C8C8C 0%, #6E6E6E 100%)',
+    boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)', color: '#FFFFFF',
+  };
 
   return (
     <AnimatePresence>
