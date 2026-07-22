@@ -29,6 +29,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
   const [time, setTime] = useState(() => new Date());
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [clockOpen, setClockOpen] = useState(false);
   const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
