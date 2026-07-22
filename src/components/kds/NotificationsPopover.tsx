@@ -62,9 +62,9 @@ export function NotificationsPopover({ open, onClose, anchorRef }: Props) {
   return (
     <div
       ref={ref}
-      className="fixed left-2 right-2 md:absolute md:left-auto md:right-0 md:w-80 rounded-2xl shadow-2xl z-[9999] overflow-hidden"
+      className="fixed left-2 right-2 md:left-auto md:right-2 md:w-80 rounded-2xl shadow-2xl z-[9999] overflow-hidden"
       style={{
-        top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 44px) + 4px)',
+        top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 56px) + 6px)',
         background: '#1C1C1E',
         border: '1px solid rgba(255,255,255,0.1)',
         fontFamily: 'Montserrat, sans-serif',
