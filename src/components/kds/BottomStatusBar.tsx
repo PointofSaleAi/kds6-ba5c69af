@@ -372,6 +372,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
       )}
 
+      <div className="flex-1" />
+
     </div>
     <EightySixSheet
       open={eightySixOpen}
