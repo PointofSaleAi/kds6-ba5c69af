@@ -49,10 +49,10 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
 
   useEffect(() => {
+    // Keep the var in sync in case the module-level assignment ran before
+    // documentElement was ready. No cleanup: the header height is a stable
+    // layout token used by other screens that outlive this component.
     document.documentElement.style.setProperty('--kds-header-h', `${HEADER_H}px`);
-    return () => {
-      document.documentElement.style.removeProperty('--kds-header-h');
-    };
   }, []);
 
   useEffect(() => {
