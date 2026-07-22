@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
+import { NotificationsPopover } from '@/components/kds/NotificationsPopover';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import switchUserIcon from '@/assets/icons/switch-user.png';
@@ -22,6 +23,8 @@ const HEADER_BG = '#0D0D1A';
  */
 export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean } = {}) {
   const [time, setTime] = useState(() => new Date());
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
 
@@ -134,21 +137,31 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
           <img src={supportIcon} alt="" className="w-5 h-5" />
         </button>
 
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="relative p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
-        >
-          <img src={notificationIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
-          {unreadCount > 0 && (
-            <span
-              className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] rounded-full text-[9px] font-bold flex items-center justify-center px-0.5"
-              style={{ background: '#ED1C24', color: '#FFFFFF' }}
-            >
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </span>
-          )}
-        </button>
+        <div className="relative">
+          <button
+            ref={notifBtnRef}
+            type="button"
+            aria-label="Notifications"
+            aria-pressed={notifOpen}
+            onClick={() => setNotifOpen(v => !v)}
+            className="relative p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
+          >
+            <img src={notificationIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
+            {unreadCount > 0 && (
+              <span
+                className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] rounded-full text-[9px] font-bold flex items-center justify-center px-0.5"
+                style={{ background: '#ED1C24', color: '#FFFFFF' }}
+              >
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </button>
+          <NotificationsPopover
+            open={notifOpen}
+            onClose={() => setNotifOpen(false)}
+            anchorRef={notifBtnRef}
+          />
+        </div>
 
         <button
           type="button"
