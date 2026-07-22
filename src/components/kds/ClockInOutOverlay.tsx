@@ -139,11 +139,14 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 if (key === 'C') return (
                   <motion.button key={key} onClick={() => setPin('')} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
                 );
-                if (key === 'ENTER') return (
-                  <motion.button key={key} onClick={() => { if (pin.length === PIN_LENGTH) setPin(''); }} style={{ ...greyKey, fontSize: '16px', fontWeight: 600 }} aria-label="Enter" whileTap={tapAnim} whileHover={hoverAnim} transition={transition} className="whitespace-nowrap">
-                    Enter
-                  </motion.button>
-                );
+                if (key === 'ENTER') {
+                  const enabled = pin.length === PIN_LENGTH;
+                  return (
+                    <motion.button key={key} onClick={() => { if (enabled) setPin(''); }} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label="Enter" whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
+                      Enter
+                    </motion.button>
+                  );
+                }
                 return (
                   <motion.button key={key} onClick={() => handleDigit(key)} style={lightKey} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>{key}</motion.button>
                 );
@@ -152,9 +155,16 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
 
             {/* Action row */}
             <div className="grid grid-cols-3 gap-3 mb-3">
-              <button className="h-14 rounded-lg bg-[#922B21] text-white font-semibold shadow active:scale-95 transition-transform">Clock Out</button>
-              <button className="h-14 rounded-lg bg-[#6E6E6E] text-white font-semibold shadow active:scale-95 transition-transform">Break</button>
-              <button className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform">Clock In</button>
+              {(() => {
+                const enabled = pin.length === PIN_LENGTH;
+                return (
+                  <>
+                    <button disabled={!enabled} className="h-14 rounded-lg bg-[#922B21] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock Out</button>
+                    <button className="h-14 rounded-lg bg-[#6E6E6E] text-white font-semibold shadow active:scale-95 transition-transform">Break</button>
+                    <button disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock In</button>
+                  </>
+                );
+              })()}
             </div>
 
             {/* Biometrics + revenue center */}
