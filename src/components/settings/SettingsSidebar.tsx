@@ -77,14 +77,14 @@ export function SettingsSidebar() {
             {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <div
-              className="text-[0.95rem] font-bold leading-tight truncate"
+          <div
+            className="text-[0.82rem] font-bold leading-tight truncate"
               style={{ color: 'hsl(var(--text-primary))' }}
             >
               {displayName}
             </div>
             <div
-              className="text-[0.8rem] leading-tight truncate mt-0.5"
+              className="text-[0.7rem] leading-tight truncate mt-0.5"
               style={{ color: 'hsl(var(--text-muted))' }}
             >
               {roleLabel}
