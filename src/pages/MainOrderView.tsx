@@ -925,7 +925,18 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   // Per-screen ticket sources used to feed both the screen body AND the right Summary panel
   // so the panel always reflects exactly what the user is currently looking at.
   const seenScreenOrders = useMemo(() => {
-    let list = ordersWithItemStatuses.filter(o => o.status !== 'served' && seenOrderIds.has(o.id));
+    const isItemSeen = (itemId: string) => !!itemLifecycles[itemId];
+    // Show tickets that contain at least one item marked seen (or beyond).
+    // Inside each ticket, only include the seen items.
+    let list = ordersWithItemStatuses
+      .filter(o => o.status !== 'served')
+      .map(o => ({
+        ...o,
+        courses: o.courses
+          .map(c => ({ ...c, items: c.items.filter(i => isItemSeen(i.id)) }))
+          .filter(c => c.items.length > 0),
+      }))
+      .filter(o => o.courses.length > 0);
     if (isStationView && resolvedStationCourse) {
       list = list
         .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
@@ -937,12 +948,21 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         }));
     }
     return list;
-  }, [ordersWithItemStatuses, seenOrderIds, isStationView, resolvedStationCourse]);
+  }, [ordersWithItemStatuses, itemLifecycles, isStationView, resolvedStationCourse]);
 
   const unseenScreenOrders = useMemo(() => {
+    const isItemSeen = (itemId: string) => !!itemLifecycles[itemId];
+    // Filter out items already seen; keep only tickets with at least one unseen item.
     let list = filteredOrders
       .map(o => ordersWithItemStatusesById.get(o.id) ?? o)
-      .filter(o => o.status !== 'served' && !seenOrderIds.has(o.id));
+      .filter(o => o.status !== 'served')
+      .map(o => ({
+        ...o,
+        courses: o.courses
+          .map(c => ({ ...c, items: c.items.filter(i => !isItemSeen(i.id)) }))
+          .filter(c => c.items.length > 0),
+      }))
+      .filter(o => o.courses.length > 0);
     if (isStationView && resolvedStationCourse) {
       list = list
         .filter(o => o.courses.some(c => c.items.some(i => !i.isCompleted && !i.isCancelled && i.category === resolvedStationCourse)))
@@ -954,7 +974,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         }));
     }
     return list;
-  }, [filteredOrders, ordersWithItemStatusesById, seenOrderIds, isStationView, resolvedStationCourse]);
+  }, [filteredOrders, ordersWithItemStatusesById, itemLifecycles, isStationView, resolvedStationCourse]);
 
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
