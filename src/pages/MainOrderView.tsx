@@ -19,6 +19,7 @@ import ExpoView from '@/components/kds/ExpoView';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
+import { KDSTopHeader } from '@/components/kds/KDSTopHeader';
 import { AIAssistantPanel } from '@/components/kds/AIAssistantPanel';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
@@ -1184,9 +1185,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
 
   return (
+    <>
+    <KDSTopHeader />
     <div
       className={`fixed inset-0 flex bg-tickets-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
-      style={{ top: 'var(--training-bar-h, 0px)' }}
+      style={{ top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 0px))' }}
     >
       {/* Kitchen message flash notification */}
       <AnimatePresence>
@@ -1596,5 +1599,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={(m) => { setViewMode(m); setStaggerMode(m === 'stagger'); }} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} orderTypeFilter={orderTypeFilter} onOrderTypeFilterChange={setOrderTypeFilter} />
       <OnboardingWalkthrough />
     </div>
+    </>
   );
 }
