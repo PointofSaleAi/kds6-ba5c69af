@@ -474,7 +474,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   style={{ borderRadius: '4px' }}
                 >
                   <span className="text-[12px] uppercase tracking-widest font-bold text-warning">
-                    Post Fire
+                    Un Seen
                   </span>
                 </button>
                 <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white">
