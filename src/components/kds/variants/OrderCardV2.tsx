@@ -870,7 +870,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               isLite ? (
                 <span
                   data-onboarding="ticket-header"
-                  className="text-[10px] font-semibold uppercase shrink-0"
+                  className="text-[14px] font-semibold uppercase shrink-0"
                   style={{ color: liteFg }}
                 >
                   {order.tableName}
@@ -888,7 +888,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               isLite ? (
                 <span
                   data-onboarding="ticket-header"
-                  className="text-[10px] font-semibold uppercase shrink-0"
+                  className="text-[14px] font-semibold uppercase shrink-0"
                   style={{ color: liteFg }}
                 >
                   {orderTypeLabel(order.orderType)}
