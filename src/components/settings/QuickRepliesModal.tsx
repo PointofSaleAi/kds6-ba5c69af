@@ -69,7 +69,7 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
         <div className="flex items-start justify-between px-5 pt-4 pb-3 border-b border-border">
           <div className="min-w-0">
             <h3 className="text-base font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
-              Quick replies
+              Quick Replies
             </h3>
             <p className="text-xs mt-0.5" style={{ color: 'hsl(var(--text-muted))' }}>
               Choose up to 10 quick responses kitchen staff can send on ticket messages.
