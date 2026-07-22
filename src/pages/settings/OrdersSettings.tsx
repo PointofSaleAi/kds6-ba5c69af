@@ -25,6 +25,8 @@ export default function OrdersSettings() {
     productTimers, setProductTimers,
     orderHold, setOrderHold,
     orderHoldMinutes, setOrderHoldMinutes,
+    quickReplies, setQuickReplies,
+    quickReplyItems, setQuickReplyItems,
   } = useKDSSettings();
   const hash = useHashHighlight();
 
