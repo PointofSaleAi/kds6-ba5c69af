@@ -8,7 +8,7 @@ import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
-import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
+import { useLanguage } from '@/hooks/use-language';
 import { DockDragHandle } from './DockDragHandle';
 import { EightySixSheet, type EightySixedItem } from './EightySixSheet';
 import OrderTypeFilterModal from './OrderTypeFilterModal';
@@ -66,7 +66,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, aiAssistantOpen, onToggleAiAssistant, orderTypeFilter, onOrderTypeFilterChange }: BottomStatusBarProps) {
   const { mode: kdsMode, stationCourse } = useKDSMode();
-  const { t, timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
+  const { t } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const { isPortrait } = usePortrait();
   const { toast } = useToast();
