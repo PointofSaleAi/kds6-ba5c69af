@@ -89,13 +89,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
-  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute } = useKDSSettings();
+  const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, setStaggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute } = useKDSSettings();
   const { orders, setOrders, expoTickets, markItemDone, markAllItemsDone, seenOrderIds, toggleOrderSeen, itemLifecycles } = useOrderStore();
   const { isPortrait } = usePortrait();
   const { layout: dockLayout } = useDockLayout();
   const { active: onboardingActive } = useOnboarding();
   const { pendingCount: kitchenMessagePendingCount, messages: kitchenMessages } = useKitchenMessages();
-  const [viewMode, setViewMode] = useState<ViewMode>('stagger');
+  const [viewMode, setViewMode] = useState<ViewMode>(staggerMode ? 'stagger' : 'grid');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeNav, setActiveNav] = useState('home');
   const { setView: setActiveKDSView } = useActiveKDSView();
@@ -1593,7 +1593,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         })()}
       </AnimatePresence>
 
-      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={setViewMode} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} orderTypeFilter={orderTypeFilter} onOrderTypeFilterChange={setOrderTypeFilter} />
+      <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={(m) => { setViewMode(m); setStaggerMode(m === 'stagger'); }} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} orderTypeFilter={orderTypeFilter} onOrderTypeFilterChange={setOrderTypeFilter} />
       <OnboardingWalkthrough />
     </div>
   );
