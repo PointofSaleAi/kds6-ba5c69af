@@ -171,7 +171,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                   <>
                     <button disabled={!enabled} className="h-14 rounded-lg bg-[#922B21] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock Out</button>
                     <button className="h-14 rounded-lg bg-[#6E6E6E] text-white font-semibold shadow active:scale-95 transition-transform">Break</button>
-                    <button disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock In</button>
+                    <button onClick={submitPin} disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock In</button>
                   </>
                 );
               })()}
