@@ -133,7 +133,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [expoFilter, setExpoFilter] = useState<'all' | 'ready' | 'recalled'>('all');
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const sortDefaultMap: Record<string, SortMode> = { 'By time': 'newest', 'By table': 'table', 'By type': 'type' };
+  const sortDefaultMap: Record<string, SortMode> = { 'By time': 'oldest', 'By table': 'table', 'By type': 'type' };
   const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
@@ -530,7 +530,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters, orderTypeFilter]);
 
-  const displayOrders = filteredOrders;
+  // Preserve visible order-number sequence while right-flow starts from the right edge.
+  const displayOrders = useMemo(() => {
+    if (ticketFlowDirection === 'right') return [...filteredOrders].reverse();
+    return filteredOrders;
+  }, [filteredOrders, ticketFlowDirection]);
 
   const filteredHistory = useMemo(() => {
     const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
