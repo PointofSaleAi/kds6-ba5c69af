@@ -121,6 +121,7 @@ interface KDSSettingsContextValue extends KDSSettings {
   setReducedMotion: (v: boolean) => void;
   setQuickReplies: (v: boolean) => void;
   setQuickReplyItems: (v: string[]) => void;
+  setTicketFlowDirection: (v: TicketFlowDirection) => void;
   /** Currently-active tickets route ('Default'..'v6') or null when not on a tickets route. */
   activeTicketsRoute: TicketsRouteKey | null;
   getRouteSetting: <K extends keyof RouteOverride>(route: TicketsRouteKey, key: K) => NonNullable<RouteOverride[K]>;
