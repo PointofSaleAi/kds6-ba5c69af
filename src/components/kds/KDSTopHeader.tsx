@@ -16,8 +16,16 @@ import supportIcon from '@/assets/icons/support.png';
 import notificationIcon from '@/assets/icons/notification.png';
 import wifiIcon from '@/assets/icons/wifi.png';
 
-const HEADER_H = 44;
+export const KDS_HEADER_H = 44;
+const HEADER_H = KDS_HEADER_H;
 const HEADER_BG = '#0D0D1A';
+
+// Set the CSS var synchronously at module load so the first paint of any
+// screen already reserves space for the fixed header (avoids a flash of
+// content clipped beneath the header on route changes).
+if (typeof document !== 'undefined') {
+  document.documentElement.style.setProperty('--kds-header-h', `${KDS_HEADER_H}px`);
+}
 
 /**
  * Global KDS top header. Mirrors the POS mobile app header:
