@@ -113,7 +113,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           </div>
 
           {/* Right: pin pad */}
-          <div className="flex-1 flex flex-col justify-center px-8 py-10">
+          <div className="flex-1 flex flex-col justify-center px-8 py-10 mr-16">
             <p className="text-center text-white/60 text-sm mb-4">Enter PIN to Clock In</p>
 
             <div className="flex justify-center gap-5 mb-6">
