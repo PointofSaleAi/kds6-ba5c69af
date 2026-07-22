@@ -839,7 +839,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     const s = rowStates[i.id] ?? 'idle';
     return s === 'idle';
   }));
-  const blinkColor = reducedMotion ? null : (
+  const outlineColor = reducedMotion ? null : (
     (isOvertimeElapsed && !ticketAcknowledged)
       ? timerStatus.color
       : (pendingNewItem ? (rules[0]?.color || '#4A4A47') : null)
@@ -847,8 +847,8 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
 
   return (
     <div
-      className={`bg-card rounded-md overflow-hidden border border-border shadow-sm flex flex-col ${blinkColor ? 'animate-ticket-blink' : ''}`}
-      style={blinkColor ? ({ ['--ticket-blink-rgb' as string]: hexToRgbTriplet(blinkColor) } as React.CSSProperties) : undefined}
+      className={`bg-card rounded-md overflow-hidden shadow-sm flex flex-col ${outlineColor ? 'border-2' : 'border border-border'}`}
+      style={outlineColor ? { borderColor: outlineColor } : undefined}
     >
       {/* HEADER */}
       {(() => {
