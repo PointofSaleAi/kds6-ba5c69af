@@ -10,6 +10,7 @@ import {
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 
 const HEADER_H = 44;
 const HEADER_BG = '#0D0D1A';
@@ -23,6 +24,7 @@ const HEADER_BG = '#0D0D1A';
 export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean } = {}) {
   const [time, setTime] = useState(() => new Date());
   const { unreadCount } = useNotifications();
+  const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
 
   useEffect(() => {
     document.documentElement.style.setProperty('--kds-header-h', `${HEADER_H}px`);
@@ -36,11 +38,8 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
     return () => clearInterval(t);
   }, []);
 
-  const timeLabel = time.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+  const timeLabel = formatTimeForKDS(time, tfmt);
+  const dateLabel = formatDateForKDS(time, dfmt);
 
   return (
     <header
@@ -151,11 +150,14 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
           <Wifi size={16} className="text-white/80" />
         </button>
 
-        <span
-          className="text-[12px] md:text-[13px] font-mono-timer tabular-nums text-white/90 ml-1"
-        >
-          {timeLabel}
-        </span>
+        <div className="flex flex-col items-end leading-tight ml-1 tabular-nums">
+          <span className="text-[12px] md:text-[13px] font-mono-timer text-white/95">
+            {timeLabel}
+          </span>
+          <span className="text-[9px] md:text-[10px] text-white/60">
+            {dateLabel}
+          </span>
+        </div>
       </div>
     </header>
   );
