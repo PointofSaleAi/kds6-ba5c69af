@@ -150,11 +150,14 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
           <Wifi size={16} className="text-white/80" />
         </button>
 
-        <span
-          className="text-[12px] md:text-[13px] font-mono-timer tabular-nums text-white/90 ml-1"
-        >
-          {timeLabel}
-        </span>
+        <div className="flex flex-col items-end leading-tight ml-1 tabular-nums">
+          <span className="text-[12px] md:text-[13px] font-mono-timer text-white/95">
+            {timeLabel}
+          </span>
+          <span className="text-[9px] md:text-[10px] text-white/60">
+            {dateLabel}
+          </span>
+        </div>
       </div>
     </header>
   );
