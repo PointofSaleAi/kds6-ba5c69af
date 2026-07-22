@@ -29,6 +29,12 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
   const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
+  const { identity } = useActiveIdentity();
+  const displayName = identity.name;
+  const roleLabel = identity.kind === 'staff' ? identity.role : 'Device';
+  const initials = initialsFromName(displayName);
+  const avatarBg = colorFromString(displayName + roleLabel);
+
 
   useEffect(() => {
     document.documentElement.style.setProperty('--kds-header-h', `${HEADER_H}px`);
