@@ -85,6 +85,30 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return columns;
 }
 
+function compareOrdersByNumber(a: Order, b: Order, direction: 'asc' | 'desc' = 'asc') {
+  const byNumber = a.orderNumber - b.orderNumber;
+  if (byNumber !== 0) return direction === 'asc' ? byNumber : -byNumber;
+
+  const byTime = a.timeReceived.getTime() - b.timeReceived.getTime();
+  if (byTime !== 0) return direction === 'asc' ? byTime : -byTime;
+
+  return a.id.localeCompare(b.id);
+}
+
+function sortOrdersForMode(orders: Order[], sortMode: SortMode) {
+  const sorted = [...orders];
+  if (sortMode === 'table') {
+    sorted.sort((a, b) => a.tableName.localeCompare(b.tableName) || compareOrdersByNumber(a, b));
+  } else if (sortMode === 'type') {
+    sorted.sort((a, b) => a.orderType.localeCompare(b.orderType) || compareOrdersByNumber(a, b));
+  } else if (sortMode === 'oldest') {
+    sorted.sort((a, b) => compareOrdersByNumber(a, b));
+  } else {
+    sorted.sort((a, b) => compareOrdersByNumber(a, b, 'desc'));
+  }
+  return sorted;
+}
+
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, onOpenAlerts, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default', legacyActions = false }: MainOrderViewProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
@@ -109,7 +133,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [expoFilter, setExpoFilter] = useState<'all' | 'ready' | 'recalled'>('all');
   const [historyOrders, setHistoryOrders] = useState<Order[]>(mockHistoryOrders);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
-  const sortDefaultMap: Record<string, SortMode> = { 'By time': 'newest', 'By table': 'table', 'By type': 'type' };
+  const sortDefaultMap: Record<string, SortMode> = { 'By time': 'oldest', 'By table': 'table', 'By type': 'type' };
   const [sortMode, setSortMode] = useState<SortMode>(sortDefaultMap[sortDefault] || 'newest');
   const [settingsSection, setSettingsSection] = useState<string>('display');
   const prevOrderCountRef = useRef(orders.length);
@@ -475,16 +499,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       );
     }
 
-    const sorted = [...filtered];
-    if (sortMode === 'table') {
-      sorted.sort((a, b) => a.tableName.localeCompare(b.tableName));
-    } else if (sortMode === 'type') {
-      sorted.sort((a, b) => a.orderType.localeCompare(b.orderType));
-    } else if (sortMode === 'oldest') {
-      sorted.sort((a, b) => a.timeReceived.getTime() - b.timeReceived.getTime());
-    } else {
-      sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
-    }
+    const sorted = sortOrdersForMode(filtered, sortMode);
 
     // Reorder based on selected summary items + categories
     const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
@@ -515,7 +530,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters, orderTypeFilter]);
 
-  // Visual flow direction: newest on left (default) or newest on right.
+  // Preserve visible order-number sequence while right-flow starts from the right edge.
   const displayOrders = useMemo(() => {
     if (ticketFlowDirection === 'right') return [...filteredOrders].reverse();
     return filteredOrders;
@@ -594,16 +609,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
         .filter((o) => o.courses.length > 0);
     }
 
-    const sorted = [...list];
-    if (sortMode === 'table') {
-      sorted.sort((a, b) => a.tableName.localeCompare(b.tableName));
-    } else if (sortMode === 'type') {
-      sorted.sort((a, b) => a.orderType.localeCompare(b.orderType));
-    } else if (sortMode === 'oldest') {
-      sorted.sort((a, b) => a.timeReceived.getTime() - b.timeReceived.getTime());
-    } else {
-      sorted.sort((a, b) => b.timeReceived.getTime() - a.timeReceived.getTime());
-    }
+    const sorted = sortOrdersForMode(list, sortMode);
 
     // Reorder/filter based on selected summary items + categories (tap-to-filter from Summary panel)
     const hasFilters = selectedSummaryItems.size > 0 || selectedSummaryCategories.size > 0;
@@ -966,8 +972,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             .filter(c => c.items.length > 0),
         }));
     }
-    return list;
-  }, [ordersWithItemStatuses, itemLifecycles, isStationView, resolvedStationCourse, notesAcknowledgedIds]);
+    return sortOrdersForMode(list, sortMode);
+  }, [ordersWithItemStatuses, itemLifecycles, isStationView, resolvedStationCourse, notesAcknowledgedIds, sortMode]);
 
   const unseenScreenOrders = useMemo(() => {
     const isItemSeen = (itemId: string) => !!itemLifecycles[itemId];
@@ -994,8 +1000,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             .filter(c => c.items.length > 0),
         }));
     }
-    return list;
-  }, [filteredOrders, ordersWithItemStatusesById, itemLifecycles, isStationView, resolvedStationCourse, notesAcknowledgedIds]);
+    return sortOrdersForMode(list, sortMode);
+  }, [filteredOrders, ordersWithItemStatusesById, itemLifecycles, isStationView, resolvedStationCourse, notesAcknowledgedIds, sortMode]);
 
   // FIX 7: Convert expo tickets to synthetic Orders for Cooking Summary
   const expoSyntheticOrders: Order[] = useMemo(() => {
@@ -1450,7 +1456,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                     </div>
                   )}
                   {effectiveBoardMode === 'horizontal' && (
-                    <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+                    <div className={`flex gap-1.5 overflow-x-auto pb-4 ${ticketFlowDirection === 'right' ? 'flex-row-reverse' : ''}`} style={{ minHeight: 400 }}>
                       {filteredHistory.map((order) => (
                         <motion.div key={order.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`shrink-0 ${isPortrait ? 'w-[220px]' : 'w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]'}`}>
                           {renderOrderCard(getStationDisplayOrder(order))}

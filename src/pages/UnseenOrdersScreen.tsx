@@ -49,7 +49,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { isPortrait } = usePortrait();
   const { t } = useLanguage();
-  const { textSize, ticketSpacing } = useKDSSettings();
+  const { textSize, ticketSpacing, ticketFlowDirection } = useKDSSettings();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
   const unseenOrders = useMemo(() => {
@@ -117,7 +117,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
               </AnimatePresence>
             </div>
           ) : viewMode === 'horizontal' ? (
-            <div className="flex gap-1.5 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+            <div className={`flex gap-1.5 overflow-x-auto pb-4 ${ticketFlowDirection === 'right' ? 'flex-row-reverse' : ''}`} style={{ minHeight: 400 }}>
               <AnimatePresence mode="popLayout">
                 {unseenOrders.map(order => (
                   <motion.div key={order.id} layout variants={cardVariants} initial="initial" animate="animate" exit="exit" className="shrink-0 w-[180px] sm:w-[190px] lg:w-[200px] xl:w-[210px]">
