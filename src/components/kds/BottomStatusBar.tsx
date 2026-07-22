@@ -188,9 +188,9 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
 
   return (
     <>
-    <div className="h-[52px] bg-brand-dark flex items-center justify-between px-4 shrink-0 z-10 gap-2">
+    <div className="h-[52px] bg-brand-dark flex items-center justify-center px-4 shrink-0 z-10 gap-2">
 
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex flex-1 items-center gap-2 shrink-0">
         <DockDragHandle
           panel="bottomBar"
           orientation="horizontal"
@@ -212,7 +212,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       </div>
 
       {!hideViewControls && (
-      <div className={`flex items-center ${isPortrait ? 'gap-2' : 'gap-3'}`}>
+      <div className={`flex-none flex items-center ${isPortrait ? 'gap-2' : 'gap-3'}`}>
         {/* Category filter */}
         <TooltipProvider delayDuration={300}>
           <Tooltip>
@@ -371,6 +371,8 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         </button>
       </div>
       )}
+
+      <div className="flex-1" />
 
     </div>
     <EightySixSheet
