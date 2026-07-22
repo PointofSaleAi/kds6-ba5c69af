@@ -44,10 +44,11 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
       if (e.key === 'Escape') onClose();
       else if (e.key >= '0' && e.key <= '9' && pin.length < PIN_LENGTH) setPin(p => p + e.key);
       else if (e.key === 'Backspace') setPin(p => p.slice(0, -1));
+      else if (e.key === 'Enter') submitPin();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, pin, onClose]);
+  }, [open, pin, onClose, submitPin]);
 
   const handleDigit = useCallback((d: string) => {
     setPin(p => (p.length < PIN_LENGTH ? p + d : p));
