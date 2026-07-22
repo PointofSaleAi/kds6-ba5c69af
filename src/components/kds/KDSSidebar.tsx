@@ -6,7 +6,6 @@ import { useNotifications } from '@/hooks/use-notifications';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import {
   Clock, Bell, Settings, Eye, EyeOff, CheckCircle2, Undo2,
-  ArrowLeftRight,
 } from 'lucide-react';
 import { TicketsIcon } from './icons/TicketsIcon';
 import {
@@ -136,30 +135,6 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
           {/* All nav items with equal spacing */}
           {navItems.map(renderButton)}
-
-          {/* Switch to POS */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href="https://mobileposapp.lovable.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex-1 flex items-center ${expanded ? 'justify-start px-3 gap-3' : 'justify-center'} rounded-xl hover:bg-white/20 transition-all duration-200 min-h-[44px] border-2 border-transparent`}
-              >
-                <ArrowLeftRight size={20} className="text-sidebar-foreground shrink-0" />
-                {expanded && (
-                  <span className="text-sidebar-foreground text-xs font-semibold whitespace-nowrap overflow-hidden">
-                    {t.switchToPOS}
-                  </span>
-                )}
-              </a>
-            </TooltipTrigger>
-            {!expanded && (
-              <TooltipContent side="right" className="text-xs">
-                {t.switchToPOS}
-              </TooltipContent>
-            )}
-          </Tooltip>
 
           {/* Version logo + version number */}
           <Tooltip>
