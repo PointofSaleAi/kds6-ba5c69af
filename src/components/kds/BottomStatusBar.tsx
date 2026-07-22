@@ -75,13 +75,6 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   const [typeFilterOpen, setTypeFilterOpen] = useState(false);
   const typeFilterRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    document.documentElement.style.setProperty('--kds-footer-h', '52px');
-    return () => {
-      document.documentElement.style.removeProperty('--kds-footer-h');
-    };
-  }, []);
-
   // 86 Items state
   const [eightySixOpen, setEightySixOpen] = useState(false);
   const [eightySixedItems, setEightySixedItems] = useState<EightySixedItem[]>([]);

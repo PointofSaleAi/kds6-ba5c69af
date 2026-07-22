@@ -208,12 +208,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed bg-black/40 z-40"
-            style={{
-              left: insets.left,
-              right: insets.right,
-              top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`,
-              bottom: `calc(${insets.bottom}px + var(--kds-footer-h, 0px))`,
-            }}
+            style={{ left: insets.left, right: insets.right, top: insets.top, bottom: insets.bottom }}
             onClick={onClose}
           />
           <motion.div
@@ -222,11 +217,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             exit={{ x: '110%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
             className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
-            style={{
-              right: insets.right,
-              top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`,
-              bottom: `calc(${insets.bottom}px + var(--kds-footer-h, 0px))`,
-            }}
+            style={{ right: insets.right, top: insets.top, bottom: insets.bottom }}
           >
             <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
             {/* Header */}
