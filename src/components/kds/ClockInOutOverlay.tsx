@@ -92,16 +92,16 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           {/* Left: date / time / weather */}
           <div className="flex-1 flex flex-col justify-center px-12 lg:px-20 text-white">
             <p className="text-lg font-semibold mb-6">{dateLabel}</p>
-            <div className="flex items-baseline gap-2 mb-10">
-              <span className="font-black leading-none tabular-nums" style={{ fontSize: 'clamp(120px, 18vw, 220px)' }}>
+            <div className="flex items-baseline gap-3 mb-10 whitespace-nowrap">
+              <span className="font-black leading-none tabular-nums" style={{ fontSize: 'clamp(96px, 14vw, 180px)' }}>
                 {displayHour}
-                <span className="inline-flex flex-col align-middle mx-2" style={{ fontSize: '0.25em', lineHeight: 1 }}>
-                  <span className="w-3 h-3 rounded-full bg-white mb-2" />
-                  <span className="w-3 h-3 rounded-full bg-white" />
+                <span className="inline-flex flex-col align-middle mx-2" style={{ verticalAlign: '0.15em' }}>
+                  <span className="rounded-full bg-white/70" style={{ width: '0.12em', height: '0.12em', marginBottom: '0.08em' }} />
+                  <span className="rounded-full bg-white/70" style={{ width: '0.12em', height: '0.12em' }} />
                 </span>
                 {minStr}
               </span>
-              <span className="font-black text-white/40" style={{ fontSize: 'clamp(40px, 5vw, 72px)' }}>
+              <span className="font-black text-white/40" style={{ fontSize: 'clamp(32px, 4vw, 56px)' }}>
                 {isPM ? 'PM' : 'AM'}
               </span>
             </div>
