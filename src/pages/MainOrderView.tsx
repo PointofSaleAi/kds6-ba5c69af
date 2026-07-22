@@ -1598,5 +1598,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       <BottomStatusBar orderCount={activeOrderCount} viewMode={viewMode} onViewModeChange={(m) => { setViewMode(m); setStaggerMode(m === 'stagger'); }} theme={theme} onToggleTheme={toggleTheme} sortMode={sortMode} onSortModeChange={setSortMode} hideViewControls={false} onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')} onOpenCategoryFilter={() => onOpenSub?.('category-filter')} onOpenRevenueFilter={() => onOpenSub?.('revenue-filter')} aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} orderTypeFilter={orderTypeFilter} onOrderTypeFilterChange={setOrderTypeFilter} />
       <OnboardingWalkthrough />
     </div>
+    </>
   );
 }
