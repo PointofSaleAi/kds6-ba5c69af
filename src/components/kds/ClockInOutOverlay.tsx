@@ -91,13 +91,13 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
 
           {/* Left: date / time / weather */}
           <div className="flex-1 flex flex-col justify-center px-12 lg:px-20 text-white">
-            <p className="text-lg font-semibold mb-6">{dateLabel}</p>
-            <div className="flex items-baseline gap-3 mb-10 whitespace-nowrap">
+            <p className="text-lg font-semibold mb-2">{dateLabel}</p>
+            <div className="flex items-baseline gap-3 mb-4 whitespace-nowrap">
               <span className="font-black leading-none tabular-nums" style={{ fontSize: 'clamp(96px, 14vw, 180px)' }}>
                 {displayHour}
-                <span className="inline-flex flex-col align-middle mx-2" style={{ verticalAlign: '0.15em' }}>
-                  <span className="rounded-full bg-white/70" style={{ width: '0.12em', height: '0.12em', marginBottom: '0.08em' }} />
-                  <span className="rounded-full bg-white/70" style={{ width: '0.12em', height: '0.12em' }} />
+                <span className="inline-flex flex-col justify-center align-middle mx-2" style={{ height: '0.62em', verticalAlign: '0.04em' }}>
+                  <span className="rounded-full bg-white/70" style={{ width: '0.16em', height: '0.16em', marginBottom: '0.14em' }} />
+                  <span className="rounded-full bg-white/70" style={{ width: '0.16em', height: '0.16em' }} />
                 </span>
                 {minStr}
               </span>
@@ -105,7 +105,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 {isPM ? 'PM' : 'AM'}
               </span>
             </div>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-1">
               <span className="text-5xl font-semibold">27°</span>
               <Sun className="w-10 h-10 text-yellow-400" />
             </div>
