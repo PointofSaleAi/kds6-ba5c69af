@@ -19,6 +19,7 @@ import ExpoView from '@/components/kds/ExpoView';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
+import { KDSTopHeader } from '@/components/kds/KDSTopHeader';
 import { AIAssistantPanel } from '@/components/kds/AIAssistantPanel';
 import { EmptyState } from '@/components/kds/EmptyState';
 import { ExpandedOrderCard } from '@/components/kds/ExpandedOrderCard';
