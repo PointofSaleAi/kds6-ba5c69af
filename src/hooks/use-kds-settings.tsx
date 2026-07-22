@@ -311,6 +311,7 @@ export function KDSSettingsProvider({ children }: { children: ReactNode }) {
         setReducedMotion: update('reducedMotion'),
         setQuickReplies: update('quickReplies'),
         setQuickReplyItems: update('quickReplyItems'),
+        setTicketFlowDirection: update('ticketFlowDirection'),
         activeTicketsRoute,
         getRouteSetting,
         setRouteSetting,
