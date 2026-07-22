@@ -24,6 +24,7 @@ const HEADER_BG = '#0D0D1A';
 export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggleAiAssistant?: () => void; aiAssistantOpen?: boolean } = {}) {
   const [time, setTime] = useState(() => new Date());
   const { unreadCount } = useNotifications();
+  const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
 
   useEffect(() => {
     document.documentElement.style.setProperty('--kds-header-h', `${HEADER_H}px`);
@@ -37,11 +38,8 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen }: { onToggl
     return () => clearInterval(t);
   }, []);
 
-  const timeLabel = time.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+  const timeLabel = formatTimeForKDS(time, tfmt);
+  const dateLabel = formatDateForKDS(time, dfmt);
 
   return (
     <header
