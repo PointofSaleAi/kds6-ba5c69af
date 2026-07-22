@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
+import { NotificationsPopover } from '@/components/kds/NotificationsPopover';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import switchUserIcon from '@/assets/icons/switch-user.png';
