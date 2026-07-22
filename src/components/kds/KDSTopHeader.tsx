@@ -4,6 +4,8 @@ import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { NotificationsPopover } from '@/components/kds/NotificationsPopover';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
+import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
+
 import switchUserIcon from '@/assets/icons/switch-user.png';
 import dinnerIcon from '@/assets/icons/dinner.png';
 import localHostIcon from '@/assets/icons/local-host.png';
