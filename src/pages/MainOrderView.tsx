@@ -515,6 +515,12 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     return [...rushed, ...nonRushed];
   }, [orders, activeFilter, sortMode, selectedSummaryItems, selectedSummaryCategories, isStationView, resolvedStationCourse, historyCategories, historyCenters, orderTypeFilter]);
 
+  // Visual flow direction: newest on left (default) or newest on right.
+  const displayOrders = useMemo(() => {
+    if (ticketFlowDirection === 'right') return [...filteredOrders].reverse();
+    return filteredOrders;
+  }, [filteredOrders, ticketFlowDirection]);
+
   const filteredHistory = useMemo(() => {
     const norm = (s: string) => s.toUpperCase().replace(/S$/, '');
     const catSet = new Set(historyCategories.map(norm));
