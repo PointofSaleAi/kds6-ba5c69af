@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Mic, Monitor, ShoppingBag, Send, Cpu, Cog, User } from 'lucide-react';
 import {
@@ -9,6 +9,7 @@ import {
 import { SettingsIconTile } from './SettingsIconTile';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import systemIcon from '@/assets/icons/settings-system.png';
+import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
   display: Monitor,
