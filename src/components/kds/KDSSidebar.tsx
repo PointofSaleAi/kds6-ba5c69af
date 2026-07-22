@@ -60,9 +60,9 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
       ]
     : [
         { icon: TicketsIcon, label: 'All', action: 'home' },
-        { icon: Clock, label: t.history, badge: 6, action: 'history' },
         { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
         { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
+        { icon: Clock, label: t.history, badge: 6, action: 'history' },
         { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
         { icon: Settings, label: t.settings, action: 'settings' },
       ];
