@@ -1184,9 +1184,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
 
   return (
+    <>
+    <KDSTopHeader />
     <div
       className={`fixed inset-0 flex bg-tickets-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
-      style={{ top: 'var(--training-bar-h, 0px)' }}
+      style={{ top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 0px))' }}
     >
       {/* Kitchen message flash notification */}
       <AnimatePresence>
