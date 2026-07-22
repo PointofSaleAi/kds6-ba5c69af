@@ -61,6 +61,7 @@ interface MainOrderViewProps {
   onOpenSub?: (sub: string) => void;
   onLogOut?: () => void;
   onDevModeChange?: (enabled: boolean) => void;
+  onOpenAlerts?: () => void;
   /** When set, OrderCards dim non-matching courses */
   stationCourse?: string;
   historyCategories?: string[];
