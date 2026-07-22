@@ -157,6 +157,7 @@ const defaults: KDSSettings = {
   reducedMotion: false,
   quickReplies: false,
   quickReplyItems: [...DEFAULT_QUICK_REPLIES],
+  ticketFlowDirection: 'left',
 };
 
 function loadSettings(): KDSSettings {
