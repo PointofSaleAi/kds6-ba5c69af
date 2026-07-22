@@ -3,15 +3,8 @@ import { X, Send, RefreshCw, Smartphone } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import { issueReplyToken, REPLY_TOKEN_TTL_SECONDS } from '@/lib/demo-auth';
+import { useKDSSettings, DEFAULT_QUICK_REPLIES } from '@/hooks/use-kds-settings';
 
-const PRESET_REPLIES = [
-  'Got it',
-  'On its Way',
-  '5 mins',
-  'Need More Time',
-  'Out of Stock',
-  'Cooking Now',
-];
 
 const MAX_CHARS = 100;
 const QR_EXPIRY_SECONDS = REPLY_TOKEN_TTL_SECONDS;
@@ -23,6 +16,12 @@ interface KitchenReplyDialogProps {
 }
 
 export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDialogProps) {
+  const { quickReplyItems } = useKDSSettings();
+  const presetReplies = (quickReplyItems && quickReplyItems.length > 0)
+    ? quickReplyItems
+    : DEFAULT_QUICK_REPLIES;
+
+
   const [text, setText] = useState('');
   const [tokenInfo, setTokenInfo] = useState(() => issueReplyToken(message.message_id));
   const [secondsLeft, setSecondsLeft] = useState(() =>
@@ -94,7 +93,7 @@ export function KitchenReplyDialog({ message, onSend, onClose }: KitchenReplyDia
             <div className="px-5 pt-4 pb-2">
               <p className="text-xs font-semibold text-text-secondary mb-2">Quick Replies</p>
               <div className="flex flex-wrap gap-2">
-                {PRESET_REPLIES.map(preset => (
+                {presetReplies.map(preset => (
                   <button
                     key={preset}
                     onClick={() => handlePreset(preset)}
