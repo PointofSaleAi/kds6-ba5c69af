@@ -1069,7 +1069,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
       onItemDone: markItemDone,
       onItemDismiss: isHistory ? handleRecallItem : handleItemDismiss,
       isSeen: seenOrderIds.has(displayOrder.id),
-      screenContext,
     };
 
     if (effectiveCardVariant === 'v1') {
