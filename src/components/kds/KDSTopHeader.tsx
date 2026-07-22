@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import AnimatedAIIcon from '@/components/kds/AnimatedAIIcon';
 import ScreenModeChip from '@/components/kds/ScreenModeChip';
 import { NotificationsPopover } from '@/components/kds/NotificationsPopover';
+import { ShiftProfilePopup } from '@/components/kds/ShiftProfilePopup';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
