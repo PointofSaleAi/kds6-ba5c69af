@@ -47,8 +47,8 @@ export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
   'custom': { headerBg: '#581C87', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
 };
 
-export type TicketsRouteKey = 'Default' | 'v1' | 'v2' | 'v3' | 'v4' | 'v5' | 'v6';
-export const TICKETS_ROUTE_KEYS: TicketsRouteKey[] = ['Default', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+export type TicketsRouteKey = 'Default' | 'v1' | 'v2' | 'v3' | 'v3-lite' | 'v4' | 'v5' | 'v6';
+export const TICKETS_ROUTE_KEYS: TicketsRouteKey[] = ['Default', 'v1', 'v2', 'v3', 'v3-lite', 'v4', 'v5', 'v6'];
 
 export interface RouteOverride {
   textSize?: TextSize;
