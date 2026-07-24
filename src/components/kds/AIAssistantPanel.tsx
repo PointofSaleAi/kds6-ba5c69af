@@ -714,32 +714,40 @@ export function AIAssistantPanel({ open, onClose }: AIAssistantPanelProps) {
                       </div>
                     )}
 
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {learnedForContext.map(q => {
-                        const label = q.length > 30 ? q.slice(0, 30) + '…' : q;
-                        return (
-                          <button
-                            key={`learned-${q}`}
-                            onClick={() => submitPrompt(q)}
-                            title={q}
-                            className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-violet-500/10 text-sm text-white hover:bg-violet-500/20 active:opacity-70 transition-all border border-violet-400/30 text-left"
-                          >
-                            <Bot className="w-3.5 h-3.5 text-violet-300 flex-shrink-0" />
-                            <span className="truncate">{label}</span>
-                          </button>
-                        );
-                      })}
-                      {SUGGESTION_CHIPS.map(chip => (
-                        <button
-                          key={chip}
-                          onClick={() => submitPrompt(chip)}
-                          className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50 text-left"
-                        >
-                          <Bot className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
-                          <span className="truncate">{chip}</span>
-                        </button>
-                      ))}
-                    </div>
+                    {(() => {
+                      const MAX_SUGGESTIONS = 3;
+                      const learnedShown = learnedForContext.slice(0, MAX_SUGGESTIONS);
+                      const remaining = Math.max(0, MAX_SUGGESTIONS - learnedShown.length);
+                      const chipsShown = SUGGESTION_CHIPS.slice(0, remaining);
+                      return (
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {learnedShown.map(q => {
+                            const label = q.length > 30 ? q.slice(0, 30) + '…' : q;
+                            return (
+                              <button
+                                key={`learned-${q}`}
+                                onClick={() => submitPrompt(q)}
+                                title={q}
+                                className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-violet-500/10 text-sm text-white hover:bg-violet-500/20 active:opacity-70 transition-all border border-violet-400/30 text-left"
+                              >
+                                <Bot className="w-3.5 h-3.5 text-violet-300 flex-shrink-0" />
+                                <span className="truncate">{label}</span>
+                              </button>
+                            );
+                          })}
+                          {chipsShown.map(chip => (
+                            <button
+                              key={chip}
+                              onClick={() => submitPrompt(chip)}
+                              className="flex items-center gap-2 px-3 py-2.5 rounded-full bg-neutral-800/60 text-sm text-white hover:bg-neutral-700/60 active:opacity-70 transition-all border border-neutral-700/50 text-left"
+                            >
+                              <Bot className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
+                              <span className="truncate">{chip}</span>
+                            </button>
+                          ))}
+                        </div>
+                      );
+                    })()}
 
                     <div className="mt-5 text-center">
                       <p className="text-xs text-neutral-400 mb-1">Try asking:</p>
