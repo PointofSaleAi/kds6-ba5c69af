@@ -201,13 +201,14 @@ function FocusLaneBoard({
     .filter(({ i }) => i !== focusIndex);
 
   // 7 ring positions around the centered 2x2 focus slot inside a 4x3 grid.
-  const ringPositions: Array<{ row: number; col: number }> = [
+  // The bottom-middle slot spans 2 columns so no cell is left empty.
+  const ringPositions: Array<{ row: number; col: number; colSpan?: number }> = [
     { row: 1, col: 1 },
     { row: 1, col: 4 },
     { row: 2, col: 1 },
     { row: 2, col: 4 },
     { row: 3, col: 1 },
-    { row: 3, col: 2 },
+    { row: 3, col: 2, colSpan: 2 },
     { row: 3, col: 4 },
   ];
 
