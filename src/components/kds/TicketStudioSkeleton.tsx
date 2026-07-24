@@ -110,33 +110,43 @@ function KdsScreenMock({
 
             <div className="flex-1 min-w-0 flex">
               <div className="flex-1 min-w-0 overflow-auto p-2">
-                <div
-                  className="grid grid-cols-4 auto-rows-min gap-2 content-start items-start"
-                >
-                  {SCREEN_ORDER_TYPES.map((ot, i) => (
-                    <div key={ot.key} className="min-w-0 flex items-start justify-center">
-                      <div
-                        data-ts-ticket
-                        className="origin-top w-full"
-                        style={{ transform: `scale(${textScale})` }}
-                      >
-                        <BoardTicketPreview
-                          boardId={boardId}
-                          identifier={identifier}
-                          orderType={ot.label}
-                          orderTypeKey={ot.key}
-                          agingOverrideSeconds={
-                            agingOverrideSeconds !== undefined
-                              ? agingOverrideSeconds + i * 15
-                              : undefined
-                          }
-                          onHeaderClick={() => onHeaderClick?.(ot.key)}
-                          onTimerClick={onTimerClick}
-                        />
+                {boardId === 'focus-lane' ? (
+                  <FocusLaneBoard
+                    identifier={identifier}
+                    textScale={textScale}
+                    agingOverrideSeconds={agingOverrideSeconds}
+                    onHeaderClick={onHeaderClick}
+                    onTimerClick={onTimerClick}
+                  />
+                ) : (
+                  <div
+                    className="grid grid-cols-4 auto-rows-min gap-2 content-start items-start"
+                  >
+                    {SCREEN_ORDER_TYPES.map((ot, i) => (
+                      <div key={ot.key} className="min-w-0 flex items-start justify-center">
+                        <div
+                          data-ts-ticket
+                          className="origin-top w-full"
+                          style={{ transform: `scale(${textScale})` }}
+                        >
+                          <BoardTicketPreview
+                            boardId={boardId}
+                            identifier={identifier}
+                            orderType={ot.label}
+                            orderTypeKey={ot.key}
+                            agingOverrideSeconds={
+                              agingOverrideSeconds !== undefined
+                                ? agingOverrideSeconds + i * 15
+                                : undefined
+                            }
+                            onHeaderClick={() => onHeaderClick?.(ot.key)}
+                            onTimerClick={onTimerClick}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <ItemSummaryPanel orders={previewOrders} />
