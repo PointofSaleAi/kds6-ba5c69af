@@ -201,13 +201,14 @@ function FocusLaneBoard({
     .filter(({ i }) => i !== focusIndex);
 
   // 7 ring positions around the centered 2x2 focus slot inside a 4x3 grid.
-  const ringPositions: Array<{ row: number; col: number }> = [
+  // The bottom-middle slot spans 2 columns so no cell is left empty.
+  const ringPositions: Array<{ row: number; col: number; colSpan?: number }> = [
     { row: 1, col: 1 },
     { row: 1, col: 4 },
     { row: 2, col: 1 },
     { row: 2, col: 4 },
     { row: 3, col: 1 },
-    { row: 3, col: 2 },
+    { row: 3, col: 2, colSpan: 2 },
     { row: 3, col: 4 },
   ];
 
@@ -257,13 +258,16 @@ function FocusLaneBoard({
             type="button"
             onClick={() => setFocusIndex(i)}
             className="min-w-0 min-h-0 flex items-start justify-center overflow-hidden text-left transition hover:opacity-90"
-            style={{ gridColumn: pos.col, gridRow: pos.row }}
+            style={{
+              gridColumn: pos.colSpan ? `${pos.col} / span ${pos.colSpan}` : String(pos.col),
+              gridRow: pos.row,
+            }}
             aria-label={`Focus ${ot.label}`}
           >
             <div
               data-ts-ticket
               className="origin-top w-full"
-              style={{ transform: `scale(${textScale * 0.72})` }}
+              style={{ transform: `scale(${textScale * (pos.colSpan ? 0.95 : 0.82)})` }}
             >
               <BoardTicketPreview
                 boardId="focus-lane"
