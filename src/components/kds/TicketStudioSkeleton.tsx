@@ -110,33 +110,43 @@ function KdsScreenMock({
 
             <div className="flex-1 min-w-0 flex">
               <div className="flex-1 min-w-0 overflow-auto p-2">
-                <div
-                  className="grid grid-cols-4 auto-rows-min gap-2 content-start items-start"
-                >
-                  {SCREEN_ORDER_TYPES.map((ot, i) => (
-                    <div key={ot.key} className="min-w-0 flex items-start justify-center">
-                      <div
-                        data-ts-ticket
-                        className="origin-top w-full"
-                        style={{ transform: `scale(${textScale})` }}
-                      >
-                        <BoardTicketPreview
-                          boardId={boardId}
-                          identifier={identifier}
-                          orderType={ot.label}
-                          orderTypeKey={ot.key}
-                          agingOverrideSeconds={
-                            agingOverrideSeconds !== undefined
-                              ? agingOverrideSeconds + i * 15
-                              : undefined
-                          }
-                          onHeaderClick={() => onHeaderClick?.(ot.key)}
-                          onTimerClick={onTimerClick}
-                        />
+                {boardId === 'focus-lane' ? (
+                  <FocusLaneBoard
+                    identifier={identifier}
+                    textScale={textScale}
+                    agingOverrideSeconds={agingOverrideSeconds}
+                    onHeaderClick={onHeaderClick}
+                    onTimerClick={onTimerClick}
+                  />
+                ) : (
+                  <div
+                    className="grid grid-cols-4 auto-rows-min gap-2 content-start items-start"
+                  >
+                    {SCREEN_ORDER_TYPES.map((ot, i) => (
+                      <div key={ot.key} className="min-w-0 flex items-start justify-center">
+                        <div
+                          data-ts-ticket
+                          className="origin-top w-full"
+                          style={{ transform: `scale(${textScale})` }}
+                        >
+                          <BoardTicketPreview
+                            boardId={boardId}
+                            identifier={identifier}
+                            orderType={ot.label}
+                            orderTypeKey={ot.key}
+                            agingOverrideSeconds={
+                              agingOverrideSeconds !== undefined
+                                ? agingOverrideSeconds + i * 15
+                                : undefined
+                            }
+                            onHeaderClick={() => onHeaderClick?.(ot.key)}
+                            onTimerClick={onTimerClick}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <ItemSummaryPanel orders={previewOrders} />
@@ -164,6 +174,117 @@ function KdsScreenMock({
     </div>
   );
 }
+
+/**
+ * Focus Lane board layout: the priority (selected) ticket is rendered
+ * large in the center of a 4x3 grid, and every other order type is
+ * shown as a smaller context ticket around it. Tapping any surrounding
+ * ticket promotes it to the centered, enlarged view.
+ */
+function FocusLaneBoard({
+  identifier,
+  textScale,
+  agingOverrideSeconds,
+  onHeaderClick,
+  onTimerClick,
+}: {
+  identifier: 'order' | 'guest';
+  textScale: number;
+  agingOverrideSeconds?: number;
+  onHeaderClick?: (key: string) => void;
+  onTimerClick?: () => void;
+}) {
+  const [focusIndex, setFocusIndex] = useState(0);
+  const focus = SCREEN_ORDER_TYPES[focusIndex];
+  const others = SCREEN_ORDER_TYPES
+    .map((ot, i) => ({ ot, i }))
+    .filter(({ i }) => i !== focusIndex);
+
+  // 7 ring positions around the centered 2x2 focus slot inside a 4x3 grid.
+  const ringPositions: Array<{ row: number; col: number }> = [
+    { row: 1, col: 1 },
+    { row: 1, col: 4 },
+    { row: 2, col: 1 },
+    { row: 2, col: 4 },
+    { row: 3, col: 1 },
+    { row: 3, col: 2 },
+    { row: 3, col: 4 },
+  ];
+
+  return (
+    <div
+      className="grid gap-2 h-full"
+      style={{
+        gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+        gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
+      }}
+    >
+      {/* Focused ticket, centered and enlarged. */}
+      <button
+        type="button"
+        onClick={() => onHeaderClick?.(focus.key)}
+        className="min-w-0 min-h-0 flex items-start justify-center overflow-hidden text-left"
+        style={{ gridColumn: '2 / span 2', gridRow: '1 / span 2' }}
+        aria-label={`Focused ticket: ${focus.label}`}
+      >
+        <div
+          data-ts-ticket
+          className="origin-top w-full"
+          style={{ transform: `scale(${textScale * 1.55})` }}
+        >
+          <BoardTicketPreview
+            boardId="focus-lane"
+            identifier={identifier}
+            orderType={focus.label}
+            orderTypeKey={focus.key}
+            agingOverrideSeconds={
+              agingOverrideSeconds !== undefined
+                ? agingOverrideSeconds + focusIndex * 15
+                : undefined
+            }
+            onHeaderClick={() => onHeaderClick?.(focus.key)}
+            onTimerClick={onTimerClick}
+          />
+        </div>
+      </button>
+
+      {/* Surrounding context tickets. Tap to promote to focus. */}
+      {others.slice(0, ringPositions.length).map(({ ot, i }, idx) => {
+        const pos = ringPositions[idx];
+        return (
+          <button
+            key={ot.key}
+            type="button"
+            onClick={() => setFocusIndex(i)}
+            className="min-w-0 min-h-0 flex items-start justify-center overflow-hidden text-left transition hover:opacity-90"
+            style={{ gridColumn: pos.col, gridRow: pos.row }}
+            aria-label={`Focus ${ot.label}`}
+          >
+            <div
+              data-ts-ticket
+              className="origin-top w-full"
+              style={{ transform: `scale(${textScale * 0.72})` }}
+            >
+              <BoardTicketPreview
+                boardId="focus-lane"
+                identifier={identifier}
+                orderType={ot.label}
+                orderTypeKey={ot.key}
+                agingOverrideSeconds={
+                  agingOverrideSeconds !== undefined
+                    ? agingOverrideSeconds + i * 15
+                    : undefined
+                }
+              />
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+
 
 type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 
