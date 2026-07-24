@@ -203,10 +203,11 @@ function loadSettings(): KDSSettings {
 
 function pathToRouteKey(pathname: string): TicketsRouteKey | null {
   if (/^\/kds\/v1\/settings(?:\/|$)/i.test(pathname)) return null;
-  const m = pathname.match(/^\/kds\/(default|v[1-6])(?:\/|$)/i);
+  const m = pathname.match(/^\/kds\/(default|v3-lite|v[1-6])(?:\/|$)/i);
   if (!m) return null;
   const seg = m[1].toLowerCase();
   if (seg === 'default') return 'Default';
+  if (seg === 'v3-lite') return 'v3-lite';
   return seg as TicketsRouteKey;
 }
 
