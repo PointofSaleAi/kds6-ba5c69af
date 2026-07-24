@@ -62,6 +62,7 @@ const AppShell = () => {
           <Route path="/kds/v2" element={<Index cardVariant="v1" />} />
           <Route path="/kds/v3" element={<Index cardVariant="v2" />} />
           <Route path="/kds/v3-lite" element={<Index cardVariant="v2" />} />
+          <Route path="/v3-lite" element={<Navigate to="/kds/v3-lite" replace />} />
           <Route path="/kds/v4" element={<Index cardVariant="v3" />} />
           <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
           <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
