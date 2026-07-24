@@ -186,11 +186,8 @@ export default function DisplaySettings() {
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Layout
                   </span>
-                  <div
-                    className="flex w-full rounded-full p-0.5"
-                    style={{ background: 'hsl(var(--muted))' }}
-                  >
-                    {([
+                  {(() => {
+                    const layoutOptions = [
                       { value: 'Default', label: 'Hero number' },
                       { value: 'v1', label: 'v1' },
                       { value: 'v2', label: 'Section list' },
@@ -199,28 +196,31 @@ export default function DisplaySettings() {
                       { value: 'v4', label: 'Detailed grid' },
                       { value: 'v5', label: 'Clean sections' },
                       { value: 'v6', label: 'v6' },
-                    ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[]).map((opt) => {
-                      const active = ticketsRoute === opt.value;
-                      return (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          onClick={() => {
-                            setTicketsRoute(opt.value);
-                            writeStoredTicketsRoute(opt.value);
-                          }}
-                          className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center whitespace-nowrap ${
-                            active
-                              ? 'bg-[hsl(var(--brand-primary))] text-[hsl(var(--brand-primary-foreground))] dark:bg-white dark:text-black'
-                              : 'bg-transparent text-[hsl(var(--text-secondary))]'
-                          }`}
-                          style={{ minHeight: 28 }}
-                        >
-                          {opt.label}
-                        </button>
-                      );
-                    })}
-                  </div>
+                    ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[];
+                    return (
+                      <select
+                        value={ticketsRoute}
+                        onChange={(e) => {
+                          const nextRoute = e.target.value as import('@/hooks/use-kds-settings').TicketsRouteKey;
+                          setTicketsRoute(nextRoute);
+                          writeStoredTicketsRoute(nextRoute);
+                        }}
+                        className="w-full rounded-lg px-3 py-2 text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
+                        style={{
+                          background: 'hsl(var(--muted))',
+                          color: 'hsl(var(--text-primary))',
+                          borderColor: 'hsl(var(--border))',
+                          minHeight: 36,
+                        }}
+                      >
+                        {layoutOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    );
+                  })()}
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
