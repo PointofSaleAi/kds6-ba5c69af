@@ -186,15 +186,41 @@ export default function DisplaySettings() {
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
                     Layout
                   </span>
-                  <SegmentedToggle
-                    options={['Default', 'v1', 'v2', 'v3', 'v3-lite', 'v4', 'v5', 'v6']}
-                    value={ticketsRoute}
-                    onChange={(v) => {
-                      const nextRoute = v as import('@/hooks/use-kds-settings').TicketsRouteKey;
-                      setTicketsRoute(nextRoute);
-                      writeStoredTicketsRoute(nextRoute);
-                    }}
-                  />
+                  <div
+                    className="flex w-full rounded-full p-0.5"
+                    style={{ background: 'hsl(var(--muted))' }}
+                  >
+                    {([
+                      { value: 'Default', label: 'Hero number' },
+                      { value: 'v1', label: 'v1' },
+                      { value: 'v2', label: 'Section list' },
+                      { value: 'v3', label: 'Standard layout' },
+                      { value: 'v3-lite', label: 'Compact sections' },
+                      { value: 'v4', label: 'Detailed grid' },
+                      { value: 'v5', label: 'Clean sections' },
+                      { value: 'v6', label: 'v6' },
+                    ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[]).map((opt) => {
+                      const active = ticketsRoute === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => {
+                            setTicketsRoute(opt.value);
+                            writeStoredTicketsRoute(opt.value);
+                          }}
+                          className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors text-center whitespace-nowrap ${
+                            active
+                              ? 'bg-[hsl(var(--brand-primary))] text-[hsl(var(--brand-primary-foreground))] dark:bg-white dark:text-black'
+                              : 'bg-transparent text-[hsl(var(--text-secondary))]'
+                          }`}
+                          style={{ minHeight: 28 }}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
