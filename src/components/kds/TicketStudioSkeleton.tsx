@@ -258,13 +258,16 @@ function FocusLaneBoard({
             type="button"
             onClick={() => setFocusIndex(i)}
             className="min-w-0 min-h-0 flex items-start justify-center overflow-hidden text-left transition hover:opacity-90"
-            style={{ gridColumn: pos.col, gridRow: pos.row }}
+            style={{
+              gridColumn: pos.colSpan ? `${pos.col} / span ${pos.colSpan}` : String(pos.col),
+              gridRow: pos.row,
+            }}
             aria-label={`Focus ${ot.label}`}
           >
             <div
               data-ts-ticket
               className="origin-top w-full"
-              style={{ transform: `scale(${textScale * 0.72})` }}
+              style={{ transform: `scale(${textScale * (pos.colSpan ? 0.95 : 0.82)})` }}
             >
               <BoardTicketPreview
                 boardId="focus-lane"
