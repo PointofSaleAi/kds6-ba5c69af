@@ -715,7 +715,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
   }, [activeCourseIndex]);
 
 
-  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers } = useKDSSettings();
+  const { ticketLayout, ticketHeaderLayout, showAllergens, showHeaderAllergens, productTimers, activeTicketsRoute } = useKDSSettings();
   const isCompact = ticketLayout === 'compact';
   const isHeaderOnly = ticketLayout === 'header';
   const identifier = ticketHeaderLayout === 'guest'
@@ -852,7 +852,7 @@ export function OrderCardV2({ order, onBump, onMarkSeen, onItemDone, onItemDismi
     >
       {/* HEADER */}
       {(() => {
-        const isLite = typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v3-lite');
+        const isLite = activeTicketsRoute === 'v3-lite' || (typeof window !== 'undefined' && window.location.pathname.startsWith('/kds/v3-lite'));
         const liteBg = isLite ? timerStatus.color : undefined;
         const liteFg = isLite ? timerStatus.textColor : undefined;
         return (
