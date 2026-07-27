@@ -144,30 +144,30 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const [selectedSummaryCategories, setSelectedSummaryCategories] = useState<Set<string>>(new Set());
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
   const fallbackTicketsRoute = useMemo(() => getTicketsRouteForCardVariant(cardVariant, legacyActions), [cardVariant, legacyActions]);
-  // Prefer the tickets route implied by the current URL (via KDSSettingsProvider's
-  // activeTicketsRoute) so History/Seen/Unseen always render the same layout as
-  // the Tickets screen for that route. Fall back to persisted preference only
-  // when the current path doesn't map to a tickets route (e.g. inside /settings
-  // when opened from a non-tickets entry).
+  // Prefer the user's last explicit layout selection (persisted via
+  // writeStoredTicketsRoute) so History/Seen/Unseen/All render the same
+  // layout everywhere in the app. Fall back to the current URL segment,
+  // then to the route derived from the mounted cardVariant.
   const [selectedTicketsRoute, setSelectedTicketsRoute] = useState(
-    () => activeTicketsRoute ?? readStoredTicketsRoute(fallbackTicketsRoute),
+    () => readStoredTicketsRoute(activeTicketsRoute ?? fallbackTicketsRoute),
   );
   const effectiveCardVariant = getCardVariantForTicketsRoute(selectedTicketsRoute);
   const effectiveLegacyActions = selectedTicketsRoute === 'Default';
   const effectiveTextSize = getRouteSetting(selectedTicketsRoute, 'textSize') || textSize;
   const effectiveTicketSpacing = getRouteSetting(selectedTicketsRoute, 'ticketSpacing') || ticketSpacing;
 
-  // Keep selectedTicketsRoute aligned with the URL as the user navigates
-  // between /kds/vN routes. Only fall back to persisted storage when the
-  // current path is not a tickets route.
+  // Re-read the stored preference when the URL changes or the persisted
+  // value is updated (e.g. from the Settings > Display > Ticket Layout
+  // dropdown or Ticket Studio). Stored value wins so a selection made
+  // anywhere applies to All/Seen/Unseen/History immediately.
   useEffect(() => {
-    setSelectedTicketsRoute(activeTicketsRoute ?? readStoredTicketsRoute(fallbackTicketsRoute));
+    setSelectedTicketsRoute(readStoredTicketsRoute(activeTicketsRoute ?? fallbackTicketsRoute));
   }, [activeTicketsRoute, fallbackTicketsRoute]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const syncTicketsRoute = () => {
-      setSelectedTicketsRoute(activeTicketsRoute ?? readStoredTicketsRoute(fallbackTicketsRoute));
+      setSelectedTicketsRoute(readStoredTicketsRoute(activeTicketsRoute ?? fallbackTicketsRoute));
     };
     window.addEventListener(TICKETS_ROUTE_CHANGE_EVENT, syncTicketsRoute);
     window.addEventListener('storage', syncTicketsRoute);
