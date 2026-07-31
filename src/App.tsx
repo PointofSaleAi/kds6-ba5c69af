@@ -69,6 +69,8 @@ const AppShell = () => {
           <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
           <Route path="/kds/v7" element={<KdsV7Page />} />
           <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
+          <Route path="/kds/sticker-lab" element={<QrStickerLabPage />} />
+
           <Route path="/kds/home-onlineordering" element={<IndexOnlineOrdering />} />
           <Route path="/kds/v1/settings" element={<Index />}>
             <Route index element={<Navigate to="display" replace />} />
