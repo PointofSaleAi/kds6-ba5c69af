@@ -108,6 +108,7 @@ const SIZES: SizeSpec[] = [
     metaSize: '9px',
     modSize: '11px',
     layout: 'column',
+    cta: true,
   },
 ];
 
