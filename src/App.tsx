@@ -46,6 +46,7 @@ import KdsReplyPage from "./pages/KdsReplyPage.tsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.tsx";
 import KdsV7Page from "./pages/KdsV7Page.tsx";
 import QrStickersPage from "./pages/QrStickersPage.tsx";
+import QrStickerLabPage from "./pages/QrStickerLabPage.tsx";
 
 const queryClient = new QueryClient();
 
