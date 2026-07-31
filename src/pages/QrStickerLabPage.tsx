@@ -32,6 +32,8 @@ interface SizeSpec {
   metaSize: string;
   modSize: string;
   layout: 'row' | 'column';
+  /** Show "SCAN AT PACKING STAGE TO COMPLETE" micro-copy (large labels only) */
+  cta?: boolean;
 }
 
 // 15mm ≈ 0.59in ≈ 57px @96dpi. Never go below 60px.
@@ -91,6 +93,7 @@ const SIZES: SizeSpec[] = [
     metaSize: '10px',
     modSize: '12px',
     layout: 'column',
+    cta: true,
   },
   {
     key: '62mm-auto',
@@ -105,6 +108,7 @@ const SIZES: SizeSpec[] = [
     metaSize: '9px',
     modSize: '11px',
     layout: 'column',
+    cta: true,
   },
 ];
 
@@ -166,7 +170,7 @@ export function StickerLabel({ spec, data }: { spec: SizeSpec; data: StickerPayl
         </div>
       )}
       {shown.length > 0 && (
-        <ul style={{ margin: '2px 0 0', padding: 0, listStyle: 'none' }}>
+        <ul style={{ margin: '2px 0 0', padding: 0, paddingLeft: 4, listStyle: 'none' }}>
           {shown.map((m) => (
             <li key={m} style={{ fontSize: spec.modSize, fontWeight: 500, lineHeight: 1.25 }}>
               • {m}
@@ -175,16 +179,42 @@ export function StickerLabel({ spec, data }: { spec: SizeSpec; data: StickerPayl
         </ul>
       )}
       {overflow > 0 && (
-        <div style={{ fontSize: spec.modSize, fontWeight: 700, lineHeight: 1.25 }}>
+        <div style={{ fontSize: spec.modSize, fontWeight: 700, lineHeight: 1.25, paddingLeft: 4 }}>
           ... +{overflow} more on KDS
         </div>
       )}
     </div>
   );
 
+  const divider = <div style={{ borderTop: '1px solid #000', margin: '4px 0', flexShrink: 0 }} />;
+
   const qr = (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 1,
+        flexShrink: 0,
+        width: spec.qrSize,
+      }}
+    >
       <QRCodeSVG value={data.qrPayload} size={spec.qrSize} level="M" fgColor="#000000" bgColor="#FFFFFF" />
+      {spec.cta && (
+        <div
+          style={{
+            fontSize: '10px',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            letterSpacing: '0.02em',
+            textAlign: 'center',
+            lineHeight: 1.15,
+            marginTop: 2,
+          }}
+        >
+          Scan At Packing Stage To Complete
+        </div>
+      )}
       <div style={{ fontFamily: 'Courier, monospace', fontSize: spec.metaSize, fontWeight: 900 }}>
         *{data.fallbackCode}*
       </div>
@@ -208,15 +238,25 @@ export function StickerLabel({ spec, data }: { spec: SizeSpec; data: StickerPayl
         flexDirection: row ? 'row' : 'column',
         alignItems: row ? 'center' : 'stretch',
         justifyContent: row ? 'space-between' : 'flex-start',
-        gap: row ? 6 : 3,
+        gap: row ? 8 : 3,
         fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden',
       }}
     >
       {row ? (
         <>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, flex: 1 }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              minWidth: 0,
+              flex: 1,
+              paddingRight: 8,
+              overflow: 'hidden',
+            }}
+          >
             {meta}
+            {divider}
             {body}
           </div>
           {qr}
@@ -224,7 +264,7 @@ export function StickerLabel({ spec, data }: { spec: SizeSpec; data: StickerPayl
       ) : (
         <>
           {meta}
-          <div style={{ borderTop: '1px solid #000', margin: '2px 0' }} />
+          {divider}
           {body}
           <div style={{ marginTop: 'auto', paddingTop: 4, display: 'flex', justifyContent: 'center' }}>{qr}</div>
         </>
