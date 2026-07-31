@@ -32,8 +32,6 @@ interface SizeSpec {
   metaSize: string;
   modSize: string;
   layout: 'row' | 'column';
-  /** Show "SCAN AT PACKING STAGE TO COMPLETE" micro-copy (large labels only) */
-  cta?: boolean;
 }
 
 // 15mm ≈ 0.59in ≈ 57px @96dpi. Never go below 60px.
@@ -93,7 +91,6 @@ const SIZES: SizeSpec[] = [
     metaSize: '10px',
     modSize: '12px',
     layout: 'column',
-    cta: true,
   },
   {
     key: '62mm-auto',
@@ -108,7 +105,6 @@ const SIZES: SizeSpec[] = [
     metaSize: '9px',
     modSize: '11px',
     layout: 'column',
-    cta: true,
   },
 ];
 
@@ -200,21 +196,6 @@ export function StickerLabel({ spec, data }: { spec: SizeSpec; data: StickerPayl
       }}
     >
       <QRCodeSVG value={data.qrPayload} size={spec.qrSize} level="M" fgColor="#000000" bgColor="#FFFFFF" />
-      {spec.cta && (
-        <div
-          style={{
-            fontSize: '10px',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.02em',
-            textAlign: 'center',
-            lineHeight: 1.15,
-            marginTop: 2,
-          }}
-        >
-          Scan At Packing Stage To Complete
-        </div>
-      )}
       <div style={{ fontFamily: 'Courier, monospace', fontSize: spec.metaSize, fontWeight: 900 }}>
         *{data.fallbackCode}*
       </div>
