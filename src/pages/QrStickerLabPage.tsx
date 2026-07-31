@@ -32,6 +32,8 @@ interface SizeSpec {
   metaSize: string;
   modSize: string;
   layout: 'row' | 'column';
+  /** Show "SCAN AT PACKING STAGE TO COMPLETE" micro-copy (large labels only) */
+  cta?: boolean;
 }
 
 // 15mm ≈ 0.59in ≈ 57px @96dpi. Never go below 60px.
