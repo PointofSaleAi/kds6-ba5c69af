@@ -93,6 +93,7 @@ const SIZES: SizeSpec[] = [
     metaSize: '10px',
     modSize: '12px',
     layout: 'column',
+    cta: true,
   },
   {
     key: '62mm-auto',
