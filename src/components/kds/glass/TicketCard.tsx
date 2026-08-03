@@ -232,7 +232,7 @@ export function TicketCard({
             style={{
               display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
               borderTop: `1px solid ${skin.hairline}`,
-              background: noteAcked ? 'rgba(29,158,117,0.10)' : undefined,
+              background: noteAcked ? skin.ackRowBg : undefined,
             }}
           >
             <div style={{ marginTop: 3, flex: '0 0 auto' }}>
@@ -256,12 +256,12 @@ export function TicketCard({
               className="active:scale-95 transition-transform"
               style={{
                 width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
-                background: noteAcked ? 'rgba(29,158,117,0.9)' : skin.btnBg,
-                border: `1px solid ${noteAcked ? 'rgba(255,255,255,0.35)' : skin.btnBorder}`,
+                background: noteAcked ? skin.ackBg : skin.btnBg,
+                border: `1px solid ${noteAcked ? skin.ackBorder : skin.btnBorder}`,
                 boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : skin.btnFg} />
+              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? skin.ackFg : skin.btnFg} />
             </button>
           </div>
         </div>
