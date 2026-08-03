@@ -53,7 +53,7 @@ export default function SettingsLayout() {
         style={{ background: 'hsl(var(--surface-bg))' }}
       >
         <div
-          className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} shrink-0 overflow-hidden flex flex-col m-4 rounded-3xl`}
+          className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} shrink-0 overflow-hidden flex flex-col m-2 rounded-3xl`}
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
@@ -61,7 +61,7 @@ export default function SettingsLayout() {
         >
           <SettingsSidebar />
         </div>
-        <main className="flex-1 overflow-y-auto scrollbar-hide">
+        <main className="flex-1 overflow-y-auto scrollbar-hide m-2 p-4">
           <Outlet key={location.pathname} />
         </main>
       </div>
