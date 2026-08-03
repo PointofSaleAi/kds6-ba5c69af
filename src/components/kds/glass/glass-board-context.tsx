@@ -361,6 +361,8 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     viewMode, setViewMode,
     sortMode, setSortMode,
     orderTypeFilter, setOrderTypeFilter,
+    view, setView, seenCount, unseenCount, historyCount,
+
     selectedItems, toggleItem,
     selectedCategories, toggleCategory,
     clearAll,
