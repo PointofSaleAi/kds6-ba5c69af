@@ -40,6 +40,8 @@ interface TicketBoardProps {
   themeOverride?: 'light' | 'dark';
   /** Limit the number of rendered tickets (settings previews). */
   maxTickets?: number;
+  /** Force a specific ticket first (settings previews show a Dine In ticket). */
+  pinnedTicketId?: string;
   /** Force a view mode, ignoring the board's own selection. */
   viewModeOverride?: ViewMode;
 }
