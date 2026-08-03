@@ -4,16 +4,20 @@ export interface StatusRule {
   id: string;
   label: string;
   color: string;
+  /** Optional gradient end colour (top → bottom stop-light pill). */
+  colorTo?: string;
+  /** Optional glow colour (rgba/hex) used for pill halos. */
+  glow?: string;
   textColor: 'white' | 'grey' | 'black';
   minMinutes: number;
   maxMinutes: number | null; // null = open-ended (final rule)
 }
 
 const DEFAULT_RULES: StatusRule[] = [
-  { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
-  { id: 'medium', label: 'Medium (Preparing)', color: '#E5A000', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
-  { id: 'delay', label: 'Delay (Warning)', color: '#D85A30', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
-  { id: 'overtime', label: 'Overtime (Critical)', color: '#E24B4A', textColor: 'white', minMinutes: 21, maxMinutes: null },
+  { id: 'start', label: 'New', color: '#34d15b', colorTo: '#1da94a', glow: 'rgba(52,209,91,.8)', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
+  { id: 'medium', label: 'Medium', color: '#ffb340', colorTo: '#f08c00', glow: 'rgba(255,179,64,.8)', textColor: 'black', minMinutes: 3, maxMinutes: 5 },
+  { id: 'delay', label: 'Delay', color: '#ff453a', colorTo: '#e0281c', glow: 'rgba(255,69,58,.8)', textColor: 'white', minMinutes: 5, maxMinutes: 7 },
+  { id: 'overtime', label: 'Overtime', color: '#a259e6', colorTo: '#7b2fc4', glow: 'rgba(162,89,230,.8)', textColor: 'white', minMinutes: 7, maxMinutes: null },
 ];
 
 export interface StatusRulesContextValue {
