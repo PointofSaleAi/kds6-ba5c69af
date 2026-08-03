@@ -649,7 +649,7 @@ function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
   const status = getStatusForElapsed(elapsed);
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
+      <div className="bg-[var(--tkt-header-bg)] text-[var(--tkt-header-fg)] px-3 py-1.5 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
