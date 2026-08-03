@@ -11,6 +11,11 @@ export interface GlassItem {
   mods?: string;
   note?: string;
   tags?: string[];
+  /**
+   * Stable stage key. Set when a ticket is projected to a subset of its items
+   * (Seen / Unseen screens) so lifecycle state survives the index shift.
+   */
+  stageKey?: string;
 }
 
 export interface GlassCourse {
@@ -215,6 +220,10 @@ export const ACT_BTN: React.CSSProperties = {
 /* ── helpers ── */
 export const keyOf = (t: string, c: string, i: number) => `${t}:${c}:${i}`;
 
+/** Resolves an item's lifecycle key, honouring projected (filtered) tickets. */
+export const itemKey = (t: GlassTicket, c: GlassCourse, it: GlassItem, i: number) =>
+  it.stageKey ?? keyOf(t.id, c.id, i);
+
 export const fmt = (sec: number) => {
   const s = Math.max(0, Math.round(sec));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
@@ -222,7 +231,7 @@ export const fmt = (sec: number) => {
 
 export function ticketKeys(t: GlassTicket): string[] {
   const out: string[] = [];
-  t.courses.forEach((c) => c.items.forEach((_, i) => out.push(keyOf(t.id, c.id, i))));
+  t.courses.forEach((c) => c.items.forEach((it, i) => out.push(itemKey(t, c, it, i))));
   return out;
 }
 
@@ -238,7 +247,7 @@ export function ticketStage(t: GlassTicket, items: Record<string, GlassStage>): 
 export function activeCourse(t: GlassTicket, items: Record<string, GlassStage>): number {
   for (let i = 0; i < t.courses.length; i++) {
     const c = t.courses[i];
-    if (!c.items.every((_, j) => (items[keyOf(t.id, c.id, j)] || 'unseen') === 'served')) return i;
+    if (!c.items.every((it, j) => (items[itemKey(t, c, it, j)] || 'unseen') === 'served')) return i;
   }
   return t.courses.length - 1;
 }

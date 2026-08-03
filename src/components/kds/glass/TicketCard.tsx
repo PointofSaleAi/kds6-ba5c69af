@@ -11,7 +11,7 @@ import {
   CTA,
   activeCourse,
   fmt,
-  keyOf,
+  itemKey,
   ticketStage,
   timerTone,
   type GlassStage,
@@ -289,7 +289,7 @@ export function TicketCard({
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
           const isOpen = ck in open ? open[ck] : ci === aIdx;
-          const done = c.items.every((_, i) => (items[keyOf(t.id, c.id, i)] || 'unseen') === 'served');
+          const done = c.items.every((it, i) => (items[itemKey(t, c, it, i)] || 'unseen') === 'served');
           const meta = c.prep ? c.prep : done ? `${c.items.length} items · done` : `${c.items.length} items`;
 
           return (
@@ -305,7 +305,7 @@ export function TicketCard({
               )}
               {isOpen &&
                 c.items.map((it, i) => {
-                  const ik = keyOf(t.id, c.id, i);
+                  const ik = itemKey(t, c, it, i);
                   const istage = items[ik] || 'unseen';
                   return (
                     <TicketItem

@@ -309,7 +309,31 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       return true;
     });
 
-    const sorted = [...filtered];
+    /**
+     * Seen / Unseen screens show only the matching products of a ticket — the
+     * whole ticket appears once every product matches. Original indices are
+     * carried over as stageKey so lifecycle actions still hit the right item.
+     */
+    const project = (t: GlassTicket, keep: (stage: GlassStage) => boolean): GlassTicket => ({
+      ...t,
+      courses: t.courses
+        .map((c) => ({
+          ...c,
+          items: c.items
+            .map((it, i) => ({ ...it, stageKey: keyOf(t.id, c.id, i) }))
+            .filter((it) => keep(itemStages[it.stageKey] || 'unseen')),
+        }))
+        .filter((c) => c.items.length > 0),
+    });
+
+    const projected =
+      view === 'seen-orders'
+        ? filtered.map((t) => project(t, (s) => s !== 'unseen'))
+        : view === 'unseen-orders'
+          ? filtered.map((t) => project(t, (s) => s === 'unseen'))
+          : filtered;
+
+    const sorted = [...projected];
     switch (sortMode) {
       // base = seconds already waited, so a larger base is an older ticket
       case 'newest': sorted.sort((a, b) => a.base - b.base); break;

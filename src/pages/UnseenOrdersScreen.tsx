@@ -43,7 +43,7 @@ function distributeIntoColumns<T>(items: T[], columnCount: number): T[][] {
 }
 
 export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showAllergens, onBump, onStepBack, onFireCourse, onItemStatusChange, onMarkSeen, onItemDismiss, renderCard, cardVariant = 'default', staggerColumnCount }: UnseenOrdersScreenProps) {
-  const { orders: storeOrders } = useOrderStore();
+  const { orders: storeOrders, itemLifecycles } = useOrderStore();
   const sourceOrders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
@@ -68,8 +68,18 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
             .filter(c => c.items.length > 0),
         }));
     }
+    // Only the matching products of a ticket belong on this screen; the whole
+    // ticket shows up once every product matches.
+    list = list
+      .map(o => ({
+        ...o,
+        courses: o.courses
+          .map(c => ({ ...c, items: c.items.filter(i => !itemLifecycles[i.id]) }))
+          .filter(c => c.items.length > 0),
+      }))
+      .filter(o => o.courses.length > 0);
     return list;
-  }, [sourceOrders, isStationView, stationCourse]);
+  }, [itemLifecycles, sourceOrders, isStationView, stationCourse]);
 
   if (unseenOrders.length === 0) {
     return (
