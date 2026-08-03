@@ -111,9 +111,9 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
       <TooltipProvider delayDuration={300}>
         <div className={`${expanded ? 'w-48' : 'w-20'} py-2 px-2 bg-transparent flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}>
         <div
-          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5 relative bg-tickets-bg"
+          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5 relative ios-glass-panel border border-[var(--glass-chrome-border)]"
           style={{
-            boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
+            boxShadow: 'var(--glass-chrome-sheen), inset 4px 4px 24px rgba(255,255,255,0.12), 0 8px 24px rgba(0,0,0,0.08)',
           }}
         >
           <div className="flex flex-col items-center gap-1 pt-1 pb-1 shrink-0">
@@ -146,7 +146,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
                 <img
                   src={versionIcon}
                   alt="Point of Sale Ai"
-                  className={`${expanded ? 'w-8 h-8' : 'w-9 h-9'} object-contain shrink-0`}
+                  className={`${expanded ? 'w-8 h-8' : 'w-9 h-9'} object-contain shrink-0 version-icon-img`}
                 />
                 <span className="text-sidebar-foreground/70 text-[9px] font-semibold tracking-wide whitespace-nowrap">
                   v{APP_VERSION}
