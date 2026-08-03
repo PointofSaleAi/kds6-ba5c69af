@@ -56,15 +56,15 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="p-3 shrink-0">
-        <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
+      <div className="py-3 px-0 shrink-0">
+        <h2 className="text-[1.65rem] font-bold px-3" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
 
         <button
           type="button"
           onClick={() => navigate(SETTINGS_GROUPS.account.path)}
-          className="mt-3 w-full flex items-center gap-2 rounded-2xl px-2 py-2 active:opacity-70 transition-all text-left"
+          className="mt-3 mx-3 w-full flex items-center gap-2 rounded-2xl px-3 py-2 active:opacity-70 transition-all text-left"
           style={{
             background: 'hsl(var(--text-primary) / 0.06)',
             boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.06)',
