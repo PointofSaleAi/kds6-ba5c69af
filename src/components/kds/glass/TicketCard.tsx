@@ -128,19 +128,25 @@ export function TicketCard({
 
       {/* header */}
       <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px' }}>
-        <div style={{ fontWeight: 800, fontSize: 68, lineHeight: 0.82, letterSpacing: '-0.055em', fontVariantNumeric: 'tabular-nums' }}>
-          {t.num}
+        <div style={{ flex: '0 0 auto', fontWeight: 800, fontSize: identifier === 'guest' ? 34 : 68, lineHeight: identifier === 'guest' ? 1 : 0.82, letterSpacing: '-0.055em', fontVariantNumeric: 'tabular-nums', maxWidth: identifier === 'guest' ? 190 : undefined }}>
+          {heroLabel}
         </div>
-        <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <GlassIcon name={t.kind} size={26} sw={2} stroke="#0b0b0c" />
-            <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>{t.type}</div>
+        <div style={{ minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+            <div style={{ flex: '0 0 auto', display: 'flex' }}>
+              <GlassIcon name={t.kind} size={26} sw={2} stroke="#0b0b0c" />
+            </div>
+            <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.type}</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'rgba(60,60,67,0.62)' }}>
-            <GlassIcon name="runner" size={22} sw={2.1} />
-            <div style={{ fontWeight: 700, fontSize: 25, lineHeight: 1, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>{t.server}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, color: 'rgba(60,60,67,0.62)' }}>
+            {/* shrink-0 wrapper: long server labels used to squeeze the icon away */}
+            <div style={{ flex: '0 0 auto', display: 'flex' }}>
+              <GlassIcon name="runner" size={22} sw={2.1} />
+            </div>
+            <div style={{ minWidth: 0, fontWeight: 700, fontSize: 25, lineHeight: 1, letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.server}</div>
           </div>
         </div>
+
         <div
           style={{
             marginLeft: 'auto',
