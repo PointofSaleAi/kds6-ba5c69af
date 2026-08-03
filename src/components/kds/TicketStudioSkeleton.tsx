@@ -801,6 +801,10 @@ export function TicketStudioSkeleton() {
                       boardId={selectedBoard}
                       identifier={identifier as 'order' | 'guest'}
                       textSize={textSize}
+                      layout={layout}
+                      density={density}
+                      safety={safety}
+                      theme={theme}
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
                       onTimerClick={cycleAgingStage}
@@ -812,6 +816,10 @@ export function TicketStudioSkeleton() {
                       boardId={selectedBoardB}
                       identifier={identifier as 'order' | 'guest'}
                       textSize={textSize}
+                      layout={layout}
+                      density={density}
+                      safety={safety}
+                      theme={theme}
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
                       onTimerClick={cycleAgingStage}
@@ -823,6 +831,10 @@ export function TicketStudioSkeleton() {
                   boardId={selectedBoard}
                   identifier={identifier as 'order' | 'guest'}
                   textSize={textSize}
+                  layout={layout}
+                  density={density}
+                  safety={safety}
+                  theme={theme}
                   agingOverrideSeconds={agingOverrideSeconds}
                   onHeaderClick={(k) => openOrderTypeInPanel(k)}
                   onTimerClick={cycleAgingStage}
@@ -1210,6 +1222,10 @@ export function TicketStudioSkeleton() {
                 boardId={selectedBoard}
                 identifier={identifier as 'order' | 'guest'}
                 textSize={textSize}
+                layout={layout}
+                density={density}
+                safety={safety}
+                theme={theme}
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
                 onTimerClick={cycleAgingStage}
