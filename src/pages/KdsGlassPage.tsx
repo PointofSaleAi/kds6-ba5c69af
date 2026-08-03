@@ -23,8 +23,12 @@ function GlassShell() {
   const board = useGlassBoard();
 
   const handleNavigate = (target: string) => {
-    if (target === 'settings') navigate('/kds/v1/settings');
-    else navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')));
+    if (target === 'settings') { navigate('/kds/v1/settings'); return; }
+    if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
+      board.setView(target);
+      return;
+    }
+    navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')));
   };
 
   const filterCount = board.selectedItems.size + board.selectedCategories.size;
@@ -38,8 +42,16 @@ function GlassShell() {
       >
         <div className="flex flex-1 overflow-hidden">
           <div className="flex shrink-0" style={{ order: dockLayout.mainSidebar === 'left' ? 0 : 4 }}>
-            <KDSSidebar activeFilter="all" onFilterChange={() => {}} onNavigate={handleNavigate} activeNav="home" />
+            <KDSSidebar
+              activeFilter="all"
+              onFilterChange={() => {}}
+              onNavigate={handleNavigate}
+              activeNav={board.view}
+              seenCount={board.seenCount}
+              unseenCount={board.unseenCount}
+            />
           </div>
+
           <main className="flex-1 overflow-auto" style={{ order: 2 }}>
             <TicketBoard />
           </main>
