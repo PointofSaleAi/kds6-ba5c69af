@@ -282,6 +282,16 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'unseen'),
     [itemStages],
   );
+  /** Any product on the ticket has been served — surfaces it on the Served screen. */
+  const hasServedItem = useCallback(
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'served'),
+    [itemStages],
+  );
+  /** Any product still outstanding — the ticket stays on the active board. */
+  const hasActiveItem = useCallback(
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') !== 'served'),
+    [itemStages],
+  );
 
   const tickets = useMemo(() => {
     const remaining = (t: GlassTicket) => {
