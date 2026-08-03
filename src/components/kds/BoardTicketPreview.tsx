@@ -245,33 +245,35 @@ const CALM_ORDER_NOTE = 'Anniversary — please pace mains after apps.';
 
 function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAdvance: () => void }) {
   const base = 'shrink-0 flex items-center justify-center active:scale-95 transition';
+  const skin = useTicketSkin();
   if (state === 'done') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: '#27AE60', width: 22, height: 22 }} aria-label="Product Served">
-        <Check size={14} color="#fff" strokeWidth={3} />
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: skin.servedBg, color: skin.servedFg, width: 22, height: 22 }} aria-label="Product Served">
+        <Check size={14} strokeWidth={3} />
       </button>
     );
   }
   if (state === 'ready') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }} aria-label="Mark Product Served">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: skin.readyBg, color: skin.readyFg, border: `1.5px solid ${skin.readyBorder}` }} aria-label="Mark Product Served">
         <Check size={14} strokeWidth={3} />
       </button>
     );
   }
   if (state === 'cooking') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: '#374151', color: '#fff' }} aria-label="Mark Product Ready">
-        <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: skin.cookingBg, color: skin.cookingFg }} aria-label="Mark Product Ready">
+        <ClocheIcon size={14} strokeWidth={2.4} color={skin.cookingFg} />
       </button>
     );
   }
   return (
-    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-black/[0.04]`} style={{ width: 22, height: 22, color: '#6C7A89' }} aria-label="Start Cooking">
+    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-[var(--tkt-hover)]`} style={{ width: 22, height: 22, color: skin.iconIdle }} aria-label="Start Cooking">
       <Eye size={18} strokeWidth={2} />
     </button>
   );
 }
+
 
 const TICKET_PHASE_ORDER: Array<'seen' | 'preparing' | 'ready' | 'served'> = ['seen', 'preparing', 'ready', 'served'];
 const PHASE_TO_PRODUCT_STATE: Record<'seen' | 'preparing' | 'ready' | 'served', CalmProductState> = {
