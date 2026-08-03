@@ -50,6 +50,8 @@ function GlassShell() {
               seenCount={board.seenCount}
               unseenCount={board.unseenCount}
               historyCount={board.historyCount}
+            />
+
 
           </div>
 
