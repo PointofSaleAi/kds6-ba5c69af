@@ -12,7 +12,7 @@ interface StatusRuleCardProps {
 }
 
 const swatches = [
-  '#E24B4A', '#D85A30', '#E5A000', '#4A4A47', '#27AE60', '#16A085',
+  '#34d15b', '#ffb340', '#ff453a', '#a259e6', '#27AE60', '#16A085',
   '#2980B9', '#2471A3', '#8E44AD', '#1A1A2E', '#2C3E50',
   '#7F8C8D', '#95A5A6', '#922B21', '#C0392B',
 ];
