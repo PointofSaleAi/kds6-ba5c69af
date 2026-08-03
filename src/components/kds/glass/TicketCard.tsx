@@ -319,8 +319,10 @@ export function TicketCard({
           );
         })}
       </div>
+      )}
 
       {/* footer */}
+      {!headerOnly && (
       <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', gap: 10, padding: `${pad(14)}px ${pad(16)}px ${pad(16)}px` }}>
         {stage !== 'unseen' && (
           <button
