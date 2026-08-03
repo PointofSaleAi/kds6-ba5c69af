@@ -40,7 +40,7 @@ export default function SettingsLayout() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-sidebar-bg">
+    <div className="flex h-screen w-screen overflow-hidden bg-transparent">
       <KDSSidebar
         activeFilter="all"
         onFilterChange={() => {}}
@@ -48,10 +48,7 @@ export default function SettingsLayout() {
         activeNav="settings"
         settingsOpen={true}
       />
-      <div
-        className="flex flex-1 overflow-hidden"
-        style={{ background: 'hsl(var(--surface-bg))' }}
-      >
+      <div className="flex flex-1 overflow-hidden bg-transparent">
         <div
           className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} shrink-0 overflow-hidden flex flex-col m-2 rounded-3xl`}
           style={{
@@ -61,7 +58,13 @@ export default function SettingsLayout() {
         >
           <SettingsSidebar />
         </div>
-        <main className="flex-1 overflow-y-auto scrollbar-hide m-2 p-4">
+        <main
+          className="flex-1 overflow-y-auto scrollbar-hide m-2 p-4 rounded-3xl"
+          style={{
+            background: 'hsl(var(--surface-card))',
+            boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+          }}
+        >
           <Outlet key={location.pathname} />
         </main>
       </div>
