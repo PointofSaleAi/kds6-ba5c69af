@@ -48,9 +48,9 @@ export default function SettingsLayout() {
         activeNav="settings"
         settingsOpen={true}
       />
-      <div className="flex flex-1 overflow-hidden bg-transparent">
+      <div className="flex flex-1 overflow-hidden bg-transparent pl-0 pr-2 py-2 gap-2">
         <div
-          className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} shrink-0 overflow-hidden flex flex-col m-2 rounded-3xl`}
+          className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} shrink-0 overflow-hidden flex flex-col rounded-3xl`}
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
@@ -59,7 +59,7 @@ export default function SettingsLayout() {
           <SettingsSidebar />
         </div>
         <main
-          className="flex-1 overflow-y-auto scrollbar-hide m-2 p-4 rounded-3xl"
+          className="flex-1 overflow-y-auto scrollbar-hide p-4 rounded-3xl"
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
