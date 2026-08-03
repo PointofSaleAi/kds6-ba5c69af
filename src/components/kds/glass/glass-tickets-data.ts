@@ -25,7 +25,7 @@ export interface GlassTicket {
   id: string;
   type: string;
   num: string;
-  kind: 'table' | 'pickup' | 'delivery' | 'drive' | 'curb' | 'banquet';
+  kind: 'table' | 'pickup' | 'delivery' | 'drive' | 'curb' | 'banquet' | 'phone' | 'sched' | 'takeout';
   server: string;
   base: number;
   allergies: string[];
@@ -125,6 +125,45 @@ export const TICKETS: GlassTicket[] = [
         { qty: '2×', name: 'Sea Bass', mods: 'Lemon butter', tags: ['FISH', 'DAIRY'] } ] },
       { id: 'des', label: 'DESSERT', prep: 'Fires 12:40 pm', items: [
         { qty: '4×', name: 'Lemon Tart', mods: '', tags: ['GLUTEN', 'EGG'] } ] },
+    ],
+  },
+  {
+    id: 't45', type: 'Take Out', num: '45', kind: 'takeout', server: 'Counter 1 · 12:11', base: 145,
+    allergies: ['GLUTEN allergy'],
+    courses: [ { id: 'all', showHeader: false, items: [
+      { qty: '2×', name: 'Chicken Biryani', mods: 'Medium spice · + Raita' },
+      { qty: '1×', name: 'Butter Naan', mods: '', tags: ['GLUTEN', 'DAIRY'] },
+      { qty: '2×', name: 'Mango Lassi', mods: 'No sugar', tags: ['DAIRY'] } ] } ],
+  },
+  {
+    id: 't47', type: 'Phone In', num: '47', kind: 'phone', server: 'Aisha K. · 12:12', base: 96,
+    allergies: ['SHELLFISH allergy'],
+    posMessage: 'Guest calling back in 10 minutes to confirm pickup time.',
+    posNote: 'Pack sauces separately, guest is collecting on the way home',
+    courses: [ { id: 'all', showHeader: false, items: [
+      { qty: '1×', name: 'Prawn Curry', mods: 'Extra hot', tags: ['SHELLFISH'] },
+      { qty: '2×', name: 'Steamed Rice', mods: '' } ] } ],
+  },
+  {
+    id: 't49', type: 'Scheduled', num: '49', kind: 'sched', server: 'Pickup 1:15 pm', base: 40,
+    allergies: ['EGG allergy'],
+    courses: [
+      { id: 'app', label: 'APPETIZER', items: [
+        { qty: '4×', name: 'Samosa', mods: '+ Tamarind chutney', tags: ['GLUTEN'] } ] },
+      { id: 'ent', label: 'ENTREE', prep: 'Fires 1:00 pm', items: [
+        { qty: '3×', name: 'Paneer Tikka', mods: 'Char grilled', tags: ['DAIRY'] },
+        { qty: '2×', name: 'Dal Makhani', mods: '', tags: ['DAIRY'] } ] },
+    ],
+  },
+  {
+    id: 't51', type: 'Table 9', num: '51', kind: 'table', server: 'Leo M. · 12:13', base: 240,
+    allergies: ['DAIRY allergy'],
+    courses: [
+      { id: 'app', label: 'APPETIZER', items: [
+        { qty: '2×', name: 'Soup of the Day', mods: 'No cream', tags: ['DAIRY'] } ] },
+      { id: 'ent', label: 'ENTREE', prep: 'Prep 2:10', items: [
+        { qty: '1×', name: 'Ribeye Steak', mods: 'Medium · + Peppercorn sauce' },
+        { qty: '1×', name: 'Duck Confit', mods: 'Crispy skin' } ] },
     ],
   },
 ];
