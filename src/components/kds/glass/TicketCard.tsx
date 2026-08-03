@@ -25,6 +25,8 @@ interface TicketCardProps {
   onTapItem: (key: string) => void;
   onToggleCourse: (courseKey: string, current: boolean) => void;
   onStepTicket: (ticket: GlassTicket, dir: number) => void;
+  /** Horizontal view: card fills the column height and the item list scrolls. */
+  fillHeight?: boolean;
 }
 
 export function TicketCard({
@@ -36,12 +38,14 @@ export function TicketCard({
   onTapItem,
   onToggleCourse,
   onStepTicket,
+  fillHeight = false,
 }: TicketCardProps) {
   const stage = ticketStage(t, items);
   const vis = stageVisuals(stage);
   const tone = timerTone(elapsedSeconds);
   const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
+
 
   return (
     <div
