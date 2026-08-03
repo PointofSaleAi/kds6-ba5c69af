@@ -47,6 +47,7 @@ import RecipeDetailPage from "./pages/RecipeDetailPage.tsx";
 import KdsV7Page from "./pages/KdsV7Page.tsx";
 import QrStickersPage from "./pages/QrStickersPage.tsx";
 import QrStickerLabPage from "./pages/QrStickerLabPage.tsx";
+import KdsGlassPage from "./pages/KdsGlassPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +69,7 @@ const AppShell = () => {
           <Route path="/kds/v5" element={<Index cardVariant="v4" />} />
           <Route path="/kds/v6" element={<Index cardVariant="v5" />} />
           <Route path="/kds/v7" element={<KdsV7Page />} />
+          <Route path="/kds/glass" element={<KdsGlassPage />} />
           <Route path="/kds/qr-stickers" element={<QrStickersPage />} />
           <Route path="/kds/sticker-lab" element={<QrStickerLabPage />} />
 
