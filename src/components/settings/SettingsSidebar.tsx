@@ -94,7 +94,7 @@ export function SettingsSidebar() {
       </div>
 
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide p-3">
+      <div className="flex-1 overflow-y-auto scrollbar-hide py-3 px-0">
         {showResults ? (
           <div>
             <div
