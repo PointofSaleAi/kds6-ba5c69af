@@ -97,6 +97,11 @@ interface GlassBoardCtx {
   toggleCourse: (courseKey: string, current: boolean) => void;
   expandAll: boolean;
   setExpandAll: (on: boolean) => void;
+  /* order-note acknowledgement + POS message seen state */
+  notesAck: Record<string, boolean>;
+  setNoteAck: (ticketId: string, on: boolean) => void;
+  posSeen: Record<string, boolean>;
+  setPosSeen: (ticketId: string, on: boolean) => void;
 }
 
 const Ctx = createContext<GlassBoardCtx | null>(null);
