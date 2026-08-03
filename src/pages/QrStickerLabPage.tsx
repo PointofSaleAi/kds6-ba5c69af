@@ -43,7 +43,7 @@ const SIZES: SizeSpec[] = [
     width: '2in',
     height: '1in',
     pageSize: '2in 1in',
-    maxModifiers: 0,
+    maxModifiers: 2,
     qrSize: 60,
     nameSize: '11px',
     metaSize: '7px',
@@ -57,7 +57,7 @@ const SIZES: SizeSpec[] = [
     width: '2in',
     height: '2in',
     pageSize: '2in 2in',
-    maxModifiers: 2,
+    maxModifiers: 4,
     qrSize: 62,
     nameSize: '15px',
     metaSize: '8px',
@@ -71,7 +71,7 @@ const SIZES: SizeSpec[] = [
     width: '2.25in',
     height: '1.25in',
     pageSize: '2.25in 1.25in',
-    maxModifiers: 1,
+    maxModifiers: 3,
     qrSize: 62,
     nameSize: '12px',
     metaSize: '7px',
@@ -85,7 +85,7 @@ const SIZES: SizeSpec[] = [
     width: '2.25in',
     height: '4in',
     pageSize: '2.25in 4in',
-    maxModifiers: 4,
+    maxModifiers: 10,
     qrSize: 104,
     nameSize: '20px',
     metaSize: '10px',
@@ -124,6 +124,9 @@ const SAMPLE: StickerPayload = {
 function truncateModifiers(modifiers: string[], max: number) {
   if (max <= 0) return { shown: [] as string[], overflow: modifiers.length };
   if (modifiers.length <= max) return { shown: modifiers, overflow: 0 };
+  // The "+N more" line costs a line itself — if only one would be hidden,
+  // print it instead of the overflow notice.
+  if (modifiers.length === max + 1) return { shown: modifiers, overflow: 0 };
   return { shown: modifiers.slice(0, max), overflow: modifiers.length - max };
 }
 
