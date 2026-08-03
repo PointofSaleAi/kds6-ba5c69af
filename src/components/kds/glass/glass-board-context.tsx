@@ -25,10 +25,13 @@ import {
 const KIND_TO_ORDER_TYPE: Record<GlassTicket['kind'], OrderType> = {
   table: 'dine-in',
   pickup: 'take-out',
+  takeout: 'take-out',
   delivery: 'delivery',
   drive: 'drive-thru',
   curb: 'curb-side',
   banquet: 'banquet',
+  phone: 'phone-in',
+  sched: 'scheduled',
 };
 
 const COURSE_CATEGORY: Record<string, string> = {
