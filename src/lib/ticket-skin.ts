@@ -49,6 +49,7 @@ export interface TicketSkinExtras {
   hover: string;
   /** Accent used by lane/course boards. */
   accent: string;
+  accentFg: string;
   /** Strong header surface (order-type / command bars). */
   headerBg: string;
   headerFg: string;
@@ -84,6 +85,7 @@ const LIGHT_EXTRAS: TicketSkinExtras = {
   iconIdle: '#6C7A89',
   hover: 'rgba(0,0,0,0.04)',
   accent: '#16A085',
+  accentFg: '#FFFFFF',
   headerBg: '#1A1A2E',
   headerFg: '#FFFFFF',
 };
@@ -116,6 +118,7 @@ const DARK_EXTRAS: TicketSkinExtras = {
   iconIdle: 'rgba(233,237,245,0.7)',
   hover: 'rgba(255,255,255,0.07)',
   accent: '#4FD1B5',
+  accentFg: '#08201c',
   headerBg: 'rgba(12,12,22,0.92)',
   headerFg: '#f3f5f9',
 };
@@ -174,6 +177,7 @@ export function ticketSkinVars(skin: TicketSkin): CSSProperties {
     '--tkt-icon': skin.iconIdle,
     '--tkt-hover': skin.hover,
     '--tkt-accent': skin.accent,
+    '--tkt-accent-fg': skin.accentFg,
     '--tkt-header-bg': skin.headerBg,
     '--tkt-header-fg': skin.headerFg,
   } as CSSProperties;
