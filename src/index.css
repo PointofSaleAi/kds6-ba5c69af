@@ -516,3 +516,9 @@
 .animate-new-row-blink {
   animation: new-row-blink 1.2s ease-in-out infinite;
 }
+
+/* Glass board: Safety Emphasis "highlighted" pulse on allergen chips. */
+@keyframes glass-safety-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}

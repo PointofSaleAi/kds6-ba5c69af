@@ -1,18 +1,17 @@
 import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CourseHeader } from './CourseHeader';
 import { GlassIcon } from './GlassIcon';
 import { TicketItem } from './TicketItem';
 import { useGlassBoard } from './glass-board-context';
 import { KitchenReplyDialog } from '../KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
+import { glossTicket, safetyStyle, stageVisualsFor, useGlassStyle } from './glass-theme';
 import {
   CTA,
-  DARK,
-  GLOSS_TICKET,
   activeCourse,
   fmt,
   keyOf,
-  stageVisuals,
   ticketStage,
   timerTone,
   type GlassStage,
@@ -47,8 +46,9 @@ export function TicketCard({
   fillHeight = false,
   identifier = 'order',
 }: TicketCardProps) {
+  const { skin, padScale, safety, appearance } = useGlassStyle();
   const stage = ticketStage(t, items);
-  const vis = stageVisuals(stage);
+  const vis = stageVisualsFor(stage, skin);
   const tone = timerTone(elapsedSeconds);
   const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
@@ -57,6 +57,9 @@ export function TicketCard({
   const noteAcked = !!notesAck[t.id];
   const msgSeen = !!posSeen[t.id];
   const [replyOpen, setReplyOpen] = useState(false);
+
+  const pad = (v: number) => Math.round(v * padScale);
+  const showSecondary = appearance !== 'compact';
 
   /* Notes: single tap acknowledges (disables the note), double tap undoes. */
   const noteTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,8 +98,6 @@ export function TicketCard({
 
   const heroLabel = identifier === 'guest' ? t.server.split('·')[0].trim() : t.num;
 
-
-
   return (
     <div
       data-screen-label={`${t.type} #${t.num}`}
@@ -108,11 +109,12 @@ export function TicketCard({
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 26,
-        background: 'rgba(255,255,255,0.62)',
+        color: skin.text,
+        background: skin.card,
         backdropFilter: 'blur(30px) saturate(185%)',
         WebkitBackdropFilter: 'blur(30px) saturate(185%)',
-        border: '1px solid rgba(255,255,255,0.75)',
-        boxShadow: '0 18px 44px rgba(28,33,54,0.16), inset 0 1px 0 rgba(255,255,255,0.95)',
+        border: `1px solid ${skin.cardBorder}`,
+        boxShadow: skin.cardShadow,
         overflow: 'hidden',
       }}
     >
@@ -121,24 +123,36 @@ export function TicketCard({
           position: 'absolute',
           inset: '0 0 auto 0',
           height: 120,
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0))',
+          background: skin.sheen,
           pointerEvents: 'none',
         }}
       />
 
       {/* header */}
-      <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px' }}>
+      <div
+        style={{
+          position: 'relative',
+          flex: '0 0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          padding: `${pad(14)}px ${pad(18)}px`,
+          ...(appearance === 'header'
+            ? { background: skin.panelHeader, borderBottom: `1px solid ${skin.hairline}` }
+            : {}),
+        }}
+      >
         <div style={{ flex: '0 0 auto', fontWeight: 800, fontSize: identifier === 'guest' ? 34 : 68, lineHeight: identifier === 'guest' ? 1 : 0.82, letterSpacing: '-0.055em', fontVariantNumeric: 'tabular-nums', maxWidth: identifier === 'guest' ? 190 : undefined }}>
           {heroLabel}
         </div>
         <div style={{ minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
             <div style={{ flex: '0 0 auto', display: 'flex' }}>
-              <GlassIcon name={t.kind} size={26} sw={2} stroke="#0b0b0c" />
+              <GlassIcon name={t.kind} size={26} sw={2} stroke={skin.text} />
             </div>
             <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.type}</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, color: 'rgba(60,60,67,0.62)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, color: skin.textMuted }}>
             {/* shrink-0 wrapper: long server labels used to squeeze the icon away */}
             <div style={{ flex: '0 0 auto', display: 'flex' }}>
               <GlassIcon name="runner" size={22} sw={2.1} />
@@ -167,35 +181,37 @@ export function TicketCard({
       </div>
 
       {/* ticket-level allergies */}
-      <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', gap: 8, padding: '0 18px 14px' }}>
-        {t.allergies.map((a) => (
-          <div key={a} style={GLOSS_TICKET}>{a}</div>
-        ))}
-      </div>
+      {t.allergies.length > 0 && (
+        <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', gap: 8, padding: `0 ${pad(18)}px ${pad(14)}px` }}>
+          {t.allergies.map((a) => (
+            <div key={a} style={{ ...glossTicket(skin), ...safetyStyle(safety) }}>{a}</div>
+          ))}
+        </div>
+      )}
 
       {/* POS block */}
-      {t.posMessage && (
+      {t.posMessage && showSecondary && (
         <div
           style={{
             position: 'relative',
             flex: '0 0 auto',
-            margin: '0 14px 12px',
+            margin: `0 ${pad(14)}px ${pad(12)}px`,
             borderRadius: 18,
-            background: 'rgba(255,255,255,0.5)',
-            border: '1px solid rgba(255,255,255,0.8)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9)',
+            background: skin.panel,
+            border: `1px solid ${skin.panelBorder}`,
+            boxShadow: skin.panelShadow,
             overflow: 'hidden',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '10px 14px', background: 'rgba(120,130,150,0.1)' }}>
-            <GlassIcon name="chat" size={17} sw={1.8} stroke="rgba(60,60,67,0.7)" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '10px 14px', background: skin.panelHeader }}>
+            <GlassIcon name="chat" size={17} sw={1.8} stroke={skin.textSecondary} />
             <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1 }}>Point of Sale terminal 1</div>
-            <div style={{ marginLeft: 'auto', fontWeight: 400, fontSize: 14, lineHeight: 1, color: 'rgba(60,60,67,0.55)' }}>5m ago</div>
+            <div style={{ marginLeft: 'auto', fontWeight: 400, fontSize: 14, lineHeight: 1, color: skin.textMuted }}>5m ago</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px' }}>
             <div style={{ flex: 1, opacity: msgSeen ? 0.5 : 1 }}>
               <div style={{ fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{t.posMessage}</div>
-              <div style={{ marginTop: 6, fontWeight: 400, fontSize: 14, lineHeight: 1, color: 'rgba(60,60,67,0.55)' }}>Maria S. – Server</div>
+              <div style={{ marginTop: 6, fontWeight: 400, fontSize: 14, lineHeight: 1, color: skin.textMuted }}>Maria S. – Server</div>
             </div>
             <button
               type="button"
@@ -204,29 +220,31 @@ export function TicketCard({
               className="active:scale-95 transition-transform"
               style={{
                 width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
-                background: msgSeen ? DARK : 'rgba(255,255,255,0.7)',
-                border: `1px solid ${msgSeen ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.9)'}`,
+                background: msgSeen ? skin.fill : skin.btnBg,
+                border: `1px solid ${msgSeen ? skin.fillBorder : skin.btnBorder}`,
                 boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name={msgSeen ? 'reply' : 'eye'} size={20} sw={1.8} stroke={msgSeen ? '#fff' : '#0b0b0c'} />
+              <GlassIcon name={msgSeen ? 'reply' : 'eye'} size={20} sw={1.8} stroke={msgSeen ? skin.fillFg : skin.btnFg} />
             </button>
           </div>
           <div
             style={{
               display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
-              borderTop: '1px solid rgba(60,60,67,0.12)',
+              borderTop: `1px solid ${skin.hairline}`,
               background: noteAcked ? 'rgba(29,158,117,0.10)' : undefined,
             }}
           >
             <div style={{ marginTop: 3, flex: '0 0 auto' }}>
-              <GlassIcon name="note" size={18} sw={1.8} stroke="rgba(60,60,67,0.7)" />
+              <GlassIcon name="note" size={18} sw={1.8} stroke={skin.textSecondary} />
             </div>
+            {/* Acknowledged notes read as disabled — never struck through. */}
             <div
               style={{
                 flex: 1, fontWeight: 500, fontSize: 17, lineHeight: 1.45,
-                opacity: noteAcked ? 0.45 : 1,
-                textDecoration: noteAcked ? 'line-through' : 'none',
+                color: noteAcked ? skin.textMuted : skin.text,
+                opacity: noteAcked ? 0.5 : 1,
+                pointerEvents: noteAcked ? 'none' : undefined,
               }}
             >
               {t.posNote}
@@ -238,28 +256,31 @@ export function TicketCard({
               className="active:scale-95 transition-transform"
               style={{
                 width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
-                background: noteAcked ? 'rgba(29,158,117,0.9)' : 'rgba(255,255,255,0.7)',
-                border: `1px solid ${noteAcked ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.9)'}`,
+                background: noteAcked ? 'rgba(29,158,117,0.9)' : skin.btnBg,
+                border: `1px solid ${noteAcked ? 'rgba(255,255,255,0.35)' : skin.btnBorder}`,
                 boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : '#0b0b0c'} />
+              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : skin.btnFg} />
             </button>
           </div>
         </div>
       )}
 
-      {t.posMessage && replyOpen && (
-        <KitchenReplyDialog
-          message={replyMessage}
-          onSend={() => setReplyOpen(false)}
-          onClose={() => setReplyOpen(false)}
-        />
-      )}
-
+      {/* Reply modal is portalled to the body so it is a true screen-level
+          modal — the board is `zoom`ed, which would otherwise trap `fixed`. */}
+      {t.posMessage && replyOpen &&
+        createPortal(
+          <KitchenReplyDialog
+            message={replyMessage}
+            onSend={() => setReplyOpen(false)}
+            onClose={() => setReplyOpen(false)}
+          />,
+          document.body,
+        )}
 
       {/* courses + items */}
-      <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px', overflowY: fillHeight ? 'auto' : 'visible' }}>
+      <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: `0 ${pad(18)}px`, overflowY: fillHeight ? 'auto' : 'visible' }}>
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
           const isOpen = ck in open ? open[ck] : ci === aIdx;
@@ -297,7 +318,7 @@ export function TicketCard({
       </div>
 
       {/* footer */}
-      <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', gap: 10, padding: '14px 16px 16px' }}>
+      <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', gap: 10, padding: `${pad(14)}px ${pad(16)}px ${pad(16)}px` }}>
         {stage !== 'unseen' && (
           <button
             type="button"
@@ -305,7 +326,7 @@ export function TicketCard({
             className="active:scale-95 transition-transform"
             style={{
               width: 58, height: 56, flex: '0 0 auto', display: 'grid', placeItems: 'center', cursor: 'pointer', borderRadius: 17,
-              background: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.9)', color: '#0b0b0c',
+              background: skin.btnBg, border: `1px solid ${skin.btnBorder}`, color: skin.btnFg,
               boxShadow: '0 6px 16px rgba(28,33,54,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
             }}
           >
@@ -319,9 +340,9 @@ export function TicketCard({
           style={{
             flex: 1, minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 11, cursor: 'pointer',
             borderRadius: 17, fontWeight: 700, fontSize: 22, lineHeight: 1, letterSpacing: '0.01em',
-            background: light ? 'rgba(255,255,255,0.7)' : DARK,
-            color: light ? '#0b0b0c' : '#fff',
-            border: `1px solid ${light ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.18)'}`,
+            background: light ? skin.btnBg : skin.fill,
+            color: light ? skin.btnFg : skin.fillFg,
+            border: `1px solid ${light ? skin.btnBorder : skin.fillBorder}`,
             boxShadow: '0 8px 22px rgba(28,33,54,0.16), inset 0 1px 0 rgba(255,255,255,0.55)',
           }}
         >

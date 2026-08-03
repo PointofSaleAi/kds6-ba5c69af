@@ -35,6 +35,11 @@ type KdsScreenMockProps = {
   boardId: string;
   identifier: 'order' | 'guest';
   textSize: string;
+  /** Personalize: Layout (spacing), Density, Safety Emphasis, Theme. */
+  layout?: string;
+  density?: string;
+  safety?: string;
+  theme?: string;
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
@@ -44,6 +49,10 @@ function KdsScreenMock({
   boardId,
   identifier,
   textSize,
+  layout = 'standard',
+  density = 'medium',
+  safety = 'bright',
+  theme = 'light',
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
@@ -51,6 +60,7 @@ function KdsScreenMock({
   const previewOrders = useMemo(() => mockOrders.slice(0, 6), []);
 
   const textScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
+
 
   // Render as a fixed "virtual KDS screen" and uniformly scale it into the
   // preview container so sidebar, summary panel, footer, and tickets all
@@ -114,7 +124,14 @@ function KdsScreenMock({
               <div className="flex-1 min-w-0 overflow-auto p-2">
                 {boardId === 'glass-view' ? (
                   <GlassBoardProvider>
-                    <TicketBoard identifier={identifier} scaleFactor={textScale} />
+                    <TicketBoard
+                      identifier={identifier}
+                      scaleFactor={textScale}
+                      spacing={layout === 'compact' ? 'Compact' : layout === 'spacious' ? 'Spacious' : 'Standard'}
+                      density={density as 'low' | 'medium' | 'high'}
+                      safety={safety as 'muted' | 'bright' | 'highlighted'}
+                      themeOverride={theme === 'dark' ? 'dark' : 'light'}
+                    />
                   </GlassBoardProvider>
                 ) : boardId === 'focus-lane' ? (
                   <FocusLaneBoard
@@ -784,6 +801,10 @@ export function TicketStudioSkeleton() {
                       boardId={selectedBoard}
                       identifier={identifier as 'order' | 'guest'}
                       textSize={textSize}
+                      layout={layout}
+                      density={density}
+                      safety={safety}
+                      theme={theme}
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
                       onTimerClick={cycleAgingStage}
@@ -795,6 +816,10 @@ export function TicketStudioSkeleton() {
                       boardId={selectedBoardB}
                       identifier={identifier as 'order' | 'guest'}
                       textSize={textSize}
+                      layout={layout}
+                      density={density}
+                      safety={safety}
+                      theme={theme}
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
                       onTimerClick={cycleAgingStage}
@@ -806,6 +831,10 @@ export function TicketStudioSkeleton() {
                   boardId={selectedBoard}
                   identifier={identifier as 'order' | 'guest'}
                   textSize={textSize}
+                  layout={layout}
+                  density={density}
+                  safety={safety}
+                  theme={theme}
                   agingOverrideSeconds={agingOverrideSeconds}
                   onHeaderClick={(k) => openOrderTypeInPanel(k)}
                   onTimerClick={cycleAgingStage}
@@ -1193,6 +1222,10 @@ export function TicketStudioSkeleton() {
                 boardId={selectedBoard}
                 identifier={identifier as 'order' | 'guest'}
                 textSize={textSize}
+                layout={layout}
+                density={density}
+                safety={safety}
+                theme={theme}
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
                 onTimerClick={cycleAgingStage}
