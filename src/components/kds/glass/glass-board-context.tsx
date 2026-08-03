@@ -306,9 +306,9 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     };
 
     const filtered = TICKETS.filter((t) => {
-      const served = isServed(t);
-      // Served tickets leave the board and live in Served (recall to bring back).
-      if (view === 'history' ? !served : served) return false;
+      // A single served product surfaces the ticket in Served; the ticket stays
+      // on the active board until every product has been served.
+      if (view === 'history' ? !hasServedItem(t) : !hasActiveItem(t)) return false;
       // A single acknowledged product is enough to surface the ticket in Seen.
       if (view === 'seen-orders' && !hasSeenItem(t)) return false;
       if (view === 'unseen-orders' && !hasUnseenItem(t)) return false;
