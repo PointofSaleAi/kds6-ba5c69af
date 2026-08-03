@@ -668,7 +668,7 @@ function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
         <SafetyRow n="2" name="Meatballs" chip="Shellfish Allergy" tone="red-outline" />
         <SafetyRow n="1" name="Filet Mignon" note="Medium rare" />
       </div>
-      <button className="w-full border-t border-border text-[11px] font-bold py-2 text-[#2C3E50]">
+      <button className="w-full border-t border-[var(--tkt-hairline)] text-[11px] font-bold py-2 text-[var(--tkt-text)]">
         SERVE
       </button>
     </Card>
