@@ -508,6 +508,7 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
   const { text, elapsed } = useDisplayTimer(1944, agingOverrideSeconds);
   const { rules, getStatusForElapsed } = useStatusRules();
   const status = getStatusForElapsed(elapsed);
+  const skin = useTicketSkin();
 
   // Build a loader-style rainbow ring. Each rule occupies an equal arc;
   // the current rule fills progressively so the ring is never fully occupied.
@@ -528,11 +529,12 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
       stops.push(`${rules[i].color} ${start}deg ${end}deg`);
     } else if (start < fillAngle) {
       stops.push(`${rules[i].color} ${start}deg ${fillAngle}deg`);
-      stops.push(`#E5E7EB ${fillAngle}deg ${end}deg`);
+      stops.push(`${skin.ringTrack} ${fillAngle}deg ${end}deg`);
     } else {
-      stops.push(`#E5E7EB ${start}deg ${end}deg`);
+      stops.push(`${skin.ringTrack} ${start}deg ${end}deg`);
     }
   }
+
   const ringBg = `conic-gradient(from -90deg, ${stops.join(', ')})`;
 
   return (
