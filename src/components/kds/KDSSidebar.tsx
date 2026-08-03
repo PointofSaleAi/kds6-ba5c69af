@@ -111,9 +111,8 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
     <TooltipProvider delayDuration={300}>
       <div className={`${expanded ? 'w-48' : 'w-20'} py-2 px-2 bg-sidebar-bg flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}>
         <div
-          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5 relative"
+          className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5 relative bg-tickets-bg"
           style={{
-            background: '#7575754D',
             boxShadow: 'inset 4px 4px 24px rgba(255,255,255,0.15)',
           }}
         >
