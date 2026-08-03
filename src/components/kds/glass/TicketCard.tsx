@@ -282,6 +282,7 @@ export function TicketCard({
         )}
 
       {/* courses + items */}
+      {!headerOnly && (
       <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: `0 ${pad(18)}px`, overflowY: fillHeight ? 'auto' : 'visible' }}>
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
