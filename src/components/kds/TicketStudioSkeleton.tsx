@@ -135,7 +135,8 @@ function KdsScreenMock({
                   </GlassBoardProvider>
                 ) : boardId === 'focus-lane' ? (
                   <FocusLaneBoard
-            theme={theme}
+                    theme={theme}
+
                     identifier={identifier}
                     textScale={textScale}
                     agingOverrideSeconds={agingOverrideSeconds}
