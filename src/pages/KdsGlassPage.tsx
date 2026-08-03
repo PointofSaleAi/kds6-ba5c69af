@@ -5,30 +5,29 @@ import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { TicketBoard } from '@/components/kds/glass/TicketBoard';
+import { GlassBoardProvider, useGlassBoard } from '@/components/kds/glass/glass-board-context';
 import { useDockLayout } from '@/hooks/use-dock-layout';
-import { useOrderStore } from '@/hooks/use-order-store';
 import { useTheme } from '@/hooks/use-theme';
 import { getTicketsRoutePath, readStoredTicketsRoute } from '@/lib/ticket-card-variant';
-import type { SortMode, ViewMode } from '@/types/kds';
 
 /**
  * Glass ticket board screen. Reuses the persistent KDS shell (top header,
- * left rail, summary panel, bottom status bar) untouched — only the main
- * content area is the new glass TicketBoard.
+ * left rail, summary panel, bottom status bar) untouched — the shell controls
+ * are wired to the shared glass board state so they actually drive the board.
  */
-export default function KdsGlassPage() {
+function GlassShell() {
   const navigate = useNavigate();
   const { layout: dockLayout } = useDockLayout();
-  const { orders } = useOrderStore();
   const { theme, toggleTheme } = useTheme();
-  const [viewMode, setViewMode] = useState<ViewMode>('stagger');
-  const [sortMode, setSortMode] = useState<SortMode>('newest');
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+  const board = useGlassBoard();
 
   const handleNavigate = (target: string) => {
     if (target === 'settings') navigate('/kds/v1/settings');
     else navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')));
   };
+
+  const filterCount = board.selectedItems.size + board.selectedCategories.size;
 
   return (
     <>
@@ -45,21 +44,41 @@ export default function KdsGlassPage() {
             <TicketBoard />
           </main>
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
-            <ItemSummaryPanel orders={orders} />
+            <ItemSummaryPanel
+              orders={board.orders}
+              selectedItems={board.selectedItems}
+              onItemToggle={board.toggleItem}
+              selectedCategories={board.selectedCategories}
+              onCategoryToggle={board.toggleCategory}
+              onClearAll={board.clearAll}
+              matchingTicketCount={filterCount > 0 ? board.tickets.length : undefined}
+              expandAll={board.expandAll}
+              onExpandAllChange={board.setExpandAll}
+            />
           </div>
         </div>
         <BottomStatusBar
-          orderCount={orders.length}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
+          orderCount={board.tickets.length}
+          viewMode={board.viewMode}
+          onViewModeChange={board.setViewMode}
           theme={theme}
           onToggleTheme={toggleTheme}
-          sortMode={sortMode}
-          onSortModeChange={setSortMode}
+          sortMode={board.sortMode}
+          onSortModeChange={board.setSortMode}
+          orderTypeFilter={board.orderTypeFilter}
+          onOrderTypeFilterChange={board.setOrderTypeFilter}
           aiAssistantOpen={aiAssistantOpen}
           onToggleAiAssistant={() => setAiAssistantOpen((v) => !v)}
         />
       </div>
     </>
+  );
+}
+
+export default function KdsGlassPage() {
+  return (
+    <GlassBoardProvider>
+      <GlassShell />
+    </GlassBoardProvider>
   );
 }

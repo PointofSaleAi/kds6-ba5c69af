@@ -25,6 +25,8 @@ interface TicketCardProps {
   onTapItem: (key: string) => void;
   onToggleCourse: (courseKey: string, current: boolean) => void;
   onStepTicket: (ticket: GlassTicket, dir: number) => void;
+  /** Horizontal view: card fills the column height and the item list scrolls. */
+  fillHeight?: boolean;
 }
 
 export function TicketCard({
@@ -36,6 +38,7 @@ export function TicketCard({
   onTapItem,
   onToggleCourse,
   onStepTicket,
+  fillHeight = false,
 }: TicketCardProps) {
   const stage = ticketStage(t, items);
   const vis = stageVisuals(stage);
@@ -43,12 +46,15 @@ export function TicketCard({
   const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
 
+
   return (
     <div
       data-screen-label={`${t.type} #${t.num}`}
       style={{
         position: 'relative',
         width: '100%',
+        ...(fillHeight ? { height: '100%' } : {}),
+
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 26,
@@ -162,7 +168,7 @@ export function TicketCard({
       )}
 
       {/* courses + items */}
-      <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px' }}>
+      <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px', overflowY: fillHeight ? 'auto' : 'visible' }}>
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
           const isOpen = ck in open ? open[ck] : ci === aIdx;

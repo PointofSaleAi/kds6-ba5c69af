@@ -97,7 +97,11 @@ interface ItemSummaryPanelProps {
   matchingTicketCount?: number;
   /** 'active' = show preparing items (default). 'completed' = show served/done items (used in History). */
   mode?: 'active' | 'completed';
+  /** Optional controlled expand-all state (keeps external boards in sync). */
+  expandAll?: boolean;
+  onExpandAllChange?: (on: boolean) => void;
 }
+
 
 interface CategorySummary {
   category: ProductCategory;
@@ -146,7 +150,7 @@ function buildSummary(records: ReturnType<typeof collectActiveItems>): CategoryS
     .filter(c => c.items.length > 0);
 }
 
-export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount, mode = 'active' }: ItemSummaryPanelProps) {
+export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount, mode = 'active', expandAll, onExpandAllChange }: ItemSummaryPanelProps) {
   const { tp, tcat, t } = useLanguage();
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
@@ -217,7 +221,13 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
     if (overtimeItems.length > 0) setOvertimeCollapsed(true);
   }, [summary, overtimeItems]);
 
-  const [expandAllOn, setExpandAllOn] = useState(false);
+  const [expandAllInternal, setExpandAllInternal] = useState(false);
+  const expandAllOn = expandAll ?? expandAllInternal;
+  const setExpandAllOn = (on: boolean) => {
+    setExpandAllInternal(on);
+    onExpandAllChange?.(on);
+  };
+
 
   const toggleSection = (cat: string) => {
     setExpandAllOn(false);
