@@ -187,9 +187,9 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="p-3 shrink-0">
+      <div className="py-3 px-0 shrink-0">
         <div
-          className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
+          className="mx-3 flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
           style={{
             background: 'hsl(var(--text-primary) / 0.06)',
             boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.04)',
