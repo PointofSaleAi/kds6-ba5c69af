@@ -260,6 +260,14 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     setSelectedCategories(new Set());
   }, []);
 
+  /* ── screen selection (left rail: All / Seen / Unseen / History) ── */
+  const [view, setView] = useState<GlassView>('home');
+
+  const isServed = useCallback(
+    (t: GlassTicket) => ticketKeys(t).every((k) => (itemStages[k] || 'unseen') === 'served'),
+    [itemStages],
+  );
+
   const tickets = useMemo(() => {
     const remaining = (t: GlassTicket) => {
       const out: { name: string; category: string }[] = [];
@@ -273,6 +281,11 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     };
 
     const filtered = TICKETS.filter((t) => {
+      const served = isServed(t);
+      // Served tickets leave the board and live in History (recall to bring back).
+      if (view === 'history' ? !served : served) return false;
+      if (view === 'seen-orders' && ticketStage(t, itemStages) === 'unseen') return false;
+      if (view === 'unseen-orders' && ticketStage(t, itemStages) !== 'unseen') return false;
       if (orderTypeFilter.length && !orderTypeFilter.includes(KIND_TO_ORDER_TYPE[t.kind])) return false;
       const rem = remaining(t);
       if (selectedCategories.size && !rem.some((r) => selectedCategories.has(r.category))) return false;
@@ -289,7 +302,19 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       case 'type': sorted.sort((a, b) => a.kind.localeCompare(b.kind) || a.base - b.base); break;
     }
     return sorted;
-  }, [itemStages, orderTypeFilter, selectedCategories, selectedItems, sortMode]);
+  }, [itemStages, isServed, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
+
+  /* ── left-rail badge counts (active board, ignoring the current screen) ── */
+  const { seenCount, unseenCount, historyCount } = useMemo(() => {
+    let seen = 0, unseen = 0, history = 0;
+    TICKETS.forEach((t) => {
+      if (isServed(t)) { history += 1; return; }
+      if (ticketStage(t, itemStages) === 'unseen') unseen += 1;
+      else seen += 1;
+    });
+    return { seenCount: seen, unseenCount: unseen, historyCount: history };
+  }, [itemStages, isServed]);
+
 
   /* ── shared-shape orders for the summary panel (derived, never hardcoded) ── */
   const orders = useMemo<Order[]>(
