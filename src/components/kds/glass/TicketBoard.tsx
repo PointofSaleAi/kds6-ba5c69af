@@ -6,7 +6,6 @@ import {
   TICKETS,
   activeCourse,
   fmt,
-  keyOf,
   ticketKeys,
   ticketStage,
   type GlassStage,
@@ -146,7 +145,3 @@ export function TicketBoard() {
     </div>
   );
 }
-
-export { keyOf, setStagesUnused };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function setStagesUnused() {}
