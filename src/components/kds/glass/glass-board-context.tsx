@@ -68,6 +68,8 @@ function readPersisted(): Partial<Persisted> {
   }
 }
 
+export type GlassView = 'home' | 'history' | 'seen-orders' | 'unseen-orders';
+
 interface GlassBoardCtx {
   /* view state */
   viewMode: ViewMode;
@@ -76,6 +78,12 @@ interface GlassBoardCtx {
   setSortMode: (v: SortMode) => void;
   orderTypeFilter: OrderType[];
   setOrderTypeFilter: (v: OrderType[]) => void;
+  /* screen (left rail) */
+  view: GlassView;
+  setView: (v: GlassView) => void;
+  seenCount: number;
+  unseenCount: number;
+  historyCount: number;
   /* summary-driven filters */
   selectedItems: Set<string>;
   toggleItem: (name: string) => void;
@@ -103,6 +111,7 @@ interface GlassBoardCtx {
   posSeen: Record<string, boolean>;
   setPosSeen: (ticketId: string, on: boolean) => void;
 }
+
 
 const Ctx = createContext<GlassBoardCtx | null>(null);
 
