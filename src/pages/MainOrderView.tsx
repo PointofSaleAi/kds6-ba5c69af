@@ -177,6 +177,15 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     };
   }, [activeTicketsRoute, fallbackTicketsRoute]);
 
+  // The Glass layout lives on its own route, so hop there when it is the
+  // selected layout and we are sitting on a tickets root screen.
+  useEffect(() => {
+    if (selectedTicketsRoute !== 'glass') return;
+    if (typeof window === 'undefined') return;
+    const onTicketsRoot = /^\/kds\/(default|v3-lite|v[1-6])\/?$/i.test(window.location.pathname);
+    if (onTicketsRoot) navigate('/kds/glass');
+  }, [selectedTicketsRoute, navigate]);
+
   useEffect(() => {
     const handler = () => setAiAssistantOpen(true);
     window.addEventListener('kds:open-ai-assistant', handler);
