@@ -338,10 +338,12 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
 
     const projected =
       view === 'seen-orders'
-        ? filtered.map((t) => project(t, (s) => s !== 'unseen'))
+        ? filtered.map((t) => project(t, (s) => s !== 'unseen' && s !== 'served'))
         : view === 'unseen-orders'
           ? filtered.map((t) => project(t, (s) => s === 'unseen'))
-          : filtered;
+          : view === 'history'
+            ? filtered.map((t) => project(t, (s) => s === 'served'))
+            : filtered.map((t) => project(t, (s) => s !== 'served'));
 
     const sorted = [...projected];
     switch (sortMode) {
