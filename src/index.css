@@ -609,10 +609,47 @@ html[data-glass-chrome] [data-radix-popper-content-wrapper] > * {
 
 /* White chrome PNG icons need inverting on light glass. */
 html[data-glass-chrome]:not(.dark) [role="banner"] img,
-html[data-glass-chrome]:not(.dark) .version-icon-img {
+html[data-glass-chrome]:not(.dark) .version-icon-img,
+html:not(.dark) .glass-rail .version-icon-img {
   filter: brightness(0) saturate(0);
   opacity: 0.85;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Glass left rail — the KDS sidebar uses the Glass-view frosted
+   colours on EVERY ticket layout / studio board, light and dark.
+   Tokens are scoped to the rail so the rest of the chrome keeps
+   its own theme unless the screen opts into glass chrome.
+   ───────────────────────────────────────────────────────────── */
+.glass-rail {
+  --glass-chrome-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.44));
+  --glass-chrome-border: rgba(255, 255, 255, 0.8);
+  --glass-chrome-hairline: rgba(60, 60, 67, 0.16);
+  --glass-chrome-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --glass-chrome-shadow: 0 14px 36px rgba(28, 33, 54, 0.16);
+  --glass-chrome-blur: blur(24px) saturate(180%);
+
+  --sidebar-foreground: 240 6% 10%;
+  --sidebar-accent: 240 8% 84%;
+  --sidebar-accent-foreground: 240 6% 8%;
+  --sidebar-border: 240 8% 78%;
+  --border: 240 8% 80%;
+}
+
+html.dark .glass-rail {
+  --glass-chrome-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045));
+  --glass-chrome-border: rgba(255, 255, 255, 0.14);
+  --glass-chrome-hairline: rgba(255, 255, 255, 0.13);
+  --glass-chrome-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --glass-chrome-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+
+  --sidebar-foreground: 0 0% 92%;
+  --sidebar-accent: 226 12% 32%;
+  --sidebar-accent-foreground: 0 0% 96%;
+  --sidebar-border: 226 10% 26%;
+  --border: 226 10% 26%;
+}
+
 
 /* Trim blur cost on small touch screens. */
 @media (max-width: 767px) {
