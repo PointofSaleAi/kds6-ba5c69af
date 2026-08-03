@@ -275,6 +275,20 @@ export default function DisplaySettings() {
                 Preview
               </p>
               <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
+                {ticketsRoute === 'glass' ? (
+                  <div className="w-[360px] max-w-full flex justify-center">
+                    <GlassBoardProvider>
+                      <TicketBoard
+                        maxTickets={1}
+                        viewModeOverride="grid"
+                        identifier={ticketHeaderLayout === 'guest' ? 'guest' : 'order'}
+                        scaleFactor={textSize === 'Compact' ? 0.9 : textSize === 'Large' ? 1.1 : 1}
+                        spacing={ticketSpacing as 'Compact' | 'Standard' | 'Spacious'}
+                        appearance={ticketLayout === 'compact' ? 'compact' : ticketLayout === 'header' ? 'header' : 'standard'}
+                      />
+                    </GlassBoardProvider>
+                  </div>
+                ) : (
                 <div
                   className={`w-[360px] max-w-full ${textSize === 'Compact' ? 'text-scale-compact' : textSize === 'Large' ? 'text-scale-large' : ''} ${spacingClass} ${selectedCardVariant === 'v5' ? 'v5-route' : ''}`}
                 >
@@ -294,6 +308,7 @@ export default function DisplaySettings() {
                     )}
                   </KDSSettingsPreviewScope>
                 </div>
+                )}
               </div>
             </div>
           </div>
