@@ -31,7 +31,7 @@ const COURSE_LEVEL_KEY = 'posai-course-level-aging';
 
 const STORAGE_KEY = 'posai-status-rules';
 const STORAGE_VERSION_KEY = 'posai-status-rules-version';
-const CURRENT_VERSION = '2';
+const CURRENT_VERSION = '3';
 
 function loadRules(): StatusRule[] {
   try {
