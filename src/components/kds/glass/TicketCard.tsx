@@ -1,6 +1,10 @@
+import { useRef, useState } from 'react';
 import { CourseHeader } from './CourseHeader';
 import { GlassIcon } from './GlassIcon';
 import { TicketItem } from './TicketItem';
+import { useGlassBoard } from './glass-board-context';
+import { KitchenReplyDialog } from '../KitchenReplyDialog';
+import type { KitchenMessage } from '@/types/kitchen-message';
 import {
   CTA,
   DARK,
@@ -27,6 +31,8 @@ interface TicketCardProps {
   onStepTicket: (ticket: GlassTicket, dir: number) => void;
   /** Horizontal view: card fills the column height and the item list scrolls. */
   fillHeight?: boolean;
+  /** Ticket Studio personalize: hero shows the order number or the guest name. */
+  identifier?: 'order' | 'guest';
 }
 
 export function TicketCard({
@@ -39,12 +45,56 @@ export function TicketCard({
   onToggleCourse,
   onStepTicket,
   fillHeight = false,
+  identifier = 'order',
 }: TicketCardProps) {
   const stage = ticketStage(t, items);
   const vis = stageVisuals(stage);
   const tone = timerTone(elapsedSeconds);
   const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
+
+  const { notesAck, setNoteAck, posSeen, setPosSeen } = useGlassBoard();
+  const noteAcked = !!notesAck[t.id];
+  const msgSeen = !!posSeen[t.id];
+  const [replyOpen, setReplyOpen] = useState(false);
+
+  /* Notes: single tap acknowledges (disables the note), double tap undoes. */
+  const noteTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleNoteTap = () => {
+    if (noteTapTimer.current) {
+      clearTimeout(noteTapTimer.current);
+      noteTapTimer.current = null;
+      setNoteAck(t.id, false);
+      return;
+    }
+    noteTapTimer.current = setTimeout(() => {
+      noteTapTimer.current = null;
+      setNoteAck(t.id, true);
+    }, 260);
+  };
+
+  /* POS message: first tap marks seen (icon becomes reply), then opens reply. */
+  const handlePosTap = () => {
+    if (!msgSeen) {
+      setPosSeen(t.id, true);
+      return;
+    }
+    setReplyOpen(true);
+  };
+
+  const replyMessage: KitchenMessage = {
+    message_id: `glass-${t.id}`,
+    message_text: t.posMessage || '',
+    employee_name: 'Maria S.',
+    employee_role: 'Server',
+    terminal_name: 'Point of Sale terminal 1',
+    linked_order_number: Number(t.num) || undefined,
+    timestamp: new Date(),
+    status: msgSeen ? 'acknowledged' : 'pending',
+  };
+
+  const heroLabel = identifier === 'guest' ? t.server.split('·')[0].trim() : t.num;
+
 
 
   return (
