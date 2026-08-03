@@ -683,7 +683,10 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
         <div className="text-[12px] font-semibold leading-tight">{name}</div>
         {chip && (
           <span className={`inline-block mt-0.5 text-[9px] font-bold uppercase px-1.5 py-[1px] rounded ${
-            tone === 'red-outline' ? 'border border-[#C0392B] text-[#C0392B]' : 'bg-[#FDECEA] text-[#C0392B]'
+            tone === 'red-outline'
+              ? 'border border-[var(--tkt-allergen-text)] text-[var(--tkt-allergen-text)]'
+              : 'bg-[var(--tkt-allergen-soft)] text-[var(--tkt-allergen-text)]'
+
           }`}>
             <AlertTriangle className="w-2 h-2 inline mr-0.5" /> {chip}
           </span>
