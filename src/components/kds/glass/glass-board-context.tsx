@@ -98,6 +98,8 @@ interface GlassBoardCtx {
   /* item lifecycle */
   itemStages: Record<string, GlassStage>;
   tapItem: (key: string) => void;
+  /** Served screen: step a single product back onto the board. */
+  recallItem: (key: string) => void;
   stepTicket: (t: GlassTicket, dir: number) => void;
   prepLabelFor: (key: string, stage: GlassStage) => string;
   /* course open/collapse */
@@ -202,6 +204,8 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const recallItem = useCallback((k: string) => stepItem(k, -1), [stepItem]);
+
   const prepLabelFor = useCallback(
     (k: string, stage: GlassStage) => {
       if (stage === 'preparing') return fmt((now - (prepAt.current[k] || now)) / 1000);
@@ -268,6 +272,17 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     [itemStages],
   );
 
+  /** Any product on the ticket has been acknowledged (Seen or beyond). */
+  const hasSeenItem = useCallback(
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') !== 'unseen'),
+    [itemStages],
+  );
+  /** Any product on the ticket is still unseen. */
+  const hasUnseenItem = useCallback(
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'unseen'),
+    [itemStages],
+  );
+
   const tickets = useMemo(() => {
     const remaining = (t: GlassTicket) => {
       const out: { name: string; category: string }[] = [];
@@ -282,10 +297,11 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
 
     const filtered = TICKETS.filter((t) => {
       const served = isServed(t);
-      // Served tickets leave the board and live in History (recall to bring back).
+      // Served tickets leave the board and live in Served (recall to bring back).
       if (view === 'history' ? !served : served) return false;
-      if (view === 'seen-orders' && ticketStage(t, itemStages) === 'unseen') return false;
-      if (view === 'unseen-orders' && ticketStage(t, itemStages) !== 'unseen') return false;
+      // A single acknowledged product is enough to surface the ticket in Seen.
+      if (view === 'seen-orders' && !hasSeenItem(t)) return false;
+      if (view === 'unseen-orders' && !hasUnseenItem(t)) return false;
       if (orderTypeFilter.length && !orderTypeFilter.includes(KIND_TO_ORDER_TYPE[t.kind])) return false;
       const rem = remaining(t);
       if (selectedCategories.size && !rem.some((r) => selectedCategories.has(r.category))) return false;
@@ -302,18 +318,19 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       case 'type': sorted.sort((a, b) => a.kind.localeCompare(b.kind) || a.base - b.base); break;
     }
     return sorted;
-  }, [itemStages, isServed, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
+  }, [itemStages, isServed, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
 
   /* ── left-rail badge counts (active board, ignoring the current screen) ── */
   const { seenCount, unseenCount, historyCount } = useMemo(() => {
     let seen = 0, unseen = 0, history = 0;
     TICKETS.forEach((t) => {
       if (isServed(t)) { history += 1; return; }
-      if (ticketStage(t, itemStages) === 'unseen') unseen += 1;
-      else seen += 1;
+      if (hasSeenItem(t)) seen += 1;
+      if (hasUnseenItem(t)) unseen += 1;
     });
     return { seenCount: seen, unseenCount: unseen, historyCount: history };
-  }, [itemStages, isServed]);
+  }, [isServed, hasSeenItem, hasUnseenItem]);
+
 
 
   /* ── shared-shape orders for the summary panel (derived, never hardcoded) ── */
@@ -367,7 +384,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     selectedCategories, toggleCategory,
     clearAll,
     tickets, orders, now, elapsedFor,
-    itemStages, tapItem, stepTicket, prepLabelFor,
+    itemStages, tapItem, recallItem, stepTicket, prepLabelFor,
     openCourses, toggleCourse, expandAll, setExpandAll,
     notesAck, setNoteAck, posSeen, setPosSeen,
   };

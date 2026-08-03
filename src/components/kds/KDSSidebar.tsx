@@ -36,9 +36,10 @@ interface KDSSidebarProps {
   settingsOpen?: boolean;
   seenCount?: number;
   unseenCount?: number;
+  historyCount?: number;
 }
 
-export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen, seenCount = 0, unseenCount = 0 }: KDSSidebarProps) {
+export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen, seenCount = 0, unseenCount = 0, historyCount = 0 }: KDSSidebarProps) {
   const { showBadge } = useBadgeVisibility();
   const { t } = useLanguage();
   const { pendingCount: pendingMessageCount } = useKitchenMessages();
@@ -53,7 +54,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
         { icon: TicketsIcon, label: 'All', action: 'home' },
         { icon: CheckCircle2, label: 'Ready Only', action: 'seen-orders' },
         { icon: Undo2, label: 'Recalled', action: 'unseen-orders' },
-        { icon: Clock, label: t.history, badge: 6, action: 'history' },
+        { icon: Clock, label: t.history, badge: historyCount || undefined, action: 'history' },
         { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
         { icon: Settings, label: t.settings, action: 'settings' },
       ]
@@ -61,10 +62,11 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
         { icon: TicketsIcon, label: 'All', action: 'home' },
         { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
         { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
-        { icon: Clock, label: t.history, badge: 6, action: 'history' },
+        { icon: Clock, label: t.history, badge: historyCount || undefined, action: 'history' },
         { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
         { icon: Settings, label: t.settings, action: 'settings' },
       ];
+
 
   const isActive = (item: SidebarItem) => {
     if (item.action === 'settings') return settingsOpen;
