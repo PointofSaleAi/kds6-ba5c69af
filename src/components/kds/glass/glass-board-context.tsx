@@ -98,6 +98,8 @@ interface GlassBoardCtx {
   /* item lifecycle */
   itemStages: Record<string, GlassStage>;
   tapItem: (key: string) => void;
+  /** Served screen: step a single product back onto the board. */
+  recallItem: (key: string) => void;
   stepTicket: (t: GlassTicket, dir: number) => void;
   prepLabelFor: (key: string, stage: GlassStage) => string;
   /* course open/collapse */
@@ -201,6 +203,8 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       return next;
     });
   }, []);
+
+  const recallItem = useCallback((k: string) => stepItem(k, -1), [stepItem]);
 
   const prepLabelFor = useCallback(
     (k: string, stage: GlassStage) => {
@@ -380,7 +384,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     selectedCategories, toggleCategory,
     clearAll,
     tickets, orders, now, elapsedFor,
-    itemStages, tapItem, stepTicket, prepLabelFor,
+    itemStages, tapItem, recallItem, stepTicket, prepLabelFor,
     openCourses, toggleCourse, expandAll, setExpandAll,
     notesAck, setNoteAck, posSeen, setPosSeen,
   };
