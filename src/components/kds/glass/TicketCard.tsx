@@ -193,35 +193,70 @@ export function TicketCard({
             <div style={{ marginLeft: 'auto', fontWeight: 400, fontSize: 14, lineHeight: 1, color: 'rgba(60,60,67,0.55)' }}>5m ago</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px' }}>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, opacity: msgSeen ? 0.5 : 1 }}>
               <div style={{ fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{t.posMessage}</div>
               <div style={{ marginTop: 6, fontWeight: 400, fontSize: 14, lineHeight: 1, color: 'rgba(60,60,67,0.55)' }}>Maria S. – Server</div>
             </div>
-            <div
+            <button
+              type="button"
+              onClick={handlePosTap}
+              aria-label={msgSeen ? 'Reply to Point of Sale message' : 'Mark message as seen'}
+              className="active:scale-95 transition-transform"
               style={{
-                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14,
-                background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
+                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
+                background: msgSeen ? DARK : 'rgba(255,255,255,0.7)',
+                border: `1px solid ${msgSeen ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.9)'}`,
+                boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name="eye" size={20} sw={1.8} stroke="#0b0b0c" />
-            </div>
+              <GlassIcon name={msgSeen ? 'reply' : 'eye'} size={20} sw={1.8} stroke={msgSeen ? '#fff' : '#0b0b0c'} />
+            </button>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', borderTop: '1px solid rgba(60,60,67,0.12)' }}>
+          <div
+            style={{
+              display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
+              borderTop: '1px solid rgba(60,60,67,0.12)',
+              background: noteAcked ? 'rgba(29,158,117,0.10)' : undefined,
+            }}
+          >
             <div style={{ marginTop: 3, flex: '0 0 auto' }}>
               <GlassIcon name="note" size={18} sw={1.8} stroke="rgba(60,60,67,0.7)" />
             </div>
-            <div style={{ flex: 1, fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{t.posNote}</div>
             <div
               style={{
-                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14,
-                background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
+                flex: 1, fontWeight: 500, fontSize: 17, lineHeight: 1.45,
+                opacity: noteAcked ? 0.45 : 1,
+                textDecoration: noteAcked ? 'line-through' : 'none',
               }}
             >
-              <GlassIcon name="eye" size={20} sw={1.8} stroke="#0b0b0c" />
+              {t.posNote}
             </div>
+            <button
+              type="button"
+              onClick={handleNoteTap}
+              aria-label={noteAcked ? 'Double tap to undo note acknowledgement' : 'Acknowledge note'}
+              className="active:scale-95 transition-transform"
+              style={{
+                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
+                background: noteAcked ? 'rgba(29,158,117,0.9)' : 'rgba(255,255,255,0.7)',
+                border: `1px solid ${noteAcked ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.9)'}`,
+                boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
+              }}
+            >
+              <GlassIcon name={noteAcked ? 'check' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : '#0b0b0c'} />
+            </button>
           </div>
         </div>
       )}
+
+      {t.posMessage && (
+        <KitchenReplyDialog
+          open={replyOpen}
+          onOpenChange={setReplyOpen}
+          message={replyMessage}
+        />
+      )}
+
 
       {/* courses + items */}
       <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px', overflowY: fillHeight ? 'auto' : 'visible' }}>
