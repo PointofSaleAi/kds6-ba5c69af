@@ -7,6 +7,8 @@ import {
   X,
 } from 'lucide-react';
 import { BoardTicketPreview } from './BoardTicketPreview';
+import { TicketBoard } from './glass/TicketBoard';
+import { GlassBoardProvider } from './glass/glass-board-context';
 import { KDSSidebar } from './KDSSidebar';
 import { ItemSummaryPanel } from './ItemSummaryPanel';
 import { BottomStatusBar } from './BottomStatusBar';
@@ -110,7 +112,11 @@ function KdsScreenMock({
 
             <div className="flex-1 min-w-0 flex">
               <div className="flex-1 min-w-0 overflow-auto p-2">
-                {boardId === 'focus-lane' ? (
+                {boardId === 'glass-view' ? (
+                  <GlassBoardProvider>
+                    <TicketBoard identifier={identifier} scaleFactor={textScale} />
+                  </GlassBoardProvider>
+                ) : boardId === 'focus-lane' ? (
                   <FocusLaneBoard
                     identifier={identifier}
                     textScale={textScale}
@@ -303,6 +309,7 @@ const BOARDS: Board[] = [
   { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready Lanes' },
   { id: 'adaptive-density', name: 'Adaptive Density', subtitle: 'Comfortable, Balanced, Rush Modes' },
   { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast Focused Operations', featured: true },
+  { id: 'glass-view', name: 'Glass View', subtitle: 'Translucent Cards, Large Order Numbers' },
 ];
 
 function BoardThumb({ id }: { id: string; active: boolean }) {

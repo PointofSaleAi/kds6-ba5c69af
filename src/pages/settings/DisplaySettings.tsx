@@ -196,6 +196,7 @@ export default function DisplaySettings() {
                       { value: 'v4', label: 'Detailed grid' },
                       { value: 'v5', label: 'Clean sections' },
                       { value: 'v6', label: 'Itemized cards' },
+                      { value: 'glass', label: 'Glass View' },
                     ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[];
                     return (
                       <select

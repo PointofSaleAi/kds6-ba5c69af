@@ -20,13 +20,22 @@ function estHeight(t: GlassTicket, items: Record<string, GlassStage>, open: Reco
 const GLASS_SCALE = 0.6;
 const GAP = 16;
 
-export function TicketBoard() {
+interface TicketBoardProps {
+  /** Personalize override: hero shows the order number or the guest name. */
+  identifier?: 'order' | 'guest';
+  /** Extra multiplier applied on top of the base glass scale (text size). */
+  scaleFactor?: number;
+}
+
+export function TicketBoard({ identifier = 'order', scaleFactor = 1 }: TicketBoardProps = {}) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const {
     tickets, viewMode, itemStages, openCourses, toggleCourse,
     tapItem, stepTicket, prepLabelFor, elapsedFor, now,
   } = useGlassBoard();
+  const zoom = GLASS_SCALE * scaleFactor;
+
 
   useEffect(() => {
     const measure = () => setWidth(boardRef.current?.clientWidth || 0);
@@ -37,9 +46,9 @@ export function TicketBoard() {
 
   /** Column count computed from container width at the card width. */
   const colCount = useMemo(() => {
-    const avail = (width || (CARD_W + GAP) * 3) / GLASS_SCALE;
+    const avail = (width || (CARD_W + GAP) * 3) / zoom;
     return Math.max(1, Math.min(Math.max(tickets.length, 1), Math.floor((avail + GAP) / (CARD_W + GAP))));
-  }, [width, tickets.length]);
+  }, [width, tickets.length, zoom]);
 
   /** Stagger packing: each ticket drops into the shortest column. */
   const staggerColumns = useMemo(() => {
@@ -66,6 +75,7 @@ export function TicketBoard() {
       onToggleCourse={toggleCourse}
       onStepTicket={stepTicket}
       fillHeight={fillHeight}
+      identifier={identifier}
     />
   );
 
@@ -80,7 +90,7 @@ export function TicketBoard() {
 
   // `zoom` scales the verbatim glass design down to the same physical card
   // width (~300px) and font sizes as the standard ticket layouts.
-  const base: React.CSSProperties = { zoom: GLASS_SCALE, padding: GAP };
+  const base: React.CSSProperties = { zoom, padding: GAP };
 
   if (viewMode === 'horizontal') {
     return (

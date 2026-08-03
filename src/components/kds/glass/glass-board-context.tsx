@@ -25,10 +25,13 @@ import {
 const KIND_TO_ORDER_TYPE: Record<GlassTicket['kind'], OrderType> = {
   table: 'dine-in',
   pickup: 'take-out',
+  takeout: 'take-out',
   delivery: 'delivery',
   drive: 'drive-thru',
   curb: 'curb-side',
   banquet: 'banquet',
+  phone: 'phone-in',
+  sched: 'scheduled',
 };
 
 const COURSE_CATEGORY: Record<string, string> = {
@@ -94,6 +97,11 @@ interface GlassBoardCtx {
   toggleCourse: (courseKey: string, current: boolean) => void;
   expandAll: boolean;
   setExpandAll: (on: boolean) => void;
+  /* order-note acknowledgement + POS message seen state */
+  notesAck: Record<string, boolean>;
+  setNoteAck: (ticketId: string, on: boolean) => void;
+  posSeen: Record<string, boolean>;
+  setPosSeen: (ticketId: string, on: boolean) => void;
 }
 
 const Ctx = createContext<GlassBoardCtx | null>(null);
@@ -209,6 +217,16 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     setOpenCourses(next);
   }, []);
 
+  /* ── order notes / POS message acknowledgement ── */
+  const [notesAck, setNotesAckState] = useState<Record<string, boolean>>({});
+  const [posSeen, setPosSeenState] = useState<Record<string, boolean>>({});
+  const setNoteAck = useCallback((ticketId: string, on: boolean) => {
+    setNotesAckState((prev) => ({ ...prev, [ticketId]: on }));
+  }, []);
+  const setPosSeen = useCallback((ticketId: string, on: boolean) => {
+    setPosSeenState((prev) => ({ ...prev, [ticketId]: on }));
+  }, []);
+
   /* ── filters + sort ── */
   const toggleItem = useCallback((name: string) => {
     setSelectedItems((prev) => {
@@ -294,6 +312,8 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
                 modifiers: [],
                 allergens: [],
                 notes: it.note,
+                // Unseen items drive the summary panel's UNSEEN section.
+                isNew: (itemStages[k] || 'unseen') === 'unseen',
                 isCompleted: (itemStages[k] || 'unseen') === 'served',
               };
             }),
@@ -313,6 +333,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     tickets, orders, now, elapsedFor,
     itemStages, tapItem, stepTicket, prepLabelFor,
     openCourses, toggleCourse, expandAll, setExpandAll,
+    notesAck, setNoteAck, posSeen, setPosSeen,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

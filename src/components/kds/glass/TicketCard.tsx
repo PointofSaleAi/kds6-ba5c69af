@@ -1,6 +1,10 @@
+import { useRef, useState } from 'react';
 import { CourseHeader } from './CourseHeader';
 import { GlassIcon } from './GlassIcon';
 import { TicketItem } from './TicketItem';
+import { useGlassBoard } from './glass-board-context';
+import { KitchenReplyDialog } from '../KitchenReplyDialog';
+import type { KitchenMessage } from '@/types/kitchen-message';
 import {
   CTA,
   DARK,
@@ -27,6 +31,8 @@ interface TicketCardProps {
   onStepTicket: (ticket: GlassTicket, dir: number) => void;
   /** Horizontal view: card fills the column height and the item list scrolls. */
   fillHeight?: boolean;
+  /** Ticket Studio personalize: hero shows the order number or the guest name. */
+  identifier?: 'order' | 'guest';
 }
 
 export function TicketCard({
@@ -39,12 +45,56 @@ export function TicketCard({
   onToggleCourse,
   onStepTicket,
   fillHeight = false,
+  identifier = 'order',
 }: TicketCardProps) {
   const stage = ticketStage(t, items);
   const vis = stageVisuals(stage);
   const tone = timerTone(elapsedSeconds);
   const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
+
+  const { notesAck, setNoteAck, posSeen, setPosSeen } = useGlassBoard();
+  const noteAcked = !!notesAck[t.id];
+  const msgSeen = !!posSeen[t.id];
+  const [replyOpen, setReplyOpen] = useState(false);
+
+  /* Notes: single tap acknowledges (disables the note), double tap undoes. */
+  const noteTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleNoteTap = () => {
+    if (noteTapTimer.current) {
+      clearTimeout(noteTapTimer.current);
+      noteTapTimer.current = null;
+      setNoteAck(t.id, false);
+      return;
+    }
+    noteTapTimer.current = setTimeout(() => {
+      noteTapTimer.current = null;
+      setNoteAck(t.id, true);
+    }, 260);
+  };
+
+  /* POS message: first tap marks seen (icon becomes reply), then opens reply. */
+  const handlePosTap = () => {
+    if (!msgSeen) {
+      setPosSeen(t.id, true);
+      return;
+    }
+    setReplyOpen(true);
+  };
+
+  const replyMessage: KitchenMessage = {
+    message_id: `glass-${t.id}`,
+    message_text: t.posMessage || '',
+    employee_name: 'Maria S.',
+    employee_role: 'Server',
+    terminal_name: 'Point of Sale terminal 1',
+    linked_order_number: Number(t.num) || undefined,
+    timestamp: new Date(),
+    status: msgSeen ? 'acknowledged' : 'pending',
+  };
+
+  const heroLabel = identifier === 'guest' ? t.server.split('·')[0].trim() : t.num;
+
 
 
   return (
@@ -78,19 +128,25 @@ export function TicketCard({
 
       {/* header */}
       <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px' }}>
-        <div style={{ fontWeight: 800, fontSize: 68, lineHeight: 0.82, letterSpacing: '-0.055em', fontVariantNumeric: 'tabular-nums' }}>
-          {t.num}
+        <div style={{ flex: '0 0 auto', fontWeight: 800, fontSize: identifier === 'guest' ? 34 : 68, lineHeight: identifier === 'guest' ? 1 : 0.82, letterSpacing: '-0.055em', fontVariantNumeric: 'tabular-nums', maxWidth: identifier === 'guest' ? 190 : undefined }}>
+          {heroLabel}
         </div>
-        <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <GlassIcon name={t.kind} size={26} sw={2} stroke="#0b0b0c" />
-            <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>{t.type}</div>
+        <div style={{ minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+            <div style={{ flex: '0 0 auto', display: 'flex' }}>
+              <GlassIcon name={t.kind} size={26} sw={2} stroke="#0b0b0c" />
+            </div>
+            <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.type}</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'rgba(60,60,67,0.62)' }}>
-            <GlassIcon name="runner" size={22} sw={2.1} />
-            <div style={{ fontWeight: 700, fontSize: 25, lineHeight: 1, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>{t.server}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, color: 'rgba(60,60,67,0.62)' }}>
+            {/* shrink-0 wrapper: long server labels used to squeeze the icon away */}
+            <div style={{ flex: '0 0 auto', display: 'flex' }}>
+              <GlassIcon name="runner" size={22} sw={2.1} />
+            </div>
+            <div style={{ minWidth: 0, fontWeight: 700, fontSize: 25, lineHeight: 1, letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.server}</div>
           </div>
         </div>
+
         <div
           style={{
             marginLeft: 'auto',
@@ -137,35 +193,70 @@ export function TicketCard({
             <div style={{ marginLeft: 'auto', fontWeight: 400, fontSize: 14, lineHeight: 1, color: 'rgba(60,60,67,0.55)' }}>5m ago</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px' }}>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, opacity: msgSeen ? 0.5 : 1 }}>
               <div style={{ fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{t.posMessage}</div>
               <div style={{ marginTop: 6, fontWeight: 400, fontSize: 14, lineHeight: 1, color: 'rgba(60,60,67,0.55)' }}>Maria S. – Server</div>
             </div>
-            <div
+            <button
+              type="button"
+              onClick={handlePosTap}
+              aria-label={msgSeen ? 'Reply to Point of Sale message' : 'Mark message as seen'}
+              className="active:scale-95 transition-transform"
               style={{
-                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14,
-                background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
+                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
+                background: msgSeen ? DARK : 'rgba(255,255,255,0.7)',
+                border: `1px solid ${msgSeen ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.9)'}`,
+                boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name="eye" size={20} sw={1.8} stroke="#0b0b0c" />
-            </div>
+              <GlassIcon name={msgSeen ? 'reply' : 'eye'} size={20} sw={1.8} stroke={msgSeen ? '#fff' : '#0b0b0c'} />
+            </button>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', borderTop: '1px solid rgba(60,60,67,0.12)' }}>
+          <div
+            style={{
+              display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
+              borderTop: '1px solid rgba(60,60,67,0.12)',
+              background: noteAcked ? 'rgba(29,158,117,0.10)' : undefined,
+            }}
+          >
             <div style={{ marginTop: 3, flex: '0 0 auto' }}>
               <GlassIcon name="note" size={18} sw={1.8} stroke="rgba(60,60,67,0.7)" />
             </div>
-            <div style={{ flex: 1, fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{t.posNote}</div>
             <div
               style={{
-                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14,
-                background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
+                flex: 1, fontWeight: 500, fontSize: 17, lineHeight: 1.45,
+                opacity: noteAcked ? 0.45 : 1,
+                textDecoration: noteAcked ? 'line-through' : 'none',
               }}
             >
-              <GlassIcon name="eye" size={20} sw={1.8} stroke="#0b0b0c" />
+              {t.posNote}
             </div>
+            <button
+              type="button"
+              onClick={handleNoteTap}
+              aria-label={noteAcked ? 'Double tap to undo note acknowledgement' : 'Acknowledge note'}
+              className="active:scale-95 transition-transform"
+              style={{
+                width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
+                background: noteAcked ? 'rgba(29,158,117,0.9)' : 'rgba(255,255,255,0.7)',
+                border: `1px solid ${noteAcked ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.9)'}`,
+                boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
+              }}
+            >
+              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : '#0b0b0c'} />
+            </button>
           </div>
         </div>
       )}
+
+      {t.posMessage && replyOpen && (
+        <KitchenReplyDialog
+          message={replyMessage}
+          onSend={() => setReplyOpen(false)}
+          onClose={() => setReplyOpen(false)}
+        />
+      )}
+
 
       {/* courses + items */}
       <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px', overflowY: fillHeight ? 'auto' : 'visible' }}>
