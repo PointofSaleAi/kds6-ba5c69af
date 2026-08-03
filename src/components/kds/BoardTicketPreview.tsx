@@ -719,7 +719,7 @@ function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
             <span className="font-semibold">Appetizer</span>
             <span className="font-bold">3</span>
           </div>
-          <div className="flex justify-between border-l-2 border-[#16A085] pl-2 text-[11px]">
+          <div className="flex justify-between border-l-2 border-[var(--tkt-accent)] pl-2 text-[11px]">
             <span className="font-semibold">Entrée</span>
             <span className="font-bold">3</span>
           </div>
