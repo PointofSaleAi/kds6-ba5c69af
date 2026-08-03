@@ -180,7 +180,7 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
         </span>
         <span className="text-text-secondary">Maria S. · 8:00 PM</span>
       </div>
-      <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
+      <div className="px-3 py-1 text-[9px] font-bold text-[var(--tkt-allergen-text)] border-b border-[var(--tkt-hairline)]">
         ALLERGENS: PEANUT, GLUTEN, NUT
       </div>
 
