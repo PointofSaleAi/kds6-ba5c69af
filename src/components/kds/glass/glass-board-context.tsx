@@ -345,7 +345,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
             ? filtered.map((t) => project(t, (s) => s === 'served'))
             : filtered.map((t) => project(t, (s) => s !== 'served'));
 
-    const sorted = [...projected];
+    const sorted = projected.filter((t) => t.courses.length > 0);
     switch (sortMode) {
       // base = seconds already waited, so a larger base is an older ticket
       case 'newest': sorted.sort((a, b) => a.base - b.base); break;
@@ -354,18 +354,19 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       case 'type': sorted.sort((a, b) => a.kind.localeCompare(b.kind) || a.base - b.base); break;
     }
     return sorted;
-  }, [itemStages, isServed, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
+  }, [itemStages, hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
 
   /* ── left-rail badge counts (active board, ignoring the current screen) ── */
   const { seenCount, unseenCount, historyCount } = useMemo(() => {
     let seen = 0, unseen = 0, history = 0;
     TICKETS.forEach((t) => {
-      if (isServed(t)) { history += 1; return; }
+      if (hasServedItem(t)) history += 1;
+      if (!hasActiveItem(t)) return;
       if (hasSeenItem(t)) seen += 1;
       if (hasUnseenItem(t)) unseen += 1;
     });
     return { seenCount: seen, unseenCount: unseen, historyCount: history };
-  }, [isServed, hasSeenItem, hasUnseenItem]);
+  }, [hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem]);
 
 
 
