@@ -46,9 +46,9 @@ export function TicketBoard({ identifier = 'order', scaleFactor = 1 }: TicketBoa
 
   /** Column count computed from container width at the card width. */
   const colCount = useMemo(() => {
-    const avail = (width || (CARD_W + GAP) * 3) / GLASS_SCALE;
+    const avail = (width || (CARD_W + GAP) * 3) / zoom;
     return Math.max(1, Math.min(Math.max(tickets.length, 1), Math.floor((avail + GAP) / (CARD_W + GAP))));
-  }, [width, tickets.length]);
+  }, [width, tickets.length, zoom]);
 
   /** Stagger packing: each ticket drops into the shortest column. */
   const staggerColumns = useMemo(() => {
@@ -75,6 +75,7 @@ export function TicketBoard({ identifier = 'order', scaleFactor = 1 }: TicketBoa
       onToggleCourse={toggleCourse}
       onStepTicket={stepTicket}
       fillHeight={fillHeight}
+      identifier={identifier}
     />
   );
 
@@ -89,7 +90,7 @@ export function TicketBoard({ identifier = 'order', scaleFactor = 1 }: TicketBoa
 
   // `zoom` scales the verbatim glass design down to the same physical card
   // width (~300px) and font sizes as the standard ticket layouts.
-  const base: React.CSSProperties = { zoom: GLASS_SCALE, padding: GAP };
+  const base: React.CSSProperties = { zoom, padding: GAP };
 
   if (viewMode === 'horizontal') {
     return (
