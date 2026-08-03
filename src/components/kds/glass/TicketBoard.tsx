@@ -20,13 +20,22 @@ function estHeight(t: GlassTicket, items: Record<string, GlassStage>, open: Reco
 const GLASS_SCALE = 0.6;
 const GAP = 16;
 
-export function TicketBoard() {
+interface TicketBoardProps {
+  /** Personalize override: hero shows the order number or the guest name. */
+  identifier?: 'order' | 'guest';
+  /** Extra multiplier applied on top of the base glass scale (text size). */
+  scaleFactor?: number;
+}
+
+export function TicketBoard({ identifier = 'order', scaleFactor = 1 }: TicketBoardProps = {}) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const {
     tickets, viewMode, itemStages, openCourses, toggleCourse,
     tapItem, stepTicket, prepLabelFor, elapsedFor, now,
   } = useGlassBoard();
+  const zoom = GLASS_SCALE * scaleFactor;
+
 
   useEffect(() => {
     const measure = () => setWidth(boardRef.current?.clientWidth || 0);
