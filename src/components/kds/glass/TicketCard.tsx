@@ -53,6 +53,8 @@ export function TicketCard({
       style={{
         position: 'relative',
         width: '100%',
+        ...(fillHeight ? { height: '100%' } : {}),
+
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 26,
@@ -166,7 +168,7 @@ export function TicketCard({
       )}
 
       {/* courses + items */}
-      <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px' }}>
+      <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: '0 18px', overflowY: fillHeight ? 'auto' : 'visible' }}>
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
           const isOpen = ck in open ? open[ck] : ci === aIdx;
