@@ -593,7 +593,8 @@ function ProgressiveTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
         <div className="text-[13px] font-bold">{idLabel(identifier, "title")} <span className="text-text-secondary font-normal">(3)</span></div>
         <button type="button" onClick={onTimerClick} className="text-[12px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
-      <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
+      <div className="px-3 py-1 text-[9px] font-bold text-[var(--tkt-allergen-text)] border-b border-[var(--tkt-hairline)]">
+
         [CRITICAL ALLERGEN: PEANUT, GLUTEN, NUT]
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-text-secondary tracking-wide">ACTIVE COURSE</div>
