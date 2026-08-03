@@ -11,7 +11,6 @@ import {
   CTA,
   activeCourse,
   fmt,
-  keyOf,
   itemKey,
   ticketStage,
   timerTone,
