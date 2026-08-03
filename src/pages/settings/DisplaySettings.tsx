@@ -31,6 +31,8 @@ import InlineLanguageSettings from '@/components/kds/InlineLanguageSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { getCardVariantForTicketsRoute, readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
 import { TicketStudioSkeleton } from '@/components/kds/TicketStudioSkeleton';
+import { TicketBoard } from '@/components/kds/glass/TicketBoard';
+import { GlassBoardProvider } from '@/components/kds/glass/glass-board-context';
 
 
 export default function DisplaySettings() {
