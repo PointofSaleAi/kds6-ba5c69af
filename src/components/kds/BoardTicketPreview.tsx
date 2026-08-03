@@ -35,20 +35,24 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick }: Props) {
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick, themeOverride }: Props & { themeOverride?: 'light' | 'dark' }) {
   const vprops: VProps = { identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick };
-  switch (boardId) {
-    case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
-    case 'distance-view':       return <DistanceViewTicket {...vprops} />;
-    case 'progressive-ticket':  return <ProgressiveTicket {...vprops} />;
-    case 'safety-first':        return <SafetyFirstTicket {...vprops} />;
-    case 'timeline-flow':       return <TimelineFlowTicket {...vprops} />;
-    case 'adaptive-density':    return <AdaptiveDensityTicket {...vprops} />;
-    case 'dark-command-center': return <DarkCommandTicket {...vprops} />;
-    case 'calm-board':
-    default:                    return <CalmBoardTicket {...vprops} />;
-  }
+  const inner = (() => {
+    switch (boardId) {
+      case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
+      case 'distance-view':       return <DistanceViewTicket {...vprops} />;
+      case 'progressive-ticket':  return <ProgressiveTicket {...vprops} />;
+      case 'safety-first':        return <SafetyFirstTicket {...vprops} />;
+      case 'timeline-flow':       return <TimelineFlowTicket {...vprops} />;
+      case 'adaptive-density':    return <AdaptiveDensityTicket {...vprops} />;
+      case 'dark-command-center': return <DarkCommandTicket {...vprops} />;
+      case 'calm-board':
+      default:                    return <CalmBoardTicket {...vprops} />;
+    }
+  })();
+  return <TicketSkinScope theme={themeOverride}>{inner}</TicketSkinScope>;
 }
+
 
 type VProps = {
   identifier: NonNullable<Props['identifier']>;
