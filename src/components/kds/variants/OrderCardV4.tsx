@@ -115,7 +115,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
             type="button"
             onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
             className="shrink-0 inline-flex items-center justify-center"
-            style={{ width: 20, height: 20, color: '#6C7A89' }}
+            style={{ width: 20, height: 20, color: 'var(--tkt-icon-idle)' }}
             aria-label={expanded ? 'Hide details' : 'Show details'}
             aria-expanded={expanded}
           >
@@ -132,13 +132,13 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
             style={{ width: 18, height: 18 }}
             aria-label="Marking Product Done"
           >
-            <Loader2 size={14} className="animate-spin" color="#6C7A89" />
+            <Loader2 size={14} className="animate-spin" color="var(--tkt-icon-idle)" />
           </span>
         )}
         {done && (
           <span
             className="shrink-0 flex items-center justify-center rounded-full animate-scale-in"
-            style={{ background: '#27AE60', width: 18, height: 18 }}
+            style={{ background: 'var(--tkt-served-bg)', width: 18, height: 18 }}
             aria-label="Product Done"
           >
             <Check size={12} color="#fff" strokeWidth={3} />
@@ -244,7 +244,7 @@ export function OrderCardV4({ order, onBump, onMarkSeen, onItemDone, onItemDismi
       {/* HEADER */}
       <div
         className="flex items-center justify-between px-2 py-1 text-[12px] font-semibold bg-card text-foreground"
-        style={{ borderBottom: '0.5px solid #E5E7EB' }}
+        style={{ borderBottom: '0.5px solid var(--tkt-hairline)' }}
       >
         <span className="inline-flex items-center gap-1.5 min-w-0">
           <span className="truncate" style={{ fontSize: 14, fontWeight: 500 }}>{identifier}</span>
@@ -277,7 +277,7 @@ export function OrderCardV4({ order, onBump, onMarkSeen, onItemDone, onItemDismi
                 <div key={`${course.course}-${idx}`}>
                   <div
                     className="px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-text-secondary"
-                    style={{ background: '#F3F4F6' }}
+                    style={{ background: 'var(--tkt-chip-bg)' }}
                   >
                     {courseLabel(course.course)}
                   </div>

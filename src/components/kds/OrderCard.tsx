@@ -1208,7 +1208,7 @@ function DrawerHeader({ order }: { order: Order }) {
     <div
       className="flex items-center"
       style={{
-        background: '#ffffff',
+        background: 'var(--tkt-card-solid)',
         borderBottom: '1px solid rgba(0,0,0,0.08)',
         padding: '10px 16px',
       }}
@@ -1230,7 +1230,7 @@ function DrawerHeader({ order }: { order: Order }) {
         </span>
       </div>
       <div className="flex items-center justify-center" style={{ flex: 1 }}>
-        <span style={{ fontSize: 22, fontWeight: 800, color: '#1A1A2E' }}>
+        <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--tkt-text)' }}>
           {order.orderNumber}
         </span>
       </div>
