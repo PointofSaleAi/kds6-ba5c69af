@@ -135,6 +135,7 @@ function KdsScreenMock({
                   </GlassBoardProvider>
                 ) : boardId === 'focus-lane' ? (
                   <FocusLaneBoard
+            theme={theme}
                     identifier={identifier}
                     textScale={textScale}
                     agingOverrideSeconds={agingOverrideSeconds}
@@ -211,12 +212,14 @@ function FocusLaneBoard({
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
+  theme = 'light',
 }: {
   identifier: 'order' | 'guest';
   textScale: number;
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
+  theme?: string;
 }) {
   const [focusIndex, setFocusIndex] = useState(0);
   const focus = SCREEN_ORDER_TYPES[focusIndex];
