@@ -217,6 +217,16 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     setOpenCourses(next);
   }, []);
 
+  /* ── order notes / POS message acknowledgement ── */
+  const [notesAck, setNotesAckState] = useState<Record<string, boolean>>({});
+  const [posSeen, setPosSeenState] = useState<Record<string, boolean>>({});
+  const setNoteAck = useCallback((ticketId: string, on: boolean) => {
+    setNotesAckState((prev) => ({ ...prev, [ticketId]: on }));
+  }, []);
+  const setPosSeen = useCallback((ticketId: string, on: boolean) => {
+    setPosSeenState((prev) => ({ ...prev, [ticketId]: on }));
+  }, []);
+
   /* ── filters + sort ── */
   const toggleItem = useCallback((name: string) => {
     setSelectedItems((prev) => {
