@@ -4,6 +4,8 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { ClocheIcon } from './icons/ClocheIcon';
 import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
+import { useTicketSkin, TicketSkinScope } from './TicketSkinScope';
+
 
 
 type Props = {
@@ -33,20 +35,24 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick }: Props) {
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick, themeOverride }: Props & { themeOverride?: 'light' | 'dark' }) {
   const vprops: VProps = { identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick };
-  switch (boardId) {
-    case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
-    case 'distance-view':       return <DistanceViewTicket {...vprops} />;
-    case 'progressive-ticket':  return <ProgressiveTicket {...vprops} />;
-    case 'safety-first':        return <SafetyFirstTicket {...vprops} />;
-    case 'timeline-flow':       return <TimelineFlowTicket {...vprops} />;
-    case 'adaptive-density':    return <AdaptiveDensityTicket {...vprops} />;
-    case 'dark-command-center': return <DarkCommandTicket {...vprops} />;
-    case 'calm-board':
-    default:                    return <CalmBoardTicket {...vprops} />;
-  }
+  const inner = (() => {
+    switch (boardId) {
+      case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
+      case 'distance-view':       return <DistanceViewTicket {...vprops} />;
+      case 'progressive-ticket':  return <ProgressiveTicket {...vprops} />;
+      case 'safety-first':        return <SafetyFirstTicket {...vprops} />;
+      case 'timeline-flow':       return <TimelineFlowTicket {...vprops} />;
+      case 'adaptive-density':    return <AdaptiveDensityTicket {...vprops} />;
+      case 'dark-command-center': return <DarkCommandTicket {...vprops} />;
+      case 'calm-board':
+      default:                    return <CalmBoardTicket {...vprops} />;
+    }
+  })();
+  return <TicketSkinScope theme={themeOverride}>{inner}</TicketSkinScope>;
 }
+
 
 type VProps = {
   identifier: NonNullable<Props['identifier']>;
@@ -89,8 +95,11 @@ function useDisplayTimer(baselineSeconds: number, override?: number) {
 const Card = ({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) => (
   <div
     className={`w-full max-w-[320px] mx-auto rounded-lg overflow-hidden border shadow-sm ${
-      dark ? 'bg-[#1A1A2E] border-[#2A2A44] text-white' : 'bg-white border-border text-[#2C3E50]'
+      dark
+        ? 'bg-[#1A1A2E] border-[#2A2A44] text-white'
+        : 'bg-[var(--tkt-card-solid)] border-[var(--tkt-card-border)] text-[var(--tkt-text)]'
     }`}
+    style={dark ? undefined : { boxShadow: 'var(--tkt-card-shadow)' }}
   >
     {children}
   </div>
@@ -99,16 +108,17 @@ const Card = ({ children, dark = false }: { children: React.ReactNode; dark?: bo
 const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | 'amber' | 'blue' }) => {
   const styles =
     tone === 'red'
-      ? 'bg-[#FBEAEA] text-[#C0392B]'
+      ? 'bg-[var(--tkt-allergen-soft)] text-[var(--tkt-allergen-text)]'
       : tone === 'amber'
-      ? 'bg-[#FFF3D6] text-[#8A5A00]'
-      : 'bg-[#E3F0FA] text-[#1D6FA5]';
+      ? 'bg-[var(--tkt-amber-bg)] text-[var(--tkt-amber-fg)]'
+      : 'bg-[var(--tkt-blue-bg)] text-[var(--tkt-blue-fg)]';
   return (
     <span className={`inline-block px-1.5 py-[1px] rounded text-[9px] font-bold uppercase tracking-wide ${styles}`}>
       {label}
     </span>
   );
 };
+
 
 /* --------------------------------- CALM ----------------------------------- */
 
@@ -174,7 +184,7 @@ function CalmBoardTicket({ identifier, orderType, orderTypeKey, agingOverrideSec
         </span>
         <span className="text-text-secondary">Maria S. · 8:00 PM</span>
       </div>
-      <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
+      <div className="px-3 py-1 text-[9px] font-bold text-[var(--tkt-allergen-text)] border-b border-[var(--tkt-hairline)]">
         ALLERGENS: PEANUT, GLUTEN, NUT
       </div>
 
@@ -239,33 +249,35 @@ const CALM_ORDER_NOTE = 'Anniversary — please pace mains after apps.';
 
 function CalmProductAction({ state, onAdvance }: { state: CalmProductState; onAdvance: () => void }) {
   const base = 'shrink-0 flex items-center justify-center active:scale-95 transition';
+  const skin = useTicketSkin();
   if (state === 'done') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: '#27AE60', width: 22, height: 22 }} aria-label="Product Served">
-        <Check size={14} color="#fff" strokeWidth={3} />
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ background: skin.servedBg, color: skin.servedFg, width: 22, height: 22 }} aria-label="Product Served">
+        <Check size={14} strokeWidth={3} />
       </button>
     );
   }
   if (state === 'ready') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: '#DCFCE7', color: '#16A34A', border: '1.5px solid #16A34A' }} aria-label="Mark Product Served">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-full animate-scale-in`} style={{ width: 22, height: 22, background: skin.readyBg, color: skin.readyFg, border: `1.5px solid ${skin.readyBorder}` }} aria-label="Mark Product Served">
         <Check size={14} strokeWidth={3} />
       </button>
     );
   }
   if (state === 'cooking') {
     return (
-      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: '#374151', color: '#fff' }} aria-label="Mark Product Ready">
-        <ClocheIcon size={14} strokeWidth={2.4} color="#fff" />
+      <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-[5px] animate-scale-in`} style={{ width: 22, height: 22, background: skin.cookingBg, color: skin.cookingFg }} aria-label="Mark Product Ready">
+        <ClocheIcon size={14} strokeWidth={2.4} color={skin.cookingFg} />
       </button>
     );
   }
   return (
-    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-black/[0.04]`} style={{ width: 22, height: 22, color: '#6C7A89' }} aria-label="Start Cooking">
+    <button type="button" onClick={(e) => { e.stopPropagation(); onAdvance(); }} className={`${base} rounded-md hover:bg-[var(--tkt-hover)]`} style={{ width: 22, height: 22, color: skin.iconIdle }} aria-label="Start Cooking">
       <Eye size={18} strokeWidth={2} />
     </button>
   );
 }
+
 
 const TICKET_PHASE_ORDER: Array<'seen' | 'preparing' | 'ready' | 'served'> = ['seen', 'preparing', 'ready', 'served'];
 const PHASE_TO_PRODUCT_STATE: Record<'seen' | 'preparing' | 'ready' | 'served', CalmProductState> = {
@@ -328,12 +340,13 @@ function CalmBoardBody() {
 
   const ticketButtonStyle =
     ticketPhase === 'seen'
-      ? 'border border-[#1A1A2E] text-[#1A1A2E] bg-transparent hover:bg-[#1A1A2E] hover:text-white'
+      ? 'border border-[var(--tkt-fill)] text-[var(--tkt-text)] bg-transparent hover:bg-[var(--tkt-fill)] hover:text-[var(--tkt-fill-fg)]'
       : ticketPhase === 'preparing'
-      ? 'bg-[#1A1A2E] text-white'
+      ? 'bg-[var(--tkt-fill)] text-[var(--tkt-fill-fg)]'
       : ticketPhase === 'ready'
-      ? 'bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]'
-      : 'bg-[#16A34A] text-white';
+      ? 'bg-[var(--tkt-ready-bg)] text-[var(--tkt-ready-fg)] border border-[var(--tkt-ready-border)]'
+      : 'bg-[var(--tkt-served-bg)] text-[var(--tkt-served-fg)]';
+
 
   const ticketLabel =
     ticketPhase === 'seen' ? 'SEEN'
@@ -348,7 +361,7 @@ function CalmBoardBody() {
     <>
       {CALM_ORDER_NOTE && (
         <div className="px-3 pt-2">
-          <div className="rounded-md bg-[#FFF8E1] border border-[#F5D57A] px-2 py-1 text-[10px] text-[#8A5A00] leading-snug">
+          <div className="rounded-md bg-[var(--tkt-note-bg)] border border-[var(--tkt-note-border)] px-2 py-1 text-[10px] text-[var(--tkt-note-fg)] leading-snug">
             <span className="font-bold uppercase tracking-wide mr-1">Order Note</span>
             {CALM_ORDER_NOTE}
           </div>
@@ -373,9 +386,10 @@ function CalmBoardBody() {
                           key={i}
                           className={`text-[10px] leading-tight ${
                             m.kind === 'add'
-                              ? 'text-[#2471A3] font-semibold'
+                              ? 'text-[var(--tkt-mod-add)] font-semibold'
                               : m.kind === 'remove'
-                              ? 'text-[#C0392B] font-semibold line-through'
+                              ? 'text-[var(--tkt-mod-remove)] font-semibold line-through'
+
                               : 'text-text-secondary'
                           }`}
                         >
@@ -411,7 +425,7 @@ function CalmBoardBody() {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="w-full flex items-center justify-between text-[10px] text-text-secondary pt-1 hover:text-[#2C3E50] transition-colors"
+          className="w-full flex items-center justify-between text-[10px] text-text-secondary pt-1 hover:text-[var(--tkt-text)] transition-colors"
         >
           <span>{expanded ? 'Hide extra courses' : '+ 2 Courses'}</span>
           <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
@@ -440,18 +454,19 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
   const phases: Array<'seen' | 'preparing' | 'ready'> = ['seen', 'preparing', 'ready'];
   return (
     <Card>
-      <div className="h-1.5 bg-[#16A085]" />
+      <div className="h-1.5 bg-[var(--tkt-accent)]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
         <div className="text-[16px] font-black">{orderNumberLabel}</div>
         <button type="button" onClick={onTimerClick} className="text-[13px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
-      <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
+      <div className="bg-[var(--tkt-amber-bg)] text-[var(--tkt-amber-fg)] text-[10px] font-bold px-3 py-1">
         ALLERGEN WARNING: PEANUT, GLUTEN
       </div>
-      <div className="px-3 py-1 border-b border-border text-[10px] font-bold text-text-secondary">
+      <div className="px-3 py-1 border-b border-[var(--tkt-hairline)] text-[10px] font-bold text-text-secondary">
         CURRENT COURSE: ENTREE
       </div>
-      <div className="px-3 py-2.5 space-y-2 border-b border-border">
+      <div className="px-3 py-2.5 space-y-2 border-b border-[var(--tkt-hairline)]">
+
         <div className="flex items-baseline gap-3">
           <span className="text-[22px] font-black leading-none">2</span>
           <span className="text-[15px] font-bold">Meatballs</span>
@@ -466,7 +481,7 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
           <span>FUTURE: +APPETIZER, +DESSERT</span>
           <ChevronDown className="w-3 h-3" />
         </div>
-        <div className="text-[11px] text-[#2471A3] font-semibold mt-0.5">+1 Grilled Barramundi</div>
+        <div className="text-[11px] text-[var(--tkt-mod-add)] font-semibold mt-0.5">+1 Grilled Barramundi</div>
       </div>
       <div className="grid grid-cols-3 divide-x divide-border">
         {phases.map((p) => {
@@ -481,13 +496,10 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
                 const idx = phases.indexOf(phase);
                 if (idx < phases.length - 1) setPhase(phases[idx + 1]);
               }}
-              className={`py-2 text-[10px] font-bold transition ${
-                active
-                  ? 'text-[#16A085]'
-                  : passed
-                  ? 'text-[#16A085]/40'
-                  : 'text-[#16A085]/30'
+              className={`py-2 text-[10px] font-bold transition text-[var(--tkt-accent)] ${
+                active ? 'opacity-100' : passed ? 'opacity-40' : 'opacity-30'
               } ${active ? 'cursor-pointer' : 'cursor-default'}`}
+
             >
               {p.toUpperCase()}
             </button>
@@ -504,6 +516,7 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
   const { text, elapsed } = useDisplayTimer(1944, agingOverrideSeconds);
   const { rules, getStatusForElapsed } = useStatusRules();
   const status = getStatusForElapsed(elapsed);
+  const skin = useTicketSkin();
 
   // Build a loader-style rainbow ring. Each rule occupies an equal arc;
   // the current rule fills progressively so the ring is never fully occupied.
@@ -524,25 +537,26 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
       stops.push(`${rules[i].color} ${start}deg ${end}deg`);
     } else if (start < fillAngle) {
       stops.push(`${rules[i].color} ${start}deg ${fillAngle}deg`);
-      stops.push(`#E5E7EB ${fillAngle}deg ${end}deg`);
+      stops.push(`${skin.ringTrack} ${fillAngle}deg ${end}deg`);
     } else {
-      stops.push(`#E5E7EB ${start}deg ${end}deg`);
+      stops.push(`${skin.ringTrack} ${start}deg ${end}deg`);
     }
   }
+
   const ringBg = `conic-gradient(from -90deg, ${stops.join(', ')})`;
 
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 text-[11px] font-bold flex justify-between">
+      <div className="bg-[var(--tkt-header-bg)] text-[var(--tkt-header-fg)] px-3 py-1.5 text-[11px] font-bold flex justify-between">
         <span>TABLE 4 | 8:09 PM | Maria S.</span>
       </div>
       <div className="bg-[#F5B041] text-[#1A1A2E] text-[10px] font-semibold leading-tight px-3 py-1.5">
         Allergy to nuts, Please prepare food separately and notify server
       </div>
-      <div className="px-3 py-2 flex items-center justify-between border-b border-border">
+      <div className="px-3 py-2 flex items-center justify-between border-b border-[var(--tkt-hairline)]">
         <div>
           <div className="text-[10px] text-text-secondary font-semibold">Ticket</div>
-          <div className="text-[44px] font-black leading-none text-[#2C3E50]">23</div>
+          <div className="text-[44px] font-black leading-none text-[var(--tkt-text)]">23</div>
           <div className="text-[10px] text-text-secondary">Order</div>
         </div>
         <button
@@ -552,26 +566,27 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
           style={{ background: ringBg }}
           aria-label={`Aging status: ${status.label}`}
         >
-          <span className="absolute inset-[3px] rounded-full bg-white flex items-center justify-center">
-            <span className="text-[12px] font-mono tabular-nums font-bold text-[#2C3E50]">{text}</span>
+          <span className="absolute inset-[3px] rounded-full bg-[var(--tkt-card-solid)] flex items-center justify-center">
+            <span className="text-[12px] font-mono tabular-nums font-bold text-[var(--tkt-text)]">{text}</span>
           </span>
         </button>
       </div>
 
-      <div className="px-3 py-2.5 space-y-2.5 border-b border-border">
+      <div className="px-3 py-2.5 space-y-2.5 border-b border-[var(--tkt-hairline)]">
         <div>
-          <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
-          <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
-          <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
-          <div className="text-[11px] text-[#8E44AD] font-semibold">No Pickles</div>
+          <div className="text-[15px] font-black uppercase leading-tight text-[var(--tkt-text)]">2x Filet Mignon</div>
+          <div className="text-[11px] text-[var(--tkt-accent)] font-semibold">medium rare</div>
+          <div className="text-[11px] text-[var(--tkt-mod-add)] font-semibold">+ Extra Sauce</div>
+          <div className="text-[11px] text-[var(--tkt-mod-remove)] font-semibold">No Pickles</div>
         </div>
         <div>
-          <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
-          <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
-          <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
+          <div className="text-[15px] font-black uppercase leading-tight text-[var(--tkt-text)]">2x Filet Mignon</div>
+          <div className="text-[11px] text-[var(--tkt-accent)] font-semibold">medium rare</div>
+          <div className="text-[11px] text-[var(--tkt-mod-add)] font-semibold">+ Extra Sauce</div>
         </div>
       </div>
-      <button className="w-full text-[12px] font-bold py-2.5 flex items-center justify-center gap-2 text-[#2C3E50] tracking-wide">
+      <button className="w-full text-[12px] font-bold py-2.5 flex items-center justify-center gap-2 text-[var(--tkt-text)] tracking-wide">
+
         <CheckCircle2 className="w-4 h-4" />
         MARK AS COMPLETE
       </button>
@@ -589,7 +604,8 @@ function ProgressiveTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
         <div className="text-[13px] font-bold">{idLabel(identifier, "title")} <span className="text-text-secondary font-normal">(3)</span></div>
         <button type="button" onClick={onTimerClick} className="text-[12px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
-      <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
+      <div className="px-3 py-1 text-[9px] font-bold text-[var(--tkt-allergen-text)] border-b border-[var(--tkt-hairline)]">
+
         [CRITICAL ALLERGEN: PEANUT, GLUTEN, NUT]
       </div>
       <div className="px-3 py-1 text-[9px] font-bold text-text-secondary tracking-wide">ACTIVE COURSE</div>
@@ -614,7 +630,7 @@ function ProgressiveTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
           <span>8:18 pm</span>
         </div>
       </div>
-      <button className="w-full bg-[#16A085] text-white text-[11px] font-bold py-2 tracking-wide">
+      <button className="w-full bg-[var(--tkt-accent)] text-[var(--tkt-accent-fg)] text-[11px] font-bold py-2 tracking-wide">
         PREPARING
       </button>
     </Card>
@@ -645,7 +661,7 @@ function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
   const status = getStatusForElapsed(elapsed);
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
+      <div className="bg-[var(--tkt-header-bg)] text-[var(--tkt-header-fg)] px-3 py-1.5 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
@@ -664,7 +680,7 @@ function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
         <SafetyRow n="2" name="Meatballs" chip="Shellfish Allergy" tone="red-outline" />
         <SafetyRow n="1" name="Filet Mignon" note="Medium rare" />
       </div>
-      <button className="w-full border-t border-border text-[11px] font-bold py-2 text-[#2C3E50]">
+      <button className="w-full border-t border-[var(--tkt-hairline)] text-[11px] font-bold py-2 text-[var(--tkt-text)]">
         SERVE
       </button>
     </Card>
@@ -679,7 +695,10 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
         <div className="text-[12px] font-semibold leading-tight">{name}</div>
         {chip && (
           <span className={`inline-block mt-0.5 text-[9px] font-bold uppercase px-1.5 py-[1px] rounded ${
-            tone === 'red-outline' ? 'border border-[#C0392B] text-[#C0392B]' : 'bg-[#FDECEA] text-[#C0392B]'
+            tone === 'red-outline'
+              ? 'border border-[var(--tkt-allergen-text)] text-[var(--tkt-allergen-text)]'
+              : 'bg-[var(--tkt-allergen-soft)] text-[var(--tkt-allergen-text)]'
+
           }`}>
             <AlertTriangle className="w-2 h-2 inline mr-0.5" /> {chip}
           </span>
@@ -715,7 +734,7 @@ function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
             <span className="font-semibold">Appetizer</span>
             <span className="font-bold">3</span>
           </div>
-          <div className="flex justify-between border-l-2 border-[#16A085] pl-2 text-[11px]">
+          <div className="flex justify-between border-l-2 border-[var(--tkt-accent)] pl-2 text-[11px]">
             <span className="font-semibold">Entrée</span>
             <span className="font-bold">3</span>
           </div>
@@ -761,7 +780,8 @@ function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick 
           <span>John Peterson</span>
           <span className="text-text-secondary">Maria S. · 8:11 PM</span>
         </div>
-        <div className="px-3 py-1 text-[9px] font-bold text-[#C0392B] border-b border-border">
+        <div className="px-3 py-1 text-[9px] font-bold text-[var(--tkt-allergen-text)] border-b border-[var(--tkt-hairline)]">
+
           ! ALLERGENS: Dairy, Gluten, Nut
         </div>
         <div className="px-3 py-1.5 space-y-1">
@@ -791,7 +811,8 @@ function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick 
             <span>◉ Seen</span>
           </div>
         </div>
-        <button className="w-full bg-[#16A085] text-white text-[11px] font-bold py-2 tracking-wide">
+        <button className="w-full bg-[var(--tkt-accent)] text-[var(--tkt-accent-fg)] text-[11px] font-bold py-2 tracking-wide">
+
           Fulfill
         </button>
       </Card>

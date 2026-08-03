@@ -158,7 +158,7 @@ function ProductRow({
           type="button"
           onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
           className="shrink-0 inline-flex items-center justify-center"
-          style={{ width: 18, height: 18, color: '#6C7A89' }}
+          style={{ width: 18, height: 18, color: 'var(--tkt-icon)' }}
           aria-label={expanded ? 'Hide details' : 'Show details'}
           aria-expanded={expanded}
         >
@@ -171,13 +171,13 @@ function ProductRow({
       )}
       {loading && (
         <span className="shrink-0 mt-0.5 flex items-center justify-center" style={{ width: 16, height: 16 }} aria-label="Marking Product Done">
-          <Loader2 size={12} className="animate-spin" color="#6C7A89" />
+          <Loader2 size={12} className="animate-spin" color="var(--tkt-icon)" />
         </span>
       )}
       {done && (
         <span
           className="shrink-0 mt-0.5 flex items-center justify-center rounded-full animate-scale-in"
-          style={{ background: '#27AE60', width: 16, height: 16 }}
+          style={{ background: 'var(--tkt-served-bg)', width: 16, height: 16 }}
           aria-label="Product Done"
         >
           <Check size={10} color="#fff" strokeWidth={3} />
@@ -351,9 +351,9 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
             <div className="flex items-start gap-1.5 px-2 py-1.5">
               <div className="min-w-0">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{identifierPrimary}</div>
-                {identifierSub && <div className="text-[10px] text-[#6B7280] truncate">{identifierSub}</div>}
+                {identifierSub && <div className="text-[10px] text-[var(--tkt-text-2)] truncate">{identifierSub}</div>}
                 {cell1Sub && cell1Sub !== identifierSub && cell1Sub !== identifierPrimary && (
-                  <div className="text-[10px] text-[#9CA3AF] truncate">{cell1Sub}</div>
+                  <div className="text-[10px] text-[var(--tkt-text-3)] truncate">{cell1Sub}</div>
                 )}
               </div>
             </div>
@@ -361,7 +361,7 @@ export function OrderCardV3({ order, onBump, onMarkSeen, onItemDone, onItemDismi
               <img src={PersonSimpleRunBold} alt="" width={12} height={12} className="mt-0.5 opacity-70 shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="font-bold text-foreground text-[13px] leading-tight truncate">{order.serverName}</div>
-                <div className="text-[10px] text-[#6B7280] truncate">{formatTime(order.timeReceived)}</div>
+                <div className="text-[10px] text-[var(--tkt-text-2)] truncate">{formatTime(order.timeReceived)}</div>
               </div>
             </div>
           </div>

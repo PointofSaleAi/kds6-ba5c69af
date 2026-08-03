@@ -135,6 +135,8 @@ function KdsScreenMock({
                   </GlassBoardProvider>
                 ) : boardId === 'focus-lane' ? (
                   <FocusLaneBoard
+                    theme={theme}
+
                     identifier={identifier}
                     textScale={textScale}
                     agingOverrideSeconds={agingOverrideSeconds}
@@ -153,6 +155,7 @@ function KdsScreenMock({
                           style={{ transform: `scale(${textScale})` }}
                         >
                           <BoardTicketPreview
+                            themeOverride={theme === 'dark' ? 'dark' : 'light'}
                             boardId={boardId}
                             identifier={identifier}
                             orderType={ot.label}
@@ -210,12 +213,14 @@ function FocusLaneBoard({
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
+  theme = 'light',
 }: {
   identifier: 'order' | 'guest';
   textScale: number;
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
+  theme?: string;
 }) {
   const [focusIndex, setFocusIndex] = useState(0);
   const focus = SCREEN_ORDER_TYPES[focusIndex];
@@ -257,6 +262,7 @@ function FocusLaneBoard({
           style={{ transform: `scale(${textScale * 1.55})` }}
         >
           <BoardTicketPreview
+                            themeOverride={theme === 'dark' ? 'dark' : 'light'}
             boardId="focus-lane"
             identifier={identifier}
             orderType={focus.label}
@@ -293,6 +299,7 @@ function FocusLaneBoard({
               style={{ transform: `scale(${textScale * (pos.colSpan ? 0.95 : 0.82)})` }}
             >
               <BoardTicketPreview
+                            themeOverride={theme === 'dark' ? 'dark' : 'light'}
                 boardId="focus-lane"
                 identifier={identifier}
                 orderType={ot.label}
