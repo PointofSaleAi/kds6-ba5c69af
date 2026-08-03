@@ -183,7 +183,7 @@ export function TicketCard({
       </div>
 
       {/* ticket-level allergies */}
-      {t.allergies.length > 0 && (
+      {t.allergies.length > 0 && !headerOnly && (
         <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', gap: 8, padding: `0 ${pad(18)}px ${pad(14)}px` }}>
           {t.allergies.map((a) => (
             <div key={a} style={{ ...glossTicket(skin), ...safetyStyle(safety) }}>{a}</div>
