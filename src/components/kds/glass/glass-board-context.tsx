@@ -312,6 +312,8 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
                 modifiers: [],
                 allergens: [],
                 notes: it.note,
+                // Unseen items drive the summary panel's UNSEEN section.
+                isNew: (itemStages[k] || 'unseen') === 'unseen',
                 isCompleted: (itemStages[k] || 'unseen') === 'served',
               };
             }),
