@@ -537,16 +537,16 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
 
   return (
     <Card>
-      <div className="bg-[#1A1A2E] text-white px-3 py-1.5 text-[11px] font-bold flex justify-between">
+      <div className="bg-[var(--tkt-header-bg)] text-[var(--tkt-header-fg)] px-3 py-1.5 text-[11px] font-bold flex justify-between">
         <span>TABLE 4 | 8:09 PM | Maria S.</span>
       </div>
       <div className="bg-[#F5B041] text-[#1A1A2E] text-[10px] font-semibold leading-tight px-3 py-1.5">
         Allergy to nuts, Please prepare food separately and notify server
       </div>
-      <div className="px-3 py-2 flex items-center justify-between border-b border-border">
+      <div className="px-3 py-2 flex items-center justify-between border-b border-[var(--tkt-hairline)]">
         <div>
           <div className="text-[10px] text-text-secondary font-semibold">Ticket</div>
-          <div className="text-[44px] font-black leading-none text-[#2C3E50]">23</div>
+          <div className="text-[44px] font-black leading-none text-[var(--tkt-text)]">23</div>
           <div className="text-[10px] text-text-secondary">Order</div>
         </div>
         <button
@@ -556,26 +556,27 @@ function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
           style={{ background: ringBg }}
           aria-label={`Aging status: ${status.label}`}
         >
-          <span className="absolute inset-[3px] rounded-full bg-white flex items-center justify-center">
-            <span className="text-[12px] font-mono tabular-nums font-bold text-[#2C3E50]">{text}</span>
+          <span className="absolute inset-[3px] rounded-full bg-[var(--tkt-card-solid)] flex items-center justify-center">
+            <span className="text-[12px] font-mono tabular-nums font-bold text-[var(--tkt-text)]">{text}</span>
           </span>
         </button>
       </div>
 
-      <div className="px-3 py-2.5 space-y-2.5 border-b border-border">
+      <div className="px-3 py-2.5 space-y-2.5 border-b border-[var(--tkt-hairline)]">
         <div>
-          <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
-          <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
-          <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
-          <div className="text-[11px] text-[#8E44AD] font-semibold">No Pickles</div>
+          <div className="text-[15px] font-black uppercase leading-tight text-[var(--tkt-text)]">2x Filet Mignon</div>
+          <div className="text-[11px] text-[var(--tkt-accent)] font-semibold">medium rare</div>
+          <div className="text-[11px] text-[var(--tkt-mod-add)] font-semibold">+ Extra Sauce</div>
+          <div className="text-[11px] text-[var(--tkt-mod-remove)] font-semibold">No Pickles</div>
         </div>
         <div>
-          <div className="text-[15px] font-black uppercase leading-tight text-[#2C3E50]">2x Filet Mignon</div>
-          <div className="text-[11px] text-[#16A085] font-semibold">medium rare</div>
-          <div className="text-[11px] text-[#2471A3] font-semibold">+ Extra Sauce</div>
+          <div className="text-[15px] font-black uppercase leading-tight text-[var(--tkt-text)]">2x Filet Mignon</div>
+          <div className="text-[11px] text-[var(--tkt-accent)] font-semibold">medium rare</div>
+          <div className="text-[11px] text-[var(--tkt-mod-add)] font-semibold">+ Extra Sauce</div>
         </div>
       </div>
-      <button className="w-full text-[12px] font-bold py-2.5 flex items-center justify-center gap-2 text-[#2C3E50] tracking-wide">
+      <button className="w-full text-[12px] font-bold py-2.5 flex items-center justify-center gap-2 text-[var(--tkt-text)] tracking-wide">
+
         <CheckCircle2 className="w-4 h-4" />
         MARK AS COMPLETE
       </button>
