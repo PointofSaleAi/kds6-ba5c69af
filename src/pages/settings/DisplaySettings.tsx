@@ -32,6 +32,7 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { getCardVariantForTicketsRoute, readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
 import { TicketStudioSkeleton } from '@/components/kds/TicketStudioSkeleton';
 import { TicketBoard } from '@/components/kds/glass/TicketBoard';
+import { PreviewFitBox } from '@/components/kds/PreviewFitBox';
 import { GlassBoardProvider } from '@/components/kds/glass/glass-board-context';
 
 
