@@ -487,13 +487,10 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
                 const idx = phases.indexOf(phase);
                 if (idx < phases.length - 1) setPhase(phases[idx + 1]);
               }}
-              className={`py-2 text-[10px] font-bold transition ${
-                active
-                  ? 'text-[#16A085]'
-                  : passed
-                  ? 'text-[#16A085]/40'
-                  : 'text-[#16A085]/30'
+              className={`py-2 text-[10px] font-bold transition text-[var(--tkt-accent)] ${
+                active ? 'opacity-100' : passed ? 'opacity-40' : 'opacity-30'
               } ${active ? 'cursor-pointer' : 'cursor-default'}`}
+
             >
               {p.toUpperCase()}
             </button>
