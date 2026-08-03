@@ -97,7 +97,11 @@ interface ItemSummaryPanelProps {
   matchingTicketCount?: number;
   /** 'active' = show preparing items (default). 'completed' = show served/done items (used in History). */
   mode?: 'active' | 'completed';
+  /** Optional controlled expand-all state (keeps external boards in sync). */
+  expandAll?: boolean;
+  onExpandAllChange?: (on: boolean) => void;
 }
+
 
 interface CategorySummary {
   category: ProductCategory;
