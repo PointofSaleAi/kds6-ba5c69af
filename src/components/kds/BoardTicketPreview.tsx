@@ -4,7 +4,7 @@ import { useStatusRules } from '@/hooks/use-status-rules';
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-settings';
 import { ClocheIcon } from './icons/ClocheIcon';
 import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
-import { useTicketSkin } from './TicketSkinScope';
+import { useTicketSkin, TicketSkinScope } from './TicketSkinScope';
 
 
 
