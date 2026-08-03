@@ -333,6 +333,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     tickets, orders, now, elapsedFor,
     itemStages, tapItem, stepTicket, prepLabelFor,
     openCourses, toggleCourse, expandAll, setExpandAll,
+    notesAck, setNoteAck, posSeen, setPosSeen,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
