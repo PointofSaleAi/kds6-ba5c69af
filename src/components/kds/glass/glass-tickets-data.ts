@@ -72,7 +72,7 @@ export const TICKETS: GlassTicket[] = [
       { qty: '2×', name: 'Milkshake', mods: 'Chocolate', tags: ['DAIRY'] } ] } ],
   },
   {
-    id: 't33', type: 'Table 15', num: '33', kind: 'table', server: 'Emma T. · 12:07', base: 593,
+    id: 't33', type: 'Table 15', num: '33', kind: 'table', server: 'Emma T. · 12:07', base: 1490,
     allergies: ['GLUTEN allergy', 'SHELLFISH allergy', 'EGG allergy', 'DAIRY allergy', 'FISH allergy'],
     courses: [
       { id: 'app', label: 'APPETIZER', items: [
@@ -90,7 +90,7 @@ export const TICKETS: GlassTicket[] = [
     ],
   },
   {
-    id: 't36', type: 'Delivery', num: '36', kind: 'delivery', server: 'DoorDash · 12:06', base: 686,
+    id: 't36', type: 'Delivery', num: '36', kind: 'delivery', server: 'DoorDash · 12:06', base: 1290,
     allergies: ['SOY allergy', 'SESAME allergy'],
     courses: [ { id: 'all', showHeader: false, items: [
       { qty: '2×', name: 'Pad Thai', mods: 'Medium spice · No peanuts', tags: ['SOY', 'EGG'] },
@@ -114,7 +114,7 @@ export const TICKETS: GlassTicket[] = [
       { qty: '1×', name: 'Caprese Salad', mods: 'No basil', tags: ['DAIRY'] } ] } ],
   },
   {
-    id: 't42', type: 'Banquet B', num: '42', kind: 'banquet', server: 'Priya P. · 24 covers', base: 420,
+    id: 't42', type: 'Banquet B', num: '42', kind: 'banquet', server: 'Priya P. · 24 covers', base: 1345,
     allergies: ['GLUTEN allergy', 'DAIRY allergy'],
     courses: [
       { id: 'sal', label: 'SALAD', items: [
