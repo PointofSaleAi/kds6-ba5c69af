@@ -267,10 +267,6 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
   /* ── screen selection (left rail: All / Seen / Unseen / History) ── */
   const [view, setView] = useState<GlassView>('home');
 
-  const isServed = useCallback(
-    (t: GlassTicket) => ticketKeys(t).every((k) => (itemStages[k] || 'unseen') === 'served'),
-    [itemStages],
-  );
 
   /** Any product on the ticket has been acknowledged (Seen or beyond). */
   const hasSeenItem = useCallback(
