@@ -1243,6 +1243,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             settingsOpen={settingsOpen}
             seenCount={seenCount}
             unseenCount={unseenCount}
+            historyCount={filteredHistory.length}
           />
         </div>
 
@@ -1276,7 +1277,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               {/* History filter bar */}
               <div className="flex items-center gap-3 px-3 pt-3 pb-2 shrink-0">
                 <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
-                  HISTORY
+                  SERVED
                 </span>
                 {isStationView && resolvedStationCourse && (
                   <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
