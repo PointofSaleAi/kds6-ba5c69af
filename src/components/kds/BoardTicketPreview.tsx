@@ -336,12 +336,13 @@ function CalmBoardBody() {
 
   const ticketButtonStyle =
     ticketPhase === 'seen'
-      ? 'border border-[#1A1A2E] text-[#1A1A2E] bg-transparent hover:bg-[#1A1A2E] hover:text-white'
+      ? 'border border-[var(--tkt-fill)] text-[var(--tkt-text)] bg-transparent hover:bg-[var(--tkt-fill)] hover:text-[var(--tkt-fill-fg)]'
       : ticketPhase === 'preparing'
-      ? 'bg-[#1A1A2E] text-white'
+      ? 'bg-[var(--tkt-fill)] text-[var(--tkt-fill-fg)]'
       : ticketPhase === 'ready'
-      ? 'bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]'
-      : 'bg-[#16A34A] text-white';
+      ? 'bg-[var(--tkt-ready-bg)] text-[var(--tkt-ready-fg)] border border-[var(--tkt-ready-border)]'
+      : 'bg-[var(--tkt-served-bg)] text-[var(--tkt-served-fg)]';
+
 
   const ticketLabel =
     ticketPhase === 'seen' ? 'SEEN'
