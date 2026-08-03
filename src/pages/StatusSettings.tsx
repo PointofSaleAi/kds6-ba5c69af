@@ -175,35 +175,42 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   );
 }
 
+const AGING_TONES = {
+  start: { color: '#34d15b', colorTo: '#1da94a', glow: 'rgba(52,209,91,.8)', textColor: 'white' as const },
+  medium: { color: '#ffb340', colorTo: '#f08c00', glow: 'rgba(255,179,64,.8)', textColor: 'black' as const },
+  delay: { color: '#ff453a', colorTo: '#e0281c', glow: 'rgba(255,69,58,.8)', textColor: 'white' as const },
+  overtime: { color: '#a259e6', colorTo: '#7b2fc4', glow: 'rgba(162,89,230,.8)', textColor: 'white' as const },
+};
+
 const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
   {
     label: 'Fast Kitchen',
     description: 'Tight thresholds for high-volume kitchens',
     rules: [
-      { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
-      { id: 'medium', label: 'Medium (Preparing)', color: '#E5A000', textColor: 'white', minMinutes: 4, maxMinutes: 6 },
-      { id: 'delay', label: 'Delay (Warning)', color: '#D85A30', textColor: 'white', minMinutes: 7, maxMinutes: 12 },
-      { id: 'overtime', label: 'Overtime (Critical)', color: '#E24B4A', textColor: 'white', minMinutes: 13, maxMinutes: null },
+      { id: 'start', label: 'New', ...AGING_TONES.start, minMinutes: 0, maxMinutes: 2 },
+      { id: 'medium', label: 'Medium', ...AGING_TONES.medium, minMinutes: 2, maxMinutes: 4 },
+      { id: 'delay', label: 'Delay', ...AGING_TONES.delay, minMinutes: 4, maxMinutes: 6 },
+      { id: 'overtime', label: 'Overtime', ...AGING_TONES.overtime, minMinutes: 6, maxMinutes: null },
     ],
   },
   {
     label: 'Standard',
     description: 'Balanced timing for most restaurants',
     rules: [
-      { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
-      { id: 'medium', label: 'Medium (Preparing)', color: '#E5A000', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
-      { id: 'delay', label: 'Delay (Warning)', color: '#D85A30', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
-      { id: 'overtime', label: 'Overtime (Critical)', color: '#E24B4A', textColor: 'white', minMinutes: 21, maxMinutes: null },
+      { id: 'start', label: 'New', ...AGING_TONES.start, minMinutes: 0, maxMinutes: 3 },
+      { id: 'medium', label: 'Medium', ...AGING_TONES.medium, minMinutes: 3, maxMinutes: 5 },
+      { id: 'delay', label: 'Delay', ...AGING_TONES.delay, minMinutes: 5, maxMinutes: 7 },
+      { id: 'overtime', label: 'Overtime', ...AGING_TONES.overtime, minMinutes: 7, maxMinutes: null },
     ],
   },
   {
     label: 'Slow Kitchen',
     description: 'Relaxed thresholds for fine dining or complex menus',
     rules: [
-      { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 10 },
-      { id: 'medium', label: 'Medium (Preparing)', color: '#E5A000', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
-      { id: 'delay', label: 'Delay (Warning)', color: '#D85A30', textColor: 'white', minMinutes: 21, maxMinutes: 35 },
-      { id: 'overtime', label: 'Overtime (Critical)', color: '#E24B4A', textColor: 'white', minMinutes: 36, maxMinutes: null },
+      { id: 'start', label: 'New', ...AGING_TONES.start, minMinutes: 0, maxMinutes: 10 },
+      { id: 'medium', label: 'Medium', ...AGING_TONES.medium, minMinutes: 10, maxMinutes: 20 },
+      { id: 'delay', label: 'Delay', ...AGING_TONES.delay, minMinutes: 20, maxMinutes: 35 },
+      { id: 'overtime', label: 'Overtime', ...AGING_TONES.overtime, minMinutes: 35, maxMinutes: null },
     ],
   },
 ];
