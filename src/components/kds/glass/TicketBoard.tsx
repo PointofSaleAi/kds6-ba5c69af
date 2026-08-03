@@ -139,8 +139,9 @@ export function TicketBoard({
   // width (~300px) and font sizes as the standard ticket layouts.
   const base: React.CSSProperties = { zoom, padding: GAP };
 
+  let body: JSX.Element;
   if (viewMode === 'horizontal') {
-    return (
+    body = (
       <div ref={boardRef} className="h-full overflow-x-auto">
         <div style={{ ...base, display: 'flex', alignItems: 'flex-start', gap: GAP }}>
           {tickets.map((t) => (
@@ -151,10 +152,8 @@ export function TicketBoard({
         </div>
       </div>
     );
-  }
-
-  if (viewMode === 'grid') {
-    return (
+  } else if (viewMode === 'grid') {
+    body = (
       <div ref={boardRef}>
         <div
           style={{
@@ -169,17 +168,19 @@ export function TicketBoard({
         </div>
       </div>
     );
+  } else {
+    body = (
+      <div ref={boardRef}>
+        <div style={{ ...base, display: 'flex', alignItems: 'flex-start', gap: GAP }}>
+          {staggerColumns.map((col, ci) => (
+            <div key={ci} style={{ flex: '0 0 auto', width: CARD_W, display: 'flex', flexDirection: 'column', gap: GAP }}>
+              {col.items.map((t) => cardFor(t))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <div ref={boardRef}>
-      <div style={{ ...base, display: 'flex', alignItems: 'flex-start', gap: GAP }}>
-        {staggerColumns.map((col, ci) => (
-          <div key={ci} style={{ flex: '0 0 auto', width: CARD_W, display: 'flex', flexDirection: 'column', gap: GAP }}>
-            {col.items.map((t) => cardFor(t))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <GlassStyleProvider value={styleValue}>{body}</GlassStyleProvider>;
 }
