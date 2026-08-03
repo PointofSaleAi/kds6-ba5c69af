@@ -31,6 +31,8 @@ import { mockHistoryOrders } from '@/data/mock-history';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ViewMode, Order, OrderItem } from '@/types/kds';
 import { useTheme } from '@/hooks/use-theme';
+import { ticketSkinVars, resolveTicketSkin } from '@/lib/ticket-skin';
+
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useSound } from '@/hooks/use-sound';
 import { KDSSettingsPreviewScope, useKDSSettings } from '@/hooks/use-kds-settings';
