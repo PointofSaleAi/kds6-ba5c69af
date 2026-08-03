@@ -47,8 +47,8 @@ export const DEFAULT_ORDER_TYPE_DETAILED_COLORS: OrderTypeDetailedColors = {
   'custom': { headerBg: '#581C87', headerText: '#FFFFFF', ticketNumber: '#2C3E50', bodyText: '#6C7A89' },
 };
 
-export type TicketsRouteKey = 'Default' | 'v1' | 'v2' | 'v3' | 'v3-lite' | 'v4' | 'v5' | 'v6';
-export const TICKETS_ROUTE_KEYS: TicketsRouteKey[] = ['Default', 'v1', 'v2', 'v3', 'v3-lite', 'v4', 'v5', 'v6'];
+export type TicketsRouteKey = 'Default' | 'v1' | 'v2' | 'v3' | 'v3-lite' | 'v4' | 'v5' | 'v6' | 'glass';
+export const TICKETS_ROUTE_KEYS: TicketsRouteKey[] = ['Default', 'v1', 'v2', 'v3', 'v3-lite', 'v4', 'v5', 'v6', 'glass'];
 
 export interface RouteOverride {
   textSize?: TextSize;
@@ -203,11 +203,12 @@ function loadSettings(): KDSSettings {
 
 function pathToRouteKey(pathname: string): TicketsRouteKey | null {
   if (/^\/kds\/v1\/settings(?:\/|$)/i.test(pathname)) return null;
-  const m = pathname.match(/^\/kds\/(default|v3-lite|v[1-6])(?:\/|$)/i);
+  const m = pathname.match(/^\/kds\/(default|v3-lite|glass|v[1-6])(?:\/|$)/i);
   if (!m) return null;
   const seg = m[1].toLowerCase();
   if (seg === 'default') return 'Default';
   if (seg === 'v3-lite') return 'v3-lite';
+  if (seg === 'glass') return 'glass';
   return seg as TicketsRouteKey;
 }
 

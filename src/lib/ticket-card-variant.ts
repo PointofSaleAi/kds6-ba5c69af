@@ -11,6 +11,7 @@ const ROUTE_TO_CARD_VARIANT: Record<TicketsRouteKey, CardVariant> = {
   v2: 'v1',
   v3: 'v2',
   'v3-lite': 'v2',
+  glass: 'v2',
   v4: 'v3',
   v5: 'v4',
   v6: 'v5',
@@ -26,7 +27,7 @@ const CARD_VARIANT_TO_ROUTE: Record<CardVariant, TicketsRouteKey> = {
 };
 
 export function normalizeTicketsRoute(value: string | null | undefined, fallback: TicketsRouteKey = 'v3'): TicketsRouteKey {
-  if (value === 'Default' || value === 'v1' || value === 'v2' || value === 'v3' || value === 'v3-lite' || value === 'v4' || value === 'v5' || value === 'v6') {
+  if (value === 'Default' || value === 'v1' || value === 'v2' || value === 'v3' || value === 'v3-lite' || value === 'glass' || value === 'v4' || value === 'v5' || value === 'v6') {
     return value;
   }
   return fallback;
