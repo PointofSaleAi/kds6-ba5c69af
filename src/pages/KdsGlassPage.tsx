@@ -7,6 +7,7 @@ import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { TicketBoard } from '@/components/kds/glass/TicketBoard';
 import { GlassBoardProvider, useGlassBoard } from '@/components/kds/glass/glass-board-context';
 import { useDockLayout } from '@/hooks/use-dock-layout';
+import { useGlassChromeMode } from '@/hooks/use-glass-chrome';
 import { useTheme } from '@/hooks/use-theme';
 import { getTicketsRoutePath, readStoredTicketsRoute } from '@/lib/ticket-card-variant';
 
@@ -21,6 +22,7 @@ function GlassShell() {
   const { theme, toggleTheme } = useTheme();
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
   const board = useGlassBoard();
+  useGlassChromeMode(true);
 
   const handleNavigate = (target: string) => {
     if (target === 'settings') { navigate('/kds/v1/settings'); return; }

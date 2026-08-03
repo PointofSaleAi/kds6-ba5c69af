@@ -522,3 +522,112 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.55; }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Glass chrome (iOS-style frosted app shell) — scoped to screens
+   that opt in via <html data-glass-chrome> (see use-glass-chrome).
+   Light theme = white-tinted glass, dark theme = smoked glass.
+   ───────────────────────────────────────────────────────────── */
+html[data-glass-chrome] {
+  --glass-chrome-bar: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.52));
+  --glass-chrome-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.44));
+  --glass-chrome-card: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.64));
+  --glass-chrome-border: rgba(255, 255, 255, 0.8);
+  --glass-chrome-hairline: rgba(60, 60, 67, 0.16);
+  --glass-chrome-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --glass-chrome-shadow: 0 14px 36px rgba(28, 33, 54, 0.16);
+  --glass-chrome-blur: blur(24px) saturate(180%);
+
+  /* Chrome tokens flip to ink-on-glass so existing utilities stay legible. */
+  --primary-foreground: 240 6% 5%;
+  --sidebar-foreground: 240 6% 10%;
+  --sidebar-accent: 240 8% 84%;
+  --sidebar-accent-foreground: 240 6% 8%;
+  --sidebar-border: 240 8% 78%;
+  --border: 240 8% 80%;
+}
+
+html.dark[data-glass-chrome] {
+  --glass-chrome-bar: linear-gradient(180deg, rgba(44, 47, 60, 0.72), rgba(28, 30, 40, 0.6));
+  --glass-chrome-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045));
+  --glass-chrome-card: linear-gradient(180deg, rgba(48, 51, 64, 0.86), rgba(32, 34, 45, 0.78));
+  --glass-chrome-border: rgba(255, 255, 255, 0.14);
+  --glass-chrome-hairline: rgba(255, 255, 255, 0.13);
+  --glass-chrome-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --glass-chrome-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+
+  --primary-foreground: 0 0% 96%;
+  --sidebar-foreground: 0 0% 92%;
+  --sidebar-accent: 226 12% 32%;
+  --sidebar-accent-foreground: 0 0% 96%;
+  --sidebar-border: 226 10% 26%;
+  --border: 226 10% 26%;
+}
+
+/* Reusable frosted surfaces (used by components that style inline). */
+.ios-glass-bar {
+  background: var(--glass-chrome-bar) !important;
+  -webkit-backdrop-filter: var(--glass-chrome-blur);
+  backdrop-filter: var(--glass-chrome-blur);
+  box-shadow: var(--glass-chrome-sheen), 0 1px 0 var(--glass-chrome-hairline);
+}
+.ios-glass-panel {
+  background: var(--glass-chrome-panel) !important;
+  -webkit-backdrop-filter: var(--glass-chrome-blur);
+  backdrop-filter: var(--glass-chrome-blur);
+  box-shadow: var(--glass-chrome-sheen);
+}
+.ios-glass-card {
+  background: var(--glass-chrome-card) !important;
+  border: 1px solid var(--glass-chrome-border) !important;
+  -webkit-backdrop-filter: var(--glass-chrome-blur);
+  backdrop-filter: var(--glass-chrome-blur);
+  box-shadow: var(--glass-chrome-sheen), var(--glass-chrome-shadow);
+}
+
+/* Chrome containers already painted with solid tokens become frosted. */
+html[data-glass-chrome] .bg-brand-dark,
+html[data-glass-chrome] .bg-sidebar-bg,
+html[data-glass-chrome] .bg-sidebar,
+html[data-glass-chrome] .bg-surface-card,
+html[data-glass-chrome] .bg-sidebar\/95 {
+  background: var(--glass-chrome-panel);
+  -webkit-backdrop-filter: var(--glass-chrome-blur);
+  backdrop-filter: var(--glass-chrome-blur);
+  box-shadow: var(--glass-chrome-sheen);
+}
+
+/* Popovers / dropdowns / settings cards float as frosted glass. */
+html[data-glass-chrome] .bg-card,
+html[data-glass-chrome] .bg-popover,
+html[data-glass-chrome] [data-radix-popper-content-wrapper] > * {
+  background: var(--glass-chrome-card);
+  -webkit-backdrop-filter: var(--glass-chrome-blur);
+  backdrop-filter: var(--glass-chrome-blur);
+  box-shadow: var(--glass-chrome-sheen), var(--glass-chrome-shadow);
+}
+
+/* White chrome PNG icons need inverting on light glass. */
+html[data-glass-chrome]:not(.dark) [role="banner"] img {
+  filter: brightness(0) saturate(0);
+  opacity: 0.78;
+}
+
+/* Trim blur cost on small touch screens. */
+@media (max-width: 767px) {
+  html[data-glass-chrome] {
+    --glass-chrome-blur: blur(16px) saturate(150%);
+    --glass-chrome-shadow: 0 8px 20px rgba(28, 33, 54, 0.14);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  html[data-glass-chrome] {
+    --glass-chrome-blur: none;
+  }
+}
+
+/* Inverted fills inside glass chrome keep their contrast. */
+html[data-glass-chrome] .bg-primary-foreground.text-brand-dark,
+html[data-glass-chrome] .bg-brand-primary.text-primary-foreground {
+  color: hsl(var(--background));
+}

@@ -3,6 +3,7 @@ import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { usePortrait } from '@/hooks/use-portrait';
 import { getTicketsRoutePath, readStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import { useGlassChromeMode } from '@/hooks/use-glass-chrome';
 
 /**
  * Settings shell rendered inside the main KDS frame: the KDS left rail stays
@@ -14,6 +15,8 @@ export default function SettingsLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isPortrait } = usePortrait();
+  // Settings opened while the Glass layout is active inherits its frosted chrome.
+  useGlassChromeMode(readStoredTicketsRoute('v3') === 'glass');
 
   const resolveTicketsRoute = () => {
     return getTicketsRoutePath(readStoredTicketsRoute('v3'));
