@@ -640,7 +640,9 @@ function Row({ n, name, chips = [] }: { n: string; name: string; chips?: [string
 /* ------------------------------ SAFETY FIRST ------------------------------ */
 
 function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
-  const { text } = useDisplayTimer(1923, agingOverrideSeconds);
+  const { text, elapsed } = useDisplayTimer(1923, agingOverrideSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const status = getStatusForElapsed(elapsed);
   return (
     <Card>
       <div className="bg-[#1A1A2E] text-white px-3 py-1.5 flex justify-between items-center">
@@ -648,7 +650,7 @@ function SafetyFirstTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
           <span className="bg-[#C0392B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{idLabel(identifier)}</span>
           <span className="text-[11px] font-bold">23</span>
         </div>
-        <button type="button" onClick={onTimerClick} className="bg-[#C0392B] text-white text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
+        <button type="button" onClick={onTimerClick} style={{ backgroundColor: status.color, color: status.textColor }} className="text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
       </div>
       <div className="px-3 py-0.5 text-[9px] flex justify-between border-b border-border">
         <span>John Peterson</span>
@@ -691,16 +693,18 @@ function SafetyRow({ n, name, chip, note, tone }: { n: string; name: string; chi
 /* ----------------------------- TIMELINE FLOW ------------------------------ */
 
 function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
-  const { text } = useDisplayTimer(763, agingOverrideSeconds);
+  const { text, elapsed } = useDisplayTimer(763, agingOverrideSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const status = getStatusForElapsed(elapsed);
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="text-[10px] font-bold text-text-secondary uppercase mb-1.5 tracking-wide flex items-center gap-1">
-        <Flame className="w-3 h-3 text-[#E67E22]" /> Cooking Lane
+        <Flame className="w-3 h-3" style={{ color: status.color }} /> Cooking Lane
       </div>
       <Card>
         <div className="px-3 py-1.5 flex justify-between items-center border-b border-border">
           <div className="text-[12px] font-bold">Order 2</div>
-          <button type="button" onClick={onTimerClick} className="text-[11px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
+          <button type="button" onClick={onTimerClick} style={{ color: status.color }} className="text-[11px] font-bold font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
         </div>
         <div className="px-3 py-1 flex justify-between text-[10px] border-b border-border">
           <span>21 · Table #</span>
@@ -735,7 +739,9 @@ function TimelineFlowTicket({ identifier, agingOverrideSeconds, onTimerClick }: 
 /* ---------------------------- ADAPTIVE DENSITY ---------------------------- */
 
 function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
-  const { text } = useDisplayTimer(1927, agingOverrideSeconds);
+  const { text, elapsed } = useDisplayTimer(1927, agingOverrideSeconds);
+  const { getStatusForElapsed } = useStatusRules();
+  const status = getStatusForElapsed(elapsed);
   return (
     <div className="w-full max-w-[320px] mx-auto">
       <div className="flex gap-1 mb-1.5 text-[9px] font-bold">
@@ -749,7 +755,7 @@ function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick 
             <span className="bg-[#E84C3D] text-white text-[8px] font-bold px-1.5 py-0.5 rounded">URGENT</span>
             <span className="text-[12px] font-bold">23</span>
           </div>
-          <button type="button" onClick={onTimerClick} className="bg-[#FDECEA] text-[#C0392B] text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
+          <button type="button" onClick={onTimerClick} style={{ backgroundColor: `${status.color}26`, color: status.color }} className="text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
         </div>
         <div className="px-3 py-0.5 text-[10px] flex justify-between border-b border-border">
           <span>John Peterson</span>
