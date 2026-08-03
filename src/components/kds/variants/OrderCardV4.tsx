@@ -115,7 +115,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
             type="button"
             onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
             className="shrink-0 inline-flex items-center justify-center"
-            style={{ width: 20, height: 20, color: 'var(--tkt-icon-idle)' }}
+            style={{ width: 20, height: 20, color: 'var(--tkt-icon)' }}
             aria-label={expanded ? 'Hide details' : 'Show details'}
             aria-expanded={expanded}
           >
@@ -132,7 +132,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
             style={{ width: 18, height: 18 }}
             aria-label="Marking Product Done"
           >
-            <Loader2 size={14} className="animate-spin" color="var(--tkt-icon-idle)" />
+            <Loader2 size={14} className="animate-spin" color="var(--tkt-icon)" />
           </span>
         )}
         {done && (
