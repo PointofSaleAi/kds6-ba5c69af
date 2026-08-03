@@ -85,10 +85,10 @@ export function TicketBoard() {
   if (viewMode === 'horizontal') {
     return (
       <div ref={boardRef} className="h-full overflow-x-auto">
-        <div style={{ ...base, display: 'flex', alignItems: 'stretch', gap: GAP, height: `calc(${100 / GLASS_SCALE}% - ${3 * GAP}px)` }}>
+        <div style={{ ...base, display: 'flex', alignItems: 'flex-start', gap: GAP }}>
           {tickets.map((t) => (
-            <div key={t.id} style={{ flex: '0 0 auto', width: CARD_W, height: '100%', display: 'flex' }}>
-              {cardFor(t, true)}
+            <div key={t.id} style={{ flex: '0 0 auto', width: CARD_W, display: 'flex' }}>
+              {cardFor(t)}
             </div>
           ))}
         </div>
