@@ -59,7 +59,9 @@ export function TicketCard({
   const [replyOpen, setReplyOpen] = useState(false);
 
   const pad = (v: number) => Math.round(v * padScale);
-  const showSecondary = appearance !== 'compact';
+  /** Appearance "Header" renders the ticket head only. */
+  const headerOnly = appearance === 'header';
+  const showSecondary = appearance === 'standard';
 
   /* Notes: single tap acknowledges (disables the note), double tap undoes. */
   const noteTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
