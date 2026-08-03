@@ -49,7 +49,8 @@ function GlassShell() {
               activeNav={board.view}
               seenCount={board.seenCount}
               unseenCount={board.unseenCount}
-            />
+              historyCount={board.historyCount}
+
           </div>
 
           <main className="flex-1 overflow-auto" style={{ order: 2 }}>
