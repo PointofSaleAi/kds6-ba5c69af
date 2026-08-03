@@ -381,9 +381,10 @@ function CalmBoardBody() {
                           key={i}
                           className={`text-[10px] leading-tight ${
                             m.kind === 'add'
-                              ? 'text-[#2471A3] font-semibold'
+                              ? 'text-[var(--tkt-mod-add)] font-semibold'
                               : m.kind === 'remove'
-                              ? 'text-[#C0392B] font-semibold line-through'
+                              ? 'text-[var(--tkt-mod-remove)] font-semibold line-through'
+
                               : 'text-text-secondary'
                           }`}
                         >
