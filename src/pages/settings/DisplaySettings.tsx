@@ -283,6 +283,7 @@ export default function DisplaySettings() {
                     <GlassBoardProvider>
                       <TicketBoard
                         maxTickets={1}
+                        pinnedTicketId="t23"
                         viewModeOverride="grid"
                         identifier={ticketHeaderLayout === 'guest' ? 'guest' : 'order'}
                         scaleFactor={textSize === 'Compact' ? 0.9 : textSize === 'Large' ? 1.1 : 1}
