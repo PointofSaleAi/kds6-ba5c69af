@@ -356,7 +356,7 @@ function CalmBoardBody() {
     <>
       {CALM_ORDER_NOTE && (
         <div className="px-3 pt-2">
-          <div className="rounded-md bg-[#FFF8E1] border border-[#F5D57A] px-2 py-1 text-[10px] text-[#8A5A00] leading-snug">
+          <div className="rounded-md bg-[var(--tkt-note-bg)] border border-[var(--tkt-note-border)] px-2 py-1 text-[10px] text-[var(--tkt-note-fg)] leading-snug">
             <span className="font-bold uppercase tracking-wide mr-1">Order Note</span>
             {CALM_ORDER_NOTE}
           </div>
