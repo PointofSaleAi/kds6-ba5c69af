@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Bell, ChefHat, ShoppingBag, AlertTriangle, Clock, Package } from 'lucide-react';
 import { useNotifications } from '@/hooks/use-notifications';
+import { useGlassChrome } from '@/hooks/use-glass-chrome';
 import type { KDSNotification, NotificationType } from '@/types/notification';
 
 function timeAgo(d: Date): string {
@@ -43,6 +44,7 @@ interface Props {
 export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: Props) {
   const { notifications, unreadCount, acknowledge } = useNotifications();
   const ref = useRef<HTMLDivElement>(null);
+  const glass = useGlassChrome();
 
   useEffect(() => {
     if (!open) return;
@@ -63,16 +65,17 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
   return (
     <div
       ref={ref}
-      className="fixed left-2 right-2 md:left-auto md:right-2 md:w-80 rounded-2xl shadow-2xl z-[9999] overflow-hidden"
+      className={`fixed left-2 right-2 md:left-auto md:right-2 md:w-80 rounded-2xl shadow-2xl z-[9999] overflow-hidden ${glass ? 'ios-glass-card' : ''}`}
       style={{
         top: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 56px) + 6px)',
-        background: '#1C1C1E',
-        border: '1px solid rgba(255,255,255,0.1)',
+        background: glass ? undefined : '#1C1C1E',
+        border: glass ? undefined : '1px solid rgba(255,255,255,0.1)',
+        color: glass ? 'hsl(var(--foreground))' : undefined,
         fontFamily: 'Montserrat, sans-serif',
       }}
     >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <span className="text-sm font-semibold text-white">Notifications</span>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[color:var(--glass-chrome-hairline,rgba(255,255,255,0.1))]">
+        <span className={`text-sm font-semibold ${glass ? "" : "text-white"}`}>Notifications</span>
         {unreadCount > 0 && (
           <span
             className="min-w-[20px] h-5 rounded-full text-white text-[10px] font-bold flex items-center justify-center px-1.5"
@@ -85,7 +88,7 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
 
       <div className="max-h-72 overflow-y-auto">
         {recent.length === 0 ? (
-          <div className="px-4 py-6 text-center text-neutral-500 text-xs">
+          <div className="px-4 py-6 text-center text-muted-foreground text-xs">
             No notifications yet
           </div>
         ) : (
@@ -93,25 +96,25 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
             <button
               key={n.id}
               onClick={() => acknowledge(n.id)}
-              className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-white/5 transition-colors text-left ${
+              className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors text-left ${
                 !n.acknowledged ? 'bg-white/[0.03]' : ''
               }`}
             >
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${glass ? "bg-foreground/10" : "bg-white/10"}`}>
                 {iconFor(n.type)}
               </div>
               <div className="flex-1 min-w-0">
                 <p
-                  className={`text-xs font-medium ${!n.acknowledged ? 'text-white' : 'text-neutral-300'}`}
+                  className={`text-xs font-medium ${glass ? (n.acknowledged ? "opacity-70" : "") : (!n.acknowledged ? "text-white" : "text-neutral-300")}`}
                   style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                 >
                   {n.message}
                 </p>
                 {n.station && n.station !== 'All' && (
-                  <p className="text-[10px] text-neutral-500 mt-0.5 uppercase tracking-wide">{n.station}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">{n.station}</p>
                 )}
               </div>
-              <span className="text-[10px] text-neutral-600 shrink-0 mt-0.5">{timeAgo(n.timestamp)}</span>
+              <span className="text-[10px] text-muted-foreground shrink-0 mt-0.5">{timeAgo(n.timestamp)}</span>
             </button>
           ))
         )}
@@ -123,7 +126,7 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
             onViewMore?.();
             onClose();
           }}
-          className="w-full py-3 text-sm font-medium hover:bg-white/5 transition-colors border-t border-white/10"
+          className="w-full py-3 text-sm font-medium hover:bg-foreground/5 transition-colors border-t border-[color:var(--glass-chrome-hairline,rgba(255,255,255,0.1))]"
           style={{ color: '#3B82F6' }}
         >
           View More

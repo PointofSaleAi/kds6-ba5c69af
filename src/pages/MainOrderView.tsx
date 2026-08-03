@@ -6,6 +6,7 @@ import type { OrderType } from '@/types/kds';
 import type { SortMode } from '@/components/kds/BottomStatusBar';
 import type { ItemStatus } from '@/components/kds/CourseSection';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
+import { useGlassChromeMode, useGlassChrome } from '@/hooks/use-glass-chrome';
 import { getKdsScaleClasses } from '@/lib/kds-scale';
 import { OrderCard } from '@/components/kds/OrderCard';
 import { OrderCardV1 } from '@/components/kds/variants/OrderCardV1';
@@ -112,6 +113,10 @@ function sortOrdersForMode(orders: Order[], sortMode: SortMode) {
 export default function MainOrderView({ onNavigate, settingsOpen, onCloseSettings, onOpenSub, onLogOut, onDevModeChange, onOpenAlerts, stationCourse: stationCourseProp, historyCategories = [], historyCenters = [], onClearHistoryCategories, onClearHistoryCenters, onSetHistoryCategories, onSetHistoryCenters, cardVariant = 'default', legacyActions = false }: MainOrderViewProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  // Settings opened while the Glass layout is active inherits its frosted chrome.
+  useGlassChromeMode(!!settingsOpen && readStoredTicketsRoute('v3') === 'glass');
+  const glassChrome = useGlassChrome();
+
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
@@ -1253,10 +1258,10 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             style={{ background: 'hsl(var(--surface-bg))', order: 2 }}
           >
             <div
-              className="w-[209px] shrink-0 rounded-3xl overflow-hidden flex flex-col"
+              className={`w-[209px] shrink-0 rounded-3xl overflow-hidden flex flex-col ${glassChrome ? 'ios-glass-card' : ''}`}
               style={{
-                background: 'hsl(var(--surface-card))',
-                boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
+                background: glassChrome ? undefined : 'hsl(var(--surface-card))',
+                boxShadow: glassChrome ? undefined : '0 1px 2px hsl(0 0% 0% / 0.04)',
               }}
             >
               <SettingsSidebar />

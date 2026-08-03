@@ -7,6 +7,7 @@ import ClockInOutOverlay from '@/components/kds/ClockInOutOverlay';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useLanguage, formatTimeForKDS, formatDateForKDS } from '@/hooks/use-language';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
+import { useGlassChrome } from '@/hooks/use-glass-chrome';
 
 import switchUserIcon from '@/assets/icons/switch-user.png';
 import dinnerIcon from '@/assets/icons/dinner.png';
@@ -42,6 +43,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
   const { unreadCount } = useNotifications();
   const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
   const { identity } = useActiveIdentity();
+  const glass = useGlassChrome();
   const displayName = identity.name;
   const roleLabel = identity.kind === 'staff' ? identity.role : 'Device';
   const initials = initialsFromName(displayName);
@@ -62,16 +64,21 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
   const timeLabel = formatTimeForKDS(time, tfmt);
   const dateLabel = formatDateForKDS(time, dfmt);
+  const chip = glass
+    ? 'bg-foreground/10 hover:bg-foreground/15'
+    : 'bg-white/10 hover:bg-white/15';
+  const hoverChip = glass ? 'hover:bg-foreground/10' : 'hover:bg-white/10';
+
 
   return (
     <header
       role="banner"
-      className="fixed left-0 right-0 z-[9996] flex items-center justify-between px-3 md:px-4"
+      className={`fixed left-0 right-0 z-[9996] flex items-center justify-between px-3 md:px-4 ${glass ? 'ios-glass-bar' : ''}`}
       style={{
         top: 'var(--training-bar-h, 0px)',
         height: HEADER_H,
-        background: HEADER_BG,
-        color: '#FFFFFF',
+        background: glass ? undefined : HEADER_BG,
+        color: glass ? 'hsl(var(--primary-foreground))' : '#FFFFFF',
         fontFamily: 'Montserrat, sans-serif',
       }}
     >
@@ -81,7 +88,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           type="button"
           aria-label="Clock in or out"
           onClick={() => setClockOpen(true)}
-          className="p-1 rounded hover:bg-white/10 transition-colors"
+          className={`p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={switchUserIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
         </button>
@@ -89,7 +96,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         <button
           type="button"
           onClick={() => setProfileOpen(true)}
-          className="flex items-center gap-2 pl-0 pr-2 md:pr-3 bg-white/10 hover:bg-white/15 rounded-full transition-colors"
+          className={`flex items-center gap-2 pl-0 pr-2 md:pr-3 rounded-full transition-colors ${chip}`}
         >
           <span
             className="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[11px] font-bold"
@@ -99,21 +106,24 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           </span>
           <span className="text-xs md:text-sm font-medium truncate max-w-[120px] md:max-w-[180px]">{displayName}</span>
           <span
-            className="text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide truncate max-w-[80px] md:max-w-[120px]"
-            style={{ background: 'rgba(255,255,255,0.15)' }}
+            className={`text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide truncate max-w-[80px] md:max-w-[120px] ${
+              glass ? 'bg-foreground/10' : ''
+            }`}
+            style={glass ? undefined : { background: 'rgba(255,255,255,0.15)' }}
           >
             {roleLabel}
           </span>
 
 
-          <span className="hidden md:block w-px h-4 bg-white/20 mx-1" />
+          <span className={`hidden md:block w-px h-4 mx-1 ${glass ? 'bg-foreground/20' : 'bg-white/20'}`} />
 
           <img src={dinnerIcon} alt="" className="hidden md:block w-4 h-4" />
-          <span className="hidden md:inline text-[12px] text-white/90">
+          <span className="hidden md:inline text-[12px] opacity-90">
             Dinner Service (9:00 PM)
           </span>
         </button>
       </div>
+
 
       {/* Right: system controls */}
       <div className="flex items-center gap-2 md:gap-3">
@@ -125,7 +135,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           onClick={onToggleAiAssistant}
           aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
           aria-pressed={aiAssistantOpen}
-          className="flex items-center justify-center w-8 h-8 rounded-full transition-colors hover:bg-white/10"
+          className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${hoverChip}`}
           style={aiAssistantOpen ? { background: 'linear-gradient(135deg, hsla(280, 80%, 75%, 0.35) 0%, hsla(220, 90%, 70%, 0.35) 100%)' } : undefined}
         >
           <AnimatedAIIcon size={20} />
@@ -134,19 +144,19 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         <button
           type="button"
           aria-label="Local host"
-          className="relative p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
+          className={`relative p-0.5 md:p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={localHostIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
           <span
             className="absolute -top-0.5 -right-0.5 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full"
-            style={{ background: '#F59E0B', border: `1.5px solid ${HEADER_BG}` }}
+            style={{ background: '#F59E0B', border: `1.5px solid ${glass ? 'transparent' : HEADER_BG}` }}
           />
         </button>
 
         <button
           type="button"
           aria-label="Refresh"
-          className="hidden md:flex p-1 rounded hover:bg-white/10 transition-colors"
+          className={`hidden md:flex p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={refreshIcon} alt="" className="w-5 h-5" />
         </button>
@@ -154,8 +164,8 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         <button
           type="button"
           aria-label="Support"
-          className="hidden md:flex p-1.5 rounded-md transition-colors"
-          style={{ background: 'rgba(255,255,255,0.08)' }}
+          className={`hidden md:flex p-1.5 rounded-md transition-colors ${glass ? 'bg-foreground/10' : ''}`}
+          style={glass ? undefined : { background: 'rgba(255,255,255,0.08)' }}
         >
           <img src={supportIcon} alt="" className="w-5 h-5" />
         </button>
@@ -167,7 +177,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
             aria-label="Notifications"
             aria-pressed={notifOpen}
             onClick={() => setNotifOpen(v => !v)}
-            className="relative p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
+            className={`relative p-0.5 md:p-1 rounded transition-colors ${hoverChip}`}
           >
             <img src={notificationIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
             {unreadCount > 0 && (
@@ -190,16 +200,16 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
         <button
           type="button"
           aria-label="Network"
-          className="p-0.5 md:p-1 rounded hover:bg-white/10 transition-colors"
+          className={`p-0.5 md:p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={wifiIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
         </button>
 
         <div className="flex flex-col items-end leading-tight ml-1 tabular-nums">
-          <span className="text-[12px] md:text-[13px] font-mono-timer text-white/95">
+          <span className="text-[12px] md:text-[13px] font-mono-timer opacity-95">
             {timeLabel}
           </span>
-          <span className="text-[9px] md:text-[10px] text-white/60">
+          <span className="text-[9px] md:text-[10px] opacity-60">
             {dateLabel}
           </span>
         </div>
