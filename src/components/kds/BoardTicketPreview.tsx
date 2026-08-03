@@ -618,7 +618,7 @@ function ProgressiveTicket({ identifier, agingOverrideSeconds, onTimerClick }: V
           <span>8:18 pm</span>
         </div>
       </div>
-      <button className="w-full bg-[#16A085] text-white text-[11px] font-bold py-2 tracking-wide">
+      <button className="w-full bg-[var(--tkt-accent)] text-[var(--tkt-accent-fg)] text-[11px] font-bold py-2 tracking-wide">
         PREPARING
       </button>
     </Card>
