@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { TicketCard } from './TicketCard';
 import { useGlassBoard } from './glass-board-context';
 import { CARD_W, activeCourse, type GlassStage, type GlassTicket } from './glass-tickets-data';
+import { DARK_SKIN, GlassStyleProvider, LIGHT_SKIN, type GlassSafety } from './glass-theme';
+import { useTheme } from '@/hooks/use-theme';
+import type { ViewMode } from '@/types/kds';
 
 /** Height estimate drives the stagger packing (verbatim from the reference). */
 function estHeight(t: GlassTicket, items: Record<string, GlassStage>, open: Record<string, boolean>) {
@@ -25,16 +28,60 @@ interface TicketBoardProps {
   identifier?: 'order' | 'guest';
   /** Extra multiplier applied on top of the base glass scale (text size). */
   scaleFactor?: number;
+  /** Spacing / Layout control: card padding scale. */
+  spacing?: 'Compact' | 'Standard' | 'Spacious';
+  /** Density control: item row padding scale. */
+  density?: 'low' | 'medium' | 'high';
+  /** Appearance control. */
+  appearance?: 'compact' | 'standard' | 'header';
+  /** Safety emphasis applied to allergen chips. */
+  safety?: GlassSafety;
+  /** Force a theme (Ticket Studio preview); defaults to the app theme. */
+  themeOverride?: 'light' | 'dark';
+  /** Limit the number of rendered tickets (settings previews). */
+  maxTickets?: number;
+  /** Force a view mode, ignoring the board's own selection. */
+  viewModeOverride?: ViewMode;
 }
 
-export function TicketBoard({ identifier = 'order', scaleFactor = 1 }: TicketBoardProps = {}) {
+const PAD_SCALE = { Compact: 0.7, Standard: 1, Spacious: 1.35 } as const;
+const ROW_SCALE = { high: 0.6, medium: 1, low: 1.35 } as const;
+
+export function TicketBoard({
+  identifier = 'order',
+  scaleFactor = 1,
+  spacing = 'Standard',
+  density = 'medium',
+  appearance = 'standard',
+  safety = 'bright',
+  themeOverride,
+  maxTickets,
+  viewModeOverride,
+}: TicketBoardProps = {}) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
+  const { theme } = useTheme();
   const {
-    tickets, viewMode, itemStages, openCourses, toggleCourse,
+    tickets: allTickets, viewMode: boardViewMode, itemStages, openCourses, toggleCourse,
     tapItem, stepTicket, prepLabelFor, elapsedFor, now,
   } = useGlassBoard();
+  const viewMode = viewModeOverride ?? boardViewMode;
+  const tickets = useMemo(
+    () => (maxTickets ? allTickets.slice(0, maxTickets) : allTickets),
+    [allTickets, maxTickets],
+  );
   const zoom = GLASS_SCALE * scaleFactor;
+  const dark = (themeOverride ?? theme) === 'dark';
+  const styleValue = useMemo(
+    () => ({
+      skin: dark ? DARK_SKIN : LIGHT_SKIN,
+      padScale: PAD_SCALE[spacing] ?? 1,
+      rowScale: ROW_SCALE[density] ?? 1,
+      safety,
+      appearance,
+    }),
+    [dark, spacing, density, safety, appearance],
+  );
 
 
   useEffect(() => {
