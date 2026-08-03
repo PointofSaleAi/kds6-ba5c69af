@@ -419,7 +419,7 @@ function CalmBoardBody() {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="w-full flex items-center justify-between text-[10px] text-text-secondary pt-1 hover:text-[#2C3E50] transition-colors"
+          className="w-full flex items-center justify-between text-[10px] text-text-secondary pt-1 hover:text-[var(--tkt-text)] transition-colors"
         >
           <span>{expanded ? 'Hide extra courses' : '+ 2 Courses'}</span>
           <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
