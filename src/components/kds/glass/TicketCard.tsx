@@ -53,7 +53,9 @@ export function TicketCard({
   const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
 
-  const { notesAck, setNoteAck, posSeen, setPosSeen } = useGlassBoard();
+  const { notesAck, setNoteAck, posSeen, setPosSeen, view, recallItem } = useGlassBoard();
+  /** Served screen: taps recall instead of advancing (product + ticket level). */
+  const recallMode = view === 'history';
   const noteAcked = !!notesAck[t.id];
   const msgSeen = !!posSeen[t.id];
   const [replyOpen, setReplyOpen] = useState(false);
@@ -311,7 +313,7 @@ export function TicketCard({
                       item={it}
                       stage={istage}
                       prepLabel={prepLabelFor(ik, istage)}
-                      onTap={() => onTapItem(ik)}
+                      onTap={() => (recallMode ? recallItem(ik) : onTapItem(ik))}
                     />
                   );
                 })}
@@ -324,6 +326,24 @@ export function TicketCard({
       {/* footer */}
       {!headerOnly && (
       <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', gap: 10, padding: `${pad(14)}px ${pad(16)}px ${pad(16)}px` }}>
+        {recallMode ? (
+          <button
+            type="button"
+            onClick={() => onStepTicket(t, -1)}
+            className="active:scale-95 transition-transform"
+            style={{
+              flex: 1, minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 11, cursor: 'pointer',
+              borderRadius: 17, fontWeight: 700, fontSize: 22, lineHeight: 1, letterSpacing: '0.01em',
+              background: 'linear-gradient(180deg,#ff453a,#e0281c)', color: '#ffffff',
+              border: '1px solid rgba(224,40,28,0.9)',
+              boxShadow: '0 8px 22px rgba(224,40,28,0.28), inset 0 1px 0 rgba(255,255,255,0.35)',
+            }}
+          >
+            <GlassIcon name="back" size={23} sw={2} stroke="#ffffff" />
+            <span>RECALL</span>
+          </button>
+        ) : (
+        <>
         {stage !== 'unseen' && (
           <button
             type="button"
@@ -354,6 +374,8 @@ export function TicketCard({
           <GlassIcon name={vis.icon} size={23} sw={vis.sw} />
           <span>{CTA[stage]}</span>
         </button>
+        </>
+        )}
       </div>
       )}
     </div>
