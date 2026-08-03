@@ -124,7 +124,14 @@ function KdsScreenMock({
               <div className="flex-1 min-w-0 overflow-auto p-2">
                 {boardId === 'glass-view' ? (
                   <GlassBoardProvider>
-                    <TicketBoard identifier={identifier} scaleFactor={textScale} />
+                    <TicketBoard
+                      identifier={identifier}
+                      scaleFactor={textScale}
+                      spacing={layout === 'compact' ? 'Compact' : layout === 'spacious' ? 'Spacious' : 'Standard'}
+                      density={density as 'low' | 'medium' | 'high'}
+                      safety={safety as 'muted' | 'bright' | 'highlighted'}
+                      themeOverride={theme === 'dark' ? 'dark' : 'light'}
+                    />
                   </GlassBoardProvider>
                 ) : boardId === 'focus-lane' ? (
                   <FocusLaneBoard
