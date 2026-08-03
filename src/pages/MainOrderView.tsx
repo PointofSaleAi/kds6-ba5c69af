@@ -1216,7 +1216,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
     <KDSTopHeader aiAssistantOpen={aiAssistantOpen} onToggleAiAssistant={() => setAiAssistantOpen(v => !v)} onOpenAlerts={onOpenAlerts} />
     <div
       className={`fixed inset-0 flex bg-tickets-bg ${effectiveCardVariant === 'v5' ? 'v5-route' : ''} ${dockLayout.bottomBar === 'top' ? 'flex-col-reverse' : 'flex-col'}`}
-      style={{ paddingTop: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 44px))' }}
+      style={{ ...ticketSkinVars(resolveTicketSkin(theme)), paddingTop: 'calc(var(--training-bar-h, 0px) + var(--kds-header-h, 44px))' }}
     >
       {/* Kitchen message flash notification */}
       <AnimatePresence>
