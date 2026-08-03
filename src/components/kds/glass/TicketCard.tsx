@@ -59,7 +59,9 @@ export function TicketCard({
   const [replyOpen, setReplyOpen] = useState(false);
 
   const pad = (v: number) => Math.round(v * padScale);
-  const showSecondary = appearance !== 'compact';
+  /** Appearance "Header" renders the ticket head only. */
+  const headerOnly = appearance === 'header';
+  const showSecondary = appearance === 'standard';
 
   /* Notes: single tap acknowledges (disables the note), double tap undoes. */
   const noteTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -181,7 +183,7 @@ export function TicketCard({
       </div>
 
       {/* ticket-level allergies */}
-      {t.allergies.length > 0 && (
+      {t.allergies.length > 0 && !headerOnly && (
         <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', gap: 8, padding: `0 ${pad(18)}px ${pad(14)}px` }}>
           {t.allergies.map((a) => (
             <div key={a} style={{ ...glossTicket(skin), ...safetyStyle(safety) }}>{a}</div>
@@ -232,7 +234,7 @@ export function TicketCard({
             style={{
               display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
               borderTop: `1px solid ${skin.hairline}`,
-              background: noteAcked ? 'rgba(29,158,117,0.10)' : undefined,
+              background: noteAcked ? skin.ackRowBg : undefined,
             }}
           >
             <div style={{ marginTop: 3, flex: '0 0 auto' }}>
@@ -256,12 +258,12 @@ export function TicketCard({
               className="active:scale-95 transition-transform"
               style={{
                 width: 44, height: 44, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: 14, cursor: 'pointer',
-                background: noteAcked ? 'rgba(29,158,117,0.9)' : skin.btnBg,
-                border: `1px solid ${noteAcked ? 'rgba(255,255,255,0.35)' : skin.btnBorder}`,
+                background: noteAcked ? skin.ackBg : skin.btnBg,
+                border: `1px solid ${noteAcked ? skin.ackBorder : skin.btnBorder}`,
                 boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : skin.btnFg} />
+              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? skin.ackFg : skin.btnFg} />
             </button>
           </div>
         </div>
@@ -280,6 +282,7 @@ export function TicketCard({
         )}
 
       {/* courses + items */}
+      {!headerOnly && (
       <div style={{ position: 'relative', flex: 1, minHeight: 0, padding: `0 ${pad(18)}px`, overflowY: fillHeight ? 'auto' : 'visible' }}>
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
@@ -316,8 +319,10 @@ export function TicketCard({
           );
         })}
       </div>
+      )}
 
       {/* footer */}
+      {!headerOnly && (
       <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', gap: 10, padding: `${pad(14)}px ${pad(16)}px ${pad(16)}px` }}>
         {stage !== 'unseen' && (
           <button
@@ -350,6 +355,7 @@ export function TicketCard({
           <span>{CTA[stage]}</span>
         </button>
       </div>
+      )}
     </div>
   );
 }

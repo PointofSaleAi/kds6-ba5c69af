@@ -30,6 +30,11 @@ export interface GlassSkin {
   allergenFg: string;
   allergenBorder: string;
   allergenShadow: string;
+  /** Acknowledgement (order note seen): neutral grey shade + black tick. */
+  ackBg: string;
+  ackFg: string;
+  ackBorder: string;
+  ackRowBg: string;
 }
 
 export const LIGHT_SKIN: GlassSkin = {
@@ -58,6 +63,10 @@ export const LIGHT_SKIN: GlassSkin = {
   allergenBorder: 'rgba(255,255,255,0.85)',
   allergenShadow:
     '0 4px 10px rgba(158,31,20,0.22), inset 0 1.5px 0 rgba(255,255,255,0.9), inset 0 -2px 3px rgba(190,90,80,0.3)',
+  ackBg: 'rgba(120,130,150,0.18)',
+  ackFg: '#0b0b0c',
+  ackBorder: 'rgba(120,130,150,0.35)',
+  ackRowBg: 'rgba(120,130,150,0.10)',
 };
 
 export const DARK_SKIN: GlassSkin = {
@@ -84,6 +93,10 @@ export const DARK_SKIN: GlassSkin = {
   allergenFg: '#ffd9d4',
   allergenBorder: 'rgba(255,160,150,0.35)',
   allergenShadow: '0 4px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14)',
+  ackBg: 'rgba(210,216,226,0.85)',
+  ackFg: '#14141a',
+  ackBorder: 'rgba(255,255,255,0.28)',
+  ackRowBg: 'rgba(255,255,255,0.07)',
 };
 
 export type GlassSafety = 'muted' | 'bright' | 'highlighted';

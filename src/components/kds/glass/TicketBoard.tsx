@@ -40,6 +40,8 @@ interface TicketBoardProps {
   themeOverride?: 'light' | 'dark';
   /** Limit the number of rendered tickets (settings previews). */
   maxTickets?: number;
+  /** Force a specific ticket first (settings previews show a Dine In ticket). */
+  pinnedTicketId?: string;
   /** Force a view mode, ignoring the board's own selection. */
   viewModeOverride?: ViewMode;
 }
@@ -56,6 +58,7 @@ export function TicketBoard({
   safety = 'bright',
   themeOverride,
   maxTickets,
+  pinnedTicketId,
   viewModeOverride,
 }: TicketBoardProps = {}) {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -66,10 +69,14 @@ export function TicketBoard({
     tapItem, stepTicket, prepLabelFor, elapsedFor, now,
   } = useGlassBoard();
   const viewMode = viewModeOverride ?? boardViewMode;
-  const tickets = useMemo(
-    () => (maxTickets ? allTickets.slice(0, maxTickets) : allTickets),
-    [allTickets, maxTickets],
-  );
+  const tickets = useMemo(() => {
+    let list = allTickets;
+    if (pinnedTicketId) {
+      const pinned = list.find((t) => t.id === pinnedTicketId);
+      if (pinned) list = [pinned, ...list.filter((t) => t.id !== pinnedTicketId)];
+    }
+    return maxTickets ? list.slice(0, maxTickets) : list;
+  }, [allTickets, maxTickets, pinnedTicketId]);
   const zoom = GLASS_SCALE * scaleFactor;
   const dark = (themeOverride ?? theme) === 'dark';
   const styleValue = useMemo(

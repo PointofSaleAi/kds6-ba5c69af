@@ -32,6 +32,7 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { getCardVariantForTicketsRoute, readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
 import { TicketStudioSkeleton } from '@/components/kds/TicketStudioSkeleton';
 import { TicketBoard } from '@/components/kds/glass/TicketBoard';
+import { PreviewFitBox } from '@/components/kds/PreviewFitBox';
 import { GlassBoardProvider } from '@/components/kds/glass/glass-board-context';
 
 
@@ -276,12 +277,13 @@ export default function DisplaySettings() {
               <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
                 Preview
               </p>
-              <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
+              <PreviewFitBox>
                 {ticketsRoute === 'glass' ? (
                   <div className="w-[360px] max-w-full flex justify-center">
                     <GlassBoardProvider>
                       <TicketBoard
                         maxTickets={1}
+                        pinnedTicketId="t23"
                         viewModeOverride="grid"
                         identifier={ticketHeaderLayout === 'guest' ? 'guest' : 'order'}
                         scaleFactor={textSize === 'Compact' ? 0.9 : textSize === 'Large' ? 1.1 : 1}
@@ -311,7 +313,7 @@ export default function DisplaySettings() {
                   </KDSSettingsPreviewScope>
                 </div>
                 )}
-              </div>
+              </PreviewFitBox>
             </div>
           </div>
         </div>

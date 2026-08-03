@@ -72,7 +72,7 @@ export const TICKETS: GlassTicket[] = [
       { qty: '2×', name: 'Milkshake', mods: 'Chocolate', tags: ['DAIRY'] } ] } ],
   },
   {
-    id: 't33', type: 'Table 15', num: '33', kind: 'table', server: 'Emma T. · 12:07', base: 593,
+    id: 't33', type: 'Table 15', num: '33', kind: 'table', server: 'Emma T. · 12:07', base: 1490,
     allergies: ['GLUTEN allergy', 'SHELLFISH allergy', 'EGG allergy', 'DAIRY allergy', 'FISH allergy'],
     courses: [
       { id: 'app', label: 'APPETIZER', items: [
@@ -90,7 +90,7 @@ export const TICKETS: GlassTicket[] = [
     ],
   },
   {
-    id: 't36', type: 'Delivery', num: '36', kind: 'delivery', server: 'DoorDash · 12:06', base: 686,
+    id: 't36', type: 'Delivery', num: '36', kind: 'delivery', server: 'DoorDash · 12:06', base: 1290,
     allergies: ['SOY allergy', 'SESAME allergy'],
     courses: [ { id: 'all', showHeader: false, items: [
       { qty: '2×', name: 'Pad Thai', mods: 'Medium spice · No peanuts', tags: ['SOY', 'EGG'] },
@@ -114,7 +114,7 @@ export const TICKETS: GlassTicket[] = [
       { qty: '1×', name: 'Caprese Salad', mods: 'No basil', tags: ['DAIRY'] } ] } ],
   },
   {
-    id: 't42', type: 'Banquet B', num: '42', kind: 'banquet', server: 'Priya P. · 24 covers', base: 420,
+    id: 't42', type: 'Banquet B', num: '42', kind: 'banquet', server: 'Priya P. · 24 covers', base: 1345,
     allergies: ['GLUTEN allergy', 'DAIRY allergy'],
     courses: [
       { id: 'sal', label: 'SALAD', items: [
@@ -226,10 +226,13 @@ export function ticketKeys(t: GlassTicket): string[] {
   return out;
 }
 
-/** Ticket button reflects the FURTHEST stage any item reached. */
+/**
+ * Ticket button reflects the LEAST advanced stage across items — the ticket only
+ * moves to the next stage once every product reached it.
+ */
 export function ticketStage(t: GlassTicket, items: Record<string, GlassStage>): GlassStage {
   const idx = ticketKeys(t).map((k) => ORDER.indexOf(items[k] || 'unseen'));
-  return ORDER[Math.max(...(idx.length ? idx : [0]))];
+  return ORDER[Math.min(...(idx.length ? idx : [0]))];
 }
 
 export function activeCourse(t: GlassTicket, items: Record<string, GlassStage>): number {
@@ -251,10 +254,14 @@ export function stageVisuals(stage: GlassStage) {
   };
 }
 
-/** Stop-light aging: green new → amber medium → red delay → purple overtime */
+/**
+ * Aging tones, aligned 1:1 with the shared ticket aging bands
+ * (Start 0–5m · Medium 6–10m · Delay 11–20m · Overtime 21m+).
+ */
 export function timerTone(sec: number) {
-  if (sec < 180) return { bg: 'linear-gradient(180deg, #34d15b, #1da94a)', fg: '#fff', glow: '52,209,91' };
-  if (sec < 300) return { bg: 'linear-gradient(180deg, #ffb340, #f08c00)', fg: '#3d2400', glow: '255,179,64' };
-  if (sec < 420) return { bg: 'linear-gradient(180deg, #ff453a, #e0281c)', fg: '#fff', glow: '255,69,58' };
-  return { bg: 'linear-gradient(180deg, #a259e6, #7b2fc4)', fg: '#fff', glow: '162,89,230' };
+  const min = sec / 60;
+  if (min < 6) return { bg: 'linear-gradient(180deg, #5c5c58, #4A4A47)', fg: '#fff', glow: '74,74,71' };
+  if (min < 11) return { bg: 'linear-gradient(180deg, #f2b41f, #E5A000)', fg: '#3d2400', glow: '229,160,0' };
+  if (min < 21) return { bg: 'linear-gradient(180deg, #e8703f, #D85A30)', fg: '#fff', glow: '216,90,48' };
+  return { bg: 'linear-gradient(180deg, #ea5f5e, #E24B4A)', fg: '#fff', glow: '226,75,74' };
 }
