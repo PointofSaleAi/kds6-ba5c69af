@@ -243,17 +243,17 @@ export function TicketCard({
                 boxShadow: '0 4px 12px rgba(28,33,54,0.1)',
               }}
             >
-              <GlassIcon name={noteAcked ? 'check' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : '#0b0b0c'} />
+              <GlassIcon name={noteAcked ? 'tick' : 'eye'} size={20} sw={1.8} stroke={noteAcked ? '#fff' : '#0b0b0c'} />
             </button>
           </div>
         </div>
       )}
 
-      {t.posMessage && (
+      {t.posMessage && replyOpen && (
         <KitchenReplyDialog
-          open={replyOpen}
-          onOpenChange={setReplyOpen}
           message={replyMessage}
+          onSend={() => setReplyOpen(false)}
+          onClose={() => setReplyOpen(false)}
         />
       )}
 
