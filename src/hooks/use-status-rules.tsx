@@ -24,7 +24,7 @@ export interface StatusRulesContextValue {
   rules: StatusRule[];
   setRules: (rules: StatusRule[]) => void;
   resetToDefaults: () => void;
-  getStatusForElapsed: (elapsedSeconds: number) => { color: string; textColor: string; label: string; ruleId: string };
+  getStatusForElapsed: (elapsedSeconds: number) => { color: string; colorTo?: string; glow?: string; gradient: string; textColor: string; label: string; ruleId: string };
   courseLevelAging: boolean;
   setCourseLevelAging: (v: boolean) => void;
 }
@@ -78,15 +78,15 @@ export function StatusRulesProvider({ children }: { children: ReactNode }) {
     for (const rule of rules) {
       if (rule.maxMinutes === null) {
         if (elapsedMinutes >= rule.minMinutes) {
-          return { color: rule.color, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
+          return { color: rule.color, colorTo: rule.colorTo, glow: rule.glow, gradient: `linear-gradient(180deg, ${rule.color}, ${rule.colorTo ?? rule.color})`, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
         }
       } else if (elapsedMinutes >= rule.minMinutes && elapsedMinutes <= rule.maxMinutes) {
-        return { color: rule.color, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
+        return { color: rule.color, colorTo: rule.colorTo, glow: rule.glow, gradient: `linear-gradient(180deg, ${rule.color}, ${rule.colorTo ?? rule.color})`, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
       }
     }
     // Fallback to last rule
     const last = rules[rules.length - 1];
-    return { color: last.color, textColor: last.textColor === 'grey' ? '#6C7A89' : last.textColor === 'black' ? '#000000' : '#FFFFFF', label: last.label, ruleId: last.id };
+    return { color: last.color, colorTo: last.colorTo, glow: last.glow, gradient: `linear-gradient(180deg, ${last.color}, ${last.colorTo ?? last.color})`, textColor: last.textColor === 'grey' ? '#6C7A89' : last.textColor === 'black' ? '#000000' : '#FFFFFF', label: last.label, ruleId: last.id };
   }, [rules]);
 
   return (
