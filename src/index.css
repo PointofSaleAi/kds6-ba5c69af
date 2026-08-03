@@ -608,9 +608,10 @@ html[data-glass-chrome] [data-radix-popper-content-wrapper] > * {
 }
 
 /* White chrome PNG icons need inverting on light glass. */
-html[data-glass-chrome]:not(.dark) [role="banner"] img {
+html[data-glass-chrome]:not(.dark) [role="banner"] img,
+html[data-glass-chrome]:not(.dark) .version-icon-img {
   filter: brightness(0) saturate(0);
-  opacity: 0.78;
+  opacity: 0.85;
 }
 
 /* Trim blur cost on small touch screens. */
