@@ -355,6 +355,7 @@ export function TicketCard({
           <span>{CTA[stage]}</span>
         </button>
       </div>
+      )}
     </div>
   );
 }
