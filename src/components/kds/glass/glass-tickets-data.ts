@@ -256,12 +256,12 @@ export function stageVisuals(stage: GlassStage) {
 
 /**
  * Aging tones, aligned 1:1 with the shared ticket aging bands
- * (Start 0–5m · Medium 6–10m · Delay 11–20m · Overtime 21m+).
+ * (New 0–3m · Medium 3–5m · Delay 5–7m · Overtime 7m+), stop-light gradients.
  */
 export function timerTone(sec: number) {
   const min = sec / 60;
-  if (min < 6) return { bg: 'linear-gradient(180deg, #5c5c58, #4A4A47)', fg: '#fff', glow: '74,74,71' };
-  if (min < 11) return { bg: 'linear-gradient(180deg, #f2b41f, #E5A000)', fg: '#3d2400', glow: '229,160,0' };
-  if (min < 21) return { bg: 'linear-gradient(180deg, #e8703f, #D85A30)', fg: '#fff', glow: '216,90,48' };
-  return { bg: 'linear-gradient(180deg, #ea5f5e, #E24B4A)', fg: '#fff', glow: '226,75,74' };
+  if (min < 3) return { bg: 'linear-gradient(180deg, #34d15b, #1da94a)', fg: '#ffffff', glow: '52,209,91' };
+  if (min < 5) return { bg: 'linear-gradient(180deg, #ffb340, #f08c00)', fg: '#3d2400', glow: '255,179,64' };
+  if (min < 7) return { bg: 'linear-gradient(180deg, #ff453a, #e0281c)', fg: '#ffffff', glow: '255,69,58' };
+  return { bg: 'linear-gradient(180deg, #a259e6, #7b2fc4)', fg: '#ffffff', glow: '162,89,230' };
 }

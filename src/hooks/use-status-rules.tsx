@@ -4,23 +4,27 @@ export interface StatusRule {
   id: string;
   label: string;
   color: string;
+  /** Optional gradient end colour (top → bottom stop-light pill). */
+  colorTo?: string;
+  /** Optional glow colour (rgba/hex) used for pill halos. */
+  glow?: string;
   textColor: 'white' | 'grey' | 'black';
   minMinutes: number;
   maxMinutes: number | null; // null = open-ended (final rule)
 }
 
 const DEFAULT_RULES: StatusRule[] = [
-  { id: 'start', label: 'Start (New)', color: '#4A4A47', textColor: 'white', minMinutes: 0, maxMinutes: 5 },
-  { id: 'medium', label: 'Medium (Preparing)', color: '#E5A000', textColor: 'white', minMinutes: 6, maxMinutes: 10 },
-  { id: 'delay', label: 'Delay (Warning)', color: '#D85A30', textColor: 'white', minMinutes: 11, maxMinutes: 20 },
-  { id: 'overtime', label: 'Overtime (Critical)', color: '#E24B4A', textColor: 'white', minMinutes: 21, maxMinutes: null },
+  { id: 'start', label: 'New', color: '#34d15b', colorTo: '#1da94a', glow: 'rgba(52,209,91,.8)', textColor: 'white', minMinutes: 0, maxMinutes: 3 },
+  { id: 'medium', label: 'Medium', color: '#ffb340', colorTo: '#f08c00', glow: 'rgba(255,179,64,.8)', textColor: 'black', minMinutes: 3, maxMinutes: 5 },
+  { id: 'delay', label: 'Delay', color: '#ff453a', colorTo: '#e0281c', glow: 'rgba(255,69,58,.8)', textColor: 'white', minMinutes: 5, maxMinutes: 7 },
+  { id: 'overtime', label: 'Overtime', color: '#a259e6', colorTo: '#7b2fc4', glow: 'rgba(162,89,230,.8)', textColor: 'white', minMinutes: 7, maxMinutes: null },
 ];
 
 export interface StatusRulesContextValue {
   rules: StatusRule[];
   setRules: (rules: StatusRule[]) => void;
   resetToDefaults: () => void;
-  getStatusForElapsed: (elapsedSeconds: number) => { color: string; textColor: string; label: string; ruleId: string };
+  getStatusForElapsed: (elapsedSeconds: number) => { color: string; colorTo?: string; glow?: string; gradient: string; textColor: string; label: string; ruleId: string };
   courseLevelAging: boolean;
   setCourseLevelAging: (v: boolean) => void;
 }
@@ -31,7 +35,7 @@ const COURSE_LEVEL_KEY = 'posai-course-level-aging';
 
 const STORAGE_KEY = 'posai-status-rules';
 const STORAGE_VERSION_KEY = 'posai-status-rules-version';
-const CURRENT_VERSION = '3';
+const CURRENT_VERSION = '4';
 
 function loadRules(): StatusRule[] {
   try {
@@ -74,15 +78,15 @@ export function StatusRulesProvider({ children }: { children: ReactNode }) {
     for (const rule of rules) {
       if (rule.maxMinutes === null) {
         if (elapsedMinutes >= rule.minMinutes) {
-          return { color: rule.color, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
+          return { color: rule.color, colorTo: rule.colorTo, glow: rule.glow, gradient: `linear-gradient(180deg, ${rule.color}, ${rule.colorTo ?? rule.color})`, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
         }
       } else if (elapsedMinutes >= rule.minMinutes && elapsedMinutes <= rule.maxMinutes) {
-        return { color: rule.color, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
+        return { color: rule.color, colorTo: rule.colorTo, glow: rule.glow, gradient: `linear-gradient(180deg, ${rule.color}, ${rule.colorTo ?? rule.color})`, textColor: rule.textColor === 'grey' ? '#6C7A89' : rule.textColor === 'black' ? '#000000' : '#FFFFFF', label: rule.label, ruleId: rule.id };
       }
     }
     // Fallback to last rule
     const last = rules[rules.length - 1];
-    return { color: last.color, textColor: last.textColor === 'grey' ? '#6C7A89' : last.textColor === 'black' ? '#000000' : '#FFFFFF', label: last.label, ruleId: last.id };
+    return { color: last.color, colorTo: last.colorTo, glow: last.glow, gradient: `linear-gradient(180deg, ${last.color}, ${last.colorTo ?? last.color})`, textColor: last.textColor === 'grey' ? '#6C7A89' : last.textColor === 'black' ? '#000000' : '#FFFFFF', label: last.label, ruleId: last.id };
   }, [rules]);
 
   return (
