@@ -64,7 +64,7 @@ export function SettingsSidebar() {
         <button
           type="button"
           onClick={() => navigate(SETTINGS_GROUPS.account.path)}
-          className="mt-3 mx-3 w-full flex items-center gap-2 rounded-2xl px-3 py-2 active:opacity-70 transition-all text-left"
+          className="mt-3 w-full flex items-center gap-2 rounded-2xl px-3 py-2 active:opacity-70 transition-all text-left"
           style={{
             background: 'hsl(var(--text-primary) / 0.06)',
             boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.06)',
