@@ -276,7 +276,7 @@ export default function DisplaySettings() {
               <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
                 Preview
               </p>
-              <div className="flex-1 min-h-0 overflow-y-auto flex justify-center">
+              <PreviewFitBox>
                 {ticketsRoute === 'glass' ? (
                   <div className="w-[360px] max-w-full flex justify-center">
                     <GlassBoardProvider>
@@ -311,7 +311,7 @@ export default function DisplaySettings() {
                   </KDSSettingsPreviewScope>
                 </div>
                 )}
-              </div>
+              </PreviewFitBox>
             </div>
           </div>
         </div>
