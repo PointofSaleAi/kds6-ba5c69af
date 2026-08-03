@@ -446,18 +446,19 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
   const phases: Array<'seen' | 'preparing' | 'ready'> = ['seen', 'preparing', 'ready'];
   return (
     <Card>
-      <div className="h-1.5 bg-[#16A085]" />
+      <div className="h-1.5 bg-[var(--tkt-accent)]" />
       <div className="px-3 pt-2 pb-1.5 flex justify-between items-center">
         <div className="text-[16px] font-black">{orderNumberLabel}</div>
         <button type="button" onClick={onTimerClick} className="text-[13px] font-mono tabular-nums cursor-pointer hover:opacity-80">{text}</button>
       </div>
-      <div className="bg-[#FFF3D6] text-[#8A5A00] text-[10px] font-bold px-3 py-1">
+      <div className="bg-[var(--tkt-amber-bg)] text-[var(--tkt-amber-fg)] text-[10px] font-bold px-3 py-1">
         ALLERGEN WARNING: PEANUT, GLUTEN
       </div>
-      <div className="px-3 py-1 border-b border-border text-[10px] font-bold text-text-secondary">
+      <div className="px-3 py-1 border-b border-[var(--tkt-hairline)] text-[10px] font-bold text-text-secondary">
         CURRENT COURSE: ENTREE
       </div>
-      <div className="px-3 py-2.5 space-y-2 border-b border-border">
+      <div className="px-3 py-2.5 space-y-2 border-b border-[var(--tkt-hairline)]">
+
         <div className="flex items-baseline gap-3">
           <span className="text-[22px] font-black leading-none">2</span>
           <span className="text-[15px] font-bold">Meatballs</span>
