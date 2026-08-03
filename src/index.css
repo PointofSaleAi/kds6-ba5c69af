@@ -631,3 +631,9 @@ html[data-glass-chrome] .bg-primary-foreground.text-brand-dark,
 html[data-glass-chrome] .bg-brand-primary.text-primary-foreground {
   color: hsl(var(--background));
 }
+
+/* Glass chrome: keep the 86-products footer pill label legible on frosted grey. */
+html[data-glass-chrome] [data-onboarding='eighty-six'],
+html[data-glass-chrome] [data-onboarding='eighty-six'] * {
+  color: hsl(var(--primary-foreground));
+}
