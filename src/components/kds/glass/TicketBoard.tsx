@@ -25,6 +25,9 @@ function estHeight(t: GlassTicket, items: Record<string, GlassStage>, open: Reco
   return h;
 }
 
+/** Scale factor bringing the glass design in line with standard ticket sizing. */
+const GLASS_SCALE = 0.6;
+
 export function TicketBoard() {
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
