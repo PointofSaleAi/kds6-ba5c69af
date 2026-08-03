@@ -49,19 +49,6 @@ export function TicketBoard() {
     return () => window.removeEventListener('resize', measure);
   }, []);
 
-  const setStages = useCallback((keys: string[], stage: GlassStage) => {
-    setItems((prev) => {
-      const next = { ...prev };
-      keys.forEach((k) => {
-        const from = next[k] || 'unseen';
-        if (stage === 'preparing' && from !== 'preparing') prepAt.current[k] = Date.now();
-        if (from === 'preparing' && stage !== 'preparing')
-          prepFrozen.current[k] = Math.round((Date.now() - (prepAt.current[k] || Date.now())) / 1000);
-        next[k] = stage;
-      });
-      return next;
-    });
-  }, []);
 
   const stepItem = useCallback((k: string, dir: number) => {
     setItems((prev) => {
