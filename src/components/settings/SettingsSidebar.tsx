@@ -56,15 +56,15 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="py-3 px-0 shrink-0">
-        <h2 className="text-[1.65rem] font-bold px-3" style={{ color: 'hsl(var(--text-primary))' }}>
+      <div className="px-2.5 pt-3.5 pb-3 shrink-0">
+        <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
 
         <button
           type="button"
           onClick={() => navigate(SETTINGS_GROUPS.account.path)}
-          className="mt-3 w-full flex items-center gap-2 rounded-2xl px-3 py-2 active:opacity-70 transition-all text-left"
+          className="mt-3 w-full flex items-center gap-2 rounded-2xl px-2 py-2 active:opacity-70 transition-all text-left"
           style={{
             background: 'hsl(var(--text-primary) / 0.06)',
             boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.06)',
@@ -94,7 +94,7 @@ export function SettingsSidebar() {
       </div>
 
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide py-3 px-0">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-2.5 pb-2">
         {showResults ? (
           <div>
             <div
@@ -162,7 +162,7 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center gap-2.5 w-full py-2 px-3 rounded-full active:opacity-70 transition-all"
+                  className="flex items-center gap-2.5 w-full py-1 px-2 rounded-full active:opacity-70 transition-all"
                   style={{
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
@@ -187,9 +187,9 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="py-3 px-0 shrink-0">
+      <div className="px-2.5 pt-3 pb-3 shrink-0">
         <div
-          className="w-full flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
+          className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
           style={{
             background: 'hsl(var(--text-primary) / 0.06)',
             boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.04)',
