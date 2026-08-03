@@ -30,6 +30,11 @@ export interface GlassSkin {
   allergenFg: string;
   allergenBorder: string;
   allergenShadow: string;
+  /** Acknowledgement (order note seen): neutral grey shade + black tick. */
+  ackBg: string;
+  ackFg: string;
+  ackBorder: string;
+  ackRowBg: string;
 }
 
 export const LIGHT_SKIN: GlassSkin = {
