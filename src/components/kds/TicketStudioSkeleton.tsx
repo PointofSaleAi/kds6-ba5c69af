@@ -35,6 +35,11 @@ type KdsScreenMockProps = {
   boardId: string;
   identifier: 'order' | 'guest';
   textSize: string;
+  /** Personalize: Layout (spacing), Density, Safety Emphasis, Theme. */
+  layout?: string;
+  density?: string;
+  safety?: string;
+  theme?: string;
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
@@ -44,6 +49,10 @@ function KdsScreenMock({
   boardId,
   identifier,
   textSize,
+  layout = 'standard',
+  density = 'medium',
+  safety = 'bright',
+  theme = 'light',
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
@@ -51,6 +60,7 @@ function KdsScreenMock({
   const previewOrders = useMemo(() => mockOrders.slice(0, 6), []);
 
   const textScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
+
 
   // Render as a fixed "virtual KDS screen" and uniformly scale it into the
   // preview container so sidebar, summary panel, footer, and tickets all
