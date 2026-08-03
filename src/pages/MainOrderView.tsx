@@ -114,8 +114,9 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   // Settings opened while the Glass layout is active inherits its frosted chrome.
-  useGlassChromeMode(!!settingsOpen && activeTicketsRouteIsGlass());
+  useGlassChromeMode(!!settingsOpen && readStoredTicketsRoute('v3') === 'glass');
   const glassChrome = useGlassChrome();
+
   const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
