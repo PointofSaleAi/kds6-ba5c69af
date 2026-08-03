@@ -267,10 +267,6 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
   /* ── screen selection (left rail: All / Seen / Unseen / History) ── */
   const [view, setView] = useState<GlassView>('home');
 
-  const isServed = useCallback(
-    (t: GlassTicket) => ticketKeys(t).every((k) => (itemStages[k] || 'unseen') === 'served'),
-    [itemStages],
-  );
 
   /** Any product on the ticket has been acknowledged (Seen or beyond). */
   const hasSeenItem = useCallback(
@@ -280,6 +276,16 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
   /** Any product on the ticket is still unseen. */
   const hasUnseenItem = useCallback(
     (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'unseen'),
+    [itemStages],
+  );
+  /** Any product on the ticket has been served — surfaces it on the Served screen. */
+  const hasServedItem = useCallback(
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'served'),
+    [itemStages],
+  );
+  /** Any product still outstanding — the ticket stays on the active board. */
+  const hasActiveItem = useCallback(
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') !== 'served'),
     [itemStages],
   );
 
@@ -296,9 +302,9 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     };
 
     const filtered = TICKETS.filter((t) => {
-      const served = isServed(t);
-      // Served tickets leave the board and live in Served (recall to bring back).
-      if (view === 'history' ? !served : served) return false;
+      // A single served product surfaces the ticket in Served; the ticket stays
+      // on the active board until every product has been served.
+      if (view === 'history' ? !hasServedItem(t) : !hasActiveItem(t)) return false;
       // A single acknowledged product is enough to surface the ticket in Seen.
       if (view === 'seen-orders' && !hasSeenItem(t)) return false;
       if (view === 'unseen-orders' && !hasUnseenItem(t)) return false;
@@ -328,12 +334,14 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
 
     const projected =
       view === 'seen-orders'
-        ? filtered.map((t) => project(t, (s) => s !== 'unseen'))
+        ? filtered.map((t) => project(t, (s) => s !== 'unseen' && s !== 'served'))
         : view === 'unseen-orders'
           ? filtered.map((t) => project(t, (s) => s === 'unseen'))
-          : filtered;
+          : view === 'history'
+            ? filtered.map((t) => project(t, (s) => s === 'served'))
+            : filtered.map((t) => project(t, (s) => s !== 'served'));
 
-    const sorted = [...projected];
+    const sorted = projected.filter((t) => t.courses.length > 0);
     switch (sortMode) {
       // base = seconds already waited, so a larger base is an older ticket
       case 'newest': sorted.sort((a, b) => a.base - b.base); break;
@@ -342,18 +350,19 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       case 'type': sorted.sort((a, b) => a.kind.localeCompare(b.kind) || a.base - b.base); break;
     }
     return sorted;
-  }, [itemStages, isServed, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
+  }, [itemStages, hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
 
   /* ── left-rail badge counts (active board, ignoring the current screen) ── */
   const { seenCount, unseenCount, historyCount } = useMemo(() => {
     let seen = 0, unseen = 0, history = 0;
     TICKETS.forEach((t) => {
-      if (isServed(t)) { history += 1; return; }
+      if (hasServedItem(t)) history += 1;
+      if (!hasActiveItem(t)) return;
       if (hasSeenItem(t)) seen += 1;
       if (hasUnseenItem(t)) unseen += 1;
     });
     return { seenCount: seen, unseenCount: unseen, historyCount: history };
-  }, [isServed, hasSeenItem, hasUnseenItem]);
+  }, [hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem]);
 
 
 
