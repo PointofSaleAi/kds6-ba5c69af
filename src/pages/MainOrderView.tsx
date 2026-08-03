@@ -1254,7 +1254,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
         {settingsOpen ? (
           <div
-            className="flex flex-1 overflow-hidden p-4 gap-4 bg-transparent"
+            className="flex flex-1 overflow-hidden pl-0 pr-4 py-4 gap-4 bg-transparent"
             style={{ order: 2 }}
           >
             <div
