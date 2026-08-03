@@ -89,8 +89,11 @@ function useDisplayTimer(baselineSeconds: number, override?: number) {
 const Card = ({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) => (
   <div
     className={`w-full max-w-[320px] mx-auto rounded-lg overflow-hidden border shadow-sm ${
-      dark ? 'bg-[#1A1A2E] border-[#2A2A44] text-white' : 'bg-white border-border text-[#2C3E50]'
+      dark
+        ? 'bg-[#1A1A2E] border-[#2A2A44] text-white'
+        : 'bg-[var(--tkt-card-solid)] border-[var(--tkt-card-border)] text-[var(--tkt-text)]'
     }`}
+    style={dark ? undefined : { boxShadow: 'var(--tkt-card-shadow)' }}
   >
     {children}
   </div>
@@ -99,16 +102,17 @@ const Card = ({ children, dark = false }: { children: React.ReactNode; dark?: bo
 const AllergenChip = ({ label, tone = 'red' }: { label: string; tone?: 'red' | 'amber' | 'blue' }) => {
   const styles =
     tone === 'red'
-      ? 'bg-[#FBEAEA] text-[#C0392B]'
+      ? 'bg-[var(--tkt-allergen-soft)] text-[var(--tkt-allergen-text)]'
       : tone === 'amber'
-      ? 'bg-[#FFF3D6] text-[#8A5A00]'
-      : 'bg-[#E3F0FA] text-[#1D6FA5]';
+      ? 'bg-[var(--tkt-amber-bg)] text-[var(--tkt-amber-fg)]'
+      : 'bg-[var(--tkt-blue-bg)] text-[var(--tkt-blue-fg)]';
   return (
     <span className={`inline-block px-1.5 py-[1px] rounded text-[9px] font-bold uppercase tracking-wide ${styles}`}>
       {label}
     </span>
   );
 };
+
 
 /* --------------------------------- CALM ----------------------------------- */
 
