@@ -162,7 +162,7 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center gap-2.5 w-full py-1 px-2 rounded-full active:opacity-70 transition-all"
+                  className="flex items-center gap-2.5 w-full py-2 px-3 rounded-full active:opacity-70 transition-all"
                   style={{
                     background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
                   }}
