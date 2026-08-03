@@ -472,7 +472,7 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
           <span>FUTURE: +APPETIZER, +DESSERT</span>
           <ChevronDown className="w-3 h-3" />
         </div>
-        <div className="text-[11px] text-[#2471A3] font-semibold mt-0.5">+1 Grilled Barramundi</div>
+        <div className="text-[11px] text-[var(--tkt-mod-add)] font-semibold mt-0.5">+1 Grilled Barramundi</div>
       </div>
       <div className="grid grid-cols-3 divide-x divide-border">
         {phases.map((p) => {
