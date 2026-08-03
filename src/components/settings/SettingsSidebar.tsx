@@ -187,7 +187,7 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="px-2.5 pt-3 pb-3 shrink-0">
+      <div className="p-3 shrink-0">
         <div
           className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
           style={{
