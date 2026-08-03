@@ -25,6 +25,9 @@ function estHeight(t: GlassTicket, items: Record<string, GlassStage>, open: Reco
   return h;
 }
 
+/** Scale factor bringing the glass design in line with standard ticket sizing. */
+const GLASS_SCALE = 0.6;
+
 export function TicketBoard() {
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -110,7 +113,11 @@ export function TicketBoard() {
   }, [width, items, open]);
 
   return (
-    <div ref={boardRef} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: 16 }}>
+    // `zoom` scales the verbatim glass design down to the same physical card
+    // width (~300px) and font sizes (item name ~14px) as the standard ticket
+    // layouts from Ticket Layout / Ticket Studio, without forking the design.
+    <div ref={boardRef} style={{ zoom: GLASS_SCALE, display: 'flex', alignItems: 'flex-start', gap: 16, padding: 16 }}>
+
       {columns.map((col, ci) => (
         <div key={ci} style={{ flex: '0 0 auto', width: CARD_W, display: 'flex', flexDirection: 'column', gap: 16 }}>
           {col.items.map((t) => (
