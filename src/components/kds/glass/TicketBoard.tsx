@@ -65,7 +65,7 @@ export function TicketBoard({
   const [width, setWidth] = useState(0);
   const { theme } = useTheme();
   const {
-    tickets: allTickets, viewMode: boardViewMode, itemStages, openCourses, toggleCourse,
+    tickets: allTickets, viewMode: boardViewMode, view, itemStages, openCourses, toggleCourse,
     tapItem, stepTicket, prepLabelFor, elapsedFor, now,
   } = useGlassBoard();
   const viewMode = viewModeOverride ?? boardViewMode;
@@ -136,8 +136,20 @@ export function TicketBoard({
   if (tickets.length === 0) {
     return (
       <div ref={boardRef} className="flex h-full w-full flex-col items-center justify-center gap-2 p-8 text-center">
-        <p className="text-[15px] font-bold text-text-primary">No tickets match the current filters</p>
-        <p className="text-[13px] text-text-muted">Clear a filter in the footer or summary panel to see tickets again.</p>
+        <p className="text-[15px] font-bold text-text-primary">
+          {view === 'history'
+            ? 'No served tickets yet'
+            : view === 'seen-orders'
+              ? 'No seen tickets right now'
+              : view === 'unseen-orders'
+                ? 'No unseen tickets right now'
+                : 'No tickets match the current filters'}
+        </p>
+        <p className="text-[13px] text-text-muted">
+          {view === 'history'
+            ? 'Tickets move here once every product is Served. Tap undo on a ticket to recall it.'
+            : 'Clear a filter in the footer or summary panel to see tickets again.'}
+        </p>
       </div>
     );
   }

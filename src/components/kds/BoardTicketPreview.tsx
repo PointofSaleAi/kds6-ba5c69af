@@ -752,7 +752,7 @@ function AdaptiveDensityTicket({ identifier, agingOverrideSeconds, onTimerClick 
       <Card>
         <div className="px-3 py-1.5 flex justify-between items-center border-b border-border">
           <div className="flex items-center gap-1.5">
-            <span className="bg-[#E84C3D] text-white text-[8px] font-bold px-1.5 py-0.5 rounded">URGENT</span>
+            <span style={{ backgroundColor: status.color, color: status.textColor }} className="text-[8px] font-bold px-1.5 py-0.5 rounded">URGENT</span>
             <span className="text-[12px] font-bold">23</span>
           </div>
           <button type="button" onClick={onTimerClick} style={{ backgroundColor: `${status.color}26`, color: status.color }} className="text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded cursor-pointer hover:opacity-80">{text}</button>
