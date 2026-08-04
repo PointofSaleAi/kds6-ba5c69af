@@ -289,7 +289,7 @@ export function TicketCard({
         {t.courses.map((c, ci) => {
           const ck = `${t.id}:${c.id}`;
           const isOpen = ck in open ? open[ck] : ci === aIdx;
-          const done = c.items.every((it, i) => (items[itemKey(t, c, it, i)] || 'unseen') === 'served');
+          const done = c.items.every((it, i) => { const st = items[itemKey(t, c, it, i)] || 'unseen'; return st === 'served' || st === 'cleared'; });
           const meta = c.prep ? c.prep : done ? `${c.items.length} items · done` : `${c.items.length} items`;
 
           return (
