@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
@@ -79,7 +80,12 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
     boxShadow: '0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)', color: '#FFFFFF',
   };
 
-  return (
+  /**
+   * Portalled to <body>: the KDS top header uses backdrop-filter, which makes it
+   * a containing block for fixed children — rendering in place clipped this
+   * full-screen overlay to the 44px header strip.
+   */
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -220,6 +226,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
