@@ -1,31 +1,48 @@
 import { GlassIcon } from './GlassIcon';
+import { useLanguage } from '@/hooks/use-language';
 import { ACT_BTN, RED, fmt, type GlassItem, type GlassStage } from './glass-tickets-data';
 import { glossItem, safetyStyle, stageVisualsFor, useGlassStyle } from './glass-theme';
 
 /** "No …" removals read red alongside allergens. */
-function Modifiers({ mods, muted }: { mods?: string; muted: string }) {
+function Modifiers({ mods, muted, secondary, secondaryDir }: { mods?: string; muted: string; secondary?: boolean; secondaryDir?: 'ltr' | 'rtl' }) {
+  const { tm, tmSecondary } = useLanguage();
   const parts = String(mods || '').split(' · ').filter(Boolean);
   if (!parts.length) return null;
   return (
-    <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0 6px' }}>
-      {parts.map((p, i) => {
-        const neg = /^no\b/i.test(p.trim());
-        return (
-          <span
-            key={i}
-            style={{
-              fontWeight: neg ? 700 : 500,
-              fontSize: 17,
-              lineHeight: 1.4,
-              color: neg ? RED : muted,
-            }}
-          >
-            {p}
-            {i < parts.length - 1 ? ' ·' : ''}
-          </span>
-        );
-      })}
-    </div>
+    <>
+      <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0 6px' }}>
+        {parts.map((p, i) => {
+          const neg = /^no\b/i.test(p.trim());
+          return (
+            <span
+              key={i}
+              style={{
+                fontWeight: neg ? 700 : 500,
+                fontSize: 17,
+                lineHeight: 1.4,
+                color: neg ? RED : muted,
+              }}
+            >
+              {tm(p)}
+              {i < parts.length - 1 ? ' ·' : ''}
+            </span>
+          );
+        })}
+      </div>
+      {secondary && (
+        <div
+          dir={secondaryDir}
+          style={{ marginTop: 1, display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0 6px', opacity: 0.72, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+        >
+          {parts.map((p, i) => (
+            <span key={i} style={{ fontWeight: 500, fontSize: 15, lineHeight: 1.35, color: muted }}>
+              {tmSecondary(p)}
+              {i < parts.length - 1 ? ' ·' : ''}
+            </span>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 
@@ -41,6 +58,9 @@ export function TicketItem({
   onTap: () => void;
 }) {
   const { skin, rowScale, safety } = useGlassStyle();
+  const { tp, tpSecondary, tn, tnSecondary, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
+  const secondaryDir: 'ltr' | 'rtl' = secondaryLang === 'ar' ? 'rtl' : 'ltr';
+  const showSecondary = displayMode === 'dual' && showSecondaryMenu;
   const iv = stageVisualsFor(stage, skin);
   const vPad = Math.round(14 * rowScale);
 
@@ -61,13 +81,41 @@ export function TicketItem({
             textDecorationThickness: '2px',
           }}
         >
-          {item.name}
+          {tp(item.name)}
         </div>
-        <Modifiers mods={item.mods} muted={skin.textSecondary} />
-        {item.note && (
-          <div style={{ marginTop: 2, fontStyle: 'italic', fontWeight: 500, fontSize: 17, lineHeight: 1.4, color: skin.textSecondary }}>
-            {item.note}
+        {showSecondary && (
+          <div
+            dir={secondaryDir}
+            style={{
+              fontWeight: 600,
+              fontSize: 19,
+              lineHeight: 1.25,
+              letterSpacing: '-0.01em',
+              color: skin.textSecondary,
+              opacity: 0.8,
+              unicodeBidi: 'plaintext',
+              textAlign: secondaryDir === 'rtl' ? 'right' : 'left',
+              textDecorationLine: stage === 'served' || stage === 'cleared' ? 'line-through' : 'none',
+            }}
+          >
+            {tpSecondary(item.name)}
           </div>
+        )}
+        <Modifiers mods={item.mods} muted={skin.textSecondary} secondary={showSecondary} secondaryDir={secondaryDir} />
+        {item.note && (
+          <>
+            <div style={{ marginTop: 2, fontStyle: 'italic', fontWeight: 500, fontSize: 17, lineHeight: 1.4, color: skin.textSecondary }}>
+              {tn(item.note)}
+            </div>
+            {showSecondary && (
+              <div
+                dir={secondaryDir}
+                style={{ fontStyle: 'italic', fontWeight: 500, fontSize: 15, lineHeight: 1.35, color: skin.textSecondary, opacity: 0.72, unicodeBidi: 'plaintext', textAlign: secondaryDir === 'rtl' ? 'right' : 'left' }}
+              >
+                {tnSecondary(item.note)}
+              </div>
+            )}
+          </>
         )}
         {item.tags && item.tags.length > 0 && (
           <div style={{ marginTop: 8, display: 'flex', gap: 7, flexWrap: 'wrap' }}>

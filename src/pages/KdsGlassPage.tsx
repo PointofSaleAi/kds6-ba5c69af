@@ -82,6 +82,7 @@ function GlassShell() {
           onToggleTheme={toggleTheme}
           sortMode={board.sortMode}
           onSortModeChange={board.setSortMode}
+          onOpenLanguageSettings={() => navigate('/kds/v1/settings/display#language')}
           orderTypeFilter={board.orderTypeFilter}
           onOrderTypeFilterChange={board.setOrderTypeFilter}
           aiAssistantOpen={aiAssistantOpen}
