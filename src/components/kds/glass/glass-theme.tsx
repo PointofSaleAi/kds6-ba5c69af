@@ -173,10 +173,10 @@ export function glossItem(skin: GlassSkin): React.CSSProperties {
 
 /** Stage visuals, themed. */
 export function stageVisualsFor(stage: GlassStage, skin: GlassSkin) {
-  const filled = stage === 'preparing' || stage === 'served';
+  const filled = stage === 'preparing' || stage === 'served' || stage === 'cleared';
   return {
     icon: (stage === 'unseen' ? 'eye' : stage === 'preparing' ? 'dome' : 'tick') as 'eye' | 'dome' | 'tick',
-    sw: stage === 'ready' || stage === 'served' ? 2.6 : 1.9,
+    sw: stage === 'ready' || stage === 'served' || stage === 'cleared' ? 2.6 : 1.9,
     bg: filled ? skin.fill : skin.btnBg,
     fg: filled ? skin.fillFg : skin.btnFg,
     border: filled ? skin.fillBorder : skin.btnBorder,

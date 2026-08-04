@@ -9,6 +9,7 @@ import {
 import type { CourseType, Order, OrderType, ProductCategory, SortMode, ViewMode } from '@/types/kds';
 import { GlassBoardContext, useGlassBoard, type GlassBoardCtx, type GlassView } from './glass-board-ctx';
 import {
+  ITEM_MAX_INDEX,
   ORDER,
   TICKETS,
   fmt,
@@ -121,7 +122,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
   const stepItem = useCallback((k: string, dir: number) => {
     setItemStages((prev) => {
       const i = ORDER.indexOf(prev[k] || 'unseen');
-      const stage = ORDER[Math.min(ORDER.length - 1, Math.max(0, i + dir))];
+      const stage = ORDER[Math.min(ITEM_MAX_INDEX, Math.max(0, i + dir))];
       const from = prev[k] || 'unseen';
       if (stage === 'preparing' && from !== 'preparing') prepAt.current[k] = Date.now();
       if (from === 'preparing' && stage !== 'preparing')
@@ -237,12 +238,12 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
   );
   /** Any product on the ticket has been served — surfaces it on the Served screen. */
   const hasServedItem = useCallback(
-    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'served'),
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') === 'cleared'),
     [itemStages],
   );
   /** Any product still outstanding — the ticket stays on the active board. */
   const hasActiveItem = useCallback(
-    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') !== 'served'),
+    (t: GlassTicket) => ticketKeys(t).some((k) => (itemStages[k] || 'unseen') !== 'cleared'),
     [itemStages],
   );
 
@@ -251,7 +252,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       const out: { name: string; category: string }[] = [];
       t.courses.forEach((c) =>
         c.items.forEach((it, i) => {
-          if ((itemStages[keyOf(t.id, c.id, i)] || 'unseen') === 'served') return;
+          if ((itemStages[keyOf(t.id, c.id, i)] || 'unseen') === 'cleared') return;
           out.push({ name: it.name, category: glassCategory(c.label) as string });
         }),
       );
@@ -291,12 +292,12 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
 
     const projected =
       view === 'seen-orders'
-        ? filtered.map((t) => project(t, (s) => s !== 'unseen' && s !== 'served'))
+        ? filtered.map((t) => project(t, (s) => s !== 'unseen' && s !== 'cleared'))
         : view === 'unseen-orders'
           ? filtered.map((t) => project(t, (s) => s === 'unseen'))
           : view === 'history'
-            ? filtered.map((t) => project(t, (s) => s === 'served'))
-            : filtered.map((t) => project(t, (s) => s !== 'served'));
+            ? filtered.map((t) => project(t, (s) => s === 'cleared'))
+            : filtered.map((t) => project(t, (s) => s !== 'cleared'));
 
     const sorted = projected.filter((t) => t.courses.length > 0);
     switch (sortMode) {
@@ -329,7 +330,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       tickets.map((t, idx) => {
         const elapsed = Math.round(elapsedFor(t));
         const stage = ticketStage(t, itemStages);
-        const allServed = ticketKeys(t).every((k) => (itemStages[k] || 'unseen') === 'served');
+        const allServed = ticketKeys(t).every((k) => ['served', 'cleared'].includes(itemStages[k] || 'unseen'));
         return {
           id: t.id,
           orderNumber: Number(t.num) || idx + 1,
@@ -355,7 +356,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
                 notes: it.note,
                 // Unseen items drive the summary panel's UNSEEN section.
                 isNew: (itemStages[k] || 'unseen') === 'unseen',
-                isCompleted: (itemStages[k] || 'unseen') === 'served',
+                isCompleted: ['served', 'cleared'].includes(itemStages[k] || 'unseen'),
               };
             }),
           })),

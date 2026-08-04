@@ -57,7 +57,7 @@ export function TicketItem({
             lineHeight: 1.25,
             letterSpacing: '-0.02em',
             color: skin.text,
-            textDecorationLine: stage === 'served' ? 'line-through' : 'none',
+            textDecorationLine: stage === 'served' || stage === 'cleared' ? 'line-through' : 'none',
             textDecorationThickness: '2px',
           }}
         >

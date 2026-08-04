@@ -3,7 +3,7 @@
  * Ported 1:1 from the kds-tickets.html reference implementation.
  */
 
-export type GlassStage = 'unseen' | 'preparing' | 'ready' | 'served';
+export type GlassStage = 'unseen' | 'preparing' | 'ready' | 'served' | 'cleared';
 
 export interface GlassItem {
   qty: string;
@@ -39,12 +39,20 @@ export interface GlassTicket {
   courses: GlassCourse[];
 }
 
-export const ORDER: GlassStage[] = ['unseen', 'preparing', 'ready', 'served'];
+/**
+ * Full ticket lifecycle. `served` keeps the ticket on the active board (its CTA
+ * reads "Served"); pressing that CTA advances to `cleared`, which is what moves
+ * the ticket off the board onto the Served screen.
+ */
+export const ORDER: GlassStage[] = ['unseen', 'preparing', 'ready', 'served', 'cleared'];
+/** Products stop at `served` — only the ticket CTA can clear a ticket. */
+export const ITEM_MAX_INDEX = ORDER.indexOf('served');
 export const CTA: Record<GlassStage, string> = {
   unseen: 'Seen',
   preparing: 'Preparing',
   ready: 'Ready',
   served: 'Served',
+  cleared: 'Served',
 };
 export const DARK = 'rgba(20,20,24,0.92)';
 export const RED = '#c92a1f';
@@ -247,16 +255,21 @@ export function ticketStage(t: GlassTicket, items: Record<string, GlassStage>): 
 export function activeCourse(t: GlassTicket, items: Record<string, GlassStage>): number {
   for (let i = 0; i < t.courses.length; i++) {
     const c = t.courses[i];
-    if (!c.items.every((it, j) => (items[itemKey(t, c, it, j)] || 'unseen') === 'served')) return i;
+    if (!c.items.every((it, j) => isServed(items[itemKey(t, c, it, j)] || 'unseen'))) return i;
   }
   return t.courses.length - 1;
 }
 
+/** Served or cleared — both render as a completed product/ticket. */
+export function isServed(stage: GlassStage) {
+  return stage === 'served' || stage === 'cleared';
+}
+
 export function stageVisuals(stage: GlassStage) {
-  const filled = stage === 'preparing' || stage === 'served';
+  const filled = stage === 'preparing' || isServed(stage);
   return {
     icon: (stage === 'unseen' ? 'eye' : stage === 'preparing' ? 'dome' : 'tick') as 'eye' | 'dome' | 'tick',
-    sw: stage === 'ready' || stage === 'served' ? 2.6 : 1.9,
+    sw: stage === 'ready' || isServed(stage) ? 2.6 : 1.9,
     bg: filled ? DARK : 'rgba(255,255,255,0.7)',
     fg: filled ? '#ffffff' : '#0b0b0c',
     border: filled ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.9)',
