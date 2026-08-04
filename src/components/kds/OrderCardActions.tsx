@@ -19,39 +19,40 @@ interface OrderCardActionsProps {
 export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTicketRecall, legacyActions }: OrderCardActionsProps) {
   const { t } = useLanguage();
 
+  /** The button names the action it performs, so it reflects the next state. */
+  const nextState: TicketState =
+    ticketState === 'seen' ? 'preparing'
+    : ticketState === 'preparing' ? 'ready'
+    : 'done';
+
   const buttonLabel =
-    ticketState === 'seen' ? t.seen
-    : ticketState === 'preparing' ? t.preparing.toUpperCase()
-    : ticketState === 'ready' ? 'READY'
+    nextState === 'preparing' ? t.preparing.toUpperCase()
+    : nextState === 'ready' ? 'READY'
     : t.done;
 
   const legacyBg =
-    ticketState === 'seen' ? '#3F6FD8'
-    : ticketState === 'preparing' ? '#E74C3C'
-    : ticketState === 'ready' ? '#16A34A'
+    nextState === 'preparing' ? '#E74C3C'
+    : nextState === 'ready' ? '#16A34A'
     : '#7D3C98';
 
   const defaultBgInline =
-    ticketState === 'seen' ? { backgroundColor: '#1E293B' }
-    : ticketState === 'ready' ? { backgroundColor: '#16A34A' }
+    nextState === 'ready' ? { backgroundColor: '#16A34A' }
     : {};
-  const buttonColorClass = !legacyActions && ticketState === 'preparing'
+  const buttonColorClass = !legacyActions && nextState === 'preparing'
     ? 'bg-btn-preparing'
-    : !legacyActions && ticketState === 'done'
+    : !legacyActions && nextState === 'done'
       ? 'bg-btn-done'
       : '';
 
   const showUndo = ticketState !== 'seen';
 
   const IconComponent =
-    ticketState === 'seen' ? Eye
-    : ticketState === 'preparing' ? ConciergeBell
-    : ticketState === 'ready' ? Check
+    nextState === 'preparing' ? ConciergeBell
+    : nextState === 'ready' ? Check
     : CheckCircle;
 
   const legacyIconSrc =
-    ticketState === 'seen' ? seenIcon
-    : ticketState === 'preparing' ? preparingIcon
+    nextState === 'preparing' ? preparingIcon
     : itemReadyIcon;
 
   return (
