@@ -381,9 +381,3 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
-
-export function useGlassBoard() {
-  const ctx = useContext(Ctx);
-  if (!ctx) throw new Error('useGlassBoard must be used inside GlassBoardProvider');
-  return ctx;
-}
