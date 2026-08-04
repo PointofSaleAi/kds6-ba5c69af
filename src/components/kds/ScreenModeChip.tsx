@@ -49,12 +49,12 @@ export function ScreenModeChip() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 px-2 md:px-2.5 py-1 md:py-1.5 rounded-full bg-white/10 hover:bg-white/15 transition-colors"
+        className="flex items-center gap-1.5 px-2 md:px-2.5 py-1 md:py-1.5 rounded-full bg-foreground/5 hover:bg-foreground/10 dark:bg-white/10 dark:hover:bg-white/15 text-foreground transition-colors"
         aria-label={`Screen Mode: ${current.label}`}
         title={current.label}
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-        <CurrentIcon size={14} className="text-white/90" />
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
+        <CurrentIcon size={14} className="text-foreground/90" />
         <ChevronDown className="w-3.5 h-3.5 opacity-70" />
       </button>
 
