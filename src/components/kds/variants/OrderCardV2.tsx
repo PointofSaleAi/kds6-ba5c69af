@@ -478,7 +478,12 @@ function FooterBumpButton({
   onUndo: () => void;
   isHistory?: boolean;
 }) {
-  const baseConfig = FOOTER_STATE_CONFIG[ticketState];
+  // The button names the action it performs, so it renders the next state.
+  const nextState: TicketState =
+    ticketState === 'seen' ? 'preparing'
+    : ticketState === 'preparing' ? 'ready'
+    : 'done';
+  const baseConfig = FOOTER_STATE_CONFIG[nextState];
   const isRecall = isHistory && ticketState === 'done';
   const config = isRecall
     ? { label: 'Recall', Icon: Undo, color: '#E84C3D' }
