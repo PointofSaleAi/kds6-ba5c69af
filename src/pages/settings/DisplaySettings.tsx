@@ -22,7 +22,6 @@ import { useKDSSettings, KDSSettingsPreviewScope } from '@/hooks/use-kds-setting
 import { useLanguage, languageNames } from '@/hooks/use-language';
 import { useBadgeVisibility } from '@/hooks/use-badge-visibility';
 import { useDockLayout } from '@/hooks/use-dock-layout';
-import { getOverlayInsets } from '@/lib/dock-insets';
 import { useKDSMode } from '@/hooks/use-kds-mode';
 import LanguageSettings from '@/pages/LanguageSettings';
 import StatusSettings from '@/pages/StatusSettings';
@@ -100,8 +99,6 @@ export default function DisplaySettings() {
     }
   };
   const { layout: dockLayout, resetLayout } = useDockLayout();
-  const insets = getOverlayInsets(dockLayout);
-  const overlayStyle = { top: insets.top, bottom: insets.bottom, left: insets.left, right: insets.right } as React.CSSProperties;
 
   const spacingClass =
     ticketSpacing === 'Standard'
@@ -112,12 +109,9 @@ export default function DisplaySettings() {
 
   if (statusOpen) {
     return (
-      <div
-        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={overlayStyle}
-      >
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
-          <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
+      <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
             <button
               onClick={() => setStatusOpen(false)}
               className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
@@ -125,9 +119,9 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold">Ticket Aging Rules</h1>
+            <h1 className="text-2xl font-bold text-text-primary">Ticket Aging Rules</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden p-0 bg-surface-bg">
+          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
           </div>
         </div>
@@ -141,12 +135,9 @@ export default function DisplaySettings() {
 
   if (languageOpen) {
     return (
-      <div
-        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={overlayStyle}
-      >
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
-          <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
+      <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
             <button
               onClick={handleLanguageBack}
               className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
@@ -154,9 +145,9 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold">Language</h1>
+            <h1 className="text-2xl font-bold text-text-primary">Language</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden p-0 bg-surface-bg">
+          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
             <InlineLanguageSettings activeTab="language" />
           </div>
         </div>
@@ -323,12 +314,9 @@ export default function DisplaySettings() {
 
   if (ticketStudioOpen) {
     return (
-      <div
-        className="fixed z-40 flex flex-col px-4 pt-4 pb-4 bg-surface-bg"
-        style={overlayStyle}
-      >
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-surface-bg">
-          <div className="relative flex items-center justify-center pt-0 pb-4 px-0 shrink-0 bg-surface-bg">
+      <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
             <button
               onClick={() => setTicketStudioOpen(false)}
               className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
@@ -338,7 +326,9 @@ export default function DisplaySettings() {
             </button>
             <h1 className="text-2xl font-bold text-text-primary">Ticket Studio</h1>
           </div>
-          <TicketStudioSkeleton />
+          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6 flex flex-col">
+            <TicketStudioSkeleton />
+          </div>
 
         </div>
       </div>
