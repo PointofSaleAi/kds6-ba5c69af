@@ -87,7 +87,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
           <span className="relative shrink-0">
             <item.icon size={item.icon === TicketsIcon ? 26 : 22} className="text-sidebar-foreground" />
             {showBadge && item.badge != null && item.badge > 0 && (
-              <span className={`absolute -top-1.5 -right-2 ${item.badgeColor || 'bg-[#E84C3D]'} text-primary-foreground text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5`}>
+              <span className={`absolute -top-1.5 -right-2 ${item.badgeColor || 'bg-[#E84C3D]'} text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-0.5`}>
                 {item.badge}
               </span>
             )}
