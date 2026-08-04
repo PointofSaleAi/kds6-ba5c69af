@@ -100,7 +100,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   const canRemove = rules.length > 2;
 
   return (
-    <div ref={listRef} className="w-[45%] border-r border-border overflow-y-auto p-3 space-y-1">
+    <div ref={listRef} className="w-full lg:w-[45%] shrink-0 border-b lg:border-b-0 lg:border-r border-border lg:overflow-y-auto p-3 space-y-1">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
         <div className="flex items-center gap-1">
@@ -360,7 +360,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
 
 
       {/* Two-panel body */}
-      <div className="flex-1 overflow-hidden flex min-h-0 border border-border rounded-xl bg-transparent">
+      <div className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row min-h-0 border border-border rounded-xl bg-transparent">
         {/* LEFT: Status List */}
         <DraggableStatusList
           rules={draft}

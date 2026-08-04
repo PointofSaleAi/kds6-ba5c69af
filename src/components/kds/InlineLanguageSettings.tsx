@@ -226,9 +226,9 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
       {/* Tab content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'language' ? (
-          <div className="flex flex-col md:flex-row h-full gap-8">
+          <div className="flex flex-col lg:flex-row h-full gap-6 lg:gap-8 overflow-y-auto lg:overflow-hidden">
             {/* LEFT COLUMN */}
-            <div className="flex-1 overflow-y-auto space-y-4 min-w-0">
+            <div className="flex-1 lg:overflow-y-auto space-y-4 min-w-0">
               {/* Language scope */}
               <div>
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.languageScope}</div>
@@ -536,10 +536,10 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             </div>
 
             {/* VERTICAL DIVIDER */}
-            <div className="hidden md:block w-px bg-border shrink-0" />
+            <div className="hidden lg:block w-px bg-border shrink-0" />
 
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
-            <div className="w-[360px] shrink-0 flex flex-col h-full">
+            <div className="w-full lg:w-[360px] shrink-0 flex flex-col lg:h-full">
               <div className="flex items-center justify-between mb-2 gap-2">
                 <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
                   {t.previewKDS}
