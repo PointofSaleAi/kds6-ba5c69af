@@ -40,11 +40,10 @@ export interface GlassTicket {
 }
 
 export const ORDER: GlassStage[] = ['unseen', 'preparing', 'ready', 'served'];
-/** Labels name the action the tap performs (next stage), not the current one. */
 export const CTA: Record<GlassStage, string> = {
-  unseen: 'Preparing',
-  preparing: 'Ready',
-  ready: 'Served',
+  unseen: 'Seen',
+  preparing: 'Preparing',
+  ready: 'Ready',
   served: 'Served',
 };
 export const DARK = 'rgba(20,20,24,0.92)';

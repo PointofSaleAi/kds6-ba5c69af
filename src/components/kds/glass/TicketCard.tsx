@@ -9,7 +9,6 @@ import type { KitchenMessage } from '@/types/kitchen-message';
 import { glossTicket, safetyStyle, stageVisualsFor, useGlassStyle } from './glass-theme';
 import {
   CTA,
-  ORDER,
   activeCourse,
   fmt,
   itemKey,
@@ -49,11 +48,9 @@ export function TicketCard({
 }: TicketCardProps) {
   const { skin, padScale, safety, appearance } = useGlassStyle();
   const stage = ticketStage(t, items);
-  /** The footer button names the action it performs, so it renders the next stage. */
-  const nextStage = ORDER[Math.min(ORDER.length - 1, ORDER.indexOf(stage) + 1)];
-  const vis = stageVisualsFor(nextStage, skin);
+  const vis = stageVisualsFor(stage, skin);
   const tone = timerTone(elapsedSeconds);
-  const light = nextStage === 'preparing';
+  const light = stage === 'unseen' || stage === 'ready';
   const aIdx = activeCourse(t, items);
 
   const { notesAck, setNoteAck, posSeen, setPosSeen, view, recallItem } = useGlassBoard();

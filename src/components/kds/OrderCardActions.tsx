@@ -1,6 +1,7 @@
-import { ConciergeBell, Check, CheckCircle } from 'lucide-react';
+import { Eye, ConciergeBell, Check, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/hooks/use-language';
 import undoIcon from '@/assets/undo-icon.svg';
+import seenIcon from '@/assets/seen-icon.svg';
 import preparingIcon from '@/assets/preparing-icon.svg';
 import itemReadyIcon from '@/assets/item-ready-icon.svg';
 
@@ -18,40 +19,39 @@ interface OrderCardActionsProps {
 export function OrderCardActions({ orderId, ticketState, onTicketAdvance, onTicketRecall, legacyActions }: OrderCardActionsProps) {
   const { t } = useLanguage();
 
-  /** The button names the action it performs, so it reflects the next state. */
-  const nextState: TicketState =
-    ticketState === 'seen' ? 'preparing'
-    : ticketState === 'preparing' ? 'ready'
-    : 'done';
-
   const buttonLabel =
-    nextState === 'preparing' ? t.preparing.toUpperCase()
-    : nextState === 'ready' ? 'READY'
+    ticketState === 'seen' ? t.seen
+    : ticketState === 'preparing' ? t.preparing.toUpperCase()
+    : ticketState === 'ready' ? 'READY'
     : t.done;
 
   const legacyBg =
-    nextState === 'preparing' ? '#E74C3C'
-    : nextState === 'ready' ? '#16A34A'
+    ticketState === 'seen' ? '#3F6FD8'
+    : ticketState === 'preparing' ? '#E74C3C'
+    : ticketState === 'ready' ? '#16A34A'
     : '#7D3C98';
 
   const defaultBgInline =
-    nextState === 'ready' ? { backgroundColor: '#16A34A' }
+    ticketState === 'seen' ? { backgroundColor: '#1E293B' }
+    : ticketState === 'ready' ? { backgroundColor: '#16A34A' }
     : {};
-  const buttonColorClass = !legacyActions && nextState === 'preparing'
+  const buttonColorClass = !legacyActions && ticketState === 'preparing'
     ? 'bg-btn-preparing'
-    : !legacyActions && nextState === 'done'
+    : !legacyActions && ticketState === 'done'
       ? 'bg-btn-done'
       : '';
 
   const showUndo = ticketState !== 'seen';
 
   const IconComponent =
-    nextState === 'preparing' ? ConciergeBell
-    : nextState === 'ready' ? Check
+    ticketState === 'seen' ? Eye
+    : ticketState === 'preparing' ? ConciergeBell
+    : ticketState === 'ready' ? Check
     : CheckCircle;
 
   const legacyIconSrc =
-    nextState === 'preparing' ? preparingIcon
+    ticketState === 'seen' ? seenIcon
+    : ticketState === 'preparing' ? preparingIcon
     : itemReadyIcon;
 
   return (
