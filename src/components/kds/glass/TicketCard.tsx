@@ -49,9 +49,11 @@ export function TicketCard({
 }: TicketCardProps) {
   const { skin, padScale, safety, appearance } = useGlassStyle();
   const stage = ticketStage(t, items);
-  const vis = stageVisualsFor(stage, skin);
+  /** The footer button names the action it performs, so it renders the next stage. */
+  const nextStage = ORDER[Math.min(ORDER.length - 1, ORDER.indexOf(stage) + 1)];
+  const vis = stageVisualsFor(nextStage, skin);
   const tone = timerTone(elapsedSeconds);
-  const light = stage === 'unseen' || stage === 'ready';
+  const light = nextStage === 'preparing';
   const aIdx = activeCourse(t, items);
 
   const { notesAck, setNoteAck, posSeen, setPosSeen, view, recallItem } = useGlassBoard();
