@@ -9,6 +9,7 @@ import type { KitchenMessage } from '@/types/kitchen-message';
 import { glossTicket, safetyStyle, stageVisualsFor, useGlassStyle } from './glass-theme';
 import {
   CTA,
+  ORDER,
   activeCourse,
   fmt,
   itemKey,
