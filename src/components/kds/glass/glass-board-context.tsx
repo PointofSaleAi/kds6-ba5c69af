@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -9,6 +7,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { CourseType, Order, OrderType, ProductCategory, SortMode, ViewMode } from '@/types/kds';
+import { GlassBoardContext, useGlassBoard, type GlassBoardCtx, type GlassView } from './glass-board-ctx';
 import {
   ORDER,
   TICKETS,
@@ -19,6 +18,10 @@ import {
   type GlassStage,
   type GlassTicket,
 } from './glass-tickets-data';
+
+export { useGlassBoard };
+export type { GlassBoardCtx, GlassView };
+
 
 /* ── mapping helpers (glass mock data → shared KDS shapes) ── */
 
