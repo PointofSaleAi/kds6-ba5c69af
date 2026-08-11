@@ -19,6 +19,18 @@ import {
   DEFAULT_ORDER_TYPE_DETAILED_COLORS,
 } from '@/hooks/use-kds-settings';
 import { mockOrders } from '@/data/mock-orders';
+import { readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
+
+/** Same options as Settings › Ticket Layout › Layout. */
+const STYLE_OPTIONS: { value: TicketsRouteKey; label: string }[] = [
+  { value: 'v2', label: 'Section list' },
+  { value: 'v3', label: 'Standard layout' },
+  { value: 'v3-lite', label: 'Priority View' },
+  { value: 'v4', label: 'Detailed grid' },
+  { value: 'v6', label: 'Itemized cards' },
+  { value: 'glass', label: 'Glass View' },
+];
 
 const SCREEN_ORDER_TYPES = [
   { key: 'dine-in', label: 'DINE IN' },
@@ -618,6 +630,7 @@ export function TicketStudioSkeleton() {
   const [activeSlot, setActiveSlot] = useState<'A' | 'B'>('A');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [layout, setLayout] = useState<string>('standard');
+  const [styleRoute, setStyleRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute());
   const [density, setDensity] = useState<string>('medium');
   const [textSize, setTextSize] = useState<string>('large');
   const [identifier, setIdentifier] = useState<string>('order');
@@ -920,7 +933,25 @@ export function TicketStudioSkeleton() {
         <div className="flex-1 min-h-0 overflow-auto p-4 space-y-4">
           {tab === 'display' && (
             <>
+              <Field label="Style">
+                <select
+                  value={styleRoute}
+                  onChange={(e) => {
+                    const next = e.target.value as TicketsRouteKey;
+                    setStyleRoute(next);
+                    writeStoredTicketsRoute(next);
+                  }}
+                  className="w-full h-8 rounded-md border border-border bg-background px-2 text-[11px] font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
+                >
+                  {STYLE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
               <Field label="Layout">
+
                 <Segmented
                   value={layout}
                   onChange={setLayout}
