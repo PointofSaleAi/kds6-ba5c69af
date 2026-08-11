@@ -54,6 +54,8 @@ type KdsScreenMockProps = {
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
+  /** Personalize: Style — swaps the ticket card on the layout boards. */
+  styleRoute?: TicketsRouteKey;
 };
 
 function KdsScreenMock({
@@ -67,6 +69,7 @@ function KdsScreenMock({
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
+  styleRoute,
 }: KdsScreenMockProps) {
   const previewOrders = useMemo(() => mockOrders.slice(0, 6), []);
 
@@ -153,6 +156,7 @@ function KdsScreenMock({
                     agingOverrideSeconds={agingOverrideSeconds}
                     onHeaderClick={onHeaderClick}
                     onTimerClick={onTimerClick}
+                    styleRoute={styleRoute}
                   />
                 ) : (
                   <div
@@ -166,6 +170,7 @@ function KdsScreenMock({
                           style={{ transform: `scale(${textScale})` }}
                         >
                           <BoardTicketPreview
+                            styleRoute={styleRoute}
                             themeOverride={theme === 'dark' ? 'dark' : 'light'}
                             boardId={boardId}
                             identifier={identifier}
@@ -225,6 +230,7 @@ function FocusLaneBoard({
   onHeaderClick,
   onTimerClick,
   theme = 'light',
+  styleRoute,
 }: {
   identifier: 'order' | 'guest';
   textScale: number;
@@ -232,6 +238,7 @@ function FocusLaneBoard({
   onHeaderClick?: (key: string) => void;
   onTimerClick?: () => void;
   theme?: string;
+  styleRoute?: TicketsRouteKey;
 }) {
   const [focusIndex, setFocusIndex] = useState(0);
   const focus = SCREEN_ORDER_TYPES[focusIndex];
@@ -310,6 +317,7 @@ function FocusLaneBoard({
               style={{ transform: `scale(${textScale * (pos.colSpan ? 0.95 : 0.82)})` }}
             >
               <BoardTicketPreview
+                            styleRoute={styleRoute}
                             themeOverride={theme === 'dark' ? 'dark' : 'light'}
                 boardId="focus-lane"
                 identifier={identifier}
@@ -822,6 +830,7 @@ export function TicketStudioSkeleton() {
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
                       onTimerClick={cycleAgingStage}
+                      styleRoute={styleRoute}
                     />
                   </div>
                   <div className={`relative min-w-0 min-h-0 overflow-hidden border-2 ${activeSlot === 'B' ? 'border-foreground' : 'border-transparent'}`}>
@@ -837,6 +846,7 @@ export function TicketStudioSkeleton() {
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
                       onTimerClick={cycleAgingStage}
+                      styleRoute={styleRoute}
                     />
                   </div>
                 </>
@@ -852,6 +862,7 @@ export function TicketStudioSkeleton() {
                   agingOverrideSeconds={agingOverrideSeconds}
                   onHeaderClick={(k) => openOrderTypeInPanel(k)}
                   onTimerClick={cycleAgingStage}
+                  styleRoute={styleRoute}
                 />
               )}
             </div>
@@ -1261,6 +1272,7 @@ export function TicketStudioSkeleton() {
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
                 onTimerClick={cycleAgingStage}
+                styleRoute={styleRoute}
               />
             </div>
           </div>
