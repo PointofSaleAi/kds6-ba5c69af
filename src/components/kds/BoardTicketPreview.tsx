@@ -7,6 +7,14 @@ import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
 import { useTicketSkin, TicketSkinScope } from './TicketSkinScope';
 import { OrderCard } from './OrderCard';
 import { previewTicket } from '@/data/mock-preview-ticket';
+import { OrderCardV1 } from './variants/OrderCardV1';
+import { OrderCardV2 } from './variants/OrderCardV2';
+import { OrderCardV3 } from './variants/OrderCardV3';
+import { OrderCardV4 } from './variants/OrderCardV4';
+import { OrderCardV5 } from './variants/OrderCardV5';
+import { getCardVariantForTicketsRoute } from '@/lib/ticket-card-variant';
+import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
+import type { Order } from '@/types/kds';
 
 
 
@@ -20,6 +28,8 @@ type Props = {
   /** Preview-only click handlers used by Ticket Studio to route tab focus. */
   onHeaderClick?: () => void;
   onTimerClick?: () => void;
+  /** Ticket Studio › Style: swaps the ticket card used by the layout boards. */
+  styleRoute?: TicketsRouteKey;
 };
 
 /** Returns the primary ticket identifier label based on the setting. */
@@ -32,14 +42,37 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
   return map[identifier];
 }
 
+/** Boards whose ticket card follows the Ticket Studio Style selection. */
+const STYLE_DRIVEN_BOARDS = new Set(['focus-lane', 'distance-view', 'timeline-flow']);
+
+/** Renders the live ticket card for the selected Style using preview data. */
+function StyledRouteTicket({ styleRoute, orderTypeKey }: { styleRoute: TicketsRouteKey; orderTypeKey?: string }) {
+  const order = useMemo<Order>(() => ({
+    ...previewTicket,
+    orderType: (orderTypeKey as Order['orderType']) || previewTicket.orderType,
+  }), [orderTypeKey]);
+  const variant = getCardVariantForTicketsRoute(styleRoute);
+  switch (variant) {
+    case 'v1': return <OrderCardV1 order={order} />;
+    case 'v2': return <OrderCardV2 order={order} />;
+    case 'v3': return <OrderCardV3 order={order} />;
+    case 'v4': return <OrderCardV4 order={order} />;
+    case 'v5': return <OrderCardV5 order={order} />;
+    default: return <OrderCard order={order} layoutOverride="standard" legacyActions />;
+  }
+}
+
 /**
  * Board-specific standalone ticket previews.
  * Each variant mirrors the design and information hierarchy from the
  * KDS_Designs_and_Philosophy reference deck.
  */
-export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick, themeOverride }: Props & { themeOverride?: 'light' | 'dark' }) {
+export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick, styleRoute, themeOverride }: Props & { themeOverride?: 'light' | 'dark' }) {
   const vprops: VProps = { identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick };
   const inner = (() => {
+    if (styleRoute && STYLE_DRIVEN_BOARDS.has(boardId)) {
+      return <StyledRouteTicket styleRoute={styleRoute} orderTypeKey={orderTypeKey} />;
+    }
     switch (boardId) {
       case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
       case 'distance-view':       return <HeroNumberTicket {...vprops} />;
@@ -54,6 +87,7 @@ export function BoardTicketPreview({ boardId, identifier = 'order', orderType, o
   })();
   return <TicketSkinScope theme={themeOverride}>{inner}</TicketSkinScope>;
 }
+
 
 
 type VProps = {
