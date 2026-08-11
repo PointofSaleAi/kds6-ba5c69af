@@ -630,6 +630,7 @@ export function TicketStudioSkeleton() {
   const [activeSlot, setActiveSlot] = useState<'A' | 'B'>('A');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [layout, setLayout] = useState<string>('standard');
+  const [styleRoute, setStyleRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute());
   const [density, setDensity] = useState<string>('medium');
   const [textSize, setTextSize] = useState<string>('large');
   const [identifier, setIdentifier] = useState<string>('order');
