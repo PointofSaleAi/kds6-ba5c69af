@@ -19,7 +19,7 @@ import {
   DEFAULT_ORDER_TYPE_DETAILED_COLORS,
 } from '@/hooks/use-kds-settings';
 import { mockOrders } from '@/data/mock-orders';
-import { readStoredTicketsRoute, n as persistTicketsRoute } from '@/lib/ticket-card-variant';
+import { readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
 import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
 
 /** Same options as Settings › Ticket Layout › Layout. */
