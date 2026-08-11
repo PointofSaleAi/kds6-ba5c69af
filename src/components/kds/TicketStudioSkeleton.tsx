@@ -19,6 +19,18 @@ import {
   DEFAULT_ORDER_TYPE_DETAILED_COLORS,
 } from '@/hooks/use-kds-settings';
 import { mockOrders } from '@/data/mock-orders';
+import { readStoredTicketsRoute, n as persistTicketsRoute } from '@/lib/ticket-card-variant';
+import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
+
+/** Same options as Settings › Ticket Layout › Layout. */
+const STYLE_OPTIONS: { value: TicketsRouteKey; label: string }[] = [
+  { value: 'v2', label: 'Section list' },
+  { value: 'v3', label: 'Standard layout' },
+  { value: 'v3-lite', label: 'Priority View' },
+  { value: 'v4', label: 'Detailed grid' },
+  { value: 'v6', label: 'Itemized cards' },
+  { value: 'glass', label: 'Glass View' },
+];
 
 const SCREEN_ORDER_TYPES = [
   { key: 'dine-in', label: 'DINE IN' },
