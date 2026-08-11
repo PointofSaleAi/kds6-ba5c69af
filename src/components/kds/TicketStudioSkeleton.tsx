@@ -29,7 +29,6 @@ const STYLE_OPTIONS: { value: TicketsRouteKey; label: string }[] = [
   { value: 'v3-lite', label: 'Priority View' },
   { value: 'v4', label: 'Detailed grid' },
   { value: 'v6', label: 'Itemized cards' },
-  { value: 'glass', label: 'Glass View' },
 ];
 
 const SCREEN_ORDER_TYPES = [
