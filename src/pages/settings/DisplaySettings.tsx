@@ -182,13 +182,10 @@ export default function DisplaySettings() {
                   </span>
                   {(() => {
                     const layoutOptions = [
-                      { value: 'Default', label: 'Hero number' },
-                      { value: 'v1', label: 'Classic Hero' },
                       { value: 'v2', label: 'Section list' },
                       { value: 'v3', label: 'Standard layout' },
                       { value: 'v3-lite', label: 'Priority View' },
                       { value: 'v4', label: 'Detailed grid' },
-                      { value: 'v5', label: 'Clean sections' },
                       { value: 'v6', label: 'Itemized cards' },
                       { value: 'glass', label: 'Glass View' },
                     ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[];
