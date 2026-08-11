@@ -5,6 +5,8 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS } from '@/hooks/use-kds-setti
 import { ClocheIcon } from './icons/ClocheIcon';
 import { ItemPrepTimerChip } from '@/hooks/use-item-prep-timers';
 import { useTicketSkin, TicketSkinScope } from './TicketSkinScope';
+import { OrderCard } from './OrderCard';
+import { previewTicket } from '@/data/mock-preview-ticket';
 
 
 
@@ -40,7 +42,7 @@ export function BoardTicketPreview({ boardId, identifier = 'order', orderType, o
   const inner = (() => {
     switch (boardId) {
       case 'focus-lane':          return <FocusLaneTicket {...vprops} />;
-      case 'distance-view':       return <DistanceViewTicket {...vprops} />;
+      case 'distance-view':       return <HeroNumberTicket {...vprops} />;
       case 'progressive-ticket':  return <ProgressiveTicket {...vprops} />;
       case 'safety-first':        return <SafetyFirstTicket {...vprops} />;
       case 'timeline-flow':       return <TimelineFlowTicket {...vprops} />;
@@ -510,7 +512,17 @@ function FocusLaneTicket({ identifier, agingOverrideSeconds, onTimerClick }: VPr
   );
 }
 
-/* ----------------------------- DISTANCE VIEW ------------------------------ */
+/* --------------------- DISTANCE VIEW (Hero number card) ------------------- */
+
+function HeroNumberTicket({ identifier }: VProps) {
+  return (
+    <OrderCard
+      order={previewTicket}
+      layoutOverride="standard"
+      legacyActions
+    />
+  );
+}
 
 function DistanceViewTicket({ identifier, agingOverrideSeconds, onTimerClick }: VProps) {
   const { text, elapsed } = useDisplayTimer(1944, agingOverrideSeconds);

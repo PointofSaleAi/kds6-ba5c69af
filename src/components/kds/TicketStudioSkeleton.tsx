@@ -325,14 +325,9 @@ type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 const BOARDS: Board[] = [
 
 
-  { id: 'calm-board', name: 'Calm Board', subtitle: 'Balanced Operations, Low Visual Noise', featured: true },
   { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority Ticket Centered, Context at Edges' },
   { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum Readability from Several Feet' },
-  { id: 'progressive-ticket', name: 'Progressive Ticket', subtitle: 'Reveals Detail for the Active Course' },
-  { id: 'safety-first', name: 'Safety First', subtitle: 'Allergen and Cross-contact Controls Lead', featured: true },
   { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready Lanes' },
-  { id: 'adaptive-density', name: 'Adaptive Density', subtitle: 'Comfortable, Balanced, Rush Modes' },
-  { id: 'dark-command-center', name: 'Dark Command Center', subtitle: 'High-contrast Focused Operations', featured: true },
   { id: 'glass-view', name: 'Glass View', subtitle: 'Translucent Cards, Large Order Numbers' },
 ];
 
