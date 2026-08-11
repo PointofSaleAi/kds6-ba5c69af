@@ -69,6 +69,7 @@ function KdsScreenMock({
   agingOverrideSeconds,
   onHeaderClick,
   onTimerClick,
+  styleRoute,
 }: KdsScreenMockProps) {
   const previewOrders = useMemo(() => mockOrders.slice(0, 6), []);
 
