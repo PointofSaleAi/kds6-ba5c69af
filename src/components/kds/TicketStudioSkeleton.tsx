@@ -933,7 +933,25 @@ export function TicketStudioSkeleton() {
         <div className="flex-1 min-h-0 overflow-auto p-4 space-y-4">
           {tab === 'display' && (
             <>
+              <Field label="Style">
+                <select
+                  value={styleRoute}
+                  onChange={(e) => {
+                    const next = e.target.value as TicketsRouteKey;
+                    setStyleRoute(next);
+                    writeStoredTicketsRoute(next);
+                  }}
+                  className="w-full h-8 rounded-md border border-border bg-background px-2 text-[11px] font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
+                >
+                  {STYLE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </Field>
               <Field label="Layout">
+
                 <Segmented
                   value={layout}
                   onChange={setLayout}
