@@ -271,6 +271,10 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     [itemStages],
   );
 
+  /* Station mode narrows the board to a single product category. */
+  const { mode: kdsMode, stationCourse } = useKDSMode();
+  const stationCategory = kdsMode === 'Prep' && stationCourse ? stationCourse : null;
+
   const tickets = useMemo(() => {
     const remaining = (t: GlassTicket) => {
       const out: { name: string; category: string }[] = [];
