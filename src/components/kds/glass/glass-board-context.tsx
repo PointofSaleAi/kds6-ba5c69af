@@ -323,7 +323,17 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
             ? filtered.map((t) => project(t, (s) => s === 'cleared'))
             : filtered.map((t) => project(t, (s) => s !== 'cleared'));
 
-    const sorted = projected.filter((t) => t.courses.length > 0);
+    /* Station view: keep only the products belonging to the active station. */
+    const stationed = stationCategory
+      ? projected.map((t) => ({
+          ...t,
+          courses: t.courses
+            .map((c) => ({ ...c, items: c.items.filter((it) => glassItemCategory(it.name, c.label) === stationCategory) }))
+            .filter((c) => c.items.length > 0),
+        }))
+      : projected;
+
+    const sorted = stationed.filter((t) => t.courses.length > 0);
     switch (sortMode) {
       // base = seconds already waited, so a larger base is an older ticket
       case 'newest': sorted.sort((a, b) => a.base - b.base); break;
@@ -332,7 +342,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       case 'type': sorted.sort((a, b) => a.kind.localeCompare(b.kind) || a.base - b.base); break;
     }
     return sorted;
-  }, [itemStages, hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
+  }, [itemStages, hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view, stationCategory]);
 
   /* ── left-rail badge counts (active board, ignoring the current screen) ── */
   const { seenCount, unseenCount, historyCount } = useMemo(() => {
