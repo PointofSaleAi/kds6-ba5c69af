@@ -7,6 +7,7 @@ import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
 import { TicketBoard } from '@/components/kds/glass/TicketBoard';
 import { GlassBoardProvider, useGlassBoard } from '@/components/kds/glass/glass-board-context';
 import { useDockLayout } from '@/hooks/use-dock-layout';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import { useGlassChromeMode } from '@/hooks/use-glass-chrome';
 import { useTheme } from '@/hooks/use-theme';
 import { getTicketsRoutePath, readStoredTicketsRoute } from '@/lib/ticket-card-variant';
