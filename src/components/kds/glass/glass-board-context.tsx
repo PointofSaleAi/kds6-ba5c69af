@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from 'react';
 import type { CourseType, Order, OrderType, ProductCategory, SortMode, ViewMode } from '@/types/kds';
+import { mockOrders } from '@/data/mock-orders';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import { GlassBoardContext, useGlassBoard, type GlassBoardCtx, type GlassView } from './glass-board-ctx';
 import {
   ITEM_MAX_INDEX,
@@ -48,6 +50,28 @@ const COURSE_CATEGORY: Record<string, string> = {
 export function glassCategory(courseLabel?: string): ProductCategory {
   if (!courseLabel) return 'Items' as ProductCategory;
   return (COURSE_CATEGORY[courseLabel] || 'Items') as ProductCategory;
+}
+
+/**
+ * Station mode filters by product category. The glass mock data only carries
+ * course labels, so product names are matched against the shared menu data to
+ * recover their real category (Meat, Seafood, Sides, …).
+ */
+const PRODUCT_CATEGORY: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const order of mockOrders) {
+    for (const cg of order.courses) {
+      for (const item of cg.items) {
+        if (item.category) map[item.name.toLowerCase()] = item.category;
+      }
+    }
+  }
+  return map;
+})();
+
+/** Category of a glass product, falling back to its course label mapping. */
+export function glassItemCategory(name: string, courseLabel?: string): string {
+  return PRODUCT_CATEGORY[name.toLowerCase()] || (glassCategory(courseLabel) as string);
 }
 
 const qtyOf = (qty: string) => Math.max(1, parseInt(qty, 10) || 1);
@@ -247,6 +271,10 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
     [itemStages],
   );
 
+  /* Station mode narrows the board to a single product category. */
+  const { mode: kdsMode, stationCourse } = useKDSMode();
+  const stationCategory = kdsMode === 'Prep' && stationCourse ? stationCourse : null;
+
   const tickets = useMemo(() => {
     const remaining = (t: GlassTicket) => {
       const out: { name: string; category: string }[] = [];
@@ -299,7 +327,17 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
             ? filtered.map((t) => project(t, (s) => s === 'cleared'))
             : filtered.map((t) => project(t, (s) => s !== 'cleared'));
 
-    const sorted = projected.filter((t) => t.courses.length > 0);
+    /* Station view: keep only the products belonging to the active station. */
+    const stationed = stationCategory
+      ? projected.map((t) => ({
+          ...t,
+          courses: t.courses
+            .map((c) => ({ ...c, items: c.items.filter((it) => glassItemCategory(it.name, c.label) === stationCategory) }))
+            .filter((c) => c.items.length > 0),
+        }))
+      : projected;
+
+    const sorted = stationed.filter((t) => t.courses.length > 0);
     switch (sortMode) {
       // base = seconds already waited, so a larger base is an older ticket
       case 'newest': sorted.sort((a, b) => a.base - b.base); break;
@@ -308,7 +346,7 @@ export function GlassBoardProvider({ children }: { children: ReactNode }) {
       case 'type': sorted.sort((a, b) => a.kind.localeCompare(b.kind) || a.base - b.base); break;
     }
     return sorted;
-  }, [itemStages, hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view]);
+  }, [itemStages, hasServedItem, hasActiveItem, hasSeenItem, hasUnseenItem, orderTypeFilter, selectedCategories, selectedItems, sortMode, view, stationCategory]);
 
   /* ── left-rail badge counts (active board, ignoring the current screen) ── */
   const { seenCount, unseenCount, historyCount } = useMemo(() => {
