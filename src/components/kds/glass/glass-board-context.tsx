@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from 'react';
 import type { CourseType, Order, OrderType, ProductCategory, SortMode, ViewMode } from '@/types/kds';
+import { mockOrders } from '@/data/mock-orders';
+import { useKDSMode } from '@/hooks/use-kds-mode';
 import { GlassBoardContext, useGlassBoard, type GlassBoardCtx, type GlassView } from './glass-board-ctx';
 import {
   ITEM_MAX_INDEX,
