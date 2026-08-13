@@ -57,8 +57,23 @@ function GlassShell() {
 
           </div>
 
-          <main className="flex-1 overflow-auto" style={{ order: 2 }}>
-            <TicketBoard />
+          <main className="flex-1 overflow-auto flex flex-col" style={{ order: 2 }}>
+            {stationCategory && (
+              <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#1F2128' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
+                    {stationCategory}
+                  </span>
+                  <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
+                </div>
+                <button onClick={() => setStationCourse(null)} style={{ fontSize: 12, color: '#818CF8' }} className="hover:underline">
+                  Exit Station view
+                </button>
+              </div>
+            )}
+            <div className="flex-1 min-h-0">
+              <TicketBoard />
+            </div>
           </main>
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
             <ItemSummaryPanel
