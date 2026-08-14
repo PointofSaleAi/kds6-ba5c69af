@@ -119,7 +119,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   useGlassChromeMode(!!settingsOpen && readStoredTicketsRoute('v3') === 'glass');
   const glassChrome = useGlassChrome();
 
-  const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
+  const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, setStaggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute, ticketFlowDirection } = useKDSSettings();
@@ -1519,23 +1519,6 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             )
           ) : (
             <>
-              {isStationView && resolvedStationCourse && (
-                <div className="flex items-center justify-between px-4 shrink-0" style={{ height: 40, backgroundColor: '#1F2128' }}>
-                  <div className="flex items-center gap-2">
-                    <span className="text-white font-bold uppercase" style={{ fontSize: 11, letterSpacing: '0.06em', backgroundColor: '#4F46E5', borderRadius: 20, padding: '3px 10px' }}>
-                      {resolvedStationCourse}
-                    </span>
-                    <span style={{ fontSize: 12, color: '#9CA3AF' }}>Station View</span>
-                  </div>
-                  <button
-                    onClick={() => setStationCourse(null)}
-                    style={{ fontSize: 12, color: '#818CF8' }}
-                    className="hover:underline"
-                  >
-                    Exit Station view
-                  </button>
-                </div>
-              )}
 
               {displayOrders.length === 0 && kdsMode !== 'Expo' ? (
                 isStationView && resolvedStationCourse ? (
