@@ -119,7 +119,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   useGlassChromeMode(!!settingsOpen && readStoredTicketsRoute('v3') === 'glass');
   const glassChrome = useGlassChrome();
 
-  const { mode: kdsMode, stationCourse: contextStationCourse, setStationCourse } = useKDSMode();
+  const { mode: kdsMode, stationCourse: contextStationCourse } = useKDSMode();
   const resolvedStationCourse = stationCourseProp || contextStationCourse || undefined;
   const { playSound } = useSound();
   const { cardsPerRow, textSize, showAllergens, sortDefault, staggerMode, setStaggerMode, ticketSpacing, orderTypeColors, getRouteSetting, activeTicketsRoute, ticketFlowDirection } = useKDSSettings();
