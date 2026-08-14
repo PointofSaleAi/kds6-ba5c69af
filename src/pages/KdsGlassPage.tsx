@@ -23,7 +23,7 @@ function GlassShell() {
   const { theme, toggleTheme } = useTheme();
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
   const board = useGlassBoard();
-  const { mode: kdsMode, stationCourse, setStationCourse } = useKDSMode();
+  const { mode: kdsMode, stationCourse } = useKDSMode();
   const stationCategory = kdsMode === 'Prep' && stationCourse ? stationCourse : null;
   useGlassChromeMode(true);
 
