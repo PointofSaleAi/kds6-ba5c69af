@@ -6,7 +6,7 @@ import AnimatedAIIcon from './AnimatedAIIcon';
 import { usePortrait } from '@/hooks/use-portrait';
 import type { ViewMode } from '@/types/kds';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useKDSMode } from '@/hooks/use-kds-mode';
+
 import { useSound } from '@/hooks/use-sound';
 import { useLanguage } from '@/hooks/use-language';
 import { DockDragHandle } from './DockDragHandle';
@@ -65,7 +65,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
 }
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, aiAssistantOpen, onToggleAiAssistant, orderTypeFilter, onOrderTypeFilterChange }: BottomStatusBarProps) {
-  const { mode: kdsMode, stationCourse } = useKDSMode();
+  
   const { t } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const { isPortrait } = usePortrait();
