@@ -8,6 +8,7 @@ const out = process.argv[2] ?? '/mnt/documents/kds-ui-tour.mp4';
 
 const bundled = await bundle({
   entryPoint: path.resolve(__dirname, '../src/index.ts'),
+  publicDir: '/tmp/tour/public',
   webpackOverride: (c) => c,
 });
 
