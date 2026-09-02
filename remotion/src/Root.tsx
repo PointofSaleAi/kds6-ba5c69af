@@ -2,12 +2,22 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Montserrat';
 import { MainVideo } from './MainVideo';
+import { TourVideo, tourDurationInFrames } from './tour/TourVideo';
 import type { RecipeVideoProps } from './types';
 
 loadFont('normal', { weights: ['400', '600', '700', '800', '900'], subsets: ['latin'] });
 
 export const RemotionRoot: React.FC = () => {
   return (
+    <>
+    <Composition
+      id="kds-tour"
+      component={TourVideo}
+      durationInFrames={tourDurationInFrames()}
+      fps={30}
+      width={1920}
+      height={1080}
+    />
     <Composition
       id="recipe"
       component={MainVideo}
@@ -26,5 +36,6 @@ export const RemotionRoot: React.FC = () => {
       }}
       schema={undefined}
     />
+    </>
   );
 };
