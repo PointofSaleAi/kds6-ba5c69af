@@ -30,11 +30,8 @@ const SourceFrame: React.FC<{ frame: number }> = ({ frame }) => (
 );
 
 const BeatScene: React.FC<{ beat: Beat }> = ({ beat }) => {
-  const frame = Math.min(
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    require('remotion').useCurrentFrame() as number,
-    beat.to - beat.from,
-  );
+  const frame = Math.min(useCurrentFrame(), beat.to - beat.from);
+
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#05060C' }}>
