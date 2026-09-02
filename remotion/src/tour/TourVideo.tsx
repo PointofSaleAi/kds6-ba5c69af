@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
 import { TransitionSeries, springTiming } from '@remotion/transitions';
 import { fade } from '@remotion/transitions/fade';
 import trackData from './track-data.json';
