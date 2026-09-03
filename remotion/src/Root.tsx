@@ -3,6 +3,8 @@ import { Composition } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Montserrat';
 import { MainVideo } from './MainVideo';
 import { TourVideo, tourDurationInFrames } from './tour/TourVideo';
+import { MayaVideo } from './maya/MayaVideo';
+import { TOTAL as MAYA_TOTAL } from './maya/theme';
 import type { RecipeVideoProps } from './types';
 
 loadFont('normal', { weights: ['400', '600', '700', '800', '900'], subsets: ['latin'] });
@@ -10,6 +12,14 @@ loadFont('normal', { weights: ['400', '600', '700', '800', '900'], subsets: ['la
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+    <Composition
+      id="maya-ai"
+      component={MayaVideo}
+      durationInFrames={MAYA_TOTAL}
+      fps={30}
+      width={1920}
+      height={1080}
+    />
     <Composition
       id="kds-tour"
       component={TourVideo}
