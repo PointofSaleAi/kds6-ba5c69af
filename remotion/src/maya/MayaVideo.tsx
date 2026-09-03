@@ -10,9 +10,10 @@ import { S5Reports } from './scenes/S5Reports';
 import { S6Upsell } from './scenes/S6Upsell';
 import { S7Menu } from './scenes/S7Menu';
 import { S8Settings } from './scenes/S8Settings';
+import { S9Suite } from './scenes/S9Suite';
 import { S9Close } from './scenes/S9Close';
 
-const COMPONENTS = [S1Open, S2Demand, S3Copilot, S4Ordering, S5Reports, S6Upsell, S7Menu, S8Settings, S9Close];
+const COMPONENTS = [S1Open, S2Demand, S3Copilot, S4Ordering, S5Reports, S6Upsell, S7Menu, S8Settings, S9Suite, S9Close];
 
 export const MayaVideo: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: '#02030A' }}>

@@ -1,10 +1,11 @@
 import React from 'react';
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 import { C } from '../theme';
 
 /**
- * Bold, high-contrast scene copy. One short line (optionally two), Montserrat
- * 900, always inside the safe area.
+ * Bold, high-contrast scene copy in white with a pink accent line.
+ * Fades in on the spot — never slides sideways — sits on a soft dark scrim so
+ * it stays readable over live footage, and holds until the scene ends.
  */
 export const Headline: React.FC<{
   eyebrow?: string;
@@ -14,28 +15,39 @@ export const Headline: React.FC<{
   size?: number;
   delay?: number;
   place?: 'bottom-left' | 'center' | 'top-left';
-}> = ({ eyebrow, line1, line2, accent = C.blueBright, size = 86, delay = 0, place = 'bottom-left' }) => {
+}> = ({ eyebrow, line1, line2, accent = C.pink, size = 86, delay = 0, place = 'bottom-left' }) => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  const { durationInFrames } = useVideoConfig();
 
-  const enter = spring({ frame: frame - delay, fps, config: { damping: 200 }, durationInFrames: 24 });
-  const out = interpolate(frame, [durationInFrames - 20, durationInFrames - 6], [1, 0], {
+  const enter = interpolate(frame, [delay, delay + 16], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const clip = interpolate(enter, [0, 1], [0, 100]);
-  const shift = interpolate(enter, [0, 1], [46, 0]);
+  const out = interpolate(frame, [durationInFrames - 12, durationInFrames - 2], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const opacity = enter * out;
 
   const box: React.CSSProperties =
     place === 'center'
       ? { justifyContent: 'center', alignItems: 'center', textAlign: 'center' }
       : place === 'top-left'
-        ? { justifyContent: 'flex-start', alignItems: 'flex-start', padding: '96px 0 0 108px' }
-        : { justifyContent: 'flex-end', alignItems: 'flex-start', padding: '0 0 88px 108px' };
+        ? { justifyContent: 'flex-start', alignItems: 'flex-start', padding: '92px 0 0 100px' }
+        : { justifyContent: 'flex-end', alignItems: 'flex-start', padding: '0 0 84px 100px' };
 
   return (
     <AbsoluteFill style={{ ...box, pointerEvents: 'none' }}>
-      <div style={{ opacity: enter * out, transform: `translateY(${shift}px)`, maxWidth: 1360 }}>
+      <div
+        style={{
+          opacity,
+          maxWidth: 1420,
+          padding: '26px 40px 30px',
+          borderRadius: 26,
+          background: 'rgba(4,5,11,0.62)',
+          boxShadow: '0 30px 90px rgba(0,0,0,0.55)',
+        }}
+      >
         {eyebrow ? (
           <div
             style={{
@@ -44,8 +56,8 @@ export const Headline: React.FC<{
               fontSize: 22,
               letterSpacing: 5,
               textTransform: 'uppercase',
-              color: accent,
-              marginBottom: 16,
+              color: C.pink,
+              marginBottom: 14,
             }}
           >
             {eyebrow}
@@ -56,11 +68,10 @@ export const Headline: React.FC<{
             fontFamily: 'Montserrat',
             fontWeight: 900,
             fontSize: size,
-            lineHeight: 1.03,
+            lineHeight: 1.04,
             letterSpacing: -1.5,
-            color: C.cream,
-            textShadow: '0 18px 50px rgba(0,0,0,0.75)',
-            clipPath: `inset(0 ${100 - clip}% 0 0)`,
+            color: C.white,
+            textShadow: '0 14px 44px rgba(0,0,0,0.85)',
           }}
         >
           {line1}
@@ -71,12 +82,11 @@ export const Headline: React.FC<{
               marginTop: 10,
               fontFamily: 'Montserrat',
               fontWeight: 900,
-              fontSize: size * 0.62,
+              fontSize: size * 0.64,
               lineHeight: 1.1,
               letterSpacing: -0.6,
-              color: accent,
-              textShadow: '0 14px 40px rgba(0,0,0,0.7)',
-              clipPath: `inset(0 ${100 - clip}% 0 0)`,
+              color: accent === C.white ? C.white : C.pink,
+              textShadow: '0 12px 36px rgba(0,0,0,0.8)',
             }}
           >
             {line2}

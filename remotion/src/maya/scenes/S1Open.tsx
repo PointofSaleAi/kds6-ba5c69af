@@ -32,7 +32,6 @@ export const S1Open: React.FC = () => {
         eyebrow="Maya AI Automation"
         line1="Meet Maya."
         line2="The first AI that runs your restaurant."
-        accent={C.blueBright}
         size={104}
         delay={LOGO_FRAMES + 4}
         place="center"
@@ -40,7 +39,7 @@ export const S1Open: React.FC = () => {
       <Sparkles
         sparks={[
           { x: 1420, y: 300, size: 74, at: LOGO_FRAMES + 16 },
-          { x: 470, y: 760, size: 52, at: LOGO_FRAMES + 30, color: C.violet },
+          { x: 470, y: 760, size: 52, at: LOGO_FRAMES + 30, color: C.pink },
           { x: 1560, y: 800, size: 40, at: LOGO_FRAMES + 44 },
         ]}
       />
