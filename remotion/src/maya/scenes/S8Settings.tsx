@@ -22,14 +22,14 @@ const Confirm: React.FC<{ at: number }> = ({ at }) => {
         width: 560,
         padding: '24px 28px',
         borderRadius: 22,
-        background: 'linear-gradient(135deg, rgba(22,160,133,0.2), rgba(9,9,18,0.95))',
-        border: `1px solid ${C.teal}88`,
+        background: 'rgba(4,5,11,0.86)',
+        border: `1px solid ${C.pink}88`,
         boxShadow: '0 30px 80px rgba(0,0,0,0.65)',
         opacity: pop,
         transform: `translateY(${interpolate(pop, [0, 1], [40, 0])}px)`,
       }}
     >
-      <div style={{ fontFamily: 'Montserrat', fontWeight: 800, fontSize: 26, color: C.cream, lineHeight: 1.3 }}>
+      <div style={{ fontFamily: 'Montserrat', fontWeight: 800, fontSize: 26, color: C.white, lineHeight: 1.3 }}>
         Done — allergen alerts now fire on every ticket.
       </div>
       <div
@@ -40,7 +40,7 @@ const Confirm: React.FC<{ at: number }> = ({ at }) => {
           fontSize: 16,
           letterSpacing: 3,
           textTransform: 'uppercase',
-          color: C.teal,
+          color: C.pink,
         }}
       >
         Settings updated by Maya
@@ -63,14 +63,13 @@ export const S8Settings: React.FC = () => (
     <Sparkles
       sparks={[
         { x: 1240, y: 300, size: 56, at: 106 },
-        { x: 520, y: 660, size: 40, at: 130, color: C.violet },
+        { x: 520, y: 660, size: 40, at: 130, color: C.pink },
       ]}
     />
     <Headline
       eyebrow="Just tell her"
       line1="Settings, without"
       line2="digging through menus."
-      accent={C.blueBright}
       size={70}
       delay={140}
       place="top-left"

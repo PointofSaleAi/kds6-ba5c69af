@@ -1,7 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { C, SHOT } from '../theme';
-import { DeviceWindow } from '../components/DeviceWindow';
+import { C, CLIP } from '../theme';
+import { ClipWindow } from '../components/ClipWindow';
 import { Headline } from '../components/Headline';
 import { Sparkles } from '../components/Sparkles';
 
@@ -28,13 +28,13 @@ const BulkPanel: React.FC<{ at: number }> = ({ at }) => {
     <div
       style={{
         position: 'absolute',
-        right: 120,
-        top: 150,
+        right: 96,
+        top: 120,
         width: 640,
         padding: '26px 28px 20px',
         borderRadius: 24,
         background: 'linear-gradient(135deg, rgba(20,20,34,0.97), rgba(8,8,16,0.96))',
-        border: `1px solid ${C.violet}66`,
+        border: `1px solid ${C.pink}66`,
         boxShadow: '0 34px 90px rgba(0,0,0,0.7)',
         opacity: enter,
         transform: `translateY(${interpolate(enter, [0, 1], [50, 0])}px)`,
@@ -47,7 +47,7 @@ const BulkPanel: React.FC<{ at: number }> = ({ at }) => {
           fontSize: 19,
           letterSpacing: 3,
           textTransform: 'uppercase',
-          color: C.violet,
+          color: C.pink,
           marginBottom: 18,
         }}
       >
@@ -78,12 +78,12 @@ const BulkPanel: React.FC<{ at: number }> = ({ at }) => {
                 width: 22,
                 height: 22,
                 borderRadius: '50%',
-                background: C.teal,
+                background: C.pink,
                 flexShrink: 0,
-                boxShadow: `0 0 14px ${C.teal}99`,
+                boxShadow: `0 0 14px ${C.pink}99`,
               }}
             />
-            <div style={{ fontFamily: 'Montserrat', fontWeight: 600, fontSize: 21, color: C.cream }}>{row}</div>
+            <div style={{ fontFamily: 'Montserrat', fontWeight: 600, fontSize: 21, color: C.white }}>{row}</div>
           </div>
         );
       })}
@@ -94,22 +94,15 @@ const BulkPanel: React.FC<{ at: number }> = ({ at }) => {
 /** Scene 7 — menu updates in minutes via AI-driven bulk upload. */
 export const S7Menu: React.FC = () => (
   <AbsoluteFill>
-    <DeviceWindow
-      src={SHOT.menuChat}
-      from={{ scale: 1.02, x: 300, y: 0 }}
-      to={{ scale: 1.08, x: 260, y: 0 }}
-      width={1460}
-      align="left"
-    />
+    <ClipWindow src={CLIP.s7Pos} width={1360} scaleFrom={1} scaleTo={1.03} />
     <AbsoluteFill style={{ background: 'linear-gradient(90deg, transparent 30%, rgba(5,6,12,0.8) 56%)' }} />
     <BulkPanel at={14} />
-    <Sparkles sparks={[{ x: 1180, y: 190, size: 52, at: 30 }]} />
+    <Sparkles sparks={[{ x: 300, y: 240, size: 52, at: 30, color: C.pink }]} />
     <Headline
       eyebrow="Minutes, not hours"
       line1="Your whole menu,"
       line2="uploaded in one pass."
-      accent={C.violet}
-      size={70}
+      size={68}
       delay={22}
     />
   </AbsoluteFill>
