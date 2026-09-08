@@ -204,20 +204,6 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
       {open && (
         <>
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed z-40 backdrop-blur-[1px]"
-            style={{
-              left: insets.left,
-              right: insets.right,
-              top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`,
-              bottom: insets.bottom,
-              backgroundColor: 'hsl(var(--drawer-backdrop) / var(--drawer-backdrop-opacity))',
-            }}
-            onClick={onClose}
-          />
-          <motion.div
             initial={{ x: '110%' }}
             animate={{ x: 0 }}
             exit={{ x: '110%' }}
