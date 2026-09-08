@@ -281,11 +281,9 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 <button
                   data-onboarding="sort"
                   onClick={() => setSortOpen(!sortOpen)}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors min-h-[36px] min-w-[36px] ${
-                    sortMode !== 'newest'
-                      ? 'bg-primary-foreground/20 text-primary-foreground'
-                      : 'bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground'
-                  }`}
+                   className={`flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px] ${
+                     sortMode !== 'newest' ? 'text-primary-foreground' : 'text-primary-foreground/70 hover:text-primary-foreground'
+                   }`}
                   aria-label="Sort Orders"
                 >
                   <ArrowUpDown size={15} />
@@ -349,8 +347,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         <button
           data-onboarding="eighty-six"
           onClick={() => setEightySixOpen(true)}
-          className="flex items-center gap-2 px-3 py-1 rounded-xl hover:opacity-80 transition-opacity shrink-0 h-[36px]"
-          style={{ background: eightySixedItems.length > 0 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(100, 100, 100, 0.4)' }}
+           className="flex items-center gap-2 px-3 py-1 rounded-xl bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors shrink-0 h-[36px]"
           aria-label="86 products"
         >
           <div className="flex flex-col items-center leading-tight">
