@@ -61,10 +61,7 @@ export default function SettingsLayout() {
         >
           <SettingsSidebar />
         </div>
-        <main
-          className="flex-1 overflow-y-auto scrollbar-hide p-4"
-          style={{ background: 'hsl(var(--surface-bg))' }}
-        >
+        <main className="flex-1 overflow-y-auto scrollbar-hide p-4 bg-transparent">
           <Outlet key={location.pathname} />
         </main>
       </div>

@@ -1268,10 +1268,8 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             >
               <SettingsSidebar />
             </div>
-            <main
-              className={`flex-1 overflow-y-auto scrollbar-hide ${glassChrome ? 'ios-glass-card rounded-3xl' : ''}`}
-            >
-              <div className="w-full p-4" style={{ background: 'transparent' }}>
+            <main className="flex-1 overflow-y-auto scrollbar-hide bg-transparent">
+              <div className="w-full p-4 bg-transparent">
                 <Outlet />
               </div>
             </main>
