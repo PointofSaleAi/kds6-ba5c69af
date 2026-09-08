@@ -43,6 +43,8 @@
     --surface-card: 0 0% 100%;
     --surface-bg: 210 20% 98%;
     --tickets-bg: 0 0% 76%;
+    --drawer-backdrop: 210 25% 12%;
+    --drawer-backdrop-opacity: 0.32;
 
     /* Text */
     --text-primary: 210 25% 24%;
@@ -128,6 +130,8 @@
     --surface-card: 228 13% 14%;
     --surface-bg: 225 14% 11%;
     --tickets-bg: 225 14% 8%;
+    --drawer-backdrop: 225 14% 3%;
+    --drawer-backdrop-opacity: 0.58;
 
     /* Text - high contrast on dark */
     --text-primary: 0 0% 92%;

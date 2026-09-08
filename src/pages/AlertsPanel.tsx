@@ -207,8 +207,14 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed bg-black/40 z-40"
-            style={{ left: insets.left, right: insets.right, top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`, bottom: insets.bottom }}
+            className="fixed z-40 backdrop-blur-[1px]"
+            style={{
+              left: insets.left,
+              right: insets.right,
+              top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`,
+              bottom: insets.bottom,
+              backgroundColor: 'hsl(var(--drawer-backdrop) / var(--drawer-backdrop-opacity))',
+            }}
             onClick={onClose}
           />
           <motion.div
@@ -219,7 +225,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
             style={{ right: insets.right, top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`, bottom: insets.bottom }}
           >
-            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-surface-card flex flex-col">
+            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-tickets-bg flex flex-col">
             {/* Header */}
             <div className="flex-shrink-0 px-4 py-3 border-b border-border flex items-center justify-between">
               <h2 className="text-lg font-bold text-text-primary">{t.notificationsTitle}</h2>
