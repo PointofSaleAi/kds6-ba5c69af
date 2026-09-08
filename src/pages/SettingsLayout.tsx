@@ -61,7 +61,7 @@ export default function SettingsLayout() {
         <main
           className="flex-1 overflow-y-auto scrollbar-hide p-4 rounded-3xl"
           style={{
-            background: 'hsl(var(--surface-card))',
+            background: 'hsl(var(--surface-bg))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',
           }}
         >
