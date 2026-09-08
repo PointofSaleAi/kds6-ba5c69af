@@ -208,7 +208,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed z-40 inset-0"
+            className="fixed z-[9997] inset-0"
             style={{
               backgroundColor: `hsl(var(--drawer-backdrop) / var(--drawer-backdrop-opacity))`,
               backdropFilter: 'blur(6px)',
@@ -221,8 +221,8 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             animate={{ x: 0 }}
             exit={{ x: '110%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed z-50 w-[440px] max-w-[95vw] p-2 pl-0"
-            style={{ right: insets.right, top: `calc(${insets.top}px + var(--training-bar-h, 0px))`, bottom: insets.bottom }}
+            className="fixed z-[9998] w-[440px] max-w-[95vw] p-2 pl-0"
+            style={{ right: insets.right, top: `var(--training-bar-h, 0px)`, bottom: 0 }}
           >
             <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border flex flex-col" style={{ background: 'hsl(var(--surface-card))' }}>
             {/* Header */}
