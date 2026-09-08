@@ -121,7 +121,7 @@ export function SettingsPill({
       {helper && (
         <p
           className="text-xs px-2 mb-3 mt-0.5"
-          style={{ color: 'hsl(var(--text-muted))' }}
+          style={{ color: 'hsl(var(--text-secondary))' }}
         >
           {helper}
         </p>
