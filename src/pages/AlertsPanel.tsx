@@ -208,10 +208,10 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
             animate={{ x: 0 }}
             exit={{ x: '110%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed z-50 w-[440px] max-w-[95vw] p-[10px] pl-0"
+            className="fixed z-50 w-[440px] max-w-[95vw] p-2 pl-0"
             style={{ right: insets.right, top: `calc(${insets.top}px + var(--kds-header-h, 0px) + var(--training-bar-h, 0px))`, bottom: insets.bottom }}
           >
-            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-tickets-bg flex flex-col">
+            <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-border flex flex-col" style={{ background: 'hsl(var(--surface-card))' }}>
             {/* Header */}
             <div className="flex-shrink-0 px-4 py-3 border-b border-border flex items-center justify-between">
               <h2 className="text-lg font-bold text-text-primary">{t.notificationsTitle}</h2>
