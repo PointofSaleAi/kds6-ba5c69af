@@ -120,8 +120,8 @@ export function SettingsPill({
       </div>
       {helper && (
         <p
-          className="text-xs px-2 mb-3 mt-0.5"
-          style={{ color: 'hsl(var(--foreground) / 0.7)' }}
+          className="text-xs font-medium px-2 mb-3 mt-0.5"
+          style={{ color: 'hsl(var(--text-secondary))' }}
         >
           {helper}
         </p>
