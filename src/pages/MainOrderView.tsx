@@ -1271,7 +1271,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             <main
               className={`flex-1 overflow-y-auto scrollbar-hide rounded-3xl ${glassChrome ? 'ios-glass-card' : ''}`}
               style={{
-                background: glassChrome ? undefined : 'hsl(var(--surface-card))',
+                background: glassChrome ? undefined : 'hsl(var(--surface-bg))',
                 boxShadow: glassChrome ? undefined : '0 1px 2px hsl(0 0% 0% / 0.04)',
               }}
             >

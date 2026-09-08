@@ -149,7 +149,7 @@ export function ProfileSection({ onSwitchStaff }: ProfileSectionProps) {
               className="px-3 py-1 text-xs font-semibold rounded-full font-montserrat capitalize transition-colors"
               style={{
                 background: tab === k ? 'hsl(var(--brand-primary))' : 'transparent',
-                color: tab === k ? 'hsl(var(--primary-foreground))' : 'hsl(var(--text-secondary))',
+                color: tab === k ? 'hsl(var(--brand-primary-foreground))' : 'hsl(var(--text-secondary))',
               }}
             >
               {k}
