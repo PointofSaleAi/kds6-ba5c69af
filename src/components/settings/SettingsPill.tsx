@@ -113,7 +113,7 @@ export function SettingsPill({
           >
             {right}
             {interactive && !right && (
-              <ChevronRight size={18} style={{ color: 'hsl(var(--text-muted))' }} />
+              <ChevronRight size={18} style={{ color: 'hsl(var(--foreground) / 0.7)' }} />
             )}
           </div>
         </div>
@@ -121,7 +121,7 @@ export function SettingsPill({
       {helper && (
         <p
           className="text-xs px-2 mb-3 mt-0.5"
-          style={{ color: 'hsl(var(--text-secondary))' }}
+          style={{ color: 'hsl(var(--foreground) / 0.7)' }}
         >
           {helper}
         </p>
