@@ -163,9 +163,14 @@ export function SettingsSidebar() {
                   type="button"
                   onClick={() => navigate(group.path)}
                   className="flex items-center gap-2.5 w-full py-1 px-2 rounded-full active:opacity-70 transition-all"
-                  style={{
-                    background: isActive ? 'hsl(var(--surface-bg))' : 'transparent',
-                  }}
+                style={{
+                  background: isActive
+                    ? 'hsl(var(--text-primary) / 0.08)'
+                    : 'transparent',
+                  boxShadow: isActive
+                    ? 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.06)'
+                    : 'none',
+                }}
                 >
                   <SettingsIconTile
                     icon={Icon}
