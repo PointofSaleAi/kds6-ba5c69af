@@ -61,7 +61,7 @@ export default function SettingsLayout() {
         >
           <SettingsSidebar />
         </div>
-        <main className="flex-1 overflow-y-auto scrollbar-hide p-4 bg-transparent">
+        <main className="flex-1 overflow-y-auto scrollbar-hide bg-transparent">
           <Outlet key={location.pathname} />
         </main>
       </div>

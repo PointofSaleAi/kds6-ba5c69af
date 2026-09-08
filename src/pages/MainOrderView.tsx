@@ -1269,7 +1269,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
               <SettingsSidebar />
             </div>
             <main className="flex-1 overflow-y-auto scrollbar-hide bg-transparent">
-              <div className="w-full p-4 bg-transparent">
+              <div className="w-full bg-transparent">
                 <Outlet />
               </div>
             </main>
