@@ -11,7 +11,7 @@ interface OrderNotesSectionProps {
 
 export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes, onUnacknowledgeNotes }: OrderNotesSectionProps) {
   const [acknowledged, setAcknowledged] = useState(false);
-  const { tn } = useLanguage();
+  const { tn, tui } = useLanguage();
 
   const toggle = () => {
     const next = !acknowledged;
@@ -30,8 +30,8 @@ export function OrderNotesSection({ notes, orderId, onAcknowledgeNotes, onUnackn
       <div
         role="button"
         tabIndex={0}
-        aria-label={acknowledged ? 'Mark notes as unseen' : 'Acknowledge notes'}
-        title={acknowledged ? 'Tap to mark notes as unseen' : 'Tap to acknowledge notes'}
+        aria-label={acknowledged ? tui('Mark notes as unseen') : tui('Acknowledge notes')}
+        title={acknowledged ? tui('Tap to mark notes as unseen') : tui('Tap to acknowledge notes')}
         onClick={toggle}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
