@@ -171,7 +171,7 @@ export default function DisplaySettings() {
         <div className="flex-1 px-2 pb-2 overflow-hidden">
           <div className="h-full flex flex-col lg:flex-row gap-2 min-h-0 overflow-y-auto lg:overflow-hidden">
             {/* LEFT: options */}
-            <div className="w-full lg:w-[336px] shrink-0 flex flex-col gap-4 lg:overflow-y-auto">
+            <div className="w-full lg:flex-1 lg:basis-0 min-w-0 flex flex-col gap-4 lg:overflow-y-auto">
               <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
                 Controls padding, row gap, text size, layout density, and the primary ticket identifier.
               </p>
@@ -261,7 +261,7 @@ export default function DisplaySettings() {
             <div className="hidden lg:block w-px bg-border shrink-0" />
 
             {/* RIGHT: preview */}
-            <div className="flex-1 min-w-0 min-h-[360px] flex flex-col">
+            <div className="w-full lg:flex-1 lg:basis-0 min-w-0 min-h-[360px] flex flex-col">
               <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
                 Preview
               </p>
