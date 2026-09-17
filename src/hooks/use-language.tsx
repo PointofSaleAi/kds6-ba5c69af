@@ -2767,6 +2767,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     tpSecondary,
     tmSecondary,
     tnSecondary,
+    tcSecondary,
+    taSecondary,
+    toSecondary,
+    tlSecondary,
+    tpersonSecondary,
+
     dateFormat,
     setDateFormat,
     timeFormat,
