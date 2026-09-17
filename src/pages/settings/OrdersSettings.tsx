@@ -11,15 +11,8 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import { QuickRepliesModal } from '@/components/settings/QuickRepliesModal';
 
-const HOLD_TIME_OPTIONS = [
-  { value: 1, label: tui('{n} minute', { n: 1 }) },
-  { value: 2, label: tui('{n} minutes', { n: 2 }) },
-  { value: 5, label: tui('{n} minutes', { n: 5 }) },
-  { value: 10, label: tui('{n} minutes', { n: 10 }) },
-  { value: 15, label: tui('{n} minutes', { n: 15 }) },
-  { value: 20, label: tui('{n} minutes', { n: 20 }) },
-  { value: 30, label: tui('{n} minutes', { n: 30 }) },
-];
+const HOLD_TIME_VALUES = [1, 2, 5, 10, 15, 20, 30];
+
 
 export default function OrdersSettings() {
   const {
