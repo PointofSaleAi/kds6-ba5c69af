@@ -231,7 +231,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             <div className="flex-1 lg:overflow-y-auto space-y-4 min-w-0">
               {/* Language scope */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.languageScope}</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t.languageScope}</div>
                 <div className="flex bg-muted rounded-lg p-0.5">
                   {scopeOptions.map((opt) => (
                     <button
@@ -249,11 +249,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Display mode */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.displayMode}</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t.displayMode}</div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setDisplayMode('single')}
-                    className="flex-1 rounded-lg p-2.5 text-left transition-all"
+                    className="flex-1 rounded-lg p-2.5 text-left transition-all bg-surface-card"
                     style={{ border: displayMode === 'single' ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                   >
                     <div className="flex-1 min-w-0">
@@ -266,7 +266,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   </button>
                   <button
                     onClick={() => setDisplayMode('dual')}
-                    className="flex-1 rounded-lg p-2.5 text-left transition-all"
+                    className="flex-1 rounded-lg p-2.5 text-left transition-all bg-surface-card"
                     style={{ border: displayMode === 'dual' ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                   >
                     <div className="flex-1 min-w-0">
@@ -284,7 +284,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
               {/* Language pair (dual only) */}
               {displayMode === 'dual' && (
                 <div>
-                  <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">{t.languagePair}</div>
+                  <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">{t.languagePair}</div>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -324,7 +324,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Language list */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5">
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1.5">
                   {displayMode === 'dual'
                     ? `${t.selectLanguage} (${editTarget})`
                     : t.selectLanguage}
@@ -345,7 +345,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                       key={lang.code}
                       onClick={() => handleSelectLang(lang.code)}
                       className={`flex items-center gap-2.5 px-3 py-2 hover:bg-muted/50 rounded-lg transition-colors min-h-[44px] border ${
-                        selectedLangInList === lang.code ? 'bg-brand-primary/10 border-brand-primary' : 'border-border'
+                        selectedLangInList === lang.code ? 'bg-brand-primary/10 border-brand-primary' : 'bg-surface-card border-border'
                       }`}
                     >
                       <span className="text-base">{lang.flag}</span>
@@ -362,7 +362,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                 <div className="mt-2 pt-2 border-t border-border">
                   <button
                     onClick={() => setRequestFormOpen(true)}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px]"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-muted/50 rounded-lg transition-colors min-h-[44px] bg-surface-card"
                   >
                     <span className="text-base">🌐</span>
                     <span className="text-xs font-semibold text-brand-primary dark:text-foreground">{t.requestLanguage}</span>
@@ -399,7 +399,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                       <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
                         {/* Language Name */}
                         <div>
-                          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1.5 block">
                             Language name *
                           </label>
                           <div ref={reqDropdownRef} className="relative">
@@ -439,7 +439,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                               >
                                 {filteredPopular.length > 0 && (
                                   <>
-                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-secondary uppercase tracking-widest sticky top-0 bg-surface-card">Popular</div>
                                     {filteredPopular.map((lang) => (
                                       <button
                                         key={lang}
@@ -460,7 +460,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                                 )}
                                 {filteredMore.length > 0 && (
                                   <>
-                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
+                                    <div className="px-3 py-1.5 text-[10px] font-bold text-text-secondary uppercase tracking-widest sticky top-0 bg-surface-card border-t border-border">More Languages</div>
                                     {filteredMore.map((lang) => (
                                       <button
                                         key={lang}
@@ -491,7 +491,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                         {/* Region / Dialect (conditional) */}
                         {hasVariants && (
                           <div>
-                            <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                            <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1.5 block">
                               Dialect
                             </label>
                             <input
@@ -506,7 +506,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
                         {/* Reason */}
                         <div>
-                          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1.5 block">
+                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1.5 block">
                             Why do you need it?
                           </label>
                           <input
@@ -541,11 +541,11 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             {/* RIGHT COLUMN - Static preview (non-interactive) */}
             <div className="w-full lg:w-[360px] shrink-0 flex flex-col lg:h-full">
               <div className="flex items-center justify-between mb-2 gap-2">
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">
                   {t.previewKDS}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] font-semibold text-text-muted uppercase tracking-wider">View as</span>
+                  <span className="text-[9px] font-semibold text-text-secondary uppercase tracking-wider">View as</span>
                   <div className="flex bg-muted rounded-md p-0.5 border border-border">
                     {(['standard', 'compact'] as const).map((opt) => (
                       <button
@@ -583,13 +583,13 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
               {/* Date format - left */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Date Format</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-3">Date Format</div>
                 <div className="space-y-2">
                   {dateFormats.map((fmt, i) => (
                     <button
                       key={fmt}
                       onClick={() => { setDateFormat(i as DateFormatIndex); saveDateFormat(i as DateFormatIndex); }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px] bg-surface-card"
                       style={{ border: dateFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
                       <div
@@ -606,13 +606,13 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Time format - right */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Time Format</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-3">Time Format</div>
                 <div className="space-y-2">
                   {timeFormats.map((fmt, i) => (
                     <button
                       key={fmt}
                       onClick={() => { setTimeFormat(i as TimeFormatIndex); saveTimeFormat(i as TimeFormatIndex); }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px] bg-surface-card"
                       style={{ border: timeFormat === i ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
                       <div
@@ -629,7 +629,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Currency - read-only */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Currency</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-3">Currency</div>
                 <div
                   className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg min-h-[44px] bg-muted/50"
                   style={{ border: '1.5px solid hsl(var(--border))' }}
@@ -645,13 +645,13 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Temperature Unit - left */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Temperature Unit</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-3">Temperature Unit</div>
                 <div className="space-y-2">
                   {(['F', 'C'] as const).map((unit) => (
                     <button
                       key={unit}
                       onClick={() => setTempUnit(unit)}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px] bg-surface-card"
                       style={{ border: tempUnit === unit ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
                       <div
@@ -668,13 +668,13 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
 
               {/* Week Start Day - right */}
               <div>
-                <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">Week Start Day</div>
+                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-3">Week Start Day</div>
                 <div className="space-y-2">
                   {(['Sunday', 'Monday'] as const).map((day) => (
                     <button
                       key={day}
                       onClick={() => setWeekStart(day)}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px]"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all min-h-[44px] bg-surface-card"
                       style={{ border: weekStart === day ? '1.5px solid #111' : '1.5px solid hsl(var(--border))' }}
                     >
                       <div
