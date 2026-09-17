@@ -346,7 +346,11 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           })}
         </div>
         <div className="rounded-lg overflow-hidden">
-          <SelectedVariantPreview order={previewOrder} />
+          <SelectedVariantPreview
+            order={previewOrder}
+            glassTicketId={GLASS_PREVIEW_TICKET_IDS[previewType] ?? 't23'}
+            glassElapsedSeconds={(Math.max(0, rule.minMinutes) + 1) * 60}
+          />
         </div>
       </div>
     </div>
