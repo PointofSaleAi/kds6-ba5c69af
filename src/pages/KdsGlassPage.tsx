@@ -32,7 +32,7 @@ function GlassShell() {
       board.setView(target);
       return;
     }
-    navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')));
+    navigate(getTicketsRoutePath(readStoredTicketsRoute('glass')));
   };
 
   const filterCount = board.selectedItems.size + board.selectedCategories.size;

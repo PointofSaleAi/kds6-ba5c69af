@@ -114,7 +114,7 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
   const handleNavigate = useCallback((target: string) => {
     switch (target) {
       case 'home': {
-        navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')));
+        navigate(getTicketsRoutePath(readStoredTicketsRoute('glass')));
         setScreen('main');
         break;
       }
@@ -203,7 +203,7 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
         <MainOrderView
           onNavigate={handleNavigate}
           settingsOpen={inSettings}
-          onCloseSettings={() => navigate(getTicketsRoutePath(readStoredTicketsRoute('v3')))}
+          onCloseSettings={() => navigate(getTicketsRoutePath(readStoredTicketsRoute('glass')))}
           onOpenSub={handleOpenSub}
           onLogOut={handleLogOut}
           onDevModeChange={() => {}}

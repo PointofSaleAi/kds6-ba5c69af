@@ -42,7 +42,7 @@ export default function DisplaySettings() {
     reducedMotion, setReducedMotion,
   } = useKDSSettings();
   const [ticketsRoute, setTicketsRoute] = useState<import('@/hooks/use-kds-settings').TicketsRouteKey>(
-    () => readStoredTicketsRoute('v3'),
+    () => readStoredTicketsRoute('glass'),
   );
   const selectedCardVariant = getCardVariantForTicketsRoute(ticketsRoute);
   // Read values scoped to the currently-selected preview route

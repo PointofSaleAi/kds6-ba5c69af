@@ -64,10 +64,10 @@ export function SelectedVariantPreview({
   glassTicketId = 't23',
   glassElapsedSeconds,
 }: SelectedVariantPreviewProps) {
-  const [route, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('v3'));
+  const [route, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('glass'));
 
   useEffect(() => {
-    const sync = () => setRoute(readStoredTicketsRoute('v3'));
+    const sync = () => setRoute(readStoredTicketsRoute('glass'));
     window.addEventListener('storage', sync);
     window.addEventListener('focus', sync);
     window.addEventListener(TICKETS_ROUTE_CHANGE_EVENT, sync);

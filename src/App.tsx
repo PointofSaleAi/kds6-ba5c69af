@@ -58,7 +58,7 @@ const AppShell = () => {
       {mode === 'pos' && <PosModeShell />}
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/kds/v3" replace />} />
+          <Route path="/" element={<Navigate to="/kds/glass" replace />} />
           <Route path="/kds/v1" element={<Index />} />
           <Route path="/kds/default" element={<Index />} />
           <Route path="/kds/v2" element={<Index cardVariant="v1" />} />

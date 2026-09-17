@@ -32,7 +32,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
     if (pin.length !== PIN_LENGTH) return;
     setPin('');
     onClose();
-    navigate('/kds/v3');
+    navigate('/kds/glass');
   }, [pin, onClose, navigate]);
 
   useEffect(() => {
