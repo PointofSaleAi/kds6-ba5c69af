@@ -30,7 +30,9 @@ export default function OrdersSettings() {
   const [quickRepliesOpen, setQuickRepliesOpen] = useState(false);
 
   const holdTimeValue = orderHoldMinutes;
-  const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || tui('{n} minutes', { n: 5 });
+  const holdTimeLabel = (n: number) => (n === 1 ? tui('{n} minute', { n }) : tui('{n} minutes', { n }));
+  const HOLD_TIME_OPTIONS = HOLD_TIME_VALUES.map((value) => ({ value, label: holdTimeLabel(value) }));
+  const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || holdTimeLabel(5);
   const handleHoldTimeChange = (value: number) => {
     setOrderHoldMinutes(value);
   };
