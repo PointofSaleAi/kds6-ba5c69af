@@ -44,6 +44,8 @@ interface TicketBoardProps {
   pinnedTicketId?: string;
   /** Force a view mode, ignoring the board's own selection. */
   viewModeOverride?: ViewMode;
+  /** Force the pinned ticket's wait time (aging-rule previews). */
+  elapsedSecondsOverride?: number;
 }
 
 const PAD_SCALE = { Compact: 0.7, Standard: 1, Spacious: 1.35 } as const;
@@ -60,6 +62,7 @@ export function TicketBoard({
   maxTickets,
   pinnedTicketId,
   viewModeOverride,
+  elapsedSecondsOverride,
 }: TicketBoardProps = {}) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
