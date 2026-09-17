@@ -126,7 +126,11 @@ export function TicketBoard({
       items={itemStages}
       open={openCourses}
       now={now}
-      elapsedSeconds={elapsedFor(t)}
+      elapsedSeconds={
+        elapsedSecondsOverride != null && (!pinnedTicketId || t.id === pinnedTicketId)
+          ? elapsedSecondsOverride
+          : elapsedFor(t)
+      }
       prepLabelFor={prepLabelFor}
       onTapItem={tapItem}
       onToggleCourse={toggleCourse}
