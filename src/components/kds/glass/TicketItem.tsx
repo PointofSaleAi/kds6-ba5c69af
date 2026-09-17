@@ -58,7 +58,7 @@ export function TicketItem({
   onTap: () => void;
 }) {
   const { skin, rowScale, safety } = useGlassStyle();
-  const { tp, tpSecondary, tn, tnSecondary, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
+  const { tp, tpSecondary, tn, tnSecondary, ta, tl, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
   const secondaryDir: 'ltr' | 'rtl' = secondaryLang === 'ar' ? 'rtl' : 'ltr';
   const showSecondary = displayMode === 'dual' && showSecondaryMenu;
   const iv = stageVisualsFor(stage, skin);
@@ -122,11 +122,12 @@ export function TicketItem({
             {item.tags.map((tag) => (
               <div key={tag} style={{ ...glossItem(skin), ...safetyStyle(safety) }}>
                 <GlassIcon name="warn" size={13} sw={2.4} />
-                <span>{tag} allergy</span>
+                <span>{ta(tag)} {tl('allergy')}</span>
               </div>
             ))}
           </div>
         )}
+
       </div>
       <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
         {stage !== 'unseen' && (

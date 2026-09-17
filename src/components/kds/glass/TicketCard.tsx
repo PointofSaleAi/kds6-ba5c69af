@@ -7,6 +7,8 @@ import { useGlassBoard } from './glass-board-context';
 import { KitchenReplyDialog } from '../KitchenReplyDialog';
 import type { KitchenMessage } from '@/types/kitchen-message';
 import { glossTicket, safetyStyle, stageVisualsFor, useGlassStyle } from './glass-theme';
+import { useGlassLabels } from './glass-i18n';
+
 import {
   CTA,
   activeCourse,
@@ -65,6 +67,24 @@ export function TicketCard({
   const headerOnly = appearance === 'header';
   const showSecondary = appearance === 'standard';
 
+  /* Language settings drive every label on the glass ticket, not just item names. */
+  const {
+    showSecondary: dualLang,
+    secondaryDir,
+    typeLabel,
+    typeLabelSecondary,
+    serverLabel,
+    courseLabel,
+    courseLabelSecondary,
+    allergyLabel,
+    metaLabel,
+    ctaLabel,
+    noteLabel,
+    noteLabelSecondary,
+    embeddedLabel,
+  } = useGlassLabels();
+
+
   /* Notes: single tap acknowledges (disables the note), double tap undoes. */
   const noteTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleNoteTap = () => {
@@ -100,7 +120,7 @@ export function TicketCard({
     status: msgSeen ? 'acknowledged' : 'pending',
   };
 
-  const heroLabel = identifier === 'guest' ? t.server.split('·')[0].trim() : t.num;
+  const heroLabel = identifier === 'guest' ? serverLabel(t.server).split('·')[0].trim() : t.num;
 
   return (
     <div
@@ -154,14 +174,20 @@ export function TicketCard({
             <div style={{ flex: '0 0 auto', display: 'flex' }}>
               <GlassIcon name={t.kind} size={26} sw={2} stroke={skin.text} />
             </div>
-            <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.type}</div>
+            <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <div style={{ fontWeight: 800, fontSize: 30, lineHeight: 1, letterSpacing: '-0.03em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{typeLabel(t.type)}</div>
+              {dualLang && typeLabelSecondary(t.type) !== typeLabel(t.type) && (
+                <div dir={secondaryDir} style={{ fontWeight: 600, fontSize: 20, lineHeight: 1, letterSpacing: '-0.02em', color: skin.textMuted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', unicodeBidi: 'plaintext' }}>{typeLabelSecondary(t.type)}</div>
+              )}
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, color: skin.textMuted }}>
             {/* shrink-0 wrapper: long server labels used to squeeze the icon away */}
             <div style={{ flex: '0 0 auto', display: 'flex' }}>
               <GlassIcon name="runner" size={22} sw={2.1} />
             </div>
-            <div style={{ minWidth: 0, fontWeight: 700, fontSize: 25, lineHeight: 1, letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.server}</div>
+            <div style={{ minWidth: 0, fontWeight: 700, fontSize: 25, lineHeight: 1, letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{serverLabel(t.server)}</div>
+
           </div>
         </div>
 
@@ -188,7 +214,7 @@ export function TicketCard({
       {t.allergies.length > 0 && !headerOnly && (
         <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', gap: 8, padding: `0 ${pad(18)}px ${pad(14)}px` }}>
           {t.allergies.map((a) => (
-            <div key={a} style={{ ...glossTicket(skin), ...safetyStyle(safety) }}>{a}</div>
+            <div key={a} style={{ ...glossTicket(skin), ...safetyStyle(safety) }}>{allergyLabel(a)}</div>
           ))}
         </div>
       )}
@@ -209,13 +235,19 @@ export function TicketCard({
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '10px 14px', background: skin.panelHeader }}>
             <GlassIcon name="chat" size={17} sw={1.8} stroke={skin.textSecondary} />
-            <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1 }}>Point of Sale terminal 1</div>
-            <div style={{ marginLeft: 'auto', fontWeight: 400, fontSize: 14, lineHeight: 1, color: skin.textMuted }}>5m ago</div>
+            <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1 }}>{embeddedLabel('Point of Sale terminal 1')}</div>
+            <div style={{ marginLeft: 'auto', fontWeight: 400, fontSize: 14, lineHeight: 1, color: skin.textMuted }}>5m {embeddedLabel('ago')}</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px' }}>
             <div style={{ flex: 1, opacity: msgSeen ? 0.5 : 1 }}>
-              <div style={{ fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{t.posMessage}</div>
-              <div style={{ marginTop: 6, fontWeight: 400, fontSize: 14, lineHeight: 1, color: skin.textMuted }}>Maria S. – Server</div>
+              <div style={{ fontWeight: 500, fontSize: 17, lineHeight: 1.45 }}>{noteLabel(t.posMessage)}</div>
+              {dualLang && noteLabelSecondary(t.posMessage) !== noteLabel(t.posMessage) && (
+                <div dir={secondaryDir} style={{ fontWeight: 500, fontSize: 16, lineHeight: 1.45, opacity: 0.75, unicodeBidi: 'plaintext' }}>
+                  {noteLabelSecondary(t.posMessage)}
+                </div>
+              )}
+              <div style={{ marginTop: 6, fontWeight: 400, fontSize: 14, lineHeight: 1, color: skin.textMuted }}>{serverLabel('Maria S.')} – {embeddedLabel('Server')}</div>
+
             </div>
             <button
               type="button"
@@ -251,7 +283,13 @@ export function TicketCard({
                 pointerEvents: noteAcked ? 'none' : undefined,
               }}
             >
-              {t.posNote}
+              {noteLabel(t.posNote || '')}
+              {dualLang && t.posNote && noteLabelSecondary(t.posNote) !== noteLabel(t.posNote) && (
+                <div dir={secondaryDir} style={{ marginTop: 4, opacity: 0.75, unicodeBidi: 'plaintext' }}>
+                  {noteLabelSecondary(t.posNote)}
+                </div>
+              )}
+
             </div>
             <button
               type="button"
@@ -296,8 +334,11 @@ export function TicketCard({
             <div key={ck}>
               {c.showHeader !== false && (
                 <CourseHeader
-                  label={c.label || ''}
-                  meta={meta}
+                  label={courseLabel(c.label || '')}
+                  secondaryLabel={dualLang ? courseLabelSecondary(c.label || '') : undefined}
+                  secondaryDir={secondaryDir}
+                  meta={metaLabel(meta)}
+
                   hasPrep={Boolean(c.prep)}
                   isOpen={isOpen}
                   onToggle={() => onToggleCourse(ck, isOpen)}
@@ -340,7 +381,7 @@ export function TicketCard({
             }}
           >
             <GlassIcon name="back" size={23} sw={2} stroke="#ffffff" />
-            <span>RECALL</span>
+            <span>{ctaLabel('RECALL')}</span>
           </button>
         ) : (
         <>
@@ -372,7 +413,7 @@ export function TicketCard({
           }}
         >
           <GlassIcon name={vis.icon} size={23} sw={vis.sw} />
-          <span>{CTA[stage]}</span>
+          <span>{ctaLabel(CTA[stage])}</span>
         </button>
         </>
         )}
