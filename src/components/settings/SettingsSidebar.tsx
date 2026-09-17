@@ -196,8 +196,8 @@ export function SettingsSidebar() {
         <div
           className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
           style={{
-            background: 'hsl(var(--text-primary) / 0.06)',
-            boxShadow: 'inset 0 0 0 0.5px hsl(var(--text-primary) / 0.04)',
+            background: 'hsl(var(--muted))',
+            border: '1px solid hsl(var(--border))',
           }}
         >
           <Search className="w-[1.05rem] h-[1.05rem] shrink-0" style={{ color: 'hsl(var(--text-muted))' }} strokeWidth={2.5} />
