@@ -81,7 +81,9 @@ export function SelectedVariantPreview({
   const variant = getCardVariantForTicketsRoute(route);
 
   const content =
-    variant === 'v1' ? (
+    route === 'glass' ? (
+      <GlassPreview ticketId={glassTicketId} elapsedSeconds={glassElapsedSeconds} />
+    ) : variant === 'v1' ? (
       <OrderCardV1 order={order} />
     ) : variant === 'v2' ? (
       <OrderCardV2 order={order} />
