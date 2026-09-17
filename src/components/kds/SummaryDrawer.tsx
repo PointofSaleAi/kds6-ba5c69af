@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { ItemSummaryPanel } from './ItemSummaryPanel';
 import type { Order } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 
 interface SummaryDrawerProps {
   orders: Order[];
@@ -15,6 +16,7 @@ interface SummaryDrawerProps {
 }
 
 export function SummaryDrawer(props: SummaryDrawerProps) {
+  const { tui } = useLanguage();
   const [expanded, setExpanded] = useState(false);
 
   const totalRemaining = useMemo(() => {
@@ -56,7 +58,7 @@ export function SummaryDrawer(props: SummaryDrawerProps) {
           className="w-full h-[40px] flex items-center justify-center gap-2 bg-sidebar text-sidebar-foreground rounded-t-lg border-t border-x border-sidebar-border"
         >
           <span className="text-[12px] font-bold uppercase tracking-wider">
-            Summary {totalRemaining}
+            {tui('Summary {n}', { n: totalRemaining })}
           </span>
           {expanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>

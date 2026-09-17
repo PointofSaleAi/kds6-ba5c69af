@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Bell, ChefHat, ShoppingBag, AlertTriangle, Clock, Package } from 'lucide-react';
 import { useNotifications } from '@/hooks/use-notifications';
 import { useGlassChrome } from '@/hooks/use-glass-chrome';
+import { useLanguage } from '@/hooks/use-language';
 import type { KDSNotification, NotificationType } from '@/types/notification';
 
 function timeAgo(d: Date): string {
@@ -45,6 +46,7 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
   const { notifications, unreadCount, acknowledge } = useNotifications();
   const ref = useRef<HTMLDivElement>(null);
   const glass = useGlassChrome();
+  const { tui } = useLanguage();
 
   useEffect(() => {
     if (!open) return;
@@ -75,7 +77,7 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
       }}
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-[color:var(--glass-chrome-hairline,rgba(255,255,255,0.1))]">
-        <span className={`text-sm font-semibold ${glass ? "" : "text-white"}`}>Notifications</span>
+        <span className={`text-sm font-semibold ${glass ? "" : "text-white"}`}>{tui('Notifications')}</span>
         {unreadCount > 0 && (
           <span
             className="min-w-[20px] h-5 rounded-full text-white text-[10px] font-bold flex items-center justify-center px-1.5"
@@ -89,7 +91,7 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
       <div className="max-h-72 overflow-y-auto">
         {recent.length === 0 ? (
           <div className="px-4 py-6 text-center text-muted-foreground text-xs">
-            No notifications yet
+            {tui('No notifications yet')}
           </div>
         ) : (
           recent.map((n: KDSNotification) => (
@@ -129,7 +131,7 @@ export function NotificationsPopover({ open, onClose, anchorRef, onViewMore }: P
           className="w-full py-3 text-sm font-medium hover:bg-foreground/5 transition-colors border-t border-[color:var(--glass-chrome-hairline,rgba(255,255,255,0.1))]"
           style={{ color: '#3B82F6' }}
         >
-          View More
+          {tui('View More')}
         </button>
       )}
     </div>

@@ -54,7 +54,7 @@ export default function DisplaySettings() {
   const setTicketSpacing = (v: any) => setRouteSetting(ticketsRoute, 'ticketSpacing', v);
   const setTicketLayout = (v: any) => setRouteSetting(ticketsRoute, 'ticketLayout', v);
   const setTicketHeaderLayout = (v: any) => setRouteSetting(ticketsRoute, 'ticketHeaderLayout', v);
-  const { languageName, displayMode, primaryLang, secondaryLang } = useLanguage();
+  const { languageName, displayMode, primaryLang, secondaryLang, tui } = useLanguage();
   const languageDisplay = displayMode === 'dual'
     ? `${languageNames[primaryLang]}, ${languageNames[secondaryLang]}`
     : languageName;
@@ -115,11 +115,11 @@ export default function DisplaySettings() {
             <button
               onClick={() => setStatusOpen(false)}
               className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
-              aria-label="Back"
+              aria-label={tui('Back')}
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Aging Rules</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">{tui('Ticket Aging Rules')}</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
@@ -145,7 +145,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Language</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">{tui('Language')}</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2">
             <InlineLanguageSettings activeTab="language" />
@@ -166,28 +166,28 @@ export default function DisplaySettings() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Layout</h1>
+          <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">{tui('Ticket Layout')}</h1>
         </div>
         <div className="flex-1 px-2 pb-2 overflow-hidden">
           <div className="h-full flex flex-col lg:flex-row gap-2 min-h-0 overflow-y-auto lg:overflow-hidden">
             {/* LEFT: options */}
             <div className="w-full lg:flex-1 lg:basis-0 min-w-0 flex flex-col gap-4 lg:overflow-y-auto">
               <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
-                Controls padding, row gap, text size, layout density, and the primary ticket identifier.
+                {tui('Controls padding, row gap, text size, layout density, and the primary ticket identifier.')}
               </p>
               <div className="grid gap-3">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Layout
+                    {tui('Layout')}
                   </span>
                   {(() => {
                     const layoutOptions = [
-                      { value: 'v2', label: 'Section list' },
-                      { value: 'v3', label: 'Standard layout' },
-                      { value: 'v3-lite', label: 'Priority View' },
-                      { value: 'v4', label: 'Detailed grid' },
-                      { value: 'v6', label: 'Itemized cards' },
-                      { value: 'glass', label: 'Glass View' },
+                      { value: 'v2', label: tui('Section list') },
+                      { value: 'v3', label: tui('Standard layout') },
+                      { value: 'v3-lite', label: tui('Priority View') },
+                      { value: 'v4', label: tui('Detailed grid') },
+                      { value: 'v6', label: tui('Itemized cards') },
+                      { value: 'glass', label: tui('Glass View') },
                     ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[];
                     return (
                       <div className="relative w-full">
@@ -222,42 +222,42 @@ export default function DisplaySettings() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Spacing
+                    {tui('Spacing')}
                   </span>
                   <SegmentedToggle
-                    options={['Compact', 'Standard', 'Spacious']}
+                    options={[tui('Compact'), tui('Standard'), tui('Spacious')]}
                     value={ticketSpacing}
-                    onChange={(v) => setTicketSpacing(v as 'Compact' | 'Standard' | 'Spacious')}
+                    onChange={(v) => setTicketSpacing((v === tui('Compact') ? 'Compact' : v === tui('Spacious') ? 'Spacious' : 'Standard') as 'Compact' | 'Standard' | 'Spacious')}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Text size
+                    {tui('Text size')}
                   </span>
                   <SegmentedToggle
-                    options={['Compact', 'Standard', 'Large']}
-                    value={textSize}
-                    onChange={(v) => setTextSize(v as 'Compact' | 'Standard' | 'Large')}
+                    options={[tui('Compact'), tui('Standard'), tui('Large')]}
+                    value={textSize === 'Compact' ? tui('Compact') : textSize === 'Large' ? tui('Large') : tui('Standard')}
+                    onChange={(v) => setTextSize((v === tui('Compact') ? 'Compact' : v === tui('Large') ? 'Large' : 'Standard') as 'Compact' | 'Standard' | 'Large')}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Appearance
+                    {tui('Appearance')}
                   </span>
                   <SegmentedToggle
-                    options={['Compact', 'Standard', 'Header']}
-                    value={ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}
-                    onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : v === 'Header' ? 'header' : 'standard')}
+                    options={[tui('Compact'), tui('Standard'), tui('Header')]}
+                    value={ticketLayout === 'compact' ? tui('Compact') : ticketLayout === 'header' ? tui('Header') : tui('Standard')}
+                    onChange={(v) => setTicketLayout(v === tui('Compact') ? 'compact' : v === tui('Header') ? 'header' : 'standard')}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                    Identifier
+                    {tui('Identifier')}
                   </span>
                   <SegmentedToggle
-                    options={['Order number', 'Guest name']}
-                    value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'}
-                    onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')}
+                    options={[tui('Order number'), tui('Guest name')]}
+                    value={ticketHeaderLayout === 'guest' ? tui('Guest name') : tui('Order number')}
+                    onChange={(v) => setTicketHeaderLayout(v === tui('Guest name') ? 'guest' : 'kitchen')}
                   />
                 </div>
               </div>
@@ -269,7 +269,7 @@ export default function DisplaySettings() {
             {/* RIGHT: preview */}
             <div className="w-full lg:flex-1 lg:basis-0 min-w-0 min-h-[360px] flex flex-col">
               <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
-                Preview
+                {tui('Preview')}
               </p>
               <PreviewFitBox>
                 {ticketsRoute === 'glass' ? (
@@ -327,7 +327,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Studio</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">{tui('Ticket Studio')}</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2 flex flex-col">
             <TicketStudioSkeleton />
@@ -343,17 +343,17 @@ export default function DisplaySettings() {
       <SectionHeaderCard
         icon={Monitor}
         iconColor={GROUP_COLOR.display}
-        title="Display"
-        shortDescription="Customize ticket density, layout, and language for the kitchen display."
-        longDescription="Scale typography for legibility from across the line, choose ticket layout, and tune status aging colors to match your kitchen tempo."
+        title={tui('Display')}
+        shortDescription={tui('Customize ticket density, layout, and language for the kitchen display.')}
+        longDescription={tui('Scale typography for legibility from across the line, choose ticket layout, and tune status aging colors to match your kitchen tempo.')}
       />
 
       <SettingsPill
         icon={StretchVertical}
         iconColor="#0E7460"
-        label="Ticket Layout"
-        helper="Controls spacing, text size, layout density, and ticket identifier."
-        right={<ValueText>{ticketLayout === 'compact' ? 'Compact' : ticketLayout === 'header' ? 'Header' : 'Standard'}</ValueText>}
+        label={tui('Ticket Layout')}
+        helper={tui('Controls spacing, text size, layout density, and ticket identifier.')}
+        right={<ValueText>{ticketLayout === 'compact' ? tui('Compact') : ticketLayout === 'header' ? tui('Header') : tui('Standard')}</ValueText>}
         onClick={() => setTicketSpacingOpen(true)}
         highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />
@@ -361,8 +361,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={LayoutGrid}
         iconColor="#5E4DD8"
-        label="Ticket Studio"
-        helper="Browse named board designs and preview before applying to a station."
+        label={tui('Ticket Studio')}
+        helper={tui('Browse named board designs and preview before applying to a station.')}
         onClick={() => setTicketStudioOpen(true)}
         highlighted={hash === 'ticket-studio'}
       />
@@ -370,8 +370,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Palette}
         iconColor="#F9900E"
-        label="Status Colors"
-        helper="Tickets change color as they age. Adjust thresholds for your kitchen speed."
+        label={tui('Status Colors')}
+        helper={tui('Tickets change color as they age. Adjust thresholds for your kitchen speed.')}
         onClick={() => setStatusOpen(true)}
         highlighted={hash === 'status-colors'}
       />
@@ -379,8 +379,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Paintbrush}
         iconColor="#16A085"
-        label="Order Type Colors"
-        helper="Customize header colors for Dine In, Take Out, Delivery, and Banquet."
+        label={tui('Order Type Colors')}
+        helper={tui('Customize header colors for Dine In, Take Out, Delivery, and Banquet.')}
         onClick={() => setOrderTypeColorsOpen(true)}
         highlighted={hash === 'order-type-colors'}
       />
@@ -388,8 +388,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Bell}
         iconColor="#E84C3D"
-        label="Enable Badge"
-        helper="Show unread count badge on the sidebar icon."
+        label={tui('Enable Badge')}
+        helper={tui('Show unread count badge on the sidebar icon.')}
         right={<SwitchToggle checked={showBadge} onChange={setShowBadge} />}
         highlighted={hash === 'enable-badge'}
       />
@@ -397,8 +397,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Zap}
         iconColor="#7F8C8D"
-        label="Reduced Motion"
-        helper="Disable ticket, product row, and timer pill blinking animations."
+        label={tui('Reduced Motion')}
+        helper={tui('Disable ticket, product row, and timer pill blinking animations.')}
         right={<SwitchToggle checked={reducedMotion} onChange={setReducedMotion} />}
         highlighted={hash === 'reduced-motion'}
       />
@@ -408,22 +408,22 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={SlidersHorizontal}
         iconColor="#5E4DD8"
-        label="Mode Switcher"
+        label={tui('Mode Switcher')}
         helper={
           mode === 'Prep' && stationCourse
-            ? `Station mode · ${stationCourse}`
-            : 'KDS operational mode: Standard, Expo, or Station.'
+            ? tui('Station mode · {course}', { course: stationCourse })
+            : tui('KDS operational mode: Standard, Expo, or Station.')
         }
         right={
           <SegmentedToggle
-            options={['Standard', 'Expo', 'Station']}
-            value={mode === 'Prep' ? 'Station' : mode}
+            options={[tui('Standard'), tui('Expo'), tui('Station')]}
+            value={mode === 'Prep' ? tui('Station') : mode === 'Expo' ? tui('Expo') : tui('Standard')}
             onChange={(v) => {
-              if (v === 'Station') {
+              if (v === tui('Station')) {
                 setMode('Prep');
                 setStationPickerOpen(true);
               } else {
-                setMode(v as 'Standard' | 'Expo');
+                setMode((v === tui('Expo') ? 'Expo' : 'Standard') as 'Standard' | 'Expo');
               }
             }}
           />
@@ -438,16 +438,16 @@ export default function DisplaySettings() {
         >
           <DialogHeader>
             <DialogTitle style={{ color: 'hsl(var(--text-primary))' }}>
-              Choose station
+              {tui('Choose station')}
             </DialogTitle>
             <DialogDescription style={{ color: 'hsl(var(--text-secondary))' }}>
-              Filter the KDS to show only products for one station. Tap a category to apply.
+              {tui('Filter the KDS to show only products for one station. Tap a category to apply.')}
             </DialogDescription>
           </DialogHeader>
 
           {availableCategories.length === 0 ? (
             <p className="text-[13px]" style={{ color: 'hsl(var(--text-secondary))' }}>
-              No stations available. Categories will appear once orders are loaded.
+              {tui('No stations available. Categories will appear once orders are loaded.')}
             </p>
           ) : (
             <div className="flex flex-wrap gap-2 pt-1">
@@ -479,7 +479,7 @@ export default function DisplaySettings() {
               className="mt-2 text-[12px] font-semibold self-start hover:underline"
               style={{ color: 'hsl(var(--text-secondary))' }}
             >
-              Clear station filter
+              {tui('Clear station filter')}
             </button>
           )}
         </DialogContent>
@@ -488,8 +488,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={Languages}
         iconColor="#16A085"
-        label="Language"
-        helper="Display language for menu products, buttons, and notifications."
+        label={tui('Language')}
+        helper={tui('Display language for menu products, buttons, and notifications.')}
         right={<ValueText>{languageDisplay}</ValueText>}
         onClick={() => setLanguageOpen(true)}
         highlighted={hash === 'language'}
@@ -498,8 +498,8 @@ export default function DisplaySettings() {
       <SettingsPill
         icon={LayoutPanelLeft}
         iconColor="#6B7280"
-        label="Reset Chrome Layout"
-        helper="Move sidebar back to left, summary panel to right, and status bar to bottom."
+        label={tui('Reset Chrome Layout')}
+        helper={tui('Move sidebar back to left, summary panel to right, and status bar to bottom.')}
         right={<ValueText>{`${dockLayout.mainSidebar} / ${dockLayout.summaryPanel} / ${dockLayout.bottomBar}`}</ValueText>}
         onClick={resetLayout}
       />

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PosaiLogo from '@/components/PosaiLogo';
+import { useLanguage } from '@/hooks/use-language';
 
 interface SplashScreenProps {
   onReady: () => void;
 }
 
-const statusMessages = [
+const statusMessageKeys = [
   'Connecting to kitchen server...',
   'Syncing orders...',
   'Ready',
@@ -15,6 +16,7 @@ const statusMessages = [
 export default function SplashScreen({ onReady }: SplashScreenProps) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [isConnected] = useState(true);
+  const { tui } = useLanguage();
 
   useEffect(() => {
     const timers = [
@@ -37,7 +39,7 @@ export default function SplashScreen({ onReady }: SplashScreenProps) {
         <PosaiLogo variant="auto" className="h-28 object-contain" />
 
         <p className="text-text-secondary text-lg mt-2 font-medium">
-          Kitchen Display System
+          {tui('Kitchen Display System')}
         </p>
 
         {/* Loading dots */}
@@ -56,7 +58,7 @@ export default function SplashScreen({ onReady }: SplashScreenProps) {
             exit={{ opacity: 0, y: -8 }}
             className={`mt-6 text-sm ${messageIndex === 2 ? 'text-success font-semibold' : 'text-text-muted'}`}
           >
-            {statusMessages[messageIndex]}
+            {tui(statusMessageKeys[messageIndex])}
           </motion.p>
         </AnimatePresence>
       </motion.div>
@@ -65,7 +67,7 @@ export default function SplashScreen({ onReady }: SplashScreenProps) {
       <div className="absolute bottom-6 left-6 flex items-center gap-2">
         <span className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-success' : 'bg-destructive'}`} />
         <span className="text-sm text-text-muted">
-          {isConnected ? 'Connected' : 'Offline (edgeOS mode)'}
+          {isConnected ? tui('Connected') : tui('Offline (edgeOS mode)')}
         </span>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Check, Lock, Monitor, Tv2, MonitorSmartphone, Smartphone, type LucideIcon } from 'lucide-react';
 import { useScreenMode, type ScreenMode } from '@/hooks/use-screen-mode';
 import ManagerPinOverlay from './ManagerPinOverlay';
+import { useLanguage } from '@/hooks/use-language';
 
 interface ModeMeta {
   id: ScreenMode;
@@ -10,18 +11,21 @@ interface ModeMeta {
   Icon: LucideIcon;
 }
 
-const MODES: ModeMeta[] = [
-  { id: 'pos', label: 'Point of Sale', description: 'Full order taking, payments, and table management', Icon: Monitor },
-  { id: 'kds', label: 'Kitchen Display System', description: 'Kitchen display for ticket management and fulfillment', Icon: Tv2 },
-  { id: 'cfd', label: 'Customer Facing Display', description: 'Customer-facing display showing order and total', Icon: MonitorSmartphone },
-  { id: 'kiosk', label: 'Self Service Kiosk', description: 'Self-service ordering for guests at the counter', Icon: Smartphone },
-];
+function getModes(tui: (t: string) => string): ModeMeta[] {
+  return [
+    { id: 'pos', label: tui('Point of Sale'), description: tui('Full order taking, payments, and table management'), Icon: Monitor },
+    { id: 'kds', label: tui('Kitchen Display System'), description: tui('Kitchen display for ticket management and fulfillment'), Icon: Tv2 },
+    { id: 'cfd', label: tui('Customer Facing Display'), description: tui('Customer-facing display showing order and total'), Icon: MonitorSmartphone },
+    { id: 'kiosk', label: tui('Self Service Kiosk'), description: tui('Self-service ordering for guests at the counter'), Icon: Smartphone },
+  ];
+}
 
 /**
  * Screen Mode dropdown chip. Mirrors the POS mobile app switcher styling
  * so the KDS header stays consistent across surfaces.
  */
 export function ScreenModeChip() {
+  const { tui } = useLanguage();
   const [open, setOpen] = useState(false);
   const [pendingMode, setPendingMode] = useState<ScreenMode | null>(null);
   const { mode: currentMode, setMode } = useScreenMode();
@@ -35,6 +39,7 @@ export function ScreenModeChip() {
     return () => document.removeEventListener('mousedown', onOutside);
   }, [open]);
 
+  const MODES = getModes(tui);
   const current = MODES.find((m) => m.id === currentMode) ?? MODES[0];
   const CurrentIcon = current.Icon;
 
@@ -50,7 +55,7 @@ export function ScreenModeChip() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1.5 px-2 md:px-2.5 py-1 md:py-1.5 rounded-full bg-foreground/5 hover:bg-foreground/10 dark:bg-white/10 dark:hover:bg-white/15 text-foreground transition-colors"
-        aria-label={`Screen Mode: ${current.label}`}
+        aria-label={tui("Screen Mode: {label}", { label: current.label })}
         title={current.label}
       >
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
@@ -61,7 +66,7 @@ export function ScreenModeChip() {
       {open && (
         <div className="fixed left-2 right-2 top-[52px] md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:w-72 bg-[#1C1C1E] border border-white/10 rounded-2xl shadow-2xl z-[9999] overflow-hidden">
           <div className="px-4 py-2.5 border-b border-white/10">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">Screen Mode</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">{tui('Screen Mode')}</p>
           </div>
           <div className="py-1">
             {MODES.map((m) => {
@@ -93,15 +98,15 @@ export function ScreenModeChip() {
           </div>
           <div className="px-4 py-2 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-neutral-500">
             <Lock className="w-3 h-3" />
-            Manager PIN required to switch
+            {tui('Manager PIN required to switch')}
           </div>
         </div>
       )}
 
       <ManagerPinOverlay
         open={pendingMode !== null}
-        title="Manager PIN Required"
-        subtitle={pendingMode ? `Enter PIN to switch to ${MODES.find(m => m.id === pendingMode)?.label}` : ''}
+        title={tui("Manager PIN Required")}
+        subtitle={pendingMode ? tui('Enter PIN to switch to {label}', { label: MODES.find(m => m.id === pendingMode)?.label || '' }) : ''}
         onClose={() => setPendingMode(null)}
         onSuccess={() => {
           if (pendingMode) setMode(pendingMode);

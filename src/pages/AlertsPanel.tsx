@@ -70,11 +70,11 @@ const PRIORITY: Record<string, number> = {
   recalled: 5,
 };
 
-function buildAiSummary(unread: KDSNotification[]): string {
+function buildAiSummary(unread: KDSNotification[], tui: (t: string, v?: Record<string, string|number>) => string): string {
   if (unread.length === 0) return '';
   const sorted = [...unread].sort((a, b) => (PRIORITY[a.type] ?? 9) - (PRIORITY[b.type] ?? 9));
   const top = sorted.slice(0, 3).map(n => n.message.replace(/\.$/, ''));
-  const intro = unread.length === 1 ? '1 item needs attention' : `${unread.length} items need attention`;
+  const intro = unread.length === 1 ? tui('1 item needs attention') : tui('{n} items need attention', { n: unread.length });
   return `${intro} — ${top.join(', ')}.`;
 }
 
@@ -99,39 +99,39 @@ function extractTicket(msg: string): string | undefined {
   return m?.[1];
 }
 
-function getAiAction(type: string, message: string): AiAction {
+function getAiAction(type: string, message: string, tui: (t: string, v?: Record<string, string|number>) => string): AiAction {
   const lower = message.toLowerCase();
   const ticket = extractTicket(message);
   if (type === 'overtime') {
-    return { label: ticket ? `Bump ticket ${ticket}` : 'Bump ticket', color: 'red', kind: 'bump', ticketNumber: ticket };
+    return { label: ticket ? tui('Bump ticket {n}', { n: ticket }) : tui('Bump ticket'), color: 'red', kind: 'bump', ticketNumber: ticket };
   }
   if (type === 'new-order') {
-    return { label: ticket ? `Fire order ${ticket}` : 'Fire order', color: 'green', kind: 'fire', ticketNumber: ticket };
+    return { label: ticket ? tui('Fire order {n}', { n: ticket }) : tui('Fire order'), color: 'green', kind: 'fire', ticketNumber: ticket };
   }
   if (type === 'table-transfer') {
     const tables = message.match(/table\s+(\w+)/gi);
     const target = tables && tables.length > 1 ? tables[tables.length - 1].replace(/table\s+/i, '') : undefined;
-    return { label: target ? `Update to Table ${target}` : 'Update tables', color: 'navy', kind: 'update-table', targetTable: target };
+    return { label: target ? tui('Update to Table {n}', { n: target }) : tui('Update tables'), color: 'navy', kind: 'update-table', targetTable: target };
   }
   if (type === 'item-moved') {
-    return { label: 'Go to Ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+    return { label: tui('Go to Ticket'), color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
   }
   if (type === 'system' && /printer|offline|hardware/.test(lower)) {
-    return { label: 'Go to Hardware', color: 'orange', kind: 'navigate-hardware' };
+    return { label: tui('Go to Hardware'), color: 'orange', kind: 'navigate-hardware' };
   }
   if (type === 'general-alert' && /vip/.test(lower)) {
-    return { label: 'Prioritise Now', color: 'navy', kind: 'prioritise' };
+    return { label: tui('Prioritise Now'), color: 'navy', kind: 'prioritise' };
   }
   if (type === 'course-fired') {
-    return { label: 'Go to Ticket', color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
+    return { label: tui('Go to Ticket'), color: 'navy', kind: 'navigate-ticket', ticketNumber: ticket };
   }
   if (type === 'low-stock') {
-    return { label: "86 it", color: 'red', kind: 'view' };
+    return { label: tui('86 it'), color: 'red', kind: 'view' };
   }
   if (type === 'pos-86d') {
-    return { label: 'View 86 List', color: 'red', kind: 'view' };
+    return { label: tui('View 86 List'), color: 'red', kind: 'view' };
   }
-  return { label: 'View', color: 'navy', kind: 'view' };
+  return { label: tui('View'), color: 'navy', kind: 'view' };
 }
 
 
@@ -143,13 +143,13 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
   const navigate = useNavigate();
   const { messages, replies, pendingCount, acknowledgeMessage, sendReply, getRepliesForMessage } = useKitchenMessages();
   const { notifications, unreadCount, acknowledge, clearAcknowledged } = useNotifications();
-  const { t, tl, tperson, tn } = useLanguage();
+  const { t, tl, tperson, tn, tui } = useLanguage();
   const timeAgo = useTimeAgo();
   const { layout } = useDockLayout();
   const insets = getOverlayInsets(layout);
 
   const unreadNotifications = useMemo(() => notifications.filter(n => !n.acknowledged), [notifications]);
-  const aiSummary = useMemo(() => buildAiSummary(unreadNotifications), [unreadNotifications]);
+  const aiSummary = useMemo(() => buildAiSummary(unreadNotifications, tui), [unreadNotifications, tui]);
 
   const openAiAssistant = () => {
     window.dispatchEvent(new CustomEvent('kds:open-ai-assistant'));
@@ -160,19 +160,19 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
     acknowledge(notifId);
     switch (action.kind) {
       case 'bump':
-        toast.success(action.ticketNumber ? `Bumped ticket ${action.ticketNumber}` : 'Bumped ticket');
+        toast.success(action.ticketNumber ? tui('Bumped ticket {n}', { n: action.ticketNumber }) : tui('Bumped ticket'));
         onClose();
         break;
       case 'fire':
-        toast.success(action.ticketNumber ? `Fired order ${action.ticketNumber}` : 'Fired order');
+        toast.success(action.ticketNumber ? tui('Fired order {n}', { n: action.ticketNumber }) : tui('Fired order'));
         onClose();
         break;
       case 'update-table':
-        toast.success(action.targetTable ? `Tickets updated to Table ${action.targetTable}` : 'Tables updated');
+        toast.success(action.targetTable ? tui('Tickets updated to Table {n}', { n: action.targetTable }) : tui('Tables updated'));
         onClose();
         break;
       case 'prioritise':
-        toast.success('VIP tickets prioritised');
+        toast.success(tui('VIP tickets prioritised'));
         window.dispatchEvent(new CustomEvent('kds:prioritise-vip'));
         onClose();
         break;
@@ -240,7 +240,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 )}
                 <button
                   onClick={onClose}
-                  aria-label="Close Alerts"
+                  aria-label={tui('Close Alerts')}
                   className="w-10 h-10 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center active:opacity-70 transition-opacity"
                 >
                   <X className="w-5 h-5 text-text-secondary" />
@@ -278,7 +278,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                 <button
                   type="button"
                   onClick={() => setAiSummaryOpen(v => !v)}
-                  aria-label="AI Summary"
+                  aria-label={tui('AI Summary')}
                   className={`ml-auto relative w-9 h-9 rounded-full flex items-center justify-center transition-colors
                     ${aiSummaryOpen ? 'bg-[#1A1A2E]' : 'bg-muted hover:bg-muted/80'}`}
                 >
@@ -304,7 +304,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                     style={{ fontSize: '10px', color: '#93C5FD' }}
                   >
                     <MessageSquare size={10} />
-                    Ask AI what to do
+                    {tui('Ask AI what to do')}
                   </button>
                 </div>
               </div>
@@ -325,7 +325,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                       const config = notifIcons[notif.type] || notifIcons['system'];
                       const Icon = config.icon;
                       const isUnread = !notif.acknowledged;
-                      const action = isUnread ? getAiAction(notif.type, notif.message) : null;
+                      const action = isUnread ? getAiAction(notif.type, notif.message, tui) : null;
                       return (
                         <div
                           key={notif.id}
@@ -393,7 +393,7 @@ export default function AlertsPanel({ open, onClose }: AlertsPanelProps) {
                           <div className="flex items-center gap-2 px-4 py-2 bg-[#7C3AED]/10">
                             <Megaphone size={14} className="text-[#7C3AED] shrink-0" />
                             <span className="text-[11px] font-bold text-[#7C3AED] flex-1 truncate">
-                              {tl(msg.terminal_name || 'Point of Sale')}
+                              {tl(msg.terminal_name) || tui('Point of Sale')}
                             </span>
                             <span className="text-[10px] text-text-muted">{timeAgo(msg.timestamp)}</span>
                           </div>

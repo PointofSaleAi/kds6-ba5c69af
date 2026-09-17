@@ -151,7 +151,7 @@ function buildSummary(records: ReturnType<typeof collectActiveItems>): CategoryS
 }
 
 export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemToggle, selectedCategories, onCategoryToggle, onClearAll, matchingTicketCount, mode = 'active', expandAll, onExpandAllChange }: ItemSummaryPanelProps) {
-  const { tp, tcat, t } = useLanguage();
+  const { tp, tcat, t, tui } = useLanguage();
   const { isPortrait } = usePortrait();
   const { rules, courseLevelAging } = useStatusRules();
   const [collapsed, setCollapsed] = useState(false);
@@ -304,7 +304,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
   if (collapsed) {
     return (
       <div className="w-10 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-3 shrink-0">
-        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label="Expand Panel">
+        <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label={tui("Expand Panel")}>
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
         <span className="text-[14px] font-bold text-white mt-2 [writing-mode:vertical-lr]">{totalRemaining} {t.toCookLabel}</span>
@@ -331,7 +331,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           </span>
           <span className="text-[11px] font-bold text-sidebar-accent-foreground bg-sidebar-accent rounded-full px-1.5 py-0.5 min-w-[22px] text-center shrink-0">{totalRemaining}</span>
         </div>
-        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label="Collapse Panel">
+        <button onClick={() => setCollapsed(true)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[28px] min-h-[28px] flex items-center justify-center text-sidebar-foreground shrink-0 transition-colors" aria-label={tui("Collapse Panel")}>
           <ChevronRight size={16} strokeWidth={3} />
         </button>
       </div>
@@ -345,7 +345,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
           className="flex items-center justify-between gap-2 px-2 py-2 bg-sidebar border-l border-b border-sidebar-border text-left"
         >
           <span className="text-[12px] font-medium text-sidebar-foreground truncate">
-            {expandAllOn ? 'Collapse all' : 'Expand all'}
+            {tui(expandAllOn ? 'Collapse all' : 'Expand all')}
           </span>
           <span
             className={`relative inline-flex items-center h-5 w-9 rounded-full transition-colors shrink-0 ${
@@ -394,7 +394,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 <button
                   onClick={handleOvertimeToggle}
                   className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
-                  aria-label={overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime'}
+                  aria-label={tui(overtimeCollapsed ? 'Expand overtime' : 'Collapse overtime')}
                 >
                   <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                     <ChevronDown
@@ -469,7 +469,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                 <button
                   onClick={handlePostFireToggle}
                   className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
-                  aria-label={postFireCollapsed ? 'Expand unseen' : 'Collapse unseen'}
+                  aria-label={tui(postFireCollapsed ? 'Expand unseen' : 'Collapse unseen')}
                 >
                   <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                     <ChevronDown
@@ -484,7 +484,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   style={{ borderRadius: '4px' }}
                 >
                   <span className="text-[12px] uppercase tracking-widest font-bold text-warning">
-                    UnSeen
+                    {tui('UnSeen')}
                   </span>
                 </button>
                 <span className="text-[11px] font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center mr-2 shrink-0 bg-warning text-white">
@@ -556,7 +556,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                   <button
                     onClick={() => toggleSection(cat.category)}
                     className="flex items-center justify-center px-1.5 shrink-0 min-w-[36px] min-h-[36px]"
-                    aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
+                    aria-label={tui(isExpanded ? 'Collapse section' : 'Expand section')}
                   >
                     <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                       <ChevronDown
@@ -658,7 +658,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
                                     }}
                                     className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-muted hover:bg-muted/70 text-text-secondary transition-colors"
                                   >
-                                    {station}
+                                    {tui(station)}
                                   </button>
                                 ))}
                               </div>

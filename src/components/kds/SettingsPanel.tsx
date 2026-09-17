@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { X, ChevronRight, ChevronLeft, RefreshCw, Pencil, Upload, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/hooks/use-language';
 
 type Section = 'display' | 'orders' | 'hardware' | 'account' | 'language' | 'order-type-colors' | 'status-settings';
 
@@ -52,14 +53,17 @@ function RowCell({ name, subtitle, control }: { name: string; subtitle?: string;
 // Destructive variant of RowCell used for the Account "Log out" entry.
 // Keeps grid alignment with RowCell while applying the destructive palette.
 function LogOutRowCell({
-  name = 'Log out',
-  subtitle = 'Sign out of this device',
+  name,
+  subtitle,
   onClick,
 }: {
   name?: string;
   subtitle?: string;
   onClick: () => void;
 }) {
+  const { tui } = useLanguage();
+  const displayName = name ?? tui('Log out');
+  const displaySubtitle = subtitle ?? tui('Sign out of this device');
   return (
     <button
       type="button"
@@ -68,8 +72,8 @@ function LogOutRowCell({
       style={{ padding: '14px 18px', minHeight: '76px', background: '#ffffff' }}
     >
       <div className="min-w-0 flex-1">
-        <div style={{ fontSize: '17px', fontWeight: 600, color: '#C0392B' }} className="truncate">{name}</div>
-        <div style={{ fontSize: '14px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">{subtitle}</div>
+        <div style={{ fontSize: '17px', fontWeight: 600, color: '#C0392B' }} className="truncate">{displayName}</div>
+        <div style={{ fontSize: '14px', color: '#E8A0A0', marginTop: '4px' }} className="truncate">{displaySubtitle}</div>
       </div>
       <div
         className="shrink-0 flex items-center justify-center"
@@ -230,6 +234,7 @@ function ActionIconButton({ onClick, title, icon: Icon, spinning }: { onClick: (
 }
 
 export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, initialSection = 'display', onNavigateHome, orders = [] }: SettingsPanelProps) {
+  const { tui } = useLanguage();
   const [activeSection, setActiveSection] = useState<Section>(initialSection);
   useEffect(() => { setActiveSection(initialSection); }, [initialSection]);
   const {
@@ -271,7 +276,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     setFeatureModalOpen(false);
     setFeatureText('');
     setFeatureCategory('');
-    toast.success('Thank you for your feedback! Our product team will review it.');
+    toast.success(tui('Thank you for your feedback! Our product team will review it.'));
   };
 
   const handleUploadLogs = () => {
@@ -308,8 +313,8 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     console.info('[LogUpload] Collected device logs:', JSON.stringify(logs, null, 2));
     setTimeout(() => {
       setUploadingLogs(false);
-      toast.success('Logs uploaded successfully', {
-        description: `${Object.keys(logs).length} sections collected at ${formatTime(new Date())}`,
+      toast.success(tui('Logs uploaded successfully'), {
+        description: tui('{n} sections collected at {time}', { n: Object.keys(logs).length, time: formatTime(new Date()) }),
       });
     }, 2000);
   };
@@ -318,7 +323,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
     setSyncing(true);
     setTimeout(() => {
       setSyncing(false);
-      toast.success('Sync complete');
+      toast.success(tui('Sync complete'));
     }, 1500);
   };
 
@@ -327,33 +332,33 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
 
   // Display section rows
   const displayRows = [
-    { name: 'Language', subtitle: 'Display Language', control: <EditIconButton onClick={() => setActiveSection('language')} title="Configure Language" /> },
-    { name: 'Text Size', subtitle: 'Font Scale', control: <ChipGroup options={['Compact', 'Standard', 'Large']} value={textSize} onChange={setTextSize} /> },
-    { name: 'Ticket Layout', subtitle: ticketLayout === 'compact' ? 'Item names only, tap to expand' : 'Full details visible', control: <ChipGroup options={['Standard', 'Compact']} value={ticketLayout === 'compact' ? 'Compact' : 'Standard'} onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')} /> },
-    { name: 'Status Colors', subtitle: 'Ticket Aging Colors', control: <EditIconButton onClick={() => setActiveSection('status-settings')} title="Customise Status Colors" /> },
-    { name: 'Order Type Colors', subtitle: 'Header Colors', control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title="Customise Order Type Colors" /> },
-    { name: 'Allergen Badges', subtitle: 'Show on Tickets', control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
-    { name: 'Enable Badge', subtitle: 'Sidebar Icon Count', control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
-    { name: 'Ticket Identifier', subtitle: 'Primary Card Label', control: <ChipGroup options={['Order number', 'Guest name']} value={ticketHeaderLayout === 'guest' ? 'Guest name' : 'Order number'} onChange={(v) => setTicketHeaderLayout(v === 'Guest name' ? 'guest' : 'kitchen')} /> },
-    { name: 'Servable Modifiers', subtitle: 'Track Modifier Status', control: <SmallToggle checked={servableModifiers} onChange={setServableModifiers} /> },
-    { name: 'Mode Switcher', subtitle: 'KDS Operational Mode', control: <ChipGroup options={['Standard', 'Expo', 'Station']} value={kdsMode === 'Prep' ? 'Station' : kdsMode} onChange={(v) => setKdsMode((v === 'Station' ? 'Prep' : v) as KDSMode)} /> },
+    { name: tui('Language'), subtitle: tui('Display Language'), control: <EditIconButton onClick={() => setActiveSection('language')} title={tui('Configure Language')} /> },
+    { name: tui('Text Size'), subtitle: tui('Font Scale'), control: <ChipGroup options={[tui('Compact'), tui('Standard'), tui('Large')]} value={textSize} onChange={setTextSize} /> },
+    { name: tui('Ticket Layout'), subtitle: ticketLayout === 'compact' ? tui('Compact, product names only, tap to expand') : tui('Standard, full details visible'), control: <ChipGroup options={[tui('Standard'), tui('Compact')]} value={ticketLayout === 'compact' ? tui('Compact') : tui('Standard')} onChange={(v) => setTicketLayout(v === tui('Compact') ? 'compact' : 'standard')} /> },
+    { name: tui('Status Colors'), subtitle: tui('Ticket Aging Colors'), control: <EditIconButton onClick={() => setActiveSection('status-settings')} title={tui('Customise Status Colors')} /> },
+    { name: tui('Order Type Colors'), subtitle: tui('Header Colors'), control: <EditIconButton onClick={() => setActiveSection('order-type-colors')} title={tui('Customise Order Type Colors')} /> },
+    { name: tui('Allergen Badges'), subtitle: tui('Show on Tickets'), control: <SmallToggle checked={showAllergens} onChange={setShowAllergens} /> },
+    { name: tui('Enable Badge'), subtitle: tui('Sidebar Icon Count'), control: <SmallToggle checked={enableBadge} onChange={setEnableBadge} /> },
+    { name: tui('Ticket Identifier'), subtitle: tui('Primary Card Label'), control: <ChipGroup options={[tui('Order number'), tui('Guest name')]} value={ticketHeaderLayout === 'guest' ? tui('Guest name') : tui('Order number')} onChange={(v) => setTicketHeaderLayout(v === tui('Guest name') ? 'guest' : 'kitchen')} /> },
+    { name: tui('Servable Modifiers'), subtitle: tui('Track Modifier Status'), control: <SmallToggle checked={servableModifiers} onChange={setServableModifiers} /> },
+    { name: tui('Mode Switcher'), subtitle: tui('KDS Operational Mode'), control: <ChipGroup options={[tui('Standard'), tui('Expo'), tui('Station')]} value={kdsMode === 'Prep' ? tui('Station') : tui(kdsMode)} onChange={(v) => setKdsMode((v === tui('Station') ? 'Prep' : v) as KDSMode)} /> },
   ];
 
   const hardwareRows = [
-    { name: 'KOT Printer', subtitle: 'No Printer Assigned', control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title="Configure KOT Printer" /> },
-    { name: 'Label Printer', subtitle: 'No Printer Assigned', control: <EditIconButton onClick={() => onOpenSub('printer-label')} title="Configure Label Printer" /> },
-    { name: 'Sound Settings', subtitle: 'Volume & Alerts', control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title="Configure Sound Settings" /> },
-    { name: 'Sync', subtitle: 'Orders & Settings', control: <ActionIconButton onClick={handleSync} title="Sync Now" icon={RefreshCw} spinning={syncing} /> },
-    { name: 'Connection', subtitle: 'EdgeOS · Connected', control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title="Configure Connection" /> },
+    { name: tui('KOT Printer'), subtitle: tui('No Printer Assigned'), control: <EditIconButton onClick={() => onOpenSub('printer-kot')} title={tui('Configure KOT Printer')} /> },
+    { name: tui('Label Printer'), subtitle: tui('No Printer Assigned'), control: <EditIconButton onClick={() => onOpenSub('printer-label')} title={tui('Configure Label Printer')} /> },
+    { name: tui('Sound Settings'), subtitle: tui('Volume & Alerts'), control: <EditIconButton onClick={() => onOpenSub('sound-settings')} title={tui('Configure Sound Settings')} /> },
+    { name: tui('Sync'), subtitle: tui('Orders & Settings'), control: <ActionIconButton onClick={handleSync} title={tui('Sync Now')} icon={RefreshCw} spinning={syncing} /> },
+    { name: tui('Connection'), subtitle: tui('EdgeOS · Connected'), control: <ChevronIconButton onClick={() => onOpenSub('websocket-settings')} title={tui('Configure Connection')} /> },
   ];
 
   const accountRows = [
-    { name: 'Device Name', subtitle: 'Kitchen Display 1', control: null },
-    { name: 'Station ID', subtitle: 'STN-001', control: null },
-    { name: 'Bug Reporting', subtitle: 'In-app Reporting Tool', control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
-    { name: 'Debug Mode', subtitle: 'Verbose Logging', control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
-    { name: 'Upload Logs', subtitle: 'Send to Eatos Support', control: <ActionIconButton onClick={handleUploadLogs} title="Upload Logs" icon={Upload} spinning={uploadingLogs} /> },
-    { name: 'Feedback & Support', subtitle: 'Request a Feature', control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title="Request a Feature" /> },
+    { name: tui('Device Name'), subtitle: 'Kitchen Display 1', control: null },
+    { name: tui('Station ID'), subtitle: 'STN-001', control: null },
+    { name: tui('Bug Reporting'), subtitle: tui('In-app Reporting Tool'), control: <SmallToggle checked={bugReporting} onChange={setBugReporting} /> },
+    { name: tui('Debug Mode'), subtitle: tui('Verbose Logging'), control: <SmallToggle checked={devMode} onChange={(v) => { setDevMode(v); localStorage.setItem('posai-dev-mode', String(v)); onDevModeChange?.(v); }} /> },
+    { name: tui('Upload Logs'), subtitle: tui('Send to Eatos Support'), control: <ActionIconButton onClick={handleUploadLogs} title={tui('Upload Logs')} icon={Upload} spinning={uploadingLogs} /> },
+    { name: tui('Feedback & Support'), subtitle: tui('Request a Feature'), control: <ChevronIconButton onClick={() => setFeatureModalOpen(true)} title={tui('Request a Feature')} /> },
   ];
 
   return (
@@ -366,17 +371,17 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 <button
                   onClick={() => setActiveSection('display')}
                   className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
-                  aria-label="Back"
+                  aria-label={tui('Back')}
                 >
                   <ChevronLeft size={20} className="text-text-secondary" />
                 </button>
                 <div className="min-w-0">
                   <h2 className="text-lg font-bold text-text-primary leading-tight">
-                    {activeSection === 'language' ? 'Language' : activeSection === 'order-type-colors' ? 'Order type colors' : 'Ticket aging rules'}
+                    {activeSection === 'language' ? tui('Language') : activeSection === 'order-type-colors' ? tui('Order type colors') : tui('Ticket aging rules')}
                   </h2>
                   {activeSection === 'status-settings' && (
                     <p className="text-[12px] text-text-muted mt-1">
-                      Orders change color as they age. Adjust thresholds based on your kitchen speed.
+                      {tui('Orders change color as they age. Adjust thresholds based on your kitchen speed.')}
                     </p>
                   )}
                 </div>
@@ -388,10 +393,10 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                     handler?.();
                   }}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted text-text-primary text-[11px] font-bold uppercase tracking-wider min-h-[36px] hover:bg-muted/80 transition-colors shrink-0"
-                  title="Reset all Status Colors and Thresholds to Defaults"
+                  title={tui('Reset all Status Colors and Thresholds to Defaults')}
                 >
                   <RefreshCw size={13} />
-                  Reset to Defaults
+                  {tui('Reset to Defaults')}
                 </button>
               )}
             </div>
@@ -402,22 +407,22 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
         <div className={`flex-1 overflow-hidden ${activeSection === 'status-settings' ? 'flex flex-col' : 'overflow-y-auto'}`}>
           {!inSubScreen && (
             <div className="px-10 py-7 w-full">
-              <h2 className="text-2xl font-bold text-text-primary mb-6">Settings</h2>
+              <h2 className="text-2xl font-bold text-text-primary mb-6">{tui('Settings')}</h2>
 
-              <SectionHeading>Display</SectionHeading>
+              <SectionHeading>{tui('Display')}</SectionHeading>
               <RowGrid itemCount={displayRows.length}>
                 {displayRows.map((r) => <RowCell key={r.name} name={r.name} subtitle={r.subtitle} control={r.control} />)}
               </RowGrid>
 
               <div style={{ marginTop: '18px' }}>
-                <SectionHeading>Hardware</SectionHeading>
+                <SectionHeading>{tui('Hardware')}</SectionHeading>
                 <RowGrid itemCount={hardwareRows.length}>
                   {hardwareRows.map((r) => <RowCell key={r.name} name={r.name} subtitle={r.subtitle} control={r.control} />)}
                 </RowGrid>
               </div>
 
               <div style={{ marginTop: '18px' }}>
-                <SectionHeading>Account</SectionHeading>
+                <SectionHeading>{tui('Account')}</SectionHeading>
                 <RowGrid itemCount={accountRows.length + 1}>
                   {accountRows.map((r) => <RowCell key={r.name} name={r.name} subtitle={r.subtitle} control={r.control} />)}
                   <LogOutRowCell onClick={() => setShowLogoutConfirm(true)} />
@@ -454,13 +459,13 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
           <div className="absolute inset-0 bg-black/50" onClick={() => setFeatureModalOpen(false)} />
           <div className="relative bg-surface-card rounded-xl shadow-xl w-[480px] max-w-[90vw] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
-              <h3 className="text-[15px] font-bold text-text-primary">Request a Feature</h3>
+              <h3 className="text-[15px] font-bold text-text-primary">{tui('Request a Feature')}</h3>
               <button onClick={() => setFeatureModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted transition-colors min-h-[44px] min-w-[44px]">
                 <X size={18} className="text-text-muted" />
               </button>
             </div>
             <div className="px-5 pt-4 pb-2">
-              <p className="text-[12px] font-semibold text-text-secondary mb-2 uppercase tracking-wider">Category</p>
+              <p className="text-[12px] font-semibold text-text-secondary mb-2 uppercase tracking-wider">{tui('Category')}</p>
               <div className="flex flex-wrap gap-2">
                 {['Display & layout', 'Order management', 'Coursing', 'Other'].map((cat) => (
                   <button
@@ -472,7 +477,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                         : 'bg-muted text-text-secondary hover:bg-muted/80'
                     }`}
                   >
-                    {cat}
+                    {tui(cat)}
                   </button>
                 ))}
               </div>
@@ -482,7 +487,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 value={featureText}
                 onChange={(e) => { if (e.target.value.length <= 150) setFeatureText(e.target.value); }}
                 maxLength={150}
-                placeholder="What would you like to see in the KDS?"
+                placeholder={tui('What would you like to see in the KDS?')}
                 rows={5}
                 className="w-full bg-muted rounded-lg px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted outline-none resize-none min-h-[120px]"
               />
@@ -490,9 +495,9 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
             </div>
             <div className="px-5 pb-3">
               <div className="bg-muted/60 rounded-lg px-3 py-2.5 flex gap-4 text-[11px] text-text-muted">
-                <span>Station ID: STN-001</span>
-                <span>Device: Kitchen Display 1</span>
-                <span>Version: 5.0.84</span>
+                <span>{tui('Station ID')}: STN-001</span>
+                <span>{tui('Device')}: Kitchen Display 1</span>
+                <span>{tui('Version')}: 5.0.84</span>
               </div>
             </div>
             <div className="px-5 pb-4">
@@ -501,7 +506,7 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
                 disabled={!featureText.trim() || !featureCategory}
                 className="w-full py-3 rounded-lg text-[13px] font-bold uppercase tracking-wider bg-brand-dark text-primary-foreground hover:bg-brand-dark/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[48px]"
               >
-                Submit request
+                {tui('Submit request')}
               </button>
             </div>
           </div>
@@ -511,18 +516,18 @@ export function SettingsPanel({ onClose, onOpenSub, onLogOut, onDevModeChange, i
       <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Log out?</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">{tui('Log out?')}</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
-              You will be returned to the sign-in screen. Any unsaved settings will be lost.
+              {tui('You will be returned to the sign-in screen. Any unsaved settings will be lost.')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="min-h-[44px]">{tui('Cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => { onClose(); onLogOut?.(); }}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Log out
+              {tui('Log out')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

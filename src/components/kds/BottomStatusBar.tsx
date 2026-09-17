@@ -38,13 +38,14 @@ interface BottomStatusBarProps {
 
 function SoundToggle() {
   const { muted, toggleMute } = useSound();
+  const { tui } = useLanguage();
 
   return (
     <button
       data-onboarding="sound"
       onClick={toggleMute}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
-      aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+      aria-label={tui(muted ? 'Unmute sounds' : 'Mute sounds')}
     >
       {muted ? <VolumeX size={15} className="text-primary-foreground/70" /> : <Volume2 size={15} className="text-primary-foreground/70" />}
     </button>
@@ -52,12 +53,13 @@ function SoundToggle() {
 }
 
 function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
+  const { tui } = useLanguage();
   return (
     <button
       data-onboarding="language"
       onClick={onOpen}
       className="flex items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors w-9 h-9 min-h-[36px] min-w-[36px]"
-      aria-label="Change Language"
+      aria-label={tui('Change Language')}
     >
       <Languages size={15} className="text-primary-foreground/70" />
     </button>
@@ -66,7 +68,7 @@ function LanguageToggle({ onOpen }: { onOpen?: () => void }) {
 
 export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme, onToggleTheme, sortMode, onSortModeChange, hideViewControls, onOpenLanguageSettings, onOpenCategoryFilter, onOpenRevenueFilter, aiAssistantOpen, onToggleAiAssistant, orderTypeFilter, onOrderTypeFilterChange }: BottomStatusBarProps) {
   
-  const { t } = useLanguage();
+  const { t, tui } = useLanguage();
   const { orderTypeColors } = useKDSSettings();
   const { isPortrait } = usePortrait();
   const { toast } = useToast();
@@ -99,8 +101,10 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
       };
       setEightySixedItems(prev => [...prev, newItem]);
       toast({
-        title: "Product 86'd",
-        description: `${newItem.quantity > 1 ? `${newItem.quantity} x ` : ''}${item.name} marked as unavailable`,
+        title: tui("Product 86'd"),
+        description: newItem.quantity > 1
+          ? tui('{n} x {name} marked as unavailable', { n: newItem.quantity, name: item.name })
+          : tui('{name} marked as unavailable', { name: item.name }),
       });
     },
     [toast],
@@ -108,14 +112,14 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
 
   const handleRestoreItem = useCallback((itemId: string) => {
     setEightySixedItems(prev => prev.filter(i => i.id !== itemId));
-    toast({ title: 'Product Restored', description: 'Product is now available again' });
+    toast({ title: tui('Product Restored'), description: tui('Product is now available again') });
   }, [toast]);
 
   const handleScheduleRestore = useCallback((itemId: string, restoreTime: Date) => {
     setEightySixedItems(prev => prev.map(i => i.id === itemId ? { ...i, scheduledRestoreTime: restoreTime } : i));
     toast({
-      title: 'Restore Scheduled',
-      description: `Product will be restored at ${restoreTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`,
+      title: tui('Restore Scheduled'),
+      description: tui('Product will be restored at {time}', { time: restoreTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) }),
     });
   }, [toast]);
 
@@ -165,14 +169,14 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
   }, [typeFilterOpen]);
 
   const orderTypeOptions: { value: OrderType; label: string }[] = [
-    { value: 'dine-in', label: 'Dine In' },
-    { value: 'take-out', label: 'Take Out' },
-    { value: 'delivery', label: 'Delivery' },
-    { value: 'banquet', label: 'Banquet' },
-    { value: 'drive-thru', label: 'Drive Thru' },
-    { value: 'curb-side', label: 'Curb Side' },
-    { value: 'scheduled', label: 'Scheduled' },
-    { value: 'phone-in', label: 'Phone-In' },
+    { value: 'dine-in', label: tui('Dine In') },
+    { value: 'take-out', label: tui('Take Out') },
+    { value: 'delivery', label: tui('Delivery') },
+    { value: 'banquet', label: tui('Banquet') },
+    { value: 'drive-thru', label: tui('Drive Thru') },
+    { value: 'curb-side', label: tui('Curb Side') },
+    { value: 'scheduled', label: tui('Scheduled') },
+    { value: 'phone-in', label: tui('Phone-In') },
   ];
   const activeTypes = orderTypeFilter ?? [];
   const toggleType = (v: OrderType) => {
@@ -194,7 +198,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
         <DockDragHandle
           panel="bottomBar"
           orientation="horizontal"
-          ariaLabel="Drag to dock status bar"
+          ariaLabel={tui('Drag to dock status bar')}
           className="text-primary-foreground"
           showLock={false}
         />
@@ -214,12 +218,12 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 data-onboarding="filter"
                 onClick={onOpenCategoryFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
-                aria-label="Category Filter"
+                aria-label={tui('Category Filter')}
               >
                 <Filter size={15} className="text-primary-foreground/70" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top"><p>{t.categoryFilter || 'Category filter'}</p></TooltipContent>
+            <TooltipContent side="top"><p>{t.categoryFilter || tui('Category filter')}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -231,12 +235,12 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 data-onboarding="revenue"
                 onClick={onOpenRevenueFilter}
                 className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
-                aria-label="Revenue Center Filter"
+                aria-label={tui('Revenue Center Filter')}
               >
                 <Building2 size={15} className="text-primary-foreground/70" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top"><p>{t.revenueCenterFilter || 'Revenue center filter'}</p></TooltipContent>
+            <TooltipContent side="top"><p>{t.revenueCenterFilter || tui('Revenue center filter')}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -252,7 +256,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                     ? 'bg-primary-foreground/20 text-primary-foreground'
                     : 'bg-primary-foreground/10 text-primary-foreground/70 hover:text-primary-foreground'
                 }`}
-                aria-label="Filter by Order Type"
+                aria-label={tui('Filter by Order Type')}
               >
                 <Utensils size={15} />
                 {activeTypes.length > 0 && (
@@ -262,7 +266,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                 )}
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top"><p>Order Type</p></TooltipContent>
+            <TooltipContent side="top"><p>{tui('Order Type')}</p></TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -284,7 +288,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                    className={`flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px] ${
                      sortMode !== 'newest' ? 'text-primary-foreground' : 'text-primary-foreground/70 hover:text-primary-foreground'
                    }`}
-                  aria-label="Sort Orders"
+                  aria-label={tui('Sort Orders')}
                 >
                   <ArrowUpDown size={15} />
                 </button>
@@ -324,7 +328,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
                   ? 'bg-primary-foreground text-brand-dark'
                   : 'text-primary-foreground/50 hover:text-primary-foreground/80'
               }`}
-              aria-label={`Switch to ${label} view`}
+              aria-label={tui('Switch to {label} view', { label })}
             >
               <Icon size={15} />
               {!isPortrait && <span>{label}</span>}
@@ -339,7 +343,7 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           data-onboarding="theme"
           onClick={onToggleTheme}
           className="flex items-center justify-center w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors min-h-[36px] min-w-[36px]"
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          aria-label={tui(theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode')}
         >
           {theme === 'light' ? <Moon size={15} className="text-primary-foreground/70" /> : <Sun size={15} className="text-warning" />}
         </button>
@@ -348,11 +352,11 @@ export function BottomStatusBar({ orderCount, viewMode, onViewModeChange, theme,
           data-onboarding="eighty-six"
           onClick={() => setEightySixOpen(true)}
            className="flex items-center gap-2 px-3 py-1 rounded-xl bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors shrink-0 h-[36px]"
-          aria-label="86 products"
+          aria-label={tui('86 products')}
         >
           <div className="flex flex-col items-center leading-tight">
             <span className="text-[10px] text-white">86</span>
-            <span className="text-[10px] text-white">Products</span>
+            <span className="text-[10px] text-white">{tui('Products')}</span>
           </div>
           <Package className={`w-4 h-4 ${eightySixedItems.length > 0 ? 'text-[#FF6B6B]' : 'text-white/50'}`} />
           {eightySixedItems.length > 0 && (

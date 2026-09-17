@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/hooks/use-language';
 
 interface CategoryFilterPanelProps {
   open: boolean;
@@ -11,6 +12,7 @@ interface CategoryFilterPanelProps {
 }
 
 export default function CategoryFilterPanel({ open, onClose, onApply, activeCategories = [], availableCategories = [] }: CategoryFilterPanelProps) {
+  const { tui } = useLanguage();
   const allCategories = ['ALL CATEGORIES', ...availableCategories];
   const [selected, setSelected] = useState<string[]>(activeCategories.length ? activeCategories : ['ALL CATEGORIES']);
 
@@ -65,7 +67,7 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
-            <h2 className="text-lg font-bold text-text-primary">Filter by Category</h2>
+            <h2 className="text-lg font-bold text-text-primary">{tui('Filter by Category')}</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
             </button>
@@ -73,7 +75,7 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
 
           <div className="flex-1 overflow-y-auto px-4 py-4">
             {availableCategories.length === 0 ? (
-              <div className="text-sm text-text-secondary text-center py-8">No Active Categories</div>
+              <div className="text-sm text-text-secondary text-center py-8">{tui('No Active Categories')}</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {allCategories.map((cat) => {
@@ -88,7 +90,7 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
                           : 'bg-muted text-text-secondary hover:text-text-primary'
                       }`}
                     >
-                      {cat}
+                      {cat === 'ALL CATEGORIES' ? tui('All Categories') : cat}
                     </button>
                   );
                 })}
@@ -101,7 +103,7 @@ export default function CategoryFilterPanel({ open, onClose, onApply, activeCate
               onClick={handleClear}
               className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[36px]"
             >
-              Clear All
+              {tui('Clear All')}
             </button>
           </div>
         </motion.div>

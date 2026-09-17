@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Delete } from 'lucide-react';
 import PosaiLogo from '@/components/PosaiLogo';
+import { useLanguage } from '@/hooks/use-language';
 
 interface SetPinScreenProps {
   onComplete: () => void;
@@ -12,6 +13,7 @@ export default function SetPinScreen({ onComplete }: SetPinScreenProps) {
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [error, setError] = useState(false);
+  const { tui } = useLanguage();
 
   const currentPin = step === 'set' ? pin : confirmPin;
   const setCurrentPin = step === 'set' ? setPin : setConfirmPin;
@@ -66,15 +68,15 @@ export default function SetPinScreen({ onComplete }: SetPinScreenProps) {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-[420px] px-6 flex flex-col items-center">
         <PosaiLogo variant="light" className="h-20 object-contain mb-4" />
         <h1 className="text-white text-xl font-bold font-montserrat mb-1">
-          {step === 'set' ? 'Set Your PIN' : 'Confirm Your PIN'}
+          {step === 'set' ? tui('Set Your PIN') : tui('Confirm Your PIN')}
         </h1>
         <p className="text-sm font-montserrat mb-6" style={{ color: '#6C7A89' }}>
-          {step === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm'}
+          {step === 'set' ? tui('Choose a 4-digit PIN for quick access') : tui('Enter the same PIN again to confirm')}
         </p>
 
         {error && (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm font-montserrat font-semibold mb-4" style={{ color: '#E84C3D' }}>
-            PINs do not match. Try again.
+            {tui('PINs do not match. Try again.')}
           </motion.p>
         )}
 
@@ -101,7 +103,7 @@ export default function SetPinScreen({ onComplete }: SetPinScreenProps) {
               <motion.button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim}>C</motion.button>
             );
             if (key === 'BACK') return (
-              <motion.button key={key} onClick={() => setCurrentPin(p => p.slice(0, -1))} style={greyKey} whileTap={tapAnim} aria-label="Backspace">
+              <motion.button key={key} onClick={() => setCurrentPin(p => p.slice(0, -1))} style={greyKey} whileTap={tapAnim} aria-label={tui('Backspace')}>
                 <Delete className="w-5 h-5" />
               </motion.button>
             );

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 
 
 const PIN_LENGTH = 4;
@@ -25,6 +26,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
   const [pin, setPin] = useState('');
   const [revenueCenter, setRevenueCenter] = useState('Dine Center');
   const [rcOpen, setRcOpen] = useState(false);
+  const { tui } = useLanguage();
 
   const submitPin = useCallback(() => {
     if (pin.length !== PIN_LENGTH) return;
@@ -99,7 +101,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={tui('Close')}
             className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -130,7 +132,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
 
           {/* Right: pin pad */}
           <div className="flex-1 flex flex-col justify-center px-8 py-10 mr-16">
-            <p className="text-center text-white/60 text-sm mb-4">Enter PIN to Clock In</p>
+            <p className="text-center text-white/60 text-sm mb-4">{tui('Enter PIN to Clock In')}</p>
 
             <div className="flex justify-center gap-5 mb-6">
               {Array.from({ length: PIN_LENGTH }).map((_, i) => (
@@ -158,8 +160,8 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 if (key === 'ENTER') {
                   const enabled = pin.length === PIN_LENGTH;
                   return (
-                    <motion.button key={key} onClick={submitPin} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label="Enter" whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
-                      Enter
+                    <motion.button key={key} onClick={submitPin} disabled={!enabled} style={{ ...(enabled ? lightKey : greyKey), fontSize: '16px', fontWeight: 600, opacity: enabled ? 1 : 0.5, cursor: enabled ? 'pointer' : 'not-allowed' }} aria-label={tui('Enter')} whileTap={enabled ? tapAnim : undefined} whileHover={enabled ? hoverAnim : undefined} transition={transition} className="whitespace-nowrap">
+                      {tui('Enter')}
                     </motion.button>
                   );
                 }
@@ -175,9 +177,9 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                 const enabled = pin.length === PIN_LENGTH;
                 return (
                   <>
-                    <button disabled={!enabled} className="h-14 rounded-lg bg-[#922B21] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock Out</button>
-                    <button className="h-14 rounded-lg bg-[#6E6E6E] text-white font-semibold shadow active:scale-95 transition-transform">Break</button>
-                    <button onClick={submitPin} disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">Clock In</button>
+                    <button disabled={!enabled} className="h-14 rounded-lg bg-[#922B21] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">{tui('Clock Out')}</button>
+                    <button className="h-14 rounded-lg bg-[#6E6E6E] text-white font-semibold shadow active:scale-95 transition-transform">{tui('Break')}</button>
+                    <button onClick={submitPin} disabled={!enabled} className="h-14 rounded-lg bg-[#16A085] text-white font-semibold shadow active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">{tui('Clock In')}</button>
                   </>
                 );
               })()}
@@ -185,7 +187,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
 
             {/* Biometrics + revenue center */}
             <div className="grid grid-cols-3 gap-3 mb-3">
-              <button aria-label="Fingerprint" className="h-14 rounded-lg bg-[#3A3A3C] text-white flex items-center justify-center shadow active:scale-95 transition-transform">
+              <button aria-label={tui('Fingerprint')} className="h-14 rounded-lg bg-[#3A3A3C] text-white flex items-center justify-center shadow active:scale-95 transition-transform">
                 <Fingerprint className="w-6 h-6" />
               </button>
               <div className="relative">
@@ -193,7 +195,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                   onClick={() => setRcOpen(v => !v)}
                   className="w-full h-14 rounded-lg bg-white text-[#1A1A2E] flex flex-col items-center justify-center shadow active:scale-95 transition-transform"
                 >
-                  <span className="text-[9px] font-bold tracking-wide text-[#6C7A89]">REVENUE CENTER</span>
+                  <span className="text-[9px] font-bold tracking-wide text-[#6C7A89]">{tui('REVENUE CENTER')}</span>
                   <span className="text-sm font-semibold flex items-center gap-1">
                     {revenueCenter} <ChevronDown className="w-3 h-3" />
                   </span>
@@ -212,7 +214,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
                   </div>
                 )}
               </div>
-              <button aria-label="Face ID" className="h-14 rounded-lg bg-[#3A3A3C] text-white flex items-center justify-center shadow active:scale-95 transition-transform">
+              <button aria-label={tui('Face ID')} className="h-14 rounded-lg bg-[#3A3A3C] text-white flex items-center justify-center shadow active:scale-95 transition-transform">
                 <ScanFace className="w-6 h-6" />
               </button>
             </div>
@@ -221,7 +223,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
               onClick={onClose}
               className="w-full h-12 rounded-lg bg-[#1A1A1F] text-white font-bold tracking-wider border border-white/10 hover:bg-[#26262C] transition-colors"
             >
-              LOGOUT
+              {tui('LOGOUT')}
             </button>
           </div>
         </motion.div>

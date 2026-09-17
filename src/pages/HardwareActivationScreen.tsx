@@ -6,6 +6,7 @@ import PosaiLogo from '@/components/PosaiLogo';
 import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
 import { blockDemoAuthInProd } from '@/lib/demo-auth';
+import { useLanguage } from '@/hooks/use-language';
 
 interface HardwareActivationScreenProps {
   onSuccess: () => void;
@@ -13,6 +14,7 @@ interface HardwareActivationScreenProps {
 
 export default function HardwareActivationScreen({ onSuccess }: HardwareActivationScreenProps) {
   const [phase, setPhase] = useState<'activate' | 'set-pin' | 'forgot-password'>('activate');
+  const { tui } = useLanguage();
 
   // Activation state
   const [input, setInput] = useState('');
@@ -148,12 +150,12 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
           <PosaiLogo variant="light" className="h-24 object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
-              {phase === 'activate' ? 'Kitchen Display System' : phase === 'set-pin' ? 'Set Your PIN' : 'Reset password'}
+              {phase === 'activate' ? tui('Kitchen Display System') : phase === 'set-pin' ? tui('Set Your PIN') : tui('Reset password')}
             </h1>
             <p className="text-sm font-montserrat" style={{ color: '#FFFFFF' }}>
               {phase === 'set-pin'
-                ? (pinStep === 'set' ? 'Choose a 4-digit PIN for quick access' : 'Enter the same PIN again to confirm')
-                : phase === 'forgot-password' ? 'Reset your account password' : ''}
+                ? (pinStep === 'set' ? tui('Choose a 4-digit PIN for quick access') : tui('Enter the same PIN again to confirm'))
+                : phase === 'forgot-password' ? tui('Reset your account password') : ''}
             </p>
           </div>
         </div>
@@ -163,7 +165,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
             <motion.div key="activate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
               {/* LEFT: QR (primary) */}
               <div className="flex flex-col items-center justify-center px-10">
-                <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>Scan to Activate</p>
+                <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>{tui('Scan to Activate')}</p>
 
                 <AnimatePresence mode="wait">
                   {!qrApproved ? (
@@ -178,13 +180,13 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                         <div className="flex gap-2 items-start">
                           <span style={{ color: 'hsl(145, 63%, 42%)', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
                           <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                            Got a link in your email or text? Tap it, then scan this code to activate instantly.
+                            {tui('Got a link in your email or text? Tap it, then scan this code to activate instantly.')}
                           </p>
                         </div>
                         <div className="flex gap-2 items-start">
                           <span style={{ color: '#95A5A6', fontSize: '14px', lineHeight: 1.6, flexShrink: 0 }}>●</span>
                           <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                            No link? Scan with your mobile camera and enter your email and password.
+                            {tui('No link? Scan with your mobile camera and enter your email and password.')}
                           </p>
                         </div>
                       </div>
@@ -194,8 +196,8 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: 'hsl(145, 63%, 42%)' }}>
                         <Check className="w-8 h-8 text-white" strokeWidth={3} />
                       </div>
-                      <p className="text-white font-montserrat font-bold">Device Approved</p>
-                      <p className="text-xs font-montserrat mt-1" style={{ color: '#6C7A89' }}>Redirecting...</p>
+                      <p className="text-white font-montserrat font-bold">{tui('Device Approved')}</p>
+                      <p className="text-xs font-montserrat mt-1" style={{ color: '#6C7A89' }}>{tui('Redirecting...')}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -204,23 +206,23 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
               {/* Or divider */}
               <div className="hidden md:flex absolute left-1/2 top-[180px] bottom-[60px] -translate-x-1/2 flex-col items-center justify-center">
                 <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
-                <span className="text-white/50 font-montserrat font-semibold text-sm py-3">Or</span>
+                <span className="text-white/50 font-montserrat font-semibold text-sm py-3">{tui('Or')}</span>
                 <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
               </div>
 
               {/* RIGHT: Smart sign-in */}
               <div className="flex flex-col justify-center px-10">
-                <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Activate</p>
+                <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>{tui('Activate')}</p>
                 <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
-                  Enter your email or mobile number to activate
+                  {tui('Enter your email or mobile number to activate')}
                 </p>
 
                 <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
                   <div>
-                    <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or Mobile Number</label>
+                    <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>{tui('Email or Mobile Number')}</label>
                     <input
                       type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                      placeholder="Enter Your Email or Mobile Number"
+                      placeholder={tui('Enter Your Email or Mobile Number')}
                       className="font-montserrat" style={inputStyle}
                     />
                   </div>
@@ -229,30 +231,30 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                     {detectedMode === 'email' && (
                       <motion.div key="pw" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
                         <div>
-                          <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
+                          <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>{tui('Password')}</label>
                           <div style={{ position: 'relative' }}>
-                            <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                            <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={tui('Enter Password')} className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
                             <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
                               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                             </button>
                           </div>
                         </div>
-                        <button type="submit" style={btnStyle}>ACTIVATE</button>
+                        <button type="submit" style={btnStyle}>{tui('ACTIVATE')}</button>
                         <button type="button" onClick={() => setPhase('forgot-password')} className="text-sm font-montserrat text-center" style={{ color: '#FFFFFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
-                          Forgot password?
+                          {tui('Forgot password?')}
                         </button>
                       </motion.div>
                     )}
 
                     {detectedMode === 'phone' && !otpSent && (
                       <motion.div key="phone" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
-                        <button type="submit" style={btnStyle}>SEND OTP</button>
+                        <button type="submit" style={btnStyle}>{tui('SEND OTP')}</button>
                       </motion.div>
                     )}
 
                     {detectedMode === 'phone' && otpSent && (
                       <motion.div key="otp-verify" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
-                        <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>Enter the 6-digit code sent to your phone</p>
+                        <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>{tui('Enter the 6-digit code sent to your phone')}</p>
                         <div className="flex justify-center gap-2">
                           {otpCode.map((d, i) => (
                             <input key={i} id={`hw-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={d} onChange={(e) => handleOtpDigit(i, e.target.value)}
@@ -261,7 +263,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                             />
                           ))}
                         </div>
-                        <button type="button" onClick={handleVerifyOtp} style={btnStyle}>VERIFY</button>
+                        <button type="button" onClick={handleVerifyOtp} style={btnStyle}>{tui('VERIFY')}</button>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -278,16 +280,16 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                   style={{ color: '#FFFFFF', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Back
+                  {tui('Back')}
                 </button>
                 {pinError && (
                   <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm font-montserrat font-semibold mb-4 text-center" style={{ color: '#E84C3D' }}>
-                    PINs do not match. Try again.
+                    {tui('PINs do not match. Try again.')}
                   </motion.p>
                 )}
 
                 <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-                  {pinStep === 'set' ? 'Enter a 4-digit PIN' : 'Confirm your PIN'}
+                  {pinStep === 'set' ? tui('Enter a 4-digit PIN') : tui('Confirm your PIN')}
                 </p>
 
                 {/* PIN asterisks */}
@@ -316,7 +318,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
                       <motion.button key={key} onClick={handlePinClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
                     );
                     if (key === 'BACK') return (
-                      <motion.button key={key} onClick={() => setCurrentPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
+                      <motion.button key={key} onClick={() => setCurrentPin(p => p.slice(0, -1))} style={greyKey} aria-label={tui('Backspace')} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
                         <Delete className="w-5 h-5" />
                       </motion.button>
                     );

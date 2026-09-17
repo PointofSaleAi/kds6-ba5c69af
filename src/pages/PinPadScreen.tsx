@@ -7,6 +7,7 @@ import MainOrderView from '@/pages/MainOrderView';
 import ResetFlow from '@/components/kds/ResetFlow';
 import { blockDemoAuthInProd } from '@/lib/demo-auth';
 import { useActiveIdentity } from '@/hooks/use-active-identity';
+import { useLanguage } from '@/hooks/use-language';
 
 interface PinPadScreenProps {
   onSuccess: () => void;
@@ -17,6 +18,7 @@ interface PinPadScreenProps {
 
 export default function PinPadScreen({ onSuccess, onFallback, context = 'login', onCancel }: PinPadScreenProps) {
   const { identity, signInWithPin, signInAsRestaurant } = useActiveIdentity();
+  const { tui } = useLanguage();
   const currentLabel = identity.kind === 'restaurant' ? identity.name : identity.name;
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
@@ -129,13 +131,13 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full">
           <div className="flex items-center justify-center gap-5 pt-14 pb-1">
             <PosaiLogo variant="light" className="h-24 object-contain" />
-            <h1 className="text-white text-xl font-bold font-montserrat">Kitchen Display System</h1>
+            <h1 className="text-white text-xl font-bold font-montserrat">{tui('Kitchen Display System')}</h1>
           </div>
 
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 min-h-0">
             {/* LEFT: QR */}
             <div className="flex flex-col items-center justify-center px-10">
-              <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>Scan to Sign In</p>
+              <p className="text-white font-montserrat font-semibold mb-4" style={{ fontSize: '22px' }}>{tui('Scan to Sign In')}</p>
               <AnimatePresence mode="wait">
                 {!qrApproved ? (
                   <motion.div key="qr" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center">
@@ -144,7 +146,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                     </div>
                     <div style={{ maxWidth: '340px' }}>
                       <p className="font-montserrat" style={{ color: '#FFFFFF', fontSize: '14px', lineHeight: 1.6 }}>
-                        Scan with your phone camera to sign in.
+                        {tui('Scan with your phone camera to sign in.')}
                       </p>
                     </div>
                   </motion.div>
@@ -153,8 +155,8 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                     <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: 'hsl(145, 63%, 42%)' }}>
                       <Check className="w-8 h-8 text-white" strokeWidth={3} />
                     </div>
-                    <p className="text-white font-montserrat font-bold">Signed In</p>
-                    <p className="text-xs font-montserrat mt-1" style={{ color: '#6C7A89' }}>Redirecting...</p>
+                    <p className="text-white font-montserrat font-bold">{tui('Signed In')}</p>
+                    <p className="text-xs font-montserrat mt-1" style={{ color: '#6C7A89' }}>{tui('Redirecting...')}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -163,7 +165,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
             {/* Or divider */}
             <div className="hidden md:flex absolute left-1/2 top-[100px] bottom-[60px] -translate-x-1/2 flex-col items-center justify-center">
               <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
-              <span className="text-white/50 font-montserrat font-semibold text-sm py-3">Or</span>
+              <span className="text-white/50 font-montserrat font-semibold text-sm py-3">{tui('Or')}</span>
               <div className="flex-1 max-h-[80px]" style={{ width: '1px', backgroundColor: 'rgba(255,255,255,0.10)' }} />
             </div>
 
@@ -174,11 +176,11 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                   <motion.div key="pin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
                     {context === 'staff-switch' && (
                       <p className="text-center font-montserrat mb-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px' }}>
-                        Currently signed in as: <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{currentLabel}</span>
+                        {tui('Currently signed in as: ')}<span style={{ color: '#FFFFFF', fontWeight: 600 }}>{currentLabel}</span>
                       </p>
                     )}
                     <p className="text-center text-base font-montserrat font-medium mb-4" style={{ color: '#A0A0A0' }}>
-                      Enter your PIN
+                      {tui('Enter your PIN')}
                     </p>
 
                     <motion.div
@@ -210,7 +212,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                           <motion.button key={key} onClick={handleClear} style={{ ...lightKey, color: '#E84C3D' }} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>C</motion.button>
                         );
                         if (key === 'BACK') return (
-                          <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label="Backspace" whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
+                          <motion.button key={key} onClick={() => setPin(p => p.slice(0, -1))} style={greyKey} aria-label={tui('Backspace')} whileTap={tapAnim} whileHover={hoverAnim} transition={transition}>
                             <Delete className="w-5 h-5" />
                           </motion.button>
                         );
@@ -222,16 +224,16 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
 
                     <div className="flex justify-between mt-4">
                       <button onClick={() => setRightMode('forgot-pin')} className="text-sm font-montserrat" style={linkStyle}>
-                        Forgot PIN?
+                        {tui('Forgot PIN?')}
                       </button>
                       <button onClick={() => setRightMode('signin')} className="text-sm font-montserrat" style={linkStyle}>
-                        Sign in with email or mobile
+                        {tui('Sign in with email or mobile')}
                       </button>
                     </div>
                     {context === 'staff-switch' && onCancel && (
                       <div className="flex justify-center mt-3">
                         <button onClick={onCancel} className="text-sm font-montserrat" style={{ ...linkStyle, opacity: 0.75 }}>
-                          Cancel
+                          {tui('Cancel')}
                         </button>
                       </div>
                     )}
@@ -240,17 +242,17 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
 
                 {rightMode === 'signin' && (
                   <motion.div key="signin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full" style={{ maxWidth: '380px' }}>
-                    <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>Sign In</p>
+                    <p className="text-white font-montserrat font-semibold mb-1" style={{ fontSize: '24px' }}>{tui('Sign In')}</p>
                     <p className="font-montserrat mb-5" style={{ color: '#FFFFFF', fontSize: '16px' }}>
-                      Enter your email or mobile number
+                      {tui('Enter your email or mobile number')}
                     </p>
 
                     <form onSubmit={detectedMode === 'email' ? handleEmailSignIn : (e) => { e.preventDefault(); handleSendOtp(); }} className="flex flex-col gap-4">
                       <div>
-                        <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>Email or Mobile Number</label>
+                        <label className="block font-montserrat font-medium mb-1.5" style={{ color: '#FFFFFF', fontSize: '15px' }}>{tui('Email or Mobile Number')}</label>
                         <input
                           type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                          placeholder="Enter Your Email or Mobile Number"
+                          placeholder={tui('Enter Your Email or Mobile Number')}
                           className="font-montserrat" style={inputStyle}
                         />
                       </div>
@@ -259,32 +261,32 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                         {detectedMode === 'email' && (
                           <motion.div key="pw" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
                             <div>
-                              <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
+                              <label className="block font-montserrat font-medium text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>{tui('Password')}</label>
                               <div style={{ position: 'relative' }}>
-                                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={tui('Enter Password')} className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
                                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                               </div>
                               <div className="flex justify-end mt-1.5">
                                 <button type="button" onClick={() => setRightMode('forgot-password')} className="text-xs font-montserrat" style={linkStyle}>
-                                  Forgot password?
+                                  {tui('Forgot password?')}
                                 </button>
                               </div>
                             </div>
-                            <button type="submit" style={btnStyle}>SIGN IN</button>
+                            <button type="submit" style={btnStyle}>{tui('SIGN IN')}</button>
                           </motion.div>
                         )}
 
                         {detectedMode === 'phone' && !otpSent && (
                           <motion.div key="phone" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
-                            <button type="submit" style={btnStyle}>SEND OTP</button>
+                            <button type="submit" style={btnStyle}>{tui('SEND OTP')}</button>
                           </motion.div>
                         )}
 
                         {detectedMode === 'phone' && otpSent && (
                           <motion.div key="otp-verify" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex flex-col gap-4">
-                            <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>Enter the 6-digit code sent to your phone</p>
+                            <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>{tui('Enter the 6-digit code sent to your phone')}</p>
                             <div className="flex justify-center gap-2">
                               {otpCode.map((d, i) => (
                                 <input key={i} id={`pin-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={d} onChange={(e) => handleOtpDigit(i, e.target.value)}
@@ -293,7 +295,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                                 />
                               ))}
                             </div>
-                            <button type="button" onClick={handleVerifyOtp} style={btnStyle}>VERIFY</button>
+                            <button type="button" onClick={handleVerifyOtp} style={btnStyle}>{tui('VERIFY')}</button>
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -304,7 +306,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
                       className="w-full text-center text-sm font-montserrat mt-4"
                       style={linkStyle}
                     >
-                      Sign in with PIN instead
+                      {tui('Sign in with PIN instead')}
                     </button>
                   </motion.div>
                 )}
