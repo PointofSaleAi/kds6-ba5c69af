@@ -48,7 +48,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Order Type Colors</h1>
+        <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Order Type Colors</h1>
       </div>
       <div className="flex-1 px-2 pb-2 overflow-y-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -77,7 +77,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
                 </div>
 
                 {/* Color controls */}
-                <div className="bg-surface-card px-4 py-3 flex items-center gap-6">
+                <div className="bg-surface-card px-3 py-3 grid grid-cols-2 gap-2">
                   {/* Header Background */}
                   <div className="flex items-center gap-2 flex-1">
                     <label className="relative cursor-pointer shrink-0">

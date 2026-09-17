@@ -119,7 +119,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-xl sm:text-2xl font-bold text-text-primary text-center leading-tight pl-12 sm:pl-0">Ticket Aging Rules</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Aging Rules</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
@@ -145,7 +145,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-text-primary">Language</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Language</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2">
             <InlineLanguageSettings activeTab="language" />
@@ -166,7 +166,7 @@ export default function DisplaySettings() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket Layout</h1>
+          <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Layout</h1>
         </div>
         <div className="flex-1 px-2 pb-2 overflow-hidden">
           <div className="h-full flex flex-col lg:flex-row gap-2 min-h-0 overflow-y-auto lg:overflow-hidden">
@@ -321,7 +321,7 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-text-primary">Ticket Studio</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Studio</h1>
           </div>
           <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2 flex flex-col">
             <TicketStudioSkeleton />
