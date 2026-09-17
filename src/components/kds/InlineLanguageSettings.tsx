@@ -570,7 +570,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                   <SelectedVariantPreview order={previewTicket} layoutOverride={previewLayout} />
                 </div>
               </div>
-              <div className="text-[10px] text-text-muted mt-2 text-center">
+              <div className="text-xs text-text-secondary mt-2 text-center">
                 {displayMode === 'dual'
                   ? `Showing ${previewPrimaryInfo.name} (primary) + ${previewSecondaryInfo.name} (secondary) on each item.`
                   : `Showing ${getLangInfo(localSingleLang).name} only on the KDS.`}
