@@ -76,7 +76,7 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
 
   return (
     <div>
-      <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
+      <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
         Time Range (minutes)
       </label>
       <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
           <button
             onClick={() => setOpenPicker(openPicker === 'from' ? null : 'from')}
             aria-invalid={invalidFrom || undefined}
-            className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${
+            className={`w-20 min-h-[44px] px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${
               invalidFrom
                 ? 'border-destructive ring-2 ring-destructive/40'
                 : openPicker === 'from'
@@ -105,7 +105,7 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
         </div>
         <span className="text-text-muted text-xs font-medium">to</span>
         {isLast ? (
-          <span className="px-3 py-2.5 text-sm text-text-secondary italic bg-muted rounded-lg border border-border flex-1 text-center">
+          <span className="px-3 py-2.5 min-h-[44px] text-sm text-text-secondary italic bg-muted rounded-lg border border-border flex-1 text-center flex items-center justify-center">
             No limit (∞)
           </span>
         ) : (
@@ -113,7 +113,7 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
             <button
               onClick={() => setOpenPicker(openPicker === 'to' ? null : 'to')}
               aria-invalid={invalidTo || undefined}
-              className={`w-20 px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${
+              className={`w-20 min-h-[44px] px-3 py-2.5 text-sm bg-muted rounded-lg border text-text-primary text-center transition-colors ${
                 invalidTo
                   ? 'border-destructive ring-2 ring-destructive/40'
                   : openPicker === 'to'
@@ -133,12 +133,12 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
             )}
           </div>
         )}
-        <span className="text-[11px] text-text-muted font-medium">min</span>
+        <span className="text-xs text-text-secondary font-medium">min</span>
       </div>
       {error && (
         <div
           role="alert"
-          className="mt-1 flex items-center gap-1 text-[11px] font-medium text-destructive"
+          className="mt-1 flex items-center gap-1 text-xs font-medium text-destructive"
         >
           <AlertTriangle size={11} />
           <span>{error}</span>
@@ -187,7 +187,7 @@ function WheelPopover({ value, min, max, onChange }: { value: number; min: numbe
           <div
             key={num}
             onClick={() => { onChange(num); listRef.current?.scrollTo({ top: (num - min) * itemH, behavior: 'smooth' }); }}
-            className={`flex items-center justify-center cursor-pointer select-none transition-all ${num === value ? 'text-text-primary font-bold text-base' : 'text-text-muted text-sm'}`}
+            className={`flex items-center justify-center cursor-pointer select-none transition-all ${num === value ? 'text-text-primary font-bold text-base' : 'text-text-secondary text-sm'}`}
             style={{ height: itemH, scrollSnapAlign: 'start' }}
           >
             {num}
@@ -248,7 +248,8 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
   }, [rule.minMinutes, previewType]);
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 xl:grid-cols-[minmax(280px,1fr)_minmax(320px,390px)] gap-2.5 min-h-full">
+      <div className="space-y-3 min-w-0">
       {/* Errors */}
       {errors.length > 0 && (
         <div className="space-y-1">
@@ -261,9 +262,11 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
       )}
 
       {/* Status name + Time Range + Colour */}
-      <div className="flex flex-wrap items-start gap-3">
-        <div className="w-40 shrink-0">
-          <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
+      <div className="rounded-lg border border-border bg-surface-card p-3 space-y-3">
+        <div className="text-xs font-bold text-text-secondary uppercase tracking-wider">Selected Rule Editor</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-3 items-start">
+        <div className="min-w-0">
+          <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
             Status name
           </label>
           <input
@@ -271,19 +274,19 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             value={rule.label}
             onChange={(e) => onChange({ label: e.target.value })}
             maxLength={40}
-            className="w-full px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full min-h-[44px] px-3 py-2.5 text-sm bg-muted rounded-lg border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
-        <div className="shrink-0 min-w-[220px]">
+        <div className="min-w-[220px]">
           <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
         </div>
-        <div className="shrink-0 basis-full sm:basis-auto">
-          <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
+        <div className="min-w-0">
+          <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
             Color
           </label>
           <div className="flex items-center gap-2">
             <label
-              className="relative w-10 h-10 rounded-lg border border-border overflow-hidden cursor-pointer shrink-0"
+              className="relative w-11 h-11 rounded-lg border border-border overflow-hidden cursor-pointer shrink-0"
               style={{ backgroundColor: rule.color }}
             >
               <input
@@ -308,12 +311,12 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
               }}
               placeholder="#RRGGBB"
               maxLength={7}
-              className="w-28 px-2 py-2 text-xs font-mono bg-muted rounded-lg border border-border text-text-primary uppercase focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-28 min-h-[44px] px-2 py-2 text-xs font-mono bg-muted rounded-lg border border-border text-text-primary uppercase focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
-        <div className="shrink-0 basis-full sm:basis-auto">
-          <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
+        <div className="min-w-0">
+          <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
             Text color
           </label>
           <div className="flex gap-1.5">
@@ -321,7 +324,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
               <button
                 key={tc}
                 onClick={() => onChange({ textColor: tc })}
-                className={`px-2.5 py-2 rounded-lg text-[11px] font-semibold capitalize transition-colors min-h-[36px] w-14 ${
+                className={`px-2.5 py-2 rounded-lg text-xs font-semibold capitalize transition-colors min-h-[44px] min-w-[56px] ${
                   rule.textColor === tc
                     ? 'bg-foreground text-background'
                     : 'bg-muted text-text-secondary hover:bg-muted/80'
@@ -332,11 +335,13 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
             ))}
           </div>
         </div>
+        </div>
+      </div>
       </div>
 
       {/* Live KDS Ticket Preview */}
-      <div>
-        <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider mb-2 block">
+      <div className="xl:sticky xl:top-2 self-start rounded-lg border border-border bg-surface-card p-3 min-w-0">
+        <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2 block">
           Live Ticket Preview
         </label>
         <div className="flex flex-nowrap gap-1 mb-2 overflow-x-auto pb-1">
@@ -346,9 +351,9 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
               <button
                 key={opt.key}
                 onClick={() => setPreviewType(opt.key)}
-                className={`shrink-0 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide transition-all border ${
+                className={`shrink-0 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide transition-all border min-h-[36px] ${
                   previewType === opt.key
-                    ? 'text-white border-transparent shadow-sm'
+                    ? 'text-primary-foreground border-transparent shadow-sm'
                     : 'bg-muted text-text-secondary border-border hover:bg-muted/80'
                 }`}
                 style={previewType === opt.key ? { backgroundColor: optColor } : undefined}
