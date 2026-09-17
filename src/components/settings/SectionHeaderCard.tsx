@@ -10,6 +10,7 @@ interface SectionHeaderCardProps {
   longDescription?: string;
   iconSrc?: string;
   iconNode?: ReactNode;
+  highContrast?: boolean;
 }
 
 export function SectionHeaderCard({
@@ -20,6 +21,7 @@ export function SectionHeaderCard({
   longDescription,
   iconSrc,
   iconNode,
+  highContrast = false,
 }: SectionHeaderCardProps) {
   const { tui } = useLanguage();
   const [showMore, setShowMore] = useState(false);
@@ -65,7 +67,11 @@ export function SectionHeaderCard({
       </h1>
       <p
         className="w-full leading-relaxed"
-        style={{ color: 'hsl(var(--text-secondary))', fontSize: 12.5, fontWeight: 500 }}
+        style={{
+          color: highContrast ? 'hsl(var(--text-primary))' : 'hsl(var(--text-secondary))',
+          fontSize: 12.5,
+          fontWeight: highContrast ? 600 : 500,
+        }}
       >
         {showMore && hasMore ? longDescription : shortDescription}
         {hasMore && (

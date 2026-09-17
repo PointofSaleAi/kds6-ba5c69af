@@ -32,6 +32,7 @@ export default function HardwareSettings() {
         title={tui('Hardware')}
         shortDescription={tui('Pair printers, configure sound alerts, and manage your network connection.')}
         longDescription={tui('Pair printers, configure sound alerts, and manage your network connection. The KDS supports a dedicated KOT printer for kitchen tickets and an optional Label printer for per-product stickers.')}
+        highContrast
       />
 
       <SettingsPill
@@ -39,9 +40,10 @@ export default function HardwareSettings() {
         iconColor="#5E4DD8"
         label={tui('KOT Printer')}
         helper={kot.printerId ? tui('Connected to {name}', { name: kot.printerName }) : tui('No printer assigned. Tap to pair one.')}
-        right={<ValueText>{kot.printerId ? kot.printerName : tui('Not set')}</ValueText>}
+        right={<span className="text-sm font-semibold text-text-primary">{kot.printerId ? kot.printerName : tui('Not set')}</span>}
         onClick={() => openPrinter('kot')}
         highlighted={hash === 'kot-printer'}
+        highContrast
       />
 
       <SettingsPill
@@ -49,9 +51,10 @@ export default function HardwareSettings() {
         iconColor="#0A84FF"
         label={tui('Label Printer')}
         helper={label.printerId ? tui('Connected to {name}', { name: label.printerName }) : tui('No printer assigned. Tap to pair one.')}
-        right={<ValueText>{label.printerId ? label.printerName : tui('Not set')}</ValueText>}
+        right={<span className="text-sm font-semibold text-text-primary">{label.printerId ? label.printerName : tui('Not set')}</span>}
         onClick={() => openPrinter('label')}
         highlighted={hash === 'label-printer'}
+        highContrast
       />
 
       <SettingsPill
@@ -61,6 +64,7 @@ export default function HardwareSettings() {
         helper={tui('Volume, custom alert sounds, and per-event toggles.')}
         onClick={() => setSoundOpen(true)}
         highlighted={hash === 'sound-settings'}
+        highContrast
       />
 
       <SettingsPill
@@ -73,6 +77,7 @@ export default function HardwareSettings() {
           window.dispatchEvent(new CustomEvent('posai:sync-now'));
         }}
         highlighted={hash === 'sync'}
+        highContrast
       />
 
       <SettingsPill
@@ -82,6 +87,7 @@ export default function HardwareSettings() {
         helper={tui('EdgeOS local backup, cloud sync status, and device name.')}
         onClick={() => setConnectionOpen(true)}
         highlighted={hash === 'connection'}
+        highContrast
       />
 
       <PrinterRoutingModal

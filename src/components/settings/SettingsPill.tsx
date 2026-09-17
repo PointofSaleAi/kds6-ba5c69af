@@ -12,6 +12,7 @@ interface SettingsPillProps {
   right?: ReactNode;
   onClick?: () => void;
   highlighted?: boolean;
+  highContrast?: boolean;
   /**
    * Force-stack the right control under the label in portrait. Auto-detected
    * for SegmentedToggle (which expands full-width) but can be set explicitly
@@ -37,6 +38,7 @@ export function SettingsPill({
   right,
   onClick,
   highlighted,
+  highContrast = false,
   stackInPortrait,
 }: SettingsPillProps) {
   const interactive = Boolean(onClick);
@@ -120,8 +122,8 @@ export function SettingsPill({
       </div>
       {helper && (
         <p
-          className="text-xs font-medium px-2 mb-3 mt-0.5"
-          style={{ color: 'hsl(var(--text-secondary))' }}
+          className={`text-xs px-2 mb-3 mt-0.5 ${highContrast ? 'font-semibold' : 'font-medium'}`}
+          style={{ color: highContrast ? 'hsl(var(--text-primary))' : 'hsl(var(--text-secondary))' }}
         >
           {helper}
         </p>
