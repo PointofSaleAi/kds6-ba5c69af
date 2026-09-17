@@ -61,6 +61,8 @@ function GlassPreview({
 export function SelectedVariantPreview({
   order = previewTicket,
   layoutOverride,
+  glassTicketId = 't23',
+  glassElapsedSeconds,
 }: SelectedVariantPreviewProps) {
   const [route, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('v3'));
 
