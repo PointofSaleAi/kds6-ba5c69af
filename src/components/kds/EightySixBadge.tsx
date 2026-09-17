@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/use-language";
 
 type BadgeSize = "sm" | "default" | "lg";
 type BadgeVariant = "default" | "subtle" | "outline";
@@ -20,10 +21,12 @@ export function EightySixBadge({
   size = "default",
   variant = "default",
   showIcon = true,
-  label = "86'd",
+  label,
   pulse = false,
   className,
 }: EightySixBadgeProps) {
+  const { tui } = useLanguage();
+  const resolvedLabel = label ?? tui("86'd");
   const sizeClasses: Record<BadgeSize, string> = {
     sm: "eighty-six-badge-sm",
     default: "",
@@ -51,7 +54,7 @@ export function EightySixBadge({
       )}
     >
       {showIcon && <X size={iconSizes[size]} strokeWidth={3} className="flex-shrink-0" />}
-      <span>{label}</span>
+      <span>{resolvedLabel}</span>
     </span>
   );
 }

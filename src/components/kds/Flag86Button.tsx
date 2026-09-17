@@ -10,6 +10,7 @@ interface QuantityAdjusterProps {
 }
 
 function QuantityAdjuster({ value, onChange }: QuantityAdjusterProps) {
+  const { tui } = useLanguage();
   const dec = (e: React.MouseEvent) => { e.stopPropagation(); onChange(Math.max(0, value - 1)); };
   const inc = (e: React.MouseEvent) => { e.stopPropagation(); onChange(value + 1); };
   const btn: React.CSSProperties = {
@@ -28,20 +29,20 @@ function QuantityAdjuster({ value, onChange }: QuantityAdjusterProps) {
     >
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.6px', color: '#9CA3AF', textTransform: 'uppercase' }}>
-          Available quantity
+          {tui('Available quantity')}
         </span>
         <span style={{ fontSize: 10, color: '#6B7280', marginTop: 2 }}>
-          {value === 0 ? 'None left, 86 immediately' : `${value} left before 86`}
+          {value === 0 ? tui('None left, 86 immediately') : tui('{n} left before 86', { n: value })}
         </span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <button type="button" onClick={dec} style={btn} aria-label="Decrease Quantity">
+        <button type="button" onClick={dec} style={btn} aria-label={tui('Decrease Quantity')}>
           <Minus size={16} />
         </button>
         <span style={{ minWidth: 24, textAlign: 'center', fontSize: 16, fontWeight: 700, color: '#FFFFFF' }}>
           {value}
         </span>
-        <button type="button" onClick={inc} style={btn} aria-label="Increase Quantity">
+        <button type="button" onClick={inc} style={btn} aria-label={tui('Increase Quantity')}>
           <Plus size={16} />
         </button>
       </div>
@@ -49,6 +50,7 @@ function QuantityAdjuster({ value, onChange }: QuantityAdjusterProps) {
   );
 }
 import { useFlag86 } from '@/hooks/use-flag86';
+import { useLanguage } from '@/hooks/use-language';
 
 export type Flag86Scope = 'item' | 'course' | 'ticket';
 
@@ -79,6 +81,7 @@ export function Flag86Modal({
   primaryLabel,
   showQuantityAdjuster,
 }: Flag86ModalProps) {
+  const { tui } = useLanguage();
   const [qty, setQty] = useState(0);
   useEffect(() => { if (open) setQty(0); }, [open]);
   if (!open) return null;
@@ -113,7 +116,7 @@ export function Flag86Modal({
       >
         {primaryLabel === 'Request 86' && (
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.8px', color: '#F59E0B', textTransform: 'uppercase', marginBottom: 6 }}>
-            Mark as 86 (unavailable)
+            {tui('Mark as 86 (unavailable)')}
           </div>
         )}
         <div style={{ fontSize: 22, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15, marginBottom: 6 }}>
@@ -137,7 +140,7 @@ export function Flag86Modal({
             }}
           >
             <Clock size={14} color="#F59E0B" />
-            <span>{pendingCount === 0 ? 'No other pending orders' : `${pendingCount} pending orders`}</span>
+            <span>{pendingCount === 0 ? tui('No other pending orders') : tui('{n} pending orders', { n: pendingCount })}</span>
           </div>
         )}
 
@@ -193,7 +196,7 @@ export function Flag86Modal({
               cursor: 'pointer',
             }}
           >
-            Not now
+            {tui('Not now')}
           </button>
           <button
             type="button"
@@ -239,8 +242,10 @@ interface Item86ModalProps {
   renderInPlace?: boolean;
 }
 
-export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel = 'Quantity to 86', initialQuantity, renderInPlace = false }: Item86ModalProps) {
+export function Item86Modal({ open, onClose, onConfirm, productName, currentQuantity, quantityLabel, initialQuantity, renderInPlace = false }: Item86ModalProps) {
   const { orders } = useOrderStore();
+  const { tui } = useLanguage();
+  const resolvedQuantityLabel = quantityLabel ?? tui('Quantity to 86');
   const [qty, setQty] = useState(initialQuantity ?? currentQuantity);
   const backdropPointerDownRef = useRef(false);
   useEffect(() => {
@@ -311,7 +316,7 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label={`86 ${productName}`}
+        aria-label={tui('86 {name}', { name: productName })}
         style={{
           backgroundColor: '#1E2130',
           border: '1px solid #374151',
@@ -337,7 +342,7 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
                 fontSize: 11, fontWeight: 700,
               }}>
                 <Clock size={12} />
-                {pendingCount} pending
+                {tui('{n} pending', { n: pendingCount })}
               </span>
             )}
             <span style={{
@@ -348,7 +353,7 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
               fontSize: 11, fontWeight: 600,
             }}>
               <Bell size={12} />
-              FOH notified
+              {tui('FOH notified')}
             </span>
           </div>
         </div>
@@ -362,17 +367,17 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
           borderRadius: 10,
         }}>
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.6px', color: '#F3F4F6', textTransform: 'uppercase' }}>
-            {quantityLabel}
+            {resolvedQuantityLabel}
           </span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button type="button" onClick={dec} style={stepBtn} aria-label="Decrease Quantity">
+            <button type="button" onClick={dec} style={stepBtn} aria-label={tui('Decrease Quantity')}>
               <Minus size={16} />
             </button>
             <span style={{ minWidth: 28, textAlign: 'center', fontSize: 18, fontWeight: 800, color: '#FFFFFF' }}>
               {qty}
             </span>
-            <button type="button" onClick={inc} style={stepBtn} aria-label="Increase Quantity">
+            <button type="button" onClick={inc} style={stepBtn} aria-label={tui('Increase Quantity')}>
               <Plus size={16} />
             </button>
           </div>
@@ -397,7 +402,7 @@ export function Item86Modal({ open, onClose, onConfirm, productName, currentQuan
               letterSpacing: '0.5px',
             }}
           >
-            86 it
+            {tui('86 it')}
           </button>
         </div>
       </div>
@@ -417,6 +422,7 @@ interface Flag86ButtonProps {
 export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
   const [open, setOpen] = useState(false);
   const { orders } = useOrderStore();
+  const { tui } = useLanguage();
   const { clear, confirm, isConfirmed } = useFlag86();
   const confirmed = isConfirmed(itemId);
 
@@ -451,7 +457,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
   if (confirmed) {
     return (
       <span
-        aria-label={`${productName} 86'd`}
+        aria-label={`${productName} ${tui("86'd")}`}
         className="shrink-0 inline-flex items-center justify-center"
         style={{
           backgroundColor: '#F1F5F9',
@@ -469,7 +475,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
           userSelect: 'none',
         }}
       >
-        86'd
+        {tui("86'd")}
       </span>
     );
   }
@@ -480,7 +486,7 @@ export function Flag86Button({ itemId, productName }: Flag86ButtonProps) {
         type="button"
         onClick={handleClick}
         onDoubleClick={(e) => e.stopPropagation()}
-        aria-label={`86 ${productName}`}
+        aria-label={tui('86 {name}', { name: productName })}
         className="shrink-0 inline-flex items-center justify-center animate-flag86-pulse"
         style={{
           width: 32,
