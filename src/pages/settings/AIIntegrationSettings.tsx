@@ -153,8 +153,8 @@ export default function AIIntegrationSettings() {
 
       {/* Provider Selection */}
       <div
-        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold tracking-wide"
-        style={{ color: 'hsl(var(--text-muted))' }}
+        className="px-3 pt-2 pb-1.5 text-xs font-semibold tracking-wide"
+        style={{ color: 'hsl(var(--text-secondary))' }}
       >
         {tui('AI Provider')}
       </div>
@@ -181,8 +181,8 @@ export default function AIIntegrationSettings() {
       {provider && (
         <>
           <div
-            className="px-3 pt-2 pb-1.5 text-[11px] font-semibold tracking-wide"
-            style={{ color: 'hsl(var(--text-muted))' }}
+            className="px-3 pt-2 pb-1.5 text-xs font-semibold tracking-wide"
+            style={{ color: 'hsl(var(--text-secondary))' }}
           >
             {tui('API Key')}
           </div>
@@ -238,15 +238,15 @@ export default function AIIntegrationSettings() {
       {/* Info Note */}
       <div className="rounded-2xl px-4 py-2 flex gap-3 mb-4">
         <Info size={18} className="shrink-0 mt-0.5" style={{ color: 'hsl(var(--btn-seen))' }} />
-        <p className="text-[13px] leading-relaxed" style={{ color: 'hsl(var(--text-muted))' }}>
+        <p className="text-[13px] leading-relaxed" style={{ color: 'hsl(var(--text-secondary))' }}>
           {tui('All AI usage is billed directly to your own provider account. This does not use platform credits. Only Admin, Owner, or Manager roles can configure this integration.')}
         </p>
       </div>
 
       {/* AI Behavior */}
       <div
-        className="px-3 pt-2 pb-1.5 text-[11px] font-semibold tracking-wide"
-        style={{ color: 'hsl(var(--text-muted))' }}
+        className="px-3 pt-2 pb-1.5 text-xs font-semibold tracking-wide"
+        style={{ color: 'hsl(var(--text-secondary))' }}
       >
         {tui('AI Behavior')}
       </div>
@@ -267,7 +267,7 @@ export default function AIIntegrationSettings() {
               <span className="block text-[15px] font-medium" style={{ color: 'hsl(var(--text-primary))' }}>
                 {tui('AI Instructions')}
               </span>
-              <span className="text-[12px]" style={{ color: 'hsl(var(--text-muted))' }}>
+              <span className="text-xs" style={{ color: 'hsl(var(--text-secondary))' }}>
                 {tui('Rules, custom instructions & knowledge base')}
               </span>
             </div>
