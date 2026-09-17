@@ -351,7 +351,7 @@ export default function InlineLanguageSettings({ activeTab }: InlineLanguageSett
                       <span className="text-base">{lang.flag}</span>
                       <div className="flex-1 text-left min-w-0">
                         <div className="text-xs font-semibold text-text-primary truncate">{lang.name}</div>
-                        <div className="text-[10px] text-text-muted truncate">{lang.native}</div>
+                        <div className="text-[10px] text-text-secondary truncate">{lang.native}</div>
                       </div>
                       {selectedLangInList === lang.code && (
                         <Check size={14} className="text-brand-primary shrink-0" />
