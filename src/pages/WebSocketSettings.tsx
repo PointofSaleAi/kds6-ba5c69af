@@ -55,14 +55,14 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
           <div className="flex-1 overflow-y-auto">
             {/* Local Backup */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Local Backup Server')}</div>
+              <div className="text-xs font-bold text-text-primary uppercase tracking-widest mb-3">{tui('Local Backup Server')}</div>
               <button
                 onClick={() => setLocalBackup(!localBackup)}
                 className="w-full flex items-center justify-between py-3 min-h-[52px]"
               >
                 <div>
                   <div className="text-sm font-medium text-text-primary text-left">{tui('Enable Local Backup')}</div>
-                  <div className="text-xs text-text-secondary text-left">{tui('Keeps Kitchen Display System working even if internet goes down')}</div>
+                  <div className="text-xs font-medium text-text-secondary text-left">{tui('Keeps Kitchen Display System working even if internet goes down')}</div>
                 </div>
                 <div
                   className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] ${localBackup ? 'bg-brand-primary' : 'bg-border'}`}
@@ -74,7 +74,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               </button>
               {localBackup && (
                 <div className="mt-2 mb-3">
-                  <div className="text-xs text-text-secondary mb-1">{tui('Backup Server Address')}</div>
+                  <div className="text-xs font-semibold text-text-primary mb-1">{tui('Backup Server Address')}</div>
                   <input
                     type="text"
                     value={backupAddress}
@@ -87,7 +87,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
 
             {/* Cloud Server */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Cloud Server')}</div>
+              <div className="text-xs font-bold text-text-primary uppercase tracking-widest mb-3">{tui('Cloud Server')}</div>
               <div className="flex items-center gap-3 py-2">
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${
                   cloudConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -96,14 +96,14 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                   {cloudConnected ? tui('Connected') : tui('Disconnected')}
                 </div>
               </div>
-              <div className="text-xs text-text-secondary mt-1">{tui('Server: {server}', { server: 'ws.posai.com' })}</div>
+              <div className="text-xs font-medium text-text-secondary mt-1">{tui('Server: {server}', { server: 'ws.posai.com' })}</div>
             </div>
 
             {/* Device info */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Device Info')}</div>
+              <div className="text-xs font-bold text-text-primary uppercase tracking-widest mb-3">{tui('Device Info')}</div>
               <div className="mb-2">
-                <div className="text-xs text-text-secondary mb-1">{tui('Device Name')}</div>
+                <div className="text-xs font-semibold text-text-primary mb-1">{tui('Device Name')}</div>
                 <input
                   type="text"
                   value={deviceName}
@@ -113,7 +113,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               </div>
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-xs text-text-secondary">{tui('Last Order Number')}</div>
+                  <div className="text-xs font-semibold text-text-primary">{tui('Last Order Number')}</div>
                   <div className="text-sm font-semibold text-text-primary">#1,247</div>
                 </div>
                 <button className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center">
@@ -124,7 +124,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
 
             {/* Sync actions */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Sync')}</div>
+              <div className="text-xs font-bold text-text-primary uppercase tracking-widest mb-3">{tui('Sync')}</div>
               <div className="space-y-2">
                 <button
                   onClick={handleSync}
@@ -138,18 +138,18 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                 >
                   {tui('Force Sync')}
                 </button>
-                <div className="text-xs text-text-secondary text-center">{tui('May Cause a Brief Interruption')}</div>
+                <div className="text-xs font-medium text-text-secondary text-center">{tui('May Cause a Brief Interruption')}</div>
               </div>
             </div>
 
             {/* Connection log */}
             <div className="px-4 pt-4 pb-4">
-              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">{tui('Recent Sync Events')}</div>
+              <div className="text-xs font-bold text-text-primary uppercase tracking-widest mb-2">{tui('Recent Sync Events')}</div>
               <div className="space-y-1">
                 {syncLog.map((entry, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs py-1">
-                    <span className="text-text-secondary font-mono">{entry.time}</span>
-                    <span className="text-text-secondary">{entry.event}</span>
+                    <span className="text-text-primary font-mono font-semibold">{entry.time}</span>
+                    <span className="text-text-secondary font-medium">{entry.event}</span>
                   </div>
                 ))}
               </div>
