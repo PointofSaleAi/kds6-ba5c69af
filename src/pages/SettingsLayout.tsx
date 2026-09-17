@@ -49,11 +49,11 @@ export default function SettingsLayout() {
         settingsOpen={true}
       />
       <div
-        className="flex flex-1 overflow-hidden pl-0 pr-2 py-2 gap-2"
+        className="flex flex-1 overflow-hidden pl-0 pr-2 py-2 gap-2 max-[640px]:pr-1 max-[640px]:gap-1"
         style={{ background: 'hsl(var(--surface-bg))' }}
       >
         <div
-          className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} shrink-0 overflow-hidden flex flex-col rounded-3xl`}
+          className={`${isPortrait ? 'w-[184px]' : 'w-[197px]'} max-[640px]:w-[58px] shrink-0 overflow-hidden flex flex-col rounded-3xl max-[640px]:rounded-2xl`}
           style={{
             background: 'hsl(var(--surface-card))',
             boxShadow: '0 1px 2px hsl(0 0% 0% / 0.04)',

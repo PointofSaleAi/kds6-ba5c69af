@@ -56,7 +56,7 @@ export function SettingsSidebar() {
 
   return (
     <aside className="flex flex-col shrink-0 h-full w-full">
-      <div className="px-2.5 pt-3.5 pb-3 shrink-0">
+      <div className="px-2.5 pt-3.5 pb-3 shrink-0 max-[640px]:hidden">
         <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
           Settings
         </h2>
@@ -94,7 +94,7 @@ export function SettingsSidebar() {
       </div>
 
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-2.5 pb-2">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-2.5 pb-2 max-[640px]:px-1.5 max-[640px]:pt-2">
         {showResults ? (
           <div>
             <div
@@ -162,7 +162,7 @@ export function SettingsSidebar() {
                   key={id}
                   type="button"
                   onClick={() => navigate(group.path)}
-                  className="flex items-center gap-2.5 w-full py-1 px-2 rounded-full active:opacity-70 transition-all"
+                  className="flex items-center gap-2.5 w-full py-1 px-2 rounded-full active:opacity-70 transition-all max-[640px]:justify-center max-[640px]:gap-0 max-[640px]:px-1 max-[640px]:py-2 max-[640px]:rounded-xl"
                 style={{
                   background: isActive
                     ? 'hsl(var(--text-primary) / 0.08)'
@@ -180,7 +180,7 @@ export function SettingsSidebar() {
                     iconNode={id === 'orders' ? <TicketsIcon size={18} className="text-white" /> : undefined}
                   />
                   <span
-                    className="text-[0.82rem] font-semibold leading-tight"
+                    className="text-[0.82rem] font-semibold leading-tight max-[640px]:hidden"
                     style={{ color: 'hsl(var(--text-primary))' }}
                   >
                     {group.label}
@@ -192,7 +192,7 @@ export function SettingsSidebar() {
         )}
       </div>
 
-      <div className="px-2.5 pt-3 pb-3 shrink-0">
+      <div className="px-2.5 pt-3 pb-3 shrink-0 max-[640px]:hidden">
         <div
           className="flex items-center gap-2 rounded-2xl px-3 py-[0.55rem] backdrop-blur-xl"
           style={{
