@@ -2497,6 +2497,12 @@ interface LanguageContextType {
   tpSecondary: (name: string) => string;
   tmSecondary: (text: string) => string;
   tnSecondary: (text: string) => string;
+  tcSecondary: (course: string) => string;
+  taSecondary: (label: string) => string;
+  toSecondary: (label: string) => string;
+  tlSecondary: (label: string) => string;
+  tpersonSecondary: (name: string) => string;
+
   dateFormat: DateFormatIndex;
   setDateFormat: (f: DateFormatIndex) => void;
   timeFormat: TimeFormatIndex;
@@ -2535,6 +2541,12 @@ const defaultLanguageContext: LanguageContextType = {
   tpSecondary: (name: string) => name,
   tmSecondary: (text: string) => text,
   tnSecondary: (text: string) => text,
+  tcSecondary: (course: string) => course,
+  taSecondary: (label: string) => label,
+  toSecondary: (label: string) => label,
+  tlSecondary: (label: string) => label,
+  tpersonSecondary: (name: string) => name,
+
   scope: 'both',
   setScope: () => {},
   showSecondaryMenu: true,
@@ -2640,6 +2652,40 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (scope === 'interface') return text;
     return noteTexts[secondaryLang]?.[text] || text;
   }, [secondaryLang, scope]);
+
+  const tcSecondary = useCallback((course: string) => {
+    if (!course) return course;
+    if (scope === 'interface') return course;
+    const dict = courseNames[secondaryLang] || {};
+    return dict[course] || dict[course.toUpperCase()] || course;
+  }, [secondaryLang, scope]);
+
+  const taSecondary = useCallback((label: string) => {
+    if (!label) return label;
+    if (scope === 'interface') return label;
+    const dict = allergenLabels[secondaryLang] || {};
+    return dict[label] || dict[label.toUpperCase()] || label;
+  }, [secondaryLang, scope]);
+
+  const toSecondary = useCallback((label: string) => {
+    if (!label) return label;
+    if (scope === 'interface') return label;
+    const dict = orderTypeLabels[secondaryLang] || {};
+    return dict[label] || dict[label.toUpperCase()] || label;
+  }, [secondaryLang, scope]);
+
+  const tlSecondary = useCallback((label: string) => {
+    if (!label) return label;
+    if (scope === 'interface') return label;
+    const dict = embeddedLabels[secondaryLang] || {};
+    return dict[label] || dict[label.toUpperCase()] || dict[label.toLowerCase()] || label;
+  }, [secondaryLang, scope]);
+
+  const tpersonSecondary = useCallback((name: string) => {
+    if (!name) return name;
+    return personNames[secondaryLang]?.[name] || name;
+  }, [secondaryLang]);
+
 
   const tc = useCallback((course: string) => {
     if (scope === 'interface') return course;
