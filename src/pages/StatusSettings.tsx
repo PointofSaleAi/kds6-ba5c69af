@@ -102,7 +102,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   return (
     <div ref={listRef} className="w-full lg:w-[45%] shrink-0 border-b lg:border-b-0 lg:border-r border-border lg:overflow-y-auto p-3 space-y-1">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
+        <span className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Status Rules</span>
         <div className="flex items-center gap-1">
           <button
             onClick={onAdd}
