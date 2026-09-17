@@ -1,3 +1,4 @@
+import { lookupUiLabel, fillUiVars } from '@/i18n';
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 
 export type LanguageCode = 'es' | 'en-US' | 'en-GB' | 'zh' | 'vi' | 'ar' | 'ko' | 'ja';
@@ -2488,6 +2489,8 @@ interface LanguageContextType {
   to: (label: string) => string;
   tn: (text: string) => string;
   tl: (label: string) => string;
+  /** Interface phrase translator: tui('Display') / tui('{n} orders in queue', { n }). */
+  tui: (text: string, vars?: Record<string, string | number>) => string;
   tperson: (name: string) => string;
   tcat: (category: string) => string;
   languageName: string;
@@ -2532,6 +2535,7 @@ const defaultLanguageContext: LanguageContextType = {
   to: (label: string) => label,
   tn: (text: string) => text,
   tl: (label: string) => label,
+  tui: (text: string) => text,
   tperson: (name: string) => name,
   tcat: (category: string) => category,
   languageName: languageNames['en-US'],
@@ -2742,6 +2746,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return dict[category] || dict[category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()] || category;
   }, [language, displayMode, primaryLang, scope]);
 
+  /**
+   * Interface phrases (menus, buttons, settings copy). Follows the interface
+   * language and stays English when the scope is menu-items only.
+   */
+  const tui = useCallback((text: string, vars?: Record<string, string | number>) => {
+    if (!text) return text;
+    const lang = displayMode === 'dual' ? primaryLang : language;
+    const translated = scope === 'menu' ? text : lookupUiLabel(lang, text);
+    return fillUiVars(translated, vars);
+  }, [language, primaryLang, displayMode, scope]);
+
   const showSecondaryMenu = scope !== 'interface';
 
   // UI chrome should follow primaryLang in dual mode (matches menu translators).
@@ -2758,6 +2773,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     to,
     tn,
     tl,
+    tui,
     tperson,
     tcat,
     languageName: languageNames[language],
