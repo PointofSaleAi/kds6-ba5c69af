@@ -28,6 +28,7 @@ import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import PosModeShell from "@/components/kds/PosModeShell";
+import { getTicketsRoutePath, readStoredTicketsRoute } from "@/lib/ticket-card-variant";
 import Index from "./pages/Index.tsx";
 import IndexOnlineOrdering from "./pages/IndexOnlineOrdering.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -51,6 +52,11 @@ import KdsGlassPage from "./pages/KdsGlassPage.tsx";
 
 const queryClient = new QueryClient();
 
+/** Root entry: land on the saved ticket layout, defaulting to Glass View. */
+const RootRedirect = () => (
+  <Navigate to={getTicketsRoutePath(readStoredTicketsRoute('glass'))} replace />
+);
+
 const AppShell = () => {
   const { mode } = useScreenMode();
   return (
@@ -58,7 +64,7 @@ const AppShell = () => {
       {mode === 'pos' && <PosModeShell />}
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/kds/v3" replace />} />
+          <Route path="/" element={<RootRedirect />} />
           <Route path="/kds/v1" element={<Index />} />
           <Route path="/kds/default" element={<Index />} />
           <Route path="/kds/v2" element={<Index cardVariant="v1" />} />

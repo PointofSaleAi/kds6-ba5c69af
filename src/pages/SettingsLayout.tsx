@@ -16,10 +16,10 @@ export default function SettingsLayout() {
   const location = useLocation();
   const { isPortrait } = usePortrait();
   // Settings opened while the Glass layout is active inherits its frosted chrome.
-  useGlassChromeMode(readStoredTicketsRoute('v3') === 'glass');
+  useGlassChromeMode(readStoredTicketsRoute('glass') === 'glass');
 
   const resolveTicketsRoute = () => {
-    return getTicketsRoutePath(readStoredTicketsRoute('v3'));
+    return getTicketsRoutePath(readStoredTicketsRoute('glass'));
   };
 
   const handleKdsNavigate = (target: string) => {

@@ -46,7 +46,7 @@ export function getTicketsRoutePath(route: TicketsRouteKey): string {
   return route === 'Default' ? '/kds/default' : `/kds/${route}`;
 }
 
-export function readStoredTicketsRoute(fallback: TicketsRouteKey = 'v3'): TicketsRouteKey {
+export function readStoredTicketsRoute(fallback: TicketsRouteKey = 'glass'): TicketsRouteKey {
   if (typeof window === 'undefined') return fallback;
   return normalizeTicketsRoute(window.localStorage.getItem(TICKETS_ROUTE_STORAGE_KEY), fallback);
 }
