@@ -76,7 +76,7 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
 
   return (
     <div>
-      <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+      <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
         Time Range (minutes)
       </label>
       <div className="flex items-center gap-2">
@@ -250,7 +250,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
       {/* Status name + Time Range + Colour */}
       <div className="flex flex-wrap items-start gap-3">
         <div className="w-40 shrink-0">
-          <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+          <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
             Status name
           </label>
           <input
@@ -265,7 +265,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           <TimeRangeField rule={rule} isLast={isLast} onChange={onChange} />
         </div>
         <div className="shrink-0 basis-full sm:basis-auto">
-          <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+          <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
             Color
           </label>
           <div className="flex items-center gap-2">
@@ -300,7 +300,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           </div>
         </div>
         <div className="shrink-0 basis-full sm:basis-auto">
-          <label className="text-[11px] font-semibold text-text-muted mb-1 block uppercase tracking-wider">
+          <label className="text-[11px] font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
             Text color
           </label>
           <div className="flex gap-1.5">
@@ -323,7 +323,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
 
       {/* Live KDS Ticket Preview */}
       <div>
-        <label className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2 block">
+        <label className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider mb-2 block">
           Live Ticket Preview
         </label>
         <div className="flex flex-nowrap gap-1 mb-2 overflow-x-auto pb-1">

@@ -102,7 +102,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   return (
     <div ref={listRef} className="w-full lg:w-[45%] shrink-0 border-b lg:border-b-0 lg:border-r border-border lg:overflow-y-auto p-3 space-y-1">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status Rules</span>
+        <span className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Status Rules</span>
         <div className="flex items-center gap-1">
           <button
             onClick={onAdd}
@@ -141,7 +141,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
             className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
               isSelected
                 ? 'bg-muted ring-1 ring-ring shadow-sm'
-                : 'hover:bg-muted/40'
+                : 'bg-surface-card hover:bg-muted/50'
             } ${ruleErrors ? 'ring-1 ring-destructive/40' : ''} ${
               isDragging ? 'opacity-40 scale-95' : ''
             } ${isOver ? 'border-t-2 border-ring' : ''}`}
