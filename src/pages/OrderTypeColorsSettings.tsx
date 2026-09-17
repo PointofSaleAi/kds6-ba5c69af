@@ -40,18 +40,18 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="relative flex items-center justify-center px-6 pt-0 pb-4 shrink-0">
+      <div className="relative flex items-center justify-center px-2 pt-2 pb-3 shrink-0">
         <button
           onClick={onBack}
-          className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+          className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-2xl font-bold text-text-primary">Order Type Colors</h1>
+        <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Order Type Colors</h1>
       </div>
-      <div className="flex-1 px-6 pb-6 overflow-y-auto">
-        <div className="grid grid-cols-2 gap-3">
+      <div className="flex-1 px-2 pb-2 overflow-y-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
           {ORDER_TYPES.map(({ key, label, table, time }) => {
             const colors = getColors(key);
             return (
@@ -77,7 +77,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
                 </div>
 
                 {/* Color controls */}
-                <div className="bg-surface-card px-4 py-3 flex items-center gap-6">
+                <div className="bg-surface-card px-3 py-3 grid grid-cols-2 gap-2">
                   {/* Header Background */}
                   <div className="flex items-center gap-2 flex-1">
                     <label className="relative cursor-pointer shrink-0">

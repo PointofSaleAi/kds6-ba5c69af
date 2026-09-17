@@ -111,17 +111,17 @@ export default function DisplaySettings() {
     return (
       <div className="flex-1 flex flex-col overflow-hidden min-h-0">
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          <div className="relative flex items-center justify-center px-2 sm:px-6 pt-2 pb-3 shrink-0 min-h-[52px]">
+          <div className="relative flex items-center justify-center px-2 pt-2 pb-3 shrink-0 min-h-[52px]">
             <button
               onClick={() => setStatusOpen(false)}
-              className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
               aria-label="Back"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-xl sm:text-2xl font-bold text-text-primary text-center leading-tight pl-12 sm:pl-0">Ticket Aging Rules</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Aging Rules</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-2 sm:px-6 pb-2 sm:pb-6">
+          <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
           </div>
         </div>
@@ -137,17 +137,17 @@ export default function DisplaySettings() {
     return (
       <div className="flex-1 flex flex-col overflow-hidden min-h-0">
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
+          <div className="relative flex items-center justify-center px-2 pt-2 pb-3 shrink-0">
             <button
               onClick={handleLanguageBack}
-              className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
               aria-label="Back"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-text-primary">Language</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Language</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
+          <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2">
             <InlineLanguageSettings activeTab="language" />
           </div>
         </div>
@@ -158,20 +158,20 @@ export default function DisplaySettings() {
   if (ticketSpacingOpen) {
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
+        <div className="relative flex items-center justify-center px-2 pt-2 pb-3 shrink-0">
           <button
             onClick={() => setTicketSpacingOpen(false)}
-            className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+            className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
             aria-label="Back"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket Layout</h1>
+          <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Layout</h1>
         </div>
-        <div className="flex-1 px-6 pb-6 overflow-hidden">
-          <div className="h-full flex gap-6 min-h-0">
+        <div className="flex-1 px-2 pb-2 overflow-hidden">
+          <div className="h-full flex flex-col lg:flex-row gap-2 min-h-0 overflow-y-auto lg:overflow-hidden">
             {/* LEFT: options */}
-            <div className="w-[320px] shrink-0 flex flex-col gap-4 overflow-y-auto">
+            <div className="w-full lg:w-[336px] shrink-0 flex flex-col gap-4 lg:overflow-y-auto">
               <p className="text-sm" style={{ color: 'hsl(var(--text-secondary))' }}>
                 Controls padding, row gap, text size, layout density, and the primary ticket identifier.
               </p>
@@ -258,10 +258,10 @@ export default function DisplaySettings() {
             </div>
 
             {/* DIVIDER */}
-            <div className="w-px bg-border shrink-0" />
+            <div className="hidden lg:block w-px bg-border shrink-0" />
 
             {/* RIGHT: preview */}
-            <div className="flex-1 min-w-0 flex flex-col">
+            <div className="flex-1 min-w-0 min-h-[360px] flex flex-col">
               <p className="text-xs px-2 mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
                 Preview
               </p>
@@ -313,17 +313,17 @@ export default function DisplaySettings() {
     return (
       <div className="flex-1 flex flex-col overflow-hidden min-h-0">
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
+          <div className="relative flex items-center justify-center px-2 pt-2 pb-3 shrink-0">
             <button
               onClick={() => setTicketStudioOpen(false)}
-              className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+              className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
               aria-label="Back"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-text-primary">Ticket Studio</h1>
+            <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Ticket Studio</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6 flex flex-col">
+          <div className="flex-1 min-h-0 overflow-hidden px-2 pb-2 flex flex-col">
             <TicketStudioSkeleton />
           </div>
 
