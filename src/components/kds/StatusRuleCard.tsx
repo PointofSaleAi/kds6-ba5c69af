@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Check, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { StatusRule } from '@/hooks/use-status-rules';
+import { useLanguage } from '@/hooks/use-language';
 
 interface StatusRuleCardProps {
   rule: StatusRule;
@@ -34,13 +35,13 @@ function getContrastRatio(hex: string, textColor: string): { ratio: number; pass
   return { ratio: Math.round(ratio * 10) / 10, passes: ratio >= 4.5 };
 }
 
-function formatRange(min: number, max: number | null): string {
-  if (max === null) return `${min}+ min`;
-  if (min === 0) return `0\u2013${max} min`;
-  return `${min}\u2013${max} min`;
+function formatRange(min: number, max: number | null, tui: (s: string, vars?: Record<string, string | number>) => string): string {
+  if (max === null) return tui('{min}+ min', { min });
+  return tui('{min}\u2013{max} min', { min, max });
 }
 
 export default function StatusRuleCard({ rule, index, isLast, onChange, errors }: StatusRuleCardProps) {
+  const { tui } = useLanguage();
   const [expanded, setExpanded] = useState(false);
   const [customHex, setCustomHex] = useState('');
   const contrast = getContrastRatio(rule.color, rule.textColor);
@@ -62,14 +63,14 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
         </div>
         <div className="flex-1 text-left min-w-0">
           <div className="text-sm font-semibold text-text-primary truncate">{rule.label}</div>
-          <div className="text-xs text-text-muted">{formatRange(rule.minMinutes, rule.maxMinutes)}</div>
+          <div className="text-xs text-text-muted">{formatRange(rule.minMinutes, rule.maxMinutes, tui)}</div>
         </div>
         {/* Live preview chip */}
         <div
           className="px-2.5 py-1 rounded-md text-[11px] font-bold shrink-0"
           style={{ backgroundColor: rule.color, color: textColorResolved }}
         >
-          {formatRange(rule.minMinutes, rule.maxMinutes)}
+          {formatRange(rule.minMinutes, rule.maxMinutes, tui)}
         </div>
         {expanded ? <ChevronUp size={16} className="text-text-muted shrink-0" /> : <ChevronDown size={16} className="text-text-muted shrink-0" />}
       </button>
@@ -97,7 +98,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
             <div className="px-4 pb-4 pt-1 space-y-4 border-t border-border">
               {/* Label */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Status Name</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">{tui('Status Name')}</label>
                 <input
                   type="text"
                   value={rule.label}
@@ -109,7 +110,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
 
               {/* Time range */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Time Range (minutes)</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">{tui('Time Range (minutes)')}</label>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
@@ -119,9 +120,9 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                     onChange={(e) => onChange({ minMinutes: Math.max(0, parseInt(e.target.value) || 0) })}
                     className="w-20 px-3 py-2 text-sm bg-muted rounded-lg border border-border text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-ring"
                   />
-                  <span className="text-text-muted text-sm">to</span>
+                  <span className="text-text-muted text-sm">{tui('to')}</span>
                   {isLast ? (
-                    <span className="px-3 py-2 text-sm text-text-secondary italic bg-muted rounded-lg border border-border">No Limit</span>
+                    <span className="px-3 py-2 text-sm text-text-secondary italic bg-muted rounded-lg border border-border">{tui('No Limit')}</span>
                   ) : (
                     <input
                       type="number"
@@ -132,13 +133,13 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                       className="w-20 px-3 py-2 text-sm bg-muted rounded-lg border border-border text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-ring"
                     />
                   )}
-                  <span className="text-xs text-text-muted">min</span>
+                  <span className="text-xs text-text-muted">{tui('min')}</span>
                 </div>
               </div>
 
               {/* Colour swatches */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Color</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">{tui('Color')}</label>
                 <div className="flex flex-wrap gap-1.5">
                   {swatches.map((hex) => (
                     <button
@@ -152,12 +153,12 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                   ))}
                 </div>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xs text-text-muted">Custom:</span>
+                  <span className="text-xs text-text-muted">{tui('Custom:')}</span>
                   <input
                     type="text"
                     value={customHex}
                     onChange={(e) => setCustomHex(e.target.value)}
-                    placeholder="#RRGGBB"
+                    placeholder={tui('#RRGGBB')}
                     className="w-24 px-2 py-1.5 text-xs bg-muted rounded-lg border border-border text-text-primary"
                   />
                   <button
@@ -168,14 +169,14 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                     }}
                     className="text-xs text-brand-primary font-semibold min-h-[32px] px-2"
                   >
-                    Apply
+                    {tui('Apply')}
                   </button>
                 </div>
               </div>
 
               {/* Text colour */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Text Color</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">{tui('Text Color')}</label>
                 <div className="flex gap-2">
                   {textColorOptions.map((tc) => (
                     <button
@@ -185,7 +186,7 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                         rule.textColor === tc ? 'bg-brand-primary text-primary-foreground' : 'bg-muted text-text-secondary'
                       }`}
                     >
-                      {tc}
+                      {tui(tc)}
                     </button>
                   ))}
                 </div>
@@ -196,17 +197,17 @@ export default function StatusRuleCard({ rule, index, isLast, onChange, errors }
                 contrast.passes ? 'bg-[hsl(145,40%,92%)] text-[hsl(145,60%,30%)]' : 'bg-[hsl(37,80%,92%)] text-[hsl(37,80%,30%)]'
               }`}>
                 {contrast.passes ? <Check size={14} /> : <AlertTriangle size={14} />}
-                {contrast.passes ? `AA Compliant (${contrast.ratio}:1)` : `Low contrast (${contrast.ratio}:1)`}
+                {contrast.passes ? tui('AA Compliant ({ratio}:1)', { ratio: contrast.ratio }) : tui('Low contrast ({ratio}:1)', { ratio: contrast.ratio })}
               </div>
 
               {/* Full preview */}
               <div>
-                <label className="text-xs font-semibold text-text-muted mb-1.5 block">Preview</label>
+                <label className="text-xs font-semibold text-text-muted mb-1.5 block">{tui('Preview')}</label>
                 <div
                   className="rounded-lg p-3 text-center text-sm font-bold"
                   style={{ backgroundColor: rule.color, color: textColorResolved }}
                 >
-                  {rule.label} / {formatRange(rule.minMinutes, rule.maxMinutes)}
+                  {rule.label} / {formatRange(rule.minMinutes, rule.maxMinutes, tui)}
                 </div>
               </div>
             </div>

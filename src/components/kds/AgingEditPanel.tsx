@@ -362,7 +362,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
                 }`}
                 style={previewType === opt.key ? { backgroundColor: optColor } : undefined}
               >
-                {opt.label}
+                {tui(opt.label)}
               </button>
             );
           })}
