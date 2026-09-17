@@ -6,7 +6,9 @@ import { OrderCardV3 } from './variants/OrderCardV3';
 import { OrderCardV4 } from './variants/OrderCardV4';
 import { OrderCardV5 } from './variants/OrderCardV5';
 import { previewTicket } from '@/data/mock-preview-ticket';
-import { KDSSettingsPreviewScope, type TicketsRouteKey } from '@/hooks/use-kds-settings';
+import { TicketBoard } from './glass/TicketBoard';
+import { GlassBoardProvider } from './glass/glass-board-context';
+import { KDSSettingsPreviewScope, useKDSSettings, type TicketsRouteKey } from '@/hooks/use-kds-settings';
 import {
   getCardVariantForTicketsRoute,
   readStoredTicketsRoute,
