@@ -41,7 +41,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
   const [clockOpen, setClockOpen] = useState(false);
   const notifBtnRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
-  const { timeFormat: tfmt, dateFormat: dfmt } = useLanguage();
+  const { timeFormat: tfmt, dateFormat: dfmt, tui } = useLanguage();
   const { identity } = useActiveIdentity();
   const glass = useGlassChrome();
   const displayName = identity.name;
@@ -86,7 +86,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
       <div className="flex items-center gap-2 md:gap-3 min-w-0">
         <button
           type="button"
-          aria-label="Clock in or out"
+          aria-label={tui("Clock in or out")}
           onClick={() => setClockOpen(true)}
           className={`p-1 rounded transition-colors ${hoverChip}`}
         >
@@ -119,7 +119,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
           <img src={dinnerIcon} alt="" className="hidden md:block w-4 h-4" />
           <span className="hidden md:inline text-[12px] opacity-90">
-            Dinner Service (9:00 PM)
+            {tui('Dinner Service (9:00 PM)')}
           </span>
         </button>
       </div>
@@ -133,7 +133,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           type="button"
           data-onboarding="ai"
           onClick={onToggleAiAssistant}
-          aria-label={aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant'}
+          aria-label={tui(aiAssistantOpen ? 'Close AI assistant' : 'Open AI assistant')}
           aria-pressed={aiAssistantOpen}
           className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${hoverChip}`}
           style={aiAssistantOpen ? { background: 'linear-gradient(135deg, hsla(280, 80%, 75%, 0.35) 0%, hsla(220, 90%, 70%, 0.35) 100%)' } : undefined}
@@ -143,7 +143,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
         <button
           type="button"
-          aria-label="Local host"
+          aria-label={tui("Local host")}
           className={`relative p-0.5 md:p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={localHostIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />
@@ -155,7 +155,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
         <button
           type="button"
-          aria-label="Refresh"
+          aria-label={tui("Refresh")}
           className={`hidden md:flex p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={refreshIcon} alt="" className="w-5 h-5" />
@@ -163,7 +163,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
         <button
           type="button"
-          aria-label="Support"
+          aria-label={tui("Support")}
           className={`hidden md:flex p-1.5 rounded-md transition-colors ${glass ? 'bg-foreground/10' : ''}`}
           style={glass ? undefined : { background: 'rgba(255,255,255,0.08)' }}
         >
@@ -174,7 +174,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
           <button
             ref={notifBtnRef}
             type="button"
-            aria-label="Notifications"
+            aria-label={tui("Notifications")}
             aria-pressed={notifOpen}
             onClick={() => setNotifOpen(v => !v)}
             className={`relative p-0.5 md:p-1 rounded transition-colors ${hoverChip}`}
@@ -199,7 +199,7 @@ export function KDSTopHeader({ onToggleAiAssistant, aiAssistantOpen, onOpenAlert
 
         <button
           type="button"
-          aria-label="Network"
+          aria-label={tui("Network")}
           className={`p-0.5 md:p-1 rounded transition-colors ${hoverChip}`}
         >
           <img src={wifiIcon} alt="" className="w-4 h-4 md:w-5 md:h-5" />

@@ -12,6 +12,7 @@ import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { ProfileSection } from '@/components/settings/ProfileSection';
 import PinPadScreen from '@/pages/PinPadScreen';
 import { toast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/use-language';
 
 export default function AccountSettings() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function AccountSettings() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
   const [staffSwitchOpen, setStaffSwitchOpen] = useState(false);
+  const { tui } = useLanguage();
   const hash = useHashHighlight();
 
   const handleDevModeChange = (v: boolean) => {
@@ -36,8 +38,8 @@ export default function AccountSettings() {
 
   const handleUploadLogs = () => {
     toast({
-      title: 'Logs Uploaded',
-      description: 'Diagnostic logs sent to support.',
+      title: tui('Logs Uploaded'),
+      description: tui('Diagnostic logs sent to support.'),
     });
   };
 
@@ -45,8 +47,8 @@ export default function AccountSettings() {
     setFeedbackOpen(false);
     setFeedbackText('');
     toast({
-      title: 'Feedback Received',
-      description: 'Thanks, your request was sent to the product team.',
+      title: tui('Feedback Received'),
+      description: tui('Thanks, your request was sent to the product team.'),
     });
   };
 
@@ -87,8 +89,8 @@ export default function AccountSettings() {
       // ignore
     }
     toast({
-      title: 'Settings Reset',
-      description: 'All system settings have been restored to defaults.',
+      title: tui('Settings Reset'),
+      description: tui('All system settings have been restored to defaults.'),
     });
     setTimeout(() => window.location.reload(), 300);
   };
@@ -98,9 +100,9 @@ export default function AccountSettings() {
       <SectionHeaderCard
         icon={User}
         iconColor={GROUP_COLOR.account}
-        title="Account"
-        shortDescription="Manage this device's identity, developer tools, and session."
-        longDescription="Manage this device's identity, developer tools, and session. Use Dev mode to surface the scenario selector during development. Logging out returns the device to the activation flow."
+        title={tui('Account')}
+        shortDescription={tui("Manage this device's identity, developer tools, and session.")}
+        longDescription={tui("Manage this device's identity, developer tools, and session. Use Dev mode to surface the scenario selector during development. Logging out returns the device to the activation flow.")}
       />
 
       <ProfileSection
@@ -112,8 +114,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Smartphone}
         iconColor="#0A84FF"
-        label="Device Name"
-        helper="Identifier shown on receipts and in the admin console."
+        label={tui('Device Name')}
+        helper={tui('Identifier shown on receipts and in the admin console.')}
         right={<ValueText>Kitchen Display 1</ValueText>}
         highlighted={hash === 'device-name'}
       />
@@ -121,8 +123,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Hash}
         iconColor="#525252"
-        label="Station ID"
-        helper="Unique station identifier assigned at activation."
+        label={tui('Station ID')}
+        helper={tui('Unique station identifier assigned at activation.')}
         right={<ValueText>STN-001</ValueText>}
         highlighted={hash === 'station-id'}
       />
@@ -130,8 +132,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={AlertCircle}
         iconColor="#E84C3D"
-        label="Bug Reporting"
-        helper="Enable the in-app reporting tool for crash and issue capture."
+        label={tui('Bug Reporting')}
+        helper={tui('Enable the in-app reporting tool for crash and issue capture.')}
         right={<SwitchToggle checked={bugReporting} onChange={handleBugReportingChange} />}
         highlighted={hash === 'bug-reporting'}
       />
@@ -139,8 +141,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Bug}
         iconColor="#F9900E"
-        label="Debug Mode"
-        helper="Enable verbose logging and the developer scenario selector."
+        label={tui('Debug Mode')}
+        helper={tui('Enable verbose logging and the developer scenario selector.')}
         right={<SwitchToggle checked={devMode} onChange={handleDevModeChange} />}
         highlighted={hash === 'debug-mode'}
       />
@@ -148,8 +150,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={Upload}
         iconColor="#16A085"
-        label="Upload Logs"
-        helper="Send recent diagnostic logs to eatOS support."
+        label={tui('Upload Logs')}
+        helper={tui('Send recent diagnostic logs to eatOS support.')}
         onClick={handleUploadLogs}
         highlighted={hash === 'upload-logs'}
       />
@@ -157,8 +159,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={MessageSquare}
         iconColor="#7C3AED"
-        label="Feedback & Support"
-        helper="Request a feature or contact support."
+        label={tui('Feedback & Support')}
+        helper={tui('Request a feature or contact support.')}
         onClick={() => setFeedbackOpen(true)}
         highlighted={hash === 'feedback-support'}
       />
@@ -166,8 +168,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={RotateCcw}
         iconColor="#0A84FF"
-        label="Reset to Default"
-        helper="Restore all system settings to their original defaults on this device."
+        label={tui('Reset to Default')}
+        helper={tui('Restore all system settings to their original defaults on this device.')}
         onClick={() => setResetOpen(true)}
         highlighted={hash === 'reset-to-default'}
       />
@@ -175,8 +177,8 @@ export default function AccountSettings() {
       <SettingsPill
         icon={LogOut}
         iconColor="#C0392B"
-        label="Log Out"
-        helper="Sign out of this device and return to activation."
+        label={tui('Log Out')}
+        helper={tui('Sign out of this device and return to activation.')}
         onClick={() => setLogoutOpen(true)}
         highlighted={hash === 'log-out'}
       />
@@ -195,18 +197,18 @@ export default function AccountSettings() {
       <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Reset all settings to default?</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">{tui('Reset all settings to default?')}</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
-              This will restore display, orders, hardware, AI, and account preferences to their system defaults on this device. Your session will not be signed out.
+              {tui('This will restore display, orders, hardware, AI, and account preferences to their system defaults on this device. Your session will not be signed out.')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="min-h-[44px]">{tui('Cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleResetDefaults}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Reset
+              {tui('Reset')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -220,18 +222,18 @@ export default function AccountSettings() {
       <AlertDialog open={logoutOpen} onOpenChange={setLogoutOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Log out of this device?</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">{tui('Log out of this device?')}</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
-              You will need to re-enter your PIN or activation code to sign back in.
+              {tui('You will need to re-enter your PIN or activation code to sign back in.')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="min-h-[44px]">{tui('Cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleLogOut}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Log out
+              {tui('Log out')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -240,25 +242,25 @@ export default function AccountSettings() {
       <AlertDialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
         <AlertDialogContent className="bg-surface-card border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-text-primary">Request a Feature</AlertDialogTitle>
+            <AlertDialogTitle className="text-text-primary">{tui('Request a Feature')}</AlertDialogTitle>
             <AlertDialogDescription className="text-text-secondary">
-              Tell us what would make the KDS work better for your kitchen.
+              {tui('Tell us what would make the KDS work better for your kitchen.')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <textarea
             value={feedbackText}
             onChange={(e) => setFeedbackText(e.target.value)}
-            placeholder="Describe your request..."
+            placeholder={tui('Describe your request...')}
             className="w-full min-h-[120px] rounded-lg border border-border bg-surface-bg p-3 text-sm text-text-primary outline-none focus:ring-2 focus:ring-primary"
           />
           <AlertDialogFooter>
-            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="min-h-[44px]">{tui('Cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleFeedbackSubmit}
               disabled={feedbackText.trim().length === 0}
               className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
             >
-              Send
+              {tui('Send')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

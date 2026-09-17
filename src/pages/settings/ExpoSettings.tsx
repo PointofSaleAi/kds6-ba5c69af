@@ -4,9 +4,11 @@ import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SegmentedToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { useLanguage } from '@/hooks/use-language';
 
 export default function ExpoSettings() {
   const { expoSendButtonMode, setExpoSendButtonMode } = useKDSSettings();
+  const { tui } = useLanguage();
   const hash = useHashHighlight();
 
   return (
@@ -14,23 +16,23 @@ export default function ExpoSettings() {
       <SectionHeaderCard
         icon={Send}
         iconColor={GROUP_COLOR.expo}
-        title="Expo View"
-        shortDescription="Control how the Expediter view presents Send actions and ticket readiness."
-        longDescription="Control how the Expediter view presents Send actions and ticket readiness. Choose whether the Send button is always available, or only after stations have marked their products done on the KDS."
+        title={tui('Expo View')}
+        shortDescription={tui('Control how the Expediter view presents Send actions and ticket readiness.')}
+        longDescription={tui('Control how the Expediter view presents Send actions and ticket readiness. Choose whether the Send button is always available, or only after stations have marked their products done on the KDS.')}
       />
 
       <SettingsPill
         icon={Send}
         iconColor="#7C3AED"
-        label="Show Send Button"
+        label={tui('Show Send Button')}
         helper={expoSendButtonMode === 'always'
-          ? 'Always visible on every product.'
-          : 'Only when the product is marked done on the KDS.'}
+          ? tui('Always visible on every product.')
+          : tui('Only when the product is marked done on the KDS.')}
         right={
           <SegmentedToggle
-            options={['Always', 'When ready']}
-            value={expoSendButtonMode === 'always' ? 'Always' : 'When ready'}
-            onChange={(v) => setExpoSendButtonMode(v === 'Always' ? 'always' : 'when-ready')}
+            options={[tui('Always'), tui('When ready')]}
+            value={expoSendButtonMode === 'always' ? tui('Always') : tui('When ready')}
+            onChange={(v) => setExpoSendButtonMode(v === tui('Always') ? 'always' : 'when-ready')}
           />
         }
         highlighted={hash === 'expo-send-button'}

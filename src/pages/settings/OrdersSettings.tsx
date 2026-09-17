@@ -6,18 +6,19 @@ import { SettingsPill } from '@/components/settings/SettingsPill';
 import { SwitchToggle, useHashHighlight } from '@/components/settings/SettingsControls';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { useKDSSettings } from '@/hooks/use-kds-settings';
+import { useLanguage } from '@/hooks/use-language';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import { QuickRepliesModal } from '@/components/settings/QuickRepliesModal';
 
 const HOLD_TIME_OPTIONS = [
-  { value: 1, label: '1 minute' },
-  { value: 2, label: '2 minutes' },
-  { value: 5, label: '5 minutes' },
-  { value: 10, label: '10 minutes' },
-  { value: 15, label: '15 minutes' },
-  { value: 20, label: '20 minutes' },
-  { value: 30, label: '30 minutes' },
+  { value: 1, label: tui('{n} minute', { n: 1 }) },
+  { value: 2, label: tui('{n} minutes', { n: 2 }) },
+  { value: 5, label: tui('{n} minutes', { n: 5 }) },
+  { value: 10, label: tui('{n} minutes', { n: 10 }) },
+  { value: 15, label: tui('{n} minutes', { n: 15 }) },
+  { value: 20, label: tui('{n} minutes', { n: 20 }) },
+  { value: 30, label: tui('{n} minutes', { n: 30 }) },
 ];
 
 export default function OrdersSettings() {
@@ -31,11 +32,12 @@ export default function OrdersSettings() {
     quickReplyItems, setQuickReplyItems,
     ticketFlowDirection, setTicketFlowDirection,
   } = useKDSSettings();
+  const { tui } = useLanguage();
   const hash = useHashHighlight();
   const [quickRepliesOpen, setQuickRepliesOpen] = useState(false);
 
   const holdTimeValue = orderHoldMinutes;
-  const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || '5 minutes';
+  const selectedLabel = HOLD_TIME_OPTIONS.find((opt) => opt.value === holdTimeValue)?.label || tui('{n} minutes', { n: 5 });
   const handleHoldTimeChange = (value: number) => {
     setOrderHoldMinutes(value);
   };
@@ -46,17 +48,17 @@ export default function OrdersSettings() {
         icon={ShoppingBag}
         iconColor={GROUP_COLOR.orders}
         iconNode={<TicketsIcon size={28} className="text-white" />}
-        title="Tickets"
-        shortDescription="Control how products are flagged on tickets."
-        longDescription="Toggle allergen badges or servable modifiers based on your workflow."
+        title={tui('Tickets')}
+        shortDescription={tui('Control how products are flagged on tickets.')}
+        longDescription={tui('Toggle allergen badges or servable modifiers based on your workflow.')}
       />
 
 
       <SettingsPill
         icon={Sparkles}
         iconColor="#7C3AED"
-        label="Servable Modifiers"
-        helper="Track Queued, Preparing, and Done state on each modifier individually."
+        label={tui('Servable Modifiers')}
+        helper={tui('Track Queued, Preparing, and Done state on each modifier individually.')}
         right={<SwitchToggle checked={servableModifiers} onChange={setServableModifiers} />}
         highlighted={hash === 'servable-modifiers'}
       />
@@ -64,8 +66,8 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Timer}
         iconColor="#F59E0B"
-        label="Coursing Timer"
-        helper="Tracks prep time per product, so chefs on different stations can see each other's progress."
+        label={tui('Coursing Timer')}
+        helper={tui("Tracks prep time per product, so chefs on different stations can see each other's progress.")}
         right={<SwitchToggle checked={productTimers} onChange={setProductTimers} />}
         highlighted={hash === 'product-timers'}
       />
@@ -73,8 +75,8 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={AlertTriangle}
         iconColor="#C0392B"
-        label="Allergen Badges"
-        helper="Show colored allergen chips next to each product on the ticket."
+        label={tui('Allergen Badges')}
+        helper={tui('Show colored allergen chips next to each product on the ticket.')}
         right={<SwitchToggle checked={showAllergens} onChange={setShowAllergens} />}
         highlighted={hash === 'allergen-badges'}
       />
@@ -82,8 +84,8 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={AlertTriangle}
         iconColor="#C0392B"
-        label="Ticket Header Allergen Summary"
-        helper="Show a combined allergen strip at the top of each ticket card."
+        label={tui('Ticket Header Allergen Summary')}
+        helper={tui('Show a combined allergen strip at the top of each ticket card.')}
         right={<SwitchToggle checked={showHeaderAllergens} onChange={setShowHeaderAllergens} />}
         highlighted={hash === 'header-allergen-summary'}
       />
@@ -91,8 +93,8 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={Clock}
         iconColor="#3B82F6"
-        label="Order Hold"
-        helper="Holds new orders for a set time before the kitchen sees them."
+        label={tui('Order Hold')}
+        helper={tui('Holds new orders for a set time before the kitchen sees them.')}
         right={<SwitchToggle checked={orderHold} onChange={setOrderHold} />}
         highlighted={hash === 'order-hold'}
       />
@@ -122,7 +124,7 @@ export default function OrdersSettings() {
                   className="text-[15px] font-semibold"
                   style={{ color: 'hsl(var(--text-primary))' }}
                 >
-                  Hold time
+                  {tui('Hold time')}
                 </span>
               </div>
               <Popover>
@@ -175,7 +177,7 @@ export default function OrdersSettings() {
             className="text-xs px-2 mb-3 mt-0.5"
             style={{ color: 'hsl(var(--text-muted))' }}
           >
-            Sets how long new orders wait before the kitchen sees them.
+            {tui('Sets how long new orders wait before the kitchen sees them.')}
           </p>
         </div>
       )}
@@ -183,8 +185,8 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={MessageSquare}
         iconColor="#64748B"
-        label="Quick Replies"
-        helper="Choose the quick responses kitchen staff can send on ticket messages."
+        label={tui('Quick Replies')}
+        helper={tui('Choose the quick responses kitchen staff can send on ticket messages.')}
         onClick={() => setQuickRepliesOpen(true)}
         right={
           <div className="flex items-center gap-2">
@@ -200,13 +202,13 @@ export default function OrdersSettings() {
       <SettingsPill
         icon={ArrowLeftRight}
         iconColor="#3B82F6"
-        label="Ticket Flow Direction"
-        helper="Set which side new tickets enter from - match your kitchen's reading direction."
+        label={tui('Ticket Flow Direction')}
+        helper={tui("Set which side new tickets enter from - match your kitchen's reading direction.")}
         right={
           <SegmentedToggle
-            options={['Newest on left', 'Newest on right']}
-            value={ticketFlowDirection === 'right' ? 'Newest on right' : 'Newest on left'}
-            onChange={(v) => setTicketFlowDirection(v === 'Newest on right' ? 'right' : 'left')}
+            options={[tui('Newest on left'), tui('Newest on right')]}
+            value={ticketFlowDirection === 'right' ? tui('Newest on right') : tui('Newest on left')}
+            onChange={(v) => setTicketFlowDirection(v === tui('Newest on right') ? 'right' : 'left')}
           />
         }
         highlighted={hash === 'ticket-flow-direction'}

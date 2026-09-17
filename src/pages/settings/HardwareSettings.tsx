@@ -8,6 +8,7 @@ import PrinterRoutingModal, { type PrinterModalType } from '@/pages/PrinterRouti
 import SoundSettings from '@/pages/SoundSettings';
 import WebSocketSettings from '@/pages/WebSocketSettings';
 import { GROUP_COLOR } from '@/components/settings/SettingsSidebar';
+import { useLanguage } from '@/hooks/use-language';
 
 export default function HardwareSettings() {
   const { kot, label, labelEnabled, setLabelEnabled, setKotPrinter, setLabelPrinter } = usePrinterAssignments();
@@ -15,6 +16,7 @@ export default function HardwareSettings() {
   const [printerType, setPrinterType] = useState<PrinterModalType>('kot');
   const [soundOpen, setSoundOpen] = useState(false);
   const [connectionOpen, setConnectionOpen] = useState(false);
+  const { tui } = useLanguage();
   const hash = useHashHighlight();
 
   const openPrinter = (type: PrinterModalType) => {
@@ -27,17 +29,17 @@ export default function HardwareSettings() {
       <SectionHeaderCard
         icon={Cpu}
         iconColor={GROUP_COLOR.hardware}
-        title="Hardware"
-        shortDescription="Pair printers, configure sound alerts, and manage your network connection."
-        longDescription="Pair printers, configure sound alerts, and manage your network connection. The KDS supports a dedicated KOT printer for kitchen tickets and an optional Label printer for per-product stickers."
+        title={tui('Hardware')}
+        shortDescription={tui('Pair printers, configure sound alerts, and manage your network connection.')}
+        longDescription={tui('Pair printers, configure sound alerts, and manage your network connection. The KDS supports a dedicated KOT printer for kitchen tickets and an optional Label printer for per-product stickers.')}
       />
 
       <SettingsPill
         icon={Printer}
         iconColor="#5E4DD8"
-        label="KOT Printer"
-        helper={kot.printerId ? `Connected to ${kot.printerName}` : 'No printer assigned. Tap to pair one.'}
-        right={<ValueText>{kot.printerId ? kot.printerName : 'Not set'}</ValueText>}
+        label={tui('KOT Printer')}
+        helper={kot.printerId ? tui('Connected to {name}', { name: kot.printerName }) : tui('No printer assigned. Tap to pair one.')}
+        right={<ValueText>{kot.printerId ? kot.printerName : tui('Not set')}</ValueText>}
         onClick={() => openPrinter('kot')}
         highlighted={hash === 'kot-printer'}
       />
@@ -45,9 +47,9 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Tag}
         iconColor="#0A84FF"
-        label="Label Printer"
-        helper={label.printerId ? `Connected to ${label.printerName}` : 'No printer assigned. Tap to pair one.'}
-        right={<ValueText>{label.printerId ? label.printerName : 'Not set'}</ValueText>}
+        label={tui('Label Printer')}
+        helper={label.printerId ? tui('Connected to {name}', { name: label.printerName }) : tui('No printer assigned. Tap to pair one.')}
+        right={<ValueText>{label.printerId ? label.printerName : tui('Not set')}</ValueText>}
         onClick={() => openPrinter('label')}
         highlighted={hash === 'label-printer'}
       />
@@ -55,8 +57,8 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Volume2}
         iconColor="#F9900E"
-        label="Sound Settings"
-        helper="Volume, custom alert sounds, and per-event toggles."
+        label={tui('Sound Settings')}
+        helper={tui('Volume, custom alert sounds, and per-event toggles.')}
         onClick={() => setSoundOpen(true)}
         highlighted={hash === 'sound-settings'}
       />
@@ -64,8 +66,8 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={RefreshCw}
         iconColor="#16A085"
-        label="Sync"
-        helper="Force sync of orders and settings with the cloud."
+        label={tui('Sync')}
+        helper={tui('Force sync of orders and settings with the cloud.')}
         onClick={() => {
           // Simulated sync action
           window.dispatchEvent(new CustomEvent('posai:sync-now'));
@@ -76,8 +78,8 @@ export default function HardwareSettings() {
       <SettingsPill
         icon={Server}
         iconColor="#34A885"
-        label="Connection"
-        helper="EdgeOS local backup, cloud sync status, and device name."
+        label={tui('Connection')}
+        helper={tui('EdgeOS local backup, cloud sync status, and device name.')}
         onClick={() => setConnectionOpen(true)}
         highlighted={hash === 'connection'}
       />

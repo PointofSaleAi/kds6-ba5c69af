@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { GraduationCap } from 'lucide-react';
 import { useTrainingMode } from '@/hooks/use-training-mode';
+import { useLanguage } from '@/hooks/use-language';
 
 const TEAL = '#1CA9A0';
 const DARK_TEAL = '#06302D';
 
 export function TrainingModeBar() {
   const { active, exit, reload } = useTrainingMode();
+  const { tui } = useLanguage();
 
   // Push the rest of the UI down while the bar is visible.
   useEffect(() => {
@@ -22,7 +24,7 @@ export function TrainingModeBar() {
   return (
     <div
       role="region"
-      aria-label="Training Mode"
+      aria-label={tui("Training Mode")}
       className="fixed top-0 left-0 right-0 z-[9997] flex items-center justify-between gap-3 px-4"
       style={{
         background: TEAL,
@@ -34,7 +36,7 @@ export function TrainingModeBar() {
       <div className="flex items-center gap-2 min-w-0">
         <GraduationCap size={18} color={DARK_TEAL} />
         <span className="text-[13px] font-bold truncate">
-          Training mode, sample orders only, nothing here is real
+          {tui('Training mode, sample orders only, nothing here is real')}
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -48,7 +50,7 @@ export function TrainingModeBar() {
             border: `1px solid ${DARK_TEAL}`,
           }}
         >
-          Reload samples
+          {tui('Reload samples')}
         </button>
         <button
           type="button"
@@ -56,7 +58,7 @@ export function TrainingModeBar() {
           className="h-8 px-3 rounded-md text-[12px] font-bold uppercase tracking-wide"
           style={{ background: DARK_TEAL, color: '#fff' }}
         >
-          Exit training mode
+          {tui('Exit training mode')}
         </button>
       </div>
     </div>

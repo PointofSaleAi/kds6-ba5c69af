@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 
 const PIN_LENGTH = 4;
 
@@ -16,8 +17,11 @@ interface Props {
  * Reusable 4-digit manager PIN overlay. Any 4 digits unlock the action.
  * Visual style mirrors the sign-in / clock-in PIN pad.
  */
-export default function ManagerPinOverlay({ open, title = 'Manager PIN Required', subtitle = 'Enter PIN to switch screen mode', onClose, onSuccess }: Props) {
+export default function ManagerPinOverlay({ open, title, subtitle, onClose, onSuccess }: Props) {
   const [pin, setPin] = useState('');
+  const { tui } = useLanguage();
+  const resolvedTitle = title ?? tui('Manager PIN Required');
+  const resolvedSubtitle = subtitle ?? tui('Enter PIN to switch screen mode');
 
   const submit = useCallback(() => {
     if (pin.length !== PIN_LENGTH) return;
@@ -80,14 +84,14 @@ export default function ManagerPinOverlay({ open, title = 'Manager PIN Required'
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={tui('Close')}
               className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <h2 className="text-lg font-bold text-center mb-1">{title}</h2>
-            <p className="text-center text-white/60 text-xs mb-5">{subtitle}</p>
+            <h2 className="text-lg font-bold text-center mb-1">{resolvedTitle}</h2>
+            <p className="text-center text-white/60 text-xs mb-5">{resolvedSubtitle}</p>
 
             <div className="flex justify-center gap-4 mb-5">
               {Array.from({ length: PIN_LENGTH }).map((_, i) => (
@@ -125,7 +129,7 @@ export default function ManagerPinOverlay({ open, title = 'Manager PIN Required'
                       whileHover={enabled ? hover : undefined}
                       transition={transition}
                     >
-                      Enter
+                      {tui('Enter')}
                     </motion.button>
                   );
                 }

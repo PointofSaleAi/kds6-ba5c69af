@@ -98,7 +98,7 @@ function StepperControl({ value, onChange, min, max }: { value: number; onChange
 
 export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onDevModeChange }: SettingsScreenProps) {
   const { theme, setTheme } = useTheme();
-  const { t, languageName } = useLanguage();
+  const { t, tui, languageName } = useLanguage();
   const { kot, label, labelEnabled, setLabelEnabled } = usePrinterAssignments();
   const { expoSendButtonMode, setExpoSendButtonMode, ticketLayout, setTicketLayout } = useKDSSettings();
   const [displayMode, setDisplayMode] = useState('Grid');
@@ -134,7 +134,7 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
             <h2 className="text-lg font-bold text-text-primary">{t.settings}</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close Settings">
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close Settings')}>
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -153,13 +153,13 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <SettingsRow icon={Monitor} label={t.textSize} right={<SegmentedToggle options={[t.compact, t.standard, t.large]} value={textSize} onChange={setTextSize} />} />
             <SettingsRow
               icon={Monitor}
-              label="Ticket Layout"
-              description={ticketLayout === 'compact' ? 'Compact, product names only, tap to expand' : 'Standard, full details visible'}
+              label={tui('Ticket Layout')}
+              description={ticketLayout === 'compact' ? tui('Compact, product names only, tap to expand') : tui('Standard, full details visible')}
               right={
                 <SegmentedToggle
-                  options={['Standard', 'Compact']}
-                  value={ticketLayout === 'compact' ? 'Compact' : 'Standard'}
-                  onChange={(v) => setTicketLayout(v === 'Compact' ? 'compact' : 'standard')}
+                  options={[tui('Standard'), tui('Compact')]}
+                  value={ticketLayout === 'compact' ? tui('Compact') : tui('Standard')}
+                  onChange={(v) => setTicketLayout(v === tui('Compact') ? 'compact' : 'standard')}
                 />
               }
             />
@@ -175,13 +175,13 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
                 />
               }
             />
-            <SettingsRow icon={Languages} label={'Region'} description={languageName} onClick={() => onOpenSub('language-settings')} />
+            <SettingsRow icon={Languages} label={tui('Region')} description={languageName} onClick={() => onOpenSub('language-settings')} />
 
             {/* ORDERS */}
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <ShoppingBag size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">Tickets</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{tui('Tickets')}</span>
               </div>
             </div>
             <SettingsRow icon={ShoppingBag} label={t.categoryFilter} description={t.manageCategories} onClick={() => onOpenSub('category-filter')} />
@@ -195,18 +195,18 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             <div className="px-4 pt-4 pb-1">
               <div className="flex items-center gap-2 mb-1">
                 <Send size={14} className="text-text-muted" />
-                <span className="text-section-label uppercase text-text-muted tracking-widest">Expo View</span>
+                <span className="text-section-label uppercase text-text-muted tracking-widest">{tui('Expo View')}</span>
               </div>
             </div>
             <SettingsRow
               icon={Send}
-              label="Show Send Button"
-              description={expoSendButtonMode === 'always' ? 'Always — show on all products' : 'When ready — only when product is marked done on KDS'}
+              label={tui('Show Send Button')}
+              description={expoSendButtonMode === 'always' ? tui('Always — show on all products') : tui('When ready — only when product is marked done on KDS')}
               right={
                 <SegmentedToggle
-                  options={['Always', 'When ready']}
-                  value={expoSendButtonMode === 'always' ? 'Always' : 'When ready'}
-                  onChange={(v) => setExpoSendButtonMode(v === 'Always' ? 'always' : 'when-ready')}
+                  options={[tui('Always'), tui('When ready')]}
+                  value={expoSendButtonMode === 'always' ? tui('Always') : tui('When ready')}
+                  onChange={(v) => setExpoSendButtonMode(v === tui('Always') ? 'always' : 'when-ready')}
                 />
               }
             />
@@ -220,14 +220,14 @@ export default function SettingsScreen({ open, onClose, onOpenSub, onLogOut, onD
             </div>
             <SettingsRow
               icon={Printer}
-              label="KOT Printer"
-              description={kot.printerId ? kot.printerName : 'No printer assigned'}
+              label={tui('KOT Printer')}
+              description={kot.printerId ? kot.printerName : tui('No printer assigned')}
               onClick={() => onOpenSub('printer-kot')}
             />
             <SettingsRow
               icon={Tag}
-              label="Label Printer"
-              description={labelEnabled ? (label.printerId ? label.printerName : 'No printer assigned') : 'Disabled'}
+              label={tui('Label Printer')}
+              description={labelEnabled ? (label.printerId ? label.printerName : tui('No printer assigned')) : tui('Disabled')}
               right={<Toggle checked={labelEnabled} onChange={setLabelEnabled} />}
               onClick={labelEnabled ? () => onOpenSub('printer-label') : undefined}
             />

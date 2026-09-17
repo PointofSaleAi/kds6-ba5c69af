@@ -10,6 +10,7 @@ import { SettingsIconTile } from './SettingsIconTile';
 import { TicketsIcon } from '@/components/kds/icons/TicketsIcon';
 import systemIcon from '@/assets/icons/settings-system.png';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
+import { useLanguage } from '@/hooks/use-language';
 
 const GROUP_ICON: Record<SettingsGroupId, typeof Monitor> = {
   display: Monitor,
@@ -34,6 +35,7 @@ export function SettingsSidebar() {
   const location = useLocation();
   const [query, setQuery] = useState('');
   const { identity } = useActiveIdentity();
+  const { tui } = useLanguage();
 
   const results = searchSettings(query);
   const showResults = query.trim().length > 0;
@@ -47,7 +49,7 @@ export function SettingsSidebar() {
 
   const isStaff = identity.kind === 'staff';
   const displayName = identity.name;
-  const roleLabel = isStaff ? identity.role : 'Restaurant';
+  const roleLabel = isStaff ? identity.role : tui('Restaurant');
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
   const avatarBg = useMemo(
     () => colorFromString(displayName + (isStaff ? identity.role : '')),
@@ -58,7 +60,7 @@ export function SettingsSidebar() {
     <aside className="flex flex-col shrink-0 h-full w-full">
       <div className="px-2.5 pt-3.5 pb-3 shrink-0 max-[640px]:hidden">
         <h2 className="text-[1.65rem] font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
-          Settings
+          {tui('Settings')}
         </h2>
 
         <button
@@ -101,11 +103,11 @@ export function SettingsSidebar() {
               className="text-[0.7rem] font-medium tracking-wide px-3 py-2"
               style={{ color: 'hsl(var(--text-muted))' }}
             >
-              {results.length} result{results.length === 1 ? '' : 's'}
+              {results.length} {results.length === 1 ? tui('result') : tui('results')}
             </div>
             {results.length === 0 && (
               <p className="text-[0.9rem] px-3 py-3" style={{ color: 'hsl(var(--text-muted))' }}>
-                No matches. Try a different word.
+                {tui('No matches. Try a different word.')}
               </p>
             )}
             {results.map((r) => {
@@ -205,13 +207,13 @@ export function SettingsSidebar() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search"
+            placeholder={tui('Search')}
             className="bg-transparent flex-1 outline-none text-[0.95rem] font-normal leading-tight min-w-0 placeholder:font-normal placeholder:text-[hsl(var(--text-muted))] tracking-[-0.01em]"
             style={{ color: 'hsl(var(--text-primary))' }}
           />
           <button
             type="button"
-            aria-label="Voice Search"
+            aria-label={tui('Voice Search')}
             className="shrink-0 active:opacity-60 transition-opacity"
           >
             <Mic className="w-[1.05rem] h-[1.05rem]" style={{ color: 'hsl(var(--text-muted))' }} strokeWidth={2.2} />

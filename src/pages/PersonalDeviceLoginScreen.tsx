@@ -4,6 +4,7 @@ import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import PosaiLogo from '@/components/PosaiLogo';
 import { blockDemoAuthInProd } from '@/lib/demo-auth';
+import { useLanguage } from '@/hooks/use-language';
 
 interface PersonalDeviceLoginScreenProps {
   onSuccess: () => void;
@@ -19,6 +20,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
   const [phone, setPhone] = useState('');
   const [otpCode, setOtpCode] = useState<string[]>(['', '', '', '', '', '']);
   const [otpSent, setOtpSent] = useState(false);
+  const { tui } = useLanguage();
 
   const handleEmailSignIn = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -69,14 +71,14 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
         {/* Back */}
         <button onClick={onBack} className="flex items-center gap-2 font-montserrat font-medium text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer' }}>
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {tui('Back')}
         </button>
 
         {/* Logo */}
         <div className="text-center mb-8">
           <PosaiLogo variant="light" className="h-20 object-contain mx-auto mb-2" />
-          <h1 className="text-white text-xl font-bold font-montserrat">Sign In to Kitchen Display System</h1>
-          <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>Personal Device Login</p>
+          <h1 className="text-white text-xl font-bold font-montserrat">{tui('Sign In to Kitchen Display System')}</h1>
+          <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>{tui('Personal Device Login')}</p>
         </div>
 
         {/* Method tabs */}
@@ -92,7 +94,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
                 border: 'none', cursor: 'pointer',
               }}
             >
-              {tab === 'email' ? 'EMAIL' : 'MOBILE OTP'}
+              {tab === 'email' ? tui('EMAIL') : tui('MOBILE OTP')}
             </button>
           ))}
         </div>
@@ -105,30 +107,30 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
                   <QRCodeSVG value="https://kds.posai.app/auth/qr?device=byod-001" size={200} level="M" fgColor="#1A1A2E" bgColor="#FFFFFF" />
                 </div>
                 <p className="text-xs font-montserrat text-center mb-4" style={{ color: '#95A5A6' }}>
-                  Scan with your phone to sign in
+                  {tui('Scan with your phone to sign in')}
                 </p>
                 <button onClick={() => setShowQr(false)} className="text-xs underline font-montserrat" style={{ color: '#6C7A89' }}>
-                  Back to email/OTP login
+                  {tui('Back to email/OTP login')}
                 </button>
               </motion.div>
             ) : method === 'email' ? (
               <motion.form key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleEmailSignIn} className="flex flex-col gap-4">
                 <div>
-                  <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Email</label>
+                  <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>{tui('Email')}</label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="kitchen@restaurant.com" className="font-montserrat" style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Password</label>
+                  <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>{tui('Password')}</label>
                   <div style={{ position: 'relative' }}>
-                    <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter Password" className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
+                    <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={tui('Enter Password')} className="font-montserrat" style={{ ...inputStyle, paddingRight: '48px' }} />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)' }}>
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
-                <button type="submit" style={btnStyle}>SIGN IN</button>
+                <button type="submit" style={btnStyle}>{tui('SIGN IN')}</button>
                 <button type="button" onClick={() => setShowQr(true)} className="text-xs font-montserrat mt-2 text-center" style={{ color: '#6C7A89' }}>
-                  Login using QR instead
+                  {tui('Login using QR instead')}
                 </button>
               </motion.form>
             ) : (
@@ -136,7 +138,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
                 {!otpSent ? (
                   <>
                     <div>
-                      <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>Mobile Number</label>
+                      <label className="block font-montserrat font-medium text-sm mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>{tui('Mobile Number')}</label>
                       <div className="flex gap-2">
                         <select className="px-2 py-2.5 rounded-lg text-sm font-montserrat min-h-[44px]" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF' }}>
                           <option>+1</option><option>+44</option><option>+91</option>
@@ -144,14 +146,14 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
                         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(555) 123-4567" className="font-montserrat" style={{ ...inputStyle, flex: 1 }} />
                       </div>
                     </div>
-                    <button type="button" onClick={handleSendOtp} style={btnStyle}>SEND OTP</button>
+                    <button type="button" onClick={handleSendOtp} style={btnStyle}>{tui('SEND OTP')}</button>
                     <button type="button" onClick={() => setShowQr(true)} className="text-xs font-montserrat mt-2 text-center" style={{ color: '#6C7A89' }}>
-                      Login using QR instead
+                      {tui('Login using QR instead')}
                     </button>
                   </>
                 ) : (
                   <>
-                    <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>Enter the 6-digit code sent to your phone</p>
+                    <p className="text-xs font-montserrat" style={{ color: '#95A5A6' }}>{tui('Enter the 6-digit code sent to your phone')}</p>
                     <div className="flex justify-center gap-2">
                       {otpCode.map((d, i) => (
                         <input key={i} id={`pd-otp-${i}`} type="text" inputMode="numeric" maxLength={1} value={d} onChange={(e) => handleOtpDigit(i, e.target.value)}
@@ -160,7 +162,7 @@ export default function PersonalDeviceLoginScreen({ onSuccess, onBack }: Persona
                         />
                       ))}
                     </div>
-                    <button type="button" onClick={handleVerifyOtp} style={btnStyle}>VERIFY</button>
+                    <button type="button" onClick={handleVerifyOtp} style={btnStyle}>{tui('VERIFY')}</button>
                   </>
                 )}
               </motion.div>

@@ -41,7 +41,7 @@ interface KDSSidebarProps {
 
 export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav = 'home', settingsOpen, seenCount = 0, unseenCount = 0, historyCount = 0 }: KDSSidebarProps) {
   const { showBadge } = useBadgeVisibility();
-  const { t } = useLanguage();
+  const { t, tui } = useLanguage();
   const { pendingCount: pendingMessageCount } = useKitchenMessages();
   const { unreadCount: unreadNotifCount } = useNotifications();
   const { mode: kdsMode } = useKDSMode();
@@ -51,15 +51,15 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
   const navItems: SidebarItem[] = isExpo
     ? [
-        { icon: TicketsIcon, label: 'All', action: 'home' },
-        { icon: CheckCircle2, label: 'Ready Only', action: 'seen-orders' },
-        { icon: Undo2, label: 'Recalled', action: 'unseen-orders' },
+        { icon: TicketsIcon, label: tui('All'), action: 'home' },
+        { icon: CheckCircle2, label: tui('Ready Only'), action: 'seen-orders' },
+        { icon: Undo2, label: tui('Recalled'), action: 'unseen-orders' },
         { icon: Clock, label: t.history, badge: historyCount || undefined, action: 'history' },
         { icon: Bell, label: t.alerts, badge: unreadNotifCount + pendingMessageCount, action: 'alerts' },
         { icon: Settings, label: t.settings, action: 'settings' },
       ]
     : [
-        { icon: TicketsIcon, label: 'All', action: 'home' },
+        { icon: TicketsIcon, label: tui('All'), action: 'home' },
         { icon: Eye, label: t.newOrders, action: 'seen-orders', badge: seenCount || undefined, badgeColor: 'bg-[#2980B9]' },
         { icon: EyeOff, label: t.hideCompleted, action: 'unseen-orders', badge: unseenCount || undefined, badgeColor: 'bg-[#E84C3D]' },
         { icon: Clock, label: t.history, badge: historyCount || undefined, action: 'history' },
@@ -120,7 +120,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
             <DockDragHandle
               panel="mainSidebar"
               orientation="vertical"
-              ariaLabel="Drag to dock main sidebar"
+              ariaLabel={tui("Drag to dock main sidebar")}
               className="text-sidebar-foreground"
             />
           </div>

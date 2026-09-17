@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 
 interface SectionHeaderCardProps {
   icon?: LucideIcon;
@@ -20,6 +21,7 @@ export function SectionHeaderCard({
   iconSrc,
   iconNode,
 }: SectionHeaderCardProps) {
+  const { tui } = useLanguage();
   const [showMore, setShowMore] = useState(false);
   const hasMore = Boolean(longDescription);
 
@@ -73,7 +75,7 @@ export function SectionHeaderCard({
             className="ml-1"
             style={{ color: 'hsl(var(--btn-seen))', fontSize: 12.5, fontWeight: 600 }}
           >
-            {showMore ? 'Learn less' : 'Learn more...'}
+            {showMore ? tui('Learn less') : tui('Learn more...')}
           </button>
         )}
       </p>

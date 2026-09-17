@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { X, Plus, MessageSquare } from 'lucide-react';
+import { useLanguage } from '@/hooks/use-language';
 
-const SUGGESTED_POOL: string[] = [
+const SUGGESTED_POOL_KEYS: string[] = [
   'Got it',
   '5 min out',
   'Item unavailable',
@@ -25,7 +26,9 @@ interface Props {
 }
 
 export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) {
+  const { tui } = useLanguage();
   const [draft, setDraft] = useState('');
+  const SUGGESTED_POOL = useMemo(() => SUGGESTED_POOL_KEYS.map((k) => tui(k)), [tui]);
 
   const suggested = useMemo(
     () => SUGGESTED_POOL.filter((s) => !selected.some((v) => v.toLowerCase() === s.toLowerCase())),
@@ -69,16 +72,16 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
         <div className="flex items-start justify-between px-5 pt-4 pb-3 border-b border-border">
           <div className="min-w-0">
             <h3 className="text-base font-bold" style={{ color: 'hsl(var(--text-primary))' }}>
-              Quick Replies
+              {tui('Quick Replies')}
             </h3>
             <p className="text-xs mt-0.5" style={{ color: 'hsl(var(--text-muted))' }}>
-              Choose up to 10 quick responses kitchen staff can send on ticket messages.
+              {tui('Choose up to 10 quick responses kitchen staff can send on ticket messages.')}
             </p>
           </div>
           <button
             onClick={onClose}
             className="p-2 hover:bg-muted rounded-lg min-h-[36px] min-w-[36px] flex items-center justify-center"
-            aria-label="Close"
+            aria-label={tui('Close')}
           >
             <X size={18} style={{ color: 'hsl(var(--text-secondary))' }} />
           </button>
@@ -89,7 +92,7 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
           <section>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'hsl(var(--text-muted))' }}>
-                Selected
+                {tui('Selected')}
               </span>
               <span
                 className="text-[11px] font-semibold tabular-nums"
@@ -104,7 +107,7 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
             >
               {selected.length === 0 ? (
                 <p className="text-xs px-1 py-2" style={{ color: 'hsl(var(--text-muted))' }}>
-                  No quick replies selected yet.
+                  {tui('No quick replies selected yet.')}
                 </p>
               ) : (
                 <div className="flex flex-wrap gap-1.5">
@@ -122,7 +125,7 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
                         type="button"
                         onClick={() => removeSelected(idx)}
                         className="flex items-center justify-center h-5 w-5 rounded-full hover:bg-black/20"
-                        aria-label={`Remove ${item}`}
+                        aria-label={tui('Remove {item}', { item })}
                       >
                         <X size={12} />
                       </button>
@@ -136,11 +139,11 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
           {/* Suggested */}
           <section>
             <span className="text-[11px] font-bold uppercase tracking-wide block mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
-              Suggested
+              {tui('Suggested')}
             </span>
             {suggested.length === 0 ? (
               <p className="text-xs" style={{ color: 'hsl(var(--text-muted))' }}>
-                All suggestions have been added.
+                {tui('All suggestions have been added.')}
               </p>
             ) : (
               <div className="flex flex-wrap gap-1.5">
@@ -168,7 +171,7 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
           {/* Add your own */}
           <section>
             <span className="text-[11px] font-bold uppercase tracking-wide block mb-1.5" style={{ color: 'hsl(var(--text-muted))' }}>
-              Add your own
+              {tui('Add your own')}
             </span>
             <div
               className="flex items-center gap-2 rounded-xl px-3 py-1.5"
@@ -184,7 +187,7 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
                     addCustom();
                   }
                 }}
-                placeholder="Type a custom reply"
+                placeholder={tui('Type a custom reply')}
                 disabled={atCap}
                 className="flex-1 bg-transparent outline-none text-[14px] font-medium disabled:opacity-40"
                 style={{
@@ -207,12 +210,12 @@ export function QuickRepliesModal({ open, onClose, selected, onChange }: Props) 
                   color: 'hsl(var(--brand-primary-foreground))',
                 }}
               >
-                <Plus size={12} /> Add
+                <Plus size={12} /> {tui('Add')}
               </button>
             </div>
             {atCap && (
               <p className="text-[11px] mt-1.5" style={{ color: 'hsl(var(--destructive))' }}>
-                You've reached the 10 reply limit. Remove one to add another.
+                {tui("You've reached the 10 reply limit. Remove one to add another.")}
               </p>
             )}
           </section>

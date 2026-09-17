@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useActiveIdentity, initialsFromName, colorFromString } from '@/hooks/use-active-identity';
+import { useLanguage } from '@/hooks/use-language';
 
 interface ShiftProfilePopupProps {
   open: boolean;
@@ -54,10 +55,11 @@ export function ShiftProfilePopup({ open, onClose }: ShiftProfilePopupProps) {
     busiestHourLabel,
   } = useActiveIdentity();
   const [tab, setTab] = useState<TabKey>('today');
+  const { tui } = useLanguage();
 
   const isStaff = identity.kind === 'staff';
   const displayName = identity.name;
-  const roleLabel = isStaff ? identity.role : 'Device';
+  const roleLabel = isStaff ? identity.role : tui('Device');
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
   const avatarBg = useMemo(() => colorFromString(displayName + roleLabel), [displayName, roleLabel]);
 
@@ -65,8 +67,8 @@ export function ShiftProfilePopup({ open, onClose }: ShiftProfilePopupProps) {
 
   const restaurantCards: Card[] = tab === 'today'
     ? [
-        { label: 'Tickets Today', value: formatCount(ticketsToday) },
-        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeSec) },
+        { label: tui('Tickets Today'), value: formatCount(ticketsToday) },
+        { label: tui('Avg Ticket Time'), value: formatMinutes(avgTicketTimeSec) },
         {
           label: 'Tickets in Queue',
           value: (
@@ -76,35 +78,35 @@ export function ShiftProfilePopup({ open, onClose }: ShiftProfilePopupProps) {
             </span>
           ),
         },
-        { label: 'Overtime Tickets', value: formatCount(overtimeToday) },
-        { label: 'On-time Rate', value: formatPct(onTimeRateToday) },
-        { label: 'Items Prepared', value: formatCount(itemsPreparedToday) },
+        { label: tui('Overtime Tickets'), value: formatCount(overtimeToday) },
+        { label: tui('On-time Rate'), value: formatPct(onTimeRateToday) },
+        { label: tui('Items Prepared'), value: formatCount(itemsPreparedToday) },
       ]
     : [
-        { label: 'Total Tickets', value: formatCount(ticketsTotal) },
-        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeAllTimeSec) },
-        { label: 'Busiest Hour', value: busiestHourLabel ?? '—' },
-        { label: 'Total Overtime Tickets', value: formatCount(overtimeTotal) },
-        { label: 'On-time Rate', value: formatPct(onTimeRateAllTime) },
-        { label: 'Total Items Prepared', value: formatCount(itemsPreparedTotal) },
+        { label: tui('Total Tickets'), value: formatCount(ticketsTotal) },
+        { label: tui('Avg Ticket Time'), value: formatMinutes(avgTicketTimeAllTimeSec) },
+        { label: tui('Busiest Hour'), value: busiestHourLabel ?? '—' },
+        { label: tui('Total Overtime Tickets'), value: formatCount(overtimeTotal) },
+        { label: tui('On-time Rate'), value: formatPct(onTimeRateAllTime) },
+        { label: tui('Total Items Prepared'), value: formatCount(itemsPreparedTotal) },
       ];
 
   const staffCards: Card[] = tab === 'today'
     ? [
-        { label: 'Tickets Completed', value: formatCount(ticketsToday) },
-        { label: 'Hours Worked', value: formatHours(hoursWorked) },
-        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeSec) },
-        { label: 'Items Prepared', value: formatCount(itemsPreparedToday) },
-        { label: 'On-time Rate', value: formatPct(onTimeRateToday) },
-        { label: 'Overtime Tickets', value: formatCount(overtimeToday) },
+        { label: tui('Tickets Completed'), value: formatCount(ticketsToday) },
+        { label: tui('Hours Worked'), value: formatHours(hoursWorked) },
+        { label: tui('Avg Ticket Time'), value: formatMinutes(avgTicketTimeSec) },
+        { label: tui('Items Prepared'), value: formatCount(itemsPreparedToday) },
+        { label: tui('On-time Rate'), value: formatPct(onTimeRateToday) },
+        { label: tui('Overtime Tickets'), value: formatCount(overtimeToday) },
       ]
     : [
-        { label: 'Total Tickets Completed', value: formatCount(ticketsTotal) },
-        { label: 'Total Hours Worked', value: formatHours(hoursWorkedTotal) },
-        { label: 'Avg Ticket Time', value: formatMinutes(avgTicketTimeAllTimeSec) },
-        { label: 'Total Items Prepared', value: formatCount(itemsPreparedTotal) },
-        { label: 'On-time Rate', value: formatPct(onTimeRateAllTime) },
-        { label: 'Total Overtime Tickets', value: formatCount(overtimeTotal) },
+        { label: tui('Total Tickets Completed'), value: formatCount(ticketsTotal) },
+        { label: tui('Total Hours Worked'), value: formatHours(hoursWorkedTotal) },
+        { label: tui('Avg Ticket Time'), value: formatMinutes(avgTicketTimeAllTimeSec) },
+        { label: tui('Total Items Prepared'), value: formatCount(itemsPreparedTotal) },
+        { label: tui('On-time Rate'), value: formatPct(onTimeRateAllTime) },
+        { label: tui('Total Overtime Tickets'), value: formatCount(overtimeTotal) },
       ];
 
   const cards = isStaff ? staffCards : restaurantCards;
@@ -128,7 +130,7 @@ export function ShiftProfilePopup({ open, onClose }: ShiftProfilePopupProps) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={tui('Close')}
           className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
           style={{ background: 'hsl(var(--muted))' }}
         >
@@ -155,7 +157,7 @@ export function ShiftProfilePopup({ open, onClose }: ShiftProfilePopupProps) {
 
         <div className="flex items-center justify-between mt-5 mb-3">
           <span className="text-sm font-semibold" style={{ color: 'hsl(var(--text-primary))' }}>
-            Performance Summary
+            {tui('Performance Summary')}
           </span>
           <div className="flex rounded-full p-0.5" style={{ background: 'hsl(var(--muted))' }}>
             {(['today', 'total'] as TabKey[]).map((k) => (
@@ -168,7 +170,7 @@ export function ShiftProfilePopup({ open, onClose }: ShiftProfilePopupProps) {
                   color: tab === k ? 'hsl(var(--primary-foreground))' : 'hsl(var(--text-secondary))',
                 }}
               >
-                {k}
+                {tui(k)}
               </button>
             ))}
           </div>

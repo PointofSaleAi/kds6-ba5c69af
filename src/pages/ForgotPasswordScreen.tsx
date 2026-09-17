@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Delete, Check } from 'lucide-react';
 import PosaiLogo from '@/components/PosaiLogo';
+import { useLanguage } from '@/hooks/use-language';
 
 type ForgotStep = 'request' | 'otp' | 'success';
 
@@ -17,6 +18,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [countdown, setCountdown] = useState(45);
   const [successCountdown, setSuccessCountdown] = useState(3);
+  const { tui } = useLanguage();
 
   useEffect(() => {
     if (step === 'otp' && countdown > 0) {
@@ -71,20 +73,20 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
           >
             <button onClick={onBack} className="flex items-center gap-2 text-text-secondary hover:text-text-primary mb-8 min-h-[44px]">
               <ArrowLeft size={20} />
-              <span className="text-sm">Back</span>
+              <span className="text-sm">{tui('Back')}</span>
             </button>
 
             <div className="text-center mb-8">
               <PosaiLogo variant="light" className="h-28 object-contain mx-auto" />
-              <p className="text-text-muted text-sm mt-2">Kitchen Display System</p>
+              <p className="text-text-muted text-sm mt-2">{tui('Kitchen Display System')}</p>
             </div>
 
-            <h2 className="text-xl font-bold text-text-primary mb-2">Forgot Password</h2>
-            <p className="text-text-secondary text-sm mb-6">Choose How to Reset Your Password</p>
+            <h2 className="text-xl font-bold text-text-primary mb-2">{tui('Forgot Password')}</h2>
+            <p className="text-text-secondary text-sm mb-6">{tui('Choose How to Reset Your Password')}</p>
 
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-text-secondary block mb-1">Email Address</label>
+                <label className="text-sm font-medium text-text-secondary block mb-1">{tui('Email Address')}</label>
                 <input
                   type="email"
                   value={email}
@@ -96,12 +98,12 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
 
               <div className="flex items-center gap-3 my-4">
                 <div className="flex-1 h-px bg-border" />
-                <span className="text-text-muted text-sm">Or</span>
+                <span className="text-text-muted text-sm">{tui('Or')}</span>
                 <div className="flex-1 h-px bg-border" />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-text-secondary block mb-1">Mobile Number</label>
+                <label className="text-sm font-medium text-text-secondary block mb-1">{tui('Mobile Number')}</label>
                 <div className="flex gap-2">
                   <select className="px-2 py-2.5 rounded-lg border border-input bg-surface-card text-text-primary text-sm min-h-[44px]">
                     <option>+1</option>
@@ -119,11 +121,11 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               </div>
 
               <button onClick={handleSendOtp} className="w-full py-3 bg-brand-primary text-primary-foreground text-cta uppercase rounded-lg hover:bg-brand-primary/90 transition-colors min-h-[48px] mt-4">
-                SEND OTP
+                {tui('SEND OTP')}
               </button>
 
               <button onClick={onBack} className="w-full text-center text-sm text-brand-primary hover:underline mt-2">
-                Back to Sign In
+                {tui('Back to Sign In')}
               </button>
             </div>
           </motion.div>
@@ -139,12 +141,12 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
           >
             <button onClick={() => setStep('request')} className="flex items-center gap-2 text-text-secondary hover:text-text-primary mb-8 min-h-[44px]">
               <ArrowLeft size={20} />
-              <span className="text-sm">Back</span>
+              <span className="text-sm">{tui('Back')}</span>
             </button>
 
-            <h2 className="text-xl font-bold text-text-primary mb-2">Enter Verification Code</h2>
+            <h2 className="text-xl font-bold text-text-primary mb-2">{tui('Enter Verification Code')}</h2>
             <p className="text-text-secondary text-sm mb-8">
-              A 6-digit code was sent to {email ? `${email.slice(0, 3)}***` : `***${phone.slice(-4)}`}
+              {tui('A 6-digit code was sent to {contact}', { contact: email ? `${email.slice(0, 3)}***` : `***${phone.slice(-4)}` })}
             </p>
 
             <div className="flex justify-center gap-3 mb-6">
@@ -164,14 +166,14 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
 
             <p className="text-center text-sm text-text-muted mb-6">
               {countdown > 0 ? (
-                <>Resend code in 0:{String(countdown).padStart(2, '0')}</>
+                <>{tui('Resend code in {time}', { time: `0:${String(countdown).padStart(2, '0')}` })}</>
               ) : (
-                <button className="text-brand-primary hover:underline">Resend Code</button>
+                <button className="text-brand-primary hover:underline">{tui('Resend Code')}</button>
               )}
             </p>
 
             <button onClick={handleVerify} className="w-full py-3 bg-brand-primary text-primary-foreground text-cta uppercase rounded-lg hover:bg-brand-primary/90 transition-colors min-h-[48px]">
-              VERIFY
+              {tui('VERIFY')}
             </button>
           </motion.div>
         )}
@@ -191,12 +193,12 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
               <div className="w-20 h-20 rounded-full bg-success flex items-center justify-center mx-auto mb-6">
                 <Check size={40} className="text-primary-foreground" strokeWidth={3} />
               </div>
-              <h2 className="text-xl font-bold text-text-primary mb-2">Password Updated Successfully</h2>
-              <p className="text-text-secondary text-sm mb-6">You can now sign in with your new password</p>
+              <h2 className="text-xl font-bold text-text-primary mb-2">{tui('Password Updated Successfully')}</h2>
+              <p className="text-text-secondary text-sm mb-6">{tui('You can now sign in with your new password')}</p>
               <button onClick={onComplete} className="w-full py-3 bg-brand-primary text-primary-foreground text-cta uppercase rounded-lg min-h-[48px]">
-                SIGN IN
+                {tui('SIGN IN')}
               </button>
-              <p className="text-text-muted text-xs mt-3">Auto-redirecting in {successCountdown}s</p>
+              <p className="text-text-muted text-xs mt-3">{tui('Auto-redirecting in {n}s', { n: successCountdown })}</p>
             </motion.div>
           </motion.div>
         )}
