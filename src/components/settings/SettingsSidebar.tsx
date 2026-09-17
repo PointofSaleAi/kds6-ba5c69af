@@ -185,7 +185,7 @@ export function SettingsSidebar() {
                     className="text-[0.82rem] font-semibold leading-tight max-[640px]:hidden"
                     style={{ color: 'hsl(var(--text-primary))' }}
                   >
-                    {group.label}
+                    {tui(group.label)}
                   </span>
                 </button>
               );
