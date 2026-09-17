@@ -207,7 +207,7 @@ export default function AIIntegrationSettings() {
 
       {/* Actions */}
       {provider && (
-        <div className="flex gap-3 mb-2">
+        <div className="flex gap-3 mb-3">
           <button
             type="button"
             onClick={handleSave}
@@ -236,7 +236,7 @@ export default function AIIntegrationSettings() {
       )}
 
       {/* Info Note */}
-      <div className="rounded-2xl px-4 py-2 flex gap-3 mb-4">
+      <div className="rounded-2xl px-4 py-2 flex gap-3 mb-3">
         <Info size={18} className="shrink-0 mt-0.5" style={{ color: 'hsl(var(--btn-seen))' }} />
         <p className="text-[13px] leading-relaxed" style={{ color: 'hsl(var(--text-secondary))' }}>
           {tui('All AI usage is billed directly to your own provider account. This does not use platform credits. Only Admin, Owner, or Manager roles can configure this integration.')}
@@ -250,7 +250,7 @@ export default function AIIntegrationSettings() {
       >
         {tui('AI Behavior')}
       </div>
-      <div className="mb-6 rounded-[28px] overflow-hidden" style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}>
+      <div className="mb-3 rounded-[28px] overflow-hidden" style={{ background: 'hsl(var(--surface-card))', border: '1px solid hsl(var(--border))' }}>
         <button
           type="button"
           onClick={() => navigate('/kds/v1/settings/system/ai-integration/ai-instructions')}
