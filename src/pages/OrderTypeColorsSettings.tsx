@@ -43,7 +43,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
       <div className="relative flex items-center justify-center px-2 pt-2 pb-3 shrink-0">
         <button
           onClick={onBack}
-          className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
+          className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -51,7 +51,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         <h1 className="text-2xl font-bold text-text-primary">Order Type Colors</h1>
       </div>
       <div className="flex-1 px-2 pb-2 overflow-y-auto">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
           {ORDER_TYPES.map(({ key, label, table, time }) => {
             const colors = getColors(key);
             return (
