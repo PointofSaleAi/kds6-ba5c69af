@@ -212,6 +212,19 @@ const ORDER_TYPE_OPTIONS = [
 ] as const;
 type PreviewTypeKey = typeof ORDER_TYPE_OPTIONS[number]['key'];
 
+/** Glass View sample tickets matching each order type. */
+const GLASS_PREVIEW_TICKET_IDS: Record<PreviewTypeKey, string> = {
+  'dine-in': 't23',
+  'take-out': 't45',
+  delivery: 't36',
+  banquet: 't42',
+  'drive-thru': 't38',
+  'curb-side': 't40',
+  scheduled: 't49',
+  'phone-in': 't47',
+  custom: 't31',
+};
+
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
   const { orderTypeDetailedColors } = useKDSSettings();
   const [customHex, setCustomHex] = useState('');
@@ -346,7 +359,11 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
           })}
         </div>
         <div className="rounded-lg overflow-hidden">
-          <SelectedVariantPreview order={previewOrder} />
+          <SelectedVariantPreview
+            order={previewOrder}
+            glassTicketId={GLASS_PREVIEW_TICKET_IDS[previewType] ?? 't23'}
+            glassElapsedSeconds={(Math.max(0, rule.minMinutes) + 1) * 60}
+          />
         </div>
       </div>
     </div>

@@ -6,7 +6,9 @@ import { OrderCardV3 } from './variants/OrderCardV3';
 import { OrderCardV4 } from './variants/OrderCardV4';
 import { OrderCardV5 } from './variants/OrderCardV5';
 import { previewTicket } from '@/data/mock-preview-ticket';
-import { KDSSettingsPreviewScope, type TicketsRouteKey } from '@/hooks/use-kds-settings';
+import { TicketBoard } from './glass/TicketBoard';
+import { GlassBoardProvider } from './glass/glass-board-context';
+import { KDSSettingsPreviewScope, useKDSSettings, type TicketsRouteKey } from '@/hooks/use-kds-settings';
 import {
   getCardVariantForTicketsRoute,
   readStoredTicketsRoute,
@@ -17,6 +19,37 @@ import type { Order } from '@/types/kds';
 interface SelectedVariantPreviewProps {
   order?: Order;
   layoutOverride?: 'standard' | 'compact';
+  /** Glass View preview: which sample ticket to show. */
+  glassTicketId?: string;
+  /** Glass View preview: force the ticket's wait time (aging rules). */
+  glassElapsedSeconds?: number;
+}
+
+/** Glass View preview card, driven by the saved ticket-layout settings. */
+function GlassPreview({
+  ticketId,
+  elapsedSeconds,
+}: {
+  ticketId: string;
+  elapsedSeconds?: number;
+}) {
+  const { ticketSpacing, textSize, ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  return (
+    <div className="w-full flex justify-center">
+      <GlassBoardProvider>
+        <TicketBoard
+          maxTickets={1}
+          pinnedTicketId={ticketId}
+          viewModeOverride="grid"
+          identifier={ticketHeaderLayout === 'guest' ? 'guest' : 'order'}
+          scaleFactor={textSize === 'Compact' ? 0.9 : textSize === 'Large' ? 1.1 : 1}
+          spacing={ticketSpacing as 'Compact' | 'Standard' | 'Spacious'}
+          appearance={ticketLayout === 'compact' ? 'compact' : ticketLayout === 'header' ? 'header' : 'standard'}
+          elapsedSecondsOverride={elapsedSeconds}
+        />
+      </GlassBoardProvider>
+    </div>
+  );
 }
 
 /**
@@ -28,6 +61,8 @@ interface SelectedVariantPreviewProps {
 export function SelectedVariantPreview({
   order = previewTicket,
   layoutOverride,
+  glassTicketId = 't23',
+  glassElapsedSeconds,
 }: SelectedVariantPreviewProps) {
   const [route, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('v3'));
 
@@ -46,7 +81,9 @@ export function SelectedVariantPreview({
   const variant = getCardVariantForTicketsRoute(route);
 
   const content =
-    variant === 'v1' ? (
+    route === 'glass' ? (
+      <GlassPreview ticketId={glassTicketId} elapsedSeconds={glassElapsedSeconds} />
+    ) : variant === 'v1' ? (
       <OrderCardV1 order={order} />
     ) : variant === 'v2' ? (
       <OrderCardV2 order={order} />
