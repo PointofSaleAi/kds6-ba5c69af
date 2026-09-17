@@ -125,7 +125,8 @@ export function TicketBoard({
   const columnWidth = useMemo(() => {
     if (!width) return CARD_W;
     const unscaledWidth = width / zoom;
-    return Math.max(1, (unscaledWidth - GAP * 2 - GAP * (colCount - 1)) / colCount);
+    const fluidWidth = (unscaledWidth - GAP * 2 - GAP * (colCount - 1)) / colCount;
+    return Math.max(MIN_RENDERED_CARD_W / zoom, fluidWidth);
   }, [width, zoom, colCount]);
 
   /** Stagger packing: each ticket drops into the shortest column. */
