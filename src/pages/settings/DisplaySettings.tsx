@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import {
   Monitor, Type, Rows3, Palette, Languages,
   Paintbrush, Bell, IdCard, SlidersHorizontal, ArrowLeft, Zap,
-  StretchVertical, LayoutPanelLeft, LayoutGrid,
+  StretchVertical, LayoutPanelLeft, LayoutGrid, ChevronDown,
 } from 'lucide-react';
 import { SectionHeaderCard } from '@/components/settings/SectionHeaderCard';
 import { SettingsPill } from '@/components/settings/SettingsPill';
@@ -190,27 +190,33 @@ export default function DisplaySettings() {
                       { value: 'glass', label: 'Glass View' },
                     ] as { value: import('@/hooks/use-kds-settings').TicketsRouteKey; label: string }[];
                     return (
-                      <select
-                        value={ticketsRoute}
-                        onChange={(e) => {
-                          const nextRoute = e.target.value as import('@/hooks/use-kds-settings').TicketsRouteKey;
-                          setTicketsRoute(nextRoute);
-                          writeStoredTicketsRoute(nextRoute);
-                        }}
-                        className="w-full rounded-lg pl-3 pr-8 py-2 text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
-                        style={{
-                          background: 'hsl(var(--muted))',
-                          color: 'hsl(var(--text-primary))',
-                          borderColor: 'hsl(var(--border))',
-                          minHeight: 36,
-                        }}
-                      >
-                        {layoutOptions.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="relative w-full">
+                        <select
+                          value={ticketsRoute}
+                          onChange={(e) => {
+                            const nextRoute = e.target.value as import('@/hooks/use-kds-settings').TicketsRouteKey;
+                            setTicketsRoute(nextRoute);
+                            writeStoredTicketsRoute(nextRoute);
+                          }}
+                          className="w-full appearance-none rounded-lg pl-3 pr-10 py-2 text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
+                          style={{
+                            background: 'hsl(var(--muted))',
+                            color: 'hsl(var(--text-primary))',
+                            borderColor: 'hsl(var(--border))',
+                            minHeight: 36,
+                          }}
+                        >
+                          {layoutOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown
+                          aria-hidden="true"
+                          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-primary"
+                        />
+                      </div>
                     );
                   })()}
                 </div>
