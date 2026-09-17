@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useOrderStore } from "@/hooks/use-order-store";
+import { useLanguage } from "@/hooks/use-language";
 
 import {
   Sheet,
@@ -40,7 +41,7 @@ const restoreDurations = [
   { id: "1hr", label: "In 1 Hour", ms: 60 * 60 * 1000 },
   { id: "2hr", label: "In 2 Hours", ms: 2 * 60 * 60 * 1000 },
   { id: "custom", label: "Custom Time", ms: null },
-];
+]; // labels translated at render via tui()
 
 export interface EightySixedItem {
   id: string;

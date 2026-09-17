@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { OrderType } from '@/types/kds';
 import { DEFAULT_ORDER_TYPE_COLORS, useKDSSettings } from '@/hooks/use-kds-settings';
+import { useLanguage } from '@/hooks/use-language';
 
 interface OrderTypeFilterModalProps {
   open: boolean;
@@ -21,8 +22,10 @@ const ORDER_TYPE_OPTIONS: { value: OrderType; label: string }[] = [
   { value: 'phone-in', label: 'Phone-In' },
 ];
 
+
 export default function OrderTypeFilterModal({ open, onClose, activeTypes, onApply }: OrderTypeFilterModalProps) {
   const { orderTypeColors } = useKDSSettings();
+  const { tui } = useLanguage();
   if (!open) return null;
 
   const isAll = activeTypes.length === 0;
@@ -53,8 +56,8 @@ export default function OrderTypeFilterModal({ open, onClose, activeTypes, onApp
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div />
-            <h2 className="text-lg font-bold text-text-primary">Order Type Filter</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
+            <h2 className="text-lg font-bold text-text-primary">{tui('Order Type Filter')}</h2>
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close')}>
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -67,7 +70,7 @@ export default function OrderTypeFilterModal({ open, onClose, activeTypes, onApp
                   isAll ? 'bg-brand-primary text-primary-foreground' : 'bg-muted text-text-secondary hover:text-text-primary'
                 }`}
               >
-                All Types
+                {tui('All Types')}
               </button>
               {ORDER_TYPE_OPTIONS.map((opt) => {
                 const active = activeTypes.includes(opt.value);
@@ -83,7 +86,7 @@ export default function OrderTypeFilterModal({ open, onClose, activeTypes, onApp
                     }`}
                     style={active ? { backgroundColor: color, borderColor: color } : { borderColor: color, color }}
                   >
-                    {opt.label}
+                    {tui(opt.label)}
                   </button>
                 );
               })}
@@ -95,7 +98,7 @@ export default function OrderTypeFilterModal({ open, onClose, activeTypes, onApp
               onClick={() => onApply([])}
               className="w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[44px]"
             >
-              Clear All
+              {tui('Clear All')}
             </button>
           </div>
         </motion.div>
