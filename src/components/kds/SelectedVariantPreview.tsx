@@ -19,6 +19,37 @@ import type { Order } from '@/types/kds';
 interface SelectedVariantPreviewProps {
   order?: Order;
   layoutOverride?: 'standard' | 'compact';
+  /** Glass View preview: which sample ticket to show. */
+  glassTicketId?: string;
+  /** Glass View preview: force the ticket's wait time (aging rules). */
+  glassElapsedSeconds?: number;
+}
+
+/** Glass View preview card, driven by the saved ticket-layout settings. */
+function GlassPreview({
+  ticketId,
+  elapsedSeconds,
+}: {
+  ticketId: string;
+  elapsedSeconds?: number;
+}) {
+  const { ticketSpacing, textSize, ticketLayout, ticketHeaderLayout } = useKDSSettings();
+  return (
+    <div className="w-full flex justify-center">
+      <GlassBoardProvider>
+        <TicketBoard
+          maxTickets={1}
+          pinnedTicketId={ticketId}
+          viewModeOverride="grid"
+          identifier={ticketHeaderLayout === 'guest' ? 'guest' : 'order'}
+          scaleFactor={textSize === 'Compact' ? 0.9 : textSize === 'Large' ? 1.1 : 1}
+          spacing={ticketSpacing as 'Compact' | 'Standard' | 'Spacious'}
+          appearance={ticketLayout === 'compact' ? 'compact' : ticketLayout === 'header' ? 'header' : 'standard'}
+          elapsedSecondsOverride={elapsedSeconds}
+        />
+      </GlassBoardProvider>
+    </div>
+  );
 }
 
 /**
