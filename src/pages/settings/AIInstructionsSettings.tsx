@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useLanguage } from '@/hooks/use-language';
 
 const PREF_KEYS = {
   dos: 'ai_rules_dos',
@@ -69,6 +70,7 @@ function loadList(key: string, fallback: string[]): string[] {
 
 export default function AIInstructionsSettings() {
   const navigate = useNavigate();
+  const { tui } = useLanguage();
   const [dos, setDos] = useState<string[]>(DEFAULT_DOS);
   const [donts, setDonts] = useState<string[]>(DEFAULT_DONTS);
   const [customInstructions, setCustomInstructions] = useState('');
@@ -180,7 +182,7 @@ export default function AIInstructionsSettings() {
           onClick={() => navigate('/kds/v1/settings/system/ai-integration')}
           className="w-10 h-10 rounded-full flex items-center justify-center active:opacity-70 transition-opacity"
           style={cardStyle}
-          aria-label="Back"
+          aria-label={tui('Back')}
         >
           <ChevronLeft size={20} style={{ color: 'hsl(var(--text-primary))' }} />
         </button>
@@ -196,8 +198,7 @@ export default function AIInstructionsSettings() {
         className="text-[13px] leading-relaxed mb-4 px-1"
         style={{ color: 'hsl(var(--text-muted))' }}
       >
-        Define global rules, custom instructions, and restaurant knowledge to guide AI behavior
-        across all providers.
+        {tui('Define global rules, custom instructions, and restaurant knowledge to guide AI behavior across all providers.')}
       </p>
 
       {/* Do's */}
@@ -223,7 +224,7 @@ export default function AIInstructionsSettings() {
                   onClick={() => setDos((p) => p.filter((_, idx) => idx !== i))}
                   className="opacity-60 hover:opacity-100 transition-opacity shrink-0"
                   style={{ color: 'hsl(var(--text-muted))' }}
-                  aria-label="Remove"
+                  aria-label={tui('Remove')}
                 >
                   <X size={14} />
                 </button>
@@ -234,7 +235,7 @@ export default function AIInstructionsSettings() {
                 value={newDo}
                 onChange={(e) => setNewDo(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && addDo()}
-                placeholder="Add a new rule..."
+                placeholder={tui('Add a new rule...')}
                 className="text-sm flex-1"
               />
               <button
@@ -243,7 +244,7 @@ export default function AIInstructionsSettings() {
                 disabled={!newDo.trim()}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-opacity shrink-0 disabled:opacity-30"
                 style={{ background: '#16A085' }}
-                aria-label="Add Do"
+                aria-label={tui('Add Do')}
               >
                 <Plus size={16} color="#FFFFFF" />
               </button>
@@ -275,7 +276,7 @@ export default function AIInstructionsSettings() {
                   onClick={() => setDonts((p) => p.filter((_, idx) => idx !== i))}
                   className="opacity-60 hover:opacity-100 transition-opacity shrink-0"
                   style={{ color: 'hsl(var(--text-muted))' }}
-                  aria-label="Remove"
+                  aria-label={tui('Remove')}
                 >
                   <X size={14} />
                 </button>
@@ -286,7 +287,7 @@ export default function AIInstructionsSettings() {
                 value={newDont}
                 onChange={(e) => setNewDont(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && addDont()}
-                placeholder="Add a restriction..."
+                placeholder={tui('Add a restriction...')}
                 className="text-sm flex-1"
               />
               <button
@@ -295,7 +296,7 @@ export default function AIInstructionsSettings() {
                 disabled={!newDont.trim()}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-opacity shrink-0 disabled:opacity-30"
                 style={{ background: '#E74C3C' }}
-                aria-label="Add Don't"
+                aria-label={tui("Add Don't")}
               >
                 <Plus size={16} color="#FFFFFF" />
               </button>
@@ -307,7 +308,7 @@ export default function AIInstructionsSettings() {
       {/* Custom Instructions */}
       <div className="mb-3 rounded-[28px] overflow-hidden" style={cardStyle}>
         {sectionHeader(
-          'Custom Instructions',
+          tui('Custom Instructions'),
           MessageSquareText,
           '#2980B9',
           instructionsOpen,
@@ -316,8 +317,7 @@ export default function AIInstructionsSettings() {
         {instructionsOpen && (
           <div className="px-4 pb-4 space-y-3">
             <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(var(--text-muted))' }}>
-              Define tone, style, and behavior guidelines. These instructions are sent to every AI
-              conversation.
+              {tui('Define tone, style, and behavior guidelines. These instructions are sent to every AI conversation.')}
             </p>
             <Textarea
               value={customInstructions}
@@ -333,7 +333,7 @@ export default function AIInstructionsSettings() {
       {/* Knowledge Base */}
       <div className="mb-6 rounded-[28px] overflow-hidden" style={cardStyle}>
         {sectionHeader(
-          'Restaurant Knowledge Base',
+          tui('Restaurant Knowledge Base'),
           BookOpen,
           '#F39C12',
           knowledgeOpen,
@@ -342,7 +342,7 @@ export default function AIInstructionsSettings() {
         {knowledgeOpen && (
           <div className="px-4 pb-4 space-y-4">
             <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(var(--text-muted))' }}>
-              Provide restaurant-specific context so AI can give accurate, relevant responses.
+              {tui('Provide restaurant-specific context so AI can give accurate, relevant responses.')}
             </p>
 
             <div>
@@ -350,7 +350,7 @@ export default function AIInstructionsSettings() {
                 className="text-[12px] font-medium block mb-2"
                 style={{ color: 'hsl(var(--text-secondary))' }}
               >
-                Restaurant Type
+                {tui('Restaurant Type')}
               </label>
               <div className="flex flex-wrap gap-2">
                 {RESTAURANT_TYPES.map((type) => {
@@ -370,7 +370,7 @@ export default function AIInstructionsSettings() {
                           : 'hsl(var(--text-secondary))',
                       }}
                     >
-                      {type}
+                      {tui(type)}
                     </button>
                   );
                 })}
@@ -382,7 +382,7 @@ export default function AIInstructionsSettings() {
                 className="text-[12px] font-medium block mb-2"
                 style={{ color: 'hsl(var(--text-secondary))' }}
               >
-                Additional Knowledge & Context
+                {tui('Additional Knowledge & Context')}
               </label>
               <Textarea
                 value={knowledgeBase}

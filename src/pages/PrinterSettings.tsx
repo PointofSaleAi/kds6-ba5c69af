@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Printer, Wifi, WifiOff, AlertTriangle, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useLanguage } from '@/hooks/use-language';
 
 interface PrinterSettingsProps {
   open: boolean;
@@ -23,15 +24,16 @@ const mockPrinters: PrinterDevice[] = [
 ];
 
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
+  const { tui } = useLanguage();
   const colors = {
     online: 'bg-green-500',
     offline: 'bg-destructive',
     'low-paper': 'bg-amber-500',
   };
   const labels = {
-    online: 'Online',
-    offline: 'Offline',
-    'low-paper': 'Low paper',
+    online: tui('Online'),
+    offline: tui('Offline'),
+    'low-paper': tui('Low paper'),
   };
   return (
     <div className="flex items-center gap-1.5">
@@ -42,17 +44,18 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
 }
 
 export default function PrinterSettings({ open, onClose }: PrinterSettingsProps) {
+  const { tui } = useLanguage();
   const [mainPrinter, setMainPrinter] = useState('p1');
 
   if (!open) return null;
 
   const handleSetMain = (id: string) => {
     setMainPrinter(id);
-    toast.success('Main printer updated');
+    toast.success(tui('Main printer updated'));
   };
 
   const handleTestPrint = (name: string) => {
-    toast.info(`Test print sent to ${name}`);
+    toast.info(tui('Test print sent to {name}', { name }));
   };
 
   return (
@@ -75,8 +78,8 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Printer size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">Printer Settings</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
+            <h2 className="text-lg font-bold text-text-primary">{tui('Printer Settings')}</h2>
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close')}>
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -84,7 +87,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
           <div className="flex-1 overflow-y-auto">
             {/* Current main */}
             <div className="px-4 pt-4 pb-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">Current Main Printer</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">{tui('Current Main Printer')}</div>
               {(() => {
                 const current = mockPrinters.find((p) => p.id === mainPrinter);
                 if (!current) return null;
@@ -103,7 +106,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
 
             {/* Available printers */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Available Printers</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Available Printers')}</div>
               <div className="space-y-2">
                 {mockPrinters.map((printer) => (
                   <div
@@ -137,7 +140,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
                       onClick={() => handleTestPrint(printer.name)}
                       className="px-3 py-2 text-xs font-semibold text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/10 transition-colors min-h-[44px]"
                     >
-                      Test
+                      {tui('Test')}
                     </button>
                   </div>
                 ))}
@@ -150,7 +153,7 @@ export default function PrinterSettings({ open, onClose }: PrinterSettingsProps)
                 onClick={() => handleSetMain(mainPrinter)}
                 className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
               >
-                Set as Main Printer
+                {tui('Set as Main Printer')}
               </button>
             </div>
           </div>

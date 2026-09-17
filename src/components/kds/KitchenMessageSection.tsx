@@ -3,6 +3,7 @@ import { MessageCircle, Reply, Eye } from 'lucide-react';
 import itemReadyIcon from '@/assets/item-ready-icon.svg';
 import type { KitchenMessage, KitchenReply } from '@/types/kitchen-message';
 import { KitchenReplyDialog } from './KitchenReplyDialog';
+import { useLanguage } from '@/hooks/use-language';
 
 interface KitchenMessageSectionProps {
   messages: KitchenMessage[];
@@ -16,6 +17,7 @@ import { formatTime, formatTimeAgo as timeAgo } from '@/lib/datetime';
 
 export function KitchenMessageSection({ messages, replies, onAcknowledge, onReply, variant = 'default' }: KitchenMessageSectionProps) {
   const [replyTarget, setReplyTarget] = useState<KitchenMessage | null>(null);
+  const { tui } = useLanguage();
   const isV3 = variant === 'v3';
 
   if (messages.length === 0) return null;
@@ -53,7 +55,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                   {isPending ? (
                     <button
                       onClick={() => onAcknowledge(msg.message_id)}
-                      aria-label="Seen & Acknowledge"
+                      aria-label={tui('Seen & Acknowledge')}
                       className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
                       style={{ backgroundColor: '#EBD7FF' }}
                     >
@@ -62,7 +64,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                   ) : (
                     <button
                       onClick={() => setReplyTarget(msg)}
-                      aria-label="Reply"
+                      aria-label={tui('Reply')}
                       className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
                       style={{ backgroundColor: '#EBD7FF' }}
                     >
@@ -74,7 +76,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                 <div className="flex flex-col items-center gap-1 shrink-0">
                   <button
                     onClick={() => onAcknowledge(msg.message_id)}
-                    aria-label="Acknowledge"
+                    aria-label={tui('Acknowledge')}
                     className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:brightness-95"
                     style={{ backgroundColor: '#EBD7FF' }}
                   >
@@ -82,7 +84,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                   </button>
                   <button
                     onClick={() => setReplyTarget(msg)}
-                    aria-label="Reply"
+                    aria-label={tui('Reply')}
                     className="w-7 h-7 rounded-md bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
                   >
                     <Reply size={20} strokeWidth={2.5} className="text-gray-800" />
@@ -97,7 +99,7 @@ export function KitchenMessageSection({ messages, replies, onAcknowledge, onRepl
                 {msgReplies.map(r => (
                   <div key={r.reply_id} className="flex items-center gap-2">
                     <p className="text-[11px] text-text-primary font-medium flex-1 min-w-0 truncate">{r.reply_text}</p>
-                    <p className="text-[9px] text-text-muted shrink-0">{r.employee_name || 'Kitchen'} - {formatTime(r.timestamp)}</p>
+                    <p className="text-[9px] text-text-muted shrink-0">{r.employee_name || tui('Kitchen')} - {formatTime(r.timestamp)}</p>
                   </div>
                 ))}
               </div>

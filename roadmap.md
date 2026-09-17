@@ -1,9 +1,12 @@
-# Roadmap — App Interface language everywhere
+# Roadmap
 
-- [x] Shared interface-phrase dictionary (`src/i18n/`) + `tui()` translator in `use-language.tsx`
-- [ ] Pass 1 — board chrome (left rail, bottom bar, top header, notifications, summary panel, empty states, toasts)
-- [ ] Pass 2 — Settings shell (menu list, group titles, shared controls, search)
-- [ ] Pass 3 — Settings sub-screens (Display, Orders, Hardware, Printers, Sound, Account, System, Expo, AI, Stagger, Aging, Status/Order Type Colors)
-- [ ] Pass 4 — entry/account screens (PIN pad, clock in/out, sign in, switch user, device activation, logout)
-- [ ] Pass 5 — dialogs (86 drawer, recipe reference, kitchen reply, order notes, history + filters, alerts log, onboarding)
-- [ ] Verify Spanish + Arabic (RTL), light/dark, desktop/tablet/phone; build clean
+## App-wide interface language
+
+- [x] Pass 1 — board chrome (rail, bottom bar, top header, summary panel, notifications, empty states)
+- [x] Pass 2 — Settings shell (menu, groups, search, profile, shared controls)
+- [x] Pass 3 — Settings sub-screens (Display, Tickets, Hardware, Account, System, Expo, AI, Status/Order Type Colors, Printers, Sound, Stagger, Aging)
+- [x] Pass 4 — entry and account screens (PIN pad, set PIN, device activation, splash, clock in/out, manager PIN)
+- [x] Pass 5 — drawers and dialogs (86 drawer, recipes, replies, notes, filters, history, walkthrough)
+- [x] Dictionary audit: every `tui()` key covered in es / ar / zh / vi
+- [x] Verified Spanish + Arabic (RTL) on desktop, tablet and mobile, light and dark; build OK
+- [ ] Korean and Japanese dictionaries (not yet requested)

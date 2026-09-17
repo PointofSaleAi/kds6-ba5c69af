@@ -1,4 +1,5 @@
 import { useKDSSettings, DEFAULT_ORDER_TYPE_COLORS, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-kds-settings';
+import { useLanguage } from '@/hooks/use-language';
 import { RotateCcw, ArrowLeft } from 'lucide-react';
 
 const ORDER_TYPES = [
@@ -18,6 +19,7 @@ interface OrderTypeColorsSettingsProps {
 }
 
 export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSettingsProps) {
+  const { tui } = useLanguage();
   const { orderTypeColors, orderTypeDetailedColors, setOrderTypeColors, setOrderTypeDetailedColors } = useKDSSettings();
 
   const getColors = (key: string) => orderTypeDetailedColors?.[key] || DEFAULT_ORDER_TYPE_DETAILED_COLORS[key];
@@ -44,11 +46,11 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
         <button
           onClick={onBack}
           className="absolute left-2 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
-          aria-label="Back"
+          aria-label={tui('Back')}
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">Order Type Colors</h1>
+        <h1 className="w-full pl-12 sm:pl-0 text-lg sm:text-2xl font-bold text-text-primary text-center leading-tight">{tui('Order Type Colors')}</h1>
       </div>
       <div className="flex-1 px-2 pb-2 overflow-y-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -93,7 +95,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
                       />
                     </label>
                     <div className="min-w-0">
-                      <div className="text-[12px] font-semibold text-text-primary leading-tight">Background</div>
+                      <div className="text-[12px] font-semibold text-text-primary leading-tight">{tui('Background')}</div>
                       <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerBg}</div>
                     </div>
                   </div>
@@ -113,7 +115,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
                       />
                     </label>
                     <div className="min-w-0">
-                      <div className="text-[12px] font-semibold text-text-primary leading-tight">Text</div>
+                      <div className="text-[12px] font-semibold text-text-primary leading-tight">{tui('Text')}</div>
                       <div className="text-[11px] text-text-muted font-mono uppercase">{colors.headerText}</div>
                     </div>
                   </div>
@@ -128,7 +130,7 @@ export default function OrderTypeColorsSettings({ onBack }: OrderTypeColorsSetti
           className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-text-primary text-[13px] font-bold min-h-[44px] hover:bg-muted/80 transition-colors mt-4"
         >
           <RotateCcw size={14} />
-          Reset to Defaults
+          {tui('Reset to Defaults')}
         </button>
       </div>
     </div>

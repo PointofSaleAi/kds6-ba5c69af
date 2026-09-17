@@ -48,7 +48,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
   const { isPortrait } = usePortrait();
-  const { t } = useLanguage();
+  const { t, tui } = useLanguage();
   const { textSize, ticketSpacing, ticketFlowDirection } = useKDSSettings();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
 
@@ -89,7 +89,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
         </div>
         <h2 className="text-xl font-bold text-text-primary mb-1.5">{t.allCaughtUp}</h2>
         <p className="text-text-muted text-sm">
-          {isStationView && stationCourse ? `No new ${stationCourse} orders` : t.noNewUnseen}
+          {isStationView && stationCourse ? tui('No new {station} orders', { station: stationCourse }) : t.noNewUnseen}
         </p>
       </div>
     );
@@ -106,7 +106,7 @@ export default function UnseenOrdersScreen({ orders: ordersProp, viewMode, showA
         </span>
         {isStationView && stationCourse && (
           <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
-            {stationCourse} station
+            {tui('{station} station', { station: stationCourse })}
           </span>
         )}
       </div>

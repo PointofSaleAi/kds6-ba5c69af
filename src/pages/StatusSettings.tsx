@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
 import { RotateCcw, GripVertical, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { useStatusRules, DEFAULT_RULES, type StatusRule } from '@/hooks/use-status-rules';
+import { useLanguage } from '@/hooks/use-language';
 
 import AgingEditPanel from '@/components/kds/AgingEditPanel';
 
@@ -9,28 +10,28 @@ interface StatusSettingsProps {
   hideHeader?: boolean;
 }
 
-function validateRules(rules: StatusRule[]): Map<string, string[]> {
+function validateRules(rules: StatusRule[], tui: (s: string, vars?: Record<string, string | number>) => string): Map<string, string[]> {
   const errorMap = new Map<string, string[]>();
 
   rules.forEach((rule, i) => {
     const errs: string[] = [];
-    if (!rule.label.trim()) errs.push('Status name cannot be empty');
-    if (rule.minMinutes < 0) errs.push('Start minute cannot be negative');
+    if (!rule.label.trim()) errs.push(tui('Status name cannot be empty'));
+    if (rule.minMinutes < 0) errs.push(tui('Start minute cannot be negative'));
     if (rule.maxMinutes !== null && rule.maxMinutes < rule.minMinutes) {
-      errs.push('End minute must be greater than start');
+      errs.push(tui('End minute must be greater than start'));
     }
     if (i > 0) {
       const prev = rules[i - 1];
       const prevEnd = prev.maxMinutes;
       if (prevEnd !== null && rule.minMinutes <= prevEnd) {
-        errs.push(`Overlaps with "${prev.label}" (ends at ${prevEnd} min)`);
+        errs.push(tui('Overlaps with "{label}" (ends at {end} min)', { label: prev.label, end: prevEnd }));
       }
       if (prevEnd !== null && rule.minMinutes > prevEnd + 1) {
-        errs.push(`Gap between ${prevEnd} and ${rule.minMinutes} min`);
+        errs.push(tui('Gap between {start} and {end} min', { start: prevEnd, end: rule.minMinutes }));
       }
     }
     const dup = rules.find((r, j) => j !== i && r.label.trim().toLowerCase() === rule.label.trim().toLowerCase());
-    if (dup) errs.push('Duplicate status name');
+    if (dup) errs.push(tui('Duplicate status name'));
     if (errs.length > 0) errorMap.set(rule.id, errs);
   });
 
@@ -63,6 +64,7 @@ interface DraggableStatusListProps {
 }
 
 function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset, onAdd, onRemove }: DraggableStatusListProps) {
+  const { tui } = useLanguage();
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -104,22 +106,22 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   return (
     <div ref={listRef} className="w-full xl:w-[240px] lg:w-[220px] shrink-0 border-b lg:border-b-0 lg:border-r border-border overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto p-2.5 space-y-2 bg-surface-card/70">
       <div className="flex items-center justify-between gap-2 px-1">
-        <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Status Rules</span>
+        <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">{tui('Status Rules')}</span>
         <div className="flex items-center gap-1">
           <button
             onClick={onAdd}
             className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary transition-colors min-h-[32px] px-2 rounded-md hover:bg-muted"
-            title="Add New Status Level"
+            title={tui('Add New Status Level')}
           >
             <Plus size={12} />
-            Add
+            {tui('Add')}
           </button>
           <button
             onClick={onReset}
             className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary transition-colors min-h-[32px] px-2 rounded-md hover:bg-muted"
           >
             <RotateCcw size={10} />
-            Reset
+            {tui('Reset')}
           </button>
         </div>
       </div>
@@ -159,14 +161,14 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-bold text-text-primary truncate">{rule.label}</div>
                 <div className="text-[11px] font-semibold text-text-secondary">
-                  {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes} min` : `${rule.minMinutes}+ min`}
+                  {rule.maxMinutes !== null ? tui('{min}-{max} min', { min: rule.minMinutes, max: rule.maxMinutes }) : tui('{min}+ min', { min: rule.minMinutes })}
                 </div>
               </div>
               {canRemove && (
                 <button
                   onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
                   className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[32px] min-h-[32px] flex items-center justify-center"
-                  title="Remove Status Level"
+                  title={tui('Remove Status Level')}
                 >
                   <Trash2 size={12} />
                 </button>
@@ -186,8 +188,9 @@ const AGING_TONES = {
   overtime: { color: '#a259e6', colorTo: '#7b2fc4', glow: 'rgba(162,89,230,.8)', textColor: 'white' as const },
 };
 
-const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
+const PRESETS_BASE: { key: string; label: string; description: string; rules: StatusRule[] }[] = [
   {
+    key: 'fast-kitchen',
     label: 'Fast Kitchen',
     description: 'Tight thresholds for high-volume kitchens',
     rules: [
@@ -198,6 +201,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     ],
   },
   {
+    key: 'standard',
     label: 'Standard',
     description: 'Balanced timing for most restaurants',
     rules: [
@@ -208,6 +212,7 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
     ],
   },
   {
+    key: 'slow-kitchen',
     label: 'Slow Kitchen',
     description: 'Relaxed thresholds for fine dining or complex menus',
     rules: [
@@ -220,16 +225,22 @@ const PRESETS: { label: string; description: string; rules: StatusRule[] }[] = [
 ];
 
 export default function StatusSettings({ onBack, hideHeader = false }: StatusSettingsProps) {
+  const { tui } = useLanguage();
   const { rules: savedRules, setRules: saveRules, resetToDefaults, courseLevelAging, setCourseLevelAging } = useStatusRules();
   const [draft, setDraft] = useState<StatusRule[]>(savedRules);
   const [selectedId, setSelectedId] = useState<string>(draft[0]?.id || '');
 
-  const errors = useMemo(() => validateRules(draft), [draft]);
+  const errors = useMemo(() => validateRules(draft, tui), [draft, tui]);
   const hasErrors = errors.size > 0;
 
   const selectedRule = draft.find(r => r.id === selectedId);
   const selectedIndex = draft.findIndex(r => r.id === selectedId);
   const isLastSelected = selectedIndex === draft.length - 1;
+
+  const PRESETS = useMemo(
+    () => PRESETS_BASE.map((p) => ({ ...p, label: tui(p.label), description: tui(p.description) })),
+    [tui],
+  );
 
   const maxMins = useMemo(() => {
     const lastBounded = draft.filter(r => r.maxMinutes !== null);
@@ -312,11 +323,11 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
           <button
             onClick={onBack}
             className="w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
-            aria-label="Back"
+            aria-label={tui('Back')}
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-text-primary">Ticket Aging Rules</h1>
+          <h1 className="text-2xl font-bold text-text-primary">{tui('Ticket Aging Rules')}</h1>
         </div>
       )}
 
@@ -324,8 +335,8 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       <div className="pb-2 grid grid-cols-1 md:grid-cols-2 gap-2 items-stretch">
         <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-surface-card border border-border">
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
-            <div className="text-[12px] text-text-secondary leading-snug">When enabled, timing rules apply per course. Orders without courses use product-level timing.</div>
+            <div className="text-[13px] font-semibold text-text-primary">{tui('Apply to Course Level')}</div>
+            <div className="text-[12px] text-text-secondary leading-snug">{tui('When enabled, timing rules apply per course. Orders without courses use product-level timing.')}</div>
           </div>
           <button
             onClick={() => setCourseLevelAging(!courseLevelAging)}
@@ -338,7 +349,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
         </div>
 
         <div className="py-3 px-4 rounded-lg bg-surface-card border border-border">
-          <div className="text-[11px] font-bold text-text-secondary uppercase tracking-wider mb-2">Presets</div>
+          <div className="text-[11px] font-bold text-text-secondary uppercase tracking-wider mb-2">{tui('Presets')}</div>
           <div className="flex items-center gap-2 flex-wrap">
             {PRESETS.map((preset) => {
               const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
@@ -390,7 +401,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
             />
           ) : (
             <div className="flex items-center justify-center h-full text-sm text-text-muted">
-              Select a status rule to edit
+              {tui('Select a status rule to edit')}
             </div>
           )}
         </div>
@@ -403,7 +414,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
           disabled={hasErrors}
           className="w-full py-3 bg-foreground text-background font-bold text-sm uppercase rounded-lg transition-colors hover:opacity-90 disabled:opacity-40 disabled:pointer-events-none min-h-[44px]"
         >
-          Save Rules
+          {tui('Save Rules')}
         </button>
       </div>
     </div>

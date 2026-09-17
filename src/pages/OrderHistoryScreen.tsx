@@ -46,7 +46,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
   const [dateFilter, setDateFilter] = useState('today');
   const [search, setSearch] = useState('');
   const { orderTypeColors, textSize, ticketSpacing } = useKDSSettings();
-  const { t, tperson, tl, to } = useLanguage();
+  const { t, tperson, tl, to, tui } = useLanguage();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
@@ -107,7 +107,7 @@ export default function OrderHistoryScreen({ onBack, onRecall }: OrderHistoryScr
         <div className="space-y-2 max-w-4xl mx-auto">
           {isStationView && stationCourse && (
             <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-[12px] text-text-secondary">
-              Showing all history. Station-scoped history requires per-item category data, which is not yet available in the History feed.
+              {tui('Showing all history. Station-scoped history requires per-item category data, which is not yet available in the History feed.')}
             </div>
           )}
           {filtered.map((order) => (

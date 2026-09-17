@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Clock, Minus, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/hooks/use-language';
 
 interface StaggerModeSettingsProps {
   open: boolean;
@@ -36,6 +37,7 @@ function Stepper({ value, onChange, min, max, label, unit }: { value: number; on
 }
 
 export default function StaggerModeSettings({ open, onClose }: StaggerModeSettingsProps) {
+  const { tui } = useLanguage();
   const [enabled, setEnabled] = useState(true);
   const [interval, setIntervalMin] = useState(5);
   const [maxOrders, setMaxOrders] = useState(3);
@@ -44,7 +46,7 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
 
   // Preview timeline blocks
   const previewSlots = Array.from({ length: 4 }, (_, i) => ({
-    time: `${i * interval} min`,
+    time: tui('{n} min', { n: i * interval }),
     orders: Math.min(maxOrders, 3 - Math.floor(i / 2)),
   }));
 
@@ -67,8 +69,8 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Clock size={20} className="text-text-muted" />
-            <h2 className="text-lg font-bold text-text-primary">Stagger Mode</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
+            <h2 className="text-lg font-bold text-text-primary">{tui('Stagger Mode')}</h2>
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close')}>
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -79,7 +81,7 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
               onClick={() => setEnabled(!enabled)}
               className="w-full flex items-center justify-between py-3 min-h-[52px]"
             >
-              <span className="text-sm font-semibold text-text-primary">Stagger Mode</span>
+              <span className="text-sm font-semibold text-text-primary">{tui('Stagger Mode')}</span>
               <div
                 className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] ${enabled ? 'bg-brand-primary' : 'bg-border'}`}
                 role="switch"
@@ -97,22 +99,22 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
                     onChange={setIntervalMin}
                     min={1}
                     max={30}
-                    label="Release Interval"
-                    unit="minutes between batches"
+                    label={tui('Release Interval')}
+                    unit={tui('minutes between batches')}
                   />
                   <Stepper
                     value={maxOrders}
                     onChange={setMaxOrders}
                     min={1}
                     max={10}
-                    label="Max Orders per Batch"
-                    unit="orders released at once"
+                    label={tui('Max Orders per Batch')}
+                    unit={tui('orders released at once')}
                   />
                 </div>
 
                 {/* Preview timeline */}
                 <div className="mt-4">
-                  <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Release Preview</div>
+                  <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Release Preview')}</div>
                   <div className="flex items-end gap-2">
                     {previewSlots.map((slot, i) => (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
@@ -135,13 +137,13 @@ export default function StaggerModeSettings({ open, onClose }: StaggerModeSettin
               onClick={onClose}
               className="flex-1 py-3 text-sm font-semibold text-text-secondary border border-border rounded-lg hover:bg-muted transition-colors min-h-[44px]"
             >
-              Cancel
+              {tui('Cancel')}
             </button>
             <button
               onClick={onClose}
               className="flex-1 py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
             >
-              Save
+              {tui('Save')}
             </button>
           </div>
         </motion.div>

@@ -47,7 +47,7 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
   const orders = ordersProp ?? storeOrders;
   const { mode: kdsMode, stationCourse } = useKDSMode();
   const isStationView = kdsMode === 'Prep' && !!stationCourse;
-  const { t } = useLanguage();
+  const { t, tui } = useLanguage();
   const { isPortrait } = usePortrait();
   const { textSize, ticketSpacing, ticketFlowDirection } = useKDSSettings();
   const scaleClasses = getKdsScaleClasses(textSize, ticketSpacing);
@@ -87,11 +87,11 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
         <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mb-5">
           <Eye size={40} className="text-text-muted" />
         </div>
-        <h2 className="text-xl font-bold text-text-primary mb-1.5">Nothing Seen Yet</h2>
+        <h2 className="text-xl font-bold text-text-primary mb-1.5">{tui('Nothing Seen Yet')}</h2>
         <p className="text-text-muted text-sm">
           {isStationView && stationCourse
-            ? `No seen ${stationCourse} orders right now`
-            : 'Orders you acknowledge will appear here'}
+            ? tui('No seen {station} orders right now', { station: stationCourse })
+            : tui('Orders you acknowledge will appear here')}
         </p>
       </div>
     );
@@ -101,14 +101,14 @@ export default function SeenOrdersScreen({ orders: ordersProp, viewMode, showAll
     <div className={`flex-1 flex flex-col overflow-hidden bg-tickets-bg ${scaleClasses}`}>
       <div className="flex items-center gap-2.5 px-3 pt-3 pb-2 shrink-0">
         <span className="text-[11px] font-bold uppercase text-text-muted bg-muted px-2.5 py-1 rounded tracking-wider">
-          Seen Orders
+          {tui('Seen Orders')}
         </span>
         <span className="bg-[#2980B9] text-primary-foreground text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
           {seenOrders.length}
         </span>
         {isStationView && stationCourse && (
           <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground bg-[#4F46E5] px-2 py-0.5 rounded">
-            {stationCourse} station
+            {tui('{station} station', { station: stationCourse })}
           </span>
         )}
       </div>

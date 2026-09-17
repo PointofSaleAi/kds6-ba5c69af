@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { X, Volume2, VolumeX, Play, Upload, X as XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/hooks/use-language';
 
 interface SoundSettingsProps {
   open: boolean;
@@ -55,15 +56,15 @@ const PRESET_PLAYERS: Record<string, (vol: number) => void> = {
   },
 };
 
-const presetSounds = [
+const PRESET_SOUNDS_BASE = [
   { id: 'default-beep', label: 'Default Beep' },
   { id: 'double-chime', label: 'Double Chime' },
   { id: 'urgent-alert', label: 'Urgent Alert' },
   { id: 'soft-ding', label: 'Soft Ding' },
 ];
 
-const urgentOptions = ['Alarm', 'Double bell', 'Pulse'];
-const serviceBellOptions = ['Classic Bell', 'Digital chime', 'Soft tone'];
+const URGENT_OPTIONS_BASE = ['Alarm', 'Double bell', 'Pulse'];
+const SERVICE_BELL_OPTIONS_BASE = ['Classic Bell', 'Digital chime', 'Soft tone'];
 
 const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
   'Alarm': (vol) => {
@@ -118,13 +119,17 @@ const OTHER_SOUND_PLAYERS: Record<string, (vol: number) => void> = {
 };
 
 export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
+  const { tui } = useLanguage();
+  const presetSounds = PRESET_SOUNDS_BASE.map((p) => ({ ...p, label: tui(p.label) }));
+  const urgentOptions = URGENT_OPTIONS_BASE;
+  const serviceBellOptions = SERVICE_BELL_OPTIONS_BASE;
   const [volume, setVolume] = useState(75);
   const [alertVolume, setAlertVolume] = useState(80);
   const [muteAll, setMuteAll] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState('default-beep');
   const [customFile, setCustomFile] = useState<File | null>(null);
-  const [urgentSound, setUrgentSound] = useState('Alarm');
-  const [serviceBell, setServiceBell] = useState('Classic Bell');
+  const [urgentSound, setUrgentSound] = useState(URGENT_OPTIONS_BASE[0]);
+  const [serviceBell, setServiceBell] = useState(SERVICE_BELL_OPTIONS_BASE[0]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const playPreset = useCallback((id: string) => {
@@ -141,7 +146,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      alert('File must be under 2MB');
+      alert(tui('File must be under 2MB'));
       return;
     }
     setCustomFile(file);
@@ -183,14 +188,14 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <Volume2 size={20} className="text-text-muted" />
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-text-primary">Sound Settings</h2>
+              <h2 className="text-lg font-bold text-text-primary">{tui('Sound Settings')}</h2>
               {muteAll && (
                 <span className="px-2 py-0.5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full uppercase">
-                  Muted
+                  {tui('Muted')}
                 </span>
               )}
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close')}>
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -198,7 +203,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
           <div className="flex-1 overflow-y-auto">
             {/* Volume */}
             <div className="px-4 pt-4 pb-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Volume</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Volume')}</div>
               <div className="flex items-center gap-3">
                 <Volume2 size={18} className="text-text-secondary shrink-0" />
                 <input
@@ -216,7 +221,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                 <button
                   onClick={playMainVolume}
                   className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-                  aria-label="Test Sound"
+                  aria-label={tui('Test Sound')}
                 >
                   <Play size={16} className="text-brand-primary" />
                 </button>
@@ -225,10 +230,10 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
 
             {/* New order alert sound */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">New Order Alert Sound</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('New Order Alert Sound')}</div>
 
               {/* Preset sounds */}
-              <div className="text-[12px] font-semibold text-text-secondary mb-2">Preset Sounds</div>
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">{tui('Preset Sounds')}</div>
               <div className="flex flex-col gap-1.5 mb-4">
                 {presetSounds.map((preset) => (
                   <div
@@ -264,7 +269,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                           ? 'hover:bg-white/10'
                           : 'hover:bg-muted/60'
                       }`}
-                      aria-label={`Play ${preset.label}`}
+                      aria-label={tui('Play {name}', { name: preset.label })}
                     >
                       <Play size={14} className={selectedPreset === preset.id && !customFile ? 'text-primary-foreground' : 'text-brand-primary'} />
                     </button>
@@ -273,7 +278,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
               </div>
 
               {/* Custom Sound Upload */}
-              <div className="text-[12px] font-semibold text-text-secondary mb-2">Upload Custom Sound</div>
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">{tui('Upload Custom Sound')}</div>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -292,7 +297,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                   <button
                     onClick={removeCustomFile}
                     className="p-1.5 hover:bg-white/10 rounded-md min-h-[32px] min-w-[32px] flex items-center justify-center"
-                    aria-label="Remove Custom Sound"
+                    aria-label={tui('Remove Custom Sound')}
                   >
                     <XIcon size={14} className="text-primary-foreground" />
                   </button>
@@ -303,13 +308,13 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                   className="flex items-center gap-2 px-3 py-2 bg-muted text-text-primary rounded-lg text-[13px] font-medium hover:bg-muted/80 transition-colors min-h-[44px] mb-1"
                 >
                   <Upload size={14} className="text-text-muted" />
-                  Choose File
+                  {tui('Choose File')}
                 </button>
               )}
-              <p className="text-[11px] text-text-muted mb-4">Accepted formats: MP3, WAV - Max size: 2MB</p>
+              <p className="text-[11px] text-text-muted mb-4">{tui('Accepted formats: MP3, WAV - Max size: 2MB')}</p>
 
               {/* Alert volume */}
-              <div className="text-[12px] font-semibold text-text-secondary mb-2">Alert Volume</div>
+              <div className="text-[12px] font-semibold text-text-secondary mb-2">{tui('Alert Volume')}</div>
               <div className="flex items-center gap-3 mb-4">
                 <Volume2 size={16} className="text-text-secondary shrink-0" />
                 <input
@@ -329,21 +334,21 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
 
             {/* Other alert sounds */}
             <div className="px-4 pt-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Other Alert Sounds</div>
-              <SoundPicker label="Urgent / Overtime Alert" options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
-              <SoundPicker label="Service Bell (Manual)" options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Other Alert Sounds')}</div>
+              <SoundPicker label={tui('Urgent / Overtime Alert')} options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
+              <SoundPicker label={tui('Service Bell (Manual)')} options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
             </div>
 
             {/* Mute toggle */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Master</div>
+              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Master')}</div>
               <button
                 onClick={() => setMuteAll(!muteAll)}
                 className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/50 rounded-lg transition-colors min-h-[52px]"
               >
                 <div className="flex items-center gap-3">
                   <VolumeX size={20} className="text-text-muted" />
-                  <span className="text-sm font-medium text-text-primary">Mute all Sounds</span>
+                  <span className="text-sm font-medium text-text-primary">{tui('Mute all Sounds')}</span>
                 </div>
                 <div
                   className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] ${muteAll ? 'bg-brand-primary' : 'bg-border'}`}
@@ -361,7 +366,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                 onClick={onClose}
                 className="w-full py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
               >
-                Save changes
+                {tui('Save changes')}
               </button>
             </div>
           </div>
@@ -372,6 +377,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
 }
 
 function SoundPicker({ label, options, value, onChange, onPlay }: { label: string; options: string[]; value: string; onChange: (v: string) => void; onPlay?: (opt: string) => void }) {
+  const { tui } = useLanguage();
   return (
     <div className="mb-4">
       <div className="text-sm font-medium text-text-primary mb-2">{label}</div>
@@ -387,7 +393,7 @@ function SoundPicker({ label, options, value, onChange, onPlay }: { label: strin
             }`}
           >
             <Play size={12} />
-            {opt}
+            {tui(opt)}
           </button>
         ))}
       </div>
