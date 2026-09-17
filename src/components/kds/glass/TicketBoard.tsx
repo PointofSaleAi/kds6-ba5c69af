@@ -22,6 +22,9 @@ function estHeight(t: GlassTicket, items: Record<string, GlassStage>, open: Reco
 /** Scale factor bringing the glass design in line with standard ticket sizing. */
 const GLASS_SCALE = 0.6;
 const GAP = 16;
+/** Keep tickets readable while allowing four columns on landscape kitchen displays. */
+const MIN_RENDERED_CARD_W = 250;
+const MAX_BOARD_COLUMNS = 4;
 
 interface TicketBoardProps {
   /** Personalize override: hero shows the order number or the guest name. */
@@ -97,15 +100,34 @@ export function TicketBoard({
   useEffect(() => {
     const measure = () => setWidth(boardRef.current?.clientWidth || 0);
     measure();
+    const observer = new ResizeObserver(measure);
+    if (boardRef.current) observer.observe(boardRef.current);
     window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
   }, []);
 
-  /** Column count computed from container width at the card width. */
+  /**
+   * Grid and Stagger share a responsive, four-column maximum. The minimum is
+   * expressed in rendered pixels so text and controls retain the Glass scale.
+   */
   const colCount = useMemo(() => {
-    const avail = (width || (CARD_W + GAP) * 3) / zoom;
-    return Math.max(1, Math.min(Math.max(tickets.length, 1), Math.floor((avail + GAP) / (CARD_W + GAP))));
+    const renderedGap = GAP * zoom;
+    const renderedPadding = GAP * zoom * 2;
+    const available = Math.max(0, width - renderedPadding);
+    const fittingColumns = Math.floor((available + renderedGap) / (MIN_RENDERED_CARD_W + renderedGap));
+    return Math.max(1, Math.min(MAX_BOARD_COLUMNS, Math.max(tickets.length, 1), fittingColumns));
   }, [width, tickets.length, zoom]);
+
+  /** Consume the complete board width instead of leaving a dead strip at right. */
+  const columnWidth = useMemo(() => {
+    if (!width) return CARD_W;
+    const unscaledWidth = width / zoom;
+    const fluidWidth = (unscaledWidth - GAP * 2 - GAP * (colCount - 1)) / colCount;
+    return Math.max(MIN_RENDERED_CARD_W / zoom, fluidWidth);
+  }, [width, zoom, colCount]);
 
   /** Stagger packing: each ticket drops into the shortest column. */
   const staggerColumns = useMemo(() => {
@@ -185,7 +207,7 @@ export function TicketBoard({
           style={{
             ...base,
             display: 'grid',
-            gridTemplateColumns: `repeat(${colCount}, ${CARD_W}px)`,
+            gridTemplateColumns: `repeat(${colCount}, ${columnWidth}px)`,
             alignItems: 'start',
             gap: GAP,
           }}
@@ -199,7 +221,7 @@ export function TicketBoard({
       <div ref={boardRef}>
         <div style={{ ...base, display: 'flex', alignItems: 'flex-start', gap: GAP }}>
           {staggerColumns.map((col, ci) => (
-            <div key={ci} style={{ flex: '0 0 auto', width: CARD_W, display: 'flex', flexDirection: 'column', gap: GAP }}>
+            <div key={ci} style={{ flex: '0 0 auto', width: columnWidth, display: 'flex', flexDirection: 'column', gap: GAP }}>
               {col.items.map((t) => cardFor(t))}
             </div>
           ))}
