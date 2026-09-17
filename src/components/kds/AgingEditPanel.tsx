@@ -5,6 +5,7 @@ import { useKDSSettings, DEFAULT_ORDER_TYPE_DETAILED_COLORS } from '@/hooks/use-
 import { SelectedVariantPreview } from './SelectedVariantPreview';
 import { previewTicket } from '@/data/mock-preview-ticket';
 import type { Order, OrderType } from '@/types/kds';
+import { useLanguage } from '@/hooks/use-language';
 
 
 interface AgingEditPanelProps {
@@ -37,15 +38,15 @@ function resolveTextColor(tc: string) {
 
 const MAX_MINUTES = 999;
 
-function validateTimeRange(min: number, max: number | null | undefined, isLast: boolean): string | null {
-  if (!Number.isFinite(min) || !Number.isInteger(min)) return 'From must be a whole number';
-  if (min < 0) return 'From cannot be negative';
-  if (min > MAX_MINUTES) return `From cannot exceed ${MAX_MINUTES} min`;
+function validateTimeRange(min: number, max: number | null | undefined, isLast: boolean, tui: (s: string, vars?: Record<string, string | number>) => string): string | null {
+  if (!Number.isFinite(min) || !Number.isInteger(min)) return tui('From must be a whole number');
+  if (min < 0) return tui('From cannot be negative');
+  if (min > MAX_MINUTES) return tui('From cannot exceed {max} min', { max: MAX_MINUTES });
   if (isLast) return null;
-  if (max == null || !Number.isFinite(max) || !Number.isInteger(max)) return 'To is required';
-  if (max < 0) return 'To cannot be negative';
-  if (max > MAX_MINUTES) return `To cannot exceed ${MAX_MINUTES} min`;
-  if (max <= min) return 'To must be greater than From';
+  if (max == null || !Number.isFinite(max) || !Number.isInteger(max)) return tui('To is required');
+  if (max < 0) return tui('To cannot be negative');
+  if (max > MAX_MINUTES) return tui('To cannot exceed {max} min', { max: MAX_MINUTES });
+  if (max <= min) return tui('To must be greater than From');
   return null;
 }
 
@@ -55,10 +56,11 @@ function clampMinutes(v: number) {
 }
 
 function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: boolean; onChange: (u: Partial<StatusRule>) => void }) {
+  const { tui } = useLanguage();
   const [openPicker, setOpenPicker] = useState<'from' | 'to' | null>(null);
   const fromRef = useRef<HTMLDivElement>(null);
   const toRef = useRef<HTMLDivElement>(null);
-  const error = validateTimeRange(rule.minMinutes, rule.maxMinutes, isLast);
+  const error = validateTimeRange(rule.minMinutes, rule.maxMinutes, isLast, tui);
 
   useEffect(() => {
     if (!openPicker) return;
@@ -71,13 +73,14 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
     return () => document.removeEventListener('mousedown', handler);
   }, [openPicker]);
 
-  const invalidFrom = error?.toLowerCase().includes('from');
+  const fromError = !Number.isFinite(rule.minMinutes) || !Number.isInteger(rule.minMinutes) || rule.minMinutes < 0 || rule.minMinutes > MAX_MINUTES;
+  const invalidFrom = !!error && fromError;
   const invalidTo = error && !invalidFrom;
 
   return (
     <div>
       <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
-        Time Range (minutes)
+        {tui('Time Range (minutes)')}
       </label>
       <div className="flex items-center gap-2">
         <div ref={fromRef} className="relative">
@@ -103,10 +106,10 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
             />
           )}
         </div>
-        <span className="text-text-muted text-xs font-medium">to</span>
+        <span className="text-text-muted text-xs font-medium">{tui('to')}</span>
         {isLast ? (
           <span className="px-3 py-2.5 min-h-[44px] text-sm text-text-secondary italic bg-muted rounded-lg border border-border flex-1 text-center flex items-center justify-center">
-            No limit (∞)
+            {tui('No limit (∞)')}
           </span>
         ) : (
           <div ref={toRef} className="relative">
@@ -133,7 +136,7 @@ function TimeRangeField({ rule, isLast, onChange }: { rule: StatusRule; isLast: 
             )}
           </div>
         )}
-        <span className="text-xs text-text-secondary font-medium">min</span>
+        <span className="text-xs text-text-secondary font-medium">{tui('min')}</span>
       </div>
       {error && (
         <div
@@ -226,6 +229,7 @@ const GLASS_PREVIEW_TICKET_IDS: Record<PreviewTypeKey, string> = {
 };
 
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
+  const { tui } = useLanguage();
   const { orderTypeDetailedColors } = useKDSSettings();
   const [customHex, setCustomHex] = useState('');
   const [previewType, setPreviewType] = useState<PreviewTypeKey>('dine-in');
@@ -263,11 +267,11 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
 
       {/* Status name + Time Range + Colour */}
       <div className="rounded-lg border border-border bg-surface-card p-3 space-y-3">
-        <div className="text-xs font-bold text-text-secondary uppercase tracking-wider">Selected Rule Editor</div>
+        <div className="text-xs font-bold text-text-secondary uppercase tracking-wider">{tui('Selected Rule Editor')}</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-3 items-start">
         <div className="min-w-0">
           <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
-            Status name
+            {tui('Status name')}
           </label>
           <input
             type="text"
@@ -282,7 +286,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
         <div className="min-w-0">
           <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
-            Color
+            {tui('Color')}
           </label>
           <div className="flex items-center gap-2">
             <label
@@ -298,7 +302,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
                   onChange({ color: hex });
                 }}
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                aria-label="Pick Status Color"
+                aria-label={tui('Pick Status Color')}
               />
             </label>
             <input
@@ -317,7 +321,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
         </div>
         <div className="min-w-0">
           <label className="text-xs font-semibold text-text-secondary mb-1 block uppercase tracking-wider">
-            Text color
+            {tui('Text color')}
           </label>
           <div className="flex gap-1.5">
             {textColorOptions.map((tc) => (
@@ -330,7 +334,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
                     : 'bg-muted text-text-secondary hover:bg-muted/80'
                 }`}
               >
-                {tc}
+                {tui(tc)}
               </button>
             ))}
           </div>
@@ -342,7 +346,7 @@ export default function AgingEditPanel({ rule, isLast, onChange, errors }: Aging
       {/* Live KDS Ticket Preview */}
       <div className="xl:sticky xl:top-2 self-start rounded-lg border border-border bg-surface-card p-3 min-w-0">
         <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2 block">
-          Live Ticket Preview
+          {tui('Live Ticket Preview')}
         </label>
         <div className="flex flex-nowrap gap-1 mb-2 overflow-x-auto pb-1">
           {ORDER_TYPE_OPTIONS.map((opt) => {

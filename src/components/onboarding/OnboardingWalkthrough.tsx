@@ -3,6 +3,7 @@ import { ArrowRight, ArrowLeft, Eye, Bell, CheckCircle2, ListChecks, LayoutGrid,
 import { useLocation } from 'react-router-dom';
 import { useOnboarding } from '@/hooks/use-onboarding';
 import { useOrderStore } from '@/hooks/use-order-store';
+import { useLanguage } from '@/hooks/use-language';
 import { makeOnboardingSampleOrder, ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
 
 type ArrowSide = 'top' | 'bottom' | 'left' | 'right';
@@ -96,15 +97,18 @@ function TooltipCard({
 }: {
   rect: Rect | null; step: Step; index: number; total: number; onNext: () => void; onPrev: () => void; onSkip: () => void;
 }) {
+  const { tui } = useLanguage();
   const Icon = step.icon;
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardSize, setCardSize] = useState({ w: 340, h: 180 });
+  const titleText = tui(step.title);
+  const bodyText = tui(step.body);
   useLayoutEffect(() => {
     if (!cardRef.current) return;
     const w = cardRef.current.offsetWidth;
     const h = cardRef.current.offsetHeight;
     setCardSize(prev => (prev.w === w && prev.h === h ? prev : { w, h }));
-  }, [step.title, step.body]);
+  }, [titleText, bodyText]);
 
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
@@ -151,18 +155,18 @@ function TooltipCard({
           <Icon size={18} className="text-amber-400" />
         </div>
         <div>
-          <div className="text-[15px] font-bold leading-tight">{step.title}</div>
-          <div className="text-[11px] text-white/50 mt-0.5">Step {index + 1} of {total}</div>
+          <div className="text-[15px] font-bold leading-tight">{titleText}</div>
+          <div className="text-[11px] text-white/50 mt-0.5">{tui('Step {index} of {total}', { index: index + 1, total })}</div>
         </div>
       </div>
-      <p className="text-[13px] text-white/75 leading-relaxed mb-4">{step.body}</p>
+      <p className="text-[13px] text-white/75 leading-relaxed mb-4">{bodyText}</p>
       <div className="flex items-center justify-between gap-2">
         {index > 0 && (
           <button
             onClick={onPrev}
             className="flex items-center gap-1 px-3 py-2 rounded-full text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10"
           >
-            <ArrowLeft size={14} /> Back
+            <ArrowLeft size={14} /> {tui('Back')}
           </button>
         )}
         <div className="flex items-center gap-2">
@@ -170,14 +174,14 @@ function TooltipCard({
             onClick={onSkip}
             className="px-4 py-2 rounded-full text-[13px] font-bold text-white/70 hover:text-white hover:bg-white/10"
           >
-            Skip
+            {tui('Skip')}
           </button>
           <button
             onClick={onNext}
             className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold"
             style={{ background: '#F59E0B', color: '#1a1a1a' }}
           >
-            {isLast ? 'Finish' : 'Next'} <ArrowRight size={14} />
+            {isLast ? tui('Finish') : tui('Next')} <ArrowRight size={14} />
           </button>
         </div>
       </div>
@@ -186,6 +190,7 @@ function TooltipCard({
 }
 
 function CompletionCard({ onChoose }: { onChoose: (c: 'training' | 'done') => void }) {
+  const { tui } = useLanguage();
   return (
     <div className="fixed inset-0 z-[10001] flex items-center justify-center px-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
       <div className="w-full max-w-md rounded-2xl p-6 shadow-2xl" style={{ background: '#1F1F24', color: '#fff' }}>
@@ -194,9 +199,9 @@ function CompletionCard({ onChoose }: { onChoose: (c: 'training' | 'done') => vo
             <GraduationCap size={26} className="text-amber-400" />
           </div>
         </div>
-        <h2 className="text-center text-[18px] font-bold mb-2">Feeling good, or want to practice?</h2>
+        <h2 className="text-center text-[18px] font-bold mb-2">{tui('Feeling good, or want to practice?')}</h2>
         <p className="text-center text-[13px] text-white/70 mb-6">
-          Training mode uses sample orders. No real tickets are at risk while you get comfortable.
+          {tui('Training mode uses sample orders. No real tickets are at risk while you get comfortable.')}
         </p>
         <div className="flex flex-col gap-2">
           <button
@@ -204,13 +209,13 @@ function CompletionCard({ onChoose }: { onChoose: (c: 'training' | 'done') => vo
             className="w-full py-3 rounded-xl text-[14px] font-bold"
             style={{ background: '#F59E0B', color: '#1a1a1a' }}
           >
-            Switch to training mode
+            {tui('Switch to training mode')}
           </button>
           <button
             onClick={() => onChoose('done')}
             className="w-full py-3 rounded-xl text-[14px] font-bold text-white/80 hover:bg-white/5"
           >
-            No, I'm good
+            {tui("No, I'm good")}
           </button>
         </div>
       </div>

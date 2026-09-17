@@ -64,6 +64,7 @@ interface DraggableStatusListProps {
 }
 
 function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, onReset, onAdd, onRemove }: DraggableStatusListProps) {
+  const { tui } = useLanguage();
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -105,22 +106,22 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   return (
     <div ref={listRef} className="w-full xl:w-[240px] lg:w-[220px] shrink-0 border-b lg:border-b-0 lg:border-r border-border overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto p-2.5 space-y-2 bg-surface-card/70">
       <div className="flex items-center justify-between gap-2 px-1">
-        <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Status Rules</span>
+        <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">{tui('Status Rules')}</span>
         <div className="flex items-center gap-1">
           <button
             onClick={onAdd}
             className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary transition-colors min-h-[32px] px-2 rounded-md hover:bg-muted"
-            title="Add New Status Level"
+            title={tui('Add New Status Level')}
           >
             <Plus size={12} />
-            Add
+            {tui('Add')}
           </button>
           <button
             onClick={onReset}
             className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary transition-colors min-h-[32px] px-2 rounded-md hover:bg-muted"
           >
             <RotateCcw size={10} />
-            Reset
+            {tui('Reset')}
           </button>
         </div>
       </div>
@@ -160,14 +161,14 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-bold text-text-primary truncate">{rule.label}</div>
                 <div className="text-[11px] font-semibold text-text-secondary">
-                  {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes} min` : `${rule.minMinutes}+ min`}
+                  {rule.maxMinutes !== null ? tui('{min}-{max} min', { min: rule.minMinutes, max: rule.maxMinutes }) : tui('{min}+ min', { min: rule.minMinutes })}
                 </div>
               </div>
               {canRemove && (
                 <button
                   onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
                   className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[32px] min-h-[32px] flex items-center justify-center"
-                  title="Remove Status Level"
+                  title={tui('Remove Status Level')}
                 >
                   <Trash2 size={12} />
                 </button>

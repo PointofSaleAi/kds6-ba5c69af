@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Printer, Search, AlertTriangle, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useLanguage } from '@/hooks/use-language';
 
 interface PrintersScreenProps {
   open: boolean;
@@ -24,15 +25,16 @@ const mockPrinters: PrinterDevice[] = [
 ];
 
 function StatusDot({ status }: { status: PrinterDevice['status'] }) {
+  const { tui } = useLanguage();
   const colors = {
     online: 'bg-green-500',
     offline: 'bg-destructive',
     'low-paper': 'bg-amber-500',
   };
   const labels = {
-    online: 'Online',
-    offline: 'Offline',
-    'low-paper': 'Low paper',
+    online: tui('Online'),
+    offline: tui('Offline'),
+    'low-paper': tui('Low paper'),
   };
   return (
     <div className="flex items-center gap-1.5">
@@ -43,6 +45,7 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
 }
 
 export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
+  const { tui } = useLanguage();
   const [detecting, setDetecting] = useState(false);
 
   if (!open) return null;
@@ -50,14 +53,14 @@ export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
   const pairedPrinters = mockPrinters.filter((p) => p.paired);
 
   const handleTestPrint = (name: string) => {
-    toast.info(`Test print sent to ${name}`);
+    toast.info(tui('Test print sent to {name}', { name }));
   };
 
   const handleDetect = () => {
     setDetecting(true);
     setTimeout(() => {
       setDetecting(false);
-      toast.success('Device detection complete');
+      toast.success(tui('Device detection complete'));
     }, 2000);
   };
 
@@ -80,9 +83,9 @@ export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
-            <div className="text-xs text-text-muted font-medium">Printers &gt; Paired Printers</div>
-            <h2 className="text-lg font-bold text-text-primary">Printers</h2>
-            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
+            <div className="text-xs text-text-muted font-medium">{tui('Printers')} &gt; {tui('Paired Printers')}</div>
+            <h2 className="text-lg font-bold text-text-primary">{tui('Printers')}</h2>
+            <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close')}>
               <X size={20} className="text-text-secondary" />
             </button>
           </div>
@@ -94,7 +97,7 @@ export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
               className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-primary text-primary-foreground font-bold text-sm uppercase rounded-lg transition-colors hover:bg-brand-primary/90 min-h-[44px]"
             >
               <Printer size={16} />
-              Test Printer
+              {tui('Test Printer')}
             </button>
             <button
               onClick={handleDetect}
@@ -102,14 +105,14 @@ export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
               className="flex-1 flex items-center justify-center gap-2 py-3 bg-muted text-text-primary font-bold text-sm uppercase rounded-lg transition-colors hover:bg-muted/80 min-h-[44px] disabled:opacity-50"
             >
               <Search size={16} className={detecting ? 'animate-pulse' : ''} />
-              {detecting ? 'Detecting...' : 'Detect device'}
+              {detecting ? tui('Detecting...') : tui('Detect device')}
             </button>
           </div>
 
           {/* Paired printers list */}
           <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4">
             <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
-              Paired Printers ({pairedPrinters.length})
+              {tui('Paired Printers')} ({pairedPrinters.length})
             </div>
             <div className="space-y-2">
               {pairedPrinters.map((printer) => (
@@ -130,7 +133,7 @@ export default function PrintersScreen({ open, onClose }: PrintersScreenProps) {
                     onClick={() => handleTestPrint(printer.name)}
                     className="px-3 py-2 text-xs font-semibold text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/10 transition-colors min-h-[44px]"
                   >
-                    Test
+                    {tui('Test')}
                   </button>
                 </div>
               ))}
