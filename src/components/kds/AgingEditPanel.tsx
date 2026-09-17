@@ -212,6 +212,19 @@ const ORDER_TYPE_OPTIONS = [
 ] as const;
 type PreviewTypeKey = typeof ORDER_TYPE_OPTIONS[number]['key'];
 
+/** Glass View sample tickets matching each order type. */
+const GLASS_PREVIEW_TICKET_IDS: Record<PreviewTypeKey, string> = {
+  'dine-in': 't23',
+  'take-out': 't45',
+  delivery: 't36',
+  banquet: 't42',
+  'drive-thru': 't38',
+  'curb-side': 't40',
+  scheduled: 't49',
+  'phone-in': 't47',
+  custom: 't31',
+};
+
 export default function AgingEditPanel({ rule, isLast, onChange, errors }: AgingEditPanelProps) {
   const { orderTypeDetailedColors } = useKDSSettings();
   const [customHex, setCustomHex] = useState('');
