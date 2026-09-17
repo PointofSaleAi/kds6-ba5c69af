@@ -186,7 +186,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
-            <Volume2 size={20} className="text-text-muted" />
+            <Volume2 size={20} className="text-text-secondary" />
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-bold text-text-primary">{tui('Sound Settings')}</h2>
               {muteAll && (
@@ -203,7 +203,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
           <div className="flex-1 overflow-y-auto">
             {/* Volume */}
             <div className="px-4 pt-4 pb-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Volume')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Volume')}</div>
               <div className="flex items-center gap-3">
                 <Volume2 size={18} className="text-text-secondary shrink-0" />
                 <input
@@ -230,7 +230,7 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
 
             {/* New order alert sound */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('New Order Alert Sound')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('New Order Alert Sound')}</div>
 
               {/* Preset sounds */}
               <div className="text-[12px] font-semibold text-text-secondary mb-2">{tui('Preset Sounds')}</div>
@@ -307,11 +307,11 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
                   onClick={() => fileInputRef.current?.click()}
                   className="flex items-center gap-2 px-3 py-2 bg-muted text-text-primary rounded-lg text-[13px] font-medium hover:bg-muted/80 transition-colors min-h-[44px] mb-1"
                 >
-                  <Upload size={14} className="text-text-muted" />
+                  <Upload size={14} className="text-text-secondary" />
                   {tui('Choose File')}
                 </button>
               )}
-              <p className="text-[11px] text-text-muted mb-4">{tui('Accepted formats: MP3, WAV - Max size: 2MB')}</p>
+              <p className="text-[11px] text-text-secondary mb-4">{tui('Accepted formats: MP3, WAV - Max size: 2MB')}</p>
 
               {/* Alert volume */}
               <div className="text-[12px] font-semibold text-text-secondary mb-2">{tui('Alert Volume')}</div>
@@ -334,20 +334,20 @@ export default function SoundSettings({ open, onClose }: SoundSettingsProps) {
 
             {/* Other alert sounds */}
             <div className="px-4 pt-2">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Other Alert Sounds')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Other Alert Sounds')}</div>
               <SoundPicker label={tui('Urgent / Overtime Alert')} options={urgentOptions} value={urgentSound} onChange={setUrgentSound} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
               <SoundPicker label={tui('Service Bell (Manual)')} options={serviceBellOptions} value={serviceBell} onChange={setServiceBell} onPlay={(opt) => { if (!muteAll) OTHER_SOUND_PLAYERS[opt]?.(alertVolume); }} />
             </div>
 
             {/* Mute toggle */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Master')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Master')}</div>
               <button
                 onClick={() => setMuteAll(!muteAll)}
                 className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/50 rounded-lg transition-colors min-h-[52px]"
               >
                 <div className="flex items-center gap-3">
-                  <VolumeX size={20} className="text-text-muted" />
+                  <VolumeX size={20} className="text-text-secondary" />
                   <span className="text-sm font-medium text-text-primary">{tui('Mute all Sounds')}</span>
                 </div>
                 <div

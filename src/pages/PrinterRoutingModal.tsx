@@ -48,7 +48,7 @@ function StatusDot({ status }: { status: PrinterDevice['status'] }) {
   return (
     <div className="flex items-center gap-1.5">
       <span className={`w-2 h-2 rounded-full ${colors[status]}`} />
-      <span className="text-xs text-text-muted">{labels[status]}</span>
+      <span className="text-xs text-text-secondary">{labels[status]}</span>
     </div>
   );
 }
@@ -116,7 +116,7 @@ export default function PrinterRoutingModal({
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
-            <Printer size={20} className="text-text-muted" />
+            <Printer size={20} className="text-text-secondary" />
             <h2 className="text-lg font-bold text-text-primary">{titles[type]}</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Close">
               <X size={20} className="text-text-secondary" />
@@ -137,7 +137,7 @@ export default function PrinterRoutingModal({
 
           {/* Printer list */}
           <div className="flex-1 overflow-y-auto px-4 pt-4">
-            <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
+            <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">
               Available printers ({printers.length})
             </div>
             <div className="space-y-2">
@@ -164,7 +164,7 @@ export default function PrinterRoutingModal({
                       <span className="text-sm font-semibold text-text-primary">{printer.name}</span>
                       {printer.status === 'low-paper' && <AlertTriangle size={14} className="text-amber-500" />}
                     </div>
-                    <div className="text-xs text-text-muted">{printer.ip}</div>
+                    <div className="text-xs text-text-secondary">{printer.ip}</div>
                   </div>
 
                   <StatusDot status={printer.status} />

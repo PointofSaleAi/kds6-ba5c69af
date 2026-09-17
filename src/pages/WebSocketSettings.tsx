@@ -45,7 +45,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
           className="bg-surface-card rounded-t-2xl sm:rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col shadow-2xl"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
-            <Server size={20} className="text-text-muted" />
+            <Server size={20} className="text-text-secondary" />
             <h2 className="text-lg font-bold text-text-primary">{tui('Connection Settings')}</h2>
             <button onClick={onClose} className="p-2 hover:bg-muted rounded min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={tui('Close')}>
               <X size={20} className="text-text-secondary" />
@@ -55,14 +55,14 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
           <div className="flex-1 overflow-y-auto">
             {/* Local Backup */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Local Backup Server')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Local Backup Server')}</div>
               <button
                 onClick={() => setLocalBackup(!localBackup)}
                 className="w-full flex items-center justify-between py-3 min-h-[52px]"
               >
                 <div>
                   <div className="text-sm font-medium text-text-primary text-left">{tui('Enable Local Backup')}</div>
-                  <div className="text-xs text-text-muted text-left">{tui('Keeps Kitchen Display System working even if internet goes down')}</div>
+                  <div className="text-xs text-text-secondary text-left">{tui('Keeps Kitchen Display System working even if internet goes down')}</div>
                 </div>
                 <div
                   className={`relative w-11 h-6 rounded-full transition-colors min-w-[44px] ${localBackup ? 'bg-brand-primary' : 'bg-border'}`}
@@ -74,7 +74,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               </button>
               {localBackup && (
                 <div className="mt-2 mb-3">
-                  <div className="text-xs text-text-muted mb-1">{tui('Backup Server Address')}</div>
+                  <div className="text-xs text-text-secondary mb-1">{tui('Backup Server Address')}</div>
                   <input
                     type="text"
                     value={backupAddress}
@@ -87,7 +87,7 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
 
             {/* Cloud Server */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Cloud Server')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Cloud Server')}</div>
               <div className="flex items-center gap-3 py-2">
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${
                   cloudConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -96,14 +96,14 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                   {cloudConnected ? tui('Connected') : tui('Disconnected')}
                 </div>
               </div>
-              <div className="text-xs text-text-muted mt-1">{tui('Server: {server}', { server: 'ws.posai.com' })}</div>
+              <div className="text-xs text-text-secondary mt-1">{tui('Server: {server}', { server: 'ws.posai.com' })}</div>
             </div>
 
             {/* Device info */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Device Info')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Device Info')}</div>
               <div className="mb-2">
-                <div className="text-xs text-text-muted mb-1">{tui('Device Name')}</div>
+                <div className="text-xs text-text-secondary mb-1">{tui('Device Name')}</div>
                 <input
                   type="text"
                   value={deviceName}
@@ -113,18 +113,18 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
               </div>
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-xs text-text-muted">{tui('Last Order Number')}</div>
+                  <div className="text-xs text-text-secondary">{tui('Last Order Number')}</div>
                   <div className="text-sm font-semibold text-text-primary">#1,247</div>
                 </div>
                 <button className="p-2 hover:bg-muted rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center">
-                  <RefreshCw size={16} className="text-text-muted" />
+                  <RefreshCw size={16} className="text-text-secondary" />
                 </button>
               </div>
             </div>
 
             {/* Sync actions */}
             <div className="px-4 pt-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">{tui('Sync')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-3">{tui('Sync')}</div>
               <div className="space-y-2">
                 <button
                   onClick={handleSync}
@@ -138,17 +138,17 @@ export default function WebSocketSettings({ open, onClose }: WebSocketSettingsPr
                 >
                   {tui('Force Sync')}
                 </button>
-                <div className="text-[10px] text-text-muted text-center">{tui('May Cause a Brief Interruption')}</div>
+                <div className="text-xs text-text-secondary text-center">{tui('May Cause a Brief Interruption')}</div>
               </div>
             </div>
 
             {/* Connection log */}
             <div className="px-4 pt-4 pb-4">
-              <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-2">{tui('Recent Sync Events')}</div>
+              <div className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">{tui('Recent Sync Events')}</div>
               <div className="space-y-1">
                 {syncLog.map((entry, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs py-1">
-                    <span className="text-text-muted font-mono">{entry.time}</span>
+                    <span className="text-text-secondary font-mono">{entry.time}</span>
                     <span className="text-text-secondary">{entry.event}</span>
                   </div>
                 ))}
