@@ -73,6 +73,12 @@ export function useGlassLabels() {
             const t = word(m[2], orderType, embedded);
             if (t !== m[2]) return `${m[1]} ${t}`;
           }
+          // "Pickup 1:15 pm" → translate the leading label, keep the time.
+          const lead = seg.match(/^([A-Za-z][A-Za-z-]*)\s+(.+)$/);
+          if (lead) {
+            const t = word(lead[1], orderType, embedded);
+            if (t !== lead[1]) return `${t} ${lead[2]}`;
+          }
           return seg;
         })
         .join(' · ');
