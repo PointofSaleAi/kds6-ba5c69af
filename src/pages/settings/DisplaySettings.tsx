@@ -111,7 +111,7 @@ export default function DisplaySettings() {
     return (
       <div className="flex-1 flex flex-col overflow-hidden min-h-0">
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          <div className="relative flex items-center justify-center px-6 pt-2 pb-3 shrink-0">
+          <div className="relative flex items-center justify-center px-2 sm:px-6 pt-2 pb-3 shrink-0 min-h-[52px]">
             <button
               onClick={() => setStatusOpen(false)}
               className="absolute left-0 w-11 h-11 rounded-full bg-muted shadow-sm hover:bg-muted/70 transition-colors flex items-center justify-center"
@@ -119,9 +119,9 @@ export default function DisplaySettings() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-bold text-text-primary">Ticket Aging Rules</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-text-primary text-center leading-tight pl-12 sm:pl-0">Ticket Aging Rules</h1>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden px-6 pb-6">
+          <div className="flex-1 min-h-0 overflow-hidden px-2 sm:px-6 pb-2 sm:pb-6">
             <StatusSettings onBack={() => setStatusOpen(false)} hideHeader />
           </div>
         </div>

@@ -43,7 +43,9 @@ function resolveTextColor(tc: string) {
 
 function rechainRules(rules: StatusRule[]): StatusRule[] {
   return rules.map((rule, i) => {
-    const minMinutes = i === 0 ? 0 : (rules[i - 1].maxMinutes !== null ? rules[i - 1].maxMinutes! + 1 : rule.minMinutes);
+    const prevRule = rules[i - 1];
+    const prevMax = prevRule?.maxMinutes;
+    const minMinutes = i === 0 ? 0 : (prevMax !== null && prevMax !== undefined ? prevMax + 1 : rule.minMinutes);
     const maxMinutes = i === rules.length - 1 ? null : rule.maxMinutes;
     return { ...rule, minMinutes, maxMinutes };
   });
@@ -100,13 +102,13 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
   const canRemove = rules.length > 2;
 
   return (
-    <div ref={listRef} className="w-full lg:w-[45%] shrink-0 border-b lg:border-b-0 lg:border-r border-border lg:overflow-y-auto p-3 space-y-1">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Status Rules</span>
+    <div ref={listRef} className="w-full xl:w-[240px] lg:w-[220px] shrink-0 border-b lg:border-b-0 lg:border-r border-border overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto p-2.5 space-y-2 bg-surface-card/70">
+      <div className="flex items-center justify-between gap-2 px-1">
+        <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Status Rules</span>
         <div className="flex items-center gap-1">
           <button
             onClick={onAdd}
-            className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
+            className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary transition-colors min-h-[32px] px-2 rounded-md hover:bg-muted"
             title="Add New Status Level"
           >
             <Plus size={12} />
@@ -114,7 +116,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
           </button>
           <button
             onClick={onReset}
-            className="flex items-center gap-1 text-[10px] text-text-secondary hover:text-text-primary transition-colors min-h-[28px] px-1.5"
+            className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-text-primary transition-colors min-h-[32px] px-2 rounded-md hover:bg-muted"
           >
             <RotateCcw size={10} />
             Reset
@@ -122,55 +124,57 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
         </div>
       </div>
 
-      {rules.map((rule, i) => {
-        const isSelected = selectedId === rule.id;
-        const textColor = resolveTextColor(rule.textColor);
-        const ruleErrors = errors.get(rule.id);
-        const isDragging = dragIdx === i;
-        const isOver = overIdx === i && dragIdx !== null && dragIdx !== i;
+      <div className="flex lg:block gap-2 lg:space-y-1.5 min-w-max lg:min-w-0 pb-1 lg:pb-0">
+        {rules.map((rule, i) => {
+          const isSelected = selectedId === rule.id;
+          const textColor = resolveTextColor(rule.textColor);
+          const ruleErrors = errors.get(rule.id);
+          const isDragging = dragIdx === i;
+          const isOver = overIdx === i && dragIdx !== null && dragIdx !== i;
 
-        return (
-          <div
-            key={rule.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, i)}
-            onDragOver={(e) => handleDragOver(e, i)}
-            onDrop={(e) => handleDrop(e, i)}
-            onDragEnd={handleDragEnd}
-            onClick={() => onSelect(rule.id)}
-            className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
-              isSelected
-                ? 'bg-muted ring-1 ring-ring shadow-sm'
-                : 'bg-surface-card hover:bg-muted/50'
-            } ${ruleErrors ? 'ring-1 ring-destructive/40' : ''} ${
-              isDragging ? 'opacity-40 scale-95' : ''
-            } ${isOver ? 'border-t-2 border-ring' : ''}`}
-          >
-            <GripVertical size={14} className="text-text-muted/40 shrink-0 cursor-grab active:cursor-grabbing" />
+          return (
             <div
-              className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold shadow-sm"
-              style={{ backgroundColor: rule.color, color: textColor }}
+              key={rule.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, i)}
+              onDragOver={(e) => handleDragOver(e, i)}
+              onDrop={(e) => handleDrop(e, i)}
+              onDragEnd={handleDragEnd}
+              onClick={() => onSelect(rule.id)}
+              className={`w-[210px] lg:w-full flex items-center gap-2 px-2.5 py-2 rounded-lg transition-all text-left min-h-[52px] cursor-pointer border ${
+                isSelected
+                  ? 'bg-muted border-ring shadow-sm'
+                  : 'bg-surface-card border-border hover:bg-muted/60'
+              } ${ruleErrors ? 'ring-1 ring-destructive/50 border-destructive/50' : ''} ${
+                isDragging ? 'opacity-40 scale-95' : ''
+              } ${isOver ? 'border-t-2 border-ring' : ''}`}
             >
-              Aa
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-semibold text-text-primary truncate">{rule.label}</div>
-            </div>
-            <span className="text-[11px] font-bold text-text-muted shrink-0 bg-muted px-2 py-1 rounded-md">
-              {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes}m` : `${rule.minMinutes}m+`}
-            </span>
-            {canRemove && (
-              <button
-                onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
-                className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[28px] min-h-[28px] flex items-center justify-center"
-                title="Remove Status Level"
+              <GripVertical size={14} className="text-text-muted/60 shrink-0 cursor-grab active:cursor-grabbing" />
+              <div
+                className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold shadow-sm"
+                style={{ backgroundColor: rule.color, color: textColor }}
               >
-                <Trash2 size={12} />
-              </button>
-            )}
-          </div>
-        );
-      })}
+                Aa
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13px] font-bold text-text-primary truncate">{rule.label}</div>
+                <div className="text-[11px] font-semibold text-text-secondary">
+                  {rule.maxMinutes !== null ? `${rule.minMinutes}-${rule.maxMinutes} min` : `${rule.minMinutes}+ min`}
+                </div>
+              </div>
+              {canRemove && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onRemove(rule.id); }}
+                  className="p-1 rounded hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors shrink-0 min-w-[32px] min-h-[32px] flex items-center justify-center"
+                  title="Remove Status Level"
+                >
+                  <Trash2 size={12} />
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -229,7 +233,8 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
 
   const maxMins = useMemo(() => {
     const lastBounded = draft.filter(r => r.maxMinutes !== null);
-    const highestEnd = lastBounded.length > 0 ? Math.max(...lastBounded.map(r => r.maxMinutes!)) : 20;
+    const boundedEnds = lastBounded.flatMap(r => r.maxMinutes === null ? [] : [r.maxMinutes]);
+    const highestEnd = boundedEnds.length > 0 ? Math.max(...boundedEnds) : 20;
     return Math.max(30, highestEnd + 10);
   }, [draft]);
 
@@ -316,11 +321,11 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
       )}
 
       {/* Course Level Toggle + Presets (2-col) */}
-      <div className="pb-3 grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
-        <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-muted/60">
+      <div className="pb-2 grid grid-cols-1 md:grid-cols-2 gap-2 items-stretch">
+        <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-surface-card border border-border">
           <div className="flex-1 min-w-0">
             <div className="text-[13px] font-semibold text-text-primary">Apply to Course Level</div>
-            <div className="text-[11px] text-text-muted">When enabled, timing rules apply per course. Orders without courses use product-level timing.</div>
+            <div className="text-[12px] text-text-secondary leading-snug">When enabled, timing rules apply per course. Orders without courses use product-level timing.</div>
           </div>
           <button
             onClick={() => setCourseLevelAging(!courseLevelAging)}
@@ -332,8 +337,8 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
           </button>
         </div>
 
-        <div className="py-3 px-4 rounded-lg bg-muted/60">
-          <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Presets</div>
+        <div className="py-3 px-4 rounded-lg bg-surface-card border border-border">
+          <div className="text-[11px] font-bold text-text-secondary uppercase tracking-wider mb-2">Presets</div>
           <div className="flex items-center gap-2 flex-wrap">
             {PRESETS.map((preset) => {
               const isActive = preset.rules.length === draft.length && preset.rules.every((pr, i) =>
@@ -343,7 +348,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
                 <button
                   key={preset.label}
                   onClick={() => { setDraft(preset.rules); setSelectedId(preset.rules[0].id); }}
-                  className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-colors min-h-[32px] ${
+                    className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-colors min-h-[36px] ${
                     isActive
                       ? 'bg-foreground text-background border-foreground'
                       : 'bg-surface-card text-text-primary border-border hover:bg-accent'
@@ -360,7 +365,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
 
 
       {/* Two-panel body */}
-      <div className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row min-h-0 border border-border rounded-xl bg-transparent">
+      <div className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row min-h-0 border border-border rounded-lg bg-surface-card">
         {/* LEFT: Status List */}
         <DraggableStatusList
           rules={draft}
@@ -374,7 +379,7 @@ export default function StatusSettings({ onBack, hideHeader = false }: StatusSet
         />
 
         {/* RIGHT: Edit Panel */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-2.5 min-w-0">
           {selectedRule ? (
             <AgingEditPanel
               key={selectedRule.id}

@@ -1256,11 +1256,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
         {settingsOpen ? (
           <div
-            className="flex flex-1 overflow-hidden pl-0 pr-2 py-2 gap-2"
+            className="flex flex-1 overflow-hidden pl-0 pr-2 py-2 gap-2 max-[640px]:pr-1 max-[640px]:gap-1"
             style={{ order: 2 }}
           >
             <div
-              className={`w-[209px] shrink-0 rounded-3xl overflow-hidden flex flex-col ${glassChrome ? 'ios-glass-card' : ''}`}
+              className={`w-[209px] max-[640px]:w-[58px] shrink-0 rounded-3xl max-[640px]:rounded-2xl overflow-hidden flex flex-col ${glassChrome ? 'ios-glass-card' : ''}`}
               style={{
                 background: glassChrome ? undefined : 'hsl(var(--surface-card))',
                 boxShadow: glassChrome ? undefined : '0 1px 2px hsl(0 0% 0% / 0.04)',
@@ -1268,7 +1268,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
             >
               <SettingsSidebar />
             </div>
-            <main className="flex-1 overflow-y-auto scrollbar-hide bg-transparent">
+            <main className="flex-1 min-w-0 overflow-y-auto scrollbar-hide bg-transparent">
               <div className="w-full bg-transparent">
                 <Outlet />
               </div>
