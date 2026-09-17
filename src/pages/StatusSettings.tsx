@@ -141,7 +141,7 @@ function DraggableStatusList({ rules, selectedId, errors, onSelect, onReorder, o
             className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all text-left min-h-[52px] cursor-pointer ${
               isSelected
                 ? 'bg-muted ring-1 ring-ring shadow-sm'
-                : 'hover:bg-muted/40'
+                : 'bg-surface-card hover:bg-muted/50'
             } ${ruleErrors ? 'ring-1 ring-destructive/40' : ''} ${
               isDragging ? 'opacity-40 scale-95' : ''
             } ${isOver ? 'border-t-2 border-ring' : ''}`}
