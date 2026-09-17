@@ -207,7 +207,7 @@ export default function AIIntegrationSettings() {
 
       {/* Actions */}
       {provider && (
-        <div className="flex gap-3 mb-2">
+        <div className="flex gap-3 mb-3">
           <button
             type="button"
             onClick={handleSave}
