@@ -197,7 +197,7 @@ export default function DisplaySettings() {
                           setTicketsRoute(nextRoute);
                           writeStoredTicketsRoute(nextRoute);
                         }}
-                        className="w-full rounded-lg px-3 py-2 text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
+                        className="w-full rounded-lg pl-3 pr-8 py-2 text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[hsl(var(--brand-primary))]"
                         style={{
                           background: 'hsl(var(--muted))',
                           color: 'hsl(var(--text-primary))',
