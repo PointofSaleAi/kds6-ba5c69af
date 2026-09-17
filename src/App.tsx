@@ -28,6 +28,7 @@ import { DockDragLayer } from "@/components/kds/DockDragLayer";
 import { NotificationStationSync } from "@/components/kds/NotificationStationSync";
 import { NotificationToastStack } from "@/components/kds/NotificationToastStack";
 import PosModeShell from "@/components/kds/PosModeShell";
+import { getTicketsRoutePath, readStoredTicketsRoute } from "@/lib/ticket-card-variant";
 import Index from "./pages/Index.tsx";
 import IndexOnlineOrdering from "./pages/IndexOnlineOrdering.tsx";
 import NotFound from "./pages/NotFound.tsx";
