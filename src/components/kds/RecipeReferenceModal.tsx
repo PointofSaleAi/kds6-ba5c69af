@@ -5,6 +5,7 @@ import type { OrderItem, Order } from '@/types/kds';
 import { AllergenBadge } from '@/components/kds/AllergenBadge';
 import { getRecipeReference } from '@/data/recipe-reference-data';
 import { useTheme } from '@/hooks/use-theme';
+import { useLanguage } from '@/hooks/use-language';
 import { QRCodeSVG } from 'qrcode.react';
 
 interface Props {
@@ -139,6 +140,7 @@ function PlaceholderQR({ fill, bg }: { fill: string; bg: string }) {
  */
 export function RecipeReferenceModal({ product, order, courseLabel, onClose, variant = 'default' }: Props) {
   const { theme } = useTheme();
+  const { tui } = useLanguage();
   const C = theme === 'dark' ? DARK : LIGHT;
   const [videoMode, setVideoMode] = useState(false);
   const [yieldIdx, setYieldIdx] = useState(0);
@@ -231,7 +233,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
         style={{ background: C.surface, borderRadius: S.radius, color: C.textSecondary, border: `1px solid ${C.border}` }}
         role="dialog"
         aria-modal="true"
-        aria-label={`Recipe reference for ${product.name}`}
+        aria-label={tui('Recipe reference for {name}', { name: product.name })}
       >
         {/* HEADER */}
         <div className="flex items-start justify-between" style={{ padding: `${S.pad}px ${S.pad}px 4px` }}>
@@ -239,7 +241,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             {videoMode && (
               <button
                 type="button"
-                aria-label="Back to Recipe"
+                aria-label={tui('Back to Recipe')}
                 onClick={() => setVideoMode(false)}
                 className="shrink-0 inline-flex items-center justify-center rounded-full"
                 style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}
@@ -249,7 +251,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
             )}
             <div className="min-w-0 flex-1">
               <div style={{ fontSize: S.context, color: C.textMuted, letterSpacing: 0.2, marginBottom: 4 }}>
-                {videoMode ? `Recipe video · ${product.name}` : context}
+                {videoMode ? tui('Recipe video · {name}', { name: product.name }) : context}
               </div>
               <div className="truncate" style={{ fontSize: S.itemName, fontWeight: 500, color: C.textPrimary, lineHeight: 1.15 }}>
                 {product.name}
@@ -271,7 +273,7 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                     fontWeight: 500,
                   }}
                 >
-                  Yield: {recipe.yields[yieldIdx]}
+                  {tui('Yield: {y}', { y: recipe.yields[yieldIdx] })}
                   <ChevronDown size={12} />
                 </button>
                 {yieldOpen && (
@@ -309,13 +311,13 @@ export function RecipeReferenceModal({ product, order, courseLabel, onClose, var
                 }}
               >
                 <Play size={14} color={C.brandRed} fill={C.brandRed} />
-                Watch video · {recipe.video!.duration}
+                {tui('Watch video · {duration}', { duration: recipe.video!.duration })}
               </button>
             )}
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={tui('Close')}
               className="inline-flex items-center justify-center rounded-full"
               style={{ width: 32, height: 32, background: C.iconBtnBg, color: C.textPrimary }}
             >
