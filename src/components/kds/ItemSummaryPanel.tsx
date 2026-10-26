@@ -307,7 +307,7 @@ export function ItemSummaryPanel({ orders, stationCourse, selectedItems, onItemT
         <button onClick={() => setCollapsed(false)} className="p-1 rounded-full bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 min-w-[32px] min-h-[32px] flex items-center justify-center text-sidebar-foreground transition-colors" aria-label={tui("Expand Panel")}>
           <ChevronLeft size={18} strokeWidth={3} />
         </button>
-        <span className="text-[14px] font-bold text-white mt-2 [writing-mode:vertical-lr]">{totalRemaining} {t.toCookLabel}</span>
+        <span className="text-[14px] font-bold text-sidebar-foreground mt-2 [writing-mode:vertical-lr]">{totalRemaining} {t.toCookLabel}</span>
       </div>
     );
   }
