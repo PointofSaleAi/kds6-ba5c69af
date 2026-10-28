@@ -635,7 +635,7 @@ const ORDER_TYPES_LIST = [
 type PanelTab = 'display' | 'aging' | 'order-type';
 
 export function TicketStudioSkeleton() {
-  const [selectedBoard, setSelectedBoard] = useState('focus-lane');
+  const [selectedBoard, setSelectedBoard] = useState('distance-view');
   const [selectedBoardB, setSelectedBoardB] = useState('distance-view');
   const [compareMode, setCompareMode] = useState(false);
   const [activeSlot, setActiveSlot] = useState<'A' | 'B'>('A');
