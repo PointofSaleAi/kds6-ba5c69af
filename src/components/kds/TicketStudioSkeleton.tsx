@@ -267,7 +267,6 @@ function FocusLaneBoard({
       style={{
         gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
         gap,
-        gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
       }}
     >
       {/* Focused ticket, centered and enlarged. */}
