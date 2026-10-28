@@ -349,8 +349,8 @@ type Board = { id: string; name: string; subtitle: string; featured?: boolean };
 const BOARDS: Board[] = [
 
 
-  { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority Ticket Centered, Context at Edges' },
   { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum Readability from Several Feet' },
+  { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority Ticket Centered, Context at Edges' },
   { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready Lanes' },
 ];
 
