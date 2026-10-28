@@ -284,7 +284,7 @@ function FocusLaneBoard({
           style={{ transform: `scale(${textScale * 1.55})` }}
         >
           <BoardTicketPreview
-                            themeOverride={theme === 'dark' ? 'dark' : 'light'}
+            themeOverride={theme === 'dark' ? 'dark' : 'light'}
             boardId="focus-lane"
             identifier={identifier}
             orderType={focus.label}

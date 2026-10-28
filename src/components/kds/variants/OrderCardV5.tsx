@@ -319,6 +319,12 @@ function TightWidthBox({
     const el = primaryRef.current;
     if (!el) return;
     try {
+      // Measure at natural width (not our previously-set width), and undo
+      // any ancestor CSS scale so the result is in layout px.
+      const prev = el.style.width;
+      el.style.width = '100%';
+      const box = el.getBoundingClientRect();
+      const ratio = el.offsetWidth > 0 && box.width > 0 ? box.width / el.offsetWidth : 1;
       const range = document.createRange();
       range.selectNodeContents(el);
       const rects = range.getClientRects();
@@ -327,7 +333,8 @@ function TightWidthBox({
         if (rects[i].width > max) max = rects[i].width;
       }
       range.detach?.();
-      if (max > 0) setWidth(Math.ceil(max));
+      el.style.width = prev;
+      if (max > 0) setWidth(Math.ceil(max / ratio));
     } catch {
       /* noop */
     }
