@@ -12,6 +12,11 @@ import { useDockLayout } from '@/hooks/use-dock-layout';
 import { useGlassChromeMode } from '@/hooks/use-glass-chrome';
 import { useTheme } from '@/hooks/use-theme';
 import { getTicketsRoutePath, readStoredTicketsRoute } from '@/lib/ticket-card-variant';
+import ExpoView from '@/components/kds/ExpoView';
+import { ExpoSummaryPanel } from '@/components/kds/ExpoSummaryPanel';
+import { useKDSMode } from '@/hooks/use-kds-mode';
+import { useOrderStore } from '@/hooks/use-order-store';
+import type { ExpoTicket } from '@/data/mock-expo-orders';
 
 /**
  * Glass ticket board screen. Reuses the persistent KDS shell (top header,
@@ -26,10 +31,33 @@ function GlassShell() {
   const board = useGlassBoard();
   
   useGlassChromeMode(true);
+  const { mode: kdsMode } = useKDSMode();
+  const isExpo = kdsMode === 'Expo';
+  const { expoTickets } = useOrderStore();
+  const [expoFilter, setExpoFilter] = useState<'all' | 'ready' | 'recalled'>('all');
+  const [expoPinnedIds, setExpoPinnedIds] = useState<string[]>([]);
+  const [expoAllTickets, setExpoAllTickets] = useState<ExpoTicket[]>([]);
+  const [expoSelectedProducts, setExpoSelectedProducts] = useState<string[]>([]);
+  const handleExpoSendAllProduct = (productName: string) => {
+    setExpoAllTickets((prev) => prev.map((t) => ({
+      ...t,
+      items: t.items.map((i) => (i.name === productName ? { ...i, status: 'done' as const } : i)),
+      stations: t.stations.map((s) => {
+        if (!t.items.some((i) => i.name === productName)) return s;
+        const allDone = t.items.every((i) => (i.name === productName ? true : i.status === 'done'));
+        return allDone ? { ...s, status: 'done' as const } : s;
+      }),
+    })));
+  };
 
   const handleNavigate = (target: string) => {
     if (target === 'settings') { navigate('/kds/v1/settings'); return; }
     if (target === 'home' || target === 'history' || target === 'seen-orders' || target === 'unseen-orders') {
+      if (isExpo) {
+        if (target === 'home') setExpoFilter('all');
+        if (target === 'seen-orders') setExpoFilter('ready');
+        if (target === 'unseen-orders') setExpoFilter('recalled');
+      }
       board.setView(target);
       return;
     }
@@ -61,11 +89,26 @@ function GlassShell() {
           </div>
 
           <main className="flex-1 overflow-auto flex flex-col" style={{ order: 2 }}>
-            <div className="flex-1 min-h-0">
-              <TicketBoard />
+            <div className="flex-1 min-h-0 flex flex-col">
+              {isExpo ? (
+                <ExpoView viewMode={board.viewMode as any} pinnedTicketIds={expoPinnedIds} onFilterChange={() => setExpoPinnedIds([])} onTicketSentOut={(id) => setExpoPinnedIds((p) => p.filter((x) => x !== id))} onAllTicketsChange={setExpoAllTickets} selectedProducts={expoSelectedProducts} controlledFilter={expoFilter} hideTopControls />
+              ) : (
+                <TicketBoard />
+              )}
             </div>
           </main>
           <div className="flex shrink-0" style={{ order: dockLayout.summaryPanel === 'left' ? 1 : 3 }}>
+            {isExpo ? (
+              <ExpoSummaryPanel
+                tickets={expoAllTickets.length > 0 ? expoAllTickets : expoTickets}
+                pinnedTicketIds={expoPinnedIds}
+                onTogglePin={(id) => setExpoPinnedIds((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]))}
+                onClearAllPins={() => setExpoPinnedIds([])}
+                selectedProducts={expoSelectedProducts}
+                onProductToggle={(n) => setExpoSelectedProducts((p) => (p.includes(n) ? p.filter((x) => x !== n) : [...p, n]))}
+                onSendAllProduct={handleExpoSendAllProduct}
+              />
+            ) : (
             <ItemSummaryPanel
               orders={board.orders}
               selectedItems={board.selectedItems}
@@ -77,6 +120,7 @@ function GlassShell() {
               expandAll={board.expandAll}
               onExpandAllChange={board.setExpandAll}
             />
+            )}
           </div>
         </div>
         <BottomStatusBar
