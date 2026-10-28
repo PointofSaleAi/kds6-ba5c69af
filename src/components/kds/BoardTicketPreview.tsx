@@ -12,6 +12,7 @@ import { OrderCardV2 } from './variants/OrderCardV2';
 import { OrderCardV3 } from './variants/OrderCardV3';
 import { OrderCardV4 } from './variants/OrderCardV4';
 import { OrderCardV5 } from './variants/OrderCardV5';
+import { SelectedVariantPreview } from './SelectedVariantPreview';
 import { getCardVariantForTicketsRoute } from '@/lib/ticket-card-variant';
 import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
 import type { Order } from '@/types/kds';
@@ -46,20 +47,12 @@ export function idLabel(identifier: 'order' | 'guest' | 'table' = 'order', varia
 const STYLE_DRIVEN_BOARDS = new Set(['focus-lane', 'distance-view', 'timeline-flow']);
 
 /** Renders the live ticket card for the selected Style using preview data. */
-function StyledRouteTicket({ styleRoute, orderTypeKey }: { styleRoute: TicketsRouteKey; orderTypeKey?: string }) {
+function StyledRouteTicket({ styleRoute, orderTypeKey, agingOverrideSeconds }: { styleRoute: TicketsRouteKey; orderTypeKey?: string; agingOverrideSeconds?: number }) {
   const order = useMemo<Order>(() => ({
     ...previewTicket,
     orderType: (orderTypeKey as Order['orderType']) || previewTicket.orderType,
   }), [orderTypeKey]);
-  const variant = getCardVariantForTicketsRoute(styleRoute);
-  switch (variant) {
-    case 'v1': return <OrderCardV1 order={order} />;
-    case 'v2': return <OrderCardV2 order={order} />;
-    case 'v3': return <OrderCardV3 order={order} />;
-    case 'v4': return <OrderCardV4 order={order} />;
-    case 'v5': return <OrderCardV5 order={order} />;
-    default: return <OrderCard order={order} layoutOverride="standard" legacyActions />;
-  }
+  return <SelectedVariantPreview order={order} routeOverride={styleRoute} />;
 }
 
 /**
@@ -70,8 +63,8 @@ function StyledRouteTicket({ styleRoute, orderTypeKey }: { styleRoute: TicketsRo
 export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick, styleRoute, themeOverride }: Props & { themeOverride?: 'light' | 'dark' }) {
   const vprops: VProps = { identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick };
   const inner = (() => {
-    if (styleRoute && STYLE_DRIVEN_BOARDS.has(boardId)) {
-      return <StyledRouteTicket styleRoute={styleRoute} orderTypeKey={orderTypeKey} />;
+    if (styleRoute && styleRoute !== 'glass') {
+      return <StyledRouteTicket styleRoute={styleRoute} orderTypeKey={orderTypeKey} agingOverrideSeconds={agingOverrideSeconds} />;
     }
     switch (boardId) {
       case 'focus-lane':          return <FocusLaneTicket {...vprops} />;

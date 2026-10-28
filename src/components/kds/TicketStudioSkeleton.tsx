@@ -24,12 +24,12 @@ import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
 
 /** Same options as Settings › Ticket Layout › Layout. */
 const STYLE_OPTIONS: { value: TicketsRouteKey; label: string }[] = [
-  { value: 'glass', label: 'Glass View' },
   { value: 'v2', label: 'Section list' },
   { value: 'v3', label: 'Standard layout' },
   { value: 'v3-lite', label: 'Priority View' },
   { value: 'v4', label: 'Detailed grid' },
   { value: 'v6', label: 'Itemized cards' },
+  { value: 'glass', label: 'Glass View' },
 ];
 
 const SCREEN_ORDER_TYPES = [
@@ -281,9 +281,10 @@ function FocusLaneBoard({
         <div
           data-ts-ticket
           className="origin-top w-full"
-          style={{ transform: `scale(${textScale * 1.55})` }}
+          style={{ transform: `scale(${textScale * (styleRoute ? 1 : 1.55)})` }}
         >
           <BoardTicketPreview
+            styleRoute={styleRoute}
             themeOverride={theme === 'dark' ? 'dark' : 'light'}
             boardId="focus-lane"
             identifier={identifier}
