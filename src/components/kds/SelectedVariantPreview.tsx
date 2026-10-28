@@ -23,6 +23,8 @@ interface SelectedVariantPreviewProps {
   glassTicketId?: string;
   /** Glass View preview: force the ticket's wait time (aging rules). */
   glassElapsedSeconds?: number;
+  /** Force a specific layout instead of the saved one (Ticket Studio Style). */
+  routeOverride?: TicketsRouteKey;
 }
 
 /** Glass View preview card, driven by the saved ticket-layout settings. */
@@ -63,8 +65,9 @@ export function SelectedVariantPreview({
   layoutOverride,
   glassTicketId = 't23',
   glassElapsedSeconds,
+  routeOverride,
 }: SelectedVariantPreviewProps) {
-  const [route, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('glass'));
+  const [savedRoute, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('glass'));
 
   useEffect(() => {
     const sync = () => setRoute(readStoredTicketsRoute('glass'));
@@ -78,6 +81,7 @@ export function SelectedVariantPreview({
     };
   }, []);
 
+  const route = routeOverride ?? savedRoute;
   const variant = getCardVariantForTicketsRoute(route);
 
   const content =
