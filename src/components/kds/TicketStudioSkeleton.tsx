@@ -940,17 +940,6 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Density">
-                <Segmented
-                  value={density}
-                  onChange={setDensity}
-                  options={[
-                    { value: 'low', label: 'Low' },
-                    { value: 'medium', label: 'Medium' },
-                    { value: 'high', label: 'High' },
-                  ]}
-                />
-              </Field>
               <Field label="Text Size">
                 <Segmented
                   value={textSize}
@@ -969,17 +958,6 @@ export function TicketStudioSkeleton() {
                   options={[
                     { value: 'order', label: 'Order Number' },
                     { value: 'guest', label: 'Guest Name' },
-                  ]}
-                />
-              </Field>
-              <Field label="Safety Emphasis">
-                <Segmented
-                  value={safety}
-                  onChange={setSafety}
-                  options={[
-                    { value: 'muted', label: 'Muted' },
-                    { value: 'bright', label: 'Bright' },
-                    { value: 'highlighted', label: 'Highlighted' },
                   ]}
                 />
               </Field>
