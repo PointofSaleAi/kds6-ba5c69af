@@ -71,6 +71,9 @@ function KdsScreenMock({
   const previewOrders = useMemo(() => mockOrders.slice(0, 6), []);
 
   const textScale = textSize === 'small' ? 0.9 : textSize === 'large' ? 1.05 : 1;
+  // Layout spacing: gap between tickets + board padding.
+  const boardGap = layout === 'compact' ? 4 : layout === 'spacious' ? 20 : 10;
+  const boardPad = layout === 'compact' ? 4 : layout === 'spacious' ? 20 : 8;
 
 
   // Render as a fixed "virtual KDS screen" and uniformly scale it into the
@@ -132,7 +135,7 @@ function KdsScreenMock({
             />
 
             <div className="flex-1 min-w-0 flex">
-              <div className="flex-1 min-w-0 overflow-auto p-2">
+              <div className="flex-1 min-w-0 overflow-auto" style={{ padding: boardPad }}>
                 {styleRoute === 'glass' ? (
                   <GlassBoardProvider>
                     <TicketBoard
@@ -156,7 +159,8 @@ function KdsScreenMock({
                   />
                 ) : (
                   <div
-                    className="grid grid-cols-4 auto-rows-min gap-2 content-start items-start"
+                    className="grid grid-cols-4 auto-rows-min content-start items-start"
+                    style={{ gap: boardGap }}
                   >
                     {SCREEN_ORDER_TYPES.map((ot, i) => (
                       <div key={ot.key} className="min-w-0 flex items-start justify-center">
