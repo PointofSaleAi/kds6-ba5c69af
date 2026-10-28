@@ -47,10 +47,8 @@ type KdsScreenMockProps = {
   boardId: string;
   identifier: 'order' | 'guest';
   textSize: string;
-  /** Personalize: Layout (spacing), Density, Safety Emphasis, Theme. */
+  /** Personalize: Layout (spacing), Text Size, Theme. */
   layout?: string;
-  density?: string;
-  safety?: string;
   theme?: string;
   agingOverrideSeconds?: number;
   onHeaderClick?: (key: string) => void;
@@ -64,8 +62,6 @@ function KdsScreenMock({
   identifier,
   textSize,
   layout = 'standard',
-  density = 'medium',
-  safety = 'bright',
   theme = 'light',
   agingOverrideSeconds,
   onHeaderClick,
@@ -143,8 +139,6 @@ function KdsScreenMock({
                       identifier={identifier}
                       scaleFactor={textScale}
                       spacing={layout === 'compact' ? 'Compact' : layout === 'spacious' ? 'Spacious' : 'Standard'}
-                      density={density as 'low' | 'medium' | 'high'}
-                      safety={safety as 'muted' | 'bright' | 'highlighted'}
                       themeOverride={theme === 'dark' ? 'dark' : 'light'}
                       elapsedSecondsOverride={agingOverrideSeconds}
                     />
@@ -639,10 +633,8 @@ export function TicketStudioSkeleton() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [layout, setLayout] = useState<string>('standard');
   const [styleRoute, setStyleRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute());
-  const [density, setDensity] = useState<string>('medium');
   const [textSize, setTextSize] = useState<string>('large');
   const [identifier, setIdentifier] = useState<string>('order');
-  const [safety, setSafety] = useState<string>('highlighted');
   const [theme, setTheme] = useState<string>('light');
   
   
@@ -733,10 +725,8 @@ export function TicketStudioSkeleton() {
 
   const handleReset = () => {
     setLayout('compact');
-    setDensity('high');
     setTextSize('large');
     setIdentifier('order');
-    setSafety('bright');
     setTheme('light');
 
     setAgingStageIndex(null);
@@ -810,8 +800,6 @@ export function TicketStudioSkeleton() {
             <div
               data-ts-preview
               data-theme={theme}
-              data-safety={safety}
-              data-density={density}
               data-textsize={textSize}
               data-layout={layout}
               className={`w-full h-full ${theme === 'dark' ? 'dark' : ''} ${compareMode ? 'grid grid-cols-2 gap-1' : ''}`}
@@ -825,8 +813,6 @@ export function TicketStudioSkeleton() {
                       identifier={identifier as 'order' | 'guest'}
                       textSize={textSize}
                       layout={layout}
-                      density={density}
-                      safety={safety}
                       theme={theme}
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
@@ -841,8 +827,6 @@ export function TicketStudioSkeleton() {
                       identifier={identifier as 'order' | 'guest'}
                       textSize={textSize}
                       layout={layout}
-                      density={density}
-                      safety={safety}
                       theme={theme}
                       agingOverrideSeconds={agingOverrideSeconds}
                       onHeaderClick={(k) => openOrderTypeInPanel(k)}
@@ -857,8 +841,6 @@ export function TicketStudioSkeleton() {
                   identifier={identifier as 'order' | 'guest'}
                   textSize={textSize}
                   layout={layout}
-                  density={density}
-                  safety={safety}
                   theme={theme}
                   agingOverrideSeconds={agingOverrideSeconds}
                   onHeaderClick={(k) => openOrderTypeInPanel(k)}
@@ -867,23 +849,6 @@ export function TicketStudioSkeleton() {
                 />
               )}
             </div>
-            <style dangerouslySetInnerHTML={{ __html: `
-              [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-1 > * + *,
-              [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-1\\.5 > * + *,
-              [data-ts-preview][data-density="low"] [data-ts-ticket] .space-y-2 > * + * { margin-top: .55rem; }
-              [data-ts-preview][data-density="high"] [data-ts-ticket] .space-y-1 > * + *,
-              [data-ts-preview][data-density="high"] [data-ts-ticket] .space-y-1\\.5 > * + *,
-              [data-ts-preview][data-density="high"] [data-ts-ticket] .space-y-2 > * + * { margin-top: .1rem; }
-              [data-ts-preview][data-density="high"] [data-ts-ticket] .py-2 { padding-top: .3rem; padding-bottom: .3rem; }
-              [data-ts-preview][data-density="high"] [data-ts-ticket] .py-1\\.5 { padding-top: .2rem; padding-bottom: .2rem; }
-              [data-ts-preview][data-density="low"] [data-ts-ticket] .py-1\\.5 { padding-top: .55rem; padding-bottom: .55rem; }
-              [data-ts-preview][data-safety="muted"] [data-ts-ticket] { filter: saturate(.35); }
-              [data-ts-preview][data-safety="bright"] [data-ts-ticket] { filter: saturate(1.35); }
-              [data-ts-preview][data-safety="highlighted"] [data-ts-ticket] .text-\\[\\#C0392B\\],
-              [data-ts-preview][data-safety="highlighted"] [data-ts-ticket] .bg-\\[\\#E84C3D\\],
-              [data-ts-preview][data-safety="highlighted"] [data-ts-ticket] .bg-\\[\\#C0392B\\] { animation: ts-pulse 1.4s ease-in-out infinite; }
-              @keyframes ts-pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
-            `}} />
           </div>
         </div>
 
@@ -974,17 +939,6 @@ export function TicketStudioSkeleton() {
                   ]}
                 />
               </Field>
-              <Field label="Density">
-                <Segmented
-                  value={density}
-                  onChange={setDensity}
-                  options={[
-                    { value: 'low', label: 'Low' },
-                    { value: 'medium', label: 'Medium' },
-                    { value: 'high', label: 'High' },
-                  ]}
-                />
-              </Field>
               <Field label="Text Size">
                 <Segmented
                   value={textSize}
@@ -1003,17 +957,6 @@ export function TicketStudioSkeleton() {
                   options={[
                     { value: 'order', label: 'Order Number' },
                     { value: 'guest', label: 'Guest Name' },
-                  ]}
-                />
-              </Field>
-              <Field label="Safety Emphasis">
-                <Segmented
-                  value={safety}
-                  onChange={setSafety}
-                  options={[
-                    { value: 'muted', label: 'Muted' },
-                    { value: 'bright', label: 'Bright' },
-                    { value: 'highlighted', label: 'Highlighted' },
                   ]}
                 />
               </Field>
@@ -1257,8 +1200,6 @@ export function TicketStudioSkeleton() {
             <div
               data-ts-preview
               data-theme={theme}
-              data-safety={safety}
-              data-density={density}
               data-textsize={textSize}
               data-layout={layout}
               className={`w-full h-full ${theme === 'dark' ? 'dark' : ''}`}
@@ -1268,8 +1209,6 @@ export function TicketStudioSkeleton() {
                 identifier={identifier as 'order' | 'guest'}
                 textSize={textSize}
                 layout={layout}
-                density={density}
-                safety={safety}
                 theme={theme}
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
