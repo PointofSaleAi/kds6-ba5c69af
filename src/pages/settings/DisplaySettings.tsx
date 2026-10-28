@@ -349,22 +349,12 @@ export default function DisplaySettings() {
       />
 
       <SettingsPill
-        icon={StretchVertical}
-        iconColor="#0E7460"
-        label={tui('Ticket Layout')}
-        helper={tui('Controls spacing, text size, layout density, and ticket identifier.')}
-        right={<ValueText>{ticketLayout === 'compact' ? tui('Compact') : ticketLayout === 'header' ? tui('Header') : tui('Standard')}</ValueText>}
-        onClick={() => setTicketSpacingOpen(true)}
-        highlighted={hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
-      />
-
-      <SettingsPill
         icon={LayoutGrid}
         iconColor="#5E4DD8"
         label={tui('Ticket Studio')}
         helper={tui('Browse named board designs and preview before applying to a station.')}
         onClick={() => setTicketStudioOpen(true)}
-        highlighted={hash === 'ticket-studio'}
+        highlighted={hash === 'ticket-studio' || hash === 'ticket-spacing' || hash === 'ticket-layout' || hash === 'text-size' || hash === 'ticket-identifier'}
       />
 
       <SettingsPill
