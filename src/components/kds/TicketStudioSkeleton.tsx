@@ -265,6 +265,7 @@ function FocusLaneBoard({
     <div
       className="grid h-full"
       style={{
+        gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
         gap,
       }}
