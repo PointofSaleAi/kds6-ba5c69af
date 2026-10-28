@@ -849,7 +849,6 @@ export function TicketStudioSkeleton() {
                 />
               )}
             </div>
-            <style dangerouslySetInnerHTML={{ __html: `
           </div>
         </div>
 
