@@ -656,7 +656,7 @@ export function TicketStudioSkeleton() {
   const identifier = getRouteSetting(styleRoute, 'ticketHeaderLayout') === 'guest' ? 'guest' : 'order';
   const setIdentifier = (v: string) =>
     setRouteSetting(styleRoute, 'ticketHeaderLayout', (v === 'guest' ? 'guest' : 'kitchen') as any);
-  const theme = appTheme;
+  const theme: string = appTheme;
   const setTheme = (v: string) => setAppTheme(v === 'dark' ? 'dark' : 'light');
   
   
