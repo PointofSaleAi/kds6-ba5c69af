@@ -24,6 +24,7 @@ import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
 
 /** Same options as Settings › Ticket Layout › Layout. */
 const STYLE_OPTIONS: { value: TicketsRouteKey; label: string }[] = [
+  { value: 'glass', label: 'Glass View' },
   { value: 'v2', label: 'Section list' },
   { value: 'v3', label: 'Standard layout' },
   { value: 'v3-lite', label: 'Priority View' },
@@ -136,7 +137,7 @@ function KdsScreenMock({
 
             <div className="flex-1 min-w-0 flex">
               <div className="flex-1 min-w-0 overflow-auto p-2">
-                {boardId === 'glass-view' ? (
+                {styleRoute === 'glass' ? (
                   <GlassBoardProvider>
                     <TicketBoard
                       identifier={identifier}
@@ -145,6 +146,7 @@ function KdsScreenMock({
                       density={density as 'low' | 'medium' | 'high'}
                       safety={safety as 'muted' | 'bright' | 'highlighted'}
                       themeOverride={theme === 'dark' ? 'dark' : 'light'}
+                      elapsedSecondsOverride={agingOverrideSeconds}
                     />
                   </GlassBoardProvider>
                 ) : boardId === 'focus-lane' ? (
@@ -347,7 +349,6 @@ const BOARDS: Board[] = [
   { id: 'focus-lane', name: 'Focus Lane', subtitle: 'Priority Ticket Centered, Context at Edges' },
   { id: 'distance-view', name: 'Distance View', subtitle: 'Maximum Readability from Several Feet' },
   { id: 'timeline-flow', name: 'Timeline Flow', subtitle: 'New, Cooking, Plating, Ready Lanes' },
-  { id: 'glass-view', name: 'Glass View', subtitle: 'Translucent Cards, Large Order Numbers' },
 ];
 
 function BoardThumb({ id }: { id: string; active: boolean }) {
@@ -945,6 +946,7 @@ export function TicketStudioSkeleton() {
             <>
               <Field label="Style">
                 <select
+                  aria-label="Style"
                   value={styleRoute}
                   onChange={(e) => {
                     const next = e.target.value as TicketsRouteKey;
