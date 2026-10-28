@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useTheme } from '@/hooks/use-theme';
 import {
   ChevronDown,
   Eye,
