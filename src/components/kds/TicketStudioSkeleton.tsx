@@ -640,11 +640,23 @@ export function TicketStudioSkeleton() {
   const [compareMode, setCompareMode] = useState(false);
   const [activeSlot, setActiveSlot] = useState<'A' | 'B'>('A');
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [layout, setLayout] = useState<string>('standard');
-  const [styleRoute, setStyleRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute());
-  const [textSize, setTextSize] = useState<string>('large');
-  const [identifier, setIdentifier] = useState<string>('order');
-  const [theme, setTheme] = useState<string>('light');
+  const [styleRoute, setStyleRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('glass'));
+  // Display options are saved app-wide (same store the live ticket screens read),
+  // scoped to the selected Style, so Ticket Studio changes apply to the app.
+  const { getRouteSetting, setRouteSetting } = useKDSSettings();
+  const { theme: appTheme, setTheme: setAppTheme } = useTheme();
+  const layout = String(getRouteSetting(styleRoute, 'ticketSpacing')).toLowerCase();
+  const setLayout = (v: string) =>
+    setRouteSetting(styleRoute, 'ticketSpacing', (v === 'compact' ? 'Compact' : v === 'spacious' ? 'Spacious' : 'Standard') as any);
+  const rawText = getRouteSetting(styleRoute, 'textSize');
+  const textSize = rawText === 'Compact' ? 'small' : rawText === 'Large' ? 'large' : 'medium';
+  const setTextSize = (v: string) =>
+    setRouteSetting(styleRoute, 'textSize', (v === 'small' ? 'Compact' : v === 'large' ? 'Large' : 'Standard') as any);
+  const identifier = getRouteSetting(styleRoute, 'ticketHeaderLayout') === 'guest' ? 'guest' : 'order';
+  const setIdentifier = (v: string) =>
+    setRouteSetting(styleRoute, 'ticketHeaderLayout', (v === 'guest' ? 'guest' : 'kitchen') as any);
+  const theme = appTheme;
+  const setTheme = (v: string) => setAppTheme(v === 'dark' ? 'dark' : 'light');
   
   
 
