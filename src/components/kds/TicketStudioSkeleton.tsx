@@ -1200,8 +1200,6 @@ export function TicketStudioSkeleton() {
             <div
               data-ts-preview
               data-theme={theme}
-              data-safety={safety}
-              data-density={density}
               data-textsize={textSize}
               data-layout={layout}
               className={`w-full h-full ${theme === 'dark' ? 'dark' : ''}`}
@@ -1211,8 +1209,6 @@ export function TicketStudioSkeleton() {
                 identifier={identifier as 'order' | 'guest'}
                 textSize={textSize}
                 layout={layout}
-                density={density}
-                safety={safety}
                 theme={theme}
                 agingOverrideSeconds={agingOverrideSeconds}
                 onHeaderClick={(k) => openOrderTypeInPanel(k)}
