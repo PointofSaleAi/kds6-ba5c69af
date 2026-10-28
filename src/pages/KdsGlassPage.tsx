@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { KDSTopHeader } from '@/components/kds/KDSTopHeader';
+import { AIAssistantPanel } from '@/components/kds/AIAssistantPanel';
 import { KDSSidebar } from '@/components/kds/KDSSidebar';
 import { ItemSummaryPanel } from '@/components/kds/ItemSummaryPanel';
 import { BottomStatusBar } from '@/components/kds/BottomStatusBar';
@@ -93,6 +94,7 @@ function GlassShell() {
           onToggleAiAssistant={() => setAiAssistantOpen((v) => !v)}
         />
       </div>
+      <AIAssistantPanel open={aiAssistantOpen} onClose={() => setAiAssistantOpen(false)} />
     </>
   );
 }
