@@ -156,6 +156,7 @@ function KdsScreenMock({
                     onHeaderClick={onHeaderClick}
                     onTimerClick={onTimerClick}
                     styleRoute={styleRoute}
+                    gap={boardGap}
                   />
                 ) : (
                   <div
@@ -231,7 +232,9 @@ function FocusLaneBoard({
   onTimerClick,
   theme = 'light',
   styleRoute,
+  gap = 8,
 }: {
+  gap?: number;
   identifier: 'order' | 'guest';
   textScale: number;
   agingOverrideSeconds?: number;
@@ -260,7 +263,7 @@ function FocusLaneBoard({
 
   return (
     <div
-      className="grid gap-2 h-full"
+      className="grid h-full"
       style={{
         gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
