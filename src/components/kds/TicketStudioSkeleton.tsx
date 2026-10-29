@@ -354,6 +354,64 @@ function FocusLaneBoard({
   );
 }
 
+const TIMELINE_LANES = [
+  { key: 'new', label: 'New', tone: '#E84C3D' },
+  { key: 'cooking', label: 'Cooking', tone: '#E67E22' },
+  { key: 'plating', label: 'Plating', tone: '#2980B9' },
+  { key: 'ready', label: 'Ready', tone: '#16A085' },
+];
+
+function TimelineFlowBoard({
+  identifier, textScale, agingOverrideSeconds, onHeaderClick, onTimerClick, theme = 'light', styleRoute, gap = 8,
+}: {
+  gap?: number;
+  identifier: 'order' | 'guest';
+  textScale: number;
+  agingOverrideSeconds?: number;
+  onHeaderClick?: (key: string) => void;
+  onTimerClick?: () => void;
+  theme?: string;
+  styleRoute?: TicketsRouteKey;
+}) {
+  const perLane = Math.ceil(SCREEN_ORDER_TYPES.length / TIMELINE_LANES.length);
+  return (
+    <div className="h-full overflow-x-auto">
+      <div className="flex h-full min-w-[920px]" style={{ gap }}>
+        {TIMELINE_LANES.map((lane, li) => {
+          const tickets = SCREEN_ORDER_TYPES.slice(li * perLane, li * perLane + perLane);
+          return (
+            <div key={lane.key} className="flex-1 min-w-[220px] flex flex-col min-h-0 rounded-lg bg-muted/40 border border-border overflow-hidden">
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-border" style={{ borderTop: `3px solid ${lane.tone}` }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: lane.tone }} />
+                <span className="text-[13px] font-bold uppercase tracking-wide text-text-primary">{lane.label}</span>
+                <span className="ml-auto text-[12px] font-bold text-text-secondary tabular-nums">{tickets.length}</span>
+                {li < TIMELINE_LANES.length - 1 && <span className="text-[13px] font-bold text-text-secondary" aria-hidden>→</span>}
+              </div>
+              <div className="flex-1 min-h-0 overflow-y-auto p-2 flex flex-col" style={{ gap }}>
+                {tickets.map((ot) => (
+                  <div key={ot.key} data-ts-ticket className="origin-top w-full" style={{ transform: `scale(${textScale})` }}>
+                    <BoardTicketPreview
+                      styleRoute={styleRoute}
+                      themeOverride={theme === 'dark' ? 'dark' : 'light'}
+                      boardId="timeline-flow"
+                      identifier={identifier}
+                      orderType={ot.label}
+                      orderTypeKey={ot.key}
+                      agingOverrideSeconds={(agingOverrideSeconds ?? 60) + li * 240}
+                      onHeaderClick={() => onHeaderClick?.(ot.key)}
+                      onTimerClick={onTimerClick}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 
 
 type Board = { id: string; name: string; subtitle: string; featured?: boolean };
