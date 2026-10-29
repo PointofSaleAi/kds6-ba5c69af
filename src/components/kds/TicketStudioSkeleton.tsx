@@ -20,7 +20,7 @@ import {
   DEFAULT_ORDER_TYPE_DETAILED_COLORS,
 } from '@/hooks/use-kds-settings';
 import { mockOrders } from '@/data/mock-orders';
-import { readStoredBoard, writeStoredBoard } from '@/lib/ticket-board';
+import { readStoredBoard, writeStoredBoard, TIMELINE_LANES } from '@/lib/ticket-board';
 import { readStoredTicketsRoute, writeStoredTicketsRoute } from '@/lib/ticket-card-variant';
 import type { TicketsRouteKey } from '@/hooks/use-kds-settings';
 
@@ -355,12 +355,7 @@ function FocusLaneBoard({
   );
 }
 
-const TIMELINE_LANES = [
-  { key: 'new', label: 'New', tone: '#E84C3D' },
-  { key: 'cooking', label: 'Cooking', tone: '#E67E22' },
-  { key: 'plating', label: 'Plating', tone: '#2980B9' },
-  { key: 'ready', label: 'Ready', tone: '#16A085' },
-];
+
 
 function TimelineFlowBoard({
   identifier, textScale, agingOverrideSeconds, onHeaderClick, onTimerClick, theme = 'light', styleRoute, gap = 8,

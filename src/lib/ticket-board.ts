@@ -32,23 +32,21 @@ export function useStoredBoard(): TicketBoardId {
   return b;
 }
 
-export type TimelineLaneKey = 'new' | 'cooking' | 'plating' | 'ready';
+export type TimelineLaneKey = 'new' | 'preparing' | 'ready' | 'served';
 export const TIMELINE_LANES: { key: TimelineLaneKey; label: string; tone: string }[] = [
   { key: 'new', label: 'New', tone: '#E84C3D' },
-  { key: 'cooking', label: 'Cooking', tone: '#E67E22' },
-  { key: 'plating', label: 'Plating', tone: '#2980B9' },
+  { key: 'preparing', label: 'Preparing', tone: '#E67E22' },
   { key: 'ready', label: 'Ready', tone: '#16A085' },
+  { key: 'served', label: 'Served', tone: '#95A5A6' },
 ];
 
-/**
- * Lane from item states. Each state is one of unseen | seen | preparing | ready | served.
- * New = all unseen; Ready = all ready/served; Plating = some ready; else Cooking.
- */
+const RANK: Record<string, number> = { unseen: 0, new: 0, seen: 1, preparing: 1, ready: 2, done: 2, served: 3 };
+const LANE_BY_RANK: TimelineLaneKey[] = ['new', 'preparing', 'ready', 'served'];
+
+/** Lane = least-progressed active item (cleared items ignored). */
 export function laneForStates(states: string[]): TimelineLaneKey {
   const active = states.filter((s) => s !== 'cleared');
-  if (active.length === 0 || active.every((s) => s === 'unseen')) return 'new';
-  const done = (s: string) => s === 'ready' || s === 'served' || s === 'done';
-  if (active.every(done)) return 'ready';
-  if (active.some(done)) return 'plating';
-  return 'cooking';
+  if (active.length === 0) return 'served';
+  const min = Math.min(...active.map((s) => RANK[s] ?? 0));
+  return LANE_BY_RANK[min];
 }
