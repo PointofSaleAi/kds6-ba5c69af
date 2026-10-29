@@ -1092,7 +1092,7 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
   const liveBoard = activeNav === 'home' && activeFilter === 'all' ? storedBoard : 'distance-view';
   const laneOfOrder = (o: Order) => {
     const full = ordersWithItemStatusesById.get(o.id) ?? o;
-    const states = full.courses.flatMap((cg: any) => cg.items.map((i: any) => (i.status === 'new' || !i.status ? 'unseen' : i.status)));
+    const states = full.courses.flatMap((cg: any) => cg.items.map((i: any) => itemLifecycles[i.id] || (i.status === 'new' || !i.status ? 'unseen' : i.status)));
     return laneForStates(states);
   };
   const isHistory = activeNav === 'history';
