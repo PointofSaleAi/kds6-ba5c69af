@@ -159,6 +159,17 @@ function KdsScreenMock({
                     styleRoute={styleRoute}
                     gap={boardGap}
                   />
+                ) : boardId === 'timeline-flow' ? (
+                  <TimelineFlowBoard
+                    theme={theme}
+                    identifier={identifier}
+                    textScale={textScale}
+                    agingOverrideSeconds={agingOverrideSeconds}
+                    onHeaderClick={onHeaderClick}
+                    onTimerClick={onTimerClick}
+                    styleRoute={styleRoute}
+                    gap={boardGap}
+                  />
                 ) : (
                   <div
                     className="grid grid-cols-4 auto-rows-min content-start items-start"
