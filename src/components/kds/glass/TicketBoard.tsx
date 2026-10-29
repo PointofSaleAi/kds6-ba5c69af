@@ -195,18 +195,18 @@ export function TicketBoard({
   const liveBoard = applyStoredBoard && view === 'home' ? storedBoard : 'distance-view';
   if (liveBoard === 'focus-lane') {
     body = (
-      <div ref={boardRef} className="h-full" style={{ zoom }}>
-        <LiveFocusLane tickets={tickets} gap={GAP} renderTicket={(t) => cardFor(t)} />
+      <div ref={boardRef} className="h-full">
+        <LiveFocusLane tickets={tickets} gap={GAP * zoom} renderTicket={(t) => <div style={{ zoom }}>{cardFor(t)}</div>} />
       </div>
     );
   } else if (liveBoard === 'timeline-flow') {
     body = (
-      <div ref={boardRef} className="h-full" style={{ zoom }}>
+      <div ref={boardRef} className="h-full">
         <LiveTimelineLanes
           tickets={tickets}
-          gap={GAP}
+          gap={GAP * zoom}
           laneOf={(t) => laneForStates(ticketKeys(t).map((k) => itemStages[k] || 'unseen'))}
-          renderTicket={(t) => cardFor(t)}
+          renderTicket={(t) => <div style={{ zoom }}>{cardFor(t)}</div>}
         />
       </div>
     );
