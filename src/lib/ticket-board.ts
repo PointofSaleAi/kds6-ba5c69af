@@ -40,7 +40,7 @@ export const TIMELINE_LANES: { key: TimelineLaneKey; label: string; tone: string
   { key: 'served', label: 'Served', tone: '#95A5A6' },
 ];
 
-const RANK: Record<string, number> = { unseen: 0, new: 0, seen: 1, preparing: 1, ready: 2, done: 2, served: 3 };
+const RANK: Record<string, number> = { unseen: 0, new: 0, seen: 0, preparing: 1, ready: 2, done: 2, served: 3 };
 const LANE_BY_RANK: TimelineLaneKey[] = ['new', 'preparing', 'ready', 'served'];
 
 /** Lane = least-progressed active item (cleared items ignored). */
