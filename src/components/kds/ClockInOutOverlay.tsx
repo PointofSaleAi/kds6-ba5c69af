@@ -3,6 +3,10 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sun, Fingerprint, ScanFace, ChevronDown } from 'lucide-react';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useLanguage } from '@/hooks/use-language';
 
 
@@ -26,7 +30,15 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
   const [pin, setPin] = useState('');
   const [revenueCenter, setRevenueCenter] = useState('Dine Center');
   const [rcOpen, setRcOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const { tui } = useLanguage();
+
+  const handleLogOut = useCallback(() => {
+    setLogoutOpen(false);
+    setPin('');
+    onClose();
+    navigate('/kds/v1', { state: { logout: true } });
+  }, [onClose, navigate]);
 
   const submitPin = useCallback(() => {
     if (pin.length !== PIN_LENGTH) return;
@@ -220,7 +232,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
             </div>
 
             <button
-              onClick={() => { setPin(''); onClose(); navigate('/kds/v1', { state: { logout: true } }); }}
+              onClick={() => setLogoutOpen(true)}
               className="w-full h-12 rounded-lg bg-[#1A1A1F] text-white font-bold tracking-wider border border-white/10 hover:bg-[#26262C] transition-colors"
             >
               {tui('LOGOUT')}
@@ -228,7 +240,26 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           </div>
         </motion.div>
       )}
-    </AnimatePresence>,
+    </AnimatePresence>
+    <AlertDialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+      <AlertDialogContent className="bg-surface-card border-border">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-text-primary">{tui('Log out of this device?')}</AlertDialogTitle>
+          <AlertDialogDescription className="text-text-secondary">
+            {tui('You will need to re-enter your PIN or activation code to sign back in.')}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="min-h-[44px]">{tui('Cancel')}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleLogOut}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
+          >
+            {tui('Log out')}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>,
     document.body,
   );
 }
