@@ -31,13 +31,15 @@ interface SelectedVariantPreviewProps {
 function GlassPreview({
   ticketId,
   elapsedSeconds,
+  fill,
 }: {
   ticketId: string;
   elapsedSeconds?: number;
+  fill?: boolean;
 }) {
   const { ticketSpacing, textSize, ticketLayout, ticketHeaderLayout } = useKDSSettings();
   return (
-    <div className="w-full flex justify-center">
+    <div className={fill ? 'w-full min-w-0 [&>*]:w-full [&>*]:min-w-0' : 'w-full flex justify-center'}>
       <GlassBoardProvider>
         <TicketBoard
           maxTickets={1}
@@ -66,7 +68,8 @@ export function SelectedVariantPreview({
   glassTicketId = 't23',
   glassElapsedSeconds,
   routeOverride,
-}: SelectedVariantPreviewProps) {
+  glassFill,
+}: SelectedVariantPreviewProps & { glassFill?: boolean }) {
   const [savedRoute, setRoute] = useState<TicketsRouteKey>(() => readStoredTicketsRoute('glass'));
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export function SelectedVariantPreview({
 
   const content =
     route === 'glass' ? (
-      <GlassPreview ticketId={glassTicketId} elapsedSeconds={glassElapsedSeconds} />
+      <GlassPreview ticketId={glassTicketId} elapsedSeconds={glassElapsedSeconds} fill={glassFill} />
     ) : variant === 'v1' ? (
       <OrderCardV1 order={order} />
     ) : variant === 'v2' ? (
