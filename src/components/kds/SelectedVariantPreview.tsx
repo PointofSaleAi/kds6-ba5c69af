@@ -89,7 +89,7 @@ export function SelectedVariantPreview({
 
   const content =
     route === 'glass' ? (
-      <GlassPreview ticketId={glassTicketId} elapsedSeconds={glassElapsedSeconds} />
+      <GlassPreview ticketId={glassTicketId} elapsedSeconds={glassElapsedSeconds} fill={glassFill} />
     ) : variant === 'v1' ? (
       <OrderCardV1 order={order} />
     ) : variant === 'v2' ? (
