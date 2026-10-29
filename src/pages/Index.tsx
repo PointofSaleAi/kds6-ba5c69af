@@ -60,6 +60,13 @@ const Index = ({ cardVariant = 'default', legacyActions = false }: IndexProps = 
   const [screen, setScreen] = useState<AppScreen>(
     (inSettings || isVariantRoute || legacyActions) ? 'main' : (isDevMode() ? 'dev-selector' : 'splash')
   );
+  // Logout requested from elsewhere (e.g. Clock In/Out PIN pad) → back to sign-in.
+  useEffect(() => {
+    if ((location.state as { logout?: boolean } | null)?.logout) {
+      setScreen(isDevMode() ? 'dev-selector' : 'splash');
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.state]); // eslint-disable-line react-hooks/exhaustive-deps
   const [alertsOpen, setAlertsOpen] = useState(false);
 
   // Sub-screen states
