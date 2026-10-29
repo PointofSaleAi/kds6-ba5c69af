@@ -220,7 +220,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
             </div>
 
             <button
-              onClick={onClose}
+              onClick={() => { setPin(''); onClose(); navigate('/kds/v1', { state: { logout: true } }); }}
               className="w-full h-12 rounded-lg bg-[#1A1A1F] text-white font-bold tracking-wider border border-white/10 hover:bg-[#26262C] transition-colors"
             >
               {tui('LOGOUT')}
