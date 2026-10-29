@@ -243,7 +243,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
       )}
     </AnimatePresence>
     <AlertDialog open={logoutOpen} onOpenChange={setLogoutOpen}>
-      <AlertDialogContent className="bg-surface-card border-border">
+      <AlertDialogContent className="bg-surface-card border-border z-[10060]">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-text-primary">{tui('Log out of this device?')}</AlertDialogTitle>
           <AlertDialogDescription className="text-text-secondary">
