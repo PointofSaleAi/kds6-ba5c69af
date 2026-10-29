@@ -100,6 +100,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
    * full-screen overlay to the 44px header strip.
    */
   return createPortal(
+    <>
     <AnimatePresence>
       {open && (
         <motion.div
@@ -259,7 +260,8 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>,
+    </AlertDialog>
+    </>,
     document.body,
   );
 }
