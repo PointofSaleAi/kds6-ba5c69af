@@ -93,7 +93,7 @@ function GlassShell() {
               {isExpo ? (
                 <ExpoView viewMode={board.viewMode as any} pinnedTicketIds={expoPinnedIds} onFilterChange={() => setExpoPinnedIds([])} onTicketSentOut={(id) => setExpoPinnedIds((p) => p.filter((x) => x !== id))} onAllTicketsChange={setExpoAllTickets} selectedProducts={expoSelectedProducts} controlledFilter={expoFilter} hideTopControls />
               ) : (
-                <TicketBoard />
+                <TicketBoard applyStoredBoard />
               )}
             </div>
           </main>
