@@ -137,7 +137,7 @@ function KdsScreenMock({
 
             <div className="flex-1 min-w-0 flex">
               <div className="flex-1 min-w-0 overflow-auto" style={{ padding: boardPad }}>
-                {styleRoute === 'glass' ? (
+                {styleRoute === 'glass' && boardId === 'distance-view' ? (
                   <GlassBoardProvider>
                     <TicketBoard
                       identifier={identifier}

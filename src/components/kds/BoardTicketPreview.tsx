@@ -63,7 +63,7 @@ function StyledRouteTicket({ styleRoute, orderTypeKey, agingOverrideSeconds }: {
 export function BoardTicketPreview({ boardId, identifier = 'order', orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick, styleRoute, themeOverride }: Props & { themeOverride?: 'light' | 'dark' }) {
   const vprops: VProps = { identifier, orderType, orderTypeKey, agingOverrideSeconds, onHeaderClick, onTimerClick };
   const inner = (() => {
-    if (styleRoute && styleRoute !== 'glass') {
+    if (styleRoute) {
       return <StyledRouteTicket styleRoute={styleRoute} orderTypeKey={orderTypeKey} agingOverrideSeconds={agingOverrideSeconds} />;
     }
     switch (boardId) {
