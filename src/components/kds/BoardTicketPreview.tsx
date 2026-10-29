@@ -52,7 +52,7 @@ function StyledRouteTicket({ styleRoute, orderTypeKey, agingOverrideSeconds }: {
     ...previewTicket,
     orderType: (orderTypeKey as Order['orderType']) || previewTicket.orderType,
   }), [orderTypeKey]);
-  return <SelectedVariantPreview order={order} routeOverride={styleRoute} />;
+  return <SelectedVariantPreview order={order} routeOverride={styleRoute} glassFill />;
 }
 
 /**
