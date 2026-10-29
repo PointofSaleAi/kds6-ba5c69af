@@ -1,8 +1,14 @@
-# Point of Sale Ai logo sync
+# Replace Point of Sale Ai logo with the uploaded one
 
-## Finding
-The logo files in "6.0 - Create Account, Sign In" (`posai-logo.png` and `posai-logo-light.png`) are byte-for-byte the same as the KDS app's logo files. Every KDS screen that shows the logo already uses them: PIN pad, splash, set PIN, forgot password, device activation, personal device login and recipe page.
+## What changes
+- Use the uploaded logo ("POINTOFSALE" lettering with a gold dot and gold "AI") everywhere the logo shows. That covers the PIN pad, splash, set PIN, forgot password, device activation, device activated, personal device login, dev scenario screen and recipe page.
+- **Light screens:** black lettering, gold dot and gold "AI" (as uploaded).
+- **Dark screens:** white lettering, keeping the gold dot and gold "AI".
+- Same sizes as today, on desktop, tablet and mobile.
 
-## Plan
-- Make no image swap, because it would change nothing on screen.
-- If you want a newer logo, attach the new file and I'll replace both theme versions across the app on desktop, tablet and mobile.
+## Technical details
+- Remove the white background from the upload and save it as a clean see-through image, `src/assets/posai-logo.png`.
+- Make the dark-theme version by recoloring the black pixels to white and leaving the gold pixels alone. Save it as `src/assets/posai-logo-white.png`.
+- Because the file names stay the same, `PosaiLogo.tsx` and `RecipeDetailPage.tsx` pick up the new logo without code edits.
+- The new logo is a wide strip, not a box, so on each screen I'll swap its fixed height for a width that keeps it readable.
+- Check the result on the light PIN pad and the dark splash screen.
