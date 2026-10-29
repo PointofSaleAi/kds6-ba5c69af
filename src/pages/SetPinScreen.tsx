@@ -66,7 +66,7 @@ export default function SetPinScreen({ onComplete }: SetPinScreenProps) {
   return (
     <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: '#0D0D1A' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-[420px] px-6 flex flex-col items-center">
-        <PosaiLogo variant="light" className="h-20 object-contain mb-4" />
+        <PosaiLogo variant="light" className="w-[300px] max-w-[80vw] h-auto object-contain mb-4" />
         <h1 className="text-white text-xl font-bold font-montserrat mb-1">
           {step === 'set' ? tui('Set Your PIN') : tui('Confirm Your PIN')}
         </h1>

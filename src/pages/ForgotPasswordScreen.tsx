@@ -77,7 +77,7 @@ export default function ForgotPasswordScreen({ onBack, onComplete }: ForgotPassw
             </button>
 
             <div className="text-center mb-8">
-              <PosaiLogo variant="light" className="h-28 object-contain mx-auto" />
+              <PosaiLogo variant="light" className="w-[300px] max-w-[80vw] h-auto object-contain mx-auto" />
               <p className="text-text-muted text-sm mt-2">{tui('Kitchen Display System')}</p>
             </div>
 
