@@ -19,15 +19,15 @@ export function LiveFocusLane<T extends { id: string }>({
   const side = (list: T[]) => (
     <div className="hidden md:flex flex-col min-w-0" style={{ gap }}>
       {list.map((t) => (
-        <div key={t.id} className="relative">
-          {renderTicket(t)}
+        <div key={t.id} className="min-w-0">
           <button
             type="button"
             onClick={() => setFocusId(t.id)}
-            className="absolute top-1 right-1 min-h-[44px] px-3 rounded-md bg-primary text-primary-foreground text-[12px] font-bold uppercase shadow"
+            className="w-full min-h-[44px] mb-1 rounded-md bg-muted text-text-primary border border-border text-[13px] font-bold uppercase hover:bg-muted/70"
           >
-            Focus
+            Move to focus
           </button>
+          {renderTicket(t)}
         </div>
       ))}
     </div>
@@ -46,14 +46,14 @@ export function LiveFocusLane<T extends { id: string }>({
         <div className={`flex overflow-x-auto items-start mt-3 ${rest.length ? '' : 'md:hidden'}`} style={{ gap }}>
           {(rest.length ? rest : others).map((t) => (
             <div key={t.id} className={`relative shrink-0 w-[280px] ${rest.includes(t) ? '' : 'md:hidden'}`}>
-              {renderTicket(t)}
               <button
                 type="button"
                 onClick={() => setFocusId(t.id)}
-                className="absolute top-1 right-1 min-h-[44px] px-3 rounded-md bg-primary text-primary-foreground text-[12px] font-bold uppercase shadow"
+                className="w-full min-h-[44px] mb-1 rounded-md bg-muted text-text-primary border border-border text-[13px] font-bold uppercase hover:bg-muted/70"
               >
-                Focus
+                Move to focus
               </button>
+              {renderTicket(t)}
             </div>
           ))}
         </div>
