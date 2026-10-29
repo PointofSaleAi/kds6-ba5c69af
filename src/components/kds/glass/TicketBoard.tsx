@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { TicketCard } from './TicketCard';
 import { useGlassBoard } from './glass-board-context';
-import { CARD_W, activeCourse, type GlassStage, type GlassTicket } from './glass-tickets-data';
+import { LiveFocusLane, LiveTimelineLanes } from '../LiveBoardLayouts';
+import { useStoredBoard, laneForStates } from '@/lib/ticket-board';
+import { CARD_W, ticketKeys, activeCourse, type GlassStage, type GlassTicket } from './glass-tickets-data';
 import { DARK_SKIN, GlassStyleProvider, LIGHT_SKIN, type GlassSafety } from './glass-theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { ViewMode } from '@/types/kds';
@@ -66,7 +68,9 @@ export function TicketBoard({
   pinnedTicketId,
   viewModeOverride,
   elapsedSecondsOverride,
-}: TicketBoardProps = {}) {
+  applyStoredBoard,
+}: TicketBoardProps & { applyStoredBoard?: boolean } = {}) {
+  const storedBoard = useStoredBoard();
   const boardRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const { theme } = useTheme();
@@ -188,7 +192,25 @@ export function TicketBoard({
   const base: React.CSSProperties = { zoom, padding: GAP };
 
   let body: JSX.Element;
-  if (viewMode === 'horizontal') {
+  const liveBoard = applyStoredBoard && view === 'home' ? storedBoard : 'distance-view';
+  if (liveBoard === 'focus-lane') {
+    body = (
+      <div ref={boardRef} className="h-full">
+        <LiveFocusLane tickets={tickets} gap={GAP * zoom} renderTicket={(t) => <div style={{ zoom }}>{cardFor(t)}</div>} />
+      </div>
+    );
+  } else if (liveBoard === 'timeline-flow') {
+    body = (
+      <div ref={boardRef} className="h-full">
+        <LiveTimelineLanes
+          tickets={tickets}
+          gap={GAP * zoom}
+          laneOf={(t) => laneForStates(ticketKeys(t).map((k) => itemStages[k] || 'unseen'))}
+          renderTicket={(t) => <div style={{ zoom }}>{cardFor(t)}</div>}
+        />
+      </div>
+    );
+  } else if (viewMode === 'horizontal') {
     body = (
       <div ref={boardRef} className="h-full overflow-x-auto">
         <div style={{ ...base, display: 'flex', alignItems: 'flex-start', gap: GAP }}>
