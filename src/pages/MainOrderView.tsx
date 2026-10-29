@@ -48,6 +48,8 @@ import UnseenOrdersScreen from '@/pages/UnseenOrdersScreen';
 import { OnboardingWalkthrough } from '@/components/onboarding/OnboardingWalkthrough';
 import { ONBOARDING_SAMPLE_ORDER_ID } from '@/data/onboarding-sample-order';
 import { useOnboarding } from '@/hooks/use-onboarding';
+import { useStoredBoard, laneForStates } from '@/lib/ticket-board';
+import { LiveFocusLane, LiveTimelineLanes } from '@/components/kds/LiveBoardLayouts';
 import {
   getCardVariantForTicketsRoute,
   getTicketsRouteForCardVariant,
@@ -1086,6 +1088,13 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
 
   const dateTabs = ['Today', 'Yesterday', 'Last 7 days'];
 
+  const storedBoard = useStoredBoard();
+  const liveBoard = activeNav === 'home' && activeFilter === 'all' ? storedBoard : 'distance-view';
+  const laneOfOrder = (o: Order) => {
+    const full = ordersWithItemStatusesById.get(o.id) ?? o;
+    const states = full.courses.flatMap((cg: any) => cg.items.map((i: any) => (i.status === 'new' || !i.status ? 'unseen' : i.status)));
+    return laneForStates(states);
+  };
   const isHistory = activeNav === 'history';
   const isSeenScreen = activeNav === 'seen-orders';
   const isUnseenScreen = activeNav === 'unseen-orders';
@@ -1531,7 +1540,11 @@ export default function MainOrderView({ onNavigate, settingsOpen, onCloseSetting
                 <ExpoView viewMode={viewMode} pinnedTicketIds={expoPinnedIds} onFilterChange={handleExpoFilterChange} onTicketSentOut={handleExpoTicketSentOut} onAllTicketsChange={handleExpoAllTicketsChange} selectedProducts={expoSelectedProducts} controlledFilter="all" hideTopControls />
               ) : (
                 <div className="flex-1 overflow-auto p-1.5">
-                  {effectiveBoardMode === 'stagger' ? (
+                  {liveBoard === 'focus-lane' ? (
+                    <LiveFocusLane tickets={displayOrders} gap={10} renderTicket={(o) => renderOrderCard(getStationDisplayOrder(o))} />
+                  ) : liveBoard === 'timeline-flow' ? (
+                    <LiveTimelineLanes tickets={displayOrders} gap={10} laneOf={laneOfOrder} renderTicket={(o) => renderOrderCard(getStationDisplayOrder(o), { compactRows: true })} />
+                  ) : effectiveBoardMode === 'stagger' ? (
                     <div className="flex gap-1.5 sm:gap-2 lg:gap-2.5 items-start">
                       {staggerOrderColumns.map((col, colIdx) => (
                         <div key={colIdx} className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2 lg:gap-2.5">
