@@ -34,7 +34,7 @@ export default function DeviceActivatedScreen({ onComplete }: DeviceActivatedScr
           <Check className="w-10 h-10 text-white" strokeWidth={3} />
         </div>
 
-        <PosaiLogo variant="light" className="h-28 object-contain mb-3" />
+        <PosaiLogo variant="light" className="w-[300px] max-w-[80vw] h-auto object-contain mb-3" />
 
         <h1 className="text-white text-2xl font-bold font-montserrat mb-2">{tui('Device Activated')}</h1>
         <p className="text-sm font-montserrat" style={{ color: '#6C7A89' }}>

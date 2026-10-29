@@ -36,7 +36,7 @@ export default function SplashScreen({ onReady }: SplashScreenProps) {
         className="flex flex-col items-center"
       >
         {/* Logo */}
-        <PosaiLogo variant="auto" className="h-28 object-contain" />
+        <PosaiLogo variant="auto" className="w-[300px] max-w-[80vw] h-auto object-contain" />
 
         <p className="text-text-secondary text-lg mt-2 font-medium">
           {tui('Kitchen Display System')}

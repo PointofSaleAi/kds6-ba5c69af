@@ -147,7 +147,7 @@ export default function HardwareActivationScreen({ onSuccess }: HardwareActivati
 
         {/* Logo + Title row */}
         <div className="flex items-center justify-center gap-5 pt-14 pb-4">
-          <PosaiLogo variant="light" className="h-24 object-contain" />
+          <PosaiLogo variant="light" className="w-[300px] max-w-[80vw] h-auto object-contain" />
           <div>
             <h1 className="text-white text-xl font-bold font-montserrat">
               {phase === 'activate' ? tui('Kitchen Display System') : phase === 'set-pin' ? tui('Set Your PIN') : tui('Reset password')}

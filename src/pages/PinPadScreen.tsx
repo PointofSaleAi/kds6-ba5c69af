@@ -130,7 +130,7 @@ export default function PinPadScreen({ onSuccess, onFallback, context = 'login',
       <div className="relative z-10 flex flex-col h-full w-full">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full">
           <div className="flex items-center justify-center gap-5 pt-14 pb-1">
-            <PosaiLogo variant="light" className="h-24 object-contain" />
+            <PosaiLogo variant="light" className="w-[300px] max-w-[80vw] h-auto object-contain" />
             <h1 className="text-white text-xl font-bold font-montserrat">{tui('Kitchen Display System')}</h1>
           </div>
 
