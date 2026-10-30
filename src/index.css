@@ -4,6 +4,12 @@
 
 @layer base {
   :root {
+    --revenue-center-dine: 43 96% 56%;
+    --revenue-center-main: 213 94% 68%;
+    --revenue-center-patio: 160 63% 52%;
+    --revenue-center-private: 270 95% 75%;
+    --revenue-center-bar: 329 87% 70%;
+    --revenue-center-takeout: 188 86% 53%;
     /* Brand */
     --brand-primary: 0 0% 13%;
     --brand-primary-foreground: 0 0% 100%;
