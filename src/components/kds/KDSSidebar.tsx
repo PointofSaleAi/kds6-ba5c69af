@@ -109,7 +109,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
 
   return (
       <TooltipProvider delayDuration={300}>
-        <div className={`glass-rail ${expanded ? 'w-48' : 'w-20'} py-2 px-2 bg-transparent flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}>
+        <div className={`glass-rail ${expanded ? 'w-48' : 'w-20'} py-2 px-2 bg-tickets-bg flex flex-col h-full shrink-0 z-20 transition-all duration-300 ease-out`}>
         <div
           className="h-full rounded-2xl flex flex-col gap-1 py-2 px-1.5 relative ios-glass-panel border border-[var(--glass-chrome-border)]"
           style={{
