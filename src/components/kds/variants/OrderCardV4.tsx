@@ -41,6 +41,7 @@ interface V1ProductRowProps {
 }
 
 function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress, compact = false }: V1ProductRowProps) {
+  const { showAllergens } = useKDSSettings();
 
   const done = state === 'done';
   const loading = state === 'loading';

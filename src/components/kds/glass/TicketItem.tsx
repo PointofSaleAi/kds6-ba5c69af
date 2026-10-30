@@ -1,3 +1,4 @@
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { GlassIcon } from './GlassIcon';
 import { useLanguage } from '@/hooks/use-language';
 import { ACT_BTN, RED, fmt, type GlassItem, type GlassStage } from './glass-tickets-data';
@@ -57,6 +58,7 @@ export function TicketItem({
   prepLabel: string;
   onTap: () => void;
 }) {
+  const { showAllergens } = useKDSSettings();
   const { skin, rowScale, safety } = useGlassStyle();
   const { tp, tpSecondary, tn, tnSecondary, ta, tl, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
   const secondaryDir: 'ltr' | 'rtl' = secondaryLang === 'ar' ? 'rtl' : 'ltr';
@@ -117,7 +119,7 @@ export function TicketItem({
             )}
           </>
         )}
-        {item.tags && item.tags.length > 0 && (
+        {showAllergens && item.tags && item.tags.length > 0 && (
           <div style={{ marginTop: 8, display: 'flex', gap: 7, flexWrap: 'wrap' }}>
             {item.tags.map((tag) => (
               <div key={tag} style={{ ...glossItem(skin), ...safetyStyle(safety) }}>

@@ -80,6 +80,7 @@ function ProductRow({
   compact?: boolean;
   isNewBlink?: boolean;
 }) {
+  const { showAllergens } = useKDSSettings();
 
   const done = state === 'done';
   const loading = state === 'loading';

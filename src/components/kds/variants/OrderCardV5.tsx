@@ -57,6 +57,7 @@ function ProductPill({
   onLongPress: (p: OrderItem) => void;
   tx: Translators;
 }) {
+  const { showAllergens } = useKDSSettings();
   const done = state === 'done';
   const loading = state === 'loading';
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
@@ -180,7 +181,7 @@ function ProductPill({
               />
             );
           })}
-          {product.allergens.length > 0 && (
+          {showAllergens && product.allergens.length > 0 && (
             <ModifierRow
               prefix="!"
               text={product.allergens.map((a) => tx.ta(a.label)).join(', ')}

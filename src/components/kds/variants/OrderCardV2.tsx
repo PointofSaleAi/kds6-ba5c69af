@@ -193,6 +193,7 @@ function V2ProductRow({
   productTimersEnabled?: boolean;
   isNewBlink?: boolean;
 }) {
+  const { showAllergens } = useKDSSettings();
 
   const { tp, tpSecondary, tm, tmSecondary, tn, tnSecondary, displayMode, showSecondaryMenu, secondaryLang } = useLanguage();
   const secondaryDir = secondaryLang === 'ar' ? 'rtl' : 'ltr';
@@ -383,9 +384,9 @@ function V2ProductRow({
           </div>
         </div>
 
-          {showDetails && (product.allergens.length > 0 || product.modifiers.length > 0 || product.notes) && (
+          {showDetails && ((showAllergens && product.allergens.length > 0) || product.modifiers.length > 0 || product.notes) && (
             <div style={{ paddingLeft: 24 }}>
-              {product.allergens.length > 0 && (
+              {showAllergens && product.allergens.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-0.5" data-onboarding="item-allergen">
                   {product.allergens.map((a) => (
                     <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
