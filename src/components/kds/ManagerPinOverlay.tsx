@@ -46,7 +46,7 @@ export default function ManagerPinOverlay({ open, title, subtitle, onClose, onSu
     return () => window.removeEventListener('keydown', onKey);
   }, [open, pin, onClose, submit]);
 
-  const keys = ['1','2','3','4','5','6','7','8','9','C','0','ENTER'];
+  const keys = ['7','8','9','4','5','6','1','2','3','C','0','ENTER'];
 
   const keyBase: React.CSSProperties = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
