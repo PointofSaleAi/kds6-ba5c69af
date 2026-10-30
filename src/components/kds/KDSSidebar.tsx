@@ -122,6 +122,7 @@ export function KDSSidebar({ activeFilter, onFilterChange, onNavigate, activeNav
               orientation="vertical"
               ariaLabel={tui("Drag to dock main sidebar")}
               className="text-sidebar-foreground"
+              showLock={false}
             />
           </div>
           {/* Restaurant Logo - tap to expand/collapse */}
