@@ -8,10 +8,10 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useLanguage } from '@/hooks/use-language';
+import { REVENUE_CENTERS, RevenueCenterIcon } from './RevenueCenterIcon';
 
 
 const PIN_LENGTH = 4;
-const REVENUE_CENTERS = ['Dine Center', 'Bar', 'Patio', 'Takeout'];
 
 interface Props {
   open: boolean;
@@ -199,33 +199,48 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
             </div>
 
             {/* Biometrics + revenue center */}
-            <div className="grid grid-cols-3 gap-3 mb-3">
+            <div className="relative grid grid-cols-3 gap-3 mb-3">
               <button aria-label={tui('Fingerprint')} className="h-14 rounded-lg bg-[#3A3A3C] text-white flex items-center justify-center shadow active:scale-95 transition-transform">
                 <Fingerprint className="w-6 h-6" />
               </button>
-              <div className="relative">
+              <div>
                 <button
                   onClick={() => setRcOpen(v => !v)}
                   className="w-full h-14 rounded-lg bg-white text-[#1A1A2E] flex flex-col items-center justify-center shadow active:scale-95 transition-transform"
                 >
                   <span className="text-[9px] font-bold tracking-wide text-[#6C7A89]">{tui('REVENUE CENTER')}</span>
                   <span className="text-sm font-semibold flex items-center gap-1">
-                    {revenueCenter} <ChevronDown className="w-3 h-3" />
+                    {tui(revenueCenter)} <ChevronDown className="w-3 h-3" />
                   </span>
                 </button>
-                {rcOpen && (
-                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-white rounded-lg shadow-lg overflow-hidden z-10">
-                    {REVENUE_CENTERS.map(rc => (
-                      <button
-                        key={rc}
-                        onClick={() => { setRevenueCenter(rc); setRcOpen(false); }}
-                        className="w-full text-left px-3 py-2 text-sm text-[#1A1A2E] hover:bg-black/5"
-                      >
-                        {rc}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {rcOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute bottom-full left-0 right-0 mb-2 bg-[#1a1a1e] rounded-2xl shadow-2xl border border-white/10 z-50 p-4"
+                    >
+                      <p className="text-white/60 text-xs font-medium mb-3 text-center uppercase tracking-wide">{tui('Select Revenue Center')}</p>
+                      <div className="grid grid-cols-3 gap-2.5">
+                        {REVENUE_CENTERS.map(rc => {
+                          const sel = rc === revenueCenter;
+                          return (
+                            <button
+                              key={rc}
+                              onClick={() => { setRevenueCenter(rc); setRcOpen(false); }}
+                              className={`rounded-xl px-2 py-3 flex flex-col items-center justify-center gap-2 transition-all min-h-[78px] ${sel ? 'bg-white/20 border border-white/40' : 'bg-white/10 border border-transparent hover:bg-white/20 active:bg-white/30'}`}
+                            >
+                              <RevenueCenterIcon center={rc} className="w-6 h-6 shrink-0" />
+                              <span className="text-xs font-medium text-center leading-tight text-white break-words w-full">{tui(rc)}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <button aria-label={tui('Face ID')} className="h-14 rounded-lg bg-[#3A3A3C] text-white flex items-center justify-center shadow active:scale-95 transition-transform">
                 <ScanFace className="w-6 h-6" />
