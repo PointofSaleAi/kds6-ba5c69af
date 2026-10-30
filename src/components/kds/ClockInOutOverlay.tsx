@@ -110,15 +110,6 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
           className="fixed inset-0 z-[10050] flex"
           style={{ background: '#000000', fontFamily: 'Montserrat, sans-serif' }}
         >
-          {/* Close */}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={tui('Close')}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
 
           {/* Left: date / time / weather */}
           <div className="flex-1 flex flex-col justify-center px-12 lg:px-20 text-white">
