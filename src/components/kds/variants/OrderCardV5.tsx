@@ -57,6 +57,7 @@ function ProductPill({
   onLongPress: (p: OrderItem) => void;
   tx: Translators;
 }) {
+  const { showAllergens } = useKDSSettings();
   const done = state === 'done';
   const loading = state === 'loading';
   const longPress = useLongPress(() => onLongPress(product), { delay: 500 });
@@ -180,7 +181,7 @@ function ProductPill({
               />
             );
           })}
-          {product.allergens.length > 0 && (
+          {showAllergens && product.allergens.length > 0 && (
             <ModifierRow
               prefix="!"
               text={product.allergens.map((a) => tx.ta(a.label)).join(', ')}
@@ -438,7 +439,7 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         <V2Header order={order} />
       </div>
 
-      {!isHeaderOnly && showAllergens && showHeaderAllergens && (() => {
+      {!isHeaderOnly && showHeaderAllergens && (() => {
         const allAllergens = order.courses.flatMap((c) => c.items.flatMap((i) => i.allergens));
         const unique = Array.from(new Map(allAllergens.map((a) => [a.type, a])).values());
         if (unique.length === 0) return null;

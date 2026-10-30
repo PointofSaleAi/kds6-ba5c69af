@@ -1,3 +1,4 @@
+import { useKDSSettings } from '@/hooks/use-kds-settings';
 import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CourseHeader } from './CourseHeader';
@@ -48,6 +49,7 @@ export function TicketCard({
   fillHeight = false,
   identifier = 'order',
 }: TicketCardProps) {
+  const { showHeaderAllergens } = useKDSSettings();
   const { skin, padScale, safety, appearance } = useGlassStyle();
   const stage = ticketStage(t, items);
   const vis = stageVisualsFor(stage, skin);
@@ -211,7 +213,7 @@ export function TicketCard({
       </div>
 
       {/* ticket-level allergies */}
-      {t.allergies.length > 0 && !headerOnly && (
+      {showHeaderAllergens && t.allergies.length > 0 && !headerOnly && (
         <div style={{ position: 'relative', flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', gap: 8, padding: `0 ${pad(18)}px ${pad(14)}px` }}>
           {t.allergies.map((a) => (
             <div key={a} style={{ ...glossTicket(skin), ...safetyStyle(safety) }}>{allergyLabel(a)}</div>
