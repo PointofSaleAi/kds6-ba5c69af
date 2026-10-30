@@ -100,7 +100,7 @@ export function ExpoSummaryPanel({
   }
 
   return (
-    <div className="w-[220px] flex flex-col shrink-0 overflow-hidden">
+    <div className="w-[240px] flex flex-col shrink-0 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-3 bg-sidebar border-l border-sidebar-border">
         <div className="flex items-center gap-2 min-w-0">
