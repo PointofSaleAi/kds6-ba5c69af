@@ -78,7 +78,7 @@ export default function ClockInOutOverlay({ open, onClose }: Props) {
   const displayHour = ((hours + 11) % 12) + 1;
   const minStr = mins.toString().padStart(2, '0');
 
-  const keys: Array<string> = ['1','2','3','4','5','6','7','8','9','C','0','ENTER'];
+  const keys: Array<string> = ['7','8','9','4','5','6','1','2','3','C','0','ENTER'];
 
   const keyBase: React.CSSProperties = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
