@@ -119,7 +119,7 @@ export function TicketBoard({
    */
   const colCount = useMemo(() => {
     const renderedGap = GAP * zoom;
-    const renderedPadding = GAP * zoom * 2;
+    const renderedPadding = 0;
     const available = Math.max(0, width - renderedPadding);
     const fittingColumns = Math.floor((available + renderedGap) / (MIN_RENDERED_CARD_W + renderedGap));
     return Math.max(1, Math.min(MAX_BOARD_COLUMNS, Math.max(tickets.length, 1), fittingColumns));
@@ -129,7 +129,7 @@ export function TicketBoard({
   const columnWidth = useMemo(() => {
     if (!width) return CARD_W;
     const unscaledWidth = width / zoom;
-    const fluidWidth = (unscaledWidth - GAP * 2 - GAP * (colCount - 1)) / colCount;
+    const fluidWidth = (unscaledWidth - GAP * (colCount - 1)) / colCount;
     return Math.max(MIN_RENDERED_CARD_W / zoom, fluidWidth);
   }, [width, zoom, colCount]);
 
@@ -189,7 +189,7 @@ export function TicketBoard({
 
   // `zoom` scales the verbatim glass design down to the same physical card
   // width (~300px) and font sizes as the standard ticket layouts.
-  const base: React.CSSProperties = { zoom, padding: GAP };
+  const base: React.CSSProperties = { zoom, padding: `${GAP}px 0` };
 
   let body: JSX.Element;
   const liveBoard = applyStoredBoard && view === 'home' ? storedBoard : 'distance-view';
