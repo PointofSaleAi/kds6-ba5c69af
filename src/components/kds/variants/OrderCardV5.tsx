@@ -438,7 +438,7 @@ export function OrderCardV5({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         <V2Header order={order} />
       </div>
 
-      {!isHeaderOnly && showAllergens && showHeaderAllergens && (() => {
+      {!isHeaderOnly && showHeaderAllergens && (() => {
         const allAllergens = order.courses.flatMap((c) => c.items.flatMap((i) => i.allergens));
         const unique = Array.from(new Map(allAllergens.map((a) => [a.type, a])).values());
         if (unique.length === 0) return null;

@@ -84,7 +84,7 @@ function V1ProductRow({ product, state, onToggle, onReset, onRemove, onLongPress
             >
               {product.name}
             </span>
-            {showDetails && product.allergens.map((a) => (
+            {showDetails && showAllergens && product.allergens.map((a) => (
               <AllergenBadge key={a.type} allergen={a} variant="item" suffix="allergy" />
             ))}
           </div>
@@ -261,7 +261,7 @@ export function OrderCardV4({ order, onBump, onMarkSeen, onItemDone, onItemDismi
         </span>
       </div>
 
-      {!isHeaderOnly && showAllergens && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
+      {!isHeaderOnly && showHeaderAllergens && <OrderAllergenStrip order={order} compact={isCompact} showBottomRule={!order.orderNotes} />}
       {!isHeaderOnly && order.orderNotes && <OrderNotesSection notes={order.orderNotes} orderId={order.id} />}
 
       {/* COURSES */}
